@@ -38,6 +38,7 @@ export function Pagination({
   setPageSize,
 }: PaginationProps) {
   const pageSizes = [10, 25, 50, 100];
+  const pageSizeLabel = "results per page";
   if (!pageSizes.includes(pageSize)) {
     pageSizes.push(pageSize);
     pageSizes.sort();
@@ -53,7 +54,9 @@ export function Pagination({
     >
       <Stack direction="row" spacing={2}>
         <Menu>
-          <MenuButton as={Button}>{pageSize} per page</MenuButton>
+          <MenuButton as={Button}>
+            {pageSize} {pageSizeLabel}
+          </MenuButton>
           <MenuList fontSize="sm" boxShadow="xl" minW={48}>
             {pageSizes.map((size) => (
               <MenuItem
@@ -62,7 +65,7 @@ export function Pagination({
                   setPageSize(size);
                 }}
               >
-                {size} per page
+                {size} {pageSizeLabel}
               </MenuItem>
             ))}
           </MenuList>

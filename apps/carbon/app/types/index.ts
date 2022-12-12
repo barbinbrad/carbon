@@ -3,14 +3,16 @@ import type { TypedResponse } from "@remix-run/node";
 import type { ReactElement } from "react";
 import type { ValidationErrorResponseData } from "remix-validated-form";
 
-export type FormActionData = Promise<
-  TypedResponse<ValidationErrorResponseData> | TypedResponse<Result>
->;
-
 export type Authenticated<T> = T & {
   permission?: string;
   action?: "view" | "create" | "update" | "delete";
 };
+
+export type AriaLiveValues = "polite" | "assertive" | "off";
+
+export type FormActionData = Promise<
+  TypedResponse<ValidationErrorResponseData> | TypedResponse<Result>
+>;
 
 export type NavItem = Omit<Route, "icon"> & {
   icon: ReactElement;

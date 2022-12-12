@@ -48,12 +48,12 @@ The monorepo follows the Turborepo covention of grouping packages into one of tw
 
 ## Tech Stack
 
-- [Turborepo](https://turbo.build)
 - [Remix](https://remix.run)
+- [Chakra UI](https://chakra-ui.com/)
 - [Supabase](https://supabase.com/)
 - [Postgres](https://postgresql.org/)
-- [Chakra UI](https://chakra-ui.com/)
 - [Redis](https://redis.io)
+- [Turborepo](https://turbo.build)
 - [Prisma](https://prisma.io/)
 
 ## Local Development

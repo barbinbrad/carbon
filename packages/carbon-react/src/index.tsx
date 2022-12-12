@@ -1,5 +1,6 @@
 import type { OptionBase, GroupBase } from "./Inputs";
 import { Select } from "./Inputs";
+import Loading from "./Loading";
 import { ActionMenu } from "./Overlay";
 import { useNotification } from "./Message";
 import ThemeProvider, { theme } from "./Theme";
@@ -11,6 +12,7 @@ export type { OptionBase, GroupBase };
 export {
   ActionMenu,
   ClientOnly,
+  Loading,
   Select,
   ThemeProvider,
   theme,

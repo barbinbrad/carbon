@@ -1,14 +1,11 @@
 import { useDisclosure, useOutsideClick, useId } from "@chakra-ui/react";
 import { useFetcher } from "@remix-run/react";
+import type { PostgrestError } from "@supabase/supabase-js";
 import debounce from "lodash/debounce";
 import words from "lodash/words";
-import type {
-  AriaAttributes,
-  ChangeEvent,
-  KeyboardEvent,
-  MouseEvent,
-} from "react";
+import type { AriaAttributes, ChangeEvent, KeyboardEvent } from "react";
 import { useEffect, useState, useMemo, useCallback, useRef } from "react";
+import type { Group } from "~/modules/Users/types";
 
 import type {
   OptionGroup,
@@ -21,15 +18,12 @@ import type {
 
 const defaultProps = {
   accessibilityLabel: "User selector",
-  canSwitchTeams: true,
   checkedSelections: false,
   disabled: false,
   hideSelections: false,
   id: "MultiUserSelect",
-  individualsOnly: false,
   innerInputRender: null,
   isMulti: false,
-  modalOnly: false,
   placeholder: "",
   queryFilters: {} as UserSelectionQueryFilters,
   readOnly: false,
@@ -39,7 +33,6 @@ const defaultProps = {
   showAvatars: false,
   testID: "UserSelect",
   usersOnly: false,
-  employeeTypesOnly: false,
   onCancel: () => {},
 };
 
@@ -55,8 +48,8 @@ export default function useUserSelect(props: UserSelectProps) {
 
   /* Data Fetching */
   const groupsFetcher = useFetcher<{
-    data?: unknown; //TODO
-    errors?: unknown; // TODO
+    groups: Group[];
+    errors?: PostgrestError;
   }>();
 
   useEffect(() => {
@@ -77,9 +70,6 @@ export default function useUserSelect(props: UserSelectProps) {
 
   /* Disclosures */
   const dropdown = useDisclosure();
-  const modal = useDisclosure({
-    defaultIsOpen: innerProps.isModalOpen,
-  });
 
   /* Input */
   const [controlledValue, setControlledValue] = useState("");
@@ -100,98 +90,97 @@ export default function useUserSelect(props: UserSelectProps) {
         : {}
     );
 
+  // Convert the tree from the server into a format that is easier to work with
   const optionGroups = useMemo<OptionGroup[]>(() => {
-    // const makeGroupItems = (
-    //   group: unknown, //TODO
-    //   groupId: string
-    // ): SelectionItemInterface[] => {
-    //   const result: SelectionItemInterface[] = [];
+    const makeGroupItems = (
+      group: Group,
+      groupId: string
+    ): SelectionItemInterface[] => {
+      const result: SelectionItemInterface[] = [];
 
-    //   if (!innerProps.individualsOnly) {
-    //     result.push({
-    //       ...group,
-    //       uid: getOptionId(groupId, group!.selectionCode!),
-    //     } as SelectionItemInterface);
-    //   }
+      if (!innerProps.usersOnly) {
+        result.push({
+          ...group.data,
+          uid: getOptionId(groupId, group.data.id),
+          label: group.data.name || "",
+          children: group.children,
+        });
 
-    //   if (!innerProps.employeeTypesOnly && "people" in group && group.people) {
-    //     const shouldFilterPeople =
-    //       innerProps.queryFilters?.allowedPeople &&
-    //       innerProps.queryFilters?.allowedPeople.length > 0;
+        const subgroups = group.children.map((subgroup) => ({
+          ...subgroup.data,
+          uid: getOptionId(groupId, subgroup.data.id),
+          label: subgroup.data.name || "",
+          children: subgroup.children,
+        }));
 
-    //     // while ugly, reduce allows us to filter allowed ids and map a new uid in one pass
-    //     const people = group.people.reduce((acc, person) => {
-    //       return !shouldFilterPeople ||
-    //         (shouldFilterPeople &&
-    //           innerProps.queryFilters?.allowedPeople?.includes(
-    //             parseInt(utils.fromGlobalId(person!.id))
-    //           ))
-    //         ? acc.concat({
-    //             ...person,
-    //             uid: getOptionId(groupId, person!.selectionCode!),
-    //           } as SelectionItemInterface)
-    //         : acc;
-    //     }, [] as SelectionItemInterface[]);
-    //     return result.concat(people);
-    //   }
-    //   return result;
-    // };
+        result.push(...subgroups);
+      }
 
-    // return !groupsFetcher.data ||
-    //   !groupsFetcher.data.data ||
-    //   !groupsFetcher.data.data.groups
-    //   ? []
-    //   : groupsFetcher.data.data.groups.map((group) => {
-    //       const uid = getGroupId(instanceId, group!.selectionCode!);
-    //       return {
-    //         uid,
-    //         expanded: false,
-    //         items: makeGroupItems(group as SelectionGroup, uid),
-    //         label: group?.label || "",
-    //       };
-    //     });
+      const users = group.data.users.map((user) => {
+        return {
+          ...user,
+          uid: getOptionId(groupId, user.id),
+          label: user.fullName || "",
+        };
+      });
 
-    console.log("groupsFetcher.data", groupsFetcher.data);
-    return [];
-  }, [
-    groupsFetcher,
-    instanceId,
-    innerProps.individualsOnly,
-    innerProps.employeeTypesOnly,
-    innerProps.queryFilters?.allowedPeople,
-  ]);
+      result.push(...users);
+
+      return result;
+    };
+
+    // TODO filter for employeeTypes only and allowedUsers
+
+    return !groupsFetcher.data || !groupsFetcher.data.groups
+      ? []
+      : groupsFetcher.data.groups.reduce<OptionGroup[]>((acc, group) => {
+          if (
+            !innerProps.usersOnly ||
+            (group.data.users && group.data.users.length)
+          ) {
+            const uid = getGroupId(instanceId, group.data.id);
+            return acc.concat({
+              uid,
+              expanded: false,
+              items: makeGroupItems(group, uid),
+              name: group.data.name || "",
+            });
+          }
+          return acc;
+        }, []);
+  }, [groupsFetcher.data, innerProps.usersOnly, instanceId]);
 
   /* Pre-populate controlled component after data loads */
   useEffect(() => {
-    // if (innerProps.value && optionGroups && optionGroups.length > 0) {
-    //   const flattened = optionGroups.reduce(
-    //     (acc, group) => acc.concat(group.items),
-    //     [] as SelectionItemInterface[]
-    //   );
-    //   if (Array.isArray(innerProps.value)) {
-    //     const selections = flattened.reduce((acc, item) => {
-    //       if (innerProps.value!.includes(item.selectionCode)) {
-    //         return {
-    //           ...acc,
-    //           [item.selectionCode]: item,
-    //         };
-    //       }
-    //       return acc;
-    //     }, {} as SelectionItemsById);
-    //     if (Object.keys(selections).length > 0) {
-    //       setSelectionItemsById(selections);
-    //     }
-    //   } else {
-    //     const selection = flattened.find(
-    //       (item) => item.selectionCode === innerProps.value
-    //     );
-    //     if (selection) {
-    //       setSelectionItemsById({
-    //         [selection?.selectionCode]: selection,
-    //       });
-    //     }
-    //   }
-    // }
+    if (innerProps.value && optionGroups && optionGroups.length > 0) {
+      const flattened = optionGroups.reduce(
+        (acc, group) => acc.concat(group.items),
+        [] as SelectionItemInterface[]
+      );
+      if (Array.isArray(innerProps.value)) {
+        const selections = flattened.reduce((acc, item) => {
+          if (innerProps.value!.includes(item.id)) {
+            return {
+              ...acc,
+              [item.id]: item,
+            };
+          }
+          return acc;
+        }, {} as SelectionItemsById);
+        if (Object.keys(selections).length > 0) {
+          setSelectionItemsById(selections);
+        }
+      } else {
+        const selection = flattened.find(
+          (item) => item.id === innerProps.value
+        );
+        if (selection) {
+          setSelectionItemsById({
+            [selection?.id]: selection,
+          });
+        }
+      }
+    }
   }, [optionGroups, innerProps.value]);
 
   const makeFilteredOptionGroups = useCallback(
@@ -225,9 +214,8 @@ export default function useUserSelect(props: UserSelectProps) {
 
   const commit = useCallback(() => {
     dropdown.onClose();
-    modal.onClose();
     setFocusedId(null);
-  }, [dropdown, modal, setFocusedId]);
+  }, [dropdown, setFocusedId]);
 
   useOutsideClick({
     ref: containerRef,
@@ -460,7 +448,7 @@ export default function useUserSelect(props: UserSelectProps) {
             }
           : {};
 
-        nextSelections[selectionItem.selectionCode] = checked(selectionItem);
+        nextSelections[selectionItem.id] = checked(selectionItem);
 
         onChange(Object.values(nextSelections));
         return nextSelections;
@@ -485,11 +473,10 @@ export default function useUserSelect(props: UserSelectProps) {
   const onDeselect = useCallback(
     (selectionItem: SelectionItemInterface) => {
       if (selectionItem === undefined) return;
-      const { selectionCode } = selectionItem;
+      const { id } = selectionItem;
       setSelectionItemsById((previousSelections) => {
-        if (selectionCode in previousSelections) {
-          const { [selectionCode]: removed, ...newSelectionCodes } =
-            previousSelections;
+        if (id in previousSelections) {
+          const { [id]: removed, ...newSelectionCodes } = previousSelections;
 
           onChange(Object.values(newSelectionCodes));
           return newSelectionCodes;
@@ -504,7 +491,7 @@ export default function useUserSelect(props: UserSelectProps) {
   const onToggle = useCallback(
     (selectionItem?: SelectionItemInterface) => {
       if (selectionItem === undefined) return;
-      if (selectionItem.selectionCode in selectionItemsById) {
+      if (selectionItem.id in selectionItemsById) {
         onDeselect(selectionItem);
       } else {
         onSelect(selectionItem);
@@ -519,7 +506,7 @@ export default function useUserSelect(props: UserSelectProps) {
       setSelectionItemsById((previousSelections) => {
         const nextSelections = {
           ...previousSelections,
-          [selectionItem.selectionCode]: toggleChecked(selectionItem),
+          [selectionItem.id]: toggleChecked(selectionItem),
         };
 
         onCheckedChange(Object.values(nextSelections));
@@ -564,17 +551,28 @@ export default function useUserSelect(props: UserSelectProps) {
 
   const onExplode = useCallback(
     (selectionItem: SelectionItemInterface) => {
-      if (!("people" in selectionItem)) return;
+      if (!("users" in selectionItem)) return;
 
-      const { selectionCode, people } = selectionItem;
+      const { id, users, children } = selectionItem;
 
       setSelectionItemsById((prevSelectionItems) => {
-        if (selectionCode in prevSelectionItems) {
-          const { [selectionCode]: removed, ...newSelectionItems } =
-            prevSelectionItems;
+        if (id in prevSelectionItems) {
+          const { [id]: removed, ...newSelectionItems } = prevSelectionItems;
 
-          people.forEach((person) => {
-            newSelectionItems[person.selectionCode] = person;
+          users.forEach((user) => {
+            newSelectionItems[user.id] = {
+              ...user,
+              uid: getOptionId(id, user.id),
+              label: user.fullName || "",
+            };
+          });
+
+          children?.forEach((group) => {
+            newSelectionItems[group.data.id] = {
+              ...group.data,
+              uid: getOptionId(id, group.data.id),
+              label: group.data.name || "",
+            };
           });
 
           onChange(Object.values(newSelectionItems));
@@ -690,14 +688,6 @@ export default function useUserSelect(props: UserSelectProps) {
     ]
   );
 
-  const onShowModal = (e: MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
-    modal.onOpen();
-    dropdown.onClose();
-    setFocusedId(null);
-    clear();
-  };
-
   /* Accessibility */
 
   const popoverProps = useMemo<AriaAttributes>(() => ({}), []);
@@ -751,7 +741,6 @@ export default function useUserSelect(props: UserSelectProps) {
     // filters
     inputValue,
     // disclosures
-    modal,
     dropdown,
     // props
     innerProps,
@@ -776,7 +765,6 @@ export default function useUserSelect(props: UserSelectProps) {
     onToggleChecked,
     onExplode,
     onMouseOver,
-    onShowModal,
     setControlledValue,
     setSelectionItemsById,
   };
@@ -797,6 +785,13 @@ function checked(item: SelectionItemInterface): SelectionItemInterface {
   };
 }
 
+export function isGroup(item: SelectionItemInterface) {
+  return (
+    ("users" in item && item.users?.length > 0) ||
+    ("children" in item && item?.children?.length)
+  );
+}
+
 function toggleChecked(item: SelectionItemInterface): SelectionItemInterface {
   return {
     ...item,
@@ -810,8 +805,8 @@ function makeSelectionItemsById(
 ): SelectionItemsById {
   const result: SelectionItemsById = {};
   input.forEach((item) => {
-    if (!(item.selectionCode in result)) {
-      result[item.selectionCode] = checked(item);
+    if (!(item.id in result)) {
+      result[item.id] = checked(item);
       // early exit for signle user select
       if (!isMulti) return result;
     }

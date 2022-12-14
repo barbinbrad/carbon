@@ -1,6 +1,5 @@
 import { useColor } from "@carbon/react";
 import { Box, Button, Grid, Text, VStack } from "@chakra-ui/react";
-import { SkipNavContent } from "@chakra-ui/skip-nav";
 import type { MetaFunction } from "@remix-run/node";
 import { Link, Outlet, useMatches } from "@remix-run/react";
 import { ContentSidebar } from "~/components/Navigation/Sidebar";
@@ -19,7 +18,6 @@ export default function UsersRoute() {
   return (
     <Grid w="full" h="full" templateColumns="auto 1fr" overflow="auto">
       <ContentSidebar>
-        <SkipNavContent />
         <VStack spacing={2}>
           {links.map((groups) =>
             Object.entries(groups).map(([group, routes]) => (

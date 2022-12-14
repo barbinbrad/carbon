@@ -1,11 +1,12 @@
+import { useColor } from "@carbon/react";
 import type { SystemStyleObject } from "@chakra-ui/react";
-import { useColorModeValue, useMultiStyleConfig } from "@chakra-ui/react";
+import { useMultiStyleConfig } from "@chakra-ui/react";
 import type { ThemeObject } from "~/types/chakra";
 
 export const useGroupStyles = (isFocused: boolean, isSticky: boolean) => {
   const menuItemStyles = useMultiStyleConfig("Menu").item as ThemeObject;
-  // const selectedBg = useColorModeValue("blue.500", "blue.200");
-  // const selectedColor = useColorModeValue("white", "black");
+  const selectedBg = useColor("gray.200");
+  const selectedColor = useColor("black");
 
   const sx: SystemStyleObject = {
     ...menuItemStyles,
@@ -22,14 +23,14 @@ export const useGroupStyles = (isFocused: boolean, isSticky: boolean) => {
     borderRadius: "md",
 
     ...(isFocused && menuItemStyles._focus),
-    // ...(isFocused && {
-    //   bg: selectedBg,
-    //   color: selectedColor,
-    //   _active: { bg: selectedBg },
-    // }),
+    ...(isFocused && {
+      bg: selectedBg,
+      color: selectedColor,
+      _active: { bg: selectedBg },
+    }),
     _hover: {
-      // bg: selectedBg,
-      // color: selectedColor,
+      bg: selectedBg,
+      color: selectedColor,
       ...menuItemStyles._focus,
     },
     _focus: {
@@ -47,8 +48,8 @@ export const useOptionStyles = (
   isDisabled?: boolean
 ) => {
   const menuItemStyles = useMultiStyleConfig("Menu").item as ThemeObject;
-  const selectedBg = useColorModeValue("blue.500", "blue.200");
-  const selectedColor = useColorModeValue("white", "black");
+  const selectedBg = useColor("gray.700");
+  const selectedColor = useColor("white");
 
   const sx: SystemStyleObject = {
     ...menuItemStyles,

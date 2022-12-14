@@ -1,5 +1,6 @@
 import {
   Avatar,
+  AvatarGroup,
   HStack,
   IconButton,
   Input,
@@ -8,7 +9,6 @@ import {
   InputRightElement,
   Spinner,
 } from "@chakra-ui/react";
-import { BsThreeDotsVertical } from "react-icons/bs";
 import { MdOutlineClear } from "react-icons/md";
 import useUserSelectContext from "../provider";
 
@@ -24,12 +24,18 @@ const SelectInput = () => {
     onInputBlur,
     onInputChange,
     onInputFocus,
-    onShowModal,
   } = useUserSelectContext();
 
   return (
     <InputGroup>
-      {!isMulti && (
+      {isMulti ? (
+        <InputLeftElement left={2}>
+          <AvatarGroup size="xs" max={2}>
+            <Avatar />
+            <Avatar />
+          </AvatarGroup>
+        </InputLeftElement>
+      ) : (
         <InputLeftElement>
           <Avatar size="xs" />
         </InputLeftElement>
@@ -49,7 +55,8 @@ const SelectInput = () => {
         ref={inputRef}
         type="text"
         value={inputValue}
-        pr={isMulti ? "5rem" : "2.5rem"}
+        pl={isMulti ? "3.175rem" : undefined}
+        pr="2.5rem"
       />
 
       <InputRightElement w="auto">
@@ -66,18 +73,6 @@ const SelectInput = () => {
               borderRadius={4}
               size="sm"
               variant="ghost"
-            />
-          )}
-          {isMulti && (
-            <IconButton
-              aria-label="Open user selection modal"
-              data-testid={`UserSelectionInput:OpenFullDialogButton:${testID}`}
-              disabled={disabled}
-              onClick={onShowModal}
-              size="sm"
-              h="1.75rem"
-              variant="solid"
-              icon={<BsThreeDotsVertical />}
             />
           )}
         </HStack>

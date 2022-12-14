@@ -8,8 +8,6 @@ export type Authenticated<T> = T & {
   action?: "view" | "create" | "update" | "delete";
 };
 
-export type AriaLiveValues = "polite" | "assertive" | "off";
-
 export type FormActionData = Promise<
   TypedResponse<ValidationErrorResponseData> | TypedResponse<Result>
 >;

@@ -99,7 +99,10 @@ export async function createEmployeeAccount(
   };
 }
 
-async function createUser(client: SupabaseClient<Database>, user: User) {
+async function createUser(
+  client: SupabaseClient<Database>,
+  user: Omit<User, "fullName">
+) {
   const { data, error } = await insertUser(client, user);
 
   if (error) {
@@ -295,7 +298,7 @@ export async function getUserByEmail(email: string) {
 export async function getUsers(client: SupabaseClient<Database>) {
   return client
     .from("user")
-    .select("id, firstName, lastName, email")
+    .select("id, firstName, lastName, fullName, email")
     .order("lastName");
 }
 
@@ -306,7 +309,10 @@ export async function insertEmployee(
   return client.from("employee").insert([employee]);
 }
 
-async function insertUser(client: SupabaseClient<Database>, user: User) {
+async function insertUser(
+  client: SupabaseClient<Database>,
+  user: Omit<User, "fullName">
+) {
   return client.from("user").insert([user]).select("*");
 }
 

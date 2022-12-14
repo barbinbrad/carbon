@@ -25,6 +25,15 @@ export type Feature = NonNullable<
   Awaited<ReturnType<typeof getFeatures>>["data"]
 >[number];
 
+export type Group = {
+  data: {
+    id: string;
+    name: string;
+    users: User[];
+  };
+  children: Group[];
+};
+
 export type Permission = {
   view: boolean;
   create: boolean;

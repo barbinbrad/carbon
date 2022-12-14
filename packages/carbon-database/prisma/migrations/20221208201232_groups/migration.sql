@@ -204,7 +204,7 @@ CREATE VIEW groups_view AS
   FROM groups_recursive 
   WHERE "isIdentityGroup" = false
   GROUP BY "groupId", "name", "parentId", "isEmployeeTypeGroup"
-  ORDER BY "isEmployeeTypeGroup" DESC;
+  ORDER BY "isEmployeeTypeGroup" DESC, "name" ASC;
 
 
 CREATE OR REPLACE FUNCTION groups_for_user(uid text) RETURNS "jsonb"

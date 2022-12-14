@@ -1,3 +1,4 @@
+import { useColor } from "@carbon/react";
 import {
   Avatar,
   Box,
@@ -8,18 +9,17 @@ import {
   ListItem,
   Text,
   Tooltip,
-  useColorModeValue,
 } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { MdPlaylistAdd, MdOutlineClear } from "react-icons/md";
-import type { SelectionItemInterface } from "../types";
 import useUserSelectContext from "../provider";
+import { isGroup } from "../useUserSelect";
 
 const SelectionList = () => {
   const {
-    innerProps: { checkedSelections, readOnly, userTypesOnly, width },
+    innerProps: { checkedSelections, readOnly, width },
     instanceId,
-    selectionItemsByCode,
+    selectionItemsById,
     onDeselect,
     onExplode,
     onToggleChecked,
@@ -27,23 +27,23 @@ const SelectionList = () => {
 
   const selected = useMemo(
     () =>
-      Object.values(selectionItemsByCode).sort((a, b) =>
+      Object.values(selectionItemsById).sort((a, b) =>
         a.label < b.label ? -1 : 0
       ),
-    [selectionItemsByCode]
+    [selectionItemsById]
   );
 
-  const background = useColorModeValue("gray.100", "whiteAlpha.200");
+  const background = useColor("gray.100");
 
   return (
     <List w="full" maxW={width} mt={1}>
       {selected.map((item) => {
-        const id = `UserSelection:SelectedItem-${item.selectionCode}`;
-        const canExpand = isGroup(item) && !userTypesOnly && !checkedSelections;
+        const id = `UserSelection:SelectedItem-${item.id}`;
+        const canExpand = isGroup(item) && !checkedSelections;
 
         return (
           <ListItem
-            key={item.selectionCode}
+            key={item.id}
             p={2}
             borderRadius="md"
             _hover={{ background }}
@@ -105,11 +105,5 @@ const SelectionList = () => {
     </List>
   );
 };
-
-function isGroup(item: SelectionItemInterface) {
-  return (
-    "people" in item && item.people.length > 0 && item.groupType !== "EVERYONE"
-  );
-}
 
 export default SelectionList;

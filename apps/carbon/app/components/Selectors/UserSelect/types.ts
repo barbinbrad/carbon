@@ -8,6 +8,8 @@ import type {
   RefObject,
 } from "react";
 
+import type { User, Group } from "~/modules/Users/types";
+
 export type ComboBoxRefs = {
   containerRef: RefObject<HTMLDivElement>;
   inputRef: RefObject<HTMLInputElement>;
@@ -17,29 +19,18 @@ export type ComboBoxRefs = {
   focusableNodes: MutableRefObject<Record<string, TreeNode>>;
 };
 
-export type TreeNode = {
-  uid: string;
-  expandable: boolean;
-  parentId?: string;
-  previousId?: string;
-  nextId?: string;
-};
 export interface UserSelectProps {
   accessibilityLabel?: string;
-  canSwitchTeams?: boolean;
   checkedSelections?: boolean;
   disabled?: boolean;
   hideSelections?: boolean;
   id?: string;
-  individualsOnly?: boolean;
   innerInputRender?:
     | ((props: UserSelectProps) => JSX.Element | JSX.Element[])
     | ReactNode
     | null;
-  isModalOpen?: boolean;
   isMulti?: boolean;
   label?: string;
-  modalOnly?: boolean;
   placeholder?: string;
   showAvatars?: boolean;
   queryFilters?: UserSelectionQueryFilters;
@@ -50,7 +41,6 @@ export interface UserSelectProps {
   selectionsMaxHeight?: string | number;
   testID?: string;
   usersOnly?: boolean;
-  employeeTypesOnly?: boolean;
   value?: string[] | string; // Will be set when used as a controlled input
   width?: number;
   onBlur?: (e: any) => void;
@@ -65,26 +55,16 @@ export type OptionGroup = {
   uid: string;
   expanded: boolean;
   items: SelectionItemInterface[];
-  label: string;
+  name: string;
 };
 
-export interface PersonNode {
-  id?: string;
-  label: string;
-  selectionId: string;
-  initials: string;
-  orgId?: number;
-  preferredName?: string;
-  personId?: string;
-  firstName?: string;
-  lastName?: string;
-  emailAddress?: string;
-  active?: boolean;
-  pictureUrl: string | null;
-  teamLabels?: string;
-  __typename?: "PersonNode";
-}
-
+export type TreeNode = {
+  uid: string;
+  expandable: boolean;
+  parentId?: string;
+  previousId?: string;
+  nextId?: string;
+};
 export interface PopoverProps {
   aria: HTMLAttributes<HTMLDivElement>;
   children: ReactNode;
@@ -92,39 +72,21 @@ export interface PopoverProps {
   refs: ComboBoxRefs;
 }
 
-export interface SelectionGroup {
-  id?: string;
-  label: string;
-  selectionId: string;
-  people: PersonNode[];
-  pluralLabel: string;
-  groupType: string;
-  active?: boolean;
-  team?: {
-    label?: string;
-  };
-  __typename?: "SelectionGroup";
-}
-
 interface SelectionOptions {
-  uid?: string;
+  uid: string;
+  label: string;
   isChecked?: boolean;
-  isPersistent?: boolean; // does not prevent removal from the item within the modal.
-  sortString?: string;
+  isPersistent?: boolean;
 }
 
-type PersonNodeWithOptions = PersonNode & SelectionOptions;
-type SelectionGroupWithOptions = SelectionGroup & SelectionOptions;
+type UserWithOptions = User & SelectionOptions;
+type SelectionGroupWithOptions = Group["data"] & {
+  children?: Group[];
+} & SelectionOptions;
 
 export type SelectionItemInterface =
-  | PersonNodeWithOptions
+  | UserWithOptions
   | SelectionGroupWithOptions;
-
-export interface SingleUserselectProps {
-  disabled?: boolean;
-  placeholder?: string;
-  readOnly?: boolean;
-}
 
 export type SelectionItemsById = Record<string, SelectionItemInterface>;
 
@@ -132,12 +94,10 @@ export interface SelectInputProps {
   aria?: Omit<InputHTMLAttributes<HTMLInputElement>, "size">;
   errors?: unknown; // TODO
   inputValue: string;
-  innerProps: UserSelectProps | SingleUserselectProps;
-  isModalOpen: boolean;
+  innerProps: UserSelectProps;
   loading: boolean;
   isMulti: boolean;
   refs: ComboBoxRefs;
-  onMoreButtonClick: () => void;
   onClearSearchInput: () => void;
   onInputOnChange: (e: ChangeEvent<HTMLInputElement>) => void;
   onInputKeyDown: (e: KeyboardEvent<HTMLInputElement>) => void;
@@ -165,11 +125,7 @@ export interface UserTreeSelectProps {
 }
 
 export interface UserSelectionQueryFilters {
-  excludeAthletes?: boolean;
   excludeSelf?: boolean;
-  includeContacts?: boolean;
-  includeEveryoneGroups?: boolean;
-  onlyPersonTypes?: string[];
-  selectionRestrictingPermission?: string;
-  allowedPeople?: number[];
+  onlyEmployeeTypes?: string[];
+  allowedIds?: string[];
 }

@@ -17,7 +17,6 @@ import Input from "./components/Input";
 import Popover from "./components/Popover";
 import SelectionList from "./components/SelectionList";
 import TreeSelect from "./components/TreeSelect";
-import UserSelectionModal from "./components/Modal";
 import type { UserSelectProps } from "./types";
 import { UserSelectContext } from "./provider";
 import useUserSelect from "./useUserSelect";
@@ -29,17 +28,8 @@ export default function Component(props: UserSelectProps) {
 
 const UserSelect = (state: ReturnType<typeof useUserSelect>) => {
   const {
-    modal,
     dropdown,
-    innerProps: {
-      hideSelections,
-      isMulti,
-      label,
-      modalOnly,
-      readOnly,
-      testID,
-      width,
-    },
+    innerProps: { hideSelections, isMulti, label, readOnly, testID, width },
     refs: { containerRef },
     selectionItemsById,
   } = state;
@@ -47,26 +37,21 @@ const UserSelect = (state: ReturnType<typeof useUserSelect>) => {
   return (
     <UserSelectContext.Provider value={state}>
       {label && <FormLabel>{label}</FormLabel>}
-      {!modalOnly && (
-        <>
-          <Container ref={containerRef} width={width} testID={testID}>
-            {!readOnly && (
-              <Combobox>
-                <Input />
-                {dropdown.isOpen && (
-                  <Popover>
-                    <TreeSelect />
-                  </Popover>
-                )}
-              </Combobox>
+      <Container ref={containerRef} width={width} testID={testID}>
+        {!readOnly && (
+          <Combobox>
+            <Input />
+            {dropdown.isOpen && (
+              <Popover>
+                <TreeSelect />
+              </Popover>
             )}
-            {!hideSelections &&
-              isMulti &&
-              Object.keys(selectionItemsById).length > 0 && <SelectionList />}
-          </Container>
-        </>
-      )}
-      {modal.isOpen && <UserSelectionModal />}
+          </Combobox>
+        )}
+        {!hideSelections &&
+          isMulti &&
+          Object.keys(selectionItemsById).length > 0 && <SelectionList />}
+      </Container>
     </UserSelectContext.Provider>
   );
 };

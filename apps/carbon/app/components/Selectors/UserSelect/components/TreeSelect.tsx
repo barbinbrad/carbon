@@ -5,7 +5,7 @@ import { FaCheck, FaChevronRight } from "react-icons/fa";
 import Empty from "~/components/Data/Empty";
 import type { OptionGroup, SelectionItemInterface } from "../types";
 import useUserSelectContext from "../provider";
-import { useGroupStyles, useOptionStyles } from "./useStyles";
+import { useGroupStyles, useOptionStyles } from "./useUserSelectStyles";
 
 const UserTreeSelect = () => {
   const {
@@ -57,7 +57,7 @@ const Group = ({ group }: { group: OptionGroup }) => {
     focusedId,
     onSelect,
     onDeselect,
-    selectionItemsByCode,
+    selectionItemsById,
   } = useUserSelectContext();
 
   const isFocused = group.uid === focusedId;
@@ -81,15 +81,15 @@ const Group = ({ group }: { group: OptionGroup }) => {
         }
         sx={sx}
       >
-        <Text noOfLines={1}>{group.label}</Text>
+        <Text noOfLines={1}>{group.name}</Text>
         <MoreIcon isExpanded={isExpanded} />
       </Box>
       {isExpanded && (
         <List role="group" display="flex" flexDirection="column">
           {group.items.map((item) => {
-            const isDisabled = item.selectionCode in []; // TODO
+            const isDisabled = item.id in []; // TODO
             const isFocused = item.uid === focusedId;
-            const isSelected = item.selectionCode in selectionItemsByCode;
+            const isSelected = item.id in selectionItemsById;
 
             return (
               <Option
@@ -129,8 +129,7 @@ const Option = ({
   onClick: () => void;
 }) => {
   const sx = useOptionStyles(isFocused, isSelected, isDisabled);
-  const label =
-    "people" in item ? `${item.label} (${item.people.length})` : item.label;
+  const name = item.label;
 
   return (
     <ListItem
@@ -153,7 +152,7 @@ const Option = ({
           opacity={isSelected ? 1 : 0}
         />
       </MenuIcon>
-      <Text noOfLines={1}>{label}</Text>
+      <Text noOfLines={1}>{name}</Text>
     </ListItem>
   );
 };

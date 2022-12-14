@@ -1,9 +1,9 @@
+import { useColor } from "@carbon/react";
 import type { IconProps, SystemStyleObject } from "@chakra-ui/react";
 import {
   Box,
   Icon,
   MenuIcon,
-  useColorModeValue,
   useMultiStyleConfig,
   useTheme,
 } from "@chakra-ui/react";
@@ -131,7 +131,7 @@ export const LoadingMessage = <
    *
    * @see {@link https://github.com/chakra-ui/chakra-ui/blob/13c6d2e08b61e179773be4722bb81173dd599306/packages/theme/src/styles.ts#L13}
    */
-  const color = useColorModeValue("gray.400", "whiteAlpha.400");
+  const color = useColor("gray.400");
 
   const fontSizes: SizeProps = {
     sm: "0.875rem",
@@ -193,7 +193,7 @@ export const NoOptionsMessage = <
    *
    * @see {@link https://github.com/chakra-ui/chakra-ui/blob/13c6d2e08b61e179773be4722bb81173dd599306/packages/theme/src/styles.ts#L13}
    */
-  const color = useColorModeValue("gray.400", "whiteAlpha.400");
+  const color = useColor("gray.400");
 
   const fontSizes: SizeProps = {
     sm: "0.875rem",
@@ -374,19 +374,9 @@ export const Option = <
     lg: "0.5rem 1rem",
   };
 
-  /**
-   * Use the same selected color as the border of the select component
-   *
-   * @see {@link https://github.com/chakra-ui/chakra-ui/blob/13c6d2e08b61e179773be4722bb81173dd599306/packages/theme/src/components/input.ts#L73}
-   */
-  const selectedBg = useColorModeValue(
-    `${selectedOptionColor}.500`,
-    `${selectedOptionColor}.300`
-  );
-  const selectedColor = useColorModeValue("white", "black");
+  const selectedBg = useColor("gray.500");
+  const selectedColor = useColor("white");
 
-  // Don't create exta space for the checkmark if using a multi select with
-  // options that dissapear when they're selected
   const showCheckIcon: boolean =
     selectedOptionStyle === "check" &&
     (!isMulti || hideSelectedOptions === false);

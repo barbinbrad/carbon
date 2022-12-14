@@ -1,5 +1,6 @@
 import { useNotification } from "@carbon/react";
 import { Box, Grid, GridItem } from "@chakra-ui/react";
+import { SkipNavContent } from "@chakra-ui/skip-nav";
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
@@ -71,6 +72,7 @@ export default function AppRoute() {
           <Grid templateColumns="auto 1fr" h="full" w="full">
             <IconSidebar />
             <Box w="full" h="full">
+              <SkipNavContent />
               <Outlet />
             </Box>
           </Grid>

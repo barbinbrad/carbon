@@ -27,7 +27,7 @@ const defaultProps = {
   placeholder: "",
   queryFilters: {} as UserSelectionQueryFilters,
   readOnly: false,
-  resetAfterSelection: true,
+  resetAfterSelection: false,
   selections: [] as SelectionItemInterface[],
   selectionsMaxHeight: "auto",
   showAvatars: false,
@@ -453,9 +453,10 @@ export default function useUserSelect(props: UserSelectProps) {
         onChange(Object.values(nextSelections));
         return nextSelections;
       });
-      if (innerProps.isMulti) {
+      if (innerProps.isMulti && !innerProps.resetAfterSelection) {
         setFocusedId(selectionItem.uid!);
       } else {
+        console.log("resetting");
         commit();
         clear();
       }
@@ -464,6 +465,7 @@ export default function useUserSelect(props: UserSelectProps) {
       clear,
       commit,
       innerProps.isMulti,
+      innerProps.resetAfterSelection,
       onChange,
       setFocusedId,
       setSelectionItemsById,

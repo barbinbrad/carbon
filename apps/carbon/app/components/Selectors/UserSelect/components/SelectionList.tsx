@@ -17,7 +17,7 @@ import { isGroup } from "../useUserSelect";
 
 const SelectionList = () => {
   const {
-    innerProps: { checkedSelections, readOnly, width },
+    innerProps: { checkedSelections, readOnly, selectionsMaxHeight, width },
     instanceId,
     selectionItemsById,
     onDeselect,
@@ -36,10 +36,16 @@ const SelectionList = () => {
   const background = useColor("gray.100");
 
   return (
-    <List w="full" maxW={width} mt={1}>
+    <List
+      w="full"
+      maxW={width}
+      mt={1}
+      maxH={selectionsMaxHeight}
+      overflowY={selectionsMaxHeight ? "auto" : undefined}
+    >
       {selected.map((item) => {
         const id = `UserSelection:SelectedItem-${item.id}`;
-        const canExpand = isGroup(item) && !checkedSelections;
+        const canExpand = !checkedSelections && !readOnly && isGroup(item);
 
         return (
           <ListItem

@@ -16,10 +16,10 @@ import type { PostgrestResponse } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import { Hidden, Select, Submit } from "~/components/Form";
+import PermissionCheckboxes from "~/modules/Users/components/Permission";
+import type { EmployeeType, Permission } from "~/modules/Users/types";
 import { employeeValidator } from "~/services/users";
 import { mapRowsToOptions } from "~/utils/form";
-import PermissionCheckboxes from "../../components/Permission";
-import type { EmployeeType, Permission } from "../../types";
 
 type EmployeePermissionsFormProps = {
   name: string;

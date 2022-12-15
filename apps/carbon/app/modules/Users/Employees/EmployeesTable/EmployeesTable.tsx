@@ -6,7 +6,7 @@ import { BsPencilSquare } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { Table } from "~/components/Data";
 import { usePermissions } from "~/hooks";
-import type { Employee, User } from "../../types";
+import type { Employee, User } from "~/modules/Users/types";
 
 type EmployeesTableProps = {
   data: Employee[];

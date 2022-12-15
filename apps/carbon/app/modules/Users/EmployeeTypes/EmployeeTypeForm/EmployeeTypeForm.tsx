@@ -15,9 +15,9 @@ import { useNavigate } from "@remix-run/react";
 import { useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import { Color, Hidden, Input, Submit } from "~/components/Form";
+import PermissionCheckboxes from "~/modules/Users/components/Permission";
+import type { Permission } from "~/modules/Users/types";
 import { employeeTypeValidator } from "~/services/users";
-import PermissionCheckboxes from "../../components/Permission";
-import type { Permission } from "../../types";
 
 type EmployeeTypeFormProps = {
   initialValues: {

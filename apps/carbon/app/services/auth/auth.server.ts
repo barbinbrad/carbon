@@ -3,8 +3,9 @@ import type { AuthSession as SupabaseAuthSession } from "@supabase/supabase-js";
 import { SERVER_URL } from "~/config/env";
 import { REFRESH_ACCESS_TOKEN_THRESHOLD } from "~/config/env";
 import { getSupabase, getSupabaseAdmin } from "~/lib/supabase";
-import { requireAuthSession, setSessionFlash } from "~/services/session";
+import { requireAuthSession, flash } from "~/services/session";
 import { getPermissions } from "~/services/users";
+import { error } from "~/utils/result";
 import type { AuthSession } from "./types";
 
 export async function createEmailAuthAccount(
@@ -101,10 +102,10 @@ export async function requirePermissions(
   if (!hasRequiredPermissions) {
     throw redirect(
       "/app",
-      await setSessionFlash(request, {
-        success: false,
-        message: "Access Denied",
-      })
+      await flash(
+        request,
+        error({ myPermissions, requirePermissions }, "Access Denied")
+      )
     );
   }
 

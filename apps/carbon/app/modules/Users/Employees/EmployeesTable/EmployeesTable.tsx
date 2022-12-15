@@ -6,7 +6,7 @@ import { BsPencilSquare } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { Table } from "~/components/Data";
 import { usePermissions } from "~/hooks";
-import type { Employee, User } from "../types";
+import type { Employee, User } from "../../types";
 
 type EmployeesTableProps = {
   data: Employee[];
@@ -39,31 +39,9 @@ const EmployeesTable = memo(
         id: user.id,
         firstName: user.firstName,
         lastName: user.lastName,
+        fullName: `${user.firstName} ${user.lastName}`,
         email: user.email,
         employeeType: employeeType.name,
-        actions: (
-          <Flex justifyContent="end">
-            {permissions.can("update", "users") && (
-              <ActionMenu>
-                <MenuItem
-                  icon={<BsPencilSquare />}
-                  onClick={() => navigate(`/app/users/employees/${user.id}`)}
-                >
-                  Edit Employee
-                </MenuItem>
-                <MenuItem
-                  icon={<IoMdTrash />}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    navigate(`/app/users/employeess/deactivate/${user.id}`);
-                  }}
-                >
-                  Deactivate Employee
-                </MenuItem>
-              </ActionMenu>
-            )}
-          </Flex>
-        ),
       };
     });
 
@@ -72,29 +50,59 @@ const EmployeesTable = memo(
         data={rows}
         columns={[
           {
-            Header: "First Name",
-            accessor: "firstName",
+            accessorKey: "firstName",
+            header: "First Name",
+            cell: (item) => item.getValue(),
           },
           {
-            Header: "Last Name",
-            accessor: "lastName",
+            accessorKey: "lastName",
+            header: "Last Name",
+            cell: (item) => item.getValue(),
           },
           {
-            Header: "Email",
-            accessor: "email",
+            accessorKey: "email",
+            header: "Email",
+            cell: (item) => item.getValue(),
           },
           {
-            Header: "Employee Type",
-            accessor: "employeeType",
+            accessorKey: "employeeType",
+            header: "Employee Type",
+            cell: (item) => item.getValue(),
           },
           {
-            Header: <VisuallyHidden>Actions</VisuallyHidden>,
-            accessor: "actions",
+            header: () => <VisuallyHidden>Actions</VisuallyHidden>,
+            accessorKey: "id",
+            cell: (item) => (
+              <Flex justifyContent="end">
+                {permissions.can("update", "users") && (
+                  <ActionMenu>
+                    <MenuItem
+                      icon={<BsPencilSquare />}
+                      onClick={() =>
+                        navigate(`/app/users/employees/${item.getValue()}`)
+                      }
+                    >
+                      Edit Employee
+                    </MenuItem>
+                    <MenuItem
+                      icon={<IoMdTrash />}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(
+                          `/app/users/employeess/deactivate/${item.getValue()}`
+                        );
+                      }}
+                    >
+                      Deactivate Employee
+                    </MenuItem>
+                  </ActionMenu>
+                )}
+              </Flex>
+            ),
           },
         ]}
         count={count}
         selectableRows={selectableRows}
-        // @ts-ignore
         onSelectedRowsChange={onSelectedRowsChange}
       />
     );

@@ -6,7 +6,7 @@ import { Link, Outlet, useLoaderData } from "@remix-run/react";
 import { IoMdAdd } from "react-icons/io";
 import { DebouncedInput } from "~/components/Search";
 import { usePermissions } from "~/hooks";
-import { EmployeeTypesTable } from "~/modules/Users";
+import { EmployeeTypesTable } from "~/modules/Users/EmployeeTypes";
 import { requirePermissions } from "~/services/auth";
 import { getEmployeeTypes } from "~/services/users";
 import { getPaginationParams } from "~/utils/http";

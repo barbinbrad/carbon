@@ -4,5 +4,5 @@
   },
   "extends": "@carbon/tsconfig/react-library.json",
   "include": ["src"],
-  "exclude": ["dist", "build", "node_modules"]
+  "exclude": ["**/*.d.ts", "./dist", "node_modules"]
 }

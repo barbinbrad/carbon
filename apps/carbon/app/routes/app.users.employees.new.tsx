@@ -2,13 +2,13 @@ import type { ActionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
 import { requirePermissions } from "~/services/auth";
-import { setSessionFlash } from "~/services/session";
+import { flash } from "~/services/session";
 import {
   createEmployeeAccount,
   createEmployeeValidator,
 } from "~/services/users";
 import { assertIsPost } from "~/utils/http";
-import { CreateEmployeeModal } from "~/modules/Users";
+import { CreateEmployeeModal } from "~/modules/Users/Employees";
 
 export async function action({ request }: ActionArgs) {
   assertIsPost(request);
@@ -32,10 +32,7 @@ export async function action({ request }: ActionArgs) {
     employeeType,
   });
 
-  return redirect(
-    "/app/users/employees",
-    await setSessionFlash(request, result)
-  );
+  return redirect("/app/users/employees", await flash(request, result));
 }
 
 export default function () {

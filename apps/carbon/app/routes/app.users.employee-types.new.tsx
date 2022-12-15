@@ -4,7 +4,7 @@ import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
 import { getSupabase } from "~/lib/supabase";
-import { EmployeeTypeForm } from "~/modules/Users";
+import { EmployeeTypeForm } from "~/modules/Users/EmployeeTypes";
 import { requirePermissions } from "~/services/auth";
 import {
   employeeTypeValidator,
@@ -14,8 +14,9 @@ import {
   upsertEmployeeType,
   upsertEmployeeTypePermissions,
 } from "~/services/users";
-import { requireAuthSession, setSessionFlash } from "~/services/session";
+import { requireAuthSession, flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { error, success } from "~/utils/result";
 
 export async function loader({ request }: LoaderArgs) {
   const { accessToken } = await requireAuthSession(request);
@@ -25,10 +26,7 @@ export async function loader({ request }: LoaderArgs) {
   if (features.error || features.data === null) {
     return redirect(
       "/app/users/employee-types",
-      await setSessionFlash(request, {
-        success: false,
-        message: "Failed to fetch features",
-      })
+      await flash(request, error(features.error, "Failed to get features"))
     );
   }
 
@@ -59,10 +57,10 @@ export async function action({ request }: ActionArgs) {
   if (jsonValidation.success === false) {
     return json(
       {},
-      await setSessionFlash(request, {
-        success: false,
-        message: "Failed to parse permissions",
-      })
+      await flash(
+        request,
+        error(jsonValidation.error, "Failed to parse permissions")
+      )
     );
   }
 
@@ -73,10 +71,10 @@ export async function action({ request }: ActionArgs) {
   if (insertEmployeeType.error) {
     return json(
       {},
-      await setSessionFlash(request, {
-        success: false,
-        message: insertEmployeeType.error.message,
-      })
+      await flash(
+        request,
+        error(insertEmployeeType.error, "Failed to insert employee type")
+      )
     );
   }
 
@@ -84,10 +82,10 @@ export async function action({ request }: ActionArgs) {
   if (!employeeTypeId) {
     return json(
       {},
-      await setSessionFlash(request, {
-        success: false,
-        message: "Failed to created employee type",
-      })
+      await flash(
+        request,
+        error(insertEmployeeType, "Failed to insert employee type")
+      )
     );
   }
   const insertEmployeeTypePermissions = await upsertEmployeeTypePermissions(
@@ -99,19 +97,19 @@ export async function action({ request }: ActionArgs) {
   if (insertEmployeeTypePermissions.error) {
     return json(
       {},
-      await setSessionFlash(request, {
-        success: false,
-        message: insertEmployeeTypePermissions.error.message,
-      })
+      await flash(
+        request,
+        error(
+          insertEmployeeTypePermissions.error,
+          "Failed to insert employee type permissions"
+        )
+      )
     );
   }
 
   return redirect(
     "/app/users/employee-types",
-    await setSessionFlash(request, {
-      success: true,
-      message: "Employee type updated",
-    })
+    await flash(request, success("Employee type created"))
   );
 }
 

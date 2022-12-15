@@ -11,10 +11,11 @@ import {
   commitAuthSession,
   destroyAuthSession,
   getAuthSession,
-  setSessionFlash,
+  flash,
 } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
 import type { FormActionData } from "~/types";
+import { error } from "~/utils/result";
 
 export async function loader({ request }: LoaderArgs) {
   const authSession = await getAuthSession(request);
@@ -30,13 +31,9 @@ export async function action({ request }: ActionArgs): FormActionData {
   const validation = await callbackValidator.validate(await request.formData());
 
   if (validation.error) {
-    return json(
-      {
-        success: false,
-        message: "Invalid request",
-      },
-      { status: 400 }
-    );
+    return json(error(validation.error, "Invalid callback form"), {
+      status: 400,
+    });
   }
 
   const { refreshToken } = validation.data;
@@ -48,15 +45,13 @@ export async function action({ request }: ActionArgs): FormActionData {
   if (!authSession) {
     return redirect(
       "/",
-      await setSessionFlash(request, {
-        success: false,
-        message: "Invalid token",
-      })
+      await flash(request, error(authSession, "Invalid refresh token"))
     );
   }
 
   // user has an account, skip creation and just commit the session
-  if ((await getUserByEmail(authSession.email))?.data) {
+  const user = await getUserByEmail(authSession.email);
+  if (user?.data) {
     return redirect("/reset-password", {
       headers: {
         "Set-Cookie": await commitAuthSession(request, {
@@ -67,10 +62,7 @@ export async function action({ request }: ActionArgs): FormActionData {
   } else {
     return redirect(
       "/",
-      await setSessionFlash(request, {
-        success: false,
-        message: "User not found",
-      })
+      await flash(request, error(user.error, "User not found"))
     );
   }
 }

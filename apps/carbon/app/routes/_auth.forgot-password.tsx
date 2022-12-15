@@ -21,6 +21,7 @@ import { forgotPasswordValidator, sendMagicLink } from "~/services/auth";
 import { getUserByEmail } from "~/services/users";
 import { assertIsPost } from "~/utils/http";
 import type { FormActionData, Result } from "~/types";
+import { error } from "~/utils/result";
 
 export const meta: MetaFunction = () => ({
   title: "Carbon | Forgot Password",
@@ -48,10 +49,9 @@ export async function action({ request }: ActionArgs): FormActionData {
     const authSession = await sendMagicLink(email);
 
     if (!authSession) {
-      return json(
-        { success: false, message: "Failed to send email" },
-        { status: 500 }
-      );
+      return json(error(authSession, "Failed to send magic link"), {
+        status: 500,
+      });
     }
   }
 

@@ -20,6 +20,30 @@ import { refreshAccessToken, verifyAuthSession } from "../auth/auth.server";
 import type { AuthSession } from "../auth/types";
 import type { Result } from "~/types";
 
+async function assertAuthSession(
+  request: Request,
+  { onFailRedirectTo }: { onFailRedirectTo?: string } = {}
+) {
+  const authSession = await getAuthSession(request);
+
+  // If there is no user session, Fly, You Fools! 🧙‍♂️
+  if (!authSession?.accessToken || !authSession?.refreshToken) {
+    throw redirect(
+      `${onFailRedirectTo || "/login"}?${makeRedirectToFromHere(request)}`,
+      {
+        headers: {
+          "Set-Cookie": await commitAuthSession(request, {
+            authSession: null,
+            flashErrorMessage: "No user session found", // TODO: handle this in UI
+          }),
+        },
+      }
+    );
+  }
+
+  return authSession;
+}
+
 const sessionStorage = createCookieSessionStorage({
   cookie: {
     name: "__authSession",
@@ -48,18 +72,6 @@ export async function createAuthSession({
       }),
     },
   });
-}
-
-async function getSession(request: Request) {
-  const cookie = request.headers.get("Cookie");
-  return sessionStorage.getSession(cookie);
-}
-
-export async function getAuthSession(
-  request: Request
-): Promise<AuthSession | null> {
-  const session = await getSession(request);
-  return session.get(SESSION_KEY);
 }
 
 export async function commitAuthSession(
@@ -107,43 +119,49 @@ export async function destroyAuthSession(
       );
 }
 
-async function assertAuthSession(
-  request: Request,
-  { onFailRedirectTo }: { onFailRedirectTo?: string } = {}
-) {
-  const authSession = await getAuthSession(request);
-
-  // If there is no user session, Fly, You Fools! 🧙‍♂️
-  if (!authSession?.accessToken || !authSession?.refreshToken) {
-    throw redirect(
-      `${onFailRedirectTo || "/login"}?${makeRedirectToFromHere(request)}`,
-      {
-        headers: {
-          "Set-Cookie": await commitAuthSession(request, {
-            authSession: null,
-            flashErrorMessage: "No user session found", // TODO: handle this in UI
-          }),
-        },
-      }
-    );
+export async function flash(request: Request, result: Result) {
+  const session = await getSession(request);
+  if (typeof result.success === "boolean") {
+    session.flash("success", result.success);
+    session.flash("message", result.message);
   }
 
-  return authSession;
+  return {
+    headers: { "Set-Cookie": await sessionStorage.commitSession(session) },
+  };
 }
 
-/**
- * Assert auth session is present and verified from supabase auth api
- *
- * If used in loader (GET method)
- * - Refresh tokens if session is expired
- * - Return auth session if not expired
- * - Destroy session if refresh token is expired
- *
- * If used in action (POST method)
- * - Try to refresh session if expired and return this new session (it's your job to handle session commit)
- * - Return auth session if not expired
- * - Destroy session if refresh token is expired
- */
+export async function getAuthSession(
+  request: Request
+): Promise<AuthSession | null> {
+  const session = await getSession(request);
+  return session.get(SESSION_KEY);
+}
+
+export async function getSessionFlash(request: Request) {
+  const session = await getSession(request);
+
+  const result: Result = {
+    success: session.get("success") === true,
+    message: session.get("message"),
+  };
+
+  if (!result.message) return null;
+
+  const headers = { "Set-Cookie": await sessionStorage.commitSession(session) };
+
+  return { result, headers };
+}
+
+async function getSession(request: Request) {
+  const cookie = request.headers.get("Cookie");
+  return sessionStorage.getSession(cookie);
+}
+
+function isExpiringSoon(expiresAt: number) {
+  return (expiresAt - REFRESH_ACCESS_TOKEN_THRESHOLD) * 1000 < Date.now();
+}
+
 export async function requireAuthSession(
   request: Request,
   {
@@ -168,10 +186,6 @@ export async function requireAuthSession(
 
   // finally, we have a valid session, let's return it
   return authSession;
-}
-
-function isExpiringSoon(expiresAt: number) {
-  return (expiresAt - REFRESH_ACCESS_TOKEN_THRESHOLD) * 1000 < Date.now();
 }
 
 export async function refreshAuthSession(
@@ -215,31 +229,4 @@ export async function refreshAuthSession(
 
   // we can't redirect because we are in an action, so, deal with it and don't forget to handle session commit 👮‍♀️
   return refreshedAuthSession;
-}
-
-export async function getSessionFlash(request: Request) {
-  const session = await getSession(request);
-
-  const result: Result = {
-    success: session.get("success") === true,
-    message: session.get("message"),
-  };
-
-  if (!result.message) return null;
-
-  const headers = { "Set-Cookie": await sessionStorage.commitSession(session) };
-
-  return { result, headers };
-}
-
-export async function setSessionFlash(request: Request, result: Result) {
-  const session = await getSession(request);
-  if (typeof result.success === "boolean") {
-    session.flash("success", result.success);
-    session.flash("message", result.message);
-  }
-
-  return {
-    headers: { "Set-Cookie": await sessionStorage.commitSession(session) },
-  };
 }

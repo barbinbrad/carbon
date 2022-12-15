@@ -11,8 +11,9 @@ import type {
   User,
 } from "~/modules/Users/types";
 import { deleteAuthAccount, sendInviteByEmail } from "~/services/auth";
-import { requireAuthSession, setSessionFlash } from "~/services/session";
+import { requireAuthSession, flash } from "~/services/session";
 import type { Result } from "~/types";
+import { error, success } from "~/utils/result";
 
 export async function createEmployeeAccount(
   client: SupabaseClient<Database>,
@@ -32,21 +33,17 @@ export async function createEmployeeAccount(
     client,
     employeeType
   );
-  if (employeeTypePermissions.error) {
-    return {
-      success: false,
-      message: employeeTypePermissions.error.message,
-    };
-  }
+  if (employeeTypePermissions.error)
+    return error(
+      employeeTypePermissions.error,
+      "Failed to get employee type permissions"
+    );
 
   // TODO: we should only send this after we've done the other stuff
   const invitation = await sendInviteByEmail(email);
 
   if (invitation.error)
-    return {
-      success: false,
-      message: invitation.error.message,
-    };
+    return error(invitation.error.message, "Failed to send invitation email");
 
   const userId = invitation.data.user.id;
 
@@ -54,10 +51,7 @@ export async function createEmployeeAccount(
   const claimsUpdate = await setUserClaims(userId, claims);
   if (claimsUpdate.error) {
     await deleteAuthAccount(userId);
-    return {
-      success: false,
-      message: claimsUpdate.error.message,
-    };
+    return error(claimsUpdate.error, "Failed to set user claims");
   }
 
   const insertUser = await createUser(client, {
@@ -67,36 +61,21 @@ export async function createEmployeeAccount(
     lastName,
   });
 
-  if (insertUser.error) {
-    return {
-      success: false,
-      message: insertUser.error.message,
-    };
-  }
+  if (insertUser.error)
+    return error(insertUser.error, "Failed to create a new user");
 
-  if (!insertUser.data) {
-    return {
-      success: false,
-      message: "No data returned from createUser",
-    };
-  }
+  if (!insertUser.data)
+    return error(insertUser, "No data returned from create user");
 
   const createEmployee = await insertEmployee(client, {
     id: insertUser.data[0].id,
     employeeTypeId: employeeType,
   });
 
-  if (createEmployee.error) {
-    return {
-      success: false,
-      message: createEmployee.error.message,
-    };
-  }
+  if (createEmployee.error)
+    return error(createEmployee.error, "Failed to create an employee");
 
-  return {
-    success: true,
-    message: "Employee account created",
-  };
+  return success("Employee account created");
 }
 
 async function createUser(
@@ -224,9 +203,13 @@ export async function getPermissions(
 ) {
   const { userId } = await requireAuthSession(request);
 
-  let permissions: Record<string, Permission> | null = JSON.parse(
-    (await redis.get(getPermissionCacheKey(userId))) || "null"
-  );
+  let permissions: Record<string, Permission> | null = null;
+
+  try {
+    permissions = JSON.parse(
+      (await redis.get(getPermissionCacheKey(userId))) || "null"
+    );
+  } catch {}
 
   // if we don't have permissions from redis, get them from the database
   if (!permissions) {
@@ -234,10 +217,7 @@ export async function getPermissions(
     if (claims.error || claims.data === null) {
       throw redirect(
         "/app",
-        await setSessionFlash(request, {
-          success: false,
-          message: "Failed to parse claims",
-        })
+        await flash(request, error(claims.error, "Failed to get claims"))
       );
     }
     // convert claims to permissions
@@ -249,10 +229,7 @@ export async function getPermissions(
     if (!permissions) {
       throw redirect(
         "/app",
-        await setSessionFlash(request, {
-          success: false,
-          message: "Failed to parse claims",
-        })
+        await flash(request, error(claims, "Failed to parse claims"))
       );
     }
   }
@@ -270,10 +247,7 @@ export async function getUser(
   if (user?.error || user?.data === null) {
     throw redirect(
       "/app",
-      await setSessionFlash(request, {
-        success: false,
-        message: "Failed to get user",
-      })
+      await flash(request, error(user.error, "Failed to get user"))
     );
   }
 
@@ -466,12 +440,8 @@ export async function updateEmployee(
     .from("employee")
     .upsert([{ id, employeeTypeId: employeeType }]);
 
-  if (updateEmployeeEmployeeType.error) {
-    return {
-      success: false,
-      message: "Failed to update employee type",
-    };
-  }
+  if (updateEmployeeEmployeeType.error)
+    return error(updateEmployeeEmployeeType.error, "Failed to update employee");
 
   return updatePermissions(client, { id, permissions });
 }
@@ -483,12 +453,8 @@ export async function updatePermissions(
   if (await client.rpc("is_claims_admin")) {
     const getClaims = await getClaimsById(client, id);
 
-    if (getClaims.error) {
-      return {
-        success: false,
-        message: "Failed parse claims",
-      };
-    }
+    if (getClaims.error) return error(getClaims.error, "Failed to get claims");
+
     const currentClaims =
       typeof getClaims.data !== "object" ||
       Array.isArray(getClaims.data) ||
@@ -508,24 +474,14 @@ export async function updatePermissions(
       ...currentClaims,
       ...newClaims,
     });
-    if (claimsUpdate.error) {
-      return {
-        success: false,
-        message: "Failed to update permissions",
-      };
-    }
+    if (claimsUpdate.error)
+      return error(claimsUpdate.error, "Failed to update claims");
 
     await redis.del(getPermissionCacheKey(id));
 
-    return {
-      success: true,
-      message: "Permissions updated",
-    };
+    return success("Permissions updated");
   } else {
-    return {
-      success: false,
-      message: "Unauthorized",
-    };
+    return error(null, "You do not have permission to update permissions");
   }
 }
 

@@ -108,7 +108,7 @@ export function getPaginationParams(params: URLSearchParams): {
   limit: number;
   offset: number;
 } {
-  const limit = parseNumberFromUrlParam(params, "limit", 10);
+  const limit = parseNumberFromUrlParam(params, "limit", 15);
   const offset = parseNumberFromUrlParam(params, "offset", 0);
 
   return { limit, offset };

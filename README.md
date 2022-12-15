@@ -86,7 +86,7 @@ Finally, start the apps and packages:
 yarn dev         # yarn dev in all apps & packages
 ```
 
-To kill the database containers, you can run, but fair warning that this will delete the database:
+To kill the database containers in a non-recoverable way, you can run:
 
 ```bash
 $ yarn db:kill   # stop and delete all database containers

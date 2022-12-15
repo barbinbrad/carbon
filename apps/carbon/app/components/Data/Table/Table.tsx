@@ -1,34 +1,36 @@
-import { forwardRef, Fragment, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { forwardRef } from "react";
 import { useColor } from "@carbon/react";
 import type { ThemeTypings } from "@chakra-ui/react";
 import { Checkbox } from "@chakra-ui/react";
 import {
   Box,
-  Flex,
   Table as ChakraTable,
   Thead,
   Tbody,
   Tr,
   Th,
   Td,
-  chakra,
 } from "@chakra-ui/react";
-import type { Column } from "react-table";
-import { useTable, useSortBy, useRowSelect } from "react-table";
+import type { ColumnDef, RowSelectionState } from "@tanstack/react-table";
+import {
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 
 import { AiFillCaretUp, AiFillCaretDown } from "react-icons/ai";
-import { Pagination } from "./components/Pagination";
-import { useUrlParams } from "~/hooks";
-import { parseNumberFromUrlParam } from "~/utils/http";
+import { Pagination, usePagination } from "./components";
 
 interface TableProps<T extends object> {
-  columns: Column<T>[];
+  columns: ColumnDef<T>[];
   data: T[];
   count: number;
   colorScheme?: ThemeTypings["colorSchemes"];
   selectableRows?: boolean;
+  shouldPaginate?: boolean;
   onRowClick?: (row: T) => void;
-  onSelectedRowsChange?: (rows: T[]) => void;
+  onSelectedRowsChange?: (selectedRows: T[]) => void;
 }
 
 const Table = <T extends object>({
@@ -36,120 +38,52 @@ const Table = <T extends object>({
   columns,
   count,
   colorScheme = "blackAlpha",
+  shouldPaginate = true,
   selectableRows,
   onRowClick,
   onSelectedRowsChange,
 }: TableProps<T>) => {
-  const {
-    headerGroups,
-    rows,
-    selectedFlatRows,
-    getTableProps,
-    getTableBodyProps,
-    prepareRow,
-  } = useTable(
-    {
-      columns,
-      data,
+  const pagination = usePagination(count);
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+
+  if (selectableRows) columns.unshift(getSelectableColumn<T>());
+  const table = useReactTable({
+    data,
+    columns,
+    state: {
+      rowSelection,
     },
-    useSortBy,
-    useRowSelect,
-    (hooks) => {
-      selectableRows &&
-        hooks.visibleColumns.push((columns) => [
-          {
-            id: "selection",
-            Header: ({ getToggleAllRowsSelectedProps }) => (
-              <div>
-                <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
-              </div>
-            ),
-            // @ts-ignore
-            Cell: ({ row }) => (
-              <div>
-                <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
-              </div>
-            ),
-          },
-          ...columns,
-        ]);
-    }
-  );
-
-  const rowBackground = useColor("gray.50");
-
-  const [params, setParams] = useUrlParams();
-  const limit = parseNumberFromUrlParam(params, "limit", 10);
-  const offset = parseNumberFromUrlParam(params, "offset", 0);
-
-  const pageIndex = Math.floor(offset / limit) + 1;
-  const pageCount = Math.ceil(count / limit);
-  const canPreviousPage = pageIndex > 1;
-  const canNextPage = pageIndex < Math.ceil(count / limit);
-
-  const gotoPage = (page: number) => {
-    setParams({
-      offset: (page - 1) * limit,
-      limit,
-    });
-  };
-
-  const previousPage = () => {
-    gotoPage(pageIndex - 1);
-  };
-
-  const nextPage = () => {
-    gotoPage(pageIndex + 1);
-  };
-
-  const setPageSize = (pageSize: number) => {
-    setParams({
-      offset: 0,
-      limit: pageSize,
-    });
-  };
+    onRowSelectionChange: setRowSelection,
+    getCoreRowModel: getCoreRowModel(),
+  });
 
   useEffect(() => {
-    if (selectableRows && typeof onSelectedRowsChange === "function") {
-      onSelectedRowsChange(selectedFlatRows.map((row) => row.original));
+    if (typeof onSelectedRowsChange === "function") {
+      onSelectedRowsChange(
+        table.getSelectedRowModel().flatRows.map((row) => row.original)
+      );
     }
-  }, [selectableRows, selectedFlatRows, onSelectedRowsChange]);
+  }, [rowSelection, table, onSelectedRowsChange]);
+
+  const rows = table.getRowModel().rows;
+  const rowBackground = useColor("gray.50");
 
   return (
     <Box w="full">
-      <ChakraTable {...getTableProps()}>
+      <ChakraTable>
         <Thead>
-          {headerGroups.map((headerGroup, headerIdx) => (
-            <Tr
-              {...headerGroup.getHeaderGroupProps()}
-              key={`${headerGroup.id}-${headerIdx}`}
-            >
-              {headerGroup.headers.map((column) => (
-                <Fragment key={column.id}>
-                  <Th
-                    {...column.getHeaderProps(column.getSortByToggleProps())}
-                    px={4}
-                  >
-                    <Flex
-                      justify="flex-start"
-                      align="center"
-                      fontSize="xs"
-                      color="gray.500"
-                    >
-                      {column.render("Header")}
-                      <chakra.span pl="4">
-                        {column.isSorted ? (
-                          column.isSortedDesc ? (
-                            <AiFillCaretDown aria-label="sorted descending" />
-                          ) : (
-                            <AiFillCaretUp aria-label="sorted ascending" />
-                          )
-                        ) : null}
-                      </chakra.span>
-                    </Flex>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <Tr key={headerGroup.id}>
+              {headerGroup.headers.map((header) => {
+                return (
+                  <Th key={header.id} colSpan={header.colSpan} px={4} py={3}>
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext()
+                    )}
                   </Th>
-                </Fragment>
-              ))}
+                );
+              })}
             </Tr>
           ))}
         </Thead>
@@ -160,13 +94,11 @@ const Table = <T extends object>({
             </Empty>
           </Box>
         ) : ( */}
-        <Tbody {...getTableBodyProps()}>
-          {rows.map((row, rowIndex) => {
-            prepareRow(row);
+        <Tbody>
+          {rows.map((row) => {
             return (
               <Tr
-                {...row.getRowProps()}
-                key={`${row.id}-${rowIndex}`}
+                key={row.id}
                 onClick={() => {
                   if (typeof onRowClick === "function") {
                     onRowClick(row.original);
@@ -178,34 +110,25 @@ const Table = <T extends object>({
                   background: rowBackground,
                 }}
               >
-                {row.cells.map((cell, colIndex) => (
-                  <Fragment key={`${cell.column.id}-${colIndex}`}>
-                    <Td fontSize="sm" px={4} py={3} {...cell.getCellProps()}>
-                      {cell.render("Cell")}
+                {row.getVisibleCells().map((cell) => {
+                  return (
+                    <Td key={cell.id} fontSize="sm" px={4} py={2}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
                     </Td>
-                  </Fragment>
-                ))}
+                  );
+                })}
               </Tr>
             );
           })}
         </Tbody>
         {/* )} */}
       </ChakraTable>
-      {rows.length > 0 && (
-        <Pagination
-          count={count}
-          offset={offset}
-          pageIndex={pageIndex}
-          pageSize={limit}
-          canPreviousPage={canPreviousPage}
-          canNextPage={canNextPage}
-          pageCount={pageCount}
-          gotoPage={gotoPage}
-          nextPage={nextPage}
-          previousPage={previousPage}
-          setPageSize={setPageSize}
-          colorScheme={colorScheme}
-        />
+
+      {rows.length > 0 && shouldPaginate && (
+        <Pagination {...pagination} colorScheme={colorScheme} />
       )}
     </Box>
   );
@@ -234,5 +157,29 @@ const IndeterminateCheckbox = forwardRef<
 });
 
 IndeterminateCheckbox.displayName = "IndeterminateCheckbox";
+
+function getSelectableColumn<T>(): ColumnDef<T> {
+  return {
+    id: "select",
+    header: ({ table }) => (
+      <IndeterminateCheckbox
+        {...{
+          checked: table.getIsAllRowsSelected(),
+          indeterminate: table.getIsSomeRowsSelected(),
+          onChange: table.getToggleAllRowsSelectedHandler(),
+        }}
+      />
+    ),
+    cell: ({ row }) => (
+      <IndeterminateCheckbox
+        {...{
+          checked: row.getIsSelected(),
+          indeterminate: row.getIsSomeSelected(),
+          onChange: row.getToggleSelectedHandler(),
+        }}
+      />
+    ),
+  };
+}
 
 export default Table;

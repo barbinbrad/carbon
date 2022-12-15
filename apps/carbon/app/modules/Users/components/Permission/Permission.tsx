@@ -1,6 +1,6 @@
 import { Box, Checkbox, Stack } from "@chakra-ui/react";
 import { capitalize } from "~/utils/string";
-import type { Permission } from "../types";
+import type { Permission } from "../../types";
 
 type PermissionProps = {
   module: string;

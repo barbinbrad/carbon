@@ -16,10 +16,14 @@ const Topbar = () => {
       display="grid"
       gap={4}
       gridTemplateColumns="auto 1fr auto 1fr"
+      // backdropFilter="auto"
+      // backdropBlur="8px"
       bg={useColor("white")}
       borderBottom={1}
       borderBottomColor={borderColor}
       borderBottomStyle="solid"
+      position="sticky"
+      top={0}
       zIndex={1}
     >
       <Logo />

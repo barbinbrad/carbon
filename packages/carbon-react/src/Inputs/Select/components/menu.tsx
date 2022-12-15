@@ -1,4 +1,3 @@
-import { useColor } from "@carbon/react";
 import type { IconProps, SystemStyleObject } from "@chakra-ui/react";
 import {
   Box,
@@ -17,6 +16,7 @@ import type {
   NoticeProps,
   OptionProps,
 } from "react-select";
+import { useColor } from "../../../hooks";
 import type { SizeProps, ThemeObject } from "../types";
 
 const Menu = <Option, IsMulti extends boolean, Group extends GroupBase<Option>>(

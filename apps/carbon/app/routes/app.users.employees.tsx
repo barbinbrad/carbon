@@ -8,7 +8,7 @@ import { BsCheckSquare } from "react-icons/bs";
 import { IoMdAdd } from "react-icons/io";
 import { DebouncedInput } from "~/components/Search";
 import { usePermissions, useUrlParams } from "~/hooks";
-import { EmployeesTable } from "~/modules/Users";
+import { EmployeesTable } from "~/modules/Users/Employees";
 import type { User } from "~/modules/Users/types";
 import { requirePermissions } from "~/services/auth";
 import { getEmployees, getEmployeeTypes } from "~/services/users";

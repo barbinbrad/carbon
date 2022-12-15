@@ -23,6 +23,7 @@ import {
 } from "~/services/auth";
 import type { FormActionData, Result } from "~/types";
 import { assertIsPost } from "~/utils/http";
+import { error } from "~/utils/result";
 
 export const meta: MetaFunction = () => ({
   title: "Carbon | Login",
@@ -50,10 +51,9 @@ export async function action({ request }: ActionArgs): FormActionData {
   const authSession = await signInWithEmail(email, password);
 
   if (!authSession) {
-    return json(
-      { success: false, message: "Invalid email/password" },
-      { status: 400 }
-    );
+    return json(error(authSession, "Invalid email/password"), {
+      status: 400,
+    });
   }
 
   return createAuthSession({

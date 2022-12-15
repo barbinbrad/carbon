@@ -13,7 +13,8 @@ import { json, redirect } from "@remix-run/node";
 import { Form, useLoaderData, useNavigate, useParams } from "@remix-run/react";
 import { requirePermissions } from "~/services/auth";
 import { deleteEmployeeType, getEmployeeType } from "~/services/users";
-import { setSessionFlash } from "~/services/session";
+import { flash } from "~/services/session";
+import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderArgs) {
   const { client } = await requirePermissions(request, {
@@ -33,10 +34,7 @@ export async function action({ request, params }: ActionArgs) {
   if (!employeeTypeId) {
     return redirect(
       "/app/users/employee-types",
-      await setSessionFlash(request, {
-        success: false,
-        message: "Employee type ID is required",
-      })
+      await flash(request, error(params, "Failed to get an employee type id"))
     );
   }
 
@@ -44,10 +42,10 @@ export async function action({ request, params }: ActionArgs) {
   if (deleteType.error) {
     return redirect(
       "/app/users/employee-types",
-      await setSessionFlash(request, {
-        success: false,
-        message: deleteType.error.message,
-      })
+      await flash(
+        request,
+        error(deleteType.error, "Failed to delete employee type")
+      )
     );
   }
 
@@ -55,10 +53,7 @@ export async function action({ request, params }: ActionArgs) {
 
   return redirect(
     "/app/users/employee-types",
-    await setSessionFlash(request, {
-      success: true,
-      message: "Successfully deleted employee type",
-    })
+    await flash(request, success("Successfully deleted employee type"))
   );
 }
 

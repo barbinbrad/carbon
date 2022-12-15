@@ -3,9 +3,9 @@ import { json } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
-import { EmployeePermissionsForm } from "~/modules/Users";
+import { EmployeePermissionsForm } from "~/modules/Users/Employees";
 import { requirePermissions } from "~/services/auth";
-import { setSessionFlash } from "~/services/session";
+import { flash } from "~/services/session";
 import {
   employeePermissionsValidator,
   employeeValidator,
@@ -15,6 +15,7 @@ import {
   updateEmployee,
 } from "~/services/users";
 import { assertIsPost } from "~/utils/http";
+import { error } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderArgs) {
   const { client } = await requirePermissions(request, {
@@ -32,10 +33,13 @@ export async function loader({ request, params }: LoaderArgs) {
   if (claims.error || employee.error || claims.data === null) {
     redirect(
       "/app/users/employees",
-      await setSessionFlash(request, {
-        success: false,
-        message: "Failed to fetch employee data",
-      })
+      await flash(
+        request,
+        error(
+          { claims: claims.error, employee: employee.error },
+          "Failed to load employee"
+        )
+      )
     );
   }
 
@@ -43,10 +47,7 @@ export async function loader({ request, params }: LoaderArgs) {
   if (permissions === null) {
     redirect(
       "/app/users/employees",
-      await setSessionFlash(request, {
-        success: false,
-        message: "Failed to parse permissions",
-      })
+      await flash(request, error(claims.data, "Failed to parse claims"))
     );
   }
 
@@ -77,10 +78,7 @@ export async function action({ request }: ActionArgs) {
   ) {
     return json(
       {},
-      await setSessionFlash(request, {
-        success: false,
-        message: "Failed to parse permissions",
-      })
+      await flash(request, error(permissions, "Failed to parse permissions"))
     );
   }
 
@@ -90,10 +88,7 @@ export async function action({ request }: ActionArgs) {
     permissions,
   });
 
-  return redirect(
-    "/app/users/employees",
-    await setSessionFlash(request, result)
-  );
+  return redirect("/app/users/employees", await flash(request, result));
 }
 
 export default function UsersEmployeeRoute() {

@@ -3,7 +3,7 @@ import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
-import { EmployeeTypeForm } from "~/modules/Users";
+import { EmployeeTypeForm } from "~/modules/Users/EmployeeTypes";
 import { requirePermissions } from "~/services/auth";
 import {
   employeeTypeValidator,
@@ -14,8 +14,9 @@ import {
   upsertEmployeeType,
   upsertEmployeeTypePermissions,
 } from "~/services/users";
-import { setSessionFlash } from "~/services/session";
+import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderArgs) {
   const { client } = await requirePermissions(request, {
@@ -64,10 +65,10 @@ export async function action({ request }: ActionArgs) {
   if (jsonValidation.success === false) {
     return json(
       {},
-      await setSessionFlash(request, {
-        success: false,
-        message: "Failed to parse permissions",
-      })
+      await flash(
+        request,
+        error(jsonValidation.error, "Failed to parse permissions")
+      )
     );
   }
 
@@ -80,10 +81,10 @@ export async function action({ request }: ActionArgs) {
   if (updateEmployeeType.error) {
     return json(
       {},
-      await setSessionFlash(request, {
-        success: false,
-        message: updateEmployeeType.error.message,
-      })
+      await flash(
+        request,
+        error(updateEmployeeType.error, "Failed to update employee type")
+      )
     );
   }
 
@@ -96,19 +97,19 @@ export async function action({ request }: ActionArgs) {
   if (updateEmployeeTypePermissions.error) {
     return json(
       {},
-      await setSessionFlash(request, {
-        success: false,
-        message: updateEmployeeTypePermissions.error.message,
-      })
+      await flash(
+        request,
+        error(
+          updateEmployeeTypePermissions.error,
+          "Failed to update employee type permissions"
+        )
+      )
     );
   }
 
   return redirect(
     "/app/users/employee-types",
-    await setSessionFlash(request, {
-      success: true,
-      message: "Updated employee type",
-    })
+    await flash(request, success("Updated employee type"))
   );
 }
 

@@ -18,8 +18,8 @@ import { ValidatedForm } from "remix-validated-form";
 import { Hidden, Select, Submit } from "~/components/Form";
 import { employeeValidator } from "~/services/users";
 import { mapRowsToOptions } from "~/utils/form";
-import PermissionCheckboxes from "../Permission";
-import type { EmployeeType, Permission } from "../types";
+import PermissionCheckboxes from "../../components/Permission";
+import type { EmployeeType, Permission } from "../../types";
 
 type EmployeePermissionsFormProps = {
   name: string;

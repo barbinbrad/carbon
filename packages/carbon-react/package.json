@@ -28,8 +28,7 @@
     "react-colorful": "^5.6.1",
     "react-hook-form": "^7.37.0",
     "react-icons": "^4.6.0",
-    "react-select": "^5.5.1",
-    "react-table": "^7.8.0"
+    "react-select": "^5.5.1"
   },
   "devDependencies": {
     "@carbon/jest": "*",
@@ -38,7 +37,6 @@
     "@types/jest": "^26.0.22",
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
-    "@types/react-table": "7.7.12",
     "eslint": "^7.32.0",
     "eslint-config-carbon": "*",
     "jest": "^26.6.3",

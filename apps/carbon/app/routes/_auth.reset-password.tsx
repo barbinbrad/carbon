@@ -16,7 +16,8 @@ import { ValidatedForm, validationError } from "remix-validated-form";
 import { Password, Submit } from "~/components/Form";
 import { getSupabaseAdmin } from "~/lib/supabase";
 import { resetPasswordValidator } from "~/services/auth/auth.form";
-import { requireAuthSession, setSessionFlash } from "~/services/session";
+import { requireAuthSession, flash } from "~/services/session";
+import { error, success } from "~/utils/result";
 import { assertIsPost } from "~/utils/http";
 
 export async function loader({ request }: LoaderArgs) {
@@ -37,27 +38,24 @@ export async function action({ request }: ActionArgs) {
   const { password } = validation.data;
 
   const { userId } = await requireAuthSession(request, { verify: true });
-  const { error } = await getSupabaseAdmin().auth.admin.updateUserById(userId, {
-    password,
-  });
+  const updatePassword = await getSupabaseAdmin().auth.admin.updateUserById(
+    userId,
+    {
+      password,
+    }
+  );
 
-  if (error) {
+  if (updatePassword.error) {
     return json(
       {},
-      await setSessionFlash(request, {
-        success: false,
-        message: "Failed to reset password",
-      })
+      await flash(
+        request,
+        error(updatePassword.error, "Failed to update password")
+      )
     );
   }
 
-  return redirect(
-    "/app",
-    await setSessionFlash(request, {
-      success: true,
-      message: "Password updated",
-    })
-  );
+  return redirect("/app", await flash(request, success("Password updated")));
 }
 
 export default function ResetPasswordRoute() {

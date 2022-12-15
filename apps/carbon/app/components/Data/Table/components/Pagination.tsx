@@ -37,7 +37,7 @@ export function Pagination({
   previousPage,
   setPageSize,
 }: PaginationProps) {
-  const pageSizes = [10, 25, 50, 100];
+  const pageSizes = [15, 25, 50, 100];
   const pageSizeLabel = "results per page";
   if (!pageSizes.includes(pageSize)) {
     pageSizes.push(pageSize);

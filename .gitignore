@@ -19,4 +19,3 @@ public/dist
 .env.production.local
 !packages/apps/carbon/.env
 !packages/carbon-database/.env
-!packages/carbon-redis/.env

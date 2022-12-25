@@ -28,10 +28,9 @@ The monorepo follows the Turborepo covention of grouping packages into one of tw
 
 ### `/apps`
 
-| Package Name | Description                      |
-| ------------ | -------------------------------- |
-| `carbon`     | ERP Application                  |
-| `oxygen`     | Background Worker for Async Jobs |
+| Package Name | Description     |
+| ------------ | --------------- |
+| `carbon`     | ERP Application |
 
 ### `/packages`
 

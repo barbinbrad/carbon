@@ -55,7 +55,7 @@ export default function useUserSelect(props: UserSelectProps) {
   useEffect(() => {
     const params: Record<string, string> = {};
     const query = new URLSearchParams(params).toString();
-    groupsFetcher.load(`/resource/groups?${query}`);
+    groupsFetcher.load(`/resource/users/groups?${query}`);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

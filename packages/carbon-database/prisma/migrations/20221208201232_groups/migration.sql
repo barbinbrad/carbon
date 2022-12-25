@@ -6,8 +6,7 @@ CREATE TABLE "group" (
   "createdAt" TIMESTAMP(3) DEFAULT now() NOT NULL,
   "updatedAt" TIMESTAMP(3),
   
-  CONSTRAINT "group_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "uq_group_name" UNIQUE ("name")
+  CONSTRAINT "group_pkey" PRIMARY KEY ("id")
 );
 
 CREATE TABLE "membership" (
@@ -140,38 +139,6 @@ CREATE VIEW "group_member" AS
     "membership" gm 
     INNER JOIN "group" g ON g.id = gm."groupId"
     LEFT OUTER JOIN "user" u ON u.id = gm."memberUserId";
-
--- CREATE VIEW "group_members" AS
---   SELECT 
---     root_g."groupId", 
---     root_g."name",
---     root_g."memberGroupId",
---     COALESCE(jsonb_agg(root_users.user) FILTER (WHERE root_users.user IS NOT NULL), '[]') as users
---   FROM 
---     "group_member" root_g
---   LEFT JOIN "group_member" root_users
---     ON root_users."groupId" = root_g."memberUserId"
---   WHERE root_g."isIdentityGroup" = false
---   GROUP BY 
---     root_g."groupId",
---     root_g."name",
---     root_g."memberGroupId";
-
--- CREATE VIEW "groups_view_linear" AS
---   SELECT 
---     root_g."groupId", 
---     root_g.name, 
---     root_g.users, 
---     coalesce(jsonb_agg(to_jsonb(member_g)) filter (where member_g."groupId" is not null) , '[]') as children 
---   FROM 
---     "group_members" root_g
---   LEFT JOIN 
---     "group_members" member_g 
---     ON root_g."memberGroupId" = member_g."groupId"
---   GROUP BY
---     root_g."groupId", 
---     root_g.name, 
---     root_g.users;
 
 CREATE RECURSIVE VIEW groups_recursive 
 (

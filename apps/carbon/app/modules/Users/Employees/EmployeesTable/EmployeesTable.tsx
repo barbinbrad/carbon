@@ -1,13 +1,19 @@
 import { ActionMenu } from "@carbon/react";
-import { Flex, MenuItem, VisuallyHidden } from "@chakra-ui/react";
+import {
+  Flex,
+  MenuItem,
+  useDisclosure,
+  VisuallyHidden,
+} from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
-import { memo, useMemo } from "react";
+import { memo, useMemo, useState } from "react";
 import { BsPencilSquare } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { Table } from "~/components/Data";
 import { usePermissions } from "~/hooks";
 import type { Employee } from "~/modules/Users/types";
+import { BulkEditPermissionsForm } from "~/modules/Users/BulkEditPermissions";
 
 type EmployeesTableProps = {
   data: Employee[];
@@ -24,6 +30,8 @@ const EmployeesTable = memo(
   ({ data, count, withSelectableRows = false }: EmployeesTableProps) => {
     const navigate = useNavigate();
     const permissions = usePermissions();
+    const bulkEditDrawer = useDisclosure();
+    const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
 
     const rows = useMemo(
       () =>
@@ -109,26 +117,43 @@ const EmployeesTable = memo(
       return [
         {
           label: "Bulk Edit Permissions",
-          onClick: (selected: typeof rows) => {
-            console.log(selected);
-          },
           disabled: !permissions.can("update", "users"),
+          onClick: (selected: typeof rows) => {
+            setSelectedUserIds(
+              selected.reduce<string[]>((acc, row) => {
+                if (row.user && !Array.isArray(row.user)) {
+                  acc.push(row.user.id);
+                }
+                return acc;
+              }, [])
+            );
+            bulkEditDrawer.onOpen();
+          },
         },
       ];
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
-      <Table<typeof rows[number]>
-        actions={actions}
-        count={count}
-        columns={columns}
-        data={rows}
-        defaultColumnVisibility={defaultColumnVisibility}
-        withColumnOrdering
-        withPagination
-        withSelectableRows={withSelectableRows}
-      />
+      <>
+        <Table<typeof rows[number]>
+          actions={actions}
+          count={count}
+          columns={columns}
+          data={rows}
+          defaultColumnVisibility={defaultColumnVisibility}
+          withColumnOrdering
+          withPagination
+          withSelectableRows={withSelectableRows}
+        />
+        {bulkEditDrawer.isOpen && (
+          <BulkEditPermissionsForm
+            userIds={selectedUserIds}
+            isOpen={bulkEditDrawer.isOpen}
+            onClose={bulkEditDrawer.onClose}
+          />
+        )}
+      </>
     );
   }
 );

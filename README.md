@@ -28,10 +28,10 @@ The monorepo follows the Turborepo covention of grouping packages into one of tw
 
 ### `/apps`
 
-| Package Name | Description     |
-| ------------ | --------------- |
-| `carbon`     | ERP Application |
-| `docs`       | Documentation   |
+| Package Name | Description                      |
+| ------------ | -------------------------------- |
+| `carbon`     | ERP Application                  |
+| `oxygen`     | Background Worker for Async Jobs |
 
 ### `/packages`
 
@@ -53,8 +53,9 @@ The monorepo follows the Turborepo covention of grouping packages into one of tw
 - [Supabase](https://supabase.com/)
 - [Postgres](https://postgresql.org/)
 - [Redis](https://redis.io)
-- [Turborepo](https://turbo.build)
+- [BullMQ](https://docs.bullmq.io)
 - [Prisma](https://prisma.io/)
+- [Turborepo](https://turbo.build)
 
 ## Local Development
 

@@ -7,6 +7,7 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerOverlay,
+  FormLabel,
   HStack,
   Text,
   VStack,
@@ -80,9 +81,7 @@ const EmployeePermissionsForm = ({
                 options={employeeTypeOptions}
                 placeholder="Select Employee Type"
               />
-              <Text fontSize="md" fontWeight="medium">
-                Permissions
-              </Text>
+              <FormLabel>Permissions</FormLabel>
               {Object.entries(permissions)
                 .sort((a, b) => a[0].localeCompare(b[0]))
                 .map(([module, data], index) => (

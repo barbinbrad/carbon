@@ -7,7 +7,7 @@ import { EmployeePermissionsForm } from "~/modules/Users/Employees";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import {
-  employeePermissionsValidator,
+  userPermissionsValidator,
   employeeValidator,
   getClaimsById,
   getEmployeeById,
@@ -73,7 +73,7 @@ export async function action({ request }: ActionArgs) {
   const permissions = JSON.parse(data);
   if (
     !Object.values(permissions).every(
-      (permission) => employeePermissionsValidator.safeParse(permission).success
+      (permission) => userPermissionsValidator.safeParse(permission).success
     )
   ) {
     return json(

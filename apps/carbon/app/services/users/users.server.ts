@@ -259,32 +259,35 @@ export async function getPermissions(
     permissions = JSON.parse(
       (await redis.get(getPermissionCacheKey(userId))) || "null"
     );
-  } catch {}
-
-  // if we don't have permissions from redis, get them from the database
-  if (!permissions) {
-    const claims = await getClaimsById(client, userId);
-    if (claims.error || claims.data === null) {
-      throw redirect(
-        "/app",
-        await flash(request, error(claims.error, "Failed to get claims"))
-      );
-    }
-    // convert claims to permissions
-    permissions = makePermissionsFromClaims(claims.data);
-    // store permissions in redis
-
-    await redis.set(getPermissionCacheKey(userId), JSON.stringify(permissions));
-
+  } finally {
+    // if we don't have permissions from redis, get them from the database
     if (!permissions) {
-      throw redirect(
-        "/app",
-        await flash(request, error(claims, "Failed to parse claims"))
-      );
-    }
-  }
+      const claims = await getClaimsById(client, userId);
+      if (claims.error || claims.data === null) {
+        throw redirect(
+          "/app",
+          await flash(request, error(claims.error, "Failed to get claims"))
+        );
+      }
+      // convert claims to permissions
+      permissions = makePermissionsFromClaims(claims.data);
+      // store permissions in redis
 
-  return permissions;
+      await redis.set(
+        getPermissionCacheKey(userId),
+        JSON.stringify(permissions)
+      );
+
+      if (!permissions) {
+        throw redirect(
+          "/app",
+          await flash(request, error(claims, "Failed to parse claims"))
+        );
+      }
+    }
+
+    return permissions;
+  }
 }
 
 export async function getUser(
@@ -498,7 +501,11 @@ export async function updateEmployee(
 
 export async function updatePermissions(
   client: SupabaseClient<Database>,
-  { id, permissions }: { id: string; permissions: Record<string, Permission> }
+  {
+    id,
+    permissions,
+    addOnly = false,
+  }: { id: string; permissions: Record<string, Permission>; addOnly?: boolean }
 ): Promise<Result> {
   if (await client.rpc("is_claims_admin")) {
     const getClaims = await getClaimsById(client, id);
@@ -514,10 +521,15 @@ export async function updatePermissions(
 
     const newClaims: Record<string, boolean> = {};
     Object.entries(permissions).forEach(([name, permission]) => {
-      newClaims[`${name}_view`] = permission.view;
-      newClaims[`${name}_create`] = permission.create;
-      newClaims[`${name}_update`] = permission.update;
-      newClaims[`${name}_delete`] = permission.delete;
+      const module = name.toLowerCase();
+      if (!addOnly || permission.view)
+        newClaims[`${module}_view`] = permission.view;
+      if (!addOnly || permission.create)
+        newClaims[`${module}_create`] = permission.create;
+      if (!addOnly || permission.update)
+        newClaims[`${module}_update`] = permission.update;
+      if (!addOnly || permission.delete)
+        newClaims[`${module}_delete`] = permission.delete;
     });
 
     const claimsUpdate = await setUserClaims(id, {

@@ -42,6 +42,7 @@ const Pagination = (props: PaginationProps) => {
   return (
     <HStack
       align="center"
+      bg={useColor("white")}
       borderTopColor={borderColor}
       borderTopWidth={1}
       borderTopStyle="solid"
@@ -50,6 +51,7 @@ const Pagination = (props: PaginationProps) => {
       py={2}
       spacing="6"
       w="full"
+      zIndex={1}
     >
       <HStack spacing={2}>
         <Menu>
@@ -109,10 +111,18 @@ export const PaginationButtons = ({
           <Flex fontSize="sm" h={8} fontWeight="medium" alignItems="center">
             {offset + 1} - {Math.min(offset + pageSize, count)} of {count}
           </Flex>
-          <Button disabled={!canPreviousPage} onClick={previousPage}>
+          <Button
+            disabled={!canPreviousPage}
+            onClick={previousPage}
+            leftIcon={<BsChevronLeft />}
+          >
             Previous
           </Button>
-          <Button disabled={!canNextPage} onClick={nextPage}>
+          <Button
+            disabled={!canNextPage}
+            onClick={nextPage}
+            rightIcon={<BsChevronRight />}
+          >
             Next
           </Button>
         </>

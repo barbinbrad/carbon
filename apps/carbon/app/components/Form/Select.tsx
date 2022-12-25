@@ -30,6 +30,7 @@ const Select = ({
       {label && <FormLabel htmlFor={name}>{label}</FormLabel>}
       <CarbonSelect
         {...getInputProps({
+          // @ts-ignore
           id: name,
         })}
         defaultValue={initialValue}

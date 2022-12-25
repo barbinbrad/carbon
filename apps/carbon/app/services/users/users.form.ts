@@ -1,6 +1,19 @@
 import { withZod } from "@remix-validated-form/with-zod";
 import { z } from "zod";
 
+export const bulkPermissionsValidator = withZod(
+  z.object({
+    editType: z.string().min(1, { message: "Update type is required" }),
+    userIds: z
+      .array(z.string().min(36, { message: "Invalid selection" }))
+      .min(1, { message: "Group members are required" }),
+    data: z
+      .string()
+      .startsWith("{", { message: "Invalid JSON" })
+      .endsWith("}", { message: "Invalid JSON" }),
+  })
+);
+
 export const createEmployeeValidator = withZod(
   z.object({
     email: z
@@ -48,7 +61,7 @@ export const employeeValidator = withZod(
   })
 );
 
-export const employeePermissionsValidator = z.object({
+export const userPermissionsValidator = z.object({
   view: z.boolean(),
   create: z.boolean(),
   update: z.boolean(),

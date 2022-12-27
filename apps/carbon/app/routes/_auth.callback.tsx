@@ -4,7 +4,7 @@ import { json, redirect } from "@remix-run/node";
 import type { LoaderArgs, ActionArgs } from "@remix-run/node";
 import { useFetcher } from "@remix-run/react";
 import { callbackValidator } from "~/services/auth/auth.form";
-import { getSupabase } from "~/lib/supabase";
+import { getSupabase, getSupabaseAdmin } from "~/lib/supabase";
 import { refreshAccessToken } from "~/services/auth";
 import { getUserByEmail } from "~/services/users";
 import {
@@ -37,11 +37,7 @@ export async function action({ request }: ActionArgs): FormActionData {
   }
 
   const { refreshToken } = validation.data;
-
-  // We should not trust what is sent from the client
-  // https://github.com/rphlmr/supa-fly-stack/issues/45
   const authSession = await refreshAccessToken(refreshToken);
-
   if (!authSession) {
     return redirect(
       "/",
@@ -49,7 +45,6 @@ export async function action({ request }: ActionArgs): FormActionData {
     );
   }
 
-  // user has an account, skip creation and just commit the session
   const user = await getUserByEmail(authSession.email);
   if (user?.data) {
     return redirect("/reset-password", {

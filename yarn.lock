@@ -4181,25 +4181,10 @@ bufferutil@^4.0.1:
   dependencies:
     node-gyp-build "^4.3.0"
 
-bullmq@2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/bullmq/-/bullmq-2.0.1.tgz#ad65598033317614e051be5803dc140efa9f7587"
-  integrity sha512-i6RtXKjg4B0IeEEB8AQMrrSIEgm7VCL92cgv4sOXrBSIBdBJjmvowVJ5tPF0+NBM7UpKFJCl72Go8XU1GK/uVg==
-  dependencies:
-    cron-parser "^4.6.0"
-    get-port "6.1.2"
-    glob "^8.0.3"
-    ioredis "^5.2.2"
-    lodash "^4.17.21"
-    msgpackr "^1.6.2"
-    semver "^7.3.7"
-    tslib "^2.0.0"
-    uuid "^9.0.0"
-
-bullmq@~2.1.0:
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/bullmq/-/bullmq-2.1.3.tgz#6bb1e99c94b27dc4d72a18b1549d260a00edc5f5"
-  integrity sha512-sOuPHbCWegOnC0uKC1i8L6njmiDquenkStMXdpCzh+xrHEB4AxOFVhuM8SchmnjcJUBnW1lVe+SBc1vMNyR1ZQ==
+bullmq@~3.5.1:
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/bullmq/-/bullmq-3.5.1.tgz#253032396e9fb30d63336ad28ae2eaeffb37de41"
+  integrity sha512-QxQnSIPBmEVq/bM1wxmMdh9RS4oNyUNeCvoTegr2EgtlNYToCkLgHAkM56JhaRlffo9ExNiWfVFJpXLWDfK0Fw==
   dependencies:
     cron-parser "^4.6.0"
     glob "^8.0.3"
@@ -6595,11 +6580,6 @@ get-package-type@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/get-package-type/-/get-package-type-0.1.0.tgz#8de2d803cff44df3bc6c456e6668b36c3926e11a"
   integrity sha512-pjzuKtY64GYfWizNAJ0fr9VqttZkNiK2iS430LtIHzjBEr6bX8Am2zm4sW4Ro5wjWW5cAlRL1qAMTcXbjNAO2Q==
-
-get-port@6.1.2:
-  version "6.1.2"
-  resolved "https://registry.yarnpkg.com/get-port/-/get-port-6.1.2.tgz#c1228abb67ba0e17fb346da33b15187833b9c08a"
-  integrity sha512-BrGGraKm2uPqurfGVj/z97/zv8dPleC6x9JBNRTrDNtCkkRF4rPwrQXFgL7+I+q8QSdU4ntLQX2D7KIxSy8nGw==
 
 get-port@^5.1.1:
   version "5.1.1"

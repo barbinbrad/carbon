@@ -55,6 +55,17 @@ export interface Database {
           employeeTypeId?: string
         }
       }
+      employeePersonalData: {
+        Row: {
+          id: string
+        }
+        Insert: {
+          id: string
+        }
+        Update: {
+          id?: string
+        }
+      }
       employeeType: {
         Row: {
           id: string
@@ -186,6 +197,8 @@ export interface Database {
           firstName: string
           lastName: string
           fullName: string | null
+          about: string
+          avatarUrl: string | null
           emailVerified: string | null
           createdAt: string
           updatedAt: string | null
@@ -196,6 +209,8 @@ export interface Database {
           firstName: string
           lastName: string
           fullName?: string | null
+          about?: string
+          avatarUrl?: string | null
           emailVerified?: string | null
           createdAt?: string
           updatedAt?: string | null
@@ -206,6 +221,8 @@ export interface Database {
           firstName?: string
           lastName?: string
           fullName?: string | null
+          about?: string
+          avatarUrl?: string | null
           emailVerified?: string | null
           createdAt?: string
           updatedAt?: string | null

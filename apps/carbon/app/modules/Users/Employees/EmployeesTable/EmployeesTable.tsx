@@ -14,6 +14,7 @@ import { Table } from "~/components/Data";
 import { usePermissions } from "~/hooks";
 import type { Employee } from "~/modules/Users/types";
 import { BulkEditPermissionsForm } from "~/modules/Users/BulkEditPermissions";
+import { Avatar } from "~/components/Avatar";
 
 type EmployeesTableProps = {
   data: Employee[];
@@ -22,6 +23,7 @@ type EmployeesTableProps = {
 };
 
 const defaultColumnVisibility = {
+  Avatar: false,
   user_firstName: false,
   user_lastName: false,
 };
@@ -53,6 +55,16 @@ const EmployeesTable = memo(
 
     const columns = useMemo<ColumnDef<typeof rows[number]>[]>(() => {
       return [
+        {
+          header: "Avatar",
+          cell: ({ row }) => (
+            <Avatar
+              size="sm"
+              // @ts-ignore
+              path={row.original.user?.avatarUrl}
+            />
+          ),
+        },
         {
           accessorKey: "user.fullName",
           header: "Full Name",

@@ -13,8 +13,8 @@ export const Submit = ({
       type="submit"
       size="md"
       colorScheme="brand"
-      isLoading={isSubmitting}
-      disabled={isSubmitting}
+      isLoading={isSubmitting || props.isLoading}
+      disabled={isSubmitting || props.disabled}
       {...props}
     >
       {children}

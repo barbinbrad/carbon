@@ -4,6 +4,8 @@ CREATE TABLE "user" (
     "firstName" TEXT NOT NULL,
     "lastName" TEXT NOT NULL,
     "fullName" TEXT GENERATED ALWAYS AS ("firstName" || ' ' || "lastName") STORED,
+    "about" TEXT NOT NULL DEFAULT '',
+    "avatarUrl" TEXT,
     "emailVerified" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT NOW(),
     "updatedAt" TIMESTAMP(3),
@@ -12,7 +14,7 @@ CREATE TABLE "user" (
 );
 
 CREATE UNIQUE INDEX "user_email_key" ON "user"("email");
-CREATE UNIQUE INDEX "user_fullName_key" ON "user"("fullName");
+CREATE INDEX "user_fullName_key" ON "user"("fullName");
 
 ALTER TABLE "user" ENABLE ROW LEVEL SECURITY;
 

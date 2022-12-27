@@ -61,6 +61,7 @@ export async function createEmployeeAccount(
     email,
     firstName,
     lastName,
+    avatarUrl: null,
   });
 
   if (insertUser.error)
@@ -149,7 +150,7 @@ export async function getEmployees(
   let query = client
     .from("employee")
     .select(
-      "user!inner(id, fullName, firstName, lastName, email), employeeType!inner(name)",
+      "user!inner(id, fullName, firstName, lastName, email, avatarUrl), employeeType!inner(name)",
       { count: "exact" }
     );
 
@@ -325,7 +326,7 @@ export async function getUserByEmail(email: string) {
 export async function getUsers(client: SupabaseClient<Database>) {
   return client
     .from("user")
-    .select("id, firstName, lastName, fullName, email")
+    .select("id, firstName, lastName, fullName, email, avatarUrl")
     .order("lastName");
 }
 

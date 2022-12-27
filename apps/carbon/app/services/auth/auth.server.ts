@@ -1,5 +1,9 @@
+import type { Database } from "@carbon/database";
 import { redirect } from "@remix-run/node";
-import type { AuthSession as SupabaseAuthSession } from "@supabase/supabase-js";
+import type {
+  AuthSession as SupabaseAuthSession,
+  SupabaseClient,
+} from "@supabase/supabase-js";
 import { SERVER_URL } from "~/config/env";
 import { REFRESH_ACCESS_TOKEN_THRESHOLD } from "~/config/env";
 import { getSupabase, getSupabaseAdmin } from "~/lib/supabase";
@@ -73,11 +77,16 @@ export async function requirePermissions(
     update?: string | string[];
     delete?: string | string[];
   }
-) {
-  const { accessToken } = await requireAuthSession(request);
+): Promise<{
+  client: SupabaseClient<Database>;
+  email: string;
+  userId: string;
+}> {
+  const { accessToken, email, userId } = await requireAuthSession(request);
   const client = getSupabase(accessToken);
   // early exit if no requiredPermissions are required
-  if (Object.keys(requiredPermissions).length === 0) return { client };
+  if (Object.keys(requiredPermissions).length === 0)
+    return { client, email, userId };
 
   const myPermissions = await getPermissions(request, client);
 
@@ -109,7 +118,7 @@ export async function requirePermissions(
     );
   }
 
-  return { client };
+  return { client, email, userId };
 }
 
 export async function resetPassword(accessToken: string, password: string) {
@@ -157,8 +166,7 @@ export async function refreshAccessToken(
 ): Promise<AuthSession | null> {
   if (!refreshToken) return null;
 
-  const { data, error } = await getSupabaseAdmin().auth.setSession({
-    access_token: "",
+  const { data, error } = await getSupabaseAdmin().auth.refreshSession({
     refresh_token: refreshToken,
   });
 

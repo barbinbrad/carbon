@@ -1,15 +1,10 @@
 import { ActionMenu } from "@carbon/react";
-import {
-  Avatar,
-  AvatarGroup,
-  Flex,
-  MenuItem,
-  VisuallyHidden,
-} from "@chakra-ui/react";
+import { AvatarGroup, Flex, MenuItem, VisuallyHidden } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import { memo } from "react";
 import { BsPencilSquare } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
+import { Avatar } from "~/components/Avatar";
 import { Table } from "~/components/Data";
 import { usePermissions } from "~/hooks";
 import type { Group } from "~/modules/Users/types";
@@ -28,8 +23,13 @@ const GroupsTable = memo(({ data, count }: GroupsTableProps) => {
     name: row.data.name,
     isEmployeeTypeGroup: row.data.isEmployeeTypeGroup,
     members: row.data.users
-      .map((user) => `${user.firstName} ${user.lastName}`)
-      .concat(row.children.map((child) => child.data.name)),
+      .map((user) => ({
+        name: user.fullName,
+        avatar: user.avatarUrl,
+      }))
+      .concat(
+        row.children.map((child) => ({ name: child.data.name, avatar: null }))
+      ),
   }));
 
   return (
@@ -47,14 +47,19 @@ const GroupsTable = memo(({ data, count }: GroupsTableProps) => {
           // accessorKey: undefined, // makes the column unsortable
           cell: ({ row }) => (
             <AvatarGroup max={5} size="sm" spacing={-2}>
-              {row.original.members.map((name: string, index: number) => (
-                <Avatar
-                  key={index}
-                  name={name}
-                  title={name}
-                  colorScheme="gray"
-                />
-              ))}
+              {row.original.members.map(
+                (
+                  member: { name: string | null; avatar: string | null },
+                  index: number
+                ) => (
+                  <Avatar
+                    key={index}
+                    name={member.name ?? undefined}
+                    title={member.name ?? undefined}
+                    path={member.avatar}
+                  />
+                )
+              )}
             </AvatarGroup>
           ),
         },

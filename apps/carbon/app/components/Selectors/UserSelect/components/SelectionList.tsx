@@ -1,6 +1,5 @@
 import { useColor } from "@carbon/react";
 import {
-  Avatar,
   Box,
   Checkbox,
   Flex,
@@ -12,6 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { MdPlaylistAdd, MdOutlineClear } from "react-icons/md";
+import { Avatar } from "~/components/Avatar";
 import useUserSelectContext from "../provider";
 import { isGroup } from "../useUserSelect";
 
@@ -72,7 +72,16 @@ const SelectionList = () => {
                 </>
               ) : (
                 <>
-                  <Avatar size="sm" />
+                  {"fullName" in item ? (
+                    <Avatar
+                      name={item.fullName ?? undefined}
+                      path={item.avatarUrl}
+                      size="sm"
+                    />
+                  ) : (
+                    <Avatar name={item.name} path={null} size="sm" />
+                  )}
+
                   <Box display="flex" alignItems="center" flexGrow={2}>
                     <Text fontSize={14} noOfLines={1}>
                       {item.label}

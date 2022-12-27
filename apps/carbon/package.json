@@ -28,7 +28,7 @@
     "@supabase/supabase-js": "^2.2.1",
     "@tanstack/react-table": "^8.7.3",
     "@vercel/node": "^2.8.0",
-    "bullmq": "~2.1.0",
+    "bullmq": "~3.5.1",
     "framer-motion": "^7.6.19",
     "lodash.words": "^4.2.0",
     "lodash.debounce": "^4.0.8",

@@ -53,12 +53,14 @@ model user {
   email         String       @unique
   firstName     String
   lastName      String
-  fullName      String?      @unique @default(dbgenerated("((\"firstName\" || ' '::text) || \"lastName\")"))
+  fullName      String?      @default(dbgenerated("((\"firstName\" || ' '::text) || \"lastName\")"))
   emailVerified DateTime?
   createdAt     DateTime     @default(now())
   updatedAt     DateTime?
   employee      employee?
   membership    membership[]
+
+  @@index([fullName], map: "user_fullName_key")
 }
 
 model group {
@@ -82,4 +84,7 @@ model membership {
   user                                  user?   @relation(fields: [memberUserId], references: [id], onDelete: Cascade)
 
   @@unique([groupId, memberGroupId, memberUserId], map: "uq_membership")
+  @@index([groupId], map: "index_membership_groupid")
+  @@index([memberGroupId], map: "index_membership_membergroupid")
+  @@index([memberUserId], map: "index_membership_memberuserid")
 }

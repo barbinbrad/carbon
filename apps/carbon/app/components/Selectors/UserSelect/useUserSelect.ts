@@ -456,7 +456,6 @@ export default function useUserSelect(props: UserSelectProps) {
       if (innerProps.isMulti && !innerProps.resetAfterSelection) {
         setFocusedId(selectionItem.uid!);
       } else {
-        console.log("resetting");
         commit();
         clear();
       }

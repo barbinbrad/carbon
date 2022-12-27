@@ -4,6 +4,7 @@ type User = {
   email: string;
   firstName: string;
   lastName: string;
+  avatarUrl: string | null;
 };
 
 export function useUser() {
@@ -21,6 +22,7 @@ function isUser(value: any): value is User {
   return (
     typeof value.email === "string" &&
     typeof value.firstName === "string" &&
-    typeof value.lastName === "string"
+    typeof value.lastName === "string" &&
+    "avatarUrl" in value
   );
 }

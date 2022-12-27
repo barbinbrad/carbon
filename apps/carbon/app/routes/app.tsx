@@ -5,7 +5,7 @@ import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import { useEffect } from "react";
-import { IconSidebar, Topbar } from "~/components/Navigation";
+import { IconSidebar, Topbar } from "~/components/Layout";
 import { getSupabase, SupabaseProvider } from "~/lib/supabase";
 import { getPermissions, getUser } from "~/services/users";
 import {

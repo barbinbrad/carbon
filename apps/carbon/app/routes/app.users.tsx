@@ -2,7 +2,7 @@ import { useColor } from "@carbon/react";
 import { Button, Grid, Text, VStack } from "@chakra-ui/react";
 import type { MetaFunction } from "@remix-run/node";
 import { Link, Outlet, useMatches } from "@remix-run/react";
-import { ContentSidebar } from "~/components/Navigation/Sidebar";
+import { ContentSidebar } from "~/components/Layout/Sidebar";
 import { useUsersSidebar } from "~/modules/Users";
 
 export const meta: MetaFunction = () => ({

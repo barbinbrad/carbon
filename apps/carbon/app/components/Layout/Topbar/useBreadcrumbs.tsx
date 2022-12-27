@@ -9,6 +9,41 @@ export default function useBreadcrumbs(): Route[] {
     switch (match.id) {
       case "root":
         return acc.concat({ to: "/app", name: "Home", icon: <IoHomeSharp /> });
+      case "routes/app.account":
+        return acc.concat({
+          name: "Account",
+          to: match.pathname,
+        });
+      case "routes/app.account.profile":
+        return acc.concat({
+          name: "Profile",
+          to: match.pathname,
+        });
+      case "routes/app.account.personal":
+        return acc.concat({
+          name: "Personal",
+          to: match.pathname,
+        });
+      case "routes/app.account.password":
+        return acc.concat({
+          name: "Password",
+          to: match.pathname,
+        });
+      case "routes/app.account.notifications":
+        return acc.concat({
+          name: "Notifications",
+          to: match.pathname,
+        });
+      case "routes/app.account.security":
+        return acc.concat({
+          name: "Security",
+          to: match.pathname,
+        });
+      case "routes/app.account.settings":
+        return acc.concat({
+          name: "Settings",
+          to: match.pathname,
+        });
       case "routes/app.parts":
         return acc.concat({
           name: "Parts",

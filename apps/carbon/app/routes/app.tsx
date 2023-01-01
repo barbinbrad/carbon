@@ -7,7 +7,7 @@ import { Outlet, useLoaderData } from "@remix-run/react";
 import { useEffect } from "react";
 import { IconSidebar, Topbar } from "~/components/Layout";
 import { getSupabase, SupabaseProvider } from "~/lib/supabase";
-import { getPermissions, getUser } from "~/services/users";
+import { getPermissions, getCurrentUser } from "~/services/users";
 import {
   destroyAuthSession,
   getSessionFlash,
@@ -27,7 +27,7 @@ export async function loader({ request }: LoaderArgs) {
   const [sessionFlash, permissions, user] = await Promise.all([
     getSessionFlash(request),
     getPermissions(request, client),
-    getUser(request, client),
+    getCurrentUser(request, client),
   ]);
 
   if (!permissions || !user) {

@@ -9,7 +9,7 @@ import { useField } from "remix-validated-form";
 
 type FormHiddenProps = InputProps & {
   name: string;
-  value?: string;
+  value?: string | number;
 };
 
 const Hidden = forwardRef<HTMLInputElement, FormHiddenProps>(

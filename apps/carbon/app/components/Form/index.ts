@@ -1,3 +1,5 @@
+import Array from "./Array";
+import Boolean from "./Boolean";
 import Color from "./Color";
 import Input from "./Input";
 import Hidden from "./Hidden";
@@ -9,6 +11,8 @@ import TextArea from "./Textarea";
 import Users from "./Users";
 
 export {
+  Array,
+  Boolean,
   Color,
   Input,
   Hidden,

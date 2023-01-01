@@ -3,7 +3,7 @@ import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
-import { EmployeeTypeForm } from "~/modules/Users/EmployeeTypes";
+import { EmployeeTypeForm } from "~/interfaces/Users/EmployeeTypes";
 import { requirePermissions } from "~/services/auth";
 import {
   employeeTypeValidator,
@@ -117,7 +117,6 @@ export default function NewEmployeeTypesRoute() {
   const { permissions } = useLoaderData<typeof loader>();
 
   const initialValues = {
-    id: "",
     name: "",
     color: "#000000",
     permissions,

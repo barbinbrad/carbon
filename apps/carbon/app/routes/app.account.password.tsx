@@ -3,7 +3,7 @@ import { json, redirect } from "@remix-run/router";
 import { validationError } from "remix-validated-form";
 import { PageTitle } from "~/components/Layout";
 import { getSupabaseAdmin } from "~/lib/supabase";
-import { PasswordForm } from "~/modules/Account/Password";
+import { PasswordForm } from "~/interfaces/Account/Password";
 import { accountPasswordValidator } from "~/services/account";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
@@ -53,10 +53,7 @@ export async function action({ request }: ActionArgs) {
     );
   }
 
-  return redirect(
-    "/app",
-    await flash(request, success("Succesfully updated password"))
-  );
+  return redirect("/app", await flash(request, success("Updated password")));
 }
 
 export default function AccountPassword() {

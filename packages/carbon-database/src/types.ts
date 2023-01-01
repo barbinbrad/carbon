@@ -41,6 +41,38 @@ export interface Database {
           applied_steps_count?: number
         }
       }
+      attributeDataType: {
+        Row: {
+          id: number
+          label: string
+          isBoolean: boolean
+          isDate: boolean
+          isList: boolean
+          isNumeric: boolean
+          isText: boolean
+          isUser: boolean
+        }
+        Insert: {
+          id?: number
+          label: string
+          isBoolean?: boolean
+          isDate?: boolean
+          isList?: boolean
+          isNumeric?: boolean
+          isText?: boolean
+          isUser?: boolean
+        }
+        Update: {
+          id?: number
+          label?: string
+          isBoolean?: boolean
+          isDate?: boolean
+          isList?: boolean
+          isNumeric?: boolean
+          isText?: boolean
+          isUser?: boolean
+        }
+      }
       employee: {
         Row: {
           id: string
@@ -199,6 +231,7 @@ export interface Database {
           fullName: string | null
           about: string
           avatarUrl: string | null
+          active: boolean | null
           emailVerified: string | null
           createdAt: string
           updatedAt: string | null
@@ -211,6 +244,7 @@ export interface Database {
           fullName?: string | null
           about?: string
           avatarUrl?: string | null
+          active?: boolean | null
           emailVerified?: string | null
           createdAt?: string
           updatedAt?: string | null
@@ -223,9 +257,130 @@ export interface Database {
           fullName?: string | null
           about?: string
           avatarUrl?: string | null
+          active?: boolean | null
           emailVerified?: string | null
           createdAt?: string
           updatedAt?: string | null
+        }
+      }
+      userAttribute: {
+        Row: {
+          id: number
+          name: string
+          sortOrder: number
+          userAttributeCategoryId: number
+          attributeDataTypeId: number
+          listOptions: string[] | null
+          canSelfManage: boolean | null
+          active: boolean | null
+          createdAt: string
+          createdBy: string
+          updatedAt: string | null
+          updatedBy: string | null
+        }
+        Insert: {
+          id?: number
+          name: string
+          sortOrder?: number
+          userAttributeCategoryId: number
+          attributeDataTypeId: number
+          listOptions?: string[] | null
+          canSelfManage?: boolean | null
+          active?: boolean | null
+          createdAt?: string
+          createdBy: string
+          updatedAt?: string | null
+          updatedBy?: string | null
+        }
+        Update: {
+          id?: number
+          name?: string
+          sortOrder?: number
+          userAttributeCategoryId?: number
+          attributeDataTypeId?: number
+          listOptions?: string[] | null
+          canSelfManage?: boolean | null
+          active?: boolean | null
+          createdAt?: string
+          createdBy?: string
+          updatedAt?: string | null
+          updatedBy?: string | null
+        }
+      }
+      userAttributeCategory: {
+        Row: {
+          id: number
+          name: string
+          public: boolean | null
+          protected: boolean | null
+          active: boolean | null
+          createdAt: string
+          createdBy: string
+          updatedAt: string | null
+          updatedBy: string | null
+        }
+        Insert: {
+          id?: number
+          name: string
+          public?: boolean | null
+          protected?: boolean | null
+          active?: boolean | null
+          createdAt?: string
+          createdBy: string
+          updatedAt?: string | null
+          updatedBy?: string | null
+        }
+        Update: {
+          id?: number
+          name?: string
+          public?: boolean | null
+          protected?: boolean | null
+          active?: boolean | null
+          createdAt?: string
+          createdBy?: string
+          updatedAt?: string | null
+          updatedBy?: string | null
+        }
+      }
+      userAttributeValue: {
+        Row: {
+          id: number
+          userAttributeId: number
+          userId: string
+          valueText: string | null
+          valueDate: string | null
+          valueNumber: number | null
+          valueUser: string | null
+          createdAt: string
+          createdBy: string
+          updatedAt: string | null
+          updatedBy: string | null
+        }
+        Insert: {
+          id?: number
+          userAttributeId: number
+          userId: string
+          valueText?: string | null
+          valueDate?: string | null
+          valueNumber?: number | null
+          valueUser?: string | null
+          createdAt?: string
+          createdBy: string
+          updatedAt?: string | null
+          updatedBy?: string | null
+        }
+        Update: {
+          id?: number
+          userAttributeId?: number
+          userId?: string
+          valueText?: string | null
+          valueDate?: string | null
+          valueNumber?: number | null
+          valueUser?: string | null
+          createdAt?: string
+          createdBy?: string
+          updatedAt?: string | null
+          updatedBy?: string | null
         }
       }
     }

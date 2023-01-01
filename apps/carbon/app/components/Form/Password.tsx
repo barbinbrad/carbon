@@ -38,6 +38,7 @@ const Password = forwardRef<HTMLInputElement, FormPasswordProps>(
             <Button
               h="1.75rem"
               size="sm"
+              tabIndex={-1}
               onClick={() => setPasswordVisible(!passwordVisible)}
             >
               {passwordVisible ? "Hide" : "Show"}

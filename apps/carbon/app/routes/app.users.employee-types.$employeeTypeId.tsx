@@ -3,7 +3,7 @@ import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
-import { EmployeeTypeForm } from "~/modules/Users/EmployeeTypes";
+import { EmployeeTypeForm } from "~/interfaces/Users/EmployeeTypes";
 import { requirePermissions } from "~/services/auth";
 import {
   employeeTypeValidator,
@@ -15,7 +15,7 @@ import {
   upsertEmployeeTypePermissions,
 } from "~/services/users";
 import { flash } from "~/services/session";
-import { assertIsPost } from "~/utils/http";
+import { assertIsPost, notFound } from "~/utils/http";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderArgs) {
@@ -24,7 +24,7 @@ export async function loader({ request, params }: LoaderArgs) {
   });
 
   const { employeeTypeId } = params;
-  if (!employeeTypeId) return redirect("/app/users/employee-types");
+  if (!employeeTypeId) throw notFound("employeeTypeId not found");
 
   const [employeeType, employeeTypePermissions] = await Promise.all([
     getEmployeeType(client, employeeTypeId),
@@ -32,7 +32,10 @@ export async function loader({ request, params }: LoaderArgs) {
   ]);
 
   if (employeeType?.data?.protected) {
-    return redirect("/app/users/employee-types");
+    return redirect(
+      "/app/users/employee-types",
+      await flash(request, error(null, "Cannot edit a protected employee type"))
+    );
   }
 
   return json({

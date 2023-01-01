@@ -1,19 +1,21 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData, useNavigate, useParams } from "@remix-run/react";
-import { DeleteEmployeeTypeModal } from "~/modules/Users/EmployeeTypes";
+import { DeleteEmployeeTypeModal } from "~/interfaces/Users/EmployeeTypes";
 import { requirePermissions } from "~/services/auth";
 import { deleteEmployeeType, getEmployeeType } from "~/services/users";
 import { flash } from "~/services/session";
 import { error, success } from "~/utils/result";
+import { notFound } from "~/utils/http";
 
 export async function loader({ request, params }: LoaderArgs) {
   const { client } = await requirePermissions(request, {
     view: "users",
   });
   const { employeeTypeId } = params;
+  if (!employeeTypeId) throw notFound("EmployeeTypeId not found");
 
-  const employeeType = await getEmployeeType(client, employeeTypeId!);
+  const employeeType = await getEmployeeType(client, employeeTypeId);
   if (employeeType.error) {
     return redirect(
       "/app/users/employee-types",

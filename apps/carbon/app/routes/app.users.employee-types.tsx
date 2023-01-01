@@ -4,7 +4,7 @@ import { Outlet, useLoaderData } from "@remix-run/react";
 import {
   EmployeeTypesTable,
   EmployeeTypesTableFilters,
-} from "~/modules/Users/EmployeeTypes";
+} from "~/interfaces/Users/EmployeeTypes";
 import { requirePermissions } from "~/services/auth";
 import { getEmployeeTypes } from "~/services/users";
 import { getGenericQueryFilters } from "~/utils/query";

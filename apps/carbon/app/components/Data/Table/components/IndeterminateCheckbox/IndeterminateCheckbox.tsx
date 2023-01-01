@@ -13,7 +13,6 @@ const IndeterminateCheckbox = ({
 }: IndeterminateCheckboxProps) => {
   return (
     <Checkbox
-      colorScheme="blackAlpha"
       isChecked={checked}
       isIndeterminate={indeterminate}
       ml={2}

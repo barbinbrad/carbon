@@ -8,10 +8,11 @@ datasource db {
 }
 
 model employee {
-  id             String       @id
-  employeeTypeId String
-  employeeType   employeeType @relation(fields: [employeeTypeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  user           user         @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  id                   String                @id
+  employeeTypeId       String
+  employeeType         employeeType          @relation(fields: [employeeTypeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user                 user                  @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  employeePersonalData employeePersonalData?
 }
 
 model employeeType {
@@ -49,16 +50,25 @@ model feature {
 }
 
 model user {
-  id            String       @id
-  email         String       @unique
-  firstName     String
-  lastName      String
-  fullName      String?      @default(dbgenerated("((\"firstName\" || ' '::text) || \"lastName\")"))
-  emailVerified DateTime?
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime?
-  employee      employee?
-  membership    membership[]
+  id                                                  String              @id
+  email                                               String              @unique
+  firstName                                           String
+  lastName                                            String
+  fullName                                            String?             @default(dbgenerated("((\"firstName\" || ' '::text) || \"lastName\")"))
+  about                                               String              @default("")
+  avatarUrl                                           String?
+  emailVerified                                       DateTime?
+  createdAt                                           DateTime            @default(now())
+  updatedAt                                           DateTime?
+  attribute_attribute_createdByTouser                 attribute[]         @relation("attribute_createdByTouser")
+  attribute_attribute_updatedByTouser                 attribute[]         @relation("attribute_updatedByTouser")
+  attributeCategory_attributeCategory_createdByTouser attributeCategory[] @relation("attributeCategory_createdByTouser")
+  attributeCategory_attributeCategory_updatedByTouser attributeCategory[] @relation("attributeCategory_updatedByTouser")
+  attributeValue_attributeValue_createdByTouser       attributeValue[]    @relation("attributeValue_createdByTouser")
+  attributeValue_attributeValue_updatedByTouser       attributeValue[]    @relation("attributeValue_updatedByTouser")
+  attributeValue_attributeValue_userIdTouser          attributeValue[]    @relation("attributeValue_userIdTouser")
+  employee                                            employee?
+  membership                                          membership[]
 
   @@index([fullName], map: "user_fullName_key")
 }
@@ -87,4 +97,75 @@ model membership {
   @@index([groupId], map: "index_membership_groupid")
   @@index([memberGroupId], map: "index_membership_membergroupid")
   @@index([memberUserId], map: "index_membership_memberuserid")
+}
+
+model attributeDataType {
+  id        Int         @id @default(autoincrement())
+  label     String
+  value     String
+  isBoolean Boolean     @default(false)
+  isDate    Boolean     @default(false)
+  isList    Boolean     @default(false)
+  isNumeric Boolean     @default(false)
+  isText    Boolean     @default(false)
+  attribute attribute[]
+}
+
+model employeePersonalData {
+  id       String   @id
+  employee employee @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model attribute {
+  id                             Int               @id @default(autoincrement())
+  label                          String
+  sortOrder                      Int               @default(1)
+  attributeCategoryId            Int
+  attributeDataTypeId            Int
+  listOptions                    String[]
+  canSelfManage                  Boolean?          @default(false)
+  isActive                       Boolean?          @default(true)
+  createdAt                      DateTime          @default(now())
+  createdBy                      String
+  updatedAt                      DateTime?
+  updatedBy                      String?
+  attributeCategory              attributeCategory @relation(fields: [attributeCategoryId], references: [id], onDelete: Cascade)
+  attributeDataType              attributeDataType @relation(fields: [attributeDataTypeId], references: [id], onDelete: Cascade)
+  user_attribute_createdByTouser user              @relation("attribute_createdByTouser", fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user_attribute_updatedByTouser user?             @relation("attribute_updatedByTouser", fields: [updatedBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  attributeValue                 attributeValue[]
+
+  @@unique([attributeCategoryId, sortOrder], map: "uq_attributecategory_sortorder")
+}
+
+model attributeCategory {
+  id                                     Int         @id @default(autoincrement())
+  label                                  String
+  isActive                               Boolean?    @default(true)
+  createdAt                              DateTime    @default(now())
+  createdBy                              String
+  updatedAt                              DateTime?
+  updatedBy                              String?
+  user_attributeCategory_createdByTouser user        @relation("attributeCategory_createdByTouser", fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user_attributeCategory_updatedByTouser user?       @relation("attributeCategory_updatedByTouser", fields: [updatedBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  attribute                              attribute[]
+}
+
+model attributeValue {
+  id                                  Int       @id @default(autoincrement())
+  attributeId                         Int
+  userId                              String
+  valueText                           String?
+  valueDate                           DateTime? @db.Date
+  valueNumber                         Decimal?  @db.Decimal
+  createdAt                           DateTime  @default(now())
+  createdBy                           String
+  updatedAt                           DateTime?
+  updatedBy                           String?
+  attribute                           attribute @relation(fields: [attributeId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  user_attributeValue_createdByTouser user      @relation("attributeValue_createdByTouser", fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user_attributeValue_updatedByTouser user?     @relation("attributeValue_updatedByTouser", fields: [updatedBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user_attributeValue_userIdTouser    user      @relation("attributeValue_userIdTouser", fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([attributeId, userId], map: "uq_attributeid_userid")
 }

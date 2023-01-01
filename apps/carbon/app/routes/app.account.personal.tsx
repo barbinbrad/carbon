@@ -1,5 +1,5 @@
 import { PageTitle } from "~/components/Layout";
-import { PersonalDataForm } from "~/modules/Account/Personal";
+import { PersonalDataForm } from "~/interfaces/Account/Personal";
 
 export default function AccountPersonal() {
   return (

@@ -5,7 +5,7 @@ import debounce from "lodash/debounce";
 import words from "lodash/words";
 import type { AriaAttributes, ChangeEvent, KeyboardEvent } from "react";
 import { useEffect, useState, useMemo, useCallback, useRef } from "react";
-import type { Group } from "~/modules/Users/types";
+import type { Group } from "~/interfaces/Users/types";
 
 import type {
   OptionGroup,

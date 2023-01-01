@@ -3,7 +3,7 @@ import { Button, Grid, Text, VStack } from "@chakra-ui/react";
 import type { MetaFunction } from "@remix-run/node";
 import { Link, Outlet, useMatches } from "@remix-run/react";
 import { ContentSidebar } from "~/components/Layout/Sidebar";
-import { useUsersSidebar } from "~/modules/Users";
+import { useUsersSidebar } from "~/interfaces/Users";
 
 export const meta: MetaFunction = () => ({
   title: "Carbon | Users",

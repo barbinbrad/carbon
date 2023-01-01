@@ -1,6 +1,6 @@
 import { Queue } from "~/lib/bullmq";
 import { getSupabaseAdmin } from "~/lib/supabase";
-import type { Permission } from "~/modules/Users/types";
+import type { Permission } from "~/interfaces/Users/types";
 import { updatePermissions } from "~/services/users";
 
 export type BulkPermissionsQueueData = {

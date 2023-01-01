@@ -44,8 +44,10 @@ interface TableProps<T extends object> {
   colorScheme?: ThemeTypings["colorSchemes"];
   defaultColumnVisibility?: Record<string, boolean>;
   withColumnOrdering?: boolean;
+  withFilters?: boolean;
   withPagination?: boolean;
   withSelectableRows?: boolean;
+  withSimpleSorting?: boolean;
   onRowClick?: (row: T) => void;
   onSelectedRowsChange?: (selectedRows: T[]) => void;
 }
@@ -57,9 +59,11 @@ const Table = <T extends object>({
   count = 0,
   colorScheme = "blackAlpha",
   defaultColumnVisibility = {},
+  withFilters = false,
   withColumnOrdering = false,
   withPagination = true,
   withSelectableRows = false,
+  withSimpleSorting = true,
   onRowClick,
   onSelectedRowsChange,
 }: TableProps<T>) => {
@@ -140,7 +144,7 @@ const Table = <T extends object>({
   return (
     <>
       <Box w="full" h="full">
-        {(withColumnOrdering || withSelectableRows) && (
+        {(withColumnOrdering || withFilters || withSelectableRows) && (
           <Header
             actions={actions}
             columnAccessors={columnAccessors}
@@ -150,6 +154,7 @@ const Table = <T extends object>({
             setColumnOrder={setColumnOrder}
             pagination={pagination}
             withColumnOrdering={withColumnOrdering}
+            withFilters={withFilters}
             withPagination={withPagination}
             withSelectableRows={withSelectableRows}
           />
@@ -175,6 +180,7 @@ const Table = <T extends object>({
                       {headerGroup.headers.map((header) => {
                         // TODO: improve this
                         const sortable =
+                          withSimpleSorting &&
                           "accessorKey" in header.column.columnDef &&
                           header.column.columnDef.enableSorting !== false;
                         const sorted = isSorted(
@@ -283,7 +289,9 @@ const Table = <T extends object>({
                 ).map((headerGroup) => (
                   <Tr key={headerGroup.id}>
                     {headerGroup.headers.map((header) => {
-                      const sortable = "accessorKey" in header.column.columnDef;
+                      const sortable =
+                        withSimpleSorting &&
+                        "accessorKey" in header.column.columnDef;
                       const sorted = isSorted(
                         // @ts-ignore
                         header.column.columnDef?.accessorKey ?? ""

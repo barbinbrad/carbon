@@ -5,7 +5,7 @@ import { useLoaderData } from "@remix-run/react";
 import { json } from "@remix-run/router";
 import { validationError } from "remix-validated-form";
 import { PageTitle } from "~/components/Layout";
-import { ProfileForm, ProfilePhotoForm } from "~/modules/Account/Profile";
+import { ProfileForm, ProfilePhotoForm } from "~/interfaces/Account/Profile";
 import {
   accountProfileValidator,
   getAccountById,
@@ -86,7 +86,7 @@ export async function action({ request }: ActionArgs) {
 
       return redirect(
         "/app/account/profile",
-        await flash(request, success("Successfully updated avatar"))
+        await flash(request, success("Updated avatar"))
       );
     } else {
       return redirect(

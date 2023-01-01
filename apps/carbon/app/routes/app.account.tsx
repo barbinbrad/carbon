@@ -1,9 +1,9 @@
 import { useColor } from "@carbon/react";
-import { Button, Grid, Text, VStack } from "@chakra-ui/react";
+import { Button, Grid, VStack } from "@chakra-ui/react";
 import type { MetaFunction } from "@remix-run/node";
 import { Link, Outlet, useMatches } from "@remix-run/react";
 import { ContentSidebar } from "~/components/Layout/Sidebar";
-import { useAccountSidebar } from "~/modules/Account";
+import { useAccountSidebar } from "~/interfaces/Account";
 
 export const meta: MetaFunction = () => ({
   title: "Carbon | My Account",

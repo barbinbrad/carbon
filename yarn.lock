@@ -1657,10 +1657,10 @@
     "@chakra-ui/media-query" "3.2.8"
     "@chakra-ui/react-use-previous" "2.0.3"
 
-"@chakra-ui/skip-nav@^2.0.12":
-  version "2.0.12"
-  resolved "https://registry.yarnpkg.com/@chakra-ui/skip-nav/-/skip-nav-2.0.12.tgz#f76e2c7646ba45606b5d681c0799d23866201021"
-  integrity sha512-4p1rVml+3hVc87BlXxVCEnf1r9cLzUR6DAVC+s7n857pLQBdC2HsMhlt4NwgoJGchDdZz/lnr7sMS0HzTRV45g==
+"@chakra-ui/skip-nav@^2.0.13":
+  version "2.0.13"
+  resolved "https://registry.yarnpkg.com/@chakra-ui/skip-nav/-/skip-nav-2.0.13.tgz#bd84d035c1ecd8c7c728c5bc368d9b03fe11d6d4"
+  integrity sha512-UmFjGlZhSDkFz7OizweG27bs+Ch9dDiibmXQ20lH6qW8k7aZ9IkdIJz9vsFzpbeECsVC6V5D461BoMGjiok/7A==
 
 "@chakra-ui/slider@2.0.13":
   version "2.0.13"
@@ -10277,17 +10277,17 @@ remeda@^1.2.0:
   resolved "https://registry.yarnpkg.com/remeda/-/remeda-1.3.0.tgz#6dc642187e08ead2265e8c7f8517a16a69e325ce"
   integrity sha512-DJkLBUzi0dEigDuyPtVe50aNzQq8EBQOintPaxvzwSNreXOGsRnvfGiK+cTsY+nUgGCBrcFxcvH8MIg2skfIZA==
 
-remix-flat-routes@^0.4.8:
-  version "0.4.8"
-  resolved "https://registry.yarnpkg.com/remix-flat-routes/-/remix-flat-routes-0.4.8.tgz#227c8962612c437fd1c0f87a65a71e1c26be1713"
-  integrity sha512-ApHjsrdO/vmCC2TMsl2rYd+M2vscljmKLD1JJXcZE9zlmhbT5pS2sM0NrFor7ecqLxX+kHT9xwNsvU1XaDcmmA==
+remix-flat-routes@^0.5.4:
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/remix-flat-routes/-/remix-flat-routes-0.5.4.tgz#13614b75e1cce7f0394b04df0c932eebdf2ba4d7"
+  integrity sha512-4Rw3CwWvP/jUx9IkEOEbiNbzxwc/nb4wE9mk1Q1fO3yz46CLUOOoqUCn1+0nwlKqOdyYb0iw3Q8FV7d6X2fAjw==
   dependencies:
     minimatch "^5.1.0"
 
-remix-validated-form@^4.6.4:
-  version "4.6.4"
-  resolved "https://registry.yarnpkg.com/remix-validated-form/-/remix-validated-form-4.6.4.tgz#8c43d4a6294a3673742934c81668c4ff61f3a25a"
-  integrity sha512-HYIaKYnig3e1aEPlUNl5aPFOSY77AjoViReXjKdoYJNNNRR4zUTqBtp1sm12EC6gM99aymLikz3vd0Vs2Dse/Q==
+remix-validated-form@^4.6.5:
+  version "4.6.5"
+  resolved "https://registry.yarnpkg.com/remix-validated-form/-/remix-validated-form-4.6.5.tgz#0ce7943af82cf7dac67ac8688ef49ca92ac9e8b3"
+  integrity sha512-pf6048rqhsT0lJGDvK8vapAuCITz0L05SyjSvkPNu+2t5DZAlUQaZaR1NMPu7se9RbRh1WeEUa7JWvv8HE9NrQ==
   dependencies:
     immer "^9.0.12"
     remeda "^1.2.0"
@@ -12268,10 +12268,15 @@ yocto-queue@^0.1.0:
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
 
-zod@^3.19.1:
-  version "3.19.1"
-  resolved "https://registry.yarnpkg.com/zod/-/zod-3.19.1.tgz#112f074a97b50bfc4772d4ad1576814bd8ac4473"
-  integrity sha512-LYjZsEDhCdYET9ikFu6dVPGp2YH9DegXjdJToSzD9rO6fy4qiRYFoyEYwps88OseJlPyl2NOe2iJuhEhL7IpEA==
+zod-form-data@1.2.4:
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/zod-form-data/-/zod-form-data-1.2.4.tgz#161967a60d351cc4e5e6af248e074b93ac74ec94"
+  integrity sha512-mI/rgItfvYQpvzEqGuBda/nuTHrMNoFZJ5cpiGLC5O3ZaVwI0XVo3/yTY2RreVMu57wGcDrfQcTRe5aMq2ijYA==
+
+zod@^3.20.2:
+  version "3.20.2"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-3.20.2.tgz#068606642c8f51b3333981f91c0a8ab37dfc2807"
+  integrity sha512-1MzNQdAvO+54H+EaK5YpyEy0T+Ejo/7YLHS93G3RnYWh5gaotGHwGeN/ZO687qEDU2y4CdStQYXVHIgrUl5UVQ==
 
 zustand@^4.0.0-rc.1, zustand@^4.1.1:
   version "4.1.4"

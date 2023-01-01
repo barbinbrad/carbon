@@ -3,7 +3,7 @@ import { json } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
-import { EmployeePermissionsForm } from "~/modules/Users/Employees";
+import { EmployeePermissionsForm } from "~/interfaces/Users/Employees";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import {
@@ -14,7 +14,7 @@ import {
   makePermissionsFromClaims,
   updateEmployee,
 } from "~/services/users";
-import { assertIsPost } from "~/utils/http";
+import { assertIsPost, notFound } from "~/utils/http";
 import { error } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderArgs) {
@@ -23,7 +23,7 @@ export async function loader({ request, params }: LoaderArgs) {
   });
 
   const { employeeId } = params;
-  if (!employeeId) return redirect("/app/users/employees");
+  if (!employeeId) throw notFound("EmployeeId was not found");
 
   const [claims, employee] = await Promise.all([
     getClaimsById(client, employeeId),

@@ -36,9 +36,19 @@ export const theme = {
         borderRadius: "md",
       },
     },
+    Checkbox: {
+      defaultProps: {
+        colorScheme: "blackAlpha",
+      },
+    },
     Input: {
       defaultProps: {
         borderRadius: "md",
+      },
+    },
+    Radio: {
+      defaultProps: {
+        colorScheme: "blackAlpha",
       },
     },
     Select: {
@@ -46,9 +56,10 @@ export const theme = {
         borderRadius: "md",
       },
     },
-    Checkbox: {
-      baseStyle: {},
-      defaultProps: {},
+    Switch: {
+      defaultProps: {
+        colorScheme: "green",
+      },
     },
   },
   defaultProps: {

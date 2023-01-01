@@ -33,7 +33,6 @@ const Radios = ({
           id: name,
         })}
         name={name}
-        colorScheme="blackAlpha"
       >
         <Stack spacing={2} alignItems="start" direction={direction}>
           {options.map(({ label, value }) => (

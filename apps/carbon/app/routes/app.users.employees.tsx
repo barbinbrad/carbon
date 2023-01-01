@@ -5,7 +5,7 @@ import { usePermissions } from "~/hooks";
 import {
   EmployeesTable,
   EmployeesTableFilters,
-} from "~/modules/Users/Employees";
+} from "~/interfaces/Users/Employees";
 import { requirePermissions } from "~/services/auth";
 import { getEmployees, getEmployeeTypes } from "~/services/users";
 import { getGenericQueryFilters } from "~/utils/query";

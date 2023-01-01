@@ -8,7 +8,7 @@ import {
   createEmployeeValidator,
 } from "~/services/users";
 import { assertIsPost } from "~/utils/http";
-import { CreateEmployeeModal } from "~/modules/Users/Employees";
+import { CreateEmployeeModal } from "~/interfaces/Users/Employees";
 
 export async function action({ request }: ActionArgs) {
   assertIsPost(request);

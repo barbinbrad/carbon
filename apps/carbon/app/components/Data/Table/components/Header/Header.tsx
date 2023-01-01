@@ -18,6 +18,7 @@ type HeaderProps<T> = {
   selectedRows: T[];
   setColumnOrder: (newOrder: ColumnOrderState) => void;
   withColumnOrdering: boolean;
+  withFilters: boolean;
   withPagination: boolean;
   withSelectableRows: boolean;
 };
@@ -31,6 +32,7 @@ const Header = <T extends object>({
   selectedRows,
   setColumnOrder,
   withColumnOrdering,
+  withFilters,
   withPagination,
   withSelectableRows,
 }: HeaderProps<T>) => {
@@ -52,8 +54,12 @@ const Header = <T extends object>({
         )}
       </HStack>
       <HStack spacing={2}>
-        <Filter columnAccessors={columnAccessors} />
-        <Sort columnAccessors={columnAccessors} />
+        {withFilters && (
+          <>
+            <Filter columnAccessors={columnAccessors} />
+            <Sort columnAccessors={columnAccessors} />
+          </>
+        )}
 
         {withColumnOrdering && (
           <Columns

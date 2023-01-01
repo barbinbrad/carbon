@@ -25,7 +25,7 @@ const useSelect = <
   tagVariant,
   theme,
   selectedOptionStyle = "color",
-  selectedOptionColor = "blue",
+  selectedOptionColor = "blackAlpha",
   size = "md",
   variant = "outline",
   onFocus,

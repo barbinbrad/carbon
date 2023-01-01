@@ -1,7 +1,7 @@
 import type { ActionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
-import type { Permission } from "~/modules/Users/types";
+import type { Permission } from "~/interfaces/Users/types";
 import type { BulkPermissionsQueueData } from "~/queue";
 import { bulkPermissionsQueue } from "~/queue";
 import { requirePermissions } from "~/services/auth";

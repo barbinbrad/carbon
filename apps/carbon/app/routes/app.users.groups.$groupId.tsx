@@ -3,7 +3,7 @@ import { json } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
-import { GroupForm } from "~/modules/Users/Groups";
+import { GroupForm } from "~/interfaces/Users/Groups";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import {
@@ -12,7 +12,7 @@ import {
   upsertGroup,
   upsertGroupMembers,
 } from "~/services/users";
-import { assertIsPost } from "~/utils/http";
+import { assertIsPost, notFound } from "~/utils/http";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderArgs) {
@@ -21,7 +21,7 @@ export async function loader({ request, params }: LoaderArgs) {
   });
 
   const { groupId } = params;
-  if (!groupId) return redirect("/app/users/groups");
+  if (!groupId) throw notFound("groupId not found");
 
   const groupWithMembers = await getGroupMembersById(client, groupId);
 

@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@chakra-ui/react": "^2.4.1",
-    "@chakra-ui/skip-nav": "^2.0.12",
+    "@chakra-ui/skip-nav": "^2.0.13",
     "@emotion/react": "^11.10.4",
     "@emotion/server": "^11.10.0",
     "@emotion/styled": "^11.10.4",
@@ -37,9 +37,10 @@
     "react-dom": "^18.2.0",
     "react-icons": "4.6.0",
     "reactflow": "^11.3.3",
-    "remix-flat-routes": "^0.4.8",
-    "remix-validated-form": "^4.6.4",
-    "zod": "^3.19.1"
+    "remix-flat-routes": "^0.5.4",
+    "remix-validated-form": "^4.6.5",
+    "zod": "^3.20.2",
+    "zod-form-data": "1.2.4"
   },
   "devDependencies": {
     "@remix-run/dev": "^1.8.2",

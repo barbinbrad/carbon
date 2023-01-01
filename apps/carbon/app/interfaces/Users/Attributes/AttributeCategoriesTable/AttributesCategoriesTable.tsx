@@ -1,0 +1,142 @@
+import { ActionMenu } from "@carbon/react";
+import {
+  Button,
+  Flex,
+  MenuItem,
+  Tag,
+  TagLabel,
+  useDisclosure,
+  VisuallyHidden,
+} from "@chakra-ui/react";
+import { Link, useNavigate } from "@remix-run/react";
+import type { ColumnDef } from "@tanstack/react-table";
+import { memo, useMemo, useState } from "react";
+import { BsPencilSquare, BsListUl } from "react-icons/bs";
+import { IoMdTrash } from "react-icons/io";
+import { Table } from "~/components/Data";
+import { usePermissions } from "~/hooks";
+import type { AttributeCategory } from "~/interfaces/Users/types";
+import DeleteAttributeCategoryModal from "../DeleteAttributeCategoryModal";
+
+type AttributeCategoriesTableProps = {
+  data: AttributeCategory[];
+  count: number;
+};
+
+const AttributeCategoriesTable = memo(
+  ({ data, count }: AttributeCategoriesTableProps) => {
+    const navigate = useNavigate();
+    const permissions = usePermissions();
+    const deleteModal = useDisclosure();
+    const [selectedCategory, setSelectedCategory] = useState<
+      AttributeCategory | undefined
+    >();
+
+    const onDelete = (data: AttributeCategory) => {
+      setSelectedCategory(data);
+      deleteModal.onOpen();
+    };
+
+    const onDeleteCancel = () => {
+      setSelectedCategory(undefined);
+      deleteModal.onClose();
+    };
+
+    const columns = useMemo<ColumnDef<typeof data[number]>[]>(() => {
+      return [
+        {
+          accessorKey: "name",
+          header: "Category",
+          cell: (item) => item.getValue(),
+        },
+        {
+          header: "Attributes",
+          cell: ({ row }) => (
+            <Button
+              as={Link}
+              to={`/app/users/attributes/list/${row.original.id}`}
+            >
+              {Array.isArray(row.original.userAttribute)
+                ? row.original.userAttribute?.length ?? 0
+                : 0}{" "}
+              Attributes
+            </Button>
+          ),
+        },
+        {
+          header: "Visibility",
+          accessorKey: "public",
+          cell: (item) => {
+            const isPublic = item.getValue<boolean>().toString() === "true";
+            return (
+              <Tag
+                size="md"
+                borderRadius="full"
+                variant={isPublic ? "solid" : "outline"}
+                colorScheme={isPublic ? "green" : "gray "}
+              >
+                <TagLabel>{isPublic ? "Public" : "Private"}</TagLabel>
+              </Tag>
+            );
+          },
+        },
+
+        {
+          accessorKey: "id",
+          header: () => <VisuallyHidden>Actions</VisuallyHidden>,
+          cell: ({ row }) => (
+            <Flex justifyContent="end">
+              <ActionMenu>
+                <MenuItem
+                  icon={<BsListUl />}
+                  onClick={() => {
+                    navigate(`/app/users/attributes/list/${row.original.id}`);
+                  }}
+                >
+                  View Attributes
+                </MenuItem>
+                <MenuItem
+                  icon={<BsPencilSquare />}
+                  onClick={() => {
+                    navigate(`/app/users/attributes/${row.original.id}`);
+                  }}
+                >
+                  Edit Attribute Category
+                </MenuItem>
+                <MenuItem
+                  isDisabled={
+                    row.original.protected ||
+                    !permissions.can("delete", "users")
+                  }
+                  icon={<IoMdTrash />}
+                  onClick={() => onDelete(row.original)}
+                >
+                  Delete Category
+                </MenuItem>
+              </ActionMenu>
+            </Flex>
+          ),
+        },
+      ];
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    return (
+      <>
+        <Table<typeof data[number]>
+          data={data}
+          columns={columns}
+          count={count}
+        />
+        <DeleteAttributeCategoryModal
+          onCancel={onDeleteCancel}
+          isOpen={deleteModal.isOpen}
+          data={selectedCategory}
+        />
+      </>
+    );
+  }
+);
+
+AttributeCategoriesTable.displayName = "AttributeCategoriesTable";
+export default AttributeCategoriesTable;

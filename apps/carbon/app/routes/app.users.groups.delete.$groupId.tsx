@@ -1,19 +1,21 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData, useNavigate, useParams } from "@remix-run/react";
-import { DeleteGroupModal } from "~/modules/Users/Groups";
+import { DeleteGroupModal } from "~/interfaces/Users/Groups";
 import { requirePermissions } from "~/services/auth";
 import { deleteGroup, getGroup } from "~/services/users";
 import { flash } from "~/services/session";
 import { error, success } from "~/utils/result";
+import { notFound } from "~/utils/http";
 
 export async function loader({ request, params }: LoaderArgs) {
   const { client } = await requirePermissions(request, {
     view: "users",
   });
   const { groupId } = params;
+  if (!groupId) throw notFound("groupId not found");
 
-  const group = await getGroup(client, groupId!);
+  const group = await getGroup(client, groupId);
   if (group.error) {
     return redirect(
       "/app/users/groups",

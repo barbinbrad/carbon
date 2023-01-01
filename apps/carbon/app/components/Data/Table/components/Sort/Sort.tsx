@@ -86,7 +86,6 @@ const Sort = ({ columnAccessors }: SortProps) => {
                         <>{columnAccessors[column] ?? ""}</>
                       </Text>
                       <Switch
-                        colorScheme="blackAlpha"
                         isChecked={direction === "asc"}
                         onChange={() => toggleSortByDirection(column)}
                       />

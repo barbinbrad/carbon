@@ -15,14 +15,17 @@ export const mapRowsToOptions = <T extends Record<string, any>>({
 }) => {
   if (!data) return [];
 
-  return data.reduce<{ value: string; label: string }[]>((acc, row) => {
-    const v = row[value];
-    const l = typeof label === "function" ? label(row) : row[label];
+  return data.reduce<{ value: string | number; label: string }[]>(
+    (acc, row) => {
+      const v = row[value];
+      const l = typeof label === "function" ? label(row) : row[label];
 
-    if (v && l) {
-      return [...acc, { label: l, value: v }];
-    }
+      if (v && l) {
+        return [...acc, { label: l, value: v }];
+      }
 
-    return acc;
-  }, []);
+      return acc;
+    },
+    []
+  );
 };

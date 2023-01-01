@@ -4,12 +4,14 @@ import type { PropsWithChildren } from "react";
 import { useIsSubmitting } from "remix-validated-form";
 
 export const Submit = ({
+  formId,
   children,
   ...props
-}: PropsWithChildren<ButtonProps & { text?: string }>) => {
+}: PropsWithChildren<ButtonProps & { formId?: string; text?: string }>) => {
   const isSubmitting = useIsSubmitting();
   return (
     <Button
+      form={formId}
       type="submit"
       size="md"
       colorScheme="brand"

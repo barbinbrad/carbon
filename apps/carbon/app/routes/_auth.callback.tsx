@@ -4,7 +4,7 @@ import { json, redirect } from "@remix-run/node";
 import type { LoaderArgs, ActionArgs } from "@remix-run/node";
 import { useFetcher } from "@remix-run/react";
 import { callbackValidator } from "~/services/auth/auth.form";
-import { getSupabase, getSupabaseAdmin } from "~/lib/supabase";
+import { getSupabase } from "~/lib/supabase";
 import { refreshAccessToken } from "~/services/auth";
 import { getUserByEmail } from "~/services/users";
 import {

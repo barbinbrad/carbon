@@ -109,7 +109,8 @@ export const PaginationButtons = ({
       ) : (
         <>
           <Flex fontSize="sm" h={8} fontWeight="medium" alignItems="center">
-            {offset + 1} - {Math.min(offset + pageSize, count)} of {count}
+            {count > 0 ? offset + 1 : 0} - {Math.min(offset + pageSize, count)}{" "}
+            of {count}
           </Flex>
           <Button
             disabled={!canPreviousPage}

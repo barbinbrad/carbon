@@ -22,7 +22,6 @@ import { getUserByEmail } from "~/services/users";
 import { assertIsPost } from "~/utils/http";
 import type { FormActionData, Result } from "~/types";
 import { error } from "~/utils/result";
-import { getSupabaseAdmin } from "~/lib/supabase";
 
 export const meta: MetaFunction = () => ({
   title: "Carbon | Forgot Password",

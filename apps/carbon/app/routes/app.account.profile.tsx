@@ -6,9 +6,12 @@ import { json } from "@remix-run/router";
 import { validationError } from "remix-validated-form";
 import { PageTitle } from "~/components/Layout";
 import { ProfileForm, ProfilePhotoForm } from "~/interfaces/Account/Profile";
+import { UserAttributesForm } from "~/interfaces/Account/UserAttributes";
+import type { PublicAttributes } from "~/interfaces/Account/types";
 import {
   accountProfileValidator,
-  getAccountById,
+  getAccount,
+  getPublicAttributes,
   updateAvatar,
   updatePublicAccount,
 } from "~/services/account";
@@ -20,14 +23,11 @@ import { error, success } from "~/utils/result";
 export async function loader({ request }: LoaderArgs) {
   const { client, userId } = await requirePermissions(request, {});
 
-  if (!userId) {
-    return redirect(
-      "/app",
-      await flash(request, error(undefined, "Could not authenticate request"))
-    );
-  }
+  const [user, publicAttributes] = await Promise.all([
+    getAccount(client, userId),
+    getPublicAttributes(client, userId),
+  ]);
 
-  const user = await getAccountById(client, userId);
   if (user.error || !user.data) {
     return redirect(
       "/app",
@@ -35,7 +35,17 @@ export async function loader({ request }: LoaderArgs) {
     );
   }
 
-  return json({ user: user.data });
+  if (publicAttributes.error) {
+    return redirect(
+      "/app",
+      await flash(
+        request,
+        error(publicAttributes.error, "Failed to get user attributes")
+      )
+    );
+  }
+
+  return json({ user: user.data, attributes: publicAttributes.data });
 }
 
 export async function action({ request }: ActionArgs) {
@@ -100,7 +110,7 @@ export async function action({ request }: ActionArgs) {
 }
 
 export default function AccountProfile() {
-  const { user } = useLoaderData<typeof loader>();
+  const { user, attributes } = useLoaderData<typeof loader>();
 
   return (
     <>
@@ -117,6 +127,9 @@ export default function AccountProfile() {
         <ProfileForm user={user} />
         <ProfilePhotoForm user={user} />
       </Grid>
+      {attributes.map((category: PublicAttributes) => (
+        <UserAttributesForm key={category.id} attributeCategory={category} />
+      ))}
     </>
   );
 }

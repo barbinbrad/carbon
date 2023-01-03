@@ -2,10 +2,7 @@ import type { ActionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { useNavigate } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
-import {
-  AttributeCategoryForm,
-  AttributeForm,
-} from "~/interfaces/Users/Attributes";
+import { AttributeCategoryForm } from "~/interfaces/Users/Attributes";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import {

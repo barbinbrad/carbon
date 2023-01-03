@@ -1,6 +1,7 @@
 import { Box, Grid, VStack } from "@chakra-ui/react";
 import { ValidatedForm } from "remix-validated-form";
 import { Hidden, Input, Submit, TextArea } from "~/components/Form";
+import { SectionTitle } from "~/components/Layout";
 import type { User } from "~/interfaces/Users/types";
 import { accountProfileValidator } from "~/services/account";
 
@@ -11,6 +12,7 @@ type ProfileFormProps = {
 const ProfileForm = ({ user }: ProfileFormProps) => {
   return (
     <Box w="full">
+      <SectionTitle title="Basic Information" />
       <ValidatedForm
         method="post"
         action="/app/account/profile"
@@ -24,7 +26,7 @@ const ProfileForm = ({ user }: ProfileFormProps) => {
           </Grid>
           <TextArea name="about" label="About" characterLimit={160} my={2} />
           <Hidden name="intent" value="about" />
-          <Submit>Save</Submit>
+          <Submit size="sm">Save</Submit>
         </VStack>
       </ValidatedForm>
     </Box>

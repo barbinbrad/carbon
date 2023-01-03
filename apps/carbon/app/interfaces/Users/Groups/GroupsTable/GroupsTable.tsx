@@ -4,8 +4,8 @@ import { useNavigate } from "@remix-run/react";
 import { memo } from "react";
 import { BsPencilSquare } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Avatar } from "~/components/Avatar";
-import { Table } from "~/components/Data";
+import { Avatar } from "~/components";
+import { Table } from "~/components";
 import { usePermissions } from "~/hooks";
 import type { Group } from "~/interfaces/Users/types";
 

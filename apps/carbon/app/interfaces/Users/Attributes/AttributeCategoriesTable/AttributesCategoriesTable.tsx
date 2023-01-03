@@ -11,9 +11,10 @@ import {
 import { Link, useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo, useState } from "react";
+import { BiAddToQueue } from "react-icons/bi";
 import { BsPencilSquare, BsListUl } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Table } from "~/components/Data";
+import { Table } from "~/components";
 import { usePermissions } from "~/hooks";
 import type { AttributeCategory } from "~/interfaces/Users/types";
 import DeleteAttributeCategoryModal from "../DeleteAttributeCategoryModal";
@@ -87,6 +88,16 @@ const AttributeCategoriesTable = memo(
           cell: ({ row }) => (
             <Flex justifyContent="end">
               <ActionMenu>
+                <MenuItem
+                  icon={<BiAddToQueue />}
+                  onClick={() => {
+                    navigate(
+                      `/app/users/attributes/list/${row.original.id}/new`
+                    );
+                  }}
+                >
+                  New Attribute
+                </MenuItem>
                 <MenuItem
                   icon={<BsListUl />}
                   onClick={() => {

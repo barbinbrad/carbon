@@ -81,7 +81,7 @@ const useSelect = <
   /** Ensure that the color used for the selected options is a string */
   let realSelectedOptionColor: string = selectedOptionColor;
   if (typeof selectedOptionColor !== "string") {
-    realSelectedOptionColor = "blue";
+    realSelectedOptionColor = "blackAlpha";
   }
 
   let realVariant: Variant = variant;

@@ -8,7 +8,7 @@ export default function NewAttributeRoute() {
   if (Number.isNaN(categoryId)) throw new Error("categoryId is not a number");
 
   const navigate = useNavigate();
-  const onClose = () => navigate(`/app/users/attributes/list/${categoryId}`);
+  const onClose = () => navigate(-1);
   const attributesRouteData = useRouteData<{
     dataTypes: {
       data: AttributeDataType[] | null;

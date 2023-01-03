@@ -118,9 +118,10 @@ CREATE TABLE "userAttributeValue" (
   "id" SERIAL PRIMARY KEY,
   "userAttributeId" INTEGER NOT NULL,
   "userId" TEXT NOT NULL,
-  "valueText" TEXT,
+  "valueBoolean" BOOLEAN,
   "valueDate" DATE,
-  "valueNumber" NUMERIC,
+  "valueNumeric" NUMERIC,
+  "valueText" TEXT,
   "valueUser" TEXT,
   "createdAt" TIMESTAMP(3) DEFAULT now() NOT NULL,
   "createdBy" TEXT NOT NULL,
@@ -130,27 +131,38 @@ CREATE TABLE "userAttributeValue" (
   CONSTRAINT "userAttributeValue_singleValue"
     CHECK (
       (
+        "valueBoolean" IS NOT NULL AND
+        "valueDate" IS NULL AND
+        "valueNumeric" IS NULL AND
+        "valueText" IS NULL AND
+        "valueUser" IS NULL
+      ) 
+      OR (
+        "valueBoolean" IS NULL AND
+        "valueDate" IS NULL AND
+        "valueNumeric" IS NULL AND
         "valueText" IS NOT NULL AND
-        "valueDate" IS NULL AND
-        "valueNumber" IS NULL AND
         "valueUser" IS NULL
       ) 
       OR (
-        "valueText" IS NULL AND
+        "valueBoolean" IS NULL AND
         "valueDate" IS NOT NULL AND
-        "valueNumber" IS NULL AND
+        "valueNumeric" IS NULL AND
+        "valueText" IS NULL AND
         "valueUser" IS NULL
       ) 
       OR (
-        "valueText" IS NULL AND
+        "valueBoolean" IS NULL AND
         "valueDate" IS NULL AND
-        "valueNumber" IS NOT NULL AND
+        "valueNumeric" IS NOT NULL AND
+        "valueText" IS NULL AND
         "valueUser" IS NULL
       ) 
       OR (
-        "valueText" IS NULL AND
+        "valueBoolean" IS NULL AND
         "valueDate" IS NULL AND
-        "valueNumber" IS NULL AND
+        "valueNumeric" IS NULL AND
+        "valueText" IS NULL AND
         "valueUser" IS NOT NULL
       ) 
     ),

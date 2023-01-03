@@ -347,9 +347,10 @@ export interface Database {
           id: number
           userAttributeId: number
           userId: string
-          valueText: string | null
+          valueBoolean: boolean | null
           valueDate: string | null
-          valueNumber: number | null
+          valueNumeric: number | null
+          valueText: string | null
           valueUser: string | null
           createdAt: string
           createdBy: string
@@ -360,9 +361,10 @@ export interface Database {
           id?: number
           userAttributeId: number
           userId: string
-          valueText?: string | null
+          valueBoolean?: boolean | null
           valueDate?: string | null
-          valueNumber?: number | null
+          valueNumeric?: number | null
+          valueText?: string | null
           valueUser?: string | null
           createdAt?: string
           createdBy: string
@@ -373,9 +375,10 @@ export interface Database {
           id?: number
           userAttributeId?: number
           userId?: string
-          valueText?: string | null
+          valueBoolean?: boolean | null
           valueDate?: string | null
-          valueNumber?: number | null
+          valueNumeric?: number | null
+          valueText?: string | null
           valueUser?: string | null
           createdAt?: string
           createdBy?: string

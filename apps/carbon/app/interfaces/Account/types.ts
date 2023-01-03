@@ -1,7 +1,13 @@
-import type { getAccountById } from "~/services/account";
+import type { getAccount, getPublicAttributes } from "~/services/account";
+
+export type Account = NonNullable<
+  Awaited<ReturnType<typeof getAccount>>["data"]
+>;
 
 export type PersonalData = {};
 
-export type Account = NonNullable<
-  Awaited<ReturnType<typeof getAccountById>>["data"]
->;
+export type PublicAttributes = NonNullable<
+  Awaited<ReturnType<typeof getPublicAttributes>>["data"]
+>[number];
+
+export type PrivateAttributes = PublicAttributes;

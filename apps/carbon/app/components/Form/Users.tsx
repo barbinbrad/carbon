@@ -7,7 +7,7 @@ import type {
   UserSelectProps,
 } from "../Selectors/UserSelect/types";
 
-type UsersProps = { name: string; label: string } & UserSelectProps;
+type UsersProps = { name: string; label?: string } & UserSelectProps;
 
 const Users = ({ name, label, ...props }: UsersProps) => {
   const { error, defaultValue, validate } = useField(name);

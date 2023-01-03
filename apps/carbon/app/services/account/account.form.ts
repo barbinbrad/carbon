@@ -1,5 +1,6 @@
 import { withZod } from "@remix-validated-form/with-zod";
 import { z } from "zod";
+import { zfd } from "zod-form-data";
 
 export const accountProfileValidator = withZod(
   z.object({
@@ -31,3 +32,44 @@ export const accountPasswordValidator = withZod(
 );
 
 export const accountPersonalDataValidator = withZod(z.object({}));
+
+const attributeDefaults = {
+  type: z.string().min(1, { message: "Type is required" }),
+  userAttributeId: zfd.numeric(),
+  userAttributeValueId: zfd.numeric(z.number().optional()),
+};
+
+export const attributeBooleanValidator = withZod(
+  z.object({
+    ...attributeDefaults,
+    value: zfd.checkbox(),
+  })
+);
+
+export const attributeNumericValidator = withZod(
+  z.object({
+    ...attributeDefaults,
+    value: zfd.numeric(z.number()),
+  })
+);
+
+export const attributeTextValidator = withZod(
+  z.object({
+    ...attributeDefaults,
+    value: z.string().min(1, { message: "Value is required" }),
+  })
+);
+
+export const attributeUserValidator = withZod(
+  z.object({
+    ...attributeDefaults,
+    value: z.string().min(36, { message: "User is required" }),
+  })
+);
+
+export const deleteUserAttributeValueValidator = withZod(
+  z.object({
+    userAttributeId: zfd.numeric(),
+    userAttributeValueId: zfd.numeric(),
+  })
+);

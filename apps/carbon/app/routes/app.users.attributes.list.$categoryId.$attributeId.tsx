@@ -46,6 +46,8 @@ export default function EditAttributeRoute() {
     };
   }>("/app/users/attributes");
 
+  console.log("attribute", attribute);
+
   return (
     <AttributeForm
       initialValues={{
@@ -54,6 +56,7 @@ export default function EditAttributeRoute() {
         attributeDataTypeId: attribute?.attributeDataTypeId,
         userAttributeCategoryId: attribute?.userAttributeCategoryId,
         canSelfManage: attribute.canSelfManage ?? true,
+        listOptions: attribute?.listOptions ?? [],
       }}
       dataTypes={attributesRouteData?.dataTypes?.data ?? []}
       onClose={onClose}

@@ -2,7 +2,6 @@ import { Loading } from "@carbon/react";
 import type { IconProps } from "@chakra-ui/react";
 import { Box, Icon, List, ListItem, MenuIcon, Text } from "@chakra-ui/react";
 import { FaCheck, FaChevronRight } from "react-icons/fa";
-import Empty from "~/components/Data/Empty";
 import type { OptionGroup, SelectionItemInterface } from "../types";
 import useUserSelectContext from "../provider";
 import { useGroupStyles, useOptionStyles } from "./useUserSelectStyles";
@@ -34,7 +33,7 @@ const UserTreeSelect = () => {
       ) : groups.length > 0 ? (
         groups.map((group) => <Group key={group.uid} group={group} />)
       ) : (
-        <Empty text={"No options available"} />
+        <Text>No options found</Text>
       )}
     </List>
   );

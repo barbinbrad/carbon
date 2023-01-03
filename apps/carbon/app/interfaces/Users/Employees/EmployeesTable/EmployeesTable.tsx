@@ -10,11 +10,11 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo, useState } from "react";
 import { BsPencilSquare } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Table } from "~/components/Data";
+import { Table } from "~/components";
 import { usePermissions } from "~/hooks";
 import type { Employee } from "~/interfaces/Users/types";
 import { BulkEditPermissionsForm } from "~/interfaces/Users/BulkEditPermissions";
-import { Avatar } from "~/components/Avatar";
+import { Avatar } from "~/components";
 
 type EmployeesTableProps = {
   data: Employee[];

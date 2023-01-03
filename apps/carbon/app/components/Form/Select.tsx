@@ -10,7 +10,7 @@ import { useField } from "remix-validated-form";
 
 type SelectProps = {
   name: string;
-  label: string;
+  label?: string;
   options: { value: string | number; label: string }[];
   helperText?: string;
   isReadOnly?: boolean;

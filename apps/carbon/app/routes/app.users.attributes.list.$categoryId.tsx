@@ -1,34 +1,7 @@
-import {
-  Button,
-  Drawer,
-  DrawerBody,
-  DrawerCloseButton,
-  DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerOverlay,
-  HStack,
-  IconButton,
-  List,
-  ListItem,
-  Tag,
-  TagLabel,
-  Text,
-} from "@chakra-ui/react";
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import {
-  Link,
-  Outlet,
-  useFetcher,
-  useLoaderData,
-  useNavigate,
-} from "@remix-run/react";
-import { Reorder } from "framer-motion";
-import { useMemo, useState } from "react";
-import { MdOutlineDragIndicator } from "react-icons/md";
+import { Outlet, useLoaderData, useNavigate } from "@remix-run/react";
 import { AttributeCategoryDetail } from "~/interfaces/Users/Attributes";
-import type { AttributeCategory } from "~/interfaces/Users/types";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import {

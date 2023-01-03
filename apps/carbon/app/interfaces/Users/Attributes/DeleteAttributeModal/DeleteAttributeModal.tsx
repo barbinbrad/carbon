@@ -32,8 +32,7 @@ const DeleteAttributeModal = ({
         <ModalHeader>Delete {data?.name}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          Are you sure you want to deactivate the {data?.name} attribute from{" "}
-          {data?.userAttributeCategory?.name!}?
+          Are you sure you want to deactivate the {data?.name} attribute?
         </ModalBody>
 
         <ModalFooter>

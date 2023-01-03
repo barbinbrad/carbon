@@ -150,7 +150,7 @@ export async function getAttribute(
   return client
     .from("userAttribute")
     .select(
-      "id, name, sortOrder, attributeDataTypeId, userAttributeCategoryId, canSelfManage, userAttributeCategory(name)"
+      "id, name, sortOrder, listOptions, attributeDataTypeId, userAttributeCategoryId, canSelfManage, userAttributeCategory(name)"
     )
     .eq("id", attributeId)
     .eq("active", true)

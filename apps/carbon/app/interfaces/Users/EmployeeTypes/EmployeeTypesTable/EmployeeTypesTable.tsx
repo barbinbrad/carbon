@@ -5,7 +5,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo } from "react";
 import { BsPencilSquare, BsPeopleFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Table } from "~/components/Data";
+import { Table } from "~/components";
 import { usePermissions } from "~/hooks";
 import type { EmployeeType } from "~/interfaces/Users/types";
 

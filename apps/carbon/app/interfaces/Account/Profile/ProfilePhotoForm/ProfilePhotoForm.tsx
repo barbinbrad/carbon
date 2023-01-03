@@ -3,7 +3,7 @@ import { Button, Input, InputGroup, VStack } from "@chakra-ui/react";
 import { useSubmit } from "@remix-run/react";
 import type { ChangeEvent } from "react";
 import { useRef } from "react";
-import { Avatar } from "~/components/Avatar";
+import { Avatar } from "~/components";
 import { useSupabase } from "~/lib/supabase";
 import type { Account } from "~/interfaces/Account/types";
 
@@ -78,7 +78,6 @@ const ProfilePhotoForm = ({ user }: ProfilePhotoFormProps) => {
           onChange={uploadImage}
         />
         <Button
-          size="md"
           variant="solid"
           colorScheme="brand"
           onClick={() => {
@@ -89,7 +88,7 @@ const ProfilePhotoForm = ({ user }: ProfilePhotoFormProps) => {
         </Button>
       </InputGroup>
       {user.avatarUrl && (
-        <Button size="md" variant="outline" onClick={deleteImage}>
+        <Button variant="outline" onClick={deleteImage}>
           Remove
         </Button>
       )}

@@ -62,7 +62,7 @@ const SelectInput = () => {
       <InputRightElement w="auto">
         <HStack spacing={1} mr={2}>
           {loading && <Spinner size="sm" />}
-          {!loading && inputValue.length > 0 && (
+          {!loading && !disabled && inputValue.length > 0 && (
             <IconButton
               aria-label="Clear search query"
               icon={<MdOutlineClear />}

@@ -1,6 +1,7 @@
 import { useRouteData } from "./useRouteData";
 
 type User = {
+  id: string;
   email: string;
   firstName: string;
   lastName: string;
@@ -20,6 +21,7 @@ export function useUser() {
 
 function isUser(value: any): value is User {
   return (
+    typeof value.id === "string" &&
     typeof value.email === "string" &&
     typeof value.firstName === "string" &&
     typeof value.lastName === "string" &&

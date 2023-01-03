@@ -1,5 +1,5 @@
 import { useColor } from "@carbon/react";
-import { Button, GridItem, HStack } from "@chakra-ui/react";
+import { Button, Flex, GridItem, HStack, Kbd } from "@chakra-ui/react";
 import { BiHelpCircle } from "react-icons/bi";
 import { FaSearch } from "react-icons/fa";
 import AvatarMenu from "./AvatarMenu";
@@ -31,7 +31,7 @@ const Topbar = () => {
       <Button
         colorScheme="gray"
         leftIcon={<FaSearch />}
-        variant="solid"
+        variant="outline"
         border={1}
         borderColor={borderColor}
         borderStyle="solid"
@@ -39,7 +39,10 @@ const Topbar = () => {
         w={200}
         mt={2}
       >
-        Search
+        <HStack w="full">
+          <Flex flexGrow={1}>Search</Flex>
+          <Kbd size="lg">/</Kbd>
+        </HStack>
       </Button>
       <HStack py={2} pr={4} justifyContent="end">
         <Button

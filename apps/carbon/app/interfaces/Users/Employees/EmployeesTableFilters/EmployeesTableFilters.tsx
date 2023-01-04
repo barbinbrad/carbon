@@ -43,7 +43,6 @@ const EmployeesTableFilters = ({ employeeTypes }: EmployeeTypeFiltersProps) => {
         <Select
           // @ts-ignore
           size="sm"
-          colorScheme="brand"
           value={employeeTypeOptions.filter(
             (type) => type.value === params.get("type")
           )}
@@ -55,6 +54,30 @@ const EmployeesTableFilters = ({ employeeTypes }: EmployeeTypeFiltersProps) => {
           aria-label="Employee Type"
           minW={180}
           placeholder="Employee Type"
+        />
+        <Select
+          // @ts-ignore
+          size="sm"
+          value={
+            params.get("active") === "false"
+              ? { value: "false", label: "Inactive" }
+              : { value: "true", label: "Active" }
+          }
+          options={[
+            {
+              value: "true",
+              label: "Active",
+            },
+            {
+              value: "false",
+              label: "Inactive",
+            },
+          ]}
+          onChange={(selected) => {
+            setParams({ active: selected?.value });
+          }}
+          aria-label="Active"
+          minW={180}
         />
       </HStack>
       <HStack spacing={2}>

@@ -19,11 +19,13 @@ export async function loader({ request }: LoaderArgs) {
   const searchParams = new URLSearchParams(url.search);
   const name = searchParams.get("name");
   const type = searchParams.get("type");
+  const active = searchParams.get("active") !== "false";
+
   const { limit, offset, sorts, filters } =
     getGenericQueryFilters(searchParams);
 
   const [employees, employeeTypes] = await Promise.all([
-    getEmployees(client, { name, type, limit, offset, sorts, filters }),
+    getEmployees(client, { name, type, active, limit, offset, sorts, filters }),
     getEmployeeTypes(client),
   ]);
 

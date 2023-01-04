@@ -37,6 +37,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "4.6.0",
+    "react-virtual": "2.10.4",
     "reactflow": "^11.3.3",
     "remix-flat-routes": "^0.5.4",
     "remix-validated-form": "^4.6.5",

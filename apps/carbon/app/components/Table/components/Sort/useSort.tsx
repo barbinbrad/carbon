@@ -41,11 +41,11 @@ export function useSort() {
 
     if (existingSort.includes(sortAsc)) {
       setParams({
-        sort: existingSort.filter((s) => s !== sortAsc).concat(sortDesc),
+        sort: existingSort.map((s) => (s === sortAsc ? sortDesc : s)),
       });
     } else if (existingSort.includes(sortDesc)) {
       setParams({
-        sort: existingSort.filter((s) => s !== sortDesc).concat(sortAsc),
+        sort: existingSort.map((s) => (s === sortDesc ? sortAsc : s)),
       });
     }
   };

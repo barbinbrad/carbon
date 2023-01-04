@@ -229,6 +229,7 @@ export async function getEmployees(
   args: GenericQueryFilters & {
     name: string | null;
     type: string | null;
+    active: boolean | null;
   }
 ) {
   let query = client
@@ -244,6 +245,10 @@ export async function getEmployees(
 
   if (args.type) {
     query = query.eq("employeeTypeId", args.type);
+  }
+
+  if (args.active !== null) {
+    query = query.eq("user.active", args.active);
   }
 
   query = setGenericQueryFilters(query, args, "user(lastName)");

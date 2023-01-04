@@ -87,17 +87,6 @@ export interface Database {
           employeeTypeId?: string
         }
       }
-      employeePersonalData: {
-        Row: {
-          id: string
-        }
-        Insert: {
-          id: string
-        }
-        Update: {
-          id?: string
-        }
-      }
       employeeType: {
         Row: {
           id: string

@@ -12,10 +12,3 @@ ALTER TABLE "employee" ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Only claims admin can view/modify employees" ON "employee" FOR ALL USING (is_claims_admin());
 CREATE POLICY "Anyone that's authenticated can view employees" ON "employee" FOR SELECT USING (auth.role() = 'authenticated');
 
-CREATE TABLE "employeePersonalData" (
-    "id" TEXT NOT NULL,
-    
-
-    CONSTRAINT "employeePersonalData_pkey" PRIMARY KEY ("id"),
-    CONSTRAINT "employeePersonalData_id_fkey" FOREIGN KEY ("id") REFERENCES "employee"("id") ON DELETE CASCADE ON UPDATE NO ACTION
-)

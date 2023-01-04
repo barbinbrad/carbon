@@ -2579,6 +2579,11 @@
   resolved "https://registry.yarnpkg.com/@prisma/engines/-/engines-4.6.1.tgz#ae31309cc0f600f2da22708697b3be4eb1e46f9e"
   integrity sha512-3u2/XxvxB+Q7cMXHnKU0CpBiUK1QWqpgiBv28YDo1zOIJE3FCF8DI2vrp6vuwjGt5h0JGXDSvmSf4D4maVjJdw==
 
+"@reach/observe-rect@^1.1.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@reach/observe-rect/-/observe-rect-1.2.0.tgz#d7a6013b8aafcc64c778a0ccb83355a11204d3b2"
+  integrity sha512-Ba7HmkFgfQxZqqaeIWWkNK0rEhpxVQHIoVyW1YDSkGsGIXzcaW4deC8B0pZrNSSyLTdIk7y+5olKt5+g0GmFIQ==
+
 "@react-aria/button@^3.6.4":
   version "3.6.4"
   resolved "https://registry.yarnpkg.com/@react-aria/button/-/button-3.6.4.tgz#51927c9d968d0c1f741ee2081ca7f2e244abbc12"
@@ -2608,7 +2613,7 @@
     "@react-types/shared" "^3.16.0"
     "@swc/helpers" "^0.4.14"
 
-"@react-aria/datepicker@^3.4.0":
+"@react-aria/datepicker@^3.2.1":
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/@react-aria/datepicker/-/datepicker-3.2.1.tgz#56a222c4b1c9c65b9b9371d3066611134f537ab7"
   integrity sha512-NnW9VgX/YjxkgjcIaxmOhzpfiQmTQpCXjpPJ1+3nPhKzPKpcjtPxIYTDMkm/R+6i5FRukEGtjhg3QY9amLK6hQ==
@@ -2723,7 +2728,7 @@
     "@react-types/shared" "^3.16.0"
     "@swc/helpers" "^0.4.14"
 
-"@react-stately/datepicker@^3.2.1", "@react-stately/datepicker@^3.4.0":
+"@react-stately/datepicker@^3.2.1":
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/@react-stately/datepicker/-/datepicker-3.2.1.tgz#4c545981f73771bff76885e50014b4274fa4b554"
   integrity sha512-nd6thX2Z+rOLDHduB3EgMKA0n5U83lrwn3IUfjRGrcE21zFaFmhTPsHyvol5jHy3eSyjWSN9kGpKFzOxES+uoA==
@@ -2769,7 +2774,7 @@
   dependencies:
     "@react-types/shared" "^3.16.0"
 
-"@react-types/calendar@^3.0.5", "@react-types/calendar@^3.4.0":
+"@react-types/calendar@^3.0.5":
   version "3.0.5"
   resolved "https://registry.yarnpkg.com/@react-types/calendar/-/calendar-3.0.5.tgz#a91fca7d5a2bbbd554748471f9920600cb364d18"
   integrity sha512-Kx00132hFEVvqay/Ub7q2oZEA1AzksirAuCsjakamn4LAXvitlo3PZxqBdEsyRc3nP5NR48KJj8yo276mXY8kQ==
@@ -2784,7 +2789,7 @@
   dependencies:
     "@react-types/shared" "^3.16.0"
 
-"@react-types/datepicker@^3.1.4", "@react-types/datepicker@^3.4.0":
+"@react-types/datepicker@^3.1.4":
   version "3.1.4"
   resolved "https://registry.yarnpkg.com/@react-types/datepicker/-/datepicker-3.1.4.tgz#46fd291d8acd40fdd304c4c0bf1a47e71eaa1801"
   integrity sha512-NBCXBCe3YZqeA/JrVKy0IAvJ2XSnXaVpR9iAlUwKu7V8P81CtnXHsVCrd/0HSH8QZWsGdIV5E23z0TctvW8trA==
@@ -10361,6 +10366,13 @@ react-transition-group@^4.3.0:
     dom-helpers "^5.0.1"
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
+
+react-virtual@2.10.4:
+  version "2.10.4"
+  resolved "https://registry.yarnpkg.com/react-virtual/-/react-virtual-2.10.4.tgz#08712f0acd79d7d6f7c4726f05651a13b24d8704"
+  integrity sha512-Ir6+oPQZTVHfa6+JL9M7cvMILstFZH/H3jqeYeKI4MSUX+rIruVwFC6nGVXw9wqAw8L0Kg2KvfXxI85OvYQdpQ==
+  dependencies:
+    "@reach/observe-rect" "^1.1.0"
 
 react@^18.2.0:
   version "18.2.0"

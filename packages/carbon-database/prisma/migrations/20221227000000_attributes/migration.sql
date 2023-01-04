@@ -176,4 +176,48 @@ CREATE TABLE "userAttributeValue" (
     UNIQUE ( "userAttributeId", "userId")
 );
 
--- ALTER TABLE "userAttributeValue" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "userAttributeValue" ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Claims admin can view/modify user attribute values" ON "userAttributeValue" FOR ALL USING (is_claims_admin());
+CREATE POLICY "Users can insert attributes for themselves" ON "userAttributeValue" FOR UPDATE WITH CHECK (auth.uid() = "userId"::uuid);
+CREATE POLICY "Users can modify attributes for themselves" ON "userAttributeValue" FOR UPDATE WITH CHECK (auth.uid() = "userId"::uuid);
+CREATE POLICY "Users can view their own attribtues" ON "userAttributeValue" FOR SELECT USING (auth.uid() = "userId"::uuid);
+CREATE POLICY "Users can view other users attributes if the category is public" ON "userAttributeValue" FOR SELECT 
+  USING (
+    auth.role() = 'authenticated' AND
+    "userAttributeValue"."userAttributeId" IN (
+      SELECT "id" FROM "userAttribute" WHERE "userAttributeCategoryId" IN (
+        SELECT "id" FROM "userAttributeCategory" WHERE "public" = true
+      )
+    )
+  );
+
+-- CREATE TABLE employee_personal_data (
+-- 	 id SERIAL PRIMARY KEY,
+--   bank_account_number TEXT,
+--   bank_routing_number TEXT,
+--   drivers_license_number TEXT,
+--   social_security TEXT,
+--   user_id TEXT NOT NULL,
+-- 	 key_id uuid NOT NULL DEFAULT '7da3ce7e-98f0-4c4f-9b63-b3f783eab919'::uuid,
+--   nonce BYTEA DEFAULT pgsodium.crypto_aead_det_noncegen(),
+
+--   CONSTRAINT "employee_personal_data_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE
+-- );
+
+-- SECURITY LABEL FOR pgsodium
+-- 	ON COLUMN employee_personal_data.bank_account
+--   	IS 'ENCRYPT WITH KEY COLUMN key_id ASSOCIATED (user_id) NONCE nonce';
+
+-- SECURITY LABEL FOR pgsodium
+-- 	ON COLUMN employee_personal_data.bank_routing
+--   	IS 'ENCRYPT WITH KEY COLUMN key_id ASSOCIATED (user_id) NONCE nonce';
+
+-- SECURITY LABEL FOR pgsodium
+-- 	ON COLUMN employee_personal_data.drivers_license
+--   	IS 'ENCRYPT WITH KEY COLUMN key_id ASSOCIATED (user_id) NONCE nonce';
+
+-- SECURITY LABEL FOR pgsodium
+-- 	ON COLUMN employee_personal_data.social_security
+--   	IS 'ENCRYPT WITH KEY COLUMN key_id ASSOCIATED (user_id) NONCE nonce';
+
+-- ALTER TABLE "employee_personal_data" ENABLE ROW LEVEL SECURITY;

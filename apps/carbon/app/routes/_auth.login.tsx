@@ -51,8 +51,10 @@ export async function action({ request }: ActionArgs): FormActionData {
   const authSession = await signInWithEmail(email, password);
 
   if (!authSession) {
+    // delay on incorrect password as minimal brute force protection
+    await new Promise((resolve) => setTimeout(resolve, 2000));
     return json(error(authSession, "Invalid email/password"), {
-      status: 400,
+      status: 500,
     });
   }
 

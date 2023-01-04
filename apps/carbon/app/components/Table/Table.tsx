@@ -16,6 +16,7 @@ import type {
   ColumnDef,
   ColumnOrderState,
   ColumnPinningState,
+  Row,
   RowSelectionState,
 } from "@tanstack/react-table";
 import {
@@ -24,8 +25,8 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useMemo, useState } from "react";
-
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useVirtual } from "react-virtual";
 import { AiFillCaretUp, AiFillCaretDown } from "react-icons/ai";
 import {
   Header,
@@ -51,6 +52,8 @@ interface TableProps<T extends object> {
   onRowClick?: (row: T) => void;
   onSelectedRowsChange?: (selectedRows: T[]) => void;
 }
+
+export type Position = null | { row: number; column: number };
 
 const Table = <T extends object>({
   data,
@@ -85,6 +88,10 @@ const Table = <T extends object>({
         }
       : {}
   );
+
+  // const pinnedColumns = columnPinning.left
+  //   ? columnPinning.left?.length - (withSelectableRows ? 1 : 0)
+  //   : 0;
 
   const columnAccessors = useMemo(
     () =>
@@ -124,6 +131,58 @@ const Table = <T extends object>({
     ? table.getSelectedRowModel().flatRows.map((row) => row.original)
     : [];
 
+  // const [selectedCell, setSelectedCell] = useState<Position>({
+  //   row: 2,
+  //   column: 0,
+  // });
+
+  // const handleKeydown = useCallback(
+  //   (event: KeyboardEvent) => {
+  //     const moves: { [key: string]: [0, 1] | [1, 0] | [0, -1] | [-1, 0] } = {
+  //       ArrowRight: [0, 1],
+  //       ArrowLeft: [0, -1],
+  //       ArrowDown: [1, 0],
+  //       ArrowUp: [-1, 0],
+  //       Tab: [0, 1],
+  //       Enter: [1, 0],
+  //     };
+
+  //     const rows = table.getRowModel().rows.length - 1;
+  //     const columns =
+  //       table.getVisibleLeafColumns().length - 1 - (withSelectableRows ? 1 : 0);
+
+  //     const clip = (value: number, min: number, max: number) =>
+  //       Math.min(Math.max(value, min), max);
+
+  //     const move = (direction: number[]): number[] => {
+  //       let newX = (selectedCell?.column || 0) + direction[1];
+  //       let newY = (selectedCell?.row || 0) + direction[0];
+
+  //       newX = clip(newX, 0, columns);
+  //       newY = clip(newY, 0, rows);
+
+  //       return [newX, newY];
+  //     };
+
+  //     if (event.code in moves && selectedCell) {
+  //       const [newX, newY] = move(moves[event.code]);
+  //       setSelectedCell({
+  //         row: newY,
+  //         column: newX,
+  //       });
+  //     }
+  //   },
+  //   [selectedCell, setSelectedCell, table, withSelectableRows]
+  // );
+
+  // useEffect(() => {
+  //   window.addEventListener("keydown", handleKeydown);
+
+  //   return () => {
+  //     window.removeEventListener("keydown", handleKeydown);
+  //   };
+  // }, [handleKeydown]);
+
   useEffect(() => {
     setColumnOrder(table.getAllLeafColumns().map((column) => column.id));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -137,13 +196,30 @@ const Table = <T extends object>({
   }, [rowSelection, onSelectedRowsChange]);
 
   const rows = table.getRowModel().rows;
+
   const defaultBackground = useColor("white");
   const rowBackground = useColor("gray.50");
   const borderColor = useColor("gray.200");
 
+  const tableContainerRef = useRef<HTMLDivElement>(null);
+  const rowVirtualizer = useVirtual({
+    parentRef: tableContainerRef,
+    size: rows.length,
+    overscan: 10,
+  });
+
+  const { virtualItems: virtualRows, totalSize } = rowVirtualizer;
+
+  const virtualPaddingTop =
+    virtualRows.length > 0 ? virtualRows?.[0]?.start || 0 : 0;
+  const virutalPaddingBottom =
+    virtualRows.length > 0
+      ? totalSize - (virtualRows?.[virtualRows.length - 1]?.end || 0)
+      : 0;
+
   return (
     <>
-      <Box w="full" h="full">
+      <Box w="full" h="full" ref={tableContainerRef}>
         {(withColumnOrdering || withFilters || withSelectableRows) && (
           <Header
             actions={actions}
@@ -234,8 +310,16 @@ const Table = <T extends object>({
                   ))}
                 </Thead>
                 <Tbody>
+                  {virtualPaddingTop > 0 && (
+                    <Tr>
+                      <Td style={{ height: `${virtualPaddingTop}px` }} />
+                    </Tr>
+                  )}
                   <AnimatePresence>
-                    {rows.map((row) => {
+                    {virtualRows.map((virtualRow) => {
+                      const row = rows[virtualRow.index] as Row<T>;
+                      // const rowIndex = virtualRow.index;
+
                       return (
                         <Tr
                           key={row.id}
@@ -255,27 +339,43 @@ const Table = <T extends object>({
                             background: rowBackground,
                           }}
                         >
-                          {row.getLeftVisibleCells().map((cell) => {
-                            return (
-                              <Td
-                                key={cell.id}
-                                layout
-                                transition={spring}
-                                fontSize="sm"
-                                px={4}
-                                py={2}
-                              >
-                                {flexRender(
-                                  cell.column.columnDef.cell,
-                                  cell.getContext()
-                                )}
-                              </Td>
-                            );
-                          })}
+                          {row
+                            .getLeftVisibleCells()
+                            .map((cell, columnIndex) => {
+                              const isSelected = false;
+                              //   selectedCell?.row === rowIndex &&
+                              //   selectedCell?.column === columnIndex - 1;
+
+                              return (
+                                <Td
+                                  key={cell.id}
+                                  layout
+                                  transition={spring}
+                                  boxShadow={
+                                    isSelected
+                                      ? "inset 0 0 0 3px rgb(66 153 255 / .6)"
+                                      : undefined
+                                  }
+                                  fontSize="sm"
+                                  px={4}
+                                  py={2}
+                                >
+                                  {flexRender(
+                                    cell.column.columnDef.cell,
+                                    cell.getContext()
+                                  )}
+                                </Td>
+                              );
+                            })}
                         </Tr>
                       );
                     })}
                   </AnimatePresence>
+                  {virutalPaddingBottom > 0 && (
+                    <Tr>
+                      <Td style={{ height: `${virutalPaddingBottom}px` }} />
+                    </Tr>
+                  )}
                 </Tbody>
               </ChakraTable>
             ) : null}
@@ -345,8 +445,16 @@ const Table = <T extends object>({
                 ))}
               </Thead>
               <Tbody>
+                {virtualPaddingTop > 0 && (
+                  <Tr>
+                    <Td style={{ height: `${virtualPaddingTop}px` }} />
+                  </Tr>
+                )}
                 <AnimatePresence>
-                  {rows.map((row) => {
+                  {virtualRows.map((virtualRow) => {
+                    const row = rows[virtualRow.index] as Row<T>;
+                    // const rowIndex = virtualRow.index;
+
                     return (
                       <Tr
                         key={row.id}
@@ -369,13 +477,23 @@ const Table = <T extends object>({
                         {(withColumnOrdering
                           ? row.getCenterVisibleCells()
                           : row.getVisibleCells()
-                        ).map((cell) => {
+                        ).map((cell, columnIndex) => {
+                          const isSelected = false;
+                          // selectedCell?.row === rowIndex &&
+                          // selectedCell?.column ===
+                          //   columnIndex + pinnedColumns;
+
                           return (
                             <Td
                               key={cell.id}
-                              fontSize="sm"
                               layout
                               transition={spring}
+                              boxShadow={
+                                isSelected
+                                  ? "inset 0 0 0 3px rgb(66 153 255 / .6)"
+                                  : undefined
+                              }
+                              fontSize="sm"
                               px={4}
                               py={withColumnOrdering ? 3 : 2}
                               whiteSpace="nowrap"
@@ -391,88 +509,13 @@ const Table = <T extends object>({
                     );
                   })}
                 </AnimatePresence>
+                {virutalPaddingBottom > 0 && (
+                  <Tr>
+                    <Td style={{ height: `${virutalPaddingBottom}px` }} />
+                  </Tr>
+                )}
               </Tbody>
             </ChakraTable>
-
-            {/* Pinned right columns
-            {withColumnOrdering ? (
-              <ChakraTable
-                bg={defaultBackground}
-                borderLeftColor={borderColor}
-                borderLeftStyle="solid"
-                borderLeftWidth={4}
-                // position="sticky"
-                // right={0}
-              >
-                <Thead h={10}>
-                  {table.getRightHeaderGroups().map((headerGroup) => (
-                    <Tr key={headerGroup.id}>
-                      {headerGroup.headers.map((header) => {
-                        return (
-                          <Th
-                            key={header.id}
-                            layout
-                            transition={spring}
-                            colSpan={header.colSpan}
-                            px={4}
-                            py={3}
-                          >
-                            {flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                          </Th>
-                        );
-                      })}
-                    </Tr>
-                  ))}
-                </Thead>
-                <Tbody>
-                  <AnimatePresence>
-                    {rows.map((row) => {
-                      return (
-                        <Tr
-                          key={row.id}
-                          exit={{ opacity: 0 }}
-                          layout
-                          transition={spring}
-                          onClick={() => {
-                            if (typeof onRowClick === "function") {
-                              onRowClick(row.original);
-                            }
-                          }}
-                          _hover={{
-                            cursor:
-                              typeof onRowClick === "function"
-                                ? "pointer"
-                                : undefined,
-                            background: rowBackground,
-                          }}
-                        >
-                          {row.getRightVisibleCells().map((cell) => {
-                            return (
-                              <Td
-                                key={cell.id}
-                                layout
-                                transition={spring}
-                                fontSize="sm"
-                                px={4}
-                                py={2}
-                              >
-                                {flexRender(
-                                  cell.column.columnDef.cell,
-                                  cell.getContext()
-                                )}
-                              </Td>
-                            );
-                          })}
-                        </Tr>
-                      );
-                    })}
-                  </AnimatePresence>
-                </Tbody>
-              </ChakraTable>
-            ) : null} */}
           </Grid>
         </Box>
       </Box>

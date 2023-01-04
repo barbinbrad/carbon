@@ -83,11 +83,17 @@ const Columns = <T extends object>({
                       <IconButton
                         aria-label="Toggle column"
                         icon={column.getIsPinned() ? <BsPinFill /> : <BsPin />}
-                        onClick={() =>
-                          column.getIsPinned()
-                            ? column.pin(false)
-                            : column.pin("left")
-                        }
+                        onClick={(e) => {
+                          if (column.getIsPinned()) {
+                            column.pin(false);
+                          } else {
+                            column.pin("left");
+                            // when a column is pinned, we assure that it's visible
+                            if (!column.getIsVisible()) {
+                              column.getToggleVisibilityHandler()(e);
+                            }
+                          }
+                        }}
                         variant="ghost"
                       />
                       <IconButton

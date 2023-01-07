@@ -36,20 +36,21 @@ const Sort = ({ columnAccessors }: SortProps) => {
     toggleSortBy,
     toggleSortByDirection,
   } = useSort();
+  const hasNoSorts = sorts.length === 0;
 
   return (
-    <Popover placement="bottom">
+    <Popover placement="bottom" closeOnBlur>
       <PopoverTrigger>
         <Button
-          colorScheme={sorts.length === 0 ? undefined : "brand"}
-          variant={sorts.length === 0 ? "ghost" : "solid"}
+          colorScheme={hasNoSorts ? undefined : "brand"}
+          variant={hasNoSorts ? "ghost" : "solid"}
           leftIcon={<BsListUl />}
         >
-          {sorts.length === 0 ? "Sort" : "Sorted"}
+          {hasNoSorts ? "Sort" : "Sorted"}
         </Button>
       </PopoverTrigger>
       <PopoverContent w={420} boxShadow="xl">
-        {sorts.length === 0 && (
+        {hasNoSorts && (
           <PopoverHeader>
             <Text fontSize="sm">No sorts applied to this view</Text>
             <Text fontSize="xs" color="gray.500">
@@ -58,7 +59,7 @@ const Sort = ({ columnAccessors }: SortProps) => {
           </PopoverHeader>
         )}
         <PopoverArrow />
-        {sorts.length > 0 && (
+        {!hasNoSorts && (
           <PopoverBody>
             <List
               as={Reorder.Group}

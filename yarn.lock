@@ -10620,10 +10620,10 @@ remeda@^1.2.0:
   resolved "https://registry.yarnpkg.com/remeda/-/remeda-1.3.0.tgz#6dc642187e08ead2265e8c7f8517a16a69e325ce"
   integrity sha512-DJkLBUzi0dEigDuyPtVe50aNzQq8EBQOintPaxvzwSNreXOGsRnvfGiK+cTsY+nUgGCBrcFxcvH8MIg2skfIZA==
 
-remix-flat-routes@^0.5.4:
-  version "0.5.4"
-  resolved "https://registry.yarnpkg.com/remix-flat-routes/-/remix-flat-routes-0.5.4.tgz#13614b75e1cce7f0394b04df0c932eebdf2ba4d7"
-  integrity sha512-4Rw3CwWvP/jUx9IkEOEbiNbzxwc/nb4wE9mk1Q1fO3yz46CLUOOoqUCn1+0nwlKqOdyYb0iw3Q8FV7d6X2fAjw==
+remix-flat-routes@^0.5.6:
+  version "0.5.6"
+  resolved "https://registry.yarnpkg.com/remix-flat-routes/-/remix-flat-routes-0.5.6.tgz#58475b8ddba3d8a29cd7634f9e691a70efaf7a86"
+  integrity sha512-Y+cB9Fg5L21FGSpW703tMsoORgC02Qa4BS6JG/TOM0ccDSvPDpkl/XAbg86JtZ/9aytSa7nUORlcB1725y8kAQ==
   dependencies:
     minimatch "^5.1.0"
 

@@ -1,5 +1,7 @@
-import { useColor } from "@carbon/react";
+import { useColor, useEscape } from "@carbon/react";
+import { clip } from "@carbon/utils";
 import type { ThemeTypings } from "@chakra-ui/react";
+import { VStack } from "@chakra-ui/react";
 import {
   Box,
   Flex,
@@ -7,16 +9,13 @@ import {
   Table as ChakraTable,
   Thead,
   Tbody,
-  Tr as ChakraTr,
-  Th as ChakraTh,
-  Td as ChakraTd,
   chakra,
 } from "@chakra-ui/react";
 import type {
   ColumnDef,
   ColumnOrderState,
   ColumnPinningState,
-  Row,
+  Row as RowType,
   RowSelectionState,
 } from "@tanstack/react-table";
 import {
@@ -24,18 +23,24 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { AnimatePresence } from "framer-motion";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useVirtual } from "react-virtual";
 import { AiFillCaretUp, AiFillCaretDown } from "react-icons/ai";
 import {
   Header,
   IndeterminateCheckbox,
   Pagination,
+  Td,
+  Th,
+  Tr,
+  spring,
   usePagination,
   useSort,
+  Row,
 } from "./components";
-import type { TableAction } from "./types";
+import type { EditableComponent, Position, TableAction } from "./types";
+import { getAccessorKey, updateNestedProperty } from "./utils";
 
 interface TableProps<T extends object> {
   columns: ColumnDef<T>[];
@@ -44,7 +49,9 @@ interface TableProps<T extends object> {
   count?: number;
   colorScheme?: ThemeTypings["colorSchemes"];
   defaultColumnVisibility?: Record<string, boolean>;
+  editableComponents?: Record<string, EditableComponent<T>>;
   withColumnOrdering?: boolean;
+  withInlineEditing?: boolean;
   withFilters?: boolean;
   withPagination?: boolean;
   withSelectableRows?: boolean;
@@ -53,16 +60,16 @@ interface TableProps<T extends object> {
   onSelectedRowsChange?: (selectedRows: T[]) => void;
 }
 
-export type Position = null | { row: number; column: number };
-
 const Table = <T extends object>({
   data,
   columns,
   actions = [],
   count = 0,
   colorScheme = "blackAlpha",
+  editableComponents = {},
   defaultColumnVisibility = {},
   withFilters = false,
+  withInlineEditing = false,
   withColumnOrdering = false,
   withPagination = true,
   withSelectableRows = false,
@@ -70,6 +77,13 @@ const Table = <T extends object>({
   onRowClick,
   onSelectedRowsChange,
 }: TableProps<T>) => {
+  const tableContainerRef = useRef<HTMLDivElement>(null);
+  const [internalData, setInternalData] = useState<T[]>(data);
+
+  useEffect(() => {
+    setInternalData(data);
+  }, [data]);
+
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   if (withSelectableRows) columns.unshift(getRowSelectionColumn<T>());
 
@@ -89,21 +103,22 @@ const Table = <T extends object>({
       : {}
   );
 
-  // const pinnedColumns = columnPinning.left
-  //   ? columnPinning.left?.length - (withSelectableRows ? 1 : 0)
-  //   : 0;
+  const pinnedColumns = columnPinning.left
+    ? columnPinning.left?.length - (withSelectableRows ? 1 : 0)
+    : 0;
 
   const columnAccessors = useMemo(
     () =>
       columns.reduce<Record<string, string>>((acc, column) => {
-        if (
-          column.header &&
-          typeof column.header === "string" &&
-          "accessorKey" in column
-        ) {
+        const accessorKey: string | undefined = getAccessorKey(column);
+        if (accessorKey?.includes("_"))
+          throw new Error(
+            `Invalid accessorKey ${accessorKey}. Cannot contain '_'`
+          );
+        if (accessorKey && column.header && typeof column.header === "string") {
           return {
             ...acc,
-            [column.accessorKey.toString()]: column.header,
+            [accessorKey]: column.header,
           };
         }
         return acc;
@@ -112,7 +127,7 @@ const Table = <T extends object>({
   );
 
   const table = useReactTable({
-    data,
+    data: internalData,
     columns,
     state: {
       rowSelection,
@@ -125,63 +140,202 @@ const Table = <T extends object>({
     onColumnPinningChange: setColumnPinning,
     onRowSelectionChange: setRowSelection,
     getCoreRowModel: getCoreRowModel(),
+    meta: {
+      // These are not part of the standard API, but are accessible via table.options.meta
+      editableComponents,
+      updateData: (rowIndex, columnId, value) => {
+        setInternalData((previousData) =>
+          previousData.map((row, index) => {
+            if (index === rowIndex) {
+              if (columnId.includes("_") && !(columnId in row)) {
+                updateNestedProperty(row, columnId, value);
+                return row;
+              } else {
+                return {
+                  ...row,
+                  [columnId]: value,
+                };
+              }
+            }
+            return row;
+          })
+        );
+      },
+    },
   });
 
   const selectedRows = withSelectableRows
     ? table.getSelectedRowModel().flatRows.map((row) => row.original)
     : [];
 
-  // const [selectedCell, setSelectedCell] = useState<Position>({
-  //   row: 2,
-  //   column: 0,
-  // });
+  const [editMode, setEditMode] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [selectedCell, setSelectedCell] = useState<Position>(null);
 
-  // const handleKeydown = useCallback(
-  //   (event: KeyboardEvent) => {
-  //     const moves: { [key: string]: [0, 1] | [1, 0] | [0, -1] | [-1, 0] } = {
-  //       ArrowRight: [0, 1],
-  //       ArrowLeft: [0, -1],
-  //       ArrowDown: [1, 0],
-  //       ArrowUp: [-1, 0],
-  //       Tab: [0, 1],
-  //       Enter: [1, 0],
-  //     };
+  const focusOnSelectedCell = useCallback(() => {
+    if (selectedCell == null) return;
+    const cell = tableContainerRef.current?.querySelector(
+      `[data-row="${selectedCell.row}"][data-column="${selectedCell.column}"]`
+    ) as HTMLDivElement;
+    if (cell) cell.focus();
+  }, [selectedCell, tableContainerRef]);
 
-  //     const rows = table.getRowModel().rows.length - 1;
-  //     const columns =
-  //       table.getVisibleLeafColumns().length - 1 - (withSelectableRows ? 1 : 0);
+  useEscape(() => {
+    setIsEditing(false);
+    focusOnSelectedCell();
+  });
 
-  //     const clip = (value: number, min: number, max: number) =>
-  //       Math.min(Math.max(value, min), max);
+  const onSelectedCellChange = useCallback(
+    (position: Position) => {
+      if (
+        selectedCell == null ||
+        position == null ||
+        selectedCell.row !== position?.row ||
+        selectedCell.column !== position.column
+      )
+        setSelectedCell(position);
+    },
+    [selectedCell]
+  );
 
-  //     const move = (direction: number[]): number[] => {
-  //       let newX = (selectedCell?.column || 0) + direction[1];
-  //       let newY = (selectedCell?.row || 0) + direction[0];
+  const isColumnEditable = useCallback(
+    (selectedColumn: number) => {
+      if (!withInlineEditing) return false;
 
-  //       newX = clip(newX, 0, columns);
-  //       newY = clip(newY, 0, rows);
+      const columns = table.getVisibleLeafColumns();
+      const column =
+        columns[withSelectableRows ? selectedColumn + 1 : selectedColumn];
+      if (!column) return false;
 
-  //       return [newX, newY];
-  //     };
+      const accessorKey = getAccessorKey(column.columnDef);
+      return accessorKey && accessorKey in editableComponents;
+    },
+    [table, editableComponents, withInlineEditing, withSelectableRows]
+  );
 
-  //     if (event.code in moves && selectedCell) {
-  //       const [newX, newY] = move(moves[event.code]);
-  //       setSelectedCell({
-  //         row: newY,
-  //         column: newX,
-  //       });
-  //     }
-  //   },
-  //   [selectedCell, setSelectedCell, table, withSelectableRows]
-  // );
+  const onCellClick = useCallback(
+    (row: number, column: number) => {
+      // ignore row select checkbox column
+      if (
+        selectedCell?.row === row &&
+        selectedCell?.column === column &&
+        isColumnEditable(column)
+      ) {
+        setIsEditing(true);
+        return;
+      }
+      // ignore row select checkbox column
+      if (column === -1) return;
+      setIsEditing(false);
+      onSelectedCellChange({ row, column });
+    },
+    [selectedCell, isColumnEditable, onSelectedCellChange]
+  );
 
-  // useEffect(() => {
-  //   window.addEventListener("keydown", handleKeydown);
+  const onCellEditUpdate = useCallback(
+    (rowIndex: number, columnId: string) => (value: unknown) => {
+      return table.options.meta?.updateData
+        ? table.options.meta?.updateData(rowIndex, columnId, value)
+        : undefined;
+    },
+    [table]
+  );
 
-  //   return () => {
-  //     window.removeEventListener("keydown", handleKeydown);
-  //   };
-  // }, [handleKeydown]);
+  const onKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLDivElement>) => {
+      if (!selectedCell) return;
+
+      const { code } = event;
+
+      const commandCodes: {
+        [key: string]: [0, 1] | [1, 0] | [0, -1] | [-1, 0];
+      } = {
+        Tab: [0, 1],
+        Enter: [1, 0],
+      };
+
+      const navigationCodes: {
+        [key: string]: [0, 1] | [1, 0] | [0, -1] | [-1, 0];
+      } = {
+        ArrowRight: [0, 1],
+        ArrowLeft: [0, -1],
+        ArrowDown: [1, 0],
+        ArrowUp: [-1, 0],
+      };
+
+      const lastRow = table.getRowModel().rows.length - 1;
+      const lastColumn =
+        table.getVisibleLeafColumns().length - 1 - (withSelectableRows ? 1 : 0);
+
+      const navigate = (delta: number[], tabWrap = false): number[] => {
+        const x0 = selectedCell?.column || 0;
+        const y0 = selectedCell?.row || 0;
+
+        let x1 = x0 + delta[1];
+        let y1 = y0 + delta[0];
+
+        if (tabWrap) {
+          // wrap to the next row if we're on the last column
+          if (x1 > lastColumn) {
+            x1 = 0;
+            y1++;
+          }
+          // don't wrap to the next row if we're on the last row
+          if (y1 > lastRow) {
+            x1 = x0;
+            y1 = y0;
+          }
+        } else {
+          x1 = clip(x1, 0, lastColumn);
+        }
+
+        y1 = clip(y1, 0, lastRow);
+
+        return [x1, y1];
+      };
+
+      if (code in commandCodes) {
+        // enter and tab work even if we're editing
+        event.preventDefault();
+        const [x1, y1] = navigate(commandCodes[code], code === "Tab");
+        setSelectedCell({
+          row: y1,
+          column: x1,
+        });
+
+        if (isEditing) {
+          focusOnSelectedCell();
+          setIsEditing(false);
+        }
+      } else if (code in navigationCodes) {
+        // arrow key navigation should't work if we're editing
+        if (isEditing) return;
+        event.preventDefault();
+        const [x1, y1] = navigate(navigationCodes[code], code === "Tab");
+        setIsEditing(false);
+        setSelectedCell({
+          row: y1,
+          column: x1,
+        });
+      } else if (
+        !isEditing &&
+        selectedCell &&
+        isColumnEditable(selectedCell.column)
+      ) {
+        // any other key activates editing if the column is editable and a cell is selected
+        setIsEditing(true);
+      }
+    },
+    [
+      focusOnSelectedCell,
+      isColumnEditable,
+      isEditing,
+      selectedCell,
+      setSelectedCell,
+      table,
+      withSelectableRows,
+    ]
+  );
 
   useEffect(() => {
     setColumnOrder(table.getAllLeafColumns().map((column) => column.id));
@@ -195,13 +349,24 @@ const Table = <T extends object>({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rowSelection, onSelectedRowsChange]);
 
+  // reset the selected cell when the table data changes
+  useEffect(() => {
+    setSelectedCell(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    editMode,
+    pagination.pageIndex,
+    pagination.pageSize,
+    columnOrder,
+    columnVisibility,
+  ]);
+
   const rows = table.getRowModel().rows;
 
   const defaultBackground = useColor("white");
   const rowBackground = useColor("gray.50");
   const borderColor = useColor("gray.200");
 
-  const tableContainerRef = useRef<HTMLDivElement>(null);
   const rowVirtualizer = useVirtual({
     parentRef: tableContainerRef,
     size: rows.length,
@@ -218,71 +383,76 @@ const Table = <T extends object>({
       : 0;
 
   return (
-    <>
-      <Box w="full" h="full" ref={tableContainerRef}>
-        {(withColumnOrdering || withFilters || withSelectableRows) && (
-          <Header
-            actions={actions}
-            columnAccessors={columnAccessors}
-            columnOrder={columnOrder}
-            columns={table.getAllLeafColumns()}
-            selectedRows={selectedRows}
-            setColumnOrder={setColumnOrder}
-            pagination={pagination}
-            withColumnOrdering={withColumnOrdering}
-            withFilters={withFilters}
-            withPagination={withPagination}
-            withSelectableRows={withSelectableRows}
-          />
-        )}
-        <Box h="full" overflow="scroll" style={{ contain: "strict" }}>
-          <Grid
-            w="full"
-            gridTemplateColumns={withColumnOrdering ? "auto 1fr auto" : "1fr"}
-          >
-            {/* Pinned left columns */}
-            {withColumnOrdering ? (
-              <ChakraTable
-                bg={defaultBackground}
-                borderRightColor={borderColor}
-                borderRightStyle="solid"
-                borderRightWidth={4}
-                position="sticky"
-                left={0}
-              >
-                <Thead h={10}>
-                  {table.getLeftHeaderGroups().map((headerGroup) => (
-                    <Tr key={headerGroup.id}>
-                      {headerGroup.headers.map((header) => {
-                        // TODO: improve this
-                        const sortable =
-                          withSimpleSorting &&
-                          "accessorKey" in header.column.columnDef &&
-                          header.column.columnDef.enableSorting !== false;
-                        const sorted = isSorted(
-                          // @ts-ignore
-                          header.column.columnDef?.accessorKey ?? ""
-                        );
-                        return (
-                          <Th
-                            key={header.id}
-                            layout
-                            onClick={
-                              sortable
-                                ? () =>
-                                    toggleSortBy(
-                                      // @ts-ignore
-                                      header.column.columnDef?.accessorKey ?? ""
-                                    )
-                                : undefined
-                            }
-                            cursor={sortable ? "pointer" : undefined}
-                            transition={spring}
-                            colSpan={header.colSpan}
-                            px={4}
-                            py={2}
-                            whiteSpace="nowrap"
-                          >
+    <VStack
+      w="full"
+      h="full"
+      spacing={0}
+      ref={tableContainerRef}
+      onKeyDown={editMode ? onKeyDown : undefined}
+    >
+      {(withColumnOrdering || withFilters || withSelectableRows) && (
+        <Header
+          actions={actions}
+          columnAccessors={columnAccessors}
+          columnOrder={columnOrder}
+          columns={table.getAllLeafColumns()}
+          editMode={editMode}
+          selectedRows={selectedRows}
+          setColumnOrder={setColumnOrder}
+          setEditMode={setEditMode}
+          pagination={pagination}
+          withInlineEditing={withInlineEditing}
+          withColumnOrdering={withColumnOrdering}
+          withFilters={withFilters}
+          withPagination={withPagination}
+          withSelectableRows={withSelectableRows}
+        />
+      )}
+      <Box w="full" h="full" overflow="scroll" style={{ contain: "strict" }}>
+        <Grid
+          w="full"
+          gridTemplateColumns={withColumnOrdering ? "auto 1fr auto" : "1fr"}
+        >
+          {/* Pinned left columns */}
+          {withColumnOrdering ? (
+            <ChakraTable
+              bg={defaultBackground}
+              borderRightColor={borderColor}
+              borderRightStyle="solid"
+              borderRightWidth={4}
+              position="sticky"
+              left={0}
+            >
+              <Thead>
+                {table.getLeftHeaderGroups().map((headerGroup) => (
+                  <Tr key={headerGroup.id} h={10}>
+                    {headerGroup.headers.map((header) => {
+                      const accessorKey = getAccessorKey(
+                        header.column.columnDef
+                      );
+                      const sortable =
+                        withSimpleSorting &&
+                        accessorKey &&
+                        header.column.columnDef.enableSorting !== false;
+                      const sorted = isSorted(accessorKey ?? "");
+
+                      return (
+                        <Th
+                          key={header.id}
+                          layout
+                          onClick={
+                            sortable && !editMode
+                              ? () => toggleSortBy(accessorKey ?? "")
+                              : undefined
+                          }
+                          cursor={sortable ? "pointer" : undefined}
+                          transition={spring}
+                          colSpan={header.colSpan}
+                          px={4}
+                          py={2}
+                          whiteSpace="nowrap"
+                        >
+                          {header.isPlaceholder ? null : (
                             <Flex
                               justify="flex-start"
                               align="center"
@@ -303,121 +473,93 @@ const Table = <T extends object>({
                                 ) : null}
                               </chakra.span>
                             </Flex>
-                          </Th>
-                        );
-                      })}
-                    </Tr>
-                  ))}
-                </Thead>
-                <Tbody>
-                  {virtualPaddingTop > 0 && (
-                    <Tr>
-                      <Td style={{ height: `${virtualPaddingTop}px` }} />
-                    </Tr>
-                  )}
-                  <AnimatePresence>
-                    {virtualRows.map((virtualRow) => {
-                      const row = rows[virtualRow.index] as Row<T>;
-                      // const rowIndex = virtualRow.index;
-
-                      return (
-                        <Tr
-                          key={row.id}
-                          exit={{ opacity: 0 }}
-                          layout
-                          transition={spring}
-                          onClick={() => {
-                            if (typeof onRowClick === "function") {
-                              onRowClick(row.original);
-                            }
-                          }}
-                          _hover={{
-                            cursor:
-                              typeof onRowClick === "function"
-                                ? "pointer"
-                                : undefined,
-                            background: rowBackground,
-                          }}
-                        >
-                          {row
-                            .getLeftVisibleCells()
-                            .map((cell, columnIndex) => {
-                              const isSelected = false;
-                              //   selectedCell?.row === rowIndex &&
-                              //   selectedCell?.column === columnIndex - 1;
-
-                              return (
-                                <Td
-                                  key={cell.id}
-                                  layout
-                                  transition={spring}
-                                  boxShadow={
-                                    isSelected
-                                      ? "inset 0 0 0 3px rgb(66 153 255 / .6)"
-                                      : undefined
-                                  }
-                                  fontSize="sm"
-                                  px={4}
-                                  py={2}
-                                >
-                                  {flexRender(
-                                    cell.column.columnDef.cell,
-                                    cell.getContext()
-                                  )}
-                                </Td>
-                              );
-                            })}
-                        </Tr>
+                          )}
+                        </Th>
                       );
                     })}
-                  </AnimatePresence>
-                  {virutalPaddingBottom > 0 && (
-                    <Tr>
-                      <Td style={{ height: `${virutalPaddingBottom}px` }} />
-                    </Tr>
-                  )}
-                </Tbody>
-              </ChakraTable>
-            ) : null}
+                  </Tr>
+                ))}
+              </Thead>
+              <Tbody>
+                {virtualPaddingTop > 0 && (
+                  <Tr>
+                    <Td style={{ height: `${virtualPaddingTop}px` }} />
+                  </Tr>
+                )}
+                <AnimatePresence>
+                  {virtualRows.map((virtualRow) => {
+                    const row = rows[virtualRow.index] as RowType<T>;
 
-            {/* Unpinned columns */}
-            <ChakraTable>
-              <Thead h={10}>
-                {(withColumnOrdering
-                  ? table.getCenterHeaderGroups()
-                  : table.getHeaderGroups()
-                ).map((headerGroup) => (
-                  <Tr key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => {
-                      const sortable =
-                        withSimpleSorting &&
-                        "accessorKey" in header.column.columnDef;
-                      const sorted = isSorted(
+                    return (
+                      <Row
+                        key={row.id}
+                        borderColor={borderColor}
+                        backgroundColor={rowBackground}
+                        editableComponents={editableComponents}
+                        isEditing={isEditing}
+                        isEditMode={editMode}
+                        isFrozenColumn
+                        selectedCell={selectedCell}
                         // @ts-ignore
-                        header.column.columnDef?.accessorKey ?? ""
-                      );
+                        row={row}
+                        withColumnOrdering={withColumnOrdering}
+                        onCellClick={onCellClick}
+                        onCellUpdate={onCellEditUpdate}
+                        onRowClick={
+                          onRowClick
+                            ? () => onRowClick(row.original)
+                            : undefined
+                        }
+                      />
+                    );
+                  })}
+                </AnimatePresence>
+                {virutalPaddingBottom > 0 && (
+                  <Tr>
+                    <Td style={{ height: `${virutalPaddingBottom}px` }} />
+                  </Tr>
+                )}
+              </Tbody>
+            </ChakraTable>
+          ) : null}
 
-                      return (
-                        <Th
-                          key={header.id}
-                          colSpan={header.colSpan}
-                          onClick={
-                            sortable
-                              ? () =>
-                                  toggleSortBy(
-                                    // @ts-ignore
-                                    header.column.columnDef?.accessorKey ?? ""
-                                  )
-                              : undefined
-                          }
-                          cursor={sortable ? "pointer" : undefined}
-                          layout
-                          transition={spring}
-                          px={4}
-                          py={3}
-                          w={header.getSize()}
-                          whiteSpace="nowrap"
-                        >
+          {/* Unpinned columns */}
+          <ChakraTable>
+            <Thead>
+              {(withColumnOrdering
+                ? table.getCenterHeaderGroups()
+                : table.getHeaderGroups()
+              ).map((headerGroup) => (
+                <Tr key={headerGroup.id} h={10}>
+                  {headerGroup.headers.map((header) => {
+                    const accessorKey = getAccessorKey(header.column.columnDef);
+                    const sortable =
+                      withSimpleSorting &&
+                      accessorKey &&
+                      header.column.columnDef.enableSorting !== false;
+                    const sorted = isSorted(accessorKey ?? "");
+
+                    return (
+                      <Th
+                        key={header.id}
+                        colSpan={header.colSpan}
+                        onClick={
+                          sortable
+                            ? () => toggleSortBy(accessorKey ?? "")
+                            : undefined
+                        }
+                        borderRightColor={borderColor}
+                        borderRightStyle="solid"
+                        borderRightWidth={editMode ? 1 : undefined}
+                        cursor={sortable ? "pointer" : undefined}
+                        layout
+                        transition={spring}
+                        px={4}
+                        py={3}
+                        w={header.getSize()}
+                        whiteSpace="nowrap"
+                      >
+                        {header.isPlaceholder ? null : (
                           <Flex
                             justify="flex-start"
                             align="center"
@@ -438,102 +580,65 @@ const Table = <T extends object>({
                               ) : null}
                             </chakra.span>
                           </Flex>
-                        </Th>
-                      );
-                    })}
-                  </Tr>
-                ))}
-              </Thead>
-              <Tbody>
-                {virtualPaddingTop > 0 && (
-                  <Tr>
-                    <Td style={{ height: `${virtualPaddingTop}px` }} />
-                  </Tr>
-                )}
-                <AnimatePresence>
-                  {virtualRows.map((virtualRow) => {
-                    const row = rows[virtualRow.index] as Row<T>;
-                    // const rowIndex = virtualRow.index;
-
-                    return (
-                      <Tr
-                        key={row.id}
-                        exit={{ opacity: 0 }}
-                        layout
-                        transition={spring}
-                        onClick={() => {
-                          if (typeof onRowClick === "function") {
-                            onRowClick(row.original);
-                          }
-                        }}
-                        _hover={{
-                          cursor:
-                            typeof onRowClick === "function"
-                              ? "pointer"
-                              : undefined,
-                          background: rowBackground,
-                        }}
-                      >
-                        {(withColumnOrdering
-                          ? row.getCenterVisibleCells()
-                          : row.getVisibleCells()
-                        ).map((cell, columnIndex) => {
-                          const isSelected = false;
-                          // selectedCell?.row === rowIndex &&
-                          // selectedCell?.column ===
-                          //   columnIndex + pinnedColumns;
-
-                          return (
-                            <Td
-                              key={cell.id}
-                              layout
-                              transition={spring}
-                              boxShadow={
-                                isSelected
-                                  ? "inset 0 0 0 3px rgb(66 153 255 / .6)"
-                                  : undefined
-                              }
-                              fontSize="sm"
-                              px={4}
-                              py={withColumnOrdering ? 3 : 2}
-                              whiteSpace="nowrap"
-                            >
-                              {flexRender(
-                                cell.column.columnDef.cell,
-                                cell.getContext()
-                              )}
-                            </Td>
-                          );
-                        })}
-                      </Tr>
+                        )}
+                      </Th>
                     );
                   })}
-                </AnimatePresence>
-                {virutalPaddingBottom > 0 && (
-                  <Tr>
-                    <Td style={{ height: `${virutalPaddingBottom}px` }} />
-                  </Tr>
-                )}
-              </Tbody>
-            </ChakraTable>
-          </Grid>
-        </Box>
+                </Tr>
+              ))}
+            </Thead>
+            <Tbody>
+              {virtualPaddingTop > 0 && (
+                <Tr>
+                  <Td style={{ height: `${virtualPaddingTop}px` }} />
+                </Tr>
+              )}
+              <AnimatePresence>
+                {virtualRows.map((virtualRow) => {
+                  const row = rows[virtualRow.index] as RowType<T>;
+                  const rowIsClickable =
+                    !editMode && typeof onRowClick === "function";
+
+                  return (
+                    <Row
+                      key={row.id}
+                      borderColor={borderColor}
+                      backgroundColor={rowBackground}
+                      // @ts-ignore
+                      editableComponents={editableComponents}
+                      isEditing={isEditing}
+                      isEditMode={editMode}
+                      pinnedColumns={pinnedColumns}
+                      selectedCell={selectedCell}
+                      // @ts-ignore
+                      row={row}
+                      rowIsClickable={rowIsClickable}
+                      withColumnOrdering={withColumnOrdering}
+                      onCellClick={onCellClick}
+                      onCellUpdate={onCellEditUpdate}
+                      onRowClick={
+                        rowIsClickable
+                          ? () => onRowClick(row.original)
+                          : undefined
+                      }
+                    />
+                  );
+                })}
+              </AnimatePresence>
+              {virutalPaddingBottom > 0 && (
+                <Tr>
+                  <Td style={{ height: `${virutalPaddingBottom}px` }} />
+                </Tr>
+              )}
+            </Tbody>
+          </ChakraTable>
+        </Grid>
       </Box>
       {withPagination && (
         <Pagination {...pagination} colorScheme={colorScheme} />
       )}
-    </>
+    </VStack>
   );
-};
-
-const Th = motion(ChakraTh);
-const Tr = motion(ChakraTr);
-const Td = motion(ChakraTd);
-
-const spring = {
-  type: "spring",
-  damping: 10,
-  stiffness: 30,
 };
 
 function getRowSelectionColumn<T>(): ColumnDef<T> {

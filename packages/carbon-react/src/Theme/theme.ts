@@ -1,11 +1,19 @@
+import {
+  focusRingFilled,
+  focusRingFlushed,
+  focusRingOutlined,
+} from "./focusRing";
 import { colors } from "./palette";
-
-/* Examples:
- * Focus ring color: https://codesandbox.io/s/chakra-change-focus-ring-color-c2yis?file=/src/theme.ts
- */
 
 export const theme = {
   colors,
+  styles: {
+    global: {
+      ":host,:root": {
+        "--chakra-ui-focus-ring-color": "#002aff99",
+      },
+    },
+  },
   components: {
     Button: {
       baseStyle: {},
@@ -45,6 +53,11 @@ export const theme = {
       defaultProps: {
         borderRadius: "md",
       },
+      variants: {
+        outline: focusRingOutlined,
+        filled: focusRingFilled,
+        flushed: focusRingFlushed,
+      },
     },
     Radio: {
       defaultProps: {
@@ -55,12 +68,27 @@ export const theme = {
       defaultProps: {
         borderRadius: "md",
       },
+      variants: {
+        outline: focusRingOutlined,
+        filled: focusRingFilled,
+        flushed: focusRingFlushed,
+      },
     },
     Switch: {
       defaultProps: {
         colorScheme: "green",
       },
     },
+    TextArea: {
+      variants: {
+        outline: () => focusRingOutlined().field,
+        filled: () => focusRingFilled().field,
+        flushed: () => focusRingFlushed().field,
+      },
+    },
+  },
+  shadows: {
+    outline: "0 0 0 3px var(--chakra-ui-focus-ring-color)",
   },
   defaultProps: {
     colorScheme: "gray",

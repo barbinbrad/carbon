@@ -1,7 +1,10 @@
 import { ActionMenu } from "@carbon/react";
 import {
   Flex,
+  HStack,
+  Input,
   MenuItem,
+  Select,
   useDisclosure,
   VisuallyHidden,
 } from "@chakra-ui/react";
@@ -19,17 +22,16 @@ import { Avatar } from "~/components";
 type EmployeesTableProps = {
   data: Employee[];
   count: number;
-  withSelectableRows?: boolean;
+  isEditable?: boolean;
 };
 
 const defaultColumnVisibility = {
-  Avatar: false,
   user_firstName: false,
   user_lastName: false,
 };
 
 const EmployeesTable = memo(
-  ({ data, count, withSelectableRows = false }: EmployeesTableProps) => {
+  ({ data, count, isEditable = false }: EmployeesTableProps) => {
     const navigate = useNavigate();
     const permissions = usePermissions();
     const bulkEditDrawer = useDisclosure();
@@ -56,20 +58,27 @@ const EmployeesTable = memo(
     const columns = useMemo<ColumnDef<typeof rows[number]>[]>(() => {
       return [
         {
-          header: "Avatar",
+          header: "User",
           cell: ({ row }) => (
-            <Avatar
-              size="sm"
-              // @ts-ignore
-              path={row.original.user?.avatarUrl}
-            />
+            <HStack spacing={2}>
+              <Avatar
+                size="sm"
+                // @ts-ignore
+                name={row.original.user?.fullName}
+                // @ts-ignore
+                path={row.original.user?.avatarUrl}
+              />
+
+              <span>
+                {
+                  // @ts-ignore
+                  `${row.original.user?.firstName} ${row.original.user?.lastName}`
+                }
+              </span>
+            </HStack>
           ),
         },
-        {
-          accessorKey: "user.fullName",
-          header: "Full Name",
-          cell: (item) => item.getValue(),
-        },
+
         {
           accessorKey: "user.firstName",
           header: "First Name",
@@ -154,10 +163,17 @@ const EmployeesTable = memo(
           columns={columns}
           data={rows}
           defaultColumnVisibility={defaultColumnVisibility}
+          editableComponents={{
+            "user.firstName": EditableInput,
+            "user.lastName": EditableInput,
+            "user.email": EditableInput,
+            "employeeType.name": EditableSelect,
+          }}
           withColumnOrdering
           withFilters
+          withInlineEditing={isEditable}
           withPagination
-          withSelectableRows={withSelectableRows}
+          withSelectableRows={isEditable}
         />
         {bulkEditDrawer.isOpen && (
           <BulkEditPermissionsForm
@@ -170,6 +186,47 @@ const EmployeesTable = memo(
     );
   }
 );
+
+// type EditableTableCellProps = {
+//   value: unknown;
+//   data: unknown;
+//   accessorKey: string;
+//   onUpdate: (value: unknown) => void;
+// };
+
+const EditableInput = ({ value, data, accessorKey, onUpdate }: any) => {
+  const onBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    onUpdate(e.target.value);
+  };
+
+  return (
+    <Input
+      autoFocus
+      defaultValue={value as string}
+      onBlur={onBlur}
+      border="none"
+    />
+  );
+};
+
+const EditableSelect = ({ value, data, accessorKey, onUpdate }: any) => {
+  const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    onUpdate(e.target.value);
+  };
+
+  return (
+    <Select
+      autoFocus
+      defaultValue={value as string}
+      onChange={onChange}
+      border="none"
+    >
+      <option value="Admin">Admin</option>
+      <option value="Project Manager">Project Manager</option>
+      <option value="Sales">Sales</option>
+    </Select>
+  );
+};
 
 EmployeesTable.displayName = "EmployeeTable";
 

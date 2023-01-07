@@ -15,7 +15,7 @@ export default function AccountRoute() {
   const borderColor = useColor("gray.200");
 
   return (
-    <Grid w="full" h="full" templateColumns="auto 1fr" overflow="auto">
+    <Grid w="full" h="full" templateColumns="auto 1fr">
       <ContentSidebar>
         <VStack spacing={2}>
           <VStack

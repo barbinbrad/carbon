@@ -1,3 +1,4 @@
+import { VStack } from "@chakra-ui/react";
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
@@ -37,14 +38,14 @@ export default function UsersEmployeesRoute() {
   const permissions = usePermissions();
 
   return (
-    <>
+    <VStack w="full" h="full" spacing={0}>
       <EmployeesTableFilters employeeTypes={employeeTypes.data ?? []} />
       <EmployeesTable
         data={employees.data ?? []}
         count={employees.count ?? 0}
-        withSelectableRows={permissions.can("update", "users")}
+        isEditable={permissions.can("update", "users")}
       />
       <Outlet />
-    </>
+    </VStack>
   );
 }

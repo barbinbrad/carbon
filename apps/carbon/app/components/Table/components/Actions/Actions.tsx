@@ -18,7 +18,7 @@ const Actions = <T extends Object>({
         leftIcon={<IoMdCheckboxOutline />}
         disabled={selectedRows.length === 0}
         colorScheme={selectedRows.length === 0 ? "gray" : "brand"}
-        variant={selectedRows.length === 0 ? "ghost" : "solid"}
+        variant="ghost"
       >
         Actions
       </MenuButton>

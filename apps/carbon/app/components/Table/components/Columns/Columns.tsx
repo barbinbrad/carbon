@@ -37,7 +37,7 @@ const Columns = <T extends object>({
   setColumnOrder,
 }: ColumnsProps<T>) => {
   return (
-    <Popover placement="bottom">
+    <Popover placement="bottom" closeOnBlur>
       <PopoverTrigger>
         <Button variant="ghost" leftIcon={<BsLayoutThreeColumns />}>
           Columns

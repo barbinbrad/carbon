@@ -1,6 +1,8 @@
 import { useColor } from "@carbon/react";
-import { HStack } from "@chakra-ui/react";
+import { Button, HStack } from "@chakra-ui/react";
 import type { Column, ColumnOrderState } from "@tanstack/react-table";
+import { BsFillCheckCircleFill } from "react-icons/bs";
+import { MdOutlineEditNote } from "react-icons/md";
 import type { TableAction } from "../../types";
 import Actions from "../Actions";
 import Columns from "../Columns";
@@ -14,11 +16,14 @@ type HeaderProps<T> = {
   columnAccessors: Record<string, string>;
   columnOrder: ColumnOrderState;
   columns: Column<T, unknown>[];
+  editMode: boolean;
   pagination: PaginationProps;
   selectedRows: T[];
   setColumnOrder: (newOrder: ColumnOrderState) => void;
+  setEditMode: (editMode: boolean) => void;
   withColumnOrdering: boolean;
   withFilters: boolean;
+  withInlineEditing: boolean;
   withPagination: boolean;
   withSelectableRows: boolean;
 };
@@ -28,11 +33,14 @@ const Header = <T extends object>({
   columnAccessors,
   columnOrder,
   columns,
+  editMode,
   pagination,
   selectedRows,
   setColumnOrder,
+  setEditMode,
   withColumnOrdering,
   withFilters,
+  withInlineEditing,
   withPagination,
   withSelectableRows,
 }: HeaderProps<T>) => {
@@ -52,6 +60,25 @@ const Header = <T extends object>({
         {withSelectableRows && actions.length > 0 && (
           <Actions actions={actions} selectedRows={selectedRows} />
         )}
+        {withInlineEditing &&
+          (editMode ? (
+            <Button
+              colorScheme="brand"
+              leftIcon={<BsFillCheckCircleFill />}
+              variant="solid"
+              onClick={() => setEditMode(false)}
+            >
+              Finish Editing
+            </Button>
+          ) : (
+            <Button
+              leftIcon={<MdOutlineEditNote />}
+              variant="ghost"
+              onClick={() => setEditMode(true)}
+            >
+              Edit Mode
+            </Button>
+          ))}
       </HStack>
       <HStack spacing={2}>
         {withFilters && (

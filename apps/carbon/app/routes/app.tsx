@@ -68,7 +68,7 @@ export default function AppRoute() {
     <SupabaseProvider session={session}>
       <Grid h="100vh" w="100vw" templateRows="auto 1fr">
         <Topbar />
-        <GridItem w="full" h="full">
+        <GridItem w="full" h="full" overflow="hidden">
           <Grid templateColumns="auto 1fr" h="full" w="full">
             <IconSidebar />
             <Box w="full" h="full">

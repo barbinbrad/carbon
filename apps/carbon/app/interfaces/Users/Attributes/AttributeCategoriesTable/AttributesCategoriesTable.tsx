@@ -1,10 +1,9 @@
 import { ActionMenu } from "@carbon/react";
 import {
+  Badge,
   Button,
   Flex,
   MenuItem,
-  Tag,
-  TagLabel,
   useDisclosure,
   VisuallyHidden,
 } from "@chakra-ui/react";
@@ -56,6 +55,7 @@ const AttributeCategoriesTable = memo(
             <Button
               as={Link}
               to={`/app/users/attributes/list/${row.original.id}`}
+              variant="outline"
             >
               {Array.isArray(row.original.userAttribute)
                 ? row.original.userAttribute?.length ?? 0
@@ -70,14 +70,13 @@ const AttributeCategoriesTable = memo(
           cell: (item) => {
             const isPublic = item.getValue<boolean>().toString() === "true";
             return (
-              <Tag
-                size="md"
-                borderRadius="full"
-                variant={isPublic ? "solid" : "outline"}
+              <Badge
+                size="sm"
+                variant={isPublic ? undefined : "outline"}
                 colorScheme={isPublic ? "green" : "gray "}
               >
-                <TagLabel>{isPublic ? "Public" : "Private"}</TagLabel>
-              </Tag>
+                {isPublic ? "Public" : "Private"}
+              </Badge>
             );
           },
         },

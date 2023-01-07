@@ -46,8 +46,6 @@ export default function EditAttributeRoute() {
     };
   }>("/app/users/attributes");
 
-  console.log("attribute", attribute);
-
   return (
     <AttributeForm
       initialValues={{

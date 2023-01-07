@@ -11,7 +11,14 @@ import { ActionMenu } from "./Overlay";
 import { useNotification } from "./Message";
 import ThemeProvider, { theme } from "./Theme";
 import { ClientOnly } from "./SSR";
-import { useColor, useDebounce, useInterval, useHydrated } from "./hooks";
+import {
+  useColor,
+  useDebounce,
+  useEscape,
+  useInterval,
+  useHydrated,
+  useKeyboardShortcuts,
+} from "./hooks";
 
 export type { OptionBase, OptionProps, GroupBase };
 
@@ -28,7 +35,9 @@ export {
   theme,
   useColor,
   useDebounce,
-  useInterval,
+  useEscape,
   useHydrated,
+  useInterval,
+  useKeyboardShortcuts,
   useNotification,
 };

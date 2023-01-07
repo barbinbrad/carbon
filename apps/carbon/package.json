@@ -39,7 +39,7 @@
     "react-icons": "4.6.0",
     "react-virtual": "2.10.4",
     "reactflow": "^11.3.3",
-    "remix-flat-routes": "^0.5.4",
+    "remix-flat-routes": "^0.5.6",
     "remix-validated-form": "^4.6.5",
     "zod": "^3.20.2",
     "zod-form-data": "1.2.4"

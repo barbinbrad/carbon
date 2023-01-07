@@ -1,3 +1,4 @@
+import { VStack } from "@chakra-ui/react";
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
@@ -26,10 +27,10 @@ export default function EmployeeTypesRoute() {
   const { data, count } = useLoaderData<typeof loader>();
 
   return (
-    <>
+    <VStack w="full" h="full" spacing={0}>
       <EmployeeTypesTableFilters />
       <EmployeeTypesTable data={data ?? []} count={count ?? 0} />
       <Outlet />
-    </>
+    </VStack>
   );
 }

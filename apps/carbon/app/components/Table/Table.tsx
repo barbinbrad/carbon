@@ -7,8 +7,11 @@ import {
   Flex,
   Grid,
   Table as ChakraTable,
-  Thead,
   Tbody,
+  Td,
+  Th,
+  Tr,
+  Thead,
   chakra,
 } from "@chakra-ui/react";
 import type {
@@ -31,10 +34,10 @@ import {
   Header,
   IndeterminateCheckbox,
   Pagination,
-  Td,
-  Th,
-  Tr,
-  spring,
+  // Td,
+  // Th,
+  // Tr,
+  // spring,
   usePagination,
   useSort,
   Row,
@@ -337,18 +340,6 @@ const Table = <T extends object>({
     ]
   );
 
-  useEffect(() => {
-    setColumnOrder(table.getAllLeafColumns().map((column) => column.id));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    if (typeof onSelectedRowsChange === "function") {
-      onSelectedRowsChange(selectedRows);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rowSelection, onSelectedRowsChange]);
-
   // reset the selected cell when the table data changes
   useEffect(() => {
     setSelectedCell(null);
@@ -360,6 +351,18 @@ const Table = <T extends object>({
     columnOrder,
     columnVisibility,
   ]);
+
+  useEffect(() => {
+    setColumnOrder(table.getAllLeafColumns().map((column) => column.id));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (typeof onSelectedRowsChange === "function") {
+      onSelectedRowsChange(selectedRows);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rowSelection, onSelectedRowsChange]);
 
   const rows = table.getRowModel().rows;
 
@@ -383,13 +386,7 @@ const Table = <T extends object>({
       : 0;
 
   return (
-    <VStack
-      w="full"
-      h="full"
-      spacing={0}
-      ref={tableContainerRef}
-      onKeyDown={editMode ? onKeyDown : undefined}
-    >
+    <VStack w="full" h="full" spacing={0}>
       {(withColumnOrdering || withFilters || withSelectableRows) && (
         <Header
           actions={actions}
@@ -408,7 +405,14 @@ const Table = <T extends object>({
           withSelectableRows={withSelectableRows}
         />
       )}
-      <Box w="full" h="full" overflow="scroll" style={{ contain: "strict" }}>
+      <Box
+        w="full"
+        h="full"
+        overflow="scroll"
+        style={{ contain: "strict" }}
+        ref={tableContainerRef}
+        onKeyDown={editMode ? onKeyDown : undefined}
+      >
         <Grid
           w="full"
           gridTemplateColumns={withColumnOrdering ? "auto 1fr auto" : "1fr"}
@@ -439,14 +443,14 @@ const Table = <T extends object>({
                       return (
                         <Th
                           key={header.id}
-                          layout
+                          // layout
                           onClick={
                             sortable && !editMode
                               ? () => toggleSortBy(accessorKey ?? "")
                               : undefined
                           }
                           cursor={sortable ? "pointer" : undefined}
-                          transition={spring}
+                          // transition={spring}
                           colSpan={header.colSpan}
                           px={4}
                           py={2}
@@ -552,8 +556,8 @@ const Table = <T extends object>({
                         borderRightStyle="solid"
                         borderRightWidth={editMode ? 1 : undefined}
                         cursor={sortable ? "pointer" : undefined}
-                        layout
-                        transition={spring}
+                        // layout
+                        // transition={spring}
                         px={4}
                         py={3}
                         w={header.getSize()}

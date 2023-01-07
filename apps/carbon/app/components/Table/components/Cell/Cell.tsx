@@ -1,18 +1,17 @@
 import {
   Box,
   HStack,
-  Icon,
   Popover,
   PopoverAnchor,
   PopoverBody,
   PopoverContent,
-  PopoverFooter,
+  Td,
 } from "@chakra-ui/react";
 import type { Cell as CellType } from "@tanstack/react-table";
 import { flexRender } from "@tanstack/react-table";
 import { useMovingCellRef } from "../../hooks/useMovingCellRef";
 import { memo } from "react";
-import { Td, spring } from "../Animations";
+// import { Td, spring } from "../Animations";
 import type { EditableComponent } from "../../types";
 import { getAccessorKey } from "../../utils";
 
@@ -50,8 +49,8 @@ const Cell = <T extends object>({
       ref={ref}
       data-row={cell.row.index}
       data-column={columnIndex}
-      layout
-      transition={spring}
+      // layout
+      // transition={spring}
       tabIndex={tabIndex}
       bgColor={isEditMode && !hasEditableComponent ? "gray.50" : undefined}
       borderRightColor={borderColor}
@@ -109,8 +108,6 @@ const Cell = <T extends object>({
     </Td>
   );
 };
-
-// export default Cell;
 
 export const MemoizedCell = memo(
   Cell,

@@ -1,5 +1,6 @@
 import type { Row as RowType } from "@tanstack/react-table";
-import { Tr, spring } from "../Animations";
+import { Tr } from "@chakra-ui/react";
+// import { Tr, spring } from "../Animations";
 import Cell from "../Cell";
 import type { EditableComponent, Position } from "../../types";
 
@@ -39,9 +40,9 @@ const Row = <T extends object>({
   return (
     <Tr
       key={row.id}
-      exit={{ opacity: 0 }}
-      layout
-      transition={spring}
+      // exit={{ opacity: 0 }}
+      // layout
+      // transition={spring}
       onClick={onRowClick}
       _hover={{
         cursor: rowIsClickable ? "pointer" : undefined,

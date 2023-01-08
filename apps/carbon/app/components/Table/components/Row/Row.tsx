@@ -3,6 +3,7 @@ import { Tr } from "@chakra-ui/react";
 // import { Tr, spring } from "../Animations";
 import Cell from "../Cell";
 import type { EditableComponent, Position } from "../../types";
+import { useColor } from "@carbon/react";
 
 type RowProps<T> = {
   borderColor: string;
@@ -37,9 +38,11 @@ const Row = <T extends object>({
   onCellUpdate,
   onRowClick,
 }: RowProps<T>) => {
+  const frozenBackgroundColor = useColor("white");
   return (
     <Tr
       key={row.id}
+      bg={isFrozenColumn ? frozenBackgroundColor : undefined}
       // exit={{ opacity: 0 }}
       // layout
       // transition={spring}

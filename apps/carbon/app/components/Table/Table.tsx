@@ -26,7 +26,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { AnimatePresence } from "framer-motion";
+// import { AnimatePresence } from "framer-motion";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useVirtual } from "react-virtual";
 import { AiFillCaretUp, AiFillCaretDown } from "react-icons/ai";
@@ -81,8 +81,8 @@ const Table = <T extends object>({
   onSelectedRowsChange,
 }: TableProps<T>) => {
   const tableContainerRef = useRef<HTMLDivElement>(null);
-  const [internalData, setInternalData] = useState<T[]>(data);
 
+  const [internalData, setInternalData] = useState<T[]>(data);
   useEffect(() => {
     setInternalData(data);
   }, [data]);
@@ -105,10 +105,6 @@ const Table = <T extends object>({
         }
       : {}
   );
-
-  const pinnedColumns = columnPinning.left
-    ? columnPinning.left?.length - (withSelectableRows ? 1 : 0)
-    : 0;
 
   const columnAccessors = useMemo(
     () =>
@@ -365,10 +361,7 @@ const Table = <T extends object>({
   }, [rowSelection, onSelectedRowsChange]);
 
   const rows = table.getRowModel().rows;
-
-  const defaultBackground = useColor("white");
-  const rowBackground = useColor("gray.50");
-  const borderColor = useColor("gray.200");
+  const rowsAreClickable = !editMode && typeof onRowClick === "function";
 
   const rowVirtualizer = useVirtual({
     parentRef: tableContainerRef,
@@ -376,14 +369,26 @@ const Table = <T extends object>({
     overscan: 10,
   });
 
-  const { virtualItems: virtualRows, totalSize } = rowVirtualizer;
+  // const columnVirtualizer = useVirtual({
+  //   horizontal: true,
+  //   size: table.getVisibleLeafColumns().length,
+  //   parentRef: tableContainerRef,
+  //   estimateSize: useCallback(() => 250, []),
+  //   overscan: 5,
+  // });
+
+  const { virtualItems: virtualRows, totalSize: totalRows } = rowVirtualizer;
 
   const virtualPaddingTop =
     virtualRows.length > 0 ? virtualRows?.[0]?.start || 0 : 0;
   const virutalPaddingBottom =
     virtualRows.length > 0
-      ? totalSize - (virtualRows?.[virtualRows.length - 1]?.end || 0)
+      ? totalRows - (virtualRows?.[virtualRows.length - 1]?.end || 0)
       : 0;
+
+  const defaultBackground = useColor("white");
+  const borderColor = useColor("gray.200");
+  const rowBackground = useColor("gray.50");
 
   return (
     <VStack w="full" h="full" spacing={0}>
@@ -490,34 +495,32 @@ const Table = <T extends object>({
                     <Td style={{ height: `${virtualPaddingTop}px` }} />
                   </Tr>
                 )}
-                <AnimatePresence>
-                  {virtualRows.map((virtualRow) => {
-                    const row = rows[virtualRow.index] as RowType<T>;
+                {/* <AnimatePresence> */}
+                {virtualRows.map((virtualRow) => {
+                  const row = rows[virtualRow.index] as RowType<T>;
 
-                    return (
-                      <Row
-                        key={row.id}
-                        borderColor={borderColor}
-                        backgroundColor={rowBackground}
-                        editableComponents={editableComponents}
-                        isEditing={isEditing}
-                        isEditMode={editMode}
-                        isFrozenColumn
-                        selectedCell={selectedCell}
-                        // @ts-ignore
-                        row={row}
-                        withColumnOrdering={withColumnOrdering}
-                        onCellClick={onCellClick}
-                        onCellUpdate={onCellEditUpdate}
-                        onRowClick={
-                          onRowClick
-                            ? () => onRowClick(row.original)
-                            : undefined
-                        }
-                      />
-                    );
-                  })}
-                </AnimatePresence>
+                  return (
+                    <Row
+                      key={row.id}
+                      borderColor={borderColor}
+                      backgroundColor={rowBackground}
+                      editableComponents={editableComponents}
+                      isEditing={isEditing}
+                      isEditMode={editMode}
+                      isFrozenColumn
+                      selectedCell={selectedCell}
+                      // @ts-ignore
+                      row={row}
+                      withColumnOrdering={withColumnOrdering}
+                      onCellClick={onCellClick}
+                      onCellUpdate={onCellEditUpdate}
+                      onRowClick={
+                        onRowClick ? () => onRowClick(row.original) : undefined
+                      }
+                    />
+                  );
+                })}
+                {/* </AnimatePresence> */}
                 {virutalPaddingBottom > 0 && (
                   <Tr>
                     <Td style={{ height: `${virutalPaddingBottom}px` }} />
@@ -597,38 +600,41 @@ const Table = <T extends object>({
                   <Td style={{ height: `${virtualPaddingTop}px` }} />
                 </Tr>
               )}
-              <AnimatePresence>
-                {virtualRows.map((virtualRow) => {
-                  const row = rows[virtualRow.index] as RowType<T>;
-                  const rowIsClickable =
-                    !editMode && typeof onRowClick === "function";
+              {/* <AnimatePresence> */}
+              {virtualRows.map((virtualRow) => {
+                const row = rows[virtualRow.index] as RowType<T>;
 
-                  return (
-                    <Row
-                      key={row.id}
-                      borderColor={borderColor}
-                      backgroundColor={rowBackground}
-                      // @ts-ignore
-                      editableComponents={editableComponents}
-                      isEditing={isEditing}
-                      isEditMode={editMode}
-                      pinnedColumns={pinnedColumns}
-                      selectedCell={selectedCell}
-                      // @ts-ignore
-                      row={row}
-                      rowIsClickable={rowIsClickable}
-                      withColumnOrdering={withColumnOrdering}
-                      onCellClick={onCellClick}
-                      onCellUpdate={onCellEditUpdate}
-                      onRowClick={
-                        rowIsClickable
-                          ? () => onRowClick(row.original)
-                          : undefined
-                      }
-                    />
-                  );
-                })}
-              </AnimatePresence>
+                return (
+                  <Row
+                    key={row.id}
+                    borderColor={borderColor}
+                    backgroundColor={rowBackground}
+                    // @ts-ignore
+                    editableComponents={editableComponents}
+                    isEditing={isEditing}
+                    isEditMode={editMode}
+                    pinnedColumns={
+                      columnPinning?.left
+                        ? columnPinning.left?.length -
+                          (withSelectableRows ? 1 : 0)
+                        : 0
+                    }
+                    selectedCell={selectedCell}
+                    // @ts-ignore
+                    row={row}
+                    rowIsClickable={rowsAreClickable}
+                    withColumnOrdering={withColumnOrdering}
+                    onCellClick={onCellClick}
+                    onCellUpdate={onCellEditUpdate}
+                    onRowClick={
+                      rowsAreClickable
+                        ? () => onRowClick(row.original)
+                        : undefined
+                    }
+                  />
+                );
+              })}
+              {/* </AnimatePresence> */}
               {virutalPaddingBottom > 0 && (
                 <Tr>
                   <Td style={{ height: `${virutalPaddingBottom}px` }} />

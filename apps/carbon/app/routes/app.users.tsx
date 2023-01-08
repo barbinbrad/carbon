@@ -16,7 +16,7 @@ export default function UsersRoute() {
   const labelColor = useColor("gray.500");
 
   return (
-    <Grid w="full" h="full" templateColumns="auto 1fr" overflow="hidden">
+    <Grid w="full" h="full" templateColumns="auto 1fr" overflow="auto">
       <ContentSidebar>
         <VStack spacing={2}>
           {links.map((groups) =>

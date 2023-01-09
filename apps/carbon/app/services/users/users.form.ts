@@ -60,6 +60,15 @@ export const createEmployeeValidator = withZod(
   })
 );
 
+export const deactivateUsersValidator = withZod(
+  z.object({
+    redirectTo: z.string(),
+    users: z
+      .array(z.string().min(36, { message: "Invalid user id" }))
+      .min(1, { message: "Group members are required" }),
+  })
+);
+
 export const employeeTypeValidator = withZod(
   z.object({
     id: z.string(),
@@ -95,13 +104,6 @@ export const employeeValidator = withZod(
   })
 );
 
-export const userPermissionsValidator = z.object({
-  view: z.boolean(),
-  create: z.boolean(),
-  update: z.boolean(),
-  delete: z.boolean(),
-});
-
 export const groupValidator = withZod(
   z.object({
     id: z.string(),
@@ -111,3 +113,18 @@ export const groupValidator = withZod(
       .min(1, { message: "Group members are required" }),
   })
 );
+
+export const resendInviteValidator = withZod(
+  z.object({
+    users: z
+      .array(z.string().min(36, { message: "Invalid user id" }))
+      .min(1, { message: "Group members are required" }),
+  })
+);
+
+export const userPermissionsValidator = z.object({
+  view: z.boolean(),
+  create: z.boolean(),
+  update: z.boolean(),
+  delete: z.boolean(),
+});

@@ -138,7 +138,8 @@ CREATE VIEW "group_member" AS
   FROM 
     "membership" gm 
     INNER JOIN "group" g ON g.id = gm."groupId"
-    LEFT OUTER JOIN "user" u ON u.id = gm."memberUserId";
+    LEFT OUTER JOIN "user" u ON u.id = gm."memberUserId"
+  WHERE u.active = TRUE;
 
 CREATE RECURSIVE VIEW groups_recursive 
 (

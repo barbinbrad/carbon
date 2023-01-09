@@ -17,8 +17,8 @@ import { useEffect, useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import { Hidden, Radios, Submit, Users } from "~/components/Form";
 import { bulkPermissionsValidator } from "~/services/users";
-import PermissionCheckboxes from "../components/Permission";
-import type { Permission } from "../types";
+import PermissionCheckboxes from "../../components/Permission";
+import type { Permission } from "../../types";
 
 type BulkEditPermissionsProps = {
   userIds: string[];

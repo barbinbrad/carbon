@@ -153,7 +153,7 @@ const AttributeCategoryDetail = ({
                             // @ts-ignore
                             attributeMap[sortId]?.attributeDataType
                           )}
-                          variant="ghost`"
+                          variant="ghost"
                         >
                           {
                             // @ts-ignore
@@ -168,10 +168,12 @@ const AttributeCategoryDetail = ({
                           to={sortId.toString()}
                           aria-label="Edit"
                           icon={<BsPencilSquare />}
+                          variant="ghost"
                         />
                         <IconButton
                           aria-label="Delete"
                           icon={<IoMdTrash />}
+                          variant="ghost"
                           onClick={() =>
                             // @ts-ignore
                             onDelete(attributeMap[sortId])

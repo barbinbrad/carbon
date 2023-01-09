@@ -42,7 +42,11 @@ import {
   useSort,
   Row,
 } from "./components";
-import type { EditableComponent, Position, TableAction } from "./types";
+import type {
+  EditableTableCellComponent,
+  Position,
+  TableAction,
+} from "./types";
 import { getAccessorKey, updateNestedProperty } from "./utils";
 
 interface TableProps<T extends object> {
@@ -52,7 +56,7 @@ interface TableProps<T extends object> {
   count?: number;
   colorScheme?: ThemeTypings["colorSchemes"];
   defaultColumnVisibility?: Record<string, boolean>;
-  editableComponents?: Record<string, EditableComponent<T>>;
+  editableComponents?: Record<string, EditableTableCellComponent<T>>;
   withColumnOrdering?: boolean;
   withInlineEditing?: boolean;
   withFilters?: boolean;

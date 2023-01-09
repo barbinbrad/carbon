@@ -21,7 +21,7 @@ import { forgotPasswordValidator, sendMagicLink } from "~/services/auth";
 import { getUserByEmail } from "~/services/users";
 import { assertIsPost } from "~/utils/http";
 import type { FormActionData, Result } from "~/types";
-import { error } from "~/utils/result";
+import { error, success } from "~/utils/result";
 
 export const meta: MetaFunction = () => ({
   title: "Carbon | Forgot Password",
@@ -44,8 +44,9 @@ export async function action({ request }: ActionArgs): FormActionData {
   }
 
   const { email } = validation.data;
+  const user = await getUserByEmail(email);
 
-  if ((await getUserByEmail(email))?.data) {
+  if (user.data && user.data.active) {
     const authSession = await sendMagicLink(email);
 
     if (!authSession) {
@@ -53,9 +54,13 @@ export async function action({ request }: ActionArgs): FormActionData {
         status: 500,
       });
     }
+  } else {
+    return json(error(null, "User has been deactivated"), {
+      status: 500,
+    });
   }
 
-  return json({ success: true });
+  return json(success("Magic link sent"));
 }
 
 export default function ForgotPasswordRoute() {

@@ -1,3 +1,3 @@
 import BulkEditPermissionsForm from "./BulkEditPermissionsForm";
 
-export { BulkEditPermissionsForm };
+export default BulkEditPermissionsForm;

@@ -12,14 +12,14 @@ import { flexRender } from "@tanstack/react-table";
 import { useMovingCellRef } from "../../hooks/useMovingCellRef";
 import { memo } from "react";
 // import { Td, spring } from "../Animations";
-import type { EditableComponent } from "../../types";
+import type { EditableTableCellComponent } from "../../types";
 import { getAccessorKey } from "../../utils";
 
 type CellProps<T> = {
   borderColor: string;
   cell: CellType<T, unknown>;
   columnIndex: number;
-  editableComponents: Record<string, EditableComponent<T>>;
+  editableComponents: Record<string, EditableTableCellComponent<T>>;
   isSelected: boolean;
   isEditing: boolean;
   isEditMode: boolean;
@@ -41,7 +41,7 @@ const Cell = <T extends object>({
   const { ref, tabIndex, onFocus } = useMovingCellRef(isSelected);
   const accessorKey = getAccessorKey(cell.column.columnDef);
 
-  const hasEditableComponent =
+  const hasEditableTableCellComponent =
     accessorKey !== undefined && accessorKey in editableComponents;
 
   return (
@@ -52,7 +52,9 @@ const Cell = <T extends object>({
       // layout
       // transition={spring}
       tabIndex={tabIndex}
-      bgColor={isEditMode && !hasEditableComponent ? "gray.50" : undefined}
+      bgColor={
+        isEditMode && !hasEditableTableCellComponent ? "gray.50" : undefined
+      }
       borderRightColor={borderColor}
       borderRightStyle="solid"
       borderRightWidth={isEditMode ? 1 : undefined}
@@ -70,7 +72,7 @@ const Cell = <T extends object>({
       onFocus={onFocus}
     >
       <Box ref={ref}>
-        {isSelected && isEditing && hasEditableComponent ? (
+        {isSelected && isEditing && hasEditableTableCellComponent ? (
           <Popover
             isOpen
             onOpen={() => console.log("opened")}

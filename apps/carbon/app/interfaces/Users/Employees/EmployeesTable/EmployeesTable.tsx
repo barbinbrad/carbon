@@ -2,22 +2,24 @@ import { ActionMenu } from "@carbon/react";
 import {
   Flex,
   HStack,
-  Input,
   MenuItem,
-  Select,
   useDisclosure,
   VisuallyHidden,
 } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo, useState } from "react";
-import { BsPencilSquare } from "react-icons/bs";
+import { BsEnvelope, BsPencilSquare, BsShieldLock } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Table } from "~/components";
+import { Avatar, Table } from "~/components";
 import { usePermissions } from "~/hooks";
 import type { Employee } from "~/interfaces/Users/types";
-import { BulkEditPermissionsForm } from "~/interfaces/Users/BulkEditPermissions";
-import { Avatar } from "~/components";
+import {
+  BulkEditPermissionsForm,
+  DeactivateEmployeesModal,
+  ResendInviteModal,
+} from "~/interfaces/Users/Employees";
+import { FaBan } from "react-icons/fa";
 
 type EmployeesTableProps = {
   data: Employee[];
@@ -34,8 +36,12 @@ const EmployeesTable = memo(
   ({ data, count, isEditable = false }: EmployeesTableProps) => {
     const navigate = useNavigate();
     const permissions = usePermissions();
-    const bulkEditDrawer = useDisclosure();
+
     const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
+
+    const bulkEditDrawer = useDisclosure();
+    const deactivateEmployeeModal = useDisclosure();
+    const resendInviteModal = useDisclosure();
 
     const rows = useMemo(
       () =>
@@ -109,22 +115,36 @@ const EmployeesTable = memo(
                   <MenuItem
                     icon={<BsPencilSquare />}
                     onClick={() =>
-                      navigate(`/app/users/employees/${item.getValue()}`)
+                      navigate(
+                        `/app/users/employees/${item.getValue() as string}`
+                      )
                     }
                   >
                     Edit Employee
                   </MenuItem>
                   <MenuItem
-                    icon={<IoMdTrash />}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      navigate(
-                        `/app/users/employeess/deactivate/${item.getValue()}`
-                      );
+                    icon={<BsEnvelope />}
+                    onClick={() => {
+                      setSelectedUserIds([item.getValue() as string]);
+                      resendInviteModal.onOpen();
                     }}
                   >
-                    Deactivate Employee
+                    Send Account Invite
                   </MenuItem>
+                  {
+                    // @ts-ignore
+                    item.row.original.user?.active === true && (
+                      <MenuItem
+                        icon={<IoMdTrash />}
+                        onClick={(e) => {
+                          setSelectedUserIds([item.getValue() as string]);
+                          deactivateEmployeeModal.onOpen();
+                        }}
+                      >
+                        Deactivate Employee
+                      </MenuItem>
+                    )
+                  }
                 </ActionMenu>
               )}
             </Flex>
@@ -138,6 +158,7 @@ const EmployeesTable = memo(
       return [
         {
           label: "Bulk Edit Permissions",
+          icon: <BsShieldLock />,
           disabled: !permissions.can("update", "users"),
           onClick: (selected: typeof rows) => {
             setSelectedUserIds(
@@ -151,9 +172,49 @@ const EmployeesTable = memo(
             bulkEditDrawer.onOpen();
           },
         },
+        {
+          label: "Send Account Invite",
+          icon: <BsEnvelope />,
+          disabled: !permissions.can("create", "users"),
+          onClick: (selected: typeof rows) => {
+            setSelectedUserIds(
+              selected.reduce<string[]>((acc, row) => {
+                if (row.user && !Array.isArray(row.user)) {
+                  acc.push(row.user.id);
+                }
+                return acc;
+              }, [])
+            );
+            resendInviteModal.onOpen();
+          },
+        },
+        {
+          label: "Deactivate Users",
+          icon: <FaBan />,
+          disabled: !permissions.can("delete", "users"),
+          onClick: (selected: typeof rows) => {
+            setSelectedUserIds(
+              selected.reduce<string[]>((acc, row) => {
+                if (row.user && !Array.isArray(row.user)) {
+                  acc.push(row.user.id);
+                }
+                return acc;
+              }, [])
+            );
+            deactivateEmployeeModal.onOpen();
+          },
+        },
       ];
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    // const editableComponents = useMemo(
+    //   () => ({
+    //     "user.firstName": EditableName,
+    //     "user.lastName": EditableName,
+    //   }),
+    //   []
+    // );
 
     return (
       <>
@@ -163,15 +224,8 @@ const EmployeesTable = memo(
           columns={columns}
           data={rows}
           defaultColumnVisibility={defaultColumnVisibility}
-          editableComponents={{
-            "user.firstName": EditableInput,
-            "user.lastName": EditableInput,
-            "user.email": EditableInput,
-            "employeeType.name": EditableSelect,
-          }}
           withColumnOrdering
           withFilters
-          withInlineEditing={isEditable}
           withPagination
           withSelectableRows={isEditable}
         />
@@ -182,51 +236,57 @@ const EmployeesTable = memo(
             onClose={bulkEditDrawer.onClose}
           />
         )}
+        {deactivateEmployeeModal.isOpen && (
+          <DeactivateEmployeesModal
+            userIds={selectedUserIds}
+            isOpen={deactivateEmployeeModal.isOpen}
+            onClose={deactivateEmployeeModal.onClose}
+          />
+        )}
+        {resendInviteModal.isOpen && (
+          <ResendInviteModal
+            userIds={selectedUserIds}
+            isOpen={resendInviteModal.isOpen}
+            onClose={resendInviteModal.onClose}
+          />
+        )}
       </>
     );
   }
 );
 
-// type EditableTableCellProps = {
-//   value: unknown;
-//   data: unknown;
-//   accessorKey: string;
-//   onUpdate: (value: unknown) => void;
+// const EditableName = ({
+//   value,
+//   row,
+//   accessorKey,
+//   onUpdate,
+// }: EditableTableCellComponentProps<Employee>) => {
+//   const { supabase } = useSupabase();
+//   // @ts-ignore
+//   const userId = row?.user?.id as string;
+//   if (userId === undefined) {
+//     throw new Error("Expected user id to be defined");
+//   }
+
+//   const updateName = async (name: string) => {
+//     const [table, column] = accessorKey.split(".");
+//     onUpdate(name);
+//     await supabase
+//       ?.from(table)
+//       .update({ [column]: name })
+//       .eq("id", userId);
+//   };
+
+//   const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+//     if (event.key === "Enter") {
+//       updateName(event.currentTarget.value);
+//     }
+//   };
+
+//   return (
+//     <Input autoFocus defaultValue={value as string} onKeyDown={onKeyDown} />
+//   );
 // };
-
-const EditableInput = ({ value, data, accessorKey, onUpdate }: any) => {
-  const onBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    onUpdate(e.target.value);
-  };
-
-  return (
-    <Input
-      autoFocus
-      defaultValue={value as string}
-      onBlur={onBlur}
-      border="none"
-    />
-  );
-};
-
-const EditableSelect = ({ value, data, accessorKey, onUpdate }: any) => {
-  const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    onUpdate(e.target.value);
-  };
-
-  return (
-    <Select
-      autoFocus
-      defaultValue={value as string}
-      onChange={onChange}
-      border="none"
-    >
-      <option value="Admin">Admin</option>
-      <option value="Project Manager">Project Manager</option>
-      <option value="Sales">Sales</option>
-    </Select>
-  );
-};
 
 EmployeesTable.displayName = "EmployeeTable";
 

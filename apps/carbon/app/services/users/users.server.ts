@@ -16,6 +16,7 @@ import type { Result } from "~/types";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
 import { error, success } from "~/utils/result";
+import logger from "~/lib/logger";
 
 export async function createEmployeeAccount(
   client: SupabaseClient<Database>,
@@ -106,6 +107,27 @@ async function createUser(
   }
 
   return { data, error };
+}
+
+export async function deactivateUser(
+  client: SupabaseClient<Database>,
+  userId: string
+): Promise<Result> {
+  const updateActiveStatus = await client
+    .from("user")
+    .update({ active: false })
+    .eq("id", userId);
+  if (updateActiveStatus.error) {
+    return error(updateActiveStatus.error, "Failed to deactivate user");
+  }
+  const randomPassword = Math.random().toString(36).slice(-8);
+  const updatePassword = await resetPassword(userId, randomPassword);
+
+  if (updatePassword.error) {
+    return error(updatePassword.error, "Failed to deactivate user");
+  }
+
+  return success("Sucessfully deactivated user");
 }
 
 export async function deleteAttribute(
@@ -235,7 +257,7 @@ export async function getEmployees(
   let query = client
     .from("employee")
     .select(
-      "user!inner(id, fullName, firstName, lastName, email, avatarUrl), employeeType!inner(name)",
+      "user!inner(id, fullName, firstName, lastName, email, avatarUrl, active), employeeType!inner(name)",
       { count: "exact" }
     );
 
@@ -607,6 +629,29 @@ export function makePermissionsFromEmployeeType(
   });
 
   return result;
+}
+
+export async function resendInvite(
+  client: SupabaseClient<Database>,
+  userId: string
+): Promise<Result> {
+  const user = await getUserById(client, userId);
+  if (user.error || !user.data) {
+    return error(user.error, "Failed to get user");
+  }
+
+  const invite = await sendInviteByEmail(user.data.email);
+  if (invite.error) {
+    return error(invite.error, "Failed to send invite");
+  }
+
+  return success("Succesfully sent invite");
+}
+
+export async function resetPassword(userId: string, password: string) {
+  return getSupabaseAdmin().auth.admin.updateUserById(userId, {
+    password,
+  });
 }
 
 async function setUserClaims(userId: string, claims: Record<string, boolean>) {

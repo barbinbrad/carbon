@@ -2,13 +2,13 @@ import type { Row as RowType } from "@tanstack/react-table";
 import { Tr } from "@chakra-ui/react";
 // import { Tr, spring } from "../Animations";
 import Cell from "../Cell";
-import type { EditableComponent, Position } from "../../types";
+import type { EditableTableCellComponent, Position } from "../../types";
 import { useColor } from "@carbon/react";
 
 type RowProps<T> = {
   borderColor: string;
   backgroundColor: string;
-  editableComponents: Record<string, EditableComponent<T>>;
+  editableComponents: Record<string, EditableTableCellComponent<T>>;
   isEditing: boolean;
   isEditMode: boolean;
   isFrozenColumn?: boolean;

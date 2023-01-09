@@ -12,7 +12,7 @@ import { memo, useMemo, useState } from "react";
 import { BsEnvelope, BsPencilSquare, BsShieldLock } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { Avatar, Table } from "~/components";
-import { usePermissions } from "~/hooks";
+import { usePermissions, useUrlParams } from "~/hooks";
 import type { Employee } from "~/interfaces/Users/types";
 import {
   BulkEditPermissionsForm,
@@ -36,6 +36,7 @@ const EmployeesTable = memo(
   ({ data, count, isEditable = false }: EmployeesTableProps) => {
     const navigate = useNavigate();
     const permissions = usePermissions();
+    const [params] = useUrlParams();
 
     const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
 
@@ -116,7 +117,9 @@ const EmployeesTable = memo(
                     icon={<BsPencilSquare />}
                     onClick={() =>
                       navigate(
-                        `/app/users/employees/${item.getValue() as string}`
+                        `/app/users/employees/${
+                          item.getValue() as string
+                        }?${params.toString()}`
                       )
                     }
                   >
@@ -152,7 +155,7 @@ const EmployeesTable = memo(
         },
       ];
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [params]);
 
     const actions = useMemo(() => {
       return [

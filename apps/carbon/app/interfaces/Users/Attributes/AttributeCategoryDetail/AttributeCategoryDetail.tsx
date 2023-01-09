@@ -30,6 +30,7 @@ import type {
   AttributeCategoryDetail as AttributeCategoryDetailType,
 } from "~/interfaces/Users/types";
 import { DeleteAttributeModal } from "~/interfaces/Users/Attributes";
+import { useUrlParams } from "~/hooks";
 
 type AttributeCategoryDetailProps = {
   attributeCategory: AttributeCategoryDetailType;
@@ -40,6 +41,7 @@ const AttributeCategoryDetail = ({
   attributeCategory,
   onClose,
 }: AttributeCategoryDetailProps) => {
+  const [params] = useUrlParams();
   const sortOrderFetcher = useFetcher();
 
   const attributeMap = useMemo(
@@ -187,7 +189,12 @@ const AttributeCategoryDetail = ({
             )}
           </DrawerBody>
           <DrawerFooter>
-            <Button as={Link} to="new" colorScheme="brand" size="md">
+            <Button
+              as={Link}
+              to={`new?${params.toString()}`}
+              colorScheme="brand"
+              size="md"
+            >
               New Attribute
             </Button>
           </DrawerFooter>

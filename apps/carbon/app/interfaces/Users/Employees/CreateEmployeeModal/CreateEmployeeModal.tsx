@@ -40,7 +40,7 @@ const CreateEmployeeModal = () => {
     <Modal
       initialFocusRef={initialFocusRef}
       isOpen={true}
-      onClose={() => navigate("/app/users/employees")}
+      onClose={() => navigate(-1)}
     >
       <ModalOverlay />
       <ModalContent>

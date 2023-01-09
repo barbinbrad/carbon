@@ -1,6 +1,7 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Outlet, useLoaderData, useNavigate } from "@remix-run/react";
+import { useUrlParams } from "~/hooks";
 import { AttributeCategoryDetail } from "~/interfaces/Users/Attributes";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
@@ -74,9 +75,9 @@ export async function action({ request }: ActionArgs) {
 
 export default function AttributeCategoryListRoute() {
   const { attributeCategory } = useLoaderData<typeof loader>();
-
+  const [params] = useUrlParams();
   const navigate = useNavigate();
-  const onClose = () => navigate("/app/users/attributes");
+  const onClose = () => navigate(`/app/users/attributes?${params.toString()}`);
 
   return (
     <>

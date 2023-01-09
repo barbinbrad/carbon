@@ -6,7 +6,7 @@ import { memo, useMemo } from "react";
 import { BsPencilSquare, BsPeopleFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { Table } from "~/components";
-import { usePermissions } from "~/hooks";
+import { usePermissions, useUrlParams } from "~/hooks";
 import type { EmployeeType } from "~/interfaces/Users/types";
 
 type EmployeeTypesTableProps = {
@@ -15,6 +15,7 @@ type EmployeeTypesTableProps = {
 };
 
 const EmployeeTypesTable = memo(({ data, count }: EmployeeTypesTableProps) => {
+  const [params] = useUrlParams();
   const navigate = useNavigate();
   const permissions = usePermissions();
 
@@ -59,7 +60,11 @@ const EmployeeTypesTable = memo(({ data, count }: EmployeeTypesTableProps) => {
                 }
                 icon={<BsPencilSquare />}
                 onClick={() => {
-                  navigate(`/app/users/employee-types/${row.original.id}`);
+                  navigate(
+                    `/app/users/employee-types/${
+                      row.original.id
+                    }?${params.toString()}`
+                  );
                 }}
               >
                 Edit Employee Type
@@ -71,7 +76,9 @@ const EmployeeTypesTable = memo(({ data, count }: EmployeeTypesTableProps) => {
                 icon={<IoMdTrash />}
                 onClick={() => {
                   navigate(
-                    `/app/users/employee-types/delete/${row.original.id}`
+                    `/app/users/employee-types/delete/${
+                      row.original.id
+                    }?${params.toString()}`
                   );
                 }}
               >
@@ -83,7 +90,7 @@ const EmployeeTypesTable = memo(({ data, count }: EmployeeTypesTableProps) => {
       },
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [params]);
 
   return (
     <Table<typeof data[number]> data={data} columns={columns} count={count} />

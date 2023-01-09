@@ -9,14 +9,14 @@ import {
   useDisclosure,
   VisuallyHidden,
 } from "@chakra-ui/react";
-import { Link, useNavigate } from "@remix-run/react";
+import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo, useState } from "react";
 import { BiAddToQueue } from "react-icons/bi";
 import { BsPencilSquare, BsListUl, BsPlus } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { Table } from "~/components";
-import { usePermissions } from "~/hooks";
+import { usePermissions, useUrlParams } from "~/hooks";
 import type { AttributeCategory } from "~/interfaces/Users/types";
 import DeleteAttributeCategoryModal from "../DeleteAttributeCategoryModal";
 
@@ -28,6 +28,7 @@ type AttributeCategoriesTableProps = {
 const AttributeCategoriesTable = memo(
   ({ data, count }: AttributeCategoriesTableProps) => {
     const navigate = useNavigate();
+    const [params] = useUrlParams();
     const permissions = usePermissions();
     const deleteModal = useDisclosure();
     const [selectedCategory, setSelectedCategory] = useState<
@@ -57,7 +58,11 @@ const AttributeCategoriesTable = memo(
             <ButtonGroup size="sm" isAttached variant="outline">
               <Button
                 onClick={() => {
-                  navigate(`/app/users/attributes/list/${row.original.id}`);
+                  navigate(
+                    `/app/users/attributes/list/${
+                      row.original.id
+                    }?${params.toString()}`
+                  );
                 }}
               >
                 {Array.isArray(row.original.userAttribute)
@@ -66,10 +71,14 @@ const AttributeCategoriesTable = memo(
                 Attributes
               </Button>
               <IconButton
-                aria-label="Add to friends"
+                aria-label="Add attribute"
                 icon={<BsPlus />}
                 onClick={() => {
-                  navigate(`/app/users/attributes/list/${row.original.id}/new`);
+                  navigate(
+                    `/app/users/attributes/list/${
+                      row.original.id
+                    }/new?${params.toString()}`
+                  );
                 }}
               />
             </ButtonGroup>
@@ -102,7 +111,9 @@ const AttributeCategoriesTable = memo(
                   icon={<BiAddToQueue />}
                   onClick={() => {
                     navigate(
-                      `/app/users/attributes/list/${row.original.id}/new`
+                      `/app/users/attributes/list/${
+                        row.original.id
+                      }/new?${params.toString()}`
                     );
                   }}
                 >
@@ -111,7 +122,11 @@ const AttributeCategoriesTable = memo(
                 <MenuItem
                   icon={<BsListUl />}
                   onClick={() => {
-                    navigate(`/app/users/attributes/list/${row.original.id}`);
+                    navigate(
+                      `/app/users/attributes/list/${
+                        row.original.id
+                      }?${params.toString()}`
+                    );
                   }}
                 >
                   View Attributes
@@ -140,7 +155,7 @@ const AttributeCategoriesTable = memo(
         },
       ];
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [params]);
 
     return (
       <>

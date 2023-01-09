@@ -1,22 +1,58 @@
 import { useColor } from "@carbon/react";
-import { Box, VStack } from "@chakra-ui/react";
-import type { PropsWithChildren } from "react";
+import { Box, Button, VStack } from "@chakra-ui/react";
+import { Link, useMatches } from "@remix-run/react";
+import type { Route } from "~/types";
 
-const ContentSidebar = ({ children }: PropsWithChildren<{}>) => (
-  <Box
-    h="full"
-    w="15rem"
-    bg={useColor("white")}
-    borderRight={1}
-    borderRightColor={useColor("gray.300")}
-    borderRightStyle="solid"
-  >
-    <VStack h="full" alignItems="start">
-      <Box overflowY="auto" w="full" h="full" pb={8}>
-        {children}
-      </Box>
-    </VStack>
-  </Box>
-);
+const ContentSidebar = ({ links }: { links: Route[] }) => {
+  const matches = useMatches();
+  const borderColor = useColor("gray.200");
+
+  return (
+    <Box
+      h="full"
+      w="15rem"
+      bg={useColor("white")}
+      borderRight={1}
+      borderRightColor={useColor("gray.300")}
+      borderRightStyle="solid"
+    >
+      <VStack h="full" alignItems="start">
+        <Box overflowY="auto" w="full" h="full" pb={8}>
+          <VStack spacing={2}>
+            <VStack
+              spacing={1}
+              alignItems="start"
+              borderBottomStyle={"solid"}
+              borderBottomWidth={1}
+              borderBottomColor={borderColor}
+              px={2}
+              py={4}
+              w="full"
+            >
+              {links.map((route) => {
+                const isActive = matches.some((match) =>
+                  match.pathname.includes(route.to)
+                );
+                return (
+                  <Button
+                    key={route.name}
+                    as={Link}
+                    to={route.to}
+                    variant={isActive ? "solid" : "ghost"}
+                    fontWeight={isActive ? "bold" : "normal"}
+                    justifyContent="start"
+                    w="full"
+                  >
+                    {route.name}
+                  </Button>
+                );
+              })}
+            </VStack>
+          </VStack>
+        </Box>
+      </VStack>
+    </Box>
+  );
+};
 
 export default ContentSidebar;

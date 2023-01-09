@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import type { Module } from "./features";
+import type { Feature } from "./features";
 
 export const possibleEmployees = ["Admin", "Project Manager", "Sales"] as const;
 
@@ -22,7 +22,7 @@ export { employeeTypes };
 export const employeeTypePermissionsDefinitions: Record<
   EmployeeType,
   Record<
-    Module,
+    Feature,
     { create: boolean; update: boolean; delete: boolean; view: boolean }
   >
 > = {
@@ -51,7 +51,7 @@ export const employeeTypePermissionsDefinitions: Record<
       delete: true,
       view: true,
     },
-    Orders: {
+    Sales: {
       create: true,
       update: true,
       delete: true,
@@ -81,7 +81,7 @@ export const employeeTypePermissionsDefinitions: Record<
       delete: true,
       view: true,
     },
-    Partners: {
+    People: {
       create: true,
       update: true,
       delete: true,
@@ -125,7 +125,7 @@ export const employeeTypePermissionsDefinitions: Record<
       delete: true,
       view: true,
     },
-    Orders: {
+    Sales: {
       create: false,
       update: false,
       delete: false,
@@ -155,7 +155,7 @@ export const employeeTypePermissionsDefinitions: Record<
       delete: false,
       view: true,
     },
-    Partners: {
+    People: {
       create: true,
       update: true,
       delete: true,
@@ -199,7 +199,7 @@ export const employeeTypePermissionsDefinitions: Record<
       delete: false,
       view: true,
     },
-    Orders: {
+    Sales: {
       create: true,
       update: true,
       delete: true,
@@ -229,7 +229,7 @@ export const employeeTypePermissionsDefinitions: Record<
       delete: false,
       view: false,
     },
-    Partners: {
+    People: {
       create: true,
       update: true,
       delete: true,

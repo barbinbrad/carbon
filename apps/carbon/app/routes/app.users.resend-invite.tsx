@@ -1,8 +1,8 @@
 import type { ActionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
-import type { ResendInvitesQueueData } from "~/queue";
-import { resendInvitesQueue } from "~/queue";
+import type { ResendInvitesQueueData } from "~/queues";
+import { resendInvitesQueue } from "~/queues";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { resendInvite, resendInviteValidator } from "~/services/users";

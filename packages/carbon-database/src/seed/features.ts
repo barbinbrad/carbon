@@ -1,18 +1,18 @@
 import { v4 as uuidv4 } from "uuid";
 
 const possibleFeatures = [
-  "Parts",
-  "Jobs",
-  "Inventory",
-  "Scheduling",
-  "Orders",
-  "Purchasing",
   "Documents",
+  "Inventory",
+  "Jobs",
   "Messaging",
-  "Timecards",
-  "Partners",
-  "Users",
+  "Parts",
+  "People",
+  "Purchasing",
+  "Sales",
+  "Scheduling",
   "Settings",
+  "Timecards",
+  "Users",
 ] as const;
 
 export type Feature = typeof possibleFeatures[number];

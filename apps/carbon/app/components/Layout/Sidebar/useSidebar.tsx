@@ -5,12 +5,12 @@ import {
   BsCalendar2Week,
   BsCartDash,
   BsCartPlus,
+  BsPeopleFill,
   BsShieldLock,
 } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
 import { GoSettings } from "react-icons/go";
 import { HiOutlineCube, HiOutlineDocumentDuplicate } from "react-icons/hi";
-import { SiHandshake } from "react-icons/si";
 import { usePermissions } from "~/hooks";
 
 const sidebarItems: Authenticated<NavItem>[] = [
@@ -45,9 +45,9 @@ const sidebarItems: Authenticated<NavItem>[] = [
     icon: <AiOutlineFieldTime />,
   },
   {
-    permission: "orders",
-    name: "Orders",
-    to: "/app/orders",
+    permission: "sales",
+    name: "Sales",
+    to: "/app/sales",
     icon: <BsCartPlus />,
   },
   {
@@ -69,10 +69,10 @@ const sidebarItems: Authenticated<NavItem>[] = [
     icon: <BiMessage />,
   },
   {
-    permission: "partners",
-    name: "Partners",
-    to: "/app/partners",
-    icon: <SiHandshake />,
+    permission: "people",
+    name: "People",
+    to: "/app/people",
+    icon: <BsPeopleFill />,
   },
   {
     permission: "users",

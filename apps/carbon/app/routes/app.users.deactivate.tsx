@@ -1,8 +1,8 @@
 import type { ActionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
-import type { DeactivateUserQueueData } from "~/queue";
-import { deactivateUsersQueue } from "~/queue";
+import type { DeactivateUserQueueData } from "~/queues";
+import { deactivateUsersQueue } from "~/queues";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { deactivateUser, deactivateUsersValidator } from "~/services/users";

@@ -8,11 +8,10 @@ datasource db {
 }
 
 model employee {
-  id                   String                @id
-  employeeTypeId       String
-  employeeType         employeeType          @relation(fields: [employeeTypeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  user                 user                  @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  employeePersonalData employeePersonalData?
+  id             String       @id
+  employeeTypeId String
+  employeeType   employeeType @relation(fields: [employeeTypeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user           user         @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
 
 model employeeType {
@@ -50,25 +49,27 @@ model feature {
 }
 
 model user {
-  id                                                  String              @id
-  email                                               String              @unique
-  firstName                                           String
-  lastName                                            String
-  fullName                                            String?             @default(dbgenerated("((\"firstName\" || ' '::text) || \"lastName\")"))
-  about                                               String              @default("")
-  avatarUrl                                           String?
-  emailVerified                                       DateTime?
-  createdAt                                           DateTime            @default(now())
-  updatedAt                                           DateTime?
-  attribute_attribute_createdByTouser                 attribute[]         @relation("attribute_createdByTouser")
-  attribute_attribute_updatedByTouser                 attribute[]         @relation("attribute_updatedByTouser")
-  attributeCategory_attributeCategory_createdByTouser attributeCategory[] @relation("attributeCategory_createdByTouser")
-  attributeCategory_attributeCategory_updatedByTouser attributeCategory[] @relation("attributeCategory_updatedByTouser")
-  attributeValue_attributeValue_createdByTouser       attributeValue[]    @relation("attributeValue_createdByTouser")
-  attributeValue_attributeValue_updatedByTouser       attributeValue[]    @relation("attributeValue_updatedByTouser")
-  attributeValue_attributeValue_userIdTouser          attributeValue[]    @relation("attributeValue_userIdTouser")
-  employee                                            employee?
-  membership                                          membership[]
+  id                                                          String                  @id
+  email                                                       String                  @unique
+  firstName                                                   String
+  lastName                                                    String
+  fullName                                                    String?                 @default(dbgenerated("((\"firstName\" || ' '::text) || \"lastName\")"))
+  about                                                       String                  @default("")
+  avatarUrl                                                   String?
+  active                                                      Boolean?                @default(true)
+  emailVerified                                               DateTime?
+  createdAt                                                   DateTime                @default(now())
+  updatedAt                                                   DateTime?
+  employee                                                    employee?
+  membership                                                  membership[]
+  userAttribute_userTouserAttribute_createdBy                 userAttribute[]         @relation("userTouserAttribute_createdBy")
+  userAttribute_userTouserAttribute_updatedBy                 userAttribute[]         @relation("userTouserAttribute_updatedBy")
+  userAttributeCategory_userTouserAttributeCategory_createdBy userAttributeCategory[] @relation("userTouserAttributeCategory_createdBy")
+  userAttributeCategory_userTouserAttributeCategory_updatedBy userAttributeCategory[] @relation("userTouserAttributeCategory_updatedBy")
+  userAttributeValue_userTouserAttributeValue_createdBy       userAttributeValue[]    @relation("userTouserAttributeValue_createdBy")
+  userAttributeValue_userTouserAttributeValue_updatedBy       userAttributeValue[]    @relation("userTouserAttributeValue_updatedBy")
+  userAttributeValue_userTouserAttributeValue_userId          userAttributeValue[]    @relation("userTouserAttributeValue_userId")
+  userAttributeValue_userTouserAttributeValue_valueUser       userAttributeValue[]    @relation("userTouserAttributeValue_valueUser")
 
   @@index([fullName], map: "user_fullName_key")
 }
@@ -100,72 +101,70 @@ model membership {
 }
 
 model attributeDataType {
-  id        Int         @id @default(autoincrement())
-  label     String
-  value     String
-  isBoolean Boolean     @default(false)
-  isDate    Boolean     @default(false)
-  isList    Boolean     @default(false)
-  isNumeric Boolean     @default(false)
-  isText    Boolean     @default(false)
-  attribute attribute[]
+  id            Int             @id @default(autoincrement())
+  label         String
+  isBoolean     Boolean         @default(false)
+  isDate        Boolean         @default(false)
+  isList        Boolean         @default(false)
+  isNumeric     Boolean         @default(false)
+  isText        Boolean         @default(false)
+  isUser        Boolean         @default(false)
+  userAttribute userAttribute[]
 }
 
-model employeePersonalData {
-  id       String   @id
-  employee employee @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+model userAttribute {
+  id                                 Int                   @id @default(autoincrement())
+  name                               String
+  sortOrder                          Int                   @default(1)
+  userAttributeCategoryId            Int
+  attributeDataTypeId                Int
+  listOptions                        String[]
+  canSelfManage                      Boolean?              @default(false)
+  active                             Boolean?              @default(true)
+  createdAt                          DateTime              @default(now())
+  createdBy                          String
+  updatedAt                          DateTime?
+  updatedBy                          String?
+  attributeDataType                  attributeDataType     @relation(fields: [attributeDataTypeId], references: [id], onDelete: Cascade)
+  user_userTouserAttribute_createdBy user                  @relation("userTouserAttribute_createdBy", fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user_userTouserAttribute_updatedBy user?                 @relation("userTouserAttribute_updatedBy", fields: [updatedBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  userAttributeCategory              userAttributeCategory @relation(fields: [userAttributeCategoryId], references: [id], onDelete: Cascade)
+  userAttributeValue                 userAttributeValue[]
 }
 
-model attribute {
-  id                             Int               @id @default(autoincrement())
-  label                          String
-  sortOrder                      Int               @default(1)
-  attributeCategoryId            Int
-  attributeDataTypeId            Int
-  listOptions                    String[]
-  canSelfManage                  Boolean?          @default(false)
-  isActive                       Boolean?          @default(true)
-  createdAt                      DateTime          @default(now())
-  createdBy                      String
-  updatedAt                      DateTime?
-  updatedBy                      String?
-  attributeCategory              attributeCategory @relation(fields: [attributeCategoryId], references: [id], onDelete: Cascade)
-  attributeDataType              attributeDataType @relation(fields: [attributeDataTypeId], references: [id], onDelete: Cascade)
-  user_attribute_createdByTouser user              @relation("attribute_createdByTouser", fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  user_attribute_updatedByTouser user?             @relation("attribute_updatedByTouser", fields: [updatedBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  attributeValue                 attributeValue[]
-
-  @@unique([attributeCategoryId, sortOrder], map: "uq_attributecategory_sortorder")
+model userAttributeCategory {
+  id                                         Int             @id @default(autoincrement())
+  name                                       String
+  public                                     Boolean?        @default(false)
+  protected                                  Boolean?        @default(false)
+  active                                     Boolean?        @default(true)
+  createdAt                                  DateTime        @default(now())
+  createdBy                                  String
+  updatedAt                                  DateTime?
+  updatedBy                                  String?
+  user_userTouserAttributeCategory_createdBy user            @relation("userTouserAttributeCategory_createdBy", fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user_userTouserAttributeCategory_updatedBy user?           @relation("userTouserAttributeCategory_updatedBy", fields: [updatedBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  userAttribute                              userAttribute[]
 }
 
-model attributeCategory {
-  id                                     Int         @id @default(autoincrement())
-  label                                  String
-  isActive                               Boolean?    @default(true)
-  createdAt                              DateTime    @default(now())
-  createdBy                              String
-  updatedAt                              DateTime?
-  updatedBy                              String?
-  user_attributeCategory_createdByTouser user        @relation("attributeCategory_createdByTouser", fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  user_attributeCategory_updatedByTouser user?       @relation("attributeCategory_updatedByTouser", fields: [updatedBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  attribute                              attribute[]
-}
+model userAttributeValue {
+  id                                      Int           @id @default(autoincrement())
+  userAttributeId                         Int
+  userId                                  String
+  valueBoolean                            Boolean?
+  valueDate                               DateTime?     @db.Date
+  valueNumeric                            Decimal?      @db.Decimal
+  valueText                               String?
+  valueUser                               String?
+  createdAt                               DateTime      @default(now())
+  createdBy                               String
+  updatedAt                               DateTime?
+  updatedBy                               String?
+  user_userTouserAttributeValue_createdBy user          @relation("userTouserAttributeValue_createdBy", fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user_userTouserAttributeValue_updatedBy user?         @relation("userTouserAttributeValue_updatedBy", fields: [updatedBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  userAttribute                           userAttribute @relation(fields: [userAttributeId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  user_userTouserAttributeValue_userId    user          @relation("userTouserAttributeValue_userId", fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  user_userTouserAttributeValue_valueUser user?         @relation("userTouserAttributeValue_valueUser", fields: [valueUser], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
-model attributeValue {
-  id                                  Int       @id @default(autoincrement())
-  attributeId                         Int
-  userId                              String
-  valueText                           String?
-  valueDate                           DateTime? @db.Date
-  valueNumber                         Decimal?  @db.Decimal
-  createdAt                           DateTime  @default(now())
-  createdBy                           String
-  updatedAt                           DateTime?
-  updatedBy                           String?
-  attribute                           attribute @relation(fields: [attributeId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  user_attributeValue_createdByTouser user      @relation("attributeValue_createdByTouser", fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  user_attributeValue_updatedByTouser user?     @relation("attributeValue_updatedByTouser", fields: [updatedBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  user_attributeValue_userIdTouser    user      @relation("attributeValue_userIdTouser", fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-
-  @@unique([attributeId, userId], map: "uq_attributeid_userid")
+  @@unique([userAttributeId, userId], map: "uq_userattributeid_userid")
 }

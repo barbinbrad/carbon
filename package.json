@@ -23,7 +23,7 @@
     "db:kill:redis": "yarn workspace @carbon/redis db:kill",
     "db:types": "yarn workspace @carbon/database db:types",
     "db:migrate": "yarn workspace @carbon/database db:migrate",
-    "db:migrate:new": "yarn workspace @carbon/database db:migrate:new",
+    "db:migrate:new": "yarn workspace @carbon/database supabase migration new",
     "db:push": "turbo run db:push",
     "db:pull": "turbo run db:pull",
     "db:seed": "turbo run db:seed --no-cache",

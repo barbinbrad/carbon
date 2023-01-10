@@ -18,7 +18,6 @@
     "db:kill": "supabase stop",
     "db:types": "supabase gen types typescript --local > src/types.ts",
     "db:migrate": "prisma migrate deploy",
-    "db:migrate:new": "prisma migrate dev --create-only",
     "db:push": "prisma db push",
     "db:pull": "prisma db pull",
     "db:seed": "tsx src/seed.ts",

@@ -100,7 +100,7 @@ CREATE TABLE "userAttribute" (
   "listOptions" TEXT ARRAY,
   "canSelfManage" BOOLEAN DEFAULT FALSE,
   "active" BOOLEAN DEFAULT TRUE,
-  "createdAt" TIMESTAMP(3) DEFAULT now() NOT NULL,
+  "createdAt" TIMESTAMP(3) DEFAULT NOW() NOT NULL,
   "createdBy" TEXT NOT NULL,
   "updatedAt" TIMESTAMP(3),
   "updatedBy" TEXT,

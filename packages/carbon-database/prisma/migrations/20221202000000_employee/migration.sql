@@ -3,8 +3,8 @@ CREATE TABLE "employee" (
     "employeeTypeId" TEXT NOT NULL,
 
     CONSTRAINT "employee_pkey" PRIMARY KEY ("id"),
-    CONSTRAINT "employee_employeeTypeId_fkey" FOREIGN KEY ("employeeTypeId") REFERENCES "employeeType"("id") ON DELETE NO ACTION ON UPDATE NO ACTION,
-    CONSTRAINT "employee_id_fkey" FOREIGN KEY ("id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE NO ACTION
+    CONSTRAINT "employee_employeeTypeId_fkey" FOREIGN KEY ("employeeTypeId") REFERENCES "employeeType"("id") ON DELETE NO ACTION ON UPDATE CASCADE,
+    CONSTRAINT "employee_id_fkey" FOREIGN KEY ("id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 ALTER TABLE "employee" ENABLE ROW LEVEL SECURITY;

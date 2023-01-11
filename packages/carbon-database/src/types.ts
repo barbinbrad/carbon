@@ -175,6 +175,52 @@ export interface Database {
           code?: string
         }
       }
+      customerStatus: {
+        Row: {
+          id: number
+          name: string
+          createdAt: string
+          updatedAt: string | null
+        }
+        Insert: {
+          id?: number
+          name: string
+          createdAt?: string
+          updatedAt?: string | null
+        }
+        Update: {
+          id?: number
+          name?: string
+          createdAt?: string
+          updatedAt?: string | null
+        }
+      }
+      customerType: {
+        Row: {
+          id: number
+          name: string
+          color: string | null
+          protected: boolean
+          createdAt: string
+          updatedAt: string | null
+        }
+        Insert: {
+          id?: number
+          name: string
+          color?: string | null
+          protected?: boolean
+          createdAt?: string
+          updatedAt?: string | null
+        }
+        Update: {
+          id?: number
+          name?: string
+          color?: string | null
+          protected?: boolean
+          createdAt?: string
+          updatedAt?: string | null
+        }
+      }
       employee: {
         Row: {
           id: string

@@ -106,3 +106,21 @@ CREATE TABLE "supplierContact" (
   CONSTRAINT "supplierContact_contactId_fkey" FOREIGN KEY ("contactId") REFERENCES "contact"("id") ON UPDATE CASCADE ON DELETE CASCADE,
   CONSTRAINT "supplierContact_supplierLocationId_fkey" FOREIGN KEY ("supplierLocationId") REFERENCES "supplierLocation"("id") ON UPDATE CASCADE ON DELETE SET NULL
 );
+
+CREATE TABLE "customerStatus" (
+    "id" SERIAL PRIMARY KEY,
+    "name" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3)
+);
+
+CREATE TABLE "customerType" (
+    "id" SERIAL PRIMARY KEY,
+    "name" TEXT NOT NULL,
+    "color" TEXT DEFAULT '#000000',
+    "protected" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3),
+
+    CONSTRAINT "customerType_colorCheck" CHECK ("color" is null or "color" ~* '^#[a-f0-9]{6}$')
+);

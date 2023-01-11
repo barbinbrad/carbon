@@ -1,7 +1,36 @@
-export default function SalesCustomerTypesRoute() {
+import { VStack } from "@chakra-ui/react";
+import type { LoaderArgs } from "@remix-run/node";
+import { json } from "@remix-run/node";
+import { Outlet, useLoaderData } from "@remix-run/react";
+import {
+  CustomerTypesTable,
+  CustomerTypesTableFilters,
+} from "~/interfaces/Sales/CustomerTypes";
+import { requirePermissions } from "~/services/auth";
+import { getCustomerTypes } from "~/services/sales";
+import { getGenericQueryFilters } from "~/utils/query";
+
+export async function loader({ request }: LoaderArgs) {
+  const { client } = await requirePermissions(request, {
+    view: "sales",
+  });
+
+  const url = new URL(request.url);
+  const searchParams = new URLSearchParams(url.search);
+  const name = searchParams.get("name");
+  const { limit, offset, sorts } = getGenericQueryFilters(searchParams);
+
+  return json(await getCustomerTypes(client, { name, limit, offset, sorts }));
+}
+
+export default function CustomerTypesRoute() {
+  const { data, count } = useLoaderData<typeof loader>();
+
   return (
-    <div>
-      <h1>Sales Customer Types</h1>
-    </div>
+    <VStack w="full" h="full" spacing={0}>
+      <CustomerTypesTableFilters />
+      <CustomerTypesTable data={data ?? []} count={count ?? 0} />
+      <Outlet />
+    </VStack>
   );
 }

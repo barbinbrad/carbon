@@ -9,19 +9,19 @@ import {
   ModalOverlay,
 } from "@chakra-ui/react";
 import { Form } from "@remix-run/react";
-import type { EmployeeType } from "../../types";
+import type { SupplierType } from "../../types";
 
-type DeleteEmployeeTypeModalProps = {
-  employeeTypeId: string;
-  data: EmployeeType;
+type DeleteSupplierTypeModalProps = {
+  supplierTypeId: string;
+  data: SupplierType;
   onCancel: () => void;
 };
 
-const DeleteEmployeeTypeModal = ({
-  employeeTypeId,
+const DeleteSupplierTypeModal = ({
+  supplierTypeId,
   data,
   onCancel,
-}: DeleteEmployeeTypeModalProps) => {
+}: DeleteSupplierTypeModalProps) => {
   return (
     <Modal isOpen={true} onClose={onCancel}>
       <ModalOverlay />
@@ -29,7 +29,7 @@ const DeleteEmployeeTypeModal = ({
         <ModalHeader>Delete {data?.name}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          Are you sure you want to delete the {data?.name} employee type? This
+          Are you sure you want to delete the {data?.name} supplier type? This
           cannot be undone.
         </ModalBody>
 
@@ -39,7 +39,7 @@ const DeleteEmployeeTypeModal = ({
           </Button>
           <Form
             method="post"
-            action={`/app/users/employee-types/delete/${employeeTypeId}`}
+            action={`/app/purchasing/supplier-types/delete/${supplierTypeId}`}
           >
             <Button colorScheme="red" type="submit">
               Delete
@@ -51,4 +51,4 @@ const DeleteEmployeeTypeModal = ({
   );
 };
 
-export default DeleteEmployeeTypeModal;
+export default DeleteSupplierTypeModal;

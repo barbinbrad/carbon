@@ -7,7 +7,7 @@ import { GroupForm } from "~/interfaces/Users/Groups";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import {
-  getGroupMembersById,
+  getGroupMembers,
   groupValidator,
   upsertGroup,
   upsertGroupMembers,
@@ -23,7 +23,7 @@ export async function loader({ request, params }: LoaderArgs) {
   const { groupId } = params;
   if (!groupId) throw notFound("groupId not found");
 
-  const groupWithMembers = await getGroupMembersById(client, groupId);
+  const groupWithMembers = await getGroupMembers(client, groupId);
 
   if (groupWithMembers.error) {
     redirect(

@@ -116,7 +116,7 @@ export async function action({ request }: ActionArgs) {
   );
 }
 
-export default function NewEmployeeTypesRoute() {
+export default function EditEmployeeTypesRoute() {
   const { employeeType, employeeTypePermissions } =
     useLoaderData<typeof loader>();
 

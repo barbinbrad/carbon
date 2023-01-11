@@ -519,7 +519,9 @@ const Table = <T extends object>({
                       onCellClick={onCellClick}
                       onCellUpdate={onCellEditUpdate}
                       onRowClick={
-                        onRowClick ? () => onRowClick(row.original) : undefined
+                        rowsAreClickable
+                          ? () => onRowClick(row.original)
+                          : undefined
                       }
                     />
                   );

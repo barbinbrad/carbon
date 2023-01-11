@@ -228,14 +228,11 @@ export async function getAttributeDataTypes(client: SupabaseClient<Database>) {
   return client.from("attributeDataType").select("*");
 }
 
-export async function getClaimsById(
-  client: SupabaseClient<Database>,
-  uid: string
-) {
+export async function getClaims(client: SupabaseClient<Database>, uid: string) {
   return client.rpc("get_claims", { uid });
 }
 
-export async function getEmployeeById(
+export async function getEmployee(
   client: SupabaseClient<Database>,
   id: string
 ) {
@@ -318,7 +315,7 @@ export async function getGroup(
   return client.from("group").select("id, name").eq("id", groupId).single();
 }
 
-export async function getGroupMembersById(
+export async function getGroupMembers(
   client: SupabaseClient<Database>,
   groupId: string
 ) {
@@ -374,7 +371,7 @@ export async function getPermissions(
   } finally {
     // if we don't have permissions from redis, get them from the database
     if (!permissions) {
-      const claims = await getClaimsById(client, userId);
+      const claims = await getClaims(client, userId);
       if (claims.error || claims.data === null) {
         throw redirect(
           "/app",
@@ -691,16 +688,16 @@ export async function updatePermissions(
   }: { id: string; permissions: Record<string, Permission>; addOnly?: boolean }
 ): Promise<Result> {
   if (await client.rpc("is_claims_admin")) {
-    const getClaims = await getClaimsById(client, id);
+    const claims = await getClaims(client, id);
 
-    if (getClaims.error) return error(getClaims.error, "Failed to get claims");
+    if (claims.error) return error(claims.error, "Failed to get claims");
 
     const currentClaims =
-      typeof getClaims.data !== "object" ||
-      Array.isArray(getClaims.data) ||
-      getClaims.data === null
+      typeof claims.data !== "object" ||
+      Array.isArray(claims.data) ||
+      claims.data === null
         ? {}
-        : getClaims.data;
+        : claims.data;
 
     const newClaims: Record<string, boolean> = {};
     Object.entries(permissions).forEach(([name, permission]) => {

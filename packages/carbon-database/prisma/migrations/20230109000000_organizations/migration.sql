@@ -4,25 +4,37 @@ CREATE TABLE "country" (
   "code" TEXT NOT NULL
 );
 
-CREATE TABLE "state" (
+CREATE TABLE "contact" (
   "id" SERIAL PRIMARY KEY,
-  "name" TEXT NOT NULL,
+  "firstName" TEXT,
+  "lastName" TEXT,
+  "title" TEXT,
+  "email" TEXT,
+  "mobilePhone" TEXT,
+  "homePhone" TEXT,
+  "workPhone" TEXT,
+  "fax" TEXT,
+  "addressLine1" TEXT,
+  "addressLine2" TEXT,
+  "city" TEXT,
+  "state" TEXT,
   "countryId" INTEGER,
+  "birthday" DATE,
 
-  CONSTRAINT "state_countryId_fkey" FOREIGN KEY ("countryId") REFERENCES "country"("id") ON DELETE SET NULL ON UPDATE CASCADE
+  CONSTRAINT "contact_countryId_fkey" FOREIGN KEY ("countryId") REFERENCES "country"("id") ON DELETE SET NULL ON UPDATE CASCADE
 );
+
 
 CREATE TABLE "address" (
   "id" SERIAL PRIMARY KEY,
   "addressLine1" TEXT,
   "addressLine2" TEXT,
   "city" TEXT,
-  "stateId" INTEGER,
+  "state" TEXT,
   "countryId" INTEGER,
   "phone" TEXT,
   "fax" TEXT,
 
-  CONSTRAINT "address_stateId_fkey" FOREIGN KEY ("stateId") REFERENCES "state"("id") ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT "address_countryId_fkey" FOREIGN KEY ("countryId") REFERENCES "country"("id") ON DELETE SET NULL ON UPDATE CASCADE
 );
 
@@ -82,4 +94,15 @@ CREATE TABLE "supplierLocation" (
 
   CONSTRAINT "supplierLocation_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "supplier"("id") ON UPDATE CASCADE ON DELETE CASCADE,
   CONSTRAINT "supplierLocation_addressId_fkey" FOREIGN KEY ("addressId") REFERENCES "address"("id") ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE "supplierContact" (
+  "id" SERIAL PRIMARY KEY,
+  "supplierId" TEXT NOT NULL,
+  "contactId" INTEGER NOT NULL,
+  "supplierLocationId" INTEGER,
+
+  CONSTRAINT "supplierContact_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "supplier"("id") ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT "supplierContact_contactId_fkey" FOREIGN KEY ("contactId") REFERENCES "contact"("id") ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT "supplierContact_supplierLocationId_fkey" FOREIGN KEY ("supplierLocationId") REFERENCES "supplierLocation"("id") ON UPDATE CASCADE ON DELETE SET NULL
 );

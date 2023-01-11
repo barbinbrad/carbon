@@ -9,8 +9,8 @@ import { flash } from "~/services/session";
 import {
   userPermissionsValidator,
   employeeValidator,
-  getClaimsById,
-  getEmployeeById,
+  getClaims,
+  getEmployee,
   makePermissionsFromClaims,
   updateEmployee,
 } from "~/services/users";
@@ -26,8 +26,8 @@ export async function loader({ request, params }: LoaderArgs) {
   if (!employeeId) throw notFound("EmployeeId was not found");
 
   const [claims, employee] = await Promise.all([
-    getClaimsById(client, employeeId),
-    getEmployeeById(client, employeeId),
+    getClaims(client, employeeId),
+    getEmployee(client, employeeId),
   ]);
 
   if (claims.error || employee.error || claims.data === null) {

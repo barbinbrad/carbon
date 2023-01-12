@@ -89,20 +89,20 @@ async function seed() {
       isEmployeeTypeGroup: true,
       isSupplierTypeGroup: false,
     },
-    // {
-    //   id: "11111111-1111-1111-1111-111111111111",
-    //   name: "All Customers",
-    //   isCustomerTypeGroup: true,
-    //   isEmployeeTypeGroup: false,
-    //   isSupplierTypeGroup: false,
-    // },
-    // {
-    //   id: "22222222-2222-2222-2222-222222222222",
-    //   name: "All Suppliers",
-    //   isCustomerTypeGroup: false,
-    //   isEmployeeTypeGroup: false,
-    //   isSupplierTypeGroup: true,
-    // },
+    {
+      id: "11111111-1111-1111-1111-111111111111",
+      name: "All Customers",
+      isCustomerTypeGroup: true,
+      isEmployeeTypeGroup: false,
+      isSupplierTypeGroup: false,
+    },
+    {
+      id: "22222222-2222-2222-2222-222222222222",
+      name: "All Suppliers",
+      isCustomerTypeGroup: false,
+      isEmployeeTypeGroup: false,
+      isSupplierTypeGroup: true,
+    },
   ]);
   if (insertGroups.error) throw insertGroups.error;
 

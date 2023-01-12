@@ -839,6 +839,10 @@ export interface Database {
           name: string | null
           isIdentityGroup: boolean | null
           isEmployeeTypeGroup: boolean | null
+          isCustomerOrgGroup: boolean | null
+          isCustomerTypeGroup: boolean | null
+          isSupplierOrgGroup: boolean | null
+          isSupplierTypeGroup: boolean | null
           groupId: string | null
           memberGroupId: string | null
           memberUserId: string | null
@@ -852,6 +856,10 @@ export interface Database {
           parentId: string | null
           isIdentityGroup: boolean | null
           isEmployeeTypeGroup: boolean | null
+          isCustomerOrgGroup: boolean | null
+          isCustomerTypeGroup: boolean | null
+          isSupplierOrgGroup: boolean | null
+          isSupplierTypeGroup: boolean | null
           user: Json | null
         }
       }
@@ -859,6 +867,10 @@ export interface Database {
         Row: {
           id: string | null
           isEmployeeTypeGroup: boolean | null
+          isCustomerOrgGroup: boolean | null
+          isCustomerTypeGroup: boolean | null
+          isSupplierOrgGroup: boolean | null
+          isSupplierTypeGroup: boolean | null
           name: string | null
           parentId: string | null
           users: Json | null
@@ -897,6 +909,10 @@ export interface Database {
           name: string
           parentId: string
           isEmployeeTypeGroup: boolean
+          isCustomerOrgGroup: boolean
+          isCustomerTypeGroup: boolean
+          isSupplierOrgGroup: boolean
+          isSupplierTypeGroup: boolean
           users: Json
         }[]
       }

@@ -90,7 +90,7 @@ const SelectionList = () => {
                 </>
               )}
 
-              {canExpand && (
+              {!!canExpand && (
                 <Tooltip label="Expand">
                   <IconButton
                     aria-label={`Expand ${item.label}`}

@@ -20,10 +20,9 @@ export async function loader({ request, params }: LoaderArgs) {
   });
 
   const { customerTypeId } = params;
-  if (!customerTypeId || Number.isNaN(customerTypeId))
-    throw notFound("customerTypeId not found");
+  if (!customerTypeId) throw notFound("customerTypeId not found");
 
-  const customerType = await getCustomerType(client, Number(customerTypeId));
+  const customerType = await getCustomerType(client, customerTypeId);
 
   if (customerType?.data?.protected) {
     return redirect(

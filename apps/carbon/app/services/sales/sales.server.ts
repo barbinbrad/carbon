@@ -5,14 +5,14 @@ import { setGenericQueryFilters } from "~/utils/query";
 
 export async function deleteCustomerType(
   client: SupabaseClient<Database>,
-  customerTypeId: number
+  customerTypeId: string
 ) {
   return client.from("customerType").delete().eq("id", customerTypeId);
 }
 
 export async function getCustomerType(
   client: SupabaseClient<Database>,
-  customerTypeId: number
+  customerTypeId: string
 ) {
   return client
     .from("customerType")
@@ -42,7 +42,7 @@ export async function getCustomerTypes(
 
 export async function upsertCustomerType(
   client: SupabaseClient<Database>,
-  customerType: { id?: number; name: string; color: string | null }
+  customerType: { id?: string; name: string; color: string | null }
 ) {
   return client.from("customerType").upsert([customerType]).select("id");
 }

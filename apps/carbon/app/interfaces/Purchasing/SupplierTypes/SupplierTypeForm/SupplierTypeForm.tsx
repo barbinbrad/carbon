@@ -16,7 +16,7 @@ import { supplierTypeValidator } from "~/services/purchasing";
 
 type SupplierTypeFormProps = {
   initialValues: {
-    id?: number;
+    id?: string;
     name: string;
     color: string;
   };

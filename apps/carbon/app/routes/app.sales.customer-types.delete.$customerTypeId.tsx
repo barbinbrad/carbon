@@ -15,7 +15,7 @@ export async function loader({ request, params }: LoaderArgs) {
   const { customerTypeId } = params;
   if (!customerTypeId) throw notFound("customerTypeId not found");
 
-  const customerType = await getCustomerType(client, Number(customerTypeId));
+  const customerType = await getCustomerType(client, customerTypeId);
   if (customerType.error) {
     return redirect(
       "/app/sales/customer-types",
@@ -35,7 +35,7 @@ export async function action({ request, params }: ActionArgs) {
   });
 
   const { customerTypeId } = params;
-  if (!customerTypeId || Number.isNaN(customerTypeId)) {
+  if (!customerTypeId) {
     return redirect(
       "/app/sales/customer-types",
       await flash(request, error(params, "Failed to get an customer type id"))
@@ -44,7 +44,7 @@ export async function action({ request, params }: ActionArgs) {
 
   const { error: deleteTypeError } = await deleteCustomerType(
     client,
-    Number(customerTypeId)
+    customerTypeId
   );
   if (deleteTypeError) {
     return redirect(

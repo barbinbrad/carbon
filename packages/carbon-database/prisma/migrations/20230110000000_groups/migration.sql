@@ -3,6 +3,10 @@ CREATE TABLE "group" (
   "name" TEXT NOT NULL,
   "isIdentityGroup" BOOLEAN NOT NULL DEFAULT false,
   "isEmployeeTypeGroup" BOOLEAN NOT NULL DEFAULT false,
+  "isCustomerOrgGroup" BOOLEAN NOT NULL DEFAULT false,
+  "isCustomerTypeGroup" BOOLEAN NOT NULL DEFAULT false,
+  "isSupplierTypeGroup" BOOLEAN NOT NULL DEFAULT false,
+  "isSupplierOrgGroup" BOOLEAN NOT NULL DEFAULT false,
   "createdAt" TIMESTAMP(3) DEFAULT now() NOT NULL,
   "updatedAt" TIMESTAMP(3),
   
@@ -99,7 +103,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
-
 CREATE TRIGGER on_employee_type_created
   AFTER INSERT on public."employeeType"
   FOR EACH ROW EXECUTE PROCEDURE public.create_employee_type_group();
@@ -123,7 +126,6 @@ CREATE TRIGGER on_employee_updated
 CREATE TRIGGER on_employee_type_updated
   AFTER UPDATE on public."employeeType"
   FOR EACH ROW EXECUTE PROCEDURE public.update_employee_type_group();
-
 
 CREATE VIEW "group_member" AS 
   SELECT

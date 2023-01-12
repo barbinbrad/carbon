@@ -20,10 +20,9 @@ export async function loader({ request, params }: LoaderArgs) {
   });
 
   const { supplierTypeId } = params;
-  if (!supplierTypeId || Number.isNaN(supplierTypeId))
-    throw notFound("supplierTypeId not found");
+  if (!supplierTypeId) throw notFound("supplierTypeId not found");
 
-  const supplierType = await getSupplierType(client, Number(supplierTypeId));
+  const supplierType = await getSupplierType(client, supplierTypeId);
 
   if (supplierType?.data?.protected) {
     return redirect(

@@ -15,7 +15,7 @@ export async function loader({ request, params }: LoaderArgs) {
   const { supplierTypeId } = params;
   if (!supplierTypeId) throw notFound("supplierTypeId not found");
 
-  const supplierType = await getSupplierType(client, Number(supplierTypeId));
+  const supplierType = await getSupplierType(client, supplierTypeId);
   if (supplierType.error) {
     return redirect(
       "/app/purchasing/supplier-types",
@@ -35,7 +35,7 @@ export async function action({ request, params }: ActionArgs) {
   });
 
   const { supplierTypeId } = params;
-  if (!supplierTypeId || Number.isNaN(supplierTypeId)) {
+  if (!supplierTypeId) {
     return redirect(
       "/app/purchasing/supplier-types",
       await flash(request, error(params, "Failed to get an supplier type id"))
@@ -44,7 +44,7 @@ export async function action({ request, params }: ActionArgs) {
 
   const { error: deleteTypeError } = await deleteSupplierType(
     client,
-    Number(supplierTypeId)
+    supplierTypeId
   );
   if (deleteTypeError) {
     return redirect(

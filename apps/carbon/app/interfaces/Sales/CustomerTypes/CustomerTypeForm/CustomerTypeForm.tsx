@@ -16,7 +16,7 @@ import { customerTypeValidator } from "~/services/sales";
 
 type CustomerTypeFormProps = {
   initialValues: {
-    id?: number;
+    id?: string;
     name: string;
     color: string;
   };

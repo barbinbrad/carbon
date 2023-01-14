@@ -5,6 +5,7 @@ import {
   DrawerBody,
   DrawerCloseButton,
   DrawerContent,
+  DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
   FormLabel,
@@ -60,17 +61,17 @@ const EmployeePermissionsForm = ({
 
   return (
     <Drawer onClose={onClose} isOpen={true} size="sm">
-      <DrawerOverlay />
-      <DrawerContent>
-        <DrawerCloseButton />
-        <DrawerHeader>{name}</DrawerHeader>
-        <DrawerBody pb={8}>
-          <ValidatedForm
-            validator={employeeValidator}
-            method="post"
-            action={`/app/users/employees/${initialValues.id}`}
-            defaultValues={initialValues}
-          >
+      <ValidatedForm
+        validator={employeeValidator}
+        method="post"
+        action={`/app/users/employees/${initialValues.id}`}
+        defaultValues={initialValues}
+      >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader>{name}</DrawerHeader>
+          <DrawerBody pb={8}>
             <VStack spacing={4} alignItems="start">
               <Select
                 name="employeeType"
@@ -94,6 +95,8 @@ const EmployeePermissionsForm = ({
               <Hidden name="id" />
               <Hidden name="data" value={JSON.stringify(permissions)} />
             </VStack>
+          </DrawerBody>
+          <DrawerFooter>
             <HStack spacing={2}>
               <Submit>Save</Submit>
               <Button
@@ -105,9 +108,9 @@ const EmployeePermissionsForm = ({
                 Cancel
               </Button>
             </HStack>
-          </ValidatedForm>
-        </DrawerBody>
-      </DrawerContent>
+          </DrawerFooter>
+        </DrawerContent>
+      </ValidatedForm>
     </Drawer>
   );
 };

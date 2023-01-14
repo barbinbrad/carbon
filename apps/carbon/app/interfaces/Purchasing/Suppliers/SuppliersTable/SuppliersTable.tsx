@@ -74,7 +74,6 @@ const SuppliersTable = memo(({ data, count }: SuppliersTableProps) => {
         count={count}
         columns={columns}
         data={data}
-        withFilters
         withPagination
       />
     </>

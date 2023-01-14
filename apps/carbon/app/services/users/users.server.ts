@@ -16,7 +16,6 @@ import type { Result } from "~/types";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
 import { error, success } from "~/utils/result";
-import logger from "~/lib/logger";
 
 export async function createEmployeeAccount(
   client: SupabaseClient<Database>,

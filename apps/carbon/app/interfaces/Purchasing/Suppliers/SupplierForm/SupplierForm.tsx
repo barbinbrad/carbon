@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Drawer,
   DrawerBody,
@@ -7,52 +8,62 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
+  Grid,
   HStack,
   VStack,
 } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import { ValidatedForm } from "remix-validated-form";
-import { Color, Hidden, Input, Submit } from "~/components/Form";
-import { customerTypeValidator } from "~/services/sales";
+import { Input, Submit, TextArea } from "~/components/Form";
+import { supplierValidator } from "~/services/purchasing";
 
-type CustomerTypeFormProps = {
+type SupplierFormProps = {
   initialValues: {
     id?: string;
     name: string;
-    color: string;
   };
 };
 
-const CustomerTypeForm = ({ initialValues }: CustomerTypeFormProps) => {
+const SupplierForm = ({ initialValues }: SupplierFormProps) => {
   const navigate = useNavigate();
   const onClose = () => navigate(-1);
 
   const isEditing = initialValues.id !== undefined;
 
   return (
-    <Drawer onClose={onClose} isOpen={true} size="sm">
+    <Drawer onClose={onClose} isOpen size="full">
       <ValidatedForm
-        validator={customerTypeValidator}
         method="post"
         action={
           isEditing
-            ? `/app/sales/customer-types/${initialValues.id}`
-            : "/app/sales/customer-types/new"
+            ? `/app/purchasing/customers/${initialValues.id}`
+            : "/app/purchasing/customers/new"
         }
+        validator={supplierValidator}
         defaultValues={initialValues}
       >
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader>
-            {isEditing ? "Edit" : "New"} Customer Type
-          </DrawerHeader>
-          <DrawerBody pb={8}>
-            <VStack spacing={4} alignItems="start">
-              <Hidden name="id" />
-              <Input name="name" label="Customer Type" />
-              <Color name="color" label="Color" />
-            </VStack>
+          <DrawerHeader>New Supplier</DrawerHeader>
+          <DrawerBody>
+            <Grid
+              gridTemplateColumns={["3fr 1fr", "1fr", "1fr"]}
+              gridColumnGap={4}
+              w="full"
+            >
+              <Box w="full">
+                <VStack spacing={4} my={4} w="full" alignItems="start">
+                  <Input name="name" label="Name" />
+                  <TextArea
+                    name="description"
+                    label="Description"
+                    characterLimit={160}
+                    my={2}
+                  />
+                </VStack>
+              </Box>
+            </Grid>
           </DrawerBody>
           <DrawerFooter>
             <HStack spacing={2}>
@@ -73,4 +84,4 @@ const CustomerTypeForm = ({ initialValues }: CustomerTypeFormProps) => {
   );
 };
 
-export default CustomerTypeForm;
+export default SupplierForm;

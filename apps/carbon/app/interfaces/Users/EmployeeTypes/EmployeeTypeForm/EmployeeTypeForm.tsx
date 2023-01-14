@@ -5,6 +5,7 @@ import {
   DrawerBody,
   DrawerCloseButton,
   DrawerContent,
+  DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
   FormLabel,
@@ -53,21 +54,23 @@ const EmployeeTypeForm = ({ initialValues }: EmployeeTypeFormProps) => {
 
   return (
     <Drawer onClose={onClose} isOpen={true} size="sm">
-      <DrawerOverlay />
-      <DrawerContent>
-        <DrawerCloseButton />
-        <DrawerHeader>{isEditing ? "Edit" : "New"} Employee Type</DrawerHeader>
-        <DrawerBody pb={8}>
-          <ValidatedForm
-            validator={employeeTypeValidator}
-            method="post"
-            action={
-              isEditing
-                ? `/app/users/employee-types/${initialValues.id}`
-                : "/app/users/employee-types/new"
-            }
-            defaultValues={initialValues}
-          >
+      <ValidatedForm
+        validator={employeeTypeValidator}
+        method="post"
+        action={
+          isEditing
+            ? `/app/users/employee-types/${initialValues.id}`
+            : "/app/users/employee-types/new"
+        }
+        defaultValues={initialValues}
+      >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader>
+            {isEditing ? "Edit" : "New"} Employee Type
+          </DrawerHeader>
+          <DrawerBody pb={8}>
             <VStack spacing={4} alignItems="start">
               <Hidden name="id" />
               <Input name="name" label="Employee Type" />
@@ -91,6 +94,8 @@ const EmployeeTypeForm = ({ initialValues }: EmployeeTypeFormProps) => {
                   </Box>
                 ))}
             </VStack>
+          </DrawerBody>
+          <DrawerFooter>
             <HStack spacing={2}>
               <Submit>Save</Submit>
               <Button
@@ -102,9 +107,9 @@ const EmployeeTypeForm = ({ initialValues }: EmployeeTypeFormProps) => {
                 Cancel
               </Button>
             </HStack>
-          </ValidatedForm>
-        </DrawerBody>
-      </DrawerContent>
+          </DrawerFooter>
+        </DrawerContent>
+      </ValidatedForm>
     </Drawer>
   );
 };

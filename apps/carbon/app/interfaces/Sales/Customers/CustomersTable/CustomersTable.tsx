@@ -74,7 +74,6 @@ const CustomersTable = memo(({ data, count }: CustomersTableProps) => {
         count={count}
         columns={columns}
         data={data}
-        withFilters
         withPagination
       />
     </>

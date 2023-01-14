@@ -17,9 +17,7 @@ export const theme = {
   components: {
     Button: {
       baseStyle: {},
-      // styles for different sizes ("sm", "md", "lg")
       sizes: {},
-      // styles for different visual variants ("outline", "solid")
       variants: {
         solid: (props: { colorScheme: string }) => {
           const { colorScheme: c } = props;
@@ -49,6 +47,13 @@ export const theme = {
         colorScheme: "blackAlpha",
       },
     },
+    Drawer: {
+      baseStyle: {
+        overlay: {
+          backdropFilter: "blur(3px)",
+        },
+      },
+    },
     Input: {
       defaultProps: {
         borderRadius: "md",
@@ -59,9 +64,11 @@ export const theme = {
         flushed: focusRingFlushed,
       },
     },
-    ModalOverlay: {
-      defaultProps: {
-        backdropFilter: "blur(10px) hue-rotate(90deg)",
+    Modal: {
+      baseStyle: {
+        overlay: {
+          backdropFilter: "blur(3px)",
+        },
       },
     },
     Radio: {

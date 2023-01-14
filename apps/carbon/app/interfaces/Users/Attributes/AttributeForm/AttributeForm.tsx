@@ -4,6 +4,7 @@ import {
   DrawerBody,
   DrawerCloseButton,
   DrawerContent,
+  DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
   HStack,
@@ -68,21 +69,21 @@ const AttributeForm = ({
 
   return (
     <Drawer onClose={onClose} isOpen={true} size="sm">
-      <DrawerOverlay />
-      <DrawerContent>
-        <DrawerCloseButton />
-        <DrawerHeader>{isEditing ? "Edit" : "New"} Attribute</DrawerHeader>
-        <DrawerBody pb={8}>
-          <ValidatedForm
-            validator={attributeValidator}
-            method="post"
-            action={
-              isEditing
-                ? `/app/users/attribute/${initialValues.id}`
-                : "/app/users/attribute/new"
-            }
-            defaultValues={initialValues}
-          >
+      <ValidatedForm
+        validator={attributeValidator}
+        method="post"
+        action={
+          isEditing
+            ? `/app/users/attribute/${initialValues.id}`
+            : "/app/users/attribute/new"
+        }
+        defaultValues={initialValues}
+      >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader>{isEditing ? "Edit" : "New"} Attribute</DrawerHeader>
+          <DrawerBody pb={8}>
             <VStack spacing={2} alignItems="start">
               <Hidden name="id" />
               <Input name="name" label="Name" />
@@ -105,7 +106,9 @@ const AttributeForm = ({
                 description="Users can update this value for themselves"
               />
             </VStack>
-            <HStack spacing={2} mt={8}>
+          </DrawerBody>
+          <DrawerFooter>
+            <HStack spacing={2}>
               <Submit>Save</Submit>
               <Button
                 size="md"
@@ -116,9 +119,9 @@ const AttributeForm = ({
                 Cancel
               </Button>
             </HStack>
-          </ValidatedForm>
-        </DrawerBody>
-      </DrawerContent>
+          </DrawerFooter>
+        </DrawerContent>
+      </ValidatedForm>
     </Drawer>
   );
 };

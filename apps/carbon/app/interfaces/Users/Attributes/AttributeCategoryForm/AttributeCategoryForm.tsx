@@ -4,6 +4,7 @@ import {
   DrawerBody,
   DrawerCloseButton,
   DrawerContent,
+  DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
   HStack,
@@ -30,23 +31,23 @@ const AttributeCategoryForm = ({
 
   return (
     <Drawer onClose={onClose} isOpen={true} size="sm">
-      <DrawerOverlay />
-      <DrawerContent>
-        <DrawerCloseButton />
-        <DrawerHeader>
-          {isEditing ? "Edit" : "New"} Attribute Category
-        </DrawerHeader>
-        <DrawerBody pb={8}>
-          <ValidatedForm
-            validator={attributeCategoryValidator}
-            method="post"
-            action={
-              isEditing
-                ? `/app/users/attributes/${initialValues.id}`
-                : "/app/users/attributes/new"
-            }
-            defaultValues={initialValues}
-          >
+      <ValidatedForm
+        validator={attributeCategoryValidator}
+        method="post"
+        action={
+          isEditing
+            ? `/app/users/attributes/${initialValues.id}`
+            : "/app/users/attributes/new"
+        }
+        defaultValues={initialValues}
+      >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader>
+            {isEditing ? "Edit" : "New"} Attribute Category
+          </DrawerHeader>
+          <DrawerBody pb={8}>
             <VStack spacing={4} alignItems="start">
               <Hidden name="id" />
               <Input name="name" label="Category Name" />
@@ -56,6 +57,8 @@ const AttributeCategoryForm = ({
                 description="Visible on a user's public profile"
               />
             </VStack>
+          </DrawerBody>
+          <DrawerFooter>
             <HStack spacing={2} mt={8}>
               <Submit>Save</Submit>
               <Button
@@ -67,9 +70,9 @@ const AttributeCategoryForm = ({
                 Cancel
               </Button>
             </HStack>
-          </ValidatedForm>
-        </DrawerBody>
-      </DrawerContent>
+          </DrawerFooter>
+        </DrawerContent>
+      </ValidatedForm>
     </Drawer>
   );
 };

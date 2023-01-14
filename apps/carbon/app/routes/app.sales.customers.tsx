@@ -2,7 +2,6 @@ import { VStack } from "@chakra-ui/react";
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
-import { usePermissions } from "~/hooks";
 import {
   CustomersTable,
   CustomersTableFilters,
@@ -35,7 +34,6 @@ export async function loader({ request }: LoaderArgs) {
 
 export default function SalesCustomersRoute() {
   const { customers, customerTypes } = useLoaderData<typeof loader>();
-  const permissions = usePermissions();
 
   return (
     <VStack w="full" h="full" spacing={0}>

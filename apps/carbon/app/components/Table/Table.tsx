@@ -86,21 +86,25 @@ const Table = <T extends object>({
 }: TableProps<T>) => {
   const tableContainerRef = useRef<HTMLDivElement>(null);
 
+  /* Data for Optimistic Updates */
   const [internalData, setInternalData] = useState<T[]>(data);
   useEffect(() => {
     setInternalData(data);
   }, [data]);
 
+  /* Seletable Rows */
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   if (withSelectableRows) columns.unshift(getRowSelectionColumn<T>());
 
+  /* Pagination */
   const pagination = usePagination(count, setRowSelection);
 
+  /* Column Visibility */
   const [columnVisibility, setColumnVisibility] = useState(
     defaultColumnVisibility
   );
 
-  const { isSorted, toggleSortBy } = useSort();
+  /* Column Ordering */
   const [columnOrder, setColumnOrder] = useState<ColumnOrderState>([]);
   const [columnPinning, setColumnPinning] = useState<ColumnPinningState>(
     withColumnOrdering
@@ -109,6 +113,9 @@ const Table = <T extends object>({
         }
       : {}
   );
+
+  /* Sorting */
+  const { isSorted, toggleSortBy } = useSort();
 
   const columnAccessors = useMemo(
     () =>
@@ -170,6 +177,13 @@ const Table = <T extends object>({
   const selectedRows = withSelectableRows
     ? table.getSelectedRowModel().flatRows.map((row) => row.original)
     : [];
+
+  useEffect(() => {
+    if (typeof onSelectedRowsChange === "function") {
+      onSelectedRowsChange(selectedRows);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rowSelection, onSelectedRowsChange]);
 
   const [editMode, setEditMode] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -320,12 +334,13 @@ const Table = <T extends object>({
           row: y1,
           column: x1,
         });
+        // any other key activates editing
+        // if the column is editable and a cell is selected
       } else if (
         !isEditing &&
         selectedCell &&
         isColumnEditable(selectedCell.column)
       ) {
-        // any other key activates editing if the column is editable and a cell is selected
         setIsEditing(true);
       }
     },
@@ -356,13 +371,6 @@ const Table = <T extends object>({
     setColumnOrder(table.getAllLeafColumns().map((column) => column.id));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    if (typeof onSelectedRowsChange === "function") {
-      onSelectedRowsChange(selectedRows);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rowSelection, onSelectedRowsChange]);
 
   const rows = table.getRowModel().rows;
   const rowsAreClickable = !editMode && typeof onRowClick === "function";
@@ -660,6 +668,7 @@ const Table = <T extends object>({
 function getRowSelectionColumn<T>(): ColumnDef<T> {
   return {
     id: "select",
+    size: 40,
     header: ({ table }) => (
       <IndeterminateCheckbox
         {...{

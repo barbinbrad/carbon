@@ -10,6 +10,32 @@ export async function deleteCustomerType(
   return client.from("customerType").delete().eq("id", customerTypeId);
 }
 
+export async function getCustomers(
+  client: SupabaseClient<Database>,
+  args: GenericQueryFilters & {
+    name: string | null;
+    type: string | null;
+    active: boolean | null;
+  }
+) {
+  let query = client
+    .from("customer")
+    .select("*, customerType!inner(name), customerStatus!inner(name)", {
+      count: "exact",
+    });
+
+  if (args.name) {
+    query = query.ilike("name", `%${args.name}%`);
+  }
+
+  if (args.type) {
+    query = query.eq("customerTypeId", args.type);
+  }
+
+  query = setGenericQueryFilters(query, args, "user(lastName)");
+  return query;
+}
+
 export async function getCustomerType(
   client: SupabaseClient<Database>,
   customerTypeId: string

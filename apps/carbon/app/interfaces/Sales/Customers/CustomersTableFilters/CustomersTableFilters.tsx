@@ -4,20 +4,20 @@ import { Link } from "@remix-run/react";
 import { IoMdAdd } from "react-icons/io";
 import { DebouncedInput } from "~/components/Search";
 import { usePermissions, useUrlParams } from "~/hooks";
-import type { EmployeeType } from "~/interfaces/Users/types";
+import type { CustomerType } from "~/interfaces/Sales/types";
 import { mapRowsToOptions } from "~/utils/form";
 
-type EmployeesTableFiltersProps = {
-  employeeTypes: Partial<EmployeeType>[];
+type CustomersTableFiltersProps = {
+  customerTypes: Partial<CustomerType>[];
 };
 
-const EmployeesTableFilters = ({
-  employeeTypes,
-}: EmployeesTableFiltersProps) => {
+const CustomersTableFilters = ({
+  customerTypes,
+}: CustomersTableFiltersProps) => {
   const [params, setParams] = useUrlParams();
   const permissions = usePermissions();
-  const employeeTypeOptions = mapRowsToOptions({
-    data: employeeTypes,
+  const customerTypeOptions = mapRowsToOptions({
+    data: customerTypes,
     value: "id",
     label: "name",
   });
@@ -44,17 +44,17 @@ const EmployeesTableFilters = ({
         <Select
           // @ts-ignore
           size="sm"
-          value={employeeTypeOptions.filter(
+          value={customerTypeOptions.filter(
             (type) => type.value === params.get("type")
           )}
           isClearable
-          options={employeeTypeOptions}
+          options={customerTypeOptions}
           onChange={(selected) => {
             setParams({ type: selected?.value });
           }}
-          aria-label="Employee Type"
+          aria-label="Customer Type"
           minW={180}
-          placeholder="Employee Type"
+          placeholder="Customer Type"
         />
         <Select
           // @ts-ignore
@@ -89,7 +89,7 @@ const EmployeesTableFilters = ({
             colorScheme="brand"
             leftIcon={<IoMdAdd />}
           >
-            New Employee
+            New Customer
           </Button>
         )}
       </HStack>
@@ -97,4 +97,4 @@ const EmployeesTableFilters = ({
   );
 };
 
-export default EmployeesTableFilters;
+export default CustomersTableFilters;

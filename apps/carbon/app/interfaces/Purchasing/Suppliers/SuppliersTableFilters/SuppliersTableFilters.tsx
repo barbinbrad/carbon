@@ -4,20 +4,20 @@ import { Link } from "@remix-run/react";
 import { IoMdAdd } from "react-icons/io";
 import { DebouncedInput } from "~/components/Search";
 import { usePermissions, useUrlParams } from "~/hooks";
-import type { EmployeeType } from "~/interfaces/Users/types";
+import type { SupplierType } from "~/interfaces/Purchasing/types";
 import { mapRowsToOptions } from "~/utils/form";
 
-type EmployeesTableFiltersProps = {
-  employeeTypes: Partial<EmployeeType>[];
+type SuppliersTableFiltersProps = {
+  supplierTypes: Partial<SupplierType>[];
 };
 
-const EmployeesTableFilters = ({
-  employeeTypes,
-}: EmployeesTableFiltersProps) => {
+const SuppliersTableFilters = ({
+  supplierTypes,
+}: SuppliersTableFiltersProps) => {
   const [params, setParams] = useUrlParams();
   const permissions = usePermissions();
-  const employeeTypeOptions = mapRowsToOptions({
-    data: employeeTypes,
+  const supplierTypeOptions = mapRowsToOptions({
+    data: supplierTypes,
     value: "id",
     label: "name",
   });
@@ -44,17 +44,17 @@ const EmployeesTableFilters = ({
         <Select
           // @ts-ignore
           size="sm"
-          value={employeeTypeOptions.filter(
+          value={supplierTypeOptions.filter(
             (type) => type.value === params.get("type")
           )}
           isClearable
-          options={employeeTypeOptions}
+          options={supplierTypeOptions}
           onChange={(selected) => {
             setParams({ type: selected?.value });
           }}
-          aria-label="Employee Type"
+          aria-label="Supplier Type"
           minW={180}
-          placeholder="Employee Type"
+          placeholder="Supplier Type"
         />
         <Select
           // @ts-ignore
@@ -89,7 +89,7 @@ const EmployeesTableFilters = ({
             colorScheme="brand"
             leftIcon={<IoMdAdd />}
           >
-            New Employee
+            New Supplier
           </Button>
         )}
       </HStack>
@@ -97,4 +97,4 @@ const EmployeesTableFilters = ({
   );
 };
 
-export default EmployeesTableFilters;
+export default SuppliersTableFilters;

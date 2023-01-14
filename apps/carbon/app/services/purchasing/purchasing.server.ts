@@ -21,6 +21,32 @@ export async function getSupplierType(
     .single();
 }
 
+export async function getSuppliers(
+  client: SupabaseClient<Database>,
+  args: GenericQueryFilters & {
+    name: string | null;
+    type: string | null;
+    active: boolean | null;
+  }
+) {
+  let query = client
+    .from("supplier")
+    .select("*, supplierType!inner(name), supplierStatus!inner(name)", {
+      count: "exact",
+    });
+
+  if (args.name) {
+    query = query.ilike("name", `%${args.name}%`);
+  }
+
+  if (args.type) {
+    query = query.eq("supplierTypeId", args.type);
+  }
+
+  query = setGenericQueryFilters(query, args, "user(lastName)");
+  return query;
+}
+
 export async function getSupplierTypes(
   client: SupabaseClient<Database>,
   args?: GenericQueryFilters & { name: string | null }

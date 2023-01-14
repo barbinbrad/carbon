@@ -78,7 +78,7 @@ const EmployeeTypeForm = ({ initialValues }: EmployeeTypeFormProps) => {
               />
             </VStack>
             <VStack spacing={2} alignItems="start">
-              <FormLabel>Permissions</FormLabel>
+              <FormLabel>Default Permissions</FormLabel>
               {Object.entries(permissions)
                 .sort((a, b) => a[0].localeCompare(b[0]))
                 .map(([module, data], index) => (

@@ -59,6 +59,11 @@ export const theme = {
         flushed: focusRingFlushed,
       },
     },
+    ModalOverlay: {
+      defaultProps: {
+        backdropFilter: "blur(10px) hue-rotate(90deg)",
+      },
+    },
     Radio: {
       defaultProps: {
         colorScheme: "blackAlpha",

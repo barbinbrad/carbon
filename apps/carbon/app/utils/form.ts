@@ -10,14 +10,14 @@ export const mapRowsToOptions = <T extends Record<string, any>>({
   label,
 }: {
   data: T[] | undefined | null;
-  value: keyof T;
+  value: keyof T | ((row: T) => string);
   label: keyof T | ((row: T) => string);
 }) => {
   if (!data) return [];
 
   return data.reduce<{ value: string | number; label: string }[]>(
     (acc, row) => {
-      const v = row[value];
+      const v = typeof value === "function" ? value(row) : row[value];
       const l = typeof label === "function" ? label(row) : row[label];
 
       if (v && l) {

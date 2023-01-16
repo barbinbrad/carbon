@@ -22,6 +22,8 @@ const GroupsTable = memo(({ data, count }: GroupsTableProps) => {
     id: row.data.id,
     name: row.data.name,
     isEmployeeTypeGroup: row.data.isEmployeeTypeGroup,
+    isCustomerTypeGroup: row.data.isCustomerTypeGroup,
+    isSupplierTypeGroup: row.data.isSupplierTypeGroup,
     members: row.data.users
       .map((user) => ({
         name: user.fullName,
@@ -84,6 +86,8 @@ const GroupsTable = memo(({ data, count }: GroupsTableProps) => {
                 <MenuItem
                   isDisabled={
                     row.original.isEmployeeTypeGroup ||
+                    row.original.isCustomerTypeGroup ||
+                    row.original.isSupplierTypeGroup ||
                     !permissions.can("delete", "users")
                   }
                   icon={<IoMdTrash />}

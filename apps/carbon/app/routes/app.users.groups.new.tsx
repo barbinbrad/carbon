@@ -8,7 +8,7 @@ import { assertIsPost } from "~/utils/http";
 import { error, success } from "~/utils/result";
 import { requirePermissions } from "~/services/auth";
 import {
-  createGroup,
+  insertGroup,
   deleteGroup,
   groupValidator,
   upsertGroupMembers,
@@ -28,19 +28,19 @@ export async function action({ request }: ActionArgs) {
 
   const { name, selections } = validation.data;
 
-  const insertGroup = await createGroup(client, { name });
-  if (insertGroup.error) {
+  const createGroup = await insertGroup(client, { name });
+  if (createGroup.error) {
     return json(
       {},
-      await flash(request, error(insertGroup.error, "Failed to insert group"))
+      await flash(request, error(createGroup.error, "Failed to insert group"))
     );
   }
 
-  const groupId = insertGroup.data[0]?.id;
+  const groupId = createGroup.data[0]?.id;
   if (!groupId) {
     return json(
       {},
-      await flash(request, error(insertGroup, "Failed to insert group"))
+      await flash(request, error(createGroup, "Failed to insert group"))
     );
   }
 

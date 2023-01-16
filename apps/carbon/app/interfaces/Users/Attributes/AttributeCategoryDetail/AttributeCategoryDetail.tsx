@@ -25,11 +25,11 @@ import { BsCalendarDate, BsPencilSquare, BsToggleOn } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
 import { IoMdTrash } from "react-icons/io";
 import { MdOutlineDragIndicator } from "react-icons/md";
+import { ConfirmDelete } from "~/components/Modals";
 import type {
   Attribute,
   AttributeCategoryDetail as AttributeCategoryDetailType,
 } from "~/interfaces/Users/types";
-import { DeleteAttributeModal } from "~/interfaces/Users/Attributes";
 import { useUrlParams } from "~/hooks";
 
 type AttributeCategoryDetailProps = {
@@ -170,12 +170,12 @@ const AttributeCategoryDetail = ({
                           to={sortId.toString()}
                           aria-label="Edit"
                           icon={<BsPencilSquare />}
-                          variant="ghost"
+                          variant="outline"
                         />
                         <IconButton
                           aria-label="Delete"
                           icon={<IoMdTrash />}
-                          variant="ghost"
+                          variant="outline"
                           onClick={() =>
                             // @ts-ignore
                             onDelete(attributeMap[sortId])
@@ -200,10 +200,12 @@ const AttributeCategoryDetail = ({
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
-      <DeleteAttributeModal
-        onCancel={onDeleteCancel}
+      <ConfirmDelete
         isOpen={deleteModal.isOpen}
-        data={selectedAttribute}
+        action={`/app/users/attribute/delete/${selectedAttribute?.id}`}
+        name={selectedAttribute?.name ?? ""}
+        text={`Are you sure you want to deactivate the ${selectedAttribute?.name} attribute?`}
+        onCancel={onDeleteCancel}
       />
     </>
   );

@@ -1,9 +1,16 @@
 import { ActionMenu } from "@carbon/react";
-import { Flex, MenuItem, VisuallyHidden } from "@chakra-ui/react";
+import {
+  Button,
+  ButtonGroup,
+  Flex,
+  IconButton,
+  MenuItem,
+  VisuallyHidden,
+} from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo } from "react";
-import { BsPencilSquare } from "react-icons/bs";
+import { BsPencilSquare, BsPlus } from "react-icons/bs";
 import { Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { Supplier } from "~/interfaces/Purchasing/types";
@@ -26,19 +33,44 @@ const SuppliersTable = memo(({ data, count }: SuppliersTableProps) => {
         cell: (item) => item.getValue(),
       },
       {
-        accessorKey: "description",
-        header: "Description",
-        cell: (item) => item.getValue(),
-      },
-      {
-        accessorKey: "supplierType.name",
+        // @ts-ignore
+        accessorFn: (item) => item.supplierType?.name ?? "",
         header: "Supplier Type",
         cell: (item) => item.getValue(),
       },
       {
-        accessorKey: "supplierStatus.name",
+        // @ts-ignore
+        accessorFn: (item) => item.supplierStatus?.name ?? "",
         header: "Supplier Status",
         cell: (item) => item.getValue(),
+      },
+      {
+        id: "orders",
+        header: "Orders",
+        cell: () => (
+          <ButtonGroup size="sm" isAttached variant="outline">
+            <Button onClick={() => console.log("orders")}>0 Orders</Button>
+            <IconButton
+              aria-label="New Order"
+              icon={<BsPlus />}
+              onClick={() => console.log("new order")}
+            />
+          </ButtonGroup>
+        ),
+      },
+      {
+        id: "parts",
+        header: "Parts",
+        cell: () => (
+          <ButtonGroup size="sm" isAttached variant="outline">
+            <Button onClick={() => console.log("orders")}>0 Parts</Button>
+            <IconButton
+              aria-label="New Part"
+              icon={<BsPlus />}
+              onClick={() => console.log("new part")}
+            />
+          </ButtonGroup>
+        ),
       },
       {
         header: () => <VisuallyHidden>Actions</VisuallyHidden>,
@@ -51,7 +83,7 @@ const SuppliersTable = memo(({ data, count }: SuppliersTableProps) => {
                   icon={<BsPencilSquare />}
                   onClick={() =>
                     navigate(
-                      `/app/sales/suppliers/${
+                      `/app/purchasing/suppliers/${
                         item.getValue() as string
                       }?${params.toString()}`
                     )

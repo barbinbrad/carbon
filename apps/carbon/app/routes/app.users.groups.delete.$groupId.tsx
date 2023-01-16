@@ -1,7 +1,7 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData, useNavigate, useParams } from "@remix-run/react";
-import { DeleteGroupModal } from "~/interfaces/Users/Groups";
+import { ConfirmDelete } from "~/components/Modals";
 import { requirePermissions } from "~/services/auth";
 import { deleteGroup, getGroup } from "~/services/users";
 import { flash } from "~/services/session";
@@ -62,5 +62,12 @@ export default function DeleteEmployeeTypeRoute() {
 
   const onCancel = () => navigate("/app/users/groups");
 
-  return <DeleteGroupModal groupId={groupId} data={data} onCancel={onCancel} />;
+  return (
+    <ConfirmDelete
+      action={`/app/users/groups/delete/${groupId}`}
+      name={data.name}
+      text={`Are you sure you want to delete the group: ${data.name}? This cannot be undone.`}
+      onCancel={onCancel}
+    />
+  );
 }

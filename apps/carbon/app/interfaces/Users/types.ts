@@ -63,6 +63,10 @@ export type Group = {
   data: {
     id: string;
     isEmployeeTypeGroup: boolean;
+    isCustomerOrgGroup: boolean;
+    isCustomerTypeGroup: boolean;
+    isSupplierOrgGroup: boolean;
+    isSupplierTypeGroup: boolean;
     name: string;
     users: User[];
   };

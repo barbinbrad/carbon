@@ -52,7 +52,13 @@ export const theme = {
         overlay: {
           backdropFilter: "blur(3px)",
         },
+        footer: {
+          borderColor: "gray.200",
+          borderTopWidth: "1px",
+          borderTopStyle: "solid",
+        },
       },
+      defaultProps: {},
     },
     Input: {
       defaultProps: {
@@ -91,7 +97,7 @@ export const theme = {
         colorScheme: "green",
       },
     },
-    TextArea: {
+    Textarea: {
       variants: {
         outline: () => focusRingOutlined().field,
         filled: () => focusRingFilled().field,

@@ -94,7 +94,6 @@ const Table = <T extends object>({
 
   /* Seletable Rows */
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
-  if (withSelectableRows) columns.unshift(getRowSelectionColumn<T>());
 
   /* Pagination */
   const pagination = usePagination(count, setRowSelection);
@@ -138,7 +137,9 @@ const Table = <T extends object>({
 
   const table = useReactTable({
     data: internalData,
-    columns,
+    columns: withSelectableRows
+      ? getRowSelectionColumn<T>().concat(columns)
+      : columns,
     state: {
       rowSelection,
       columnVisibility,
@@ -665,29 +666,31 @@ const Table = <T extends object>({
   );
 };
 
-function getRowSelectionColumn<T>(): ColumnDef<T> {
-  return {
-    id: "select",
-    size: 40,
-    header: ({ table }) => (
-      <IndeterminateCheckbox
-        {...{
-          checked: table.getIsAllRowsSelected(),
-          indeterminate: table.getIsSomeRowsSelected(),
-          onChange: table.getToggleAllRowsSelectedHandler(),
-        }}
-      />
-    ),
-    cell: ({ row }) => (
-      <IndeterminateCheckbox
-        {...{
-          checked: row.getIsSelected(),
-          indeterminate: row.getIsSomeSelected(),
-          onChange: row.getToggleSelectedHandler(),
-        }}
-      />
-    ),
-  };
+function getRowSelectionColumn<T>(): ColumnDef<T>[] {
+  return [
+    {
+      id: "select",
+      size: 40,
+      header: ({ table }) => (
+        <IndeterminateCheckbox
+          {...{
+            checked: table.getIsAllRowsSelected(),
+            indeterminate: table.getIsSomeRowsSelected(),
+            onChange: table.getToggleAllRowsSelectedHandler(),
+          }}
+        />
+      ),
+      cell: ({ row }) => (
+        <IndeterminateCheckbox
+          {...{
+            checked: row.getIsSelected(),
+            indeterminate: row.getIsSomeSelected(),
+            onChange: row.getToggleSelectedHandler(),
+          }}
+        />
+      ),
+    },
+  ];
 }
 
 export default Table;

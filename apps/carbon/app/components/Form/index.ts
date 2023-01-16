@@ -6,6 +6,7 @@ import Input from "./Input";
 import Hidden from "./Hidden";
 import Number from "./Number";
 import Password from "./Password";
+import Phone from "./Phone";
 import Radios from "./Radios";
 import Select from "./Select";
 import Submit from "./Submit";
@@ -22,6 +23,7 @@ export {
   Hidden,
   Number,
   Password,
+  Phone,
   Radios,
   Select,
   Submit,

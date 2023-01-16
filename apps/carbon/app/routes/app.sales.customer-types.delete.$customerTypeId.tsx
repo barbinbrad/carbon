@@ -1,7 +1,7 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData, useNavigate, useParams } from "@remix-run/react";
-import { DeleteCustomerTypeModal } from "~/interfaces/Sales/CustomerTypes";
+import { ConfirmDelete } from "~/components/Modals";
 import { requirePermissions } from "~/services/auth";
 import { deleteCustomerType, getCustomerType } from "~/services/sales";
 import { flash } from "~/services/session";
@@ -72,9 +72,10 @@ export default function DeleteCustomerTypeRoute() {
   const onCancel = () => navigate("/app/sales/customer-types");
 
   return (
-    <DeleteCustomerTypeModal
-      customerTypeId={customerTypeId}
-      data={data}
+    <ConfirmDelete
+      action={`/app/sales/customer-types/delete/${customerTypeId}`}
+      name={data.name}
+      text={`Are you sure you want to delete the customer type: ${data.name}? This cannot be undone.`}
       onCancel={onCancel}
     />
   );

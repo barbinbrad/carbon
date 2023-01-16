@@ -10,29 +10,36 @@ import {
 } from "@chakra-ui/react";
 import { Form } from "@remix-run/react";
 
-type DeleteGroupModalProps = {
-  groupId: string;
-  data: { id: string; name: string };
+type ConfirmDeleteProps = {
+  action: string;
+  isOpen?: boolean;
+  name: string;
+  text: string;
   onCancel: () => void;
+  onSubmit?: () => void;
 };
 
-const DeleteGroupModal = ({ data, onCancel }: DeleteGroupModalProps) => {
+const ConfirmDelete = ({
+  action,
+  isOpen = true,
+  name,
+  text,
+  onCancel,
+  onSubmit,
+}: ConfirmDeleteProps) => {
   return (
-    <Modal isOpen={true} onClose={onCancel}>
+    <Modal isOpen={isOpen} onClose={onCancel}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Delete {data?.name}</ModalHeader>
+        <ModalHeader>Delete {name}</ModalHeader>
         <ModalCloseButton />
-        <ModalBody>
-          Are you sure you want to delete the group: {data?.name}? This cannot
-          be undone.
-        </ModalBody>
+        <ModalBody>{text}</ModalBody>
 
         <ModalFooter>
           <Button colorScheme="gray" mr={3} onClick={onCancel}>
             Cancel
           </Button>
-          <Form method="post">
+          <Form method="post" action={action} onSubmit={onSubmit}>
             <Button colorScheme="red" type="submit">
               Delete
             </Button>
@@ -43,4 +50,4 @@ const DeleteGroupModal = ({ data, onCancel }: DeleteGroupModalProps) => {
   );
 };
 
-export default DeleteGroupModal;
+export default ConfirmDelete;

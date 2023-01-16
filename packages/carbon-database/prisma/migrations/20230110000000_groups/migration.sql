@@ -317,8 +317,10 @@ BEGIN
   INSERT INTO public."group" ("id", "name", "isCustomerOrgGroup")
   VALUES (new.id, new.name, TRUE);
 
-  INSERT INTO public."membership"("groupId", "memberGroupId")
-  VALUES (new."customerTypeId", new.id);
+  IF new."customerTypeId" IS NOT NULL THEN
+    INSERT INTO public."membership"("groupId", "memberGroupId")
+    VALUES (new."customerTypeId", new.id);
+  END IF;
 
   RETURN new;
 END;
@@ -330,8 +332,10 @@ BEGIN
   INSERT INTO public."group" ("id", "name", "isSupplierOrgGroup")
   VALUES (new.id, new.name, TRUE);
 
-  INSERT INTO public."membership"("groupId", "memberGroupId")
-  VALUES (new."supplierTypeId", new.id);
+  IF new."supplierTypeId" IS NOT NULL THEN
+    INSERT INTO public."membership"("groupId", "memberGroupId")
+    VALUES (new."supplierTypeId", new.id);
+  END IF;
 
   RETURN new;
 END;
@@ -376,8 +380,19 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE FUNCTION public.update_customer_to_customer_type_group()
 RETURNS TRIGGER AS $$
 BEGIN
-  UPDATE public."membership" SET "groupId" = new."customerTypeId"
-  WHERE "groupId" = old."customerTypeId" AND "memberGroupId" = new.id;
+  IF old."customerTypeId" IS NOT NULL THEN
+    IF new."customerTypeId" IS NOT NULL THEN
+      UPDATE public."membership" SET "groupId" = new."customerTypeId"
+      WHERE "groupId" = old."customerTypeId" AND "memberGroupId" = new.id;
+    ELSE
+      DELETE FROM public."membership" WHERE "groupId" = old."customerTypeId" AND "memberGroupId" = new.id;
+    END IF;
+  ELSE
+    IF new."customerTypeId" IS NOT NULL THEN
+      INSERT INTO public."membership" ("groupId", "memberGroupId")
+      VALUES (new."customerTypeId", new.id);
+    END IF;
+  END IF;
 
   RETURN new;
 END;
@@ -386,8 +401,19 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE FUNCTION public.update_supplier_to_supplier_type_group()
 RETURNS TRIGGER AS $$
 BEGIN
-  UPDATE public."membership" SET "groupId" = new."supplierTypeId"
-  WHERE "groupId" = old."supplierTypeId" AND "memberGroupId" = new.id;
+  IF old."supplierTypeId" IS NOT NULL THEN
+    IF new."supplierTypeId" IS NOT NULL THEN
+      UPDATE public."membership" SET "groupId" = new."supplierTypeId"
+      WHERE "groupId" = old."supplierTypeId" AND "memberGroupId" = new.id;
+    ELSE
+      DELETE FROM public."membership" WHERE "groupId" = old."supplierTypeId" AND "memberGroupId" = new.id;
+    END IF;
+  ELSE
+    IF new."supplierTypeId" IS NOT NULL THEN
+      INSERT INTO public."membership" ("groupId", "memberGroupId")
+      VALUES (new."supplierTypeId", new.id);
+    END IF;
+  END IF;
 
   RETURN new;
 END;

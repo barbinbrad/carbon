@@ -8,25 +8,77 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
+  FormLabel,
   Grid,
   HStack,
+  Skeleton,
+  Stack,
   VStack,
 } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import { ValidatedForm } from "remix-validated-form";
-import { Input, Submit, TextArea } from "~/components/Form";
+import {
+  Input,
+  Select,
+  Submit,
+  User,
+  TextArea,
+  Hidden,
+} from "~/components/Form";
 import { supplierValidator } from "~/services/purchasing";
+import type {
+  SupplierContact,
+  SupplierLocation,
+  SupplierStatus,
+  SupplierType,
+} from "~/interfaces/Purchasing/types";
+import { mapRowsToOptions } from "~/utils/form";
+import { useRouteData } from "~/hooks";
+import { SupplierContacts, SupplierLocations } from "./components";
+import { IoMdAdd } from "react-icons/io";
 
 type SupplierFormProps = {
   initialValues: {
     id?: string;
     name: string;
+    description?: string;
+    accountManagerId?: string;
+    supplierTypeId?: string;
+    supplierStatusId?: number;
+    taxId?: string;
   };
+  contacts?: SupplierContact[];
+  locations?: SupplierLocation[];
 };
 
-const SupplierForm = ({ initialValues }: SupplierFormProps) => {
+const SupplierForm = ({
+  initialValues,
+  contacts,
+  locations,
+}: SupplierFormProps) => {
   const navigate = useNavigate();
-  const onClose = () => navigate(-1);
+  const onClose = () => navigate("/app/purchasing/suppliers");
+
+  const routeData = useRouteData<{
+    supplierTypes: { data: SupplierType[] };
+    supplierStatuses: { data: SupplierStatus[] };
+  }>("/app/purchasing/suppliers");
+
+  const supplierTypeOptions = routeData?.supplierTypes
+    ? mapRowsToOptions({
+        data: routeData.supplierTypes.data ?? [],
+        value: "id",
+        label: "name",
+      })
+    : [];
+
+  const supplierStatusOptions = routeData?.supplierStatuses
+    ? mapRowsToOptions({
+        data: routeData.supplierStatuses.data ?? [],
+        value: "id",
+        label: "name",
+      })
+    : [];
 
   const isEditing = initialValues.id !== undefined;
 
@@ -36,8 +88,8 @@ const SupplierForm = ({ initialValues }: SupplierFormProps) => {
         method="post"
         action={
           isEditing
-            ? `/app/purchasing/customers/${initialValues.id}`
-            : "/app/purchasing/customers/new"
+            ? `/app/purchasing/suppliers/${initialValues.id}`
+            : "/app/purchasing/suppliers/new"
         }
         validator={supplierValidator}
         defaultValues={initialValues}
@@ -45,24 +97,63 @@ const SupplierForm = ({ initialValues }: SupplierFormProps) => {
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader>New Supplier</DrawerHeader>
+          <DrawerHeader>
+            {isEditing ? initialValues.name : "New Supplier"}
+          </DrawerHeader>
           <DrawerBody>
             <Grid
-              gridTemplateColumns={["3fr 1fr", "1fr", "1fr"]}
-              gridColumnGap={4}
+              gridTemplateColumns={["1fr", "1fr", "5fr 2fr"]}
+              gridColumnGap={8}
               w="full"
             >
               <Box w="full">
-                <VStack spacing={4} my={4} w="full" alignItems="start">
-                  <Input name="name" label="Name" />
+                <Hidden name="id" />
+                <VStack spacing={4} w="full" alignItems="start">
+                  <Grid
+                    gridTemplateColumns={["1fr", "1fr", "1fr 1fr"]}
+                    gridColumnGap={8}
+                    gridRowGap={4}
+                    w="full"
+                  >
+                    <Input name="name" label="Name" />
+                    <Input name="taxId" label="Tax ID" />
+                    <Select
+                      name="supplierTypeId"
+                      label="Supplier Type"
+                      options={supplierTypeOptions}
+                      placeholder="Select Supplier Type"
+                    />
+                    <User name="accountManagerId" label="Account Manager" />
+                    <Select
+                      name="supplierStatusId"
+                      label="Supplier Status"
+                      options={supplierStatusOptions}
+                      placeholder="Select Supplier Status"
+                    />
+                  </Grid>
+
                   <TextArea
                     name="description"
                     label="Description"
-                    characterLimit={160}
+                    characterLimit={500}
                     my={2}
                   />
                 </VStack>
               </Box>
+              <VStack spacing={8} w="full" alignItems="start">
+                <Box w="full">
+                  <FormLabel>Locations</FormLabel>
+                  <SupplierLocations
+                    locations={locations}
+                    isEditing={isEditing}
+                  />
+                </Box>
+                <SupplierContacts
+                  contacts={contacts}
+                  locations={locations}
+                  isEditing={isEditing}
+                />
+              </VStack>
             </Grid>
           </DrawerBody>
           <DrawerFooter>

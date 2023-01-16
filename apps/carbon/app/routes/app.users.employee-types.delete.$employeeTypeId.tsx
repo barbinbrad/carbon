@@ -1,7 +1,7 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData, useNavigate, useParams } from "@remix-run/react";
-import { DeleteEmployeeTypeModal } from "~/interfaces/Users/EmployeeTypes";
+import { ConfirmDelete } from "~/components/Modals";
 import { requirePermissions } from "~/services/auth";
 import { deleteEmployeeType, getEmployeeType } from "~/services/users";
 import { flash } from "~/services/session";
@@ -74,9 +74,10 @@ export default function DeleteEmployeeTypeRoute() {
   const onCancel = () => navigate("/app/users/employee-types");
 
   return (
-    <DeleteEmployeeTypeModal
-      employeeTypeId={employeeTypeId}
-      data={data}
+    <ConfirmDelete
+      action={`/app/users/employee-types/delete/${employeeTypeId}`}
+      name={data.name}
+      text={`Are you sure you want to delete the employee type: ${data.name}? This cannot be undone.`}
       onCancel={onCancel}
     />
   );

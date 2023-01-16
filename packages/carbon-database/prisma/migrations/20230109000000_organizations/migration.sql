@@ -8,8 +8,8 @@ CREATE TABLE "contact" (
   "id" SERIAL PRIMARY KEY,
   "firstName" TEXT,
   "lastName" TEXT,
-  "title" TEXT,
   "email" TEXT,
+  "title" TEXT,
   "mobilePhone" TEXT,
   "homePhone" TEXT,
   "workPhone" TEXT,
@@ -18,8 +18,10 @@ CREATE TABLE "contact" (
   "addressLine2" TEXT,
   "city" TEXT,
   "state" TEXT,
+  "postalCode" TEXT,
   "countryId" INTEGER,
   "birthday" DATE,
+  "notes" TEXT,
 
   CONSTRAINT "contact_countryId_fkey" FOREIGN KEY ("countryId") REFERENCES "country"("id") ON DELETE SET NULL ON UPDATE CASCADE
 );
@@ -31,6 +33,7 @@ CREATE TABLE "address" (
   "addressLine2" TEXT,
   "city" TEXT,
   "state" TEXT,
+  "postalCode" TEXT,
   "countryId" INTEGER,
   "phone" TEXT,
   "fax" TEXT,
@@ -66,32 +69,25 @@ CREATE TABLE "supplier" (
     "supplierTypeId" TEXT,
     "supplierStatusId" INTEGER,
     "taxId" TEXT,
-    "taxable" BOOLEAN DEFAULT TRUE,
-    "established" DATE,
     "accountManagerId" TEXT,
     "logo" TEXT,
-    "website" TEXT,
-    "twitter" TEXT,
-    "facebook" TEXT,
-    "instagram" TEXT,
-    "linkedin" TEXT,
-    "github" TEXT,
-    "youtube" TEXT,
-    "twitch" TEXT,
-    "discord" TEXT,
     "createdAt" TIMESTAMP(3) DEFAULT NOW() NOT NULL,
+    "createdBy" TEXT,
     "updatedAt" TIMESTAMP(3),
+    "updatedBy" TEXT,
 
     CONSTRAINT "supplier_pkey" PRIMARY KEY ("id"),
     CONSTRAINT "supplier_supplierTypeId_fkey" FOREIGN KEY ("supplierTypeId") REFERENCES "supplierType"("id") ON UPDATE CASCADE ON DELETE SET NULL,
     CONSTRAINT "supplier_supplierStatusId_fkey" FOREIGN KEY ("supplierStatusId") REFERENCES "supplierStatus"("id") ON UPDATE CASCADE ON DELETE SET NULL,
     CONSTRAINT "supplier_accountManagerId_fkey" FOREIGN KEY ("accountManagerId") REFERENCES "user"("id") ON UPDATE CASCADE ON DELETE SET NULL,
-    CONSTRAINT "supplier_name_unique" UNIQUE ("name"),
-    CONSTRAINT "supplier_taxId_unique" UNIQUE ("taxId")
+    CONSTRAINT "supplier_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id") ON UPDATE CASCADE ON DELETE SET NULL,
+    CONSTRAINT "supplier_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id") ON UPDATE CASCADE ON DELETE SET NULL,
+    CONSTRAINT "supplier_name_unique" UNIQUE ("name")
 );
 
 CREATE TABLE "supplierLocation" (
   "id" SERIAL PRIMARY KEY,
+  "name" TEXT NOT NULL,
   "supplierId" TEXT NOT NULL,
   "addressId" INTEGER NOT NULL,
 
@@ -149,32 +145,25 @@ CREATE TABLE "customer" (
     "customerTypeId" TEXT,
     "customerStatusId" INTEGER,
     "taxId" TEXT,
-    "taxable" BOOLEAN DEFAULT TRUE,
-    "established" DATE,
     "accountManagerId" TEXT,
     "logo" TEXT,
-    "website" TEXT,
-    "twitter" TEXT,
-    "facebook" TEXT,
-    "instagram" TEXT,
-    "linkedin" TEXT,
-    "github" TEXT,
-    "youtube" TEXT,
-    "twitch" TEXT,
-    "discord" TEXT,
     "createdAt" TIMESTAMP(3) DEFAULT NOW() NOT NULL,
+    "createdBy" TEXT,
     "updatedAt" TIMESTAMP(3),
+    "updatedBy" TEXT,
 
     CONSTRAINT "customer_pkey" PRIMARY KEY ("id"),
     CONSTRAINT "customer_customerTypeId_fkey" FOREIGN KEY ("customerTypeId") REFERENCES "customerType"("id") ON UPDATE CASCADE ON DELETE SET NULL,
     CONSTRAINT "customer_customerStatusId_fkey" FOREIGN KEY ("customerStatusId") REFERENCES "customerStatus"("id") ON UPDATE CASCADE ON DELETE SET NULL,
     CONSTRAINT "customer_accountManagerId_fkey" FOREIGN KEY ("accountManagerId") REFERENCES "user"("id") ON UPDATE CASCADE ON DELETE SET NULL,
-    CONSTRAINT "customer_name_unique" UNIQUE ("name"),
-    CONSTRAINT "customer_taxId_unique" UNIQUE ("taxId")
+    CONSTRAINT "customer_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id") ON UPDATE CASCADE ON DELETE SET NULL,
+    CONSTRAINT "customer_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id") ON UPDATE CASCADE ON DELETE SET NULL,
+    CONSTRAINT "customer_name_unique" UNIQUE ("name")
 );
 
 CREATE TABLE "customerLocation" (
   "id" SERIAL PRIMARY KEY,
+  "name" TEXT NOT NULL,
   "customerId" TEXT NOT NULL,
   "addressId" INTEGER NOT NULL,
 

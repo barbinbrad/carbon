@@ -1,5 +1,8 @@
+import Logger from "@carbon/logger";
 import type { Redis as RedisType, RedisOptions } from "ioredis";
 import Redis from "ioredis";
+
+const logger = Logger.create("redis");
 
 const config: RedisOptions = {
   enableReadyCheck: false,
@@ -28,5 +31,9 @@ if (process.env.NODE_ENV === "production") {
   }
   redis = global.__redis;
 }
+
+redis.on("error", function (e) {
+  logger.error(e);
+});
 
 export default redis;

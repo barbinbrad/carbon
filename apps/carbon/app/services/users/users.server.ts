@@ -81,20 +81,6 @@ export async function createEmployeeAccount(
   return success("Employee account created");
 }
 
-export async function createEmployeeType(
-  client: SupabaseClient<Database>,
-  employeeType: { id?: string; name: string; color: string | null }
-) {
-  return client.from("employeeType").insert([employeeType]).select("id");
-}
-
-export async function createGroup(
-  client: SupabaseClient<Database>,
-  group: { name: string }
-) {
-  return client.from("group").insert(group).select("id");
-}
-
 async function createUser(
   client: SupabaseClient<Database>,
   user: Omit<User, "fullName">
@@ -490,6 +476,20 @@ export async function insertEmployee(
   employee: EmployeeRow
 ) {
   return client.from("employee").insert([employee]);
+}
+
+export async function insertEmployeeType(
+  client: SupabaseClient<Database>,
+  employeeType: { id?: string; name: string; color: string | null }
+) {
+  return client.from("employeeType").insert([employeeType]).select("id");
+}
+
+export async function insertGroup(
+  client: SupabaseClient<Database>,
+  group: { name: string }
+) {
+  return client.from("group").insert(group).select("id");
 }
 
 async function insertUser(

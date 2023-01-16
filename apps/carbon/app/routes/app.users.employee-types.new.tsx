@@ -7,11 +7,11 @@ import { EmployeeTypeForm } from "~/interfaces/Users/EmployeeTypes";
 import { requirePermissions } from "~/services/auth";
 import {
   employeeTypeValidator,
-  getFeatures,
-  makeEmptyPermissionsFromFeatures,
   employeeTypePermissionsValidator,
+  getFeatures,
+  insertEmployeeType,
+  makeEmptyPermissionsFromFeatures,
   upsertEmployeeTypePermissions,
-  createEmployeeType,
 } from "~/services/users";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
@@ -64,27 +64,27 @@ export async function action({ request }: ActionArgs) {
     );
   }
 
-  const insertEmployeeType = await createEmployeeType(client, {
+  const createEmployeeType = await insertEmployeeType(client, {
     name,
     color: color || null,
   });
-  if (insertEmployeeType.error) {
+  if (createEmployeeType.error) {
     return json(
       {},
       await flash(
         request,
-        error(insertEmployeeType.error, "Failed to insert employee type")
+        error(createEmployeeType.error, "Failed to insert employee type")
       )
     );
   }
 
-  const employeeTypeId = insertEmployeeType.data[0]?.id;
+  const employeeTypeId = createEmployeeType.data[0]?.id;
   if (!employeeTypeId) {
     return json(
       {},
       await flash(
         request,
-        error(insertEmployeeType, "Failed to insert employee type")
+        error(createEmployeeType, "Failed to insert employee type")
       )
     );
   }

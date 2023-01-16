@@ -1,7 +1,7 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData, useNavigate, useParams } from "@remix-run/react";
-import { DeleteSupplierTypeModal } from "~/interfaces/Purchasing/SupplierTypes";
+import { ConfirmDelete } from "~/components/Modals";
 import { requirePermissions } from "~/services/auth";
 import { deleteSupplierType, getSupplierType } from "~/services/purchasing";
 import { flash } from "~/services/session";
@@ -70,11 +70,11 @@ export default function DeleteSupplierTypeRoute() {
   if (!supplierTypeId || !data) return null; // TODO - handle this better (404?)
 
   const onCancel = () => navigate("/app/purchasing/supplier-types");
-
   return (
-    <DeleteSupplierTypeModal
-      supplierTypeId={supplierTypeId}
-      data={data}
+    <ConfirmDelete
+      action={`/app/purchasing/supplier-types/delete/${supplierTypeId}`}
+      name={data.name}
+      text={`Are you sure you want to delete the supplier type: ${data.name}? This cannot be undone.`}
       onCancel={onCancel}
     />
   );

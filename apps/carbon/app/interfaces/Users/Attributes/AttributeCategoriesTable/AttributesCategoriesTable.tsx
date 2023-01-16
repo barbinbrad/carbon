@@ -16,9 +16,9 @@ import { BiAddToQueue } from "react-icons/bi";
 import { BsPencilSquare, BsListUl, BsPlus } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { Table } from "~/components";
+import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { AttributeCategory } from "~/interfaces/Users/types";
-import DeleteAttributeCategoryModal from "../DeleteAttributeCategoryModal";
 
 type AttributeCategoriesTableProps = {
   data: AttributeCategory[];
@@ -164,10 +164,14 @@ const AttributeCategoriesTable = memo(
           columns={columns}
           count={count}
         />
-        <DeleteAttributeCategoryModal
-          onCancel={onDeleteCancel}
+
+        <ConfirmDelete
+          action={`/app/users/attributes/delete/${selectedCategory?.id}`}
+          name={selectedCategory?.name ?? ""}
+          text={`Are you sure you want to deactivate the ${selectedCategory?.name} attribute category?`}
           isOpen={deleteModal.isOpen}
-          data={selectedCategory}
+          onCancel={onDeleteCancel}
+          onSubmit={onDeleteCancel}
         />
       </>
     );

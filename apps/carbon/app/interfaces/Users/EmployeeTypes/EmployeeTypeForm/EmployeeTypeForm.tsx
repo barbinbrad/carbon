@@ -71,8 +71,8 @@ const EmployeeTypeForm = ({ initialValues }: EmployeeTypeFormProps) => {
             {isEditing ? "Edit" : "New"} Employee Type
           </DrawerHeader>
           <DrawerBody pb={8}>
+            <Hidden name="id" />
             <VStack spacing={4} alignItems="start">
-              <Hidden name="id" />
               <Input name="name" label="Employee Type" />
               <Color name="color" label="Color" />
               <Hidden

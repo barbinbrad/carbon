@@ -12,21 +12,20 @@ import {
 } from "@chakra-ui/react";
 import { useParams } from "@remix-run/react";
 import { ValidatedForm } from "remix-validated-form";
-import { DatePicker, Input, Phone, Submit, TextArea } from "~/components/Form";
+import { DatePicker, Hidden, Input, Submit, TextArea } from "~/components/Form";
 import type { SupplierLocation } from "~/interfaces/Purchasing/types";
 import { supplierLocationValidator } from "~/services/purchasing";
 
-type SupplierContactFormProps = {
+type SupplierLocationFormProps = {
   location?: SupplierLocation;
   onClose: () => void;
 };
 
-const SupplierContactForm = ({
+const SupplierLocationForm = ({
   location,
   onClose,
-}: SupplierContactFormProps) => {
+}: SupplierLocationFormProps) => {
   const { supplierId } = useParams();
-  // @ts-ignore
   const isEditing = !!location?.id;
   if (Array.isArray(location?.address))
     throw new Error("location.address is an array");
@@ -38,13 +37,13 @@ const SupplierContactForm = ({
         method="post"
         action={
           isEditing
-            ? // @ts-ignore
-              `/app/purchasing/suppliers/${supplierId}/location/${location?.id}`
+            ? `/app/purchasing/suppliers/${supplierId}/location/${location?.id}`
             : `/app/purchasing/suppliers/${supplierId}/location/new`
         }
         defaultValues={{
-          id: location?.id ?? "",
-          name: location?.name ?? "",
+          id: location?.id ?? undefined,
+          addressId: location?.address?.id ?? undefined,
+
           addressLine1: location?.address?.addressLine1 ?? "",
           addressLine2: location?.address?.addressLine2 ?? "",
           city: location?.address?.city ?? "",
@@ -56,10 +55,11 @@ const SupplierContactForm = ({
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader>{isEditing ? "Edit" : "New"} Contact</DrawerHeader>
+          <DrawerHeader>{isEditing ? "Edit" : "New"} Location</DrawerHeader>
           <DrawerBody pb={8}>
+            <Hidden name="id" />
+            <Hidden name="addressId" />
             <VStack spacing={4} alignItems="start">
-              <Input name="name" label="Location Name" />
               <Input name="addressLine1" label="Address Line 1" />
               <Input name="addressLine2" label="Address Line 2" />
               <Input name="city" label="City" />
@@ -87,4 +87,4 @@ const SupplierContactForm = ({
   );
 };
 
-export default SupplierContactForm;
+export default SupplierLocationForm;

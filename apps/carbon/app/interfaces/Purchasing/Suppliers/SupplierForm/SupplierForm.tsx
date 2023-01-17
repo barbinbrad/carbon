@@ -140,7 +140,7 @@ const SupplierForm = ({
                   />
                 </VStack>
               </Box>
-              <VStack spacing={8} w="full" alignItems="start">
+              <VStack spacing={8} w="full" alignItems="start" py={[8, 8, 0]}>
                 <SupplierLocations
                   locations={locations}
                   isEditing={isEditing}

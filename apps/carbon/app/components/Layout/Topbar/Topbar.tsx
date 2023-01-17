@@ -32,9 +32,7 @@ const Topbar = () => {
         colorScheme="gray"
         leftIcon={<FaSearch />}
         variant="outline"
-        border={1}
-        borderColor={borderColor}
-        borderStyle="solid"
+        boxShadow="sm"
         color="gray.500"
         w={200}
         mt={2}

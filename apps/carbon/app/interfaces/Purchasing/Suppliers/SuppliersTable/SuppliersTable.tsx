@@ -48,7 +48,12 @@ const SuppliersTable = memo(({ data, count }: SuppliersTableProps) => {
         id: "orders",
         header: "Orders",
         cell: () => (
-          <ButtonGroup size="sm" isAttached variant="outline">
+          <ButtonGroup
+            size="sm"
+            isAttached
+            variant="outline"
+            onClick={(e) => e.stopPropagation()}
+          >
             <Button onClick={() => console.log("orders")}>0 Orders</Button>
             <IconButton
               aria-label="New Order"
@@ -62,7 +67,12 @@ const SuppliersTable = memo(({ data, count }: SuppliersTableProps) => {
         id: "parts",
         header: "Parts",
         cell: () => (
-          <ButtonGroup size="sm" isAttached variant="outline">
+          <ButtonGroup
+            size="sm"
+            isAttached
+            variant="outline"
+            onClick={(e) => e.stopPropagation()}
+          >
             <Button onClick={() => console.log("orders")}>0 Parts</Button>
             <IconButton
               aria-label="New Part"
@@ -79,18 +89,7 @@ const SuppliersTable = memo(({ data, count }: SuppliersTableProps) => {
           <Flex justifyContent="end">
             {permissions.can("update", "users") && (
               <ActionMenu>
-                <MenuItem
-                  icon={<BsPencilSquare />}
-                  onClick={() =>
-                    navigate(
-                      `/app/purchasing/suppliers/${
-                        item.getValue() as string
-                      }?${params.toString()}`
-                    )
-                  }
-                >
-                  Edit Supplier
-                </MenuItem>
+                <MenuItem icon={<BsPencilSquare />}>Edit Supplier</MenuItem>
               </ActionMenu>
             )}
           </Flex>
@@ -107,6 +106,9 @@ const SuppliersTable = memo(({ data, count }: SuppliersTableProps) => {
         columns={columns}
         data={data}
         withPagination
+        onRowClick={(row) =>
+          navigate(`/app/purchasing/suppliers/${row.id}?${params.toString()}`)
+        }
       />
     </>
   );

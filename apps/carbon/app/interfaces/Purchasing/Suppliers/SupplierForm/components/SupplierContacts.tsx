@@ -1,7 +1,7 @@
 import {
   Button,
-  FormLabel,
   HStack,
+  Heading,
   IconButton,
   List,
   ListItem,
@@ -46,7 +46,7 @@ const SupplierContacts = ({
     <>
       <VStack alignItems="start" w="full" spacing={4} mb={4}>
         <HStack w="full" justifyContent="space-between">
-          <FormLabel>Contacts</FormLabel>
+          <Heading size="md">Contacts</Heading>
           <IconButton
             icon={<IoMdAdd />}
             aria-label="Add contact"

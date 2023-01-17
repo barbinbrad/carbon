@@ -1,6 +1,6 @@
 import {
   Button,
-  FormLabel,
+  Heading,
   HStack,
   IconButton,
   List,
@@ -12,8 +12,10 @@ import {
 import { useParams } from "@remix-run/react";
 import { useState } from "react";
 import { IoMdAdd } from "react-icons/io";
+import { Address } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import type { SupplierLocation } from "~/interfaces/Purchasing/types";
+import SupplierLocationForm from "./SupplierLocationForm";
 
 type SupplierLocationProps = {
   locations?: SupplierLocation[];
@@ -39,7 +41,7 @@ const SupplierLocations = ({
     <>
       <VStack alignItems="start" w="full" spacing={4} mb={4}>
         <HStack w="full" justifyContent="space-between">
-          <FormLabel>Locations</FormLabel>
+          <Heading size="md">Locations</Heading>
           <IconButton
             icon={<IoMdAdd />}
             aria-label="Add location"
@@ -61,7 +63,6 @@ const SupplierLocations = ({
               <ListItem key={location.id}>
                 {location.address && !Array.isArray(location.address) ? (
                   <Address
-                    name={location.name}
                     address={location.address}
                     onDelete={() => {
                       setLocation(location);
@@ -100,7 +101,8 @@ const SupplierLocations = ({
       {deleteContactModal.isOpen && (
         <ConfirmDelete
           action={`/app/purchasing/suppliers/${supplierId}/location/delete/${location?.id}`}
-          name={location?.name ?? ""}
+          // @ts-ignore
+          name={location?.address?.city ?? ""}
           text="Are you sure you want to delete this location?"
           onCancel={deleteContactModal.onClose}
           onSubmit={deleteContactModal.onClose}

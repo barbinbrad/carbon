@@ -77,9 +77,9 @@ const SupplierContactForm = ({
           <DrawerCloseButton />
           <DrawerHeader>{isEditing ? "Edit" : "New"} Contact</DrawerHeader>
           <DrawerBody pb={8}>
+            <Hidden name="id" />
+            <Hidden name="contactId" />
             <VStack spacing={4} alignItems="start">
-              <Hidden name="id" />
-              <Hidden name="contactId" />
               <Input name="firstName" label="First Name" />
               <Input name="lastName" label="Last Name" />
               <Input name="email" label="Email" />

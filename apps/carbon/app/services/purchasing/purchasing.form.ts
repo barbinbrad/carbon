@@ -25,8 +25,7 @@ export const supplierContactValidator = withZod(
 
 export const supplierLocationValidator = withZod(
   z.object({
-    id: zfd.text(z.string().optional()),
-    name: z.string().min(1, { message: "Location name is required" }),
+    id: zfd.numeric(z.number().optional()),
     ...address,
   })
 );

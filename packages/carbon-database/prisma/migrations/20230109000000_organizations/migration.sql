@@ -87,7 +87,6 @@ CREATE TABLE "supplier" (
 
 CREATE TABLE "supplierLocation" (
   "id" SERIAL PRIMARY KEY,
-  "name" TEXT NOT NULL,
   "supplierId" TEXT NOT NULL,
   "addressId" INTEGER NOT NULL,
 
@@ -163,7 +162,6 @@ CREATE TABLE "customer" (
 
 CREATE TABLE "customerLocation" (
   "id" SERIAL PRIMARY KEY,
-  "name" TEXT NOT NULL,
   "customerId" TEXT NOT NULL,
   "addressId" INTEGER NOT NULL,
 

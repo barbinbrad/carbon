@@ -268,19 +268,16 @@ export interface Database {
       customerLocation: {
         Row: {
           id: number
-          name: string
           customerId: string
           addressId: number
         }
         Insert: {
           id?: number
-          name: string
           customerId: string
           addressId: number
         }
         Update: {
           id?: number
-          name?: string
           customerId?: string
           addressId?: number
         }
@@ -565,19 +562,16 @@ export interface Database {
       supplierLocation: {
         Row: {
           id: number
-          name: string
           supplierId: string
           addressId: number
         }
         Insert: {
           id?: number
-          name: string
           supplierId: string
           addressId: number
         }
         Update: {
           id?: number
-          name?: string
           supplierId?: string
           addressId?: number
         }

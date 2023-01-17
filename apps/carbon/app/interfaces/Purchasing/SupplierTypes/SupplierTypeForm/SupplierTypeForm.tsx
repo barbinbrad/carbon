@@ -48,8 +48,8 @@ const SupplierTypeForm = ({ initialValues }: SupplierTypeFormProps) => {
             {isEditing ? "Edit" : "New"} Supplier Type
           </DrawerHeader>
           <DrawerBody pb={8}>
+            <Hidden name="id" />
             <VStack spacing={4} alignItems="start">
-              <Hidden name="id" />
               <Input name="name" label="Supplier Type" />
               <Color name="color" label="Color" />
             </VStack>

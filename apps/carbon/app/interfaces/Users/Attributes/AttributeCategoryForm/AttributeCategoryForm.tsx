@@ -48,8 +48,8 @@ const AttributeCategoryForm = ({
             {isEditing ? "Edit" : "New"} Attribute Category
           </DrawerHeader>
           <DrawerBody pb={8}>
+            <Hidden name="id" />
             <VStack spacing={4} alignItems="start">
-              <Hidden name="id" />
               <Input name="name" label="Category Name" />
               <Boolean
                 name="isPublic"

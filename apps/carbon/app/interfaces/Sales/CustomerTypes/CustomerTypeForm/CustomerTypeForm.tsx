@@ -48,8 +48,8 @@ const CustomerTypeForm = ({ initialValues }: CustomerTypeFormProps) => {
             {isEditing ? "Edit" : "New"} Customer Type
           </DrawerHeader>
           <DrawerBody pb={8}>
+            <Hidden name="id" />
             <VStack spacing={4} alignItems="start">
-              <Hidden name="id" />
               <Input name="name" label="Customer Type" />
               <Color name="color" label="Color" />
             </VStack>

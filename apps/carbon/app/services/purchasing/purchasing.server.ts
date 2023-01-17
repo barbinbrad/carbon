@@ -3,13 +3,6 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
 
-export async function deleteSupplierType(
-  client: SupabaseClient<Database>,
-  supplierTypeId: string
-) {
-  return client.from("supplierType").delete().eq("id", supplierTypeId);
-}
-
 export async function deleteSupplierContact(
   client: SupabaseClient<Database>,
   supplierId: string,
@@ -22,15 +15,23 @@ export async function deleteSupplierContact(
     .eq("id", supplierContactId);
 }
 
-export async function getSupplierType(
+export async function deleteSupplierLocation(
+  client: SupabaseClient<Database>,
+  supplierId: string,
+  supplierLocationId: number
+) {
+  return client
+    .from("supplierLocation")
+    .delete()
+    .eq("supplierId", supplierId)
+    .eq("id", supplierLocationId);
+}
+
+export async function deleteSupplierType(
   client: SupabaseClient<Database>,
   supplierTypeId: string
 ) {
-  return client
-    .from("supplierType")
-    .select("id, name, color, protected")
-    .eq("id", supplierTypeId)
-    .single();
+  return client.from("supplierType").delete().eq("id", supplierTypeId);
 }
 
 export async function getSupplier(
@@ -53,7 +54,7 @@ export async function getSupplierLocations(
   return client
     .from("supplierLocation")
     .select(
-      "id, name, address(id, addressLine1, addressLine2, city, state, country(id, name), postalCode)"
+      "id, address(id, addressLine1, addressLine2, city, state, country(id, name), postalCode)"
     )
     .eq("supplierId", supplierId);
 }
@@ -117,6 +118,17 @@ export async function getSupplierStatuses(
   }
 
   return query;
+}
+
+export async function getSupplierType(
+  client: SupabaseClient<Database>,
+  supplierTypeId: string
+) {
+  return client
+    .from("supplierType")
+    .select("id, name, color, protected")
+    .eq("id", supplierTypeId)
+    .single();
 }
 
 export async function getSupplierTypes(
@@ -201,6 +213,44 @@ export async function insertSupplierContact(
     .select("id");
 }
 
+export async function insertSupplierLocation(
+  client: SupabaseClient<Database>,
+  supplierLocation: {
+    supplierId: string;
+    address: {
+      addressLine1?: string;
+      addressLine2?: string;
+      city?: string;
+      state?: string;
+      // countryId: string;
+      postalCode?: string;
+    };
+  }
+) {
+  const insertAddress = await client
+    .from("address")
+    .insert([supplierLocation.address])
+    .select("id");
+  if (insertAddress.error) {
+    return insertAddress;
+  }
+
+  const addressId = insertAddress.data[0].id;
+  if (!addressId) {
+    return { data: null, error: new Error("Address ID not found") };
+  }
+
+  return client
+    .from("supplierLocation")
+    .insert([
+      {
+        supplierId: supplierLocation.supplierId,
+        addressId,
+      },
+    ])
+    .select("id");
+}
+
 export async function updateSupplier(
   client: SupabaseClient<Database>,
   supplier: {
@@ -249,6 +299,27 @@ export async function updateSupplierContact(
     .from("contact")
     .update(supplierContact.contact)
     .eq("id", supplierContact.contactId)
+    .select("id");
+}
+
+export async function updateSupplierLocation(
+  client: SupabaseClient<Database>,
+  supplierLocation: {
+    addressId: number;
+    address: {
+      addressLine1?: string;
+      addressLine2?: string;
+      city?: string;
+      state?: string;
+      // countryId: string;
+      postalCode?: string;
+    };
+  }
+) {
+  return client
+    .from("address")
+    .update(supplierLocation.address)
+    .eq("id", supplierLocation.addressId)
     .select("id");
 }
 

@@ -84,8 +84,8 @@ const AttributeForm = ({
           <DrawerCloseButton />
           <DrawerHeader>{isEditing ? "Edit" : "New"} Attribute</DrawerHeader>
           <DrawerBody pb={8}>
+            <Hidden name="id" />
             <VStack spacing={2} alignItems="start">
-              <Hidden name="id" />
               <Input name="name" label="Name" />
               <Hidden name="userAttributeCategoryId" />
 

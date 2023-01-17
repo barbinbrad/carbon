@@ -1,41 +1,43 @@
 import { ActionMenu } from "@carbon/react";
-import { Avatar, Grid, MenuItem, Text, VStack } from "@chakra-ui/react";
-import { BsPencilSquare } from "react-icons/bs";
+import { Grid, Icon, MenuItem, Text, VStack } from "@chakra-ui/react";
+import { BsPencilSquare, BsPinMapFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 
-type ContactProps = {
-  contact: {
-    firstName: string | null;
-    lastName: string | null;
-    email: string | null;
+type AddressProps = {
+  address: {
+    city: string | null;
+    state: string | null;
+    addressLine1: string | null;
+    postalCode: string | null;
   };
   onEdit?: () => void;
   onDelete?: () => void;
 };
 
-const Contact = ({ contact, onEdit, onDelete }: ContactProps) => {
-  const name = `${contact.firstName ?? ""} ${contact.lastName ?? ""}`;
+const Address = ({ address, onEdit, onDelete }: AddressProps) => {
+  const location = `${address.city ?? ""}, ${address.state ?? ""}`;
+  const addressZip = `${address.addressLine1} ${address.postalCode}`;
   return (
     <Grid w="full" gridColumnGap={4} gridTemplateColumns="auto 1fr auto">
-      <Avatar size="sm" name={`${name}`} />
+      <Icon as={BsPinMapFill} w={8} h={8} />
       <VStack spacing={0} alignItems="start">
         <Text fontWeight="bold" noOfLines={1}>
-          {name}
+          {location}
         </Text>
         <Text fontSize="sm" color="gray.500" noOfLines={1}>
-          {contact.email ?? ""}
+          {addressZip}
         </Text>
       </VStack>
       {(onEdit || onDelete) && (
         <ActionMenu>
           {onEdit && (
             <MenuItem icon={<BsPencilSquare />} onClick={onEdit}>
-              Edit Contact
+              Edit Location
             </MenuItem>
           )}
           {onDelete && (
             <MenuItem icon={<IoMdTrash />} onClick={onDelete}>
-              Delete Contact
+              Delete Location
             </MenuItem>
           )}
         </ActionMenu>
@@ -44,4 +46,4 @@ const Contact = ({ contact, onEdit, onDelete }: ContactProps) => {
   );
 };
 
-export default Contact;
+export default Address;

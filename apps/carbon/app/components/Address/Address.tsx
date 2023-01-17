@@ -16,7 +16,9 @@ type AddressProps = {
 
 const Address = ({ address, onEdit, onDelete }: AddressProps) => {
   const location = `${address.city ?? ""}, ${address.state ?? ""}`;
-  const addressZip = `${address.addressLine1} ${address.postalCode}`;
+  const addressZip = `${address.addressLine1 ?? ""} ${
+    address.postalCode ?? ""
+  }`;
   return (
     <Grid w="full" gridColumnGap={4} gridTemplateColumns="auto 1fr auto">
       <Icon as={BsPinMapFill} w={8} h={8} />

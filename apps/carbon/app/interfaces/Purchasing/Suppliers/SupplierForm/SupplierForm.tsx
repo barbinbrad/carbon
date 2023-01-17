@@ -141,13 +141,10 @@ const SupplierForm = ({
                 </VStack>
               </Box>
               <VStack spacing={8} w="full" alignItems="start">
-                <Box w="full">
-                  <FormLabel>Locations</FormLabel>
-                  <SupplierLocations
-                    locations={locations}
-                    isEditing={isEditing}
-                  />
-                </Box>
+                <SupplierLocations
+                  locations={locations}
+                  isEditing={isEditing}
+                />
                 <SupplierContacts
                   contacts={contacts}
                   locations={locations}

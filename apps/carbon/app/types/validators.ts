@@ -2,7 +2,7 @@ import { z } from "zod";
 import { zfd } from "zod-form-data";
 
 export const address = {
-  id: zfd.text(z.string().optional()),
+  addressId: zfd.numeric(z.number().optional()),
   addressLine1: zfd.text(z.string().optional()),
   addressLine2: zfd.text(z.string().optional()),
   city: zfd.text(z.string().optional()),
@@ -14,6 +14,7 @@ export const address = {
 };
 
 export const contact = {
+  contactId: zfd.numeric(z.number().optional()),
   firstName: zfd.text(z.string().optional()),
   lastName: zfd.text(z.string().optional()),
   title: zfd.text(z.string().optional()),

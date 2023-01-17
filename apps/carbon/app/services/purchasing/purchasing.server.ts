@@ -53,7 +53,7 @@ export async function getSupplierLocations(
   return client
     .from("supplierLocation")
     .select(
-      "id, address(id, addressLine1, addressLine2, city, state, country(id, name), postalCode)"
+      "id, name, address(id, addressLine1, addressLine2, city, state, country(id, name), postalCode)"
     )
     .eq("supplierId", supplierId);
 }
@@ -172,6 +172,8 @@ export async function insertSupplierContact(
       state?: string;
       // countryId: string;
       postalCode?: string;
+      birthday?: string;
+      notes?: string;
     };
   }
 ) {
@@ -216,6 +218,37 @@ export async function updateSupplier(
     .from("supplier")
     .update(supplier)
     .eq("id", supplier.id)
+    .select("id");
+}
+
+export async function updateSupplierContact(
+  client: SupabaseClient<Database>,
+  supplierContact: {
+    contactId: number;
+    contact: {
+      firstName?: string;
+      lastName?: string;
+      email: string;
+      mobilePhone?: string;
+      homePhone?: string;
+      workPhone?: string;
+      fax?: string;
+      title?: string;
+      addressLine1?: string;
+      addressLine2?: string;
+      city?: string;
+      state?: string;
+      // countryId: string;
+      postalCode?: string;
+      birthday?: string;
+      notes?: string;
+    };
+  }
+) {
+  return client
+    .from("contact")
+    .update(supplierContact.contact)
+    .eq("id", supplierContact.contactId)
     .select("id");
 }
 

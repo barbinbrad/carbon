@@ -6,8 +6,8 @@ import {
   List,
   ListItem,
   Text,
-  useDisclosure,
   VStack,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useParams } from "@remix-run/react";
 import { useState } from "react";
@@ -32,7 +32,6 @@ const SupplierContacts = ({
   isEditing = false,
 }: SupplierContactProps) => {
   const { supplierId } = useParams();
-  if (!supplierId) throw new Error("Supplier ID is required");
 
   const [contact, setContact] = useState<SupplierContact | undefined>(
     undefined
@@ -48,21 +47,19 @@ const SupplierContacts = ({
       <VStack alignItems="start" w="full" spacing={4} mb={4}>
         <HStack w="full" justifyContent="space-between">
           <FormLabel>Contacts</FormLabel>
-          {!isEmpty && (
-            <IconButton
-              icon={<IoMdAdd />}
-              aria-label="Add contact"
-              variant="outline"
-              onClick={() => {
-                setContact(undefined);
-                contactDrawer.onOpen();
-              }}
-            />
-          )}
+          <IconButton
+            icon={<IoMdAdd />}
+            aria-label="Add contact"
+            variant="outline"
+            onClick={() => {
+              setContact(undefined);
+              contactDrawer.onOpen();
+            }}
+          />
         </HStack>
         {isEmpty && (
           <Text color="gray.500" fontSize="sm">
-            You haven’t created any locations yet.
+            You haven’t created any contacts yet.
           </Text>
         )}
         {!isEmpty && (

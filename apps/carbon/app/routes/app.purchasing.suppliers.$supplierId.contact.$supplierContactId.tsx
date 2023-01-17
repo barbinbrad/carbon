@@ -3,21 +3,22 @@ import { redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
 import { requirePermissions } from "~/services/auth";
 import {
-  insertSupplierContact,
+  updateSupplierContact,
   supplierContactValidator,
 } from "~/services/purchasing";
 import { flash } from "~/services/session";
-import { assertIsPost, notFound } from "~/utils/http";
+import { assertIsPost, badRequest, notFound } from "~/utils/http";
 import { error, success } from "~/utils/result";
 
 export async function action({ request, params }: ActionArgs) {
   assertIsPost(request);
   const { client } = await requirePermissions(request, {
-    create: "purchasing",
+    update: "purchasing",
   });
 
-  const { supplierId } = params;
+  const { supplierId, supplierContactId } = params;
   if (!supplierId) throw notFound("supplierId not found");
+  if (!supplierContactId) throw notFound("supplierContactId not found");
 
   const validation = await supplierContactValidator.validate(
     await request.formData()
@@ -29,22 +30,28 @@ export async function action({ request, params }: ActionArgs) {
 
   const { id, contactId, ...contact } = validation.data;
 
-  const createSupplierContact = await insertSupplierContact(client, {
-    supplierId,
+  if (id !== Number(supplierContactId))
+    throw badRequest("supplierContactId does not match id from form data");
+
+  if (contactId === undefined)
+    throw badRequest("contactId is undefined from form data");
+
+  const update = await updateSupplierContact(client, {
+    contactId,
     contact,
   });
-  if (createSupplierContact.error) {
+  if (update.error) {
     return redirect(
       `/app/purchasing/suppliers/${supplierId}`,
       await flash(
         request,
-        error(createSupplierContact.error, "Failed to create supplier contact")
+        error(update.error, "Failed to update supplier contact")
       )
     );
   }
 
   return redirect(
     `/app/purchasing/suppliers/${supplierId}`,
-    await flash(request, success("Supplier contact created"))
+    await flash(request, success("Supplier contact updated"))
   );
 }

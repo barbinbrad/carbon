@@ -12,7 +12,14 @@ import {
 } from "@chakra-ui/react";
 import { useParams } from "@remix-run/react";
 import { ValidatedForm } from "remix-validated-form";
-import { DatePicker, Input, Phone, Submit, TextArea } from "~/components/Form";
+import {
+  DatePicker,
+  Hidden,
+  Input,
+  Phone,
+  Submit,
+  TextArea,
+} from "~/components/Form";
 import type {
   SupplierContact,
   SupplierLocation,
@@ -31,8 +38,7 @@ const SupplierContactForm = ({
   onClose,
 }: SupplierContactFormProps) => {
   const { supplierId } = useParams();
-  // @ts-ignore
-  const isEditing = !!contact?.contact?.id;
+  const isEditing = !!contact?.id;
   if (Array.isArray(contact?.contact))
     throw new Error("contact.contact is an array");
 
@@ -43,11 +49,12 @@ const SupplierContactForm = ({
         method="post"
         action={
           isEditing
-            ? // @ts-ignore
-              `/app/purchasing/suppliers/${supplierId}/contact/${contact?.contact?.id}`
+            ? `/app/purchasing/suppliers/${supplierId}/contact/${contact?.id}`
             : `/app/purchasing/suppliers/${supplierId}/contact/new`
         }
         defaultValues={{
+          id: contact?.id ?? undefined,
+          contactId: contact?.contact?.id ?? undefined,
           firstName: contact?.contact?.firstName ?? "",
           lastName: contact?.contact?.lastName ?? "",
           email: contact?.contact?.email ?? "",
@@ -71,6 +78,8 @@ const SupplierContactForm = ({
           <DrawerHeader>{isEditing ? "Edit" : "New"} Contact</DrawerHeader>
           <DrawerBody pb={8}>
             <VStack spacing={4} alignItems="start">
+              <Hidden name="id" />
+              <Hidden name="contactId" />
               <Input name="firstName" label="First Name" />
               <Input name="lastName" label="Last Name" />
               <Input name="email" label="Email" />

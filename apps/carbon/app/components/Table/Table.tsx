@@ -55,6 +55,8 @@ interface TableProps<T extends object> {
   actions?: TableAction<T>[];
   count?: number;
   colorScheme?: ThemeTypings["colorSchemes"];
+  defaultColumnOrder?: string[];
+  defaultColumnPinning?: ColumnPinningState;
   defaultColumnVisibility?: Record<string, boolean>;
   editableComponents?: Record<string, EditableTableCellComponent<T>>;
   withColumnOrdering?: boolean;
@@ -74,6 +76,10 @@ const Table = <T extends object>({
   count = 0,
   colorScheme = "blackAlpha",
   editableComponents = {},
+  defaultColumnOrder = [],
+  defaultColumnPinning = {
+    left: ["select"],
+  },
   defaultColumnVisibility = {},
   withFilters = false,
   withInlineEditing = false,
@@ -104,13 +110,10 @@ const Table = <T extends object>({
   );
 
   /* Column Ordering */
-  const [columnOrder, setColumnOrder] = useState<ColumnOrderState>([]);
+  const [columnOrder, setColumnOrder] =
+    useState<ColumnOrderState>(defaultColumnOrder);
   const [columnPinning, setColumnPinning] = useState<ColumnPinningState>(
-    withColumnOrdering
-      ? {
-          left: ["select"],
-        }
-      : {}
+    withColumnOrdering ? defaultColumnPinning : {}
   );
 
   /* Sorting */
@@ -141,10 +144,10 @@ const Table = <T extends object>({
       ? getRowSelectionColumn<T>().concat(columns)
       : columns,
     state: {
-      rowSelection,
       columnVisibility,
       columnOrder,
       columnPinning,
+      rowSelection,
     },
     onColumnVisibilityChange: setColumnVisibility,
     onColumnOrderChange: setColumnOrder,

@@ -2,20 +2,14 @@ import { useColor } from "@carbon/react";
 import { Box, Button, VStack } from "@chakra-ui/react";
 import { Link, useMatches } from "@remix-run/react";
 import type { Route } from "~/types";
+import { CollapsibleSidebar } from "./CollapsibleSidebar";
 
 const ContentSidebar = ({ links }: { links: Route[] }) => {
   const matches = useMatches();
   const borderColor = useColor("gray.200");
 
   return (
-    <Box
-      h="full"
-      w="15rem"
-      bg={useColor("white")}
-      borderRight={1}
-      borderRightColor={useColor("gray.300")}
-      borderRightStyle="solid"
-    >
+    <CollapsibleSidebar>
       <VStack h="full" alignItems="start">
         <Box overflowY="auto" w="full" h="full" pb={8}>
           <VStack spacing={2}>
@@ -51,7 +45,7 @@ const ContentSidebar = ({ links }: { links: Route[] }) => {
           </VStack>
         </Box>
       </VStack>
-    </Box>
+    </CollapsibleSidebar>
   );
 };
 

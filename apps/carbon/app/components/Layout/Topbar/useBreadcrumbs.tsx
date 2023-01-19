@@ -49,6 +49,36 @@ export default function useBreadcrumbs(): Route[] {
           name: "Parts",
           to: match.pathname,
         });
+      case "routes/app.purchasing":
+        return acc.concat({
+          name: "Purchasing",
+          to: match.pathname,
+        });
+      case "routes/app.purchasing.suppliers":
+        return acc.concat({
+          name: "Suppliers",
+          to: match.pathname,
+        });
+      case "routes/app.purchasing.supplier-types":
+        return acc.concat({
+          name: "Supplier Types",
+          to: match.pathname,
+        });
+      case "routes/app.sales":
+        return acc.concat({
+          name: "Purchasing",
+          to: match.pathname,
+        });
+      case "routes/app.sales.customers":
+        return acc.concat({
+          name: "Customers",
+          to: match.pathname,
+        });
+      case "routes/app.sales.customer-types":
+        return acc.concat({
+          name: "Customer Types",
+          to: match.pathname,
+        });
       case "routes/app.users":
         return acc.concat({
           name: "Users",

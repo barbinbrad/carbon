@@ -436,7 +436,7 @@ const Table = <T extends object>({
       >
         <Grid
           w="full"
-          gridTemplateColumns={withColumnOrdering ? "auto 1fr auto" : "1fr"}
+          gridTemplateColumns={withColumnOrdering ? "auto 1fr" : "1fr"}
         >
           {/* Pinned left columns */}
           {withColumnOrdering ? (

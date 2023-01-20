@@ -5,8 +5,15 @@ import {
   DateRangePicker,
   TimePicker,
 } from "./Date";
-import Select from "./Select";
+import Select, { createFilter } from "./Select";
 import type { OptionBase } from "./Select/types";
 
 export type { OptionBase, OptionProps, GroupBase };
-export { DatePicker, DateTimePicker, DateRangePicker, TimePicker, Select };
+export {
+  DatePicker,
+  DateTimePicker,
+  DateRangePicker,
+  TimePicker,
+  Select,
+  createFilter,
+};

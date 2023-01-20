@@ -2,6 +2,7 @@ import { VStack } from "@chakra-ui/react";
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
+import { CustomerSelect } from "~/components/Selectors";
 import {
   CustomersTable,
   CustomersTableFilters,

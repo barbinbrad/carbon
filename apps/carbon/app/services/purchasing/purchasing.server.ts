@@ -101,6 +101,10 @@ export async function getSuppliers(
   return query;
 }
 
+export async function getSuppliersList(client: SupabaseClient<Database>) {
+  return client.from("supplier").select("id, name");
+}
+
 export async function getSupplierStatuses(
   client: SupabaseClient<Database>,
   args?: GenericQueryFilters & { name: string | null }

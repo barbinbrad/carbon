@@ -1,3 +1,4 @@
+import CustomerSelect from "./CustomerSelect";
 import UserSelect from "./UserSelect";
 
-export { UserSelect };
+export { CustomerSelect, UserSelect };

@@ -101,6 +101,10 @@ export async function getCustomers(
   return query;
 }
 
+export async function getCustomersList(client: SupabaseClient<Database>) {
+  return client.from("customer").select("id, name");
+}
+
 export async function getCustomerStatuses(
   client: SupabaseClient<Database>,
   args?: GenericQueryFilters & { name: string | null }

@@ -5,6 +5,7 @@ import {
   DateRangePicker,
   TimePicker,
   Select,
+  createFilter,
 } from "./Inputs";
 import Loading from "./Loading";
 import { ActionMenu } from "./Overlay";
@@ -32,6 +33,7 @@ export {
   Select,
   ThemeProvider,
   TimePicker,
+  createFilter,
   theme,
   useColor,
   useDebounce,

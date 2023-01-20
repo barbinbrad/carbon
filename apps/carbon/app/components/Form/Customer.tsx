@@ -51,7 +51,7 @@ const Customer = ({
   );
 
   // TODO: hack for default value
-  return options.length > 0 ? (
+  return customerFetcher.state !== "loading" ? (
     <FormControl isInvalid={!!error}>
       {label && <FormLabel htmlFor={name}>{label}</FormLabel>}
       <Select
@@ -77,7 +77,7 @@ const Customer = ({
   ) : (
     <Box>
       {label && <FormLabel>{label}</FormLabel>}
-      <Select isDisabled isLoading={isLoading} options={[]} />
+      <Select isDisabled isLoading options={[]} />
     </Box>
   );
 };

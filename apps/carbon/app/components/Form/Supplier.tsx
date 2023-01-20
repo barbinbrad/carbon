@@ -51,7 +51,7 @@ const Supplier = ({
   );
 
   // TODO: hack for default value
-  return options.length > 0 ? (
+  return supplierFetcher.state !== "loading" ? (
     <FormControl isInvalid={!!error}>
       {label && <FormLabel htmlFor={name}>{label}</FormLabel>}
       <Select

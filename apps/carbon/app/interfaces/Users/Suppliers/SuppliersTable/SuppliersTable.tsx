@@ -9,17 +9,16 @@ import {
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo, useState } from "react";
-import { BsEnvelope, BsPencilSquare, BsShieldLock } from "react-icons/bs";
+import { BsEnvelope, BsPencilSquare } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { Avatar, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
-import type { Employee } from "~/interfaces/Users/types";
-import { BulkEditPermissionsForm } from "~/interfaces/Users/Employees";
+import type { Supplier } from "~/interfaces/Users/types";
 import { ResendInviteModal, DeactivateUsersModal } from "~/interfaces/Users";
 import { FaBan } from "react-icons/fa";
 
-type EmployeesTableProps = {
-  data: Employee[];
+type SuppliersTableProps = {
+  data: Supplier[];
   count: number;
   isEditable?: boolean;
 };
@@ -29,29 +28,28 @@ const defaultColumnVisibility = {
   user_lastName: false,
 };
 
-const EmployeesTable = memo(
-  ({ data, count, isEditable = false }: EmployeesTableProps) => {
+const SuppliersTable = memo(
+  ({ data, count, isEditable = false }: SuppliersTableProps) => {
     const navigate = useNavigate();
     const permissions = usePermissions();
     const [params] = useUrlParams();
 
     const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
 
-    const bulkEditDrawer = useDisclosure();
-    const deactivateEmployeeModal = useDisclosure();
+    const deactivateSupplierModal = useDisclosure();
     const resendInviteModal = useDisclosure();
 
     const rows = useMemo(
       () =>
         data.map((d) => {
-          // we should only have one user and employee per employee id
+          // we should only have one user and supplier per supplier id
           if (
             d.user === null ||
-            d.employeeType === null ||
+            d.supplier === null ||
             Array.isArray(d.user) ||
-            Array.isArray(d.employeeType)
+            Array.isArray(d.supplier)
           ) {
-            throw new Error("Expected user and employee type to be objects");
+            throw new Error("Expected user and supplier to be objects");
           }
 
           return d;
@@ -99,8 +97,13 @@ const EmployeesTable = memo(
           cell: (item) => item.getValue(),
         },
         {
-          accessorKey: "employeeType.name",
-          header: "Employee Type",
+          accessorKey: "supplier.name",
+          header: "Supplier",
+          cell: (item) => item.getValue(),
+        },
+        {
+          accessorKey: "supplier.supplierType.name",
+          header: "Supplier Type",
           cell: (item) => item.getValue(),
         },
         {
@@ -114,13 +117,13 @@ const EmployeesTable = memo(
                     icon={<BsPencilSquare />}
                     onClick={() =>
                       navigate(
-                        `/app/users/employees/${
+                        `/app/users/suppliers/${
                           item.getValue() as string
                         }?${params.toString()}`
                       )
                     }
                   >
-                    Edit Employee
+                    Edit Supplier
                   </MenuItem>
                   <MenuItem
                     icon={<BsEnvelope />}
@@ -138,10 +141,10 @@ const EmployeesTable = memo(
                         icon={<IoMdTrash />}
                         onClick={(e) => {
                           setSelectedUserIds([item.getValue() as string]);
-                          deactivateEmployeeModal.onOpen();
+                          deactivateSupplierModal.onOpen();
                         }}
                       >
-                        Deactivate Employee
+                        Deactivate Supplier
                       </MenuItem>
                     )
                   }
@@ -156,22 +159,6 @@ const EmployeesTable = memo(
 
     const actions = useMemo(() => {
       return [
-        {
-          label: "Bulk Edit Permissions",
-          icon: <BsShieldLock />,
-          disabled: !permissions.can("update", "users"),
-          onClick: (selected: typeof rows) => {
-            setSelectedUserIds(
-              selected.reduce<string[]>((acc, row) => {
-                if (row.user && !Array.isArray(row.user)) {
-                  acc.push(row.user.id);
-                }
-                return acc;
-              }, [])
-            );
-            bulkEditDrawer.onOpen();
-          },
-        },
         {
           label: "Send Account Invite",
           icon: <BsEnvelope />,
@@ -201,7 +188,7 @@ const EmployeesTable = memo(
                 return acc;
               }, [])
             );
-            deactivateEmployeeModal.onOpen();
+            deactivateSupplierModal.onOpen();
           },
         },
       ];
@@ -229,18 +216,12 @@ const EmployeesTable = memo(
           withPagination
           withSelectableRows={isEditable}
         />
-        {bulkEditDrawer.isOpen && (
-          <BulkEditPermissionsForm
-            userIds={selectedUserIds}
-            isOpen={bulkEditDrawer.isOpen}
-            onClose={bulkEditDrawer.onClose}
-          />
-        )}
-        {deactivateEmployeeModal.isOpen && (
+
+        {deactivateSupplierModal.isOpen && (
           <DeactivateUsersModal
             userIds={selectedUserIds}
-            isOpen={deactivateEmployeeModal.isOpen}
-            onClose={deactivateEmployeeModal.onClose}
+            isOpen={deactivateSupplierModal.isOpen}
+            onClose={deactivateSupplierModal.onClose}
           />
         )}
         {resendInviteModal.isOpen && (
@@ -255,39 +236,6 @@ const EmployeesTable = memo(
   }
 );
 
-// const EditableName = ({
-//   value,
-//   row,
-//   accessorKey,
-//   onUpdate,
-// }: EditableTableCellComponentProps<Employee>) => {
-//   const { supabase } = useSupabase();
-//   // @ts-ignore
-//   const userId = row?.user?.id as string;
-//   if (userId === undefined) {
-//     throw new Error("Expected user id to be defined");
-//   }
+SuppliersTable.displayName = "SupplierTable";
 
-//   const updateName = async (name: string) => {
-//     const [table, column] = accessorKey.split(".");
-//     onUpdate(name);
-//     await supabase
-//       ?.from(table)
-//       .update({ [column]: name })
-//       .eq("id", userId);
-//   };
-
-//   const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-//     if (event.key === "Enter") {
-//       updateName(event.currentTarget.value);
-//     }
-//   };
-
-//   return (
-//     <Input autoFocus defaultValue={value as string} onKeyDown={onKeyDown} />
-//   );
-// };
-
-EmployeesTable.displayName = "EmployeeTable";
-
-export default EmployeesTable;
+export default SuppliersTable;

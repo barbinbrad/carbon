@@ -3,10 +3,12 @@ import type {
   getAttribute,
   getAttributeCategories,
   getAttributeCategory,
+  getCustomers,
   getEmployees,
   getEmployeeTypes,
   getFeatures,
   getPermissionsByEmployeeType,
+  getSuppliers,
   getUsers,
 } from "~/services/users";
 
@@ -31,6 +33,10 @@ export type AttributeDataType = {
   isNumeric: boolean;
   isText: boolean;
 };
+
+export type Customer = NonNullable<
+  Awaited<ReturnType<typeof getCustomers>>["data"]
+>[number];
 
 export enum DataType {
   Boolean = 1,
@@ -79,6 +85,10 @@ export type Permission = {
   update: boolean;
   delete: boolean;
 };
+
+export type Supplier = NonNullable<
+  Awaited<ReturnType<typeof getSuppliers>>["data"]
+>[number];
 
 export type User = NonNullable<
   Awaited<ReturnType<typeof getUsers>>["data"]

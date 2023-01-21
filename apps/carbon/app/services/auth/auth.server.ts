@@ -88,6 +88,8 @@ export async function requirePermissions(
   if (Object.keys(requiredPermissions).length === 0)
     return { client, email, userId };
 
+  console.log("does not early exit", requiredPermissions);
+
   const myPermissions = await getPermissions(request, client);
 
   const hasRequiredPermissions = Object.entries(requiredPermissions).every(

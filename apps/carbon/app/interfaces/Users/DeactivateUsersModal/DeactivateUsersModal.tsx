@@ -14,17 +14,17 @@ import { ValidatedForm } from "remix-validated-form";
 import { UserSelect } from "~/components/Selectors";
 import { deactivateUsersValidator } from "~/services/users";
 
-type DeactivateEmployeesModalProps = {
+type DeactivateUsersModalProps = {
   userIds: string[];
   isOpen: boolean;
   onClose: () => void;
 };
 
-const DeactivateEmployeesModal = ({
+const DeactivateUsersModal = ({
   userIds,
   isOpen,
   onClose,
-}: DeactivateEmployeesModalProps) => {
+}: DeactivateUsersModalProps) => {
   const isSingleUser = userIds.length === 1;
 
   return (
@@ -77,4 +77,4 @@ const DeactivateEmployeesModal = ({
   );
 };
 
-export default DeactivateEmployeesModal;
+export default DeactivateUsersModal;

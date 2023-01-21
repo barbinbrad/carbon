@@ -228,6 +228,37 @@ export async function getEmployee(
     .single();
 }
 
+export async function getSuppliers(
+  client: SupabaseClient<Database>,
+  args: GenericQueryFilters & {
+    name: string | null;
+    type: string | null;
+    active: boolean | null;
+  }
+) {
+  let query = client
+    .from("supplierAccount")
+    .select(
+      "user!inner(id, fullName, firstName, lastName, email, avatarUrl, active), supplier!inner(name, supplierType!inner(name))",
+      { count: "exact" }
+    );
+
+  if (args.name) {
+    query = query.ilike("user.fullName", `%${args.name}%`);
+  }
+
+  if (args.type) {
+    query = query.eq("supplierTypeId", args.type);
+  }
+
+  if (args.active !== null) {
+    query = query.eq("user.active", args.active);
+  }
+
+  query = setGenericQueryFilters(query, args, "user(lastName)");
+  return query;
+}
+
 export async function getEmployees(
   client: SupabaseClient<Database>,
   args: GenericQueryFilters & {
@@ -249,6 +280,37 @@ export async function getEmployees(
 
   if (args.type) {
     query = query.eq("employeeTypeId", args.type);
+  }
+
+  if (args.active !== null) {
+    query = query.eq("user.active", args.active);
+  }
+
+  query = setGenericQueryFilters(query, args, "user(lastName)");
+  return query;
+}
+
+export async function getCustomers(
+  client: SupabaseClient<Database>,
+  args: GenericQueryFilters & {
+    name: string | null;
+    type: string | null;
+    active: boolean | null;
+  }
+) {
+  let query = client
+    .from("customerAccount")
+    .select(
+      "user!inner(id, fullName, firstName, lastName, email, avatarUrl, active), customer!inner(name, customerType!inner(name))",
+      { count: "exact" }
+    );
+
+  if (args.name) {
+    query = query.ilike("user.fullName", `%${args.name}%`);
+  }
+
+  if (args.type) {
+    query = query.eq("customerTypeId", args.type);
   }
 
   if (args.active !== null) {

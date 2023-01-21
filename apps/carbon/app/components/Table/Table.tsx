@@ -477,7 +477,7 @@ const Table = <T extends object>({
                           py={2}
                           whiteSpace="nowrap"
                         >
-                          {header.isPlaceholder ? null : (
+                          {!header.isPlaceholder ? null : (
                             <Flex
                               justify="flex-start"
                               align="center"

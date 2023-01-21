@@ -21,7 +21,7 @@ export async function action({ request, params }: ActionArgs) {
   const { error: deleteSupplierContactError } = await deleteSupplierContact(
     client,
     supplierId,
-    Number(supplierContactId)
+    supplierContactId
   );
   if (deleteSupplierContactError) {
     return redirect(

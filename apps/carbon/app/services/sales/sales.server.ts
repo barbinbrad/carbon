@@ -6,7 +6,7 @@ import { setGenericQueryFilters } from "~/utils/query";
 export async function deleteCustomerContact(
   client: SupabaseClient<Database>,
   customerId: string,
-  customerContactId: number
+  customerContactId: string
 ) {
   return client
     .from("customerContact")
@@ -278,7 +278,7 @@ export async function updateCustomer(
 export async function updateCustomerContact(
   client: SupabaseClient<Database>,
   customerContact: {
-    contactId: number;
+    contactId: string;
     contact: {
       firstName?: string;
       lastName?: string;

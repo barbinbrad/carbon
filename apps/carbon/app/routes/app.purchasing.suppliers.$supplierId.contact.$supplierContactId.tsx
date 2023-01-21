@@ -30,7 +30,7 @@ export async function action({ request, params }: ActionArgs) {
 
   const { id, contactId, ...contact } = validation.data;
 
-  if (id !== Number(supplierContactId))
+  if (id !== supplierContactId)
     throw badRequest("supplierContactId does not match id from form data");
 
   if (contactId === undefined)

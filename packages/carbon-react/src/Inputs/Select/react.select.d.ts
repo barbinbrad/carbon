@@ -167,11 +167,21 @@ declare module "react-select/dist/declarations/src/Select" {
      * If passed, the select will have a max width
      * `Select` component
      *
-     * @defaultValue `full`
+     * @defaultValue undefined
      * @see {@link https://github.com/csandman/chakra-react-select#usebasicstyles--default-false}
      * @see {@link https://chakra-ui.com/docs/components/select}
      */
     maxW?: string | number;
+
+    /**
+     * If passed, the select will have a max width
+     * `Select` component
+     *
+     * @defaultValue `full`
+     * @see {@link https://github.com/csandman/chakra-react-select#usebasicstyles--default-false}
+     * @see {@link https://chakra-ui.com/docs/components/select}
+     */
+    w?: string | number;
 
     /**
      * If passed, the select will have a max width

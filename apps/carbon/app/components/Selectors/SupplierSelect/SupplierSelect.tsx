@@ -38,6 +38,7 @@ const SupplierSelect = ({ value, onChange }: SupplierSelectProps) => {
       isMulti={false}
       placeholder="Select supplier"
       onChange={onChange ? (newValue) => onChange(newValue) : undefined}
+      w="full"
     />
   );
 };

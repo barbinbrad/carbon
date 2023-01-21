@@ -12,6 +12,7 @@ import Radios from "./Radios";
 import Select from "./Select";
 import Submit from "./Submit";
 import Supplier from "./Supplier";
+import SupplierContact from "./SupplierContact";
 import TextArea from "./Textarea";
 import User from "./User";
 import Users from "./Users";
@@ -31,6 +32,7 @@ export {
   Select,
   Submit,
   Supplier,
+  SupplierContact,
   TextArea,
   User,
   Users,

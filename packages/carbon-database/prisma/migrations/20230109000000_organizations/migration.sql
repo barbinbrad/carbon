@@ -5,10 +5,10 @@ CREATE TABLE "country" (
 );
 
 CREATE TABLE "contact" (
-  "id" SERIAL PRIMARY KEY,
-  "firstName" TEXT,
-  "lastName" TEXT,
-  "email" TEXT,
+  "id" TEXT NOT NULL DEFAULT uuid_generate_v4(),
+  "firstName" TEXT NOT NULL,
+  "lastName" TEXT NOT NULL,
+  "email" TEXT NOT NULL,
   "title" TEXT,
   "mobilePhone" TEXT,
   "homePhone" TEXT,
@@ -23,6 +23,7 @@ CREATE TABLE "contact" (
   "birthday" DATE,
   "notes" TEXT,
 
+  CONSTRAINT "contact_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "contact_countryId_fkey" FOREIGN KEY ("countryId") REFERENCES "country"("id") ON DELETE SET NULL ON UPDATE CASCADE
 );
 
@@ -95,12 +96,13 @@ CREATE TABLE "supplierLocation" (
 );
 
 CREATE TABLE "supplierContact" (
-  "id" SERIAL PRIMARY KEY,
+  "id" TEXT NOT NULL DEFAULT uuid_generate_v4(),
   "supplierId" TEXT NOT NULL,
-  "contactId" INTEGER NOT NULL,
+  "contactId" TEXT NOT NULL,
   "supplierLocationId" INTEGER,
   "userId" TEXT,
 
+  CONSTRAINT "supplierContact_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "supplierContact_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "supplier"("id") ON UPDATE CASCADE ON DELETE CASCADE,
   CONSTRAINT "supplierContact_contactId_fkey" FOREIGN KEY ("contactId") REFERENCES "contact"("id") ON UPDATE CASCADE ON DELETE CASCADE,
   CONSTRAINT "supplierContact_supplierLocationId_fkey" FOREIGN KEY ("supplierLocationId") REFERENCES "supplierLocation"("id") ON UPDATE CASCADE ON DELETE SET NULL,
@@ -170,12 +172,13 @@ CREATE TABLE "customerLocation" (
 );
 
 CREATE TABLE "customerContact" (
-  "id" SERIAL PRIMARY KEY,
+  "id" TEXT NOT NULL DEFAULT uuid_generate_v4(),
   "customerId" TEXT NOT NULL,
-  "contactId" INTEGER NOT NULL,
+  "contactId" TEXT NOT NULL,
   "customerLocationId" INTEGER,
   "userId" TEXT,
 
+  CONSTRAINT "customerContact_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "customerContact_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "customer"("id") ON UPDATE CASCADE ON DELETE CASCADE,
   CONSTRAINT "customerContact_contactId_fkey" FOREIGN KEY ("contactId") REFERENCES "contact"("id") ON UPDATE CASCADE ON DELETE CASCADE,
   CONSTRAINT "customerContact_customerLocationId_fkey" FOREIGN KEY ("customerLocationId") REFERENCES "customerLocation"("id") ON UPDATE CASCADE ON DELETE SET NULL,

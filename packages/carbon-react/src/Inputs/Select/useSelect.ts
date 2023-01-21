@@ -20,6 +20,7 @@ const useSelect = <
   isReadOnly,
   isRequired,
   inputId,
+  w,
   maxW = "full",
   minW,
   tagVariant,
@@ -115,6 +116,7 @@ const useSelect = <
     errorBorderColor,
     minW,
     maxW,
+    w,
     // Extract custom props from form control
     onFocus: inputProps.onFocus,
     onBlur: inputProps.onBlur,

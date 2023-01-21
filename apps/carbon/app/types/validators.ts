@@ -14,9 +14,9 @@ export const address = {
 };
 
 export const contact = {
-  contactId: zfd.numeric(z.number().optional()),
-  firstName: zfd.text(z.string().optional()),
-  lastName: zfd.text(z.string().optional()),
+  contactId: z.string().optional(),
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
   title: zfd.text(z.string().optional()),
   email: z
     .string()

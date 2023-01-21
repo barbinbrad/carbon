@@ -21,7 +21,7 @@ export async function action({ request, params }: ActionArgs) {
   const { error: deleteCustomerContactError } = await deleteCustomerContact(
     client,
     customerId,
-    Number(customerContactId)
+    customerContactId
   );
   if (deleteCustomerContactError) {
     return redirect(

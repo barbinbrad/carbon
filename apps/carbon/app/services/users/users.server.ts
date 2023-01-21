@@ -81,6 +81,23 @@ export async function createEmployeeAccount(
   return success("Employee account created");
 }
 
+export async function createSupplierAccount(
+  client: SupabaseClient<Database>,
+  {
+    id,
+    supplier,
+  }: {
+    id: string;
+    supplier: string;
+  }
+) {
+  console.log({
+    id,
+    supplier,
+  });
+  return success("Supplier account created");
+}
+
 async function createUser(
   client: SupabaseClient<Database>,
   user: Omit<User, "fullName">
@@ -129,7 +146,6 @@ export async function deleteAttributeCategory(
   client: SupabaseClient<Database>,
   attributeCategoryId: string
 ) {
-  console.log("deleting attribute category", attributeCategoryId);
   return client
     .from("userAttributeCategory")
     .update({ active: false })

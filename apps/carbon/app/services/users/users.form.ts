@@ -60,6 +60,13 @@ export const createEmployeeValidator = withZod(
   })
 );
 
+export const createSupplierValidator = withZod(
+  z.object({
+    id: z.string().min(36, "Supplier contact is required"),
+    supplier: z.string().min(36, { message: "Supplier is required" }),
+  })
+);
+
 export const deactivateUsersValidator = withZod(
   z.object({
     redirectTo: z.string(),

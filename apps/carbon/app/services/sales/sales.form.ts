@@ -17,7 +17,7 @@ export const customerValidator = withZod(
 
 export const customerContactValidator = withZod(
   z.object({
-    id: zfd.numeric(z.number().optional()),
+    id: zfd.text(z.string().optional()),
     ...contact,
     customerLocationId: zfd.numeric(z.number().optional()),
   })

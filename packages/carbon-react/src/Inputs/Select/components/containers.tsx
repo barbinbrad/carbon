@@ -22,7 +22,7 @@ export const SelectContainer = <
     isDisabled,
     isRtl,
     hasValue,
-    selectProps: { chakraStyles, borderRadius, maxW, minW },
+    selectProps: { chakraStyles, borderRadius, maxW, minW, w },
   } = props;
 
   const initialSx: SystemStyleObject = {
@@ -49,6 +49,7 @@ export const SelectContainer = <
       borderRadius={borderRadius}
       maxW={maxW}
       minW={minW}
+      w={w}
       sx={sx}
     >
       {children}

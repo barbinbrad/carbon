@@ -17,7 +17,7 @@ export const supplierValidator = withZod(
 
 export const supplierContactValidator = withZod(
   z.object({
-    id: zfd.numeric(z.number().optional()),
+    id: zfd.text(z.string().optional()),
     ...contact,
     supplierLocationId: zfd.numeric(z.number().optional()),
   })

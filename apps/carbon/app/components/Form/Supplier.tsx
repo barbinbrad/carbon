@@ -21,7 +21,7 @@ const Supplier = ({
   helperText,
   isLoading,
   isReadOnly,
-  placeholder,
+  placeholder = "Select Supplier",
   onChange,
   ...props
 }: SupplierSelectProps) => {
@@ -65,6 +65,7 @@ const Supplier = ({
         isLoading={isLoading}
         options={options}
         placeholder={placeholder}
+        w="full"
         // @ts-ignore
         onChange={onChange ?? undefined}
       />
@@ -77,7 +78,13 @@ const Supplier = ({
   ) : (
     <Box>
       {label && <FormLabel>{label}</FormLabel>}
-      <Select isDisabled isLoading={isLoading} options={[]} />
+      <Select
+        isDisabled
+        isLoading={isLoading}
+        options={[]}
+        // @ts-ignore
+        w="full"
+      />
     </Box>
   );
 };

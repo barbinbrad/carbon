@@ -59,6 +59,19 @@ export async function getCustomerLocations(
     .eq("customerId", customerId);
 }
 
+export async function getCustomerContact(
+  client: SupabaseClient<Database>,
+  customerContactId: string
+) {
+  return client
+    .from("customerContact")
+    .select(
+      "id, contact(id, firstName, lastName, email, mobilePhone, homePhone, workPhone, fax, title, addressLine1, addressLine2, city, state, postalCode, country(id, name), birthday, notes)"
+    )
+    .eq("id", customerContactId)
+    .single();
+}
+
 export async function getCustomerContacts(
   client: SupabaseClient<Database>,
   customerId: string
@@ -174,8 +187,8 @@ export async function insertCustomerContact(
   customerContact: {
     customerId: string;
     contact: {
-      firstName?: string;
-      lastName?: string;
+      firstName: string;
+      lastName: string;
       email: string;
       mobilePhone?: string;
       homePhone?: string;

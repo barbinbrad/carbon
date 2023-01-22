@@ -2,6 +2,7 @@ import Array from "./Array";
 import Boolean from "./Boolean";
 import Color from "./Color";
 import Customer from "./Customer";
+import CustomerContact from "./CustomerContact";
 import DatePicker from "./DatePicker";
 import Input from "./Input";
 import Hidden from "./Hidden";
@@ -22,6 +23,7 @@ export {
   Boolean,
   Color,
   Customer,
+  CustomerContact,
   DatePicker,
   Input,
   Hidden,

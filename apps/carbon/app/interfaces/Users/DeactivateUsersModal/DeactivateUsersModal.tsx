@@ -17,12 +17,14 @@ import { deactivateUsersValidator } from "~/services/users";
 type DeactivateUsersModalProps = {
   userIds: string[];
   isOpen: boolean;
+  redirectTo?: string;
   onClose: () => void;
 };
 
 const DeactivateUsersModal = ({
   userIds,
   isOpen,
+  redirectTo = "/app/users/employees",
   onClose,
 }: DeactivateUsersModalProps) => {
   const isSingleUser = userIds.length === 1;
@@ -61,11 +63,7 @@ const DeactivateUsersModal = ({
                   value={id}
                 />
               ))}
-              <input
-                type="hidden"
-                name="redirectTo"
-                value="/app/users/employees"
-              />
+              <input type="hidden" name="redirectTo" value={redirectTo} />
               <Button colorScheme="red" type="submit">
                 Deactivate
               </Button>

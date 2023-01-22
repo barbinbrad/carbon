@@ -12,11 +12,77 @@ import type {
 } from "~/interfaces/Users/types";
 import { deleteAuthAccount, sendInviteByEmail } from "~/services/auth";
 import { getSupplierContact } from "~/services/purchasing";
+import { getCustomerContact } from "~/services/sales";
 import { requireAuthSession, flash } from "~/services/session";
 import type { Result } from "~/types";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
 import { error, success } from "~/utils/result";
+
+export async function createCustomerAccount(
+  client: SupabaseClient<Database>,
+  {
+    id,
+    customerId,
+  }: {
+    id: string;
+    customerId: string;
+  }
+): Promise<Result> {
+  const customerContact = await getCustomerContact(client, id);
+  if (
+    customerContact.error ||
+    customerContact.data === null ||
+    Array.isArray(customerContact.data.contact) ||
+    customerContact.data.contact === null
+  ) {
+    return error(customerContact.error, "Failed to get customer contact");
+  }
+
+  const { email, firstName, lastName } = customerContact.data.contact;
+
+  // TODO: can we do this after we've done the other stuff?
+  const invitation = await sendInviteByEmail(email);
+
+  if (invitation.error)
+    return error(invitation.error.message, "Failed to send invitation email");
+
+  const userId = invitation.data.user.id;
+
+  const claims = makeCustomerClaims();
+  const claimsUpdate = await setUserClaims(userId, {
+    role: "customer",
+    ...claims,
+  });
+  if (claimsUpdate.error) {
+    await deleteAuthAccount(userId);
+    return error(claimsUpdate.error, "Failed to set user claims");
+  }
+
+  const insertUser = await createUser(client, {
+    id: userId,
+    email,
+    firstName,
+    lastName,
+    avatarUrl: null,
+  });
+
+  if (insertUser.error)
+    return error(insertUser.error, "Failed to create a new user");
+
+  if (!insertUser.data)
+    return error(insertUser, "No data returned from create user");
+
+  const createCustomerAccount = await insertCustomerAccount(client, {
+    id: insertUser.data[0].id,
+    customerId,
+  });
+
+  if (createCustomerAccount.error)
+    return error(createCustomerAccount.error, "Failed to create an employee");
+
+  return success("Customer account created");
+}
 
 export async function createEmployeeAccount(
   client: SupabaseClient<Database>,
@@ -599,6 +665,16 @@ export async function insertAttributeCategory(
     .select("id");
 }
 
+async function insertCustomerAccount(
+  client: SupabaseClient<Database>,
+  customerAccount: {
+    id: string;
+    customerId: string;
+  }
+) {
+  return client.from("customerAccount").insert(customerAccount).select("id");
+}
+
 export async function insertEmployee(
   client: SupabaseClient<Database>,
   employee: EmployeeRow
@@ -682,6 +758,17 @@ function isClaimPermission(key: string, value: unknown) {
     ["view", "create", "update", "delete"].includes(action) &&
     typeof value === "boolean"
   );
+}
+
+function makeCustomerClaims() {
+  // TODO: this should be more dynamic
+  const claims: Record<string, boolean> = {
+    documents_view: true,
+    jobs_view: true,
+    sales_view: true,
+  };
+
+  return claims;
 }
 
 export function makeEmptyPermissionsFromFeatures(data: Feature[]) {

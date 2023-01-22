@@ -224,6 +224,7 @@ const CustomerAccountsTable = memo(
           <DeactivateUsersModal
             userIds={selectedUserIds}
             isOpen={deactivateCustomerModal.isOpen}
+            redirectTo="/app/users/suppliers"
             onClose={deactivateCustomerModal.onClose}
           />
         )}

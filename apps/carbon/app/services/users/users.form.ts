@@ -48,6 +48,13 @@ export const bulkPermissionsValidator = withZod(
   })
 );
 
+export const createCustomerValidator = withZod(
+  z.object({
+    id: z.string().min(36, "Customer contact is required"),
+    customer: z.string().min(36, { message: "Customer is required" }),
+  })
+);
+
 export const createEmployeeValidator = withZod(
   z.object({
     email: z

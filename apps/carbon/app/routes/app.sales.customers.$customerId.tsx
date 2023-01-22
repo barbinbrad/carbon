@@ -85,7 +85,7 @@ export async function action({ request }: ActionArgs) {
   if (!id) {
     return redirect(
       "/app/sales/customers",
-      await flash(request, error(null, "Failed to insert customer"))
+      await flash(request, error(null, "Failed to update customer"))
     );
   }
 
@@ -102,7 +102,7 @@ export async function action({ request }: ActionArgs) {
   if (update.error) {
     return redirect(
       "/app/sales/customers",
-      await flash(request, error(update.error, "Failed to insert customer"))
+      await flash(request, error(update.error, "Failed to update customer"))
     );
   }
 

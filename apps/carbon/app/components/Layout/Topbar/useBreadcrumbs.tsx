@@ -66,7 +66,7 @@ export default function useBreadcrumbs(): Route[] {
         });
       case "routes/app.sales":
         return acc.concat({
-          name: "Purchasing",
+          name: "Sales",
           to: match.pathname,
         });
       case "routes/app.sales.customers":

@@ -7,13 +7,13 @@ import { usePermissions, useUrlParams } from "~/hooks";
 import type { SupplierType } from "~/interfaces/Purchasing/types";
 import { mapRowsToOptions } from "~/utils/form";
 
-type SuppliersTableFiltersProps = {
+type SupplierAccountsTableFiltersProps = {
   supplierTypes: Partial<SupplierType>[];
 };
 
-const SuppliersTableFilters = ({
+const SupplierAccountsTableFilters = ({
   supplierTypes,
-}: SuppliersTableFiltersProps) => {
+}: SupplierAccountsTableFiltersProps) => {
   const [params, setParams] = useUrlParams();
   const permissions = usePermissions();
   const supplierTypeOptions = mapRowsToOptions({
@@ -97,4 +97,4 @@ const SuppliersTableFilters = ({
   );
 };
 
-export default SuppliersTableFilters;
+export default SupplierAccountsTableFilters;

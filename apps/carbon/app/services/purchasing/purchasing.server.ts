@@ -59,6 +59,19 @@ export async function getSupplierLocations(
     .eq("supplierId", supplierId);
 }
 
+export async function getSupplierContact(
+  client: SupabaseClient<Database>,
+  supplierContactId: string
+) {
+  return client
+    .from("supplierContact")
+    .select(
+      "id, contact(id, firstName, lastName, email, mobilePhone, homePhone, workPhone, fax, title, addressLine1, addressLine2, city, state, postalCode, country(id, name), birthday, notes)"
+    )
+    .eq("id", supplierContactId)
+    .single();
+}
+
 export async function getSupplierContacts(
   client: SupabaseClient<Database>,
   supplierId: string

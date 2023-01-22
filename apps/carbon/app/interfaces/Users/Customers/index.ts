@@ -1,4 +1,4 @@
-import CustomersTable from "./CustomersTable";
-import CustomersTableFilters from "./CustomersTableFilters";
+import CustomerAccountsTable from "./CustomerAccountsTable";
+import CustomerAccountsTableFilters from "./CustomerAccountsTableFilters";
 
-export { CustomersTable, CustomersTableFilters };
+export { CustomerAccountsTable, CustomerAccountsTableFilters };

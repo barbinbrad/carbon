@@ -27,7 +27,7 @@ export async function action({ request }: ActionArgs) {
   const { id, supplier } = validation.data;
   const result = await createSupplierAccount(client, {
     id,
-    supplier,
+    supplierId: supplier,
   });
 
   return redirect("/app/users/suppliers", await flash(request, result));

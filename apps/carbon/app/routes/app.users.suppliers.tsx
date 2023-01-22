@@ -4,8 +4,8 @@ import { json } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import { usePermissions } from "~/hooks";
 import {
-  SuppliersTable,
-  SuppliersTableFilters,
+  SupplierAccountsTable,
+  SupplierAccountsTableFilters,
 } from "~/interfaces/Users/Suppliers";
 import { requirePermissions } from "~/services/auth";
 import { getSupplierTypes } from "~/services/purchasing";
@@ -40,8 +40,8 @@ export default function UsersSuppliersRoute() {
 
   return (
     <VStack w="full" h="full" spacing={0}>
-      <SuppliersTableFilters supplierTypes={supplierTypes.data ?? []} />
-      <SuppliersTable
+      <SupplierAccountsTableFilters supplierTypes={supplierTypes.data ?? []} />
+      <SupplierAccountsTable
         data={suppliers.data ?? []}
         count={suppliers.count ?? 0}
         isEditable={permissions.can("update", "users")}

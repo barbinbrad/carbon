@@ -85,7 +85,7 @@ export async function action({ request }: ActionArgs) {
   if (!id) {
     return redirect(
       "/app/purchasing/suppliers",
-      await flash(request, error(null, "Failed to insert supplier"))
+      await flash(request, error(null, "Failed to update supplier"))
     );
   }
 
@@ -102,7 +102,7 @@ export async function action({ request }: ActionArgs) {
   if (update.error) {
     return redirect(
       "/app/purchasing/suppliers",
-      await flash(request, error(update.error, "Failed to insert supplier"))
+      await flash(request, error(update.error, "Failed to update supplier"))
     );
   }
 

@@ -17,7 +17,7 @@ import type { Customer } from "~/interfaces/Users/types";
 import { ResendInviteModal, DeactivateUsersModal } from "~/interfaces/Users";
 import { FaBan } from "react-icons/fa";
 
-type CustomersTableProps = {
+type CustomerAccountsTableProps = {
   data: Customer[];
   count: number;
   isEditable?: boolean;
@@ -28,8 +28,8 @@ const defaultColumnVisibility = {
   user_lastName: false,
 };
 
-const CustomersTable = memo(
-  ({ data, count, isEditable = false }: CustomersTableProps) => {
+const CustomerAccountsTable = memo(
+  ({ data, count, isEditable = false }: CustomerAccountsTableProps) => {
     const navigate = useNavigate();
     const permissions = usePermissions();
     const [params] = useUrlParams();
@@ -102,9 +102,12 @@ const CustomersTable = memo(
           cell: (item) => item.getValue(),
         },
         {
-          accessorKey: "customer.customerType.name",
           header: "Customer Type",
-          cell: (item) => item.getValue(),
+          cell: ({ row }) => {
+            // @ts-ignore
+            const customerType = row.original.customer?.customerType;
+            return customerType ? customerType.name : "";
+          },
         },
         {
           header: () => <VisuallyHidden>Actions</VisuallyHidden>,
@@ -236,6 +239,6 @@ const CustomersTable = memo(
   }
 );
 
-CustomersTable.displayName = "CustomerTable";
+CustomerAccountsTable.displayName = "CustomerTable";
 
-export default CustomersTable;
+export default CustomerAccountsTable;

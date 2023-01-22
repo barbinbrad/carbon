@@ -7,13 +7,13 @@ import { usePermissions, useUrlParams } from "~/hooks";
 import type { CustomerType } from "~/interfaces/Sales/types";
 import { mapRowsToOptions } from "~/utils/form";
 
-type CustomersTableFiltersProps = {
+type CustomerAccountsTableFiltersProps = {
   customerTypes: Partial<CustomerType>[];
 };
 
-const CustomersTableFilters = ({
+const CustomerAccountsTableFilters = ({
   customerTypes,
-}: CustomersTableFiltersProps) => {
+}: CustomerAccountsTableFiltersProps) => {
   const [params, setParams] = useUrlParams();
   const permissions = usePermissions();
   const customerTypeOptions = mapRowsToOptions({
@@ -97,4 +97,4 @@ const CustomersTableFilters = ({
   );
 };
 
-export default CustomersTableFilters;
+export default CustomerAccountsTableFilters;

@@ -4,8 +4,8 @@ import { json } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import { usePermissions } from "~/hooks";
 import {
-  CustomersTable,
-  CustomersTableFilters,
+  CustomerAccountsTable,
+  CustomerAccountsTableFilters,
 } from "~/interfaces/Users/Customers";
 import { requirePermissions } from "~/services/auth";
 import { getCustomerTypes } from "~/services/sales";
@@ -40,8 +40,8 @@ export default function UsersCustomersRoute() {
 
   return (
     <VStack w="full" h="full" spacing={0}>
-      <CustomersTableFilters customerTypes={customerTypes.data ?? []} />
-      <CustomersTable
+      <CustomerAccountsTableFilters customerTypes={customerTypes.data ?? []} />
+      <CustomerAccountsTable
         data={customers.data ?? []}
         count={customers.count ?? 0}
         isEditable={permissions.can("update", "users")}

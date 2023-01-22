@@ -17,7 +17,7 @@ import type { Supplier } from "~/interfaces/Users/types";
 import { ResendInviteModal, DeactivateUsersModal } from "~/interfaces/Users";
 import { FaBan } from "react-icons/fa";
 
-type SuppliersTableProps = {
+type SupplierAccountsTableProps = {
   data: Supplier[];
   count: number;
   isEditable?: boolean;
@@ -28,8 +28,8 @@ const defaultColumnVisibility = {
   user_lastName: false,
 };
 
-const SuppliersTable = memo(
-  ({ data, count, isEditable = false }: SuppliersTableProps) => {
+const SupplierAccountsTable = memo(
+  ({ data, count, isEditable = false }: SupplierAccountsTableProps) => {
     const navigate = useNavigate();
     const permissions = usePermissions();
     const [params] = useUrlParams();
@@ -102,9 +102,12 @@ const SuppliersTable = memo(
           cell: (item) => item.getValue(),
         },
         {
-          accessorKey: "supplier.supplierType.name",
           header: "Supplier Type",
-          cell: (item) => item.getValue(),
+          cell: ({ row }) => {
+            // @ts-ignore
+            const supplierType = row.original.supplier?.supplierType;
+            return supplierType ? supplierType.name : "";
+          },
         },
         {
           header: () => <VisuallyHidden>Actions</VisuallyHidden>,
@@ -236,6 +239,6 @@ const SuppliersTable = memo(
   }
 );
 
-SuppliersTable.displayName = "SupplierTable";
+SupplierAccountsTable.displayName = "SupplierTable";
 
-export default SuppliersTable;
+export default SupplierAccountsTable;

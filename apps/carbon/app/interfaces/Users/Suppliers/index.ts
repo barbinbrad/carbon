@@ -1,5 +1,9 @@
 import CreateSupplierModal from "./CreateSupplierModal";
-import SuppliersTable from "./SuppliersTable";
-import SuppliersTableFilters from "./SuppliersTableFilters";
+import SupplierAccountsTable from "./SupplierAccountsTable";
+import SupplierAccountsTableFilters from "./SupplierAccountsTableFilters";
 
-export { CreateSupplierModal, SuppliersTable, SuppliersTableFilters };
+export {
+  CreateSupplierModal,
+  SupplierAccountsTable,
+  SupplierAccountsTableFilters,
+};

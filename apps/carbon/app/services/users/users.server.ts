@@ -11,6 +11,7 @@ import type {
   User,
 } from "~/interfaces/Users/types";
 import { deleteAuthAccount, sendInviteByEmail } from "~/services/auth";
+import { getSupplierContact } from "~/services/purchasing";
 import { requireAuthSession, flash } from "~/services/session";
 import type { Result } from "~/types";
 import type { GenericQueryFilters } from "~/utils/query";
@@ -41,7 +42,7 @@ export async function createEmployeeAccount(
       "Failed to get employee type permissions"
     );
 
-  // TODO: we should only send this after we've done the other stuff
+  // TODO: can we do this after we've done the other stuff?
   const invitation = await sendInviteByEmail(email);
 
   if (invitation.error)
@@ -50,7 +51,10 @@ export async function createEmployeeAccount(
   const userId = invitation.data.user.id;
 
   const claims = makeClaimsFromEmployeeType(employeeTypePermissions);
-  const claimsUpdate = await setUserClaims(userId, claims);
+  const claimsUpdate = await setUserClaims(userId, {
+    role: "employee",
+    ...claims,
+  });
   if (claimsUpdate.error) {
     await deleteAuthAccount(userId);
     return error(claimsUpdate.error, "Failed to set user claims");
@@ -85,16 +89,64 @@ export async function createSupplierAccount(
   client: SupabaseClient<Database>,
   {
     id,
-    supplier,
+    supplierId,
   }: {
     id: string;
-    supplier: string;
+    supplierId: string;
   }
-) {
-  console.log({
-    id,
-    supplier,
+): Promise<Result> {
+  const supplierContact = await getSupplierContact(client, id);
+  if (
+    supplierContact.error ||
+    supplierContact.data === null ||
+    Array.isArray(supplierContact.data.contact) ||
+    supplierContact.data.contact === null
+  ) {
+    return error(supplierContact.error, "Failed to get supplier contact");
+  }
+
+  const { email, firstName, lastName } = supplierContact.data.contact;
+
+  // TODO: can we do this after we've done the other stuff?
+  const invitation = await sendInviteByEmail(email);
+
+  if (invitation.error)
+    return error(invitation.error.message, "Failed to send invitation email");
+
+  const userId = invitation.data.user.id;
+
+  const claims = makeSupplierClaims();
+  const claimsUpdate = await setUserClaims(userId, {
+    role: "customer",
+    ...claims,
   });
+  if (claimsUpdate.error) {
+    await deleteAuthAccount(userId);
+    return error(claimsUpdate.error, "Failed to set user claims");
+  }
+
+  const insertUser = await createUser(client, {
+    id: userId,
+    email,
+    firstName,
+    lastName,
+    avatarUrl: null,
+  });
+
+  if (insertUser.error)
+    return error(insertUser.error, "Failed to create a new user");
+
+  if (!insertUser.data)
+    return error(insertUser, "No data returned from create user");
+
+  const createSupplierAccount = await insertSupplierAccount(client, {
+    id: insertUser.data[0].id,
+    supplierId,
+  });
+
+  if (createSupplierAccount.error)
+    return error(createSupplierAccount.error, "Failed to create an employee");
+
   return success("Supplier account created");
 }
 
@@ -252,19 +304,18 @@ export async function getSuppliers(
     active: boolean | null;
   }
 ) {
-  let query = client
-    .from("supplierAccount")
-    .select(
-      "user!inner(id, fullName, firstName, lastName, email, avatarUrl, active), supplier!inner(name, supplierType!inner(name))",
-      { count: "exact" }
-    );
+  let query = client.from("supplierAccount").select(
+    `user!inner(id, fullName, firstName, lastName, email, avatarUrl, active), 
+      supplier!inner(name, supplierType!left(name))`,
+    { count: "exact" }
+  );
 
   if (args.name) {
     query = query.ilike("user.fullName", `%${args.name}%`);
   }
 
   if (args.type) {
-    query = query.eq("supplierTypeId", args.type);
+    query = query.eq("supplier.supplierTypeId", args.type);
   }
 
   if (args.active !== null) {
@@ -314,19 +365,18 @@ export async function getCustomers(
     active: boolean | null;
   }
 ) {
-  let query = client
-    .from("customerAccount")
-    .select(
-      "user!inner(id, fullName, firstName, lastName, email, avatarUrl, active), customer!inner(name, customerType!inner(name))",
-      { count: "exact" }
-    );
+  let query = client.from("customerAccount").select(
+    `user!inner(id, fullName, firstName, lastName, email, avatarUrl, active), 
+      customer!inner(name, customerType!left(name))`,
+    { count: "exact" }
+  );
 
   if (args.name) {
     query = query.ilike("user.fullName", `%${args.name}%`);
   }
 
   if (args.type) {
-    query = query.eq("customerTypeId", args.type);
+    query = query.eq("customer.customerTypeId", args.type);
   }
 
   if (args.active !== null) {
@@ -570,6 +620,16 @@ export async function insertGroup(
   return client.from("group").insert(group).select("id");
 }
 
+async function insertSupplierAccount(
+  client: SupabaseClient<Database>,
+  supplierAccount: {
+    id: string;
+    supplierId: string;
+  }
+) {
+  return client.from("supplierAccount").insert(supplierAccount).select("id");
+}
+
 async function insertUser(
   client: SupabaseClient<Database>,
   user: Omit<User, "fullName">
@@ -705,6 +765,17 @@ export function makePermissionsFromEmployeeType(
   return result;
 }
 
+function makeSupplierClaims() {
+  // TODO: this should be more dynamic
+  const claims: Record<string, boolean> = {
+    documents_view: true,
+    inventory_view: true,
+    purchasing_view: true,
+  };
+
+  return claims;
+}
+
 export async function resendInvite(
   client: SupabaseClient<Database>,
   userId: string
@@ -728,7 +799,10 @@ export async function resetPassword(userId: string, password: string) {
   });
 }
 
-async function setUserClaims(userId: string, claims: Record<string, boolean>) {
+async function setUserClaims(
+  userId: string,
+  claims: Record<string, boolean | string>
+) {
   return getSupabaseAdmin().auth.admin.updateUserById(userId, {
     app_metadata: claims,
   });

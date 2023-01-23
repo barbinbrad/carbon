@@ -5,10 +5,6 @@
     "docs/*",
     "packages/*"
   ],
-  "prisma": {
-    "schema": "packages/carbon-database/prisma/schema.prisma",
-    "seed": "tsx packages/carbon-database/src/seed.ts"
-  },
   "scripts": {
     "build": "turbo run build",
     "build:packages": "turbo run build --filter=./packages/*",
@@ -33,7 +29,6 @@
     "dev:docs": "turbo run dev --no-cache --parallel --continue --filter=./docs/*",
     "dev:packages": "turbo run dev --no-cache --parallel --continue --filter=./packages/*",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "generate": "turbo run generate",
     "initialize": "run-s db:init db:start",
     "lint": "turbo run lint",
     "setup": "turbo run setup",

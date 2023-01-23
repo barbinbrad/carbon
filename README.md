@@ -53,7 +53,6 @@ The monorepo follows the Turborepo covention of grouping packages into one of tw
 - [Postgres](https://postgresql.org/)
 - [Redis](https://redis.io)
 - [BullMQ](https://docs.bullmq.io)
-- [Prisma](https://prisma.io/)
 - [Turborepo](https://turbo.build)
 
 ## Local Development

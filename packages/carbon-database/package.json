@@ -17,20 +17,12 @@
     "db:start": "supabase start",
     "db:kill": "supabase stop",
     "db:types": "supabase gen types typescript --local > src/types.ts",
-    "db:migrate": "prisma migrate deploy",
-    "db:push": "prisma db push",
-    "db:pull": "prisma db pull",
+    "db:migrate": "supabase db reset",
     "db:seed": "tsx src/seed.ts",
-    "db:migrate:force": "prisma migrate reset --force",
+    "db:setup": "supabase db reset",
     "dev": "tsup --watch",
-    "format": "prisma format",
-    "generate": "prisma generate",
     "lint": "TIMING=1 eslint \"src/**/*.ts*\"",
-    "setup": "run-s setup:db db:seed",
-    "setup:db": "prisma generate && prisma migrate deploy"
-  },
-  "dependencies": {
-    "@prisma/client": "^4.6.0"
+    "setup": "run-s db:setup db:seed"
   },
   "devDependencies": {
     "@carbon/tsconfig": "*",
@@ -41,7 +33,6 @@
     "eslint": "^8.4.1",
     "eslint-config-carbon": "*",
     "npm-run-all": "^4.1.5",
-    "prisma": "^4.6.0",
     "rimraf": "^3.0.2",
     "supabase": "^1.27.1",
     "tsup": "^6.5.0",

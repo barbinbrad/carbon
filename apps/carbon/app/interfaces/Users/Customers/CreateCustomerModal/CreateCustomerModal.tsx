@@ -37,8 +37,6 @@ const CreateCustomerModal = () => {
     | undefined
   >();
 
-  console.log(params);
-
   return (
     <Modal
       initialFocusRef={initialFocusRef}

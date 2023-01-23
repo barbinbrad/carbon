@@ -16,14 +16,18 @@ import { useFetcher, useNavigate } from "@remix-run/react";
 import { useRef, useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import { Supplier, Submit, SupplierContact } from "~/components/Form";
+import { useUrlParams } from "~/hooks";
 import { createSupplierValidator } from "~/services/users";
 import type { Result } from "~/types";
 
 const CreateSupplierModal = () => {
   const navigate = useNavigate();
+  const [params] = useUrlParams();
   const initialFocusRef = useRef<HTMLInputElement>(null);
   const formFetcher = useFetcher<Result>();
-  const [supplier, setSupplier] = useState<string | undefined>(undefined);
+  const [supplier, setSupplier] = useState<string | undefined>(
+    (params.get("supplier") as string) ?? undefined
+  );
   const [contact, setContact] = useState<
     | {
         email: string;
@@ -48,6 +52,10 @@ const CreateSupplierModal = () => {
             method="post"
             action="/app/users/suppliers/new"
             validator={createSupplierValidator}
+            defaultValues={{
+              id: params.get("id") ?? "",
+              supplier: params.get("supplier") ?? "",
+            }}
             // @ts-ignore
             fetcher={formFetcher}
           >

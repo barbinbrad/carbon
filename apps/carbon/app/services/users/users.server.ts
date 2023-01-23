@@ -73,6 +73,15 @@ export async function createCustomerAccount(
   if (!insertUser.data)
     return error(insertUser, "No data returned from create user");
 
+  const updateContact = await client
+    .from("customerContact")
+    .update({ userId })
+    .eq("id", id);
+  if (updateContact.error) {
+    await deleteAuthAccount(userId);
+    return error(updateContact.error, "Failed to update customer contact");
+  }
+
   const createCustomerAccount = await insertCustomerAccount(client, {
     id: insertUser.data[0].id,
     customerId,
@@ -204,6 +213,15 @@ export async function createSupplierAccount(
 
   if (!insertUser.data)
     return error(insertUser, "No data returned from create user");
+
+  const updateContact = await client
+    .from("supplierContact")
+    .update({ userId })
+    .eq("id", id);
+  if (updateContact.error) {
+    await deleteAuthAccount(userId);
+    return error(updateContact.error, "Failed to update supplier contact");
+  }
 
   const createSupplierAccount = await insertSupplierAccount(client, {
     id: insertUser.data[0].id,

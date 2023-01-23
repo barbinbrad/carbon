@@ -9,7 +9,7 @@ import {
   VStack,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useParams } from "@remix-run/react";
+import { useNavigate, useParams } from "@remix-run/react";
 import { useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import type {
@@ -19,6 +19,7 @@ import type {
 import { Contact } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import CustomerContactForm from "./CustomerContactsForm";
+import { usePermissions } from "~/hooks";
 
 type CustomerContactProps = {
   contacts?: CustomerContact[];
@@ -32,6 +33,10 @@ const CustomerContacts = ({
   isEditing = false,
 }: CustomerContactProps) => {
   const { customerId } = useParams();
+  const navigate = useNavigate();
+  const permissions = usePermissions();
+
+  const canCreateAccount = permissions.can("create", "users");
 
   const [contact, setContact] = useState<CustomerContact | undefined>(
     undefined
@@ -66,9 +71,12 @@ const CustomerContacts = ({
           <List w="full" spacing={4}>
             {contacts?.map((contact) => (
               <ListItem key={contact.id}>
-                {contact.contact && !Array.isArray(contact.contact) ? (
+                {contact.contact &&
+                !Array.isArray(contact.contact) &&
+                !Array.isArray(contact.user) ? (
                   <Contact
                     contact={contact.contact}
+                    user={contact.user}
                     onDelete={() => {
                       setContact(contact);
                       deleteContactModal.onOpen();
@@ -77,6 +85,14 @@ const CustomerContacts = ({
                       setContact(contact);
                       contactDrawer.onOpen();
                     }}
+                    onCreateAccount={
+                      canCreateAccount && contact.user === null
+                        ? () =>
+                            navigate(
+                              `/app/users/customers/new?id=${contact.id}&customer=${customerId}`
+                            )
+                        : undefined
+                    }
                   />
                 ) : null}
               </ListItem>

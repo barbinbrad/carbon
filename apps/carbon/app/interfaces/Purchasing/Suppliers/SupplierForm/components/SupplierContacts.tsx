@@ -9,7 +9,7 @@ import {
   VStack,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useParams } from "@remix-run/react";
+import { useNavigate, useParams } from "@remix-run/react";
 import { useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import type {
@@ -19,6 +19,7 @@ import type {
 import { Contact } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import SupplierContactForm from "./SupplierContactsForm";
+import { usePermissions } from "~/hooks";
 
 type SupplierContactProps = {
   contacts?: SupplierContact[];
@@ -32,10 +33,14 @@ const SupplierContacts = ({
   isEditing = false,
 }: SupplierContactProps) => {
   const { supplierId } = useParams();
+  const navigate = useNavigate();
+  const permissions = usePermissions();
 
   const [contact, setContact] = useState<SupplierContact | undefined>(
     undefined
   );
+
+  const canCreateAccount = permissions.can("create", "users");
 
   const contactDrawer = useDisclosure();
   const deleteContactModal = useDisclosure();
@@ -66,9 +71,12 @@ const SupplierContacts = ({
           <List w="full" spacing={4}>
             {contacts?.map((contact) => (
               <ListItem key={contact.id}>
-                {contact.contact && !Array.isArray(contact.contact) ? (
+                {contact.contact &&
+                !Array.isArray(contact.contact) &&
+                !Array.isArray(contact.user) ? (
                   <Contact
                     contact={contact.contact}
+                    user={contact.user}
                     onDelete={() => {
                       setContact(contact);
                       deleteContactModal.onOpen();
@@ -77,6 +85,14 @@ const SupplierContacts = ({
                       setContact(contact);
                       contactDrawer.onOpen();
                     }}
+                    onCreateAccount={
+                      canCreateAccount && contact.user === null
+                        ? () =>
+                            navigate(
+                              `/app/users/suppliers/new?id=${contact.id}&supplier=${supplierId}`
+                            )
+                        : undefined
+                    }
                   />
                 ) : null}
               </ListItem>

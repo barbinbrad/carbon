@@ -79,7 +79,7 @@ export async function getCustomerContacts(
   return client
     .from("customerContact")
     .select(
-      "id, contact(id, firstName, lastName, email, mobilePhone, homePhone, workPhone, fax, title, addressLine1, addressLine2, city, state, postalCode, country(id, name), birthday, notes)"
+      "id, contact(id, firstName, lastName, email, mobilePhone, homePhone, workPhone, fax, title, addressLine1, addressLine2, city, state, postalCode, country(id, name), birthday, notes), user(id, active)"
     )
     .eq("customerId", customerId);
 }

@@ -30,7 +30,7 @@ const SupplierContact = ({
   ...props
 }: SupplierContactSelectProps) => {
   const initialLoad = useRef(true);
-  const { error } = useField(name);
+  const { error, defaultValue } = useField(name);
   const [value, setValue] = useControlField<string | undefined>(name);
 
   const supplierContactFetcher =
@@ -81,9 +81,17 @@ const SupplierContact = ({
 
   const controlledValue = useMemo(
     // @ts-ignore
-    () => options.filter((option) => option.value === value),
+    () => options.find((option) => option.value === value),
     [value, options]
   );
+
+  // so that we can call onChange on load
+  useEffect(() => {
+    if (controlledValue && controlledValue.value === defaultValue) {
+      handleChange(controlledValue);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [controlledValue?.value]);
 
   // TODO: hack for default value
   return supplierContactFetcher.state !== "loading" ? (

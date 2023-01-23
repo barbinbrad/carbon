@@ -394,6 +394,10 @@ BEGIN
     END IF;
   END IF;
 
+  UPDATE public."group" SET "name" = new.name
+  WHERE "id" = new.id AND "isCustomerOrgGroup" = TRUE;
+  RETURN new;
+
   RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -414,6 +418,9 @@ BEGIN
       VALUES (new."supplierTypeId", new.id);
     END IF;
   END IF;
+
+  UPDATE public."group" SET "name" = new.name
+  WHERE "id" = new.id AND "isSupplierOrgGroup" = TRUE;
 
   RETURN new;
 END;

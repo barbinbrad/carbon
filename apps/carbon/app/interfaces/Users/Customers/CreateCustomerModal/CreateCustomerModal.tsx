@@ -16,14 +16,18 @@ import { useFetcher, useNavigate } from "@remix-run/react";
 import { useRef, useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import { Customer, Submit, CustomerContact } from "~/components/Form";
+import { useUrlParams } from "~/hooks";
 import { createCustomerValidator } from "~/services/users";
 import type { Result } from "~/types";
 
 const CreateCustomerModal = () => {
   const navigate = useNavigate();
+  const [params] = useUrlParams();
   const initialFocusRef = useRef<HTMLInputElement>(null);
   const formFetcher = useFetcher<Result>();
-  const [customer, setCustomer] = useState<string | undefined>(undefined);
+  const [customer, setCustomer] = useState<string | undefined>(
+    (params.get("customer") as string) ?? undefined
+  );
   const [contact, setContact] = useState<
     | {
         email: string;
@@ -32,6 +36,8 @@ const CreateCustomerModal = () => {
       }
     | undefined
   >();
+
+  console.log(params);
 
   return (
     <Modal
@@ -48,6 +54,10 @@ const CreateCustomerModal = () => {
             method="post"
             action="/app/users/customers/new"
             validator={createCustomerValidator}
+            defaultValues={{
+              id: params.get("id") ?? "",
+              customer: params.get("customer") ?? "",
+            }}
             // @ts-ignore
             fetcher={formFetcher}
           >

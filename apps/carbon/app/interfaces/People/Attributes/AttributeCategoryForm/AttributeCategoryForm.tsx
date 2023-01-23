@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { ValidatedForm } from "remix-validated-form";
 import { Boolean, Input, Hidden, Submit } from "~/components/Form";
-import { attributeCategoryValidator } from "~/services/users";
+import { attributeCategoryValidator } from "~/services/people";
 
 type AttributeCategoryFormProps = {
   initialValues: {
@@ -36,8 +36,8 @@ const AttributeCategoryForm = ({
         method="post"
         action={
           isEditing
-            ? `/app/users/attributes/${initialValues.id}`
-            : "/app/users/attributes/new"
+            ? `/app/people/attributes/${initialValues.id}`
+            : "/app/people/attributes/new"
         }
         defaultValues={initialValues}
       >

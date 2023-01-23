@@ -2,15 +2,15 @@ import type { ActionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
 import { requirePermissions } from "~/services/auth";
+import { attributeValidator, updateAttribute } from "~/services/people";
 import { flash } from "~/services/session";
-import { attributeValidator, updateAttribute } from "~/services/users";
 import { assertIsPost } from "~/utils/http";
 import { error, success } from "~/utils/result";
 
 export async function action({ request, params }: ActionArgs) {
   assertIsPost(request);
   const { client, userId } = await requirePermissions(request, {
-    update: "users",
+    update: "people",
   });
 
   const validation = await attributeValidator.validate(
@@ -27,12 +27,12 @@ export async function action({ request, params }: ActionArgs) {
   });
   if (update.error)
     redirect(
-      "/app/users/attributes",
+      "/app/people/attributes",
       await flash(request, error(update.error, "Failed to update attribute"))
     );
 
   return redirect(
-    "/app/users/attributes",
+    "/app/people/attributes",
     await flash(request, success("Successfully updated attribtue"))
   );
 }

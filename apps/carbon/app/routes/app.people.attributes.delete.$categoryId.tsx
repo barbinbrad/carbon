@@ -1,19 +1,19 @@
 import type { LoaderArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { requirePermissions } from "~/services/auth";
-import { deleteAttributeCategory } from "~/services/users";
+import { deleteAttributeCategory } from "~/services/people";
 import { flash } from "~/services/session";
 import { error, success } from "~/utils/result";
 
 export async function action({ request, params }: LoaderArgs) {
   const { client } = await requirePermissions(request, {
-    update: "users",
+    update: "people",
   });
 
   const { categoryId } = params;
   if (!categoryId) {
     return redirect(
-      "/app/users/attributes",
+      "/app/people/attributes",
       await flash(request, error(params, "Failed to get a category id"))
     );
   }
@@ -21,7 +21,7 @@ export async function action({ request, params }: LoaderArgs) {
   const deactivateAttribute = await deleteAttributeCategory(client, categoryId);
   if (deactivateAttribute.error) {
     return redirect(
-      "/app/users/attributes",
+      "/app/people/attributes",
       await flash(
         request,
         error(
@@ -33,7 +33,7 @@ export async function action({ request, params }: LoaderArgs) {
   }
 
   return redirect(
-    "/app/users/attributes",
+    "/app/people/attributes",
     await flash(request, success("Successfully deactivated attribute category"))
   );
 }

@@ -21,7 +21,7 @@ import {
   Select,
 } from "~/components/Form";
 import { DataType } from "~/interfaces/Users/types";
-import { attributeValidator } from "~/services/users";
+import { attributeValidator } from "~/services/people";
 import { mapRowsToOptions } from "~/utils/form";
 
 type AttributeFormProps = {
@@ -74,8 +74,8 @@ const AttributeForm = ({
         method="post"
         action={
           isEditing
-            ? `/app/users/attribute/${initialValues.id}`
-            : "/app/users/attribute/new"
+            ? `/app/people/attribute/${initialValues.id}`
+            : "/app/people/attribute/new"
         }
         defaultValues={initialValues}
       >

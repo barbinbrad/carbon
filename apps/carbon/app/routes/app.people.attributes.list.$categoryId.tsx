@@ -2,19 +2,19 @@ import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Outlet, useLoaderData, useNavigate } from "@remix-run/react";
 import { useUrlParams } from "~/hooks";
-import { AttributeCategoryDetail } from "~/interfaces/Users/Attributes";
+import { AttributeCategoryDetail } from "~/interfaces/People/Attributes";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import {
   getAttributeCategory,
   updateAttributeSortOrder,
-} from "~/services/users";
+} from "~/services/people";
 import { assertIsPost, notFound } from "~/utils/http";
 import { error } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderArgs) {
   const { client } = await requirePermissions(request, {
-    view: "users",
+    view: "people",
   });
 
   const { categoryId } = params;
@@ -27,7 +27,7 @@ export async function loader({ request, params }: LoaderArgs) {
   );
   if (attributeCategory.error) {
     return redirect(
-      "/app/users/attributes",
+      "/app/people/attributes",
       await flash(
         request,
         error(attributeCategory.error, "Failed to fetch attribute category")
@@ -41,7 +41,7 @@ export async function loader({ request, params }: LoaderArgs) {
 export async function action({ request }: ActionArgs) {
   assertIsPost(request);
   const { client, userId } = await requirePermissions(request, {
-    update: "users",
+    update: "people",
   });
 
   const updateMap = (await request.formData()).get("updates") as string;
@@ -77,7 +77,7 @@ export default function AttributeCategoryListRoute() {
   const { attributeCategory } = useLoaderData<typeof loader>();
   const [params] = useUrlParams();
   const navigate = useNavigate();
-  const onClose = () => navigate(`/app/users/attributes?${params.toString()}`);
+  const onClose = () => navigate(`/app/people/attributes?${params.toString()}`);
 
   return (
     <>

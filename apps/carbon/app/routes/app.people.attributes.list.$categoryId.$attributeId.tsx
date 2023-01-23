@@ -3,17 +3,17 @@ import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData, useNavigate, useParams } from "@remix-run/react";
 import { useRouteData } from "~/hooks";
-import { AttributeForm } from "~/interfaces/Users/Attributes";
-import type { AttributeDataType } from "~/interfaces/Users/types";
+import { AttributeForm } from "~/interfaces/People/Attributes";
+import type { AttributeDataType } from "~/interfaces/People/types";
 import { requirePermissions } from "~/services/auth";
+import { getAttribute } from "~/services/people";
 import { flash } from "~/services/session";
-import { getAttribute } from "~/services/users";
 import { notFound } from "~/utils/http";
 import { error } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderArgs) {
   const { client } = await requirePermissions(request, {
-    view: "users",
+    view: "people",
   });
 
   const { categoryId, attributeId } = params;
@@ -23,7 +23,7 @@ export async function loader({ request, params }: LoaderArgs) {
   const attribute = await getAttribute(client, Number(attributeId));
   if (attribute.error) {
     return redirect(
-      `/app/users/attributes/list/${categoryId}`,
+      `/app/people/attributes/list/${categoryId}`,
       await flash(request, error(attribute.error, "Failed to fetch attribute"))
     );
   }
@@ -39,12 +39,12 @@ export default function EditAttributeRoute() {
   if (Number.isNaN(categoryId)) throw new Error("categoryId is not a number");
 
   const navigate = useNavigate();
-  const onClose = () => navigate(`/app/users/attributes/list/${categoryId}`);
+  const onClose = () => navigate(`/app/people/attributes/list/${categoryId}`);
   const attributesRouteData = useRouteData<{
     dataTypes: {
       data: AttributeDataType[] | null;
     };
-  }>("/app/users/attributes");
+  }>("/app/people/attributes");
 
   return (
     <AttributeForm

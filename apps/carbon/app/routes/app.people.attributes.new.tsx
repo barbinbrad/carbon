@@ -2,20 +2,20 @@ import type { ActionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { useNavigate } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
-import { AttributeCategoryForm } from "~/interfaces/Users/Attributes";
+import { AttributeCategoryForm } from "~/interfaces/People/Attributes";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import {
   attributeCategoryValidator,
   insertAttributeCategory,
-} from "~/services/users";
+} from "~/services/people";
 import { assertIsPost } from "~/utils/http";
 import { error, success } from "~/utils/result";
 
 export async function action({ request }: ActionArgs) {
   assertIsPost(request);
   const { client, userId } = await requirePermissions(request, {
-    update: "users",
+    update: "people",
   });
 
   const validation = await attributeCategoryValidator.validate(
@@ -35,7 +35,7 @@ export async function action({ request }: ActionArgs) {
   });
   if (createAttributeCategory.error) {
     return redirect(
-      "/app/users/attributes",
+      "/app/people/attributes",
       await flash(
         request,
         error(
@@ -47,14 +47,14 @@ export async function action({ request }: ActionArgs) {
   }
 
   return redirect(
-    "/app/users/attributes",
+    "/app/people/attributes",
     await flash(request, success("Created attribute category "))
   );
 }
 
 export default function NewAttributeCategoryRoute() {
   const navigate = useNavigate();
-  const onClose = () => navigate("/app/users/attributes");
+  const onClose = () => navigate("/app/people/attributes");
 
   const initialValues = {
     name: "",

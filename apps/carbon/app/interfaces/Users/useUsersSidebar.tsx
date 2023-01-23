@@ -24,10 +24,6 @@ const usersRoutes: Record<string, Route[]>[] = [
   {
     Configuration: [
       {
-        name: "Attributes",
-        to: "/app/users/attributes",
-      },
-      {
         name: "Employee Types",
         to: "/app/users/employee-types",
       },

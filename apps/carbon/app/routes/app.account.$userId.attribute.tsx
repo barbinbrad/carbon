@@ -10,9 +10,10 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { upsertUserAttributeValue } from "~/services/account";
+import { getAttribute } from "~/services/people";
+import { getPermissions } from "~/services/users";
 import { assertIsPost } from "~/utils/http";
 import { error, success } from "~/utils/result";
-import { getAttribute, getPermissions } from "~/services/users";
 
 export async function action({ request, params }: ActionArgs) {
   assertIsPost(request);

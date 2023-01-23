@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "@remix-run/react";
 import { useRouteData } from "~/hooks";
-import { AttributeForm } from "~/interfaces/Users/Attributes";
-import type { AttributeDataType } from "~/interfaces/Users/types";
+import { AttributeForm } from "~/interfaces/People/Attributes";
+import type { AttributeDataType } from "~/interfaces/People/types";
 
 export default function NewAttributeRoute() {
   const { categoryId } = useParams();
@@ -13,7 +13,7 @@ export default function NewAttributeRoute() {
     dataTypes: {
       data: AttributeDataType[] | null;
     };
-  }>("/app/users/attributes");
+  }>("/app/people/attributes");
 
   return (
     <AttributeForm

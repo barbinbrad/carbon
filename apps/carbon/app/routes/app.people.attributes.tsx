@@ -5,17 +5,17 @@ import { Outlet, useLoaderData } from "@remix-run/react";
 import {
   AttributeCategoriesTable,
   AttributeCategoriesTableFilters,
-} from "~/interfaces/Users/Attributes";
+} from "~/interfaces/People/Attributes";
 import { requirePermissions } from "~/services/auth";
 import {
   getAttributeCategories,
   getAttributeDataTypes,
-} from "~/services/users";
+} from "~/services/people";
 import { getGenericQueryFilters } from "~/utils/query";
 
 export async function loader({ request }: LoaderArgs) {
   const { client } = await requirePermissions(request, {
-    view: "users",
+    view: "people",
   });
 
   const url = new URL(request.url);

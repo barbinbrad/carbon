@@ -1,4 +1,4 @@
-import { createCookieSessionStorage, json, redirect } from "@remix-run/node";
+import { createCookieSessionStorage, redirect } from "@remix-run/node";
 
 import {
   getCurrentPath,
@@ -97,26 +97,14 @@ export async function commitAuthSession(
   return sessionStorage.commitSession(session, { maxAge: SESSION_MAX_AGE });
 }
 
-export async function destroyAuthSession(
-  request: Request,
-  shouldRedirect = true
-) {
+export async function destroyAuthSession(request: Request) {
   const session = await getSession(request);
 
-  return shouldRedirect
-    ? redirect("/", {
-        headers: {
-          "Set-Cookie": await sessionStorage.destroySession(session),
-        },
-      })
-    : json(
-        {},
-        {
-          headers: {
-            "Set-Cookie": await sessionStorage.destroySession(session),
-          },
-        }
-      );
+  return redirect("/", {
+    headers: {
+      "Set-Cookie": await sessionStorage.destroySession(session),
+    },
+  });
 }
 
 export async function flash(request: Request, result: Result) {

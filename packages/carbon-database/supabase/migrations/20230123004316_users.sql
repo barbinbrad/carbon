@@ -14,8 +14,8 @@ CREATE TABLE "user" (
     CONSTRAINT "user_pkey" PRIMARY KEY ("id")
 );
 
-CREATE UNIQUE INDEX "user_email_key" ON "user"("email");
-CREATE INDEX "user_fullName_key" ON "user"("fullName");
+CREATE UNIQUE INDEX "index_user_email_key" ON "user"("email");
+CREATE INDEX "index_user_fullName" ON "user"("fullName");
 
 ALTER TABLE "user" ENABLE ROW LEVEL SECURITY;
 

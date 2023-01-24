@@ -1,3 +1,4 @@
+import type { Database } from "@carbon/database";
 import { useInterval } from "@carbon/react";
 import { isBrowser } from "@carbon/utils";
 import { useFetcher } from "@remix-run/react";
@@ -93,7 +94,7 @@ import { getSupabase } from "./client";
  */
 
 const SupabaseContext = createContext<{
-  supabase: SupabaseClient | undefined;
+  supabase: SupabaseClient<Database> | undefined;
   accessToken: string | undefined;
 }>({ supabase: undefined, accessToken: undefined });
 

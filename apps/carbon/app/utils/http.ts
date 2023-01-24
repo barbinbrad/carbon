@@ -3,7 +3,10 @@ export function getCurrentPath(request: Request) {
 }
 
 export function makeRedirectToFromHere(request: Request) {
-  return new URLSearchParams([["redirectTo", getCurrentPath(request)]]);
+  const currentPath = getCurrentPath(request);
+  return new URLSearchParams([
+    ["redirectTo", currentPath.includes("resource") ? "/app" : currentPath],
+  ]);
 }
 
 export function getRedirectTo(request: Request, defaultRedirectTo = "/app") {

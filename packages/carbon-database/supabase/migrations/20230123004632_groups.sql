@@ -103,27 +103,27 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
-CREATE TRIGGER on_employee_type_created
+CREATE TRIGGER create_employee_type_group
   AFTER INSERT on public."employeeType"
   FOR EACH ROW EXECUTE PROCEDURE public.create_employee_type_group();
 
-CREATE TRIGGER on_user_created
+CREATE TRIGGER create_user_identity_group
   AFTER INSERT on public.user
   FOR EACH ROW EXECUTE PROCEDURE public.create_user_identity_group();    
 
-CREATE TRIGGER on_employee_created
+CREATE TRIGGER add_employee_to_employee_type_group
   AFTER INSERT on public.employee
   FOR EACH ROW EXECUTE PROCEDURE public.add_employee_to_employee_type_group();
 
-CREATE TRIGGER on_user_updated
+CREATE TRIGGER update_user_identity_group
   AFTER UPDATE on public.user
   FOR EACH ROW EXECUTE PROCEDURE public.update_user_identity_group();
 
-CREATE TRIGGER on_employee_updated
+CREATE TRIGGER update_employee_to_employee_type_group
   AFTER UPDATE on public.employee
   FOR EACH ROW EXECUTE PROCEDURE public.update_employee_to_employee_type_group();
 
-CREATE TRIGGER on_employee_type_updated
+CREATE TRIGGER update_employee_type_group
   AFTER UPDATE on public."employeeType"
   FOR EACH ROW EXECUTE PROCEDURE public.update_employee_type_group();
 
@@ -426,43 +426,43 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
-CREATE TRIGGER on_customer_type_created
+CREATE TRIGGER create_customer_type_group
   AFTER INSERT on public."customerType"
   FOR EACH ROW EXECUTE PROCEDURE public.create_customer_type_group();
 
-CREATE TRIGGER on_supplier_type_created
+CREATE TRIGGER create_supplier_type_group
   AFTER INSERT on public."supplierType"
   FOR EACH ROW EXECUTE PROCEDURE public.create_supplier_type_group();
 
-CREATE TRIGGER on_customer_org_created
+CREATE TRIGGER create_customer_org_group
   AFTER INSERT on public.customer
   FOR EACH ROW EXECUTE PROCEDURE public.create_customer_org_group();
 
-CREATE TRIGGER on_supplier_org_created
+CREATE TRIGGER create_supplier_org_group
   AFTER INSERT on public.supplier
   FOR EACH ROW EXECUTE PROCEDURE public.create_supplier_org_group();
 
-CREATE TRIGGER on_customer_created
+CREATE TRIGGER create_customer_account_group
   AFTER INSERT on public."customerAccount"
   FOR EACH ROW EXECUTE PROCEDURE public.add_customer_account_to_customer_group();
 
-CREATE TRIGGER on_supplier_created
+CREATE TRIGGER create_supplier_account_group
   AFTER INSERT on public."supplierAccount"
   FOR EACH ROW EXECUTE PROCEDURE public.add_supplier_account_to_supplier_group();
 
-CREATE TRIGGER on_customer_updated
+CREATE TRIGGER create_customer_group
   AFTER UPDATE on public.customer
   FOR EACH ROW EXECUTE PROCEDURE public.update_customer_to_customer_type_group();
 
-CREATE TRIGGER on_supplier_updated
+CREATE TRIGGER create_supplier_group
   AFTER UPDATE on public.supplier
   FOR EACH ROW EXECUTE PROCEDURE public.update_supplier_to_supplier_type_group();
 
-CREATE TRIGGER on_customer_type_updated
+CREATE TRIGGER update_customer_type_group
   AFTER UPDATE on public."customerType"
   FOR EACH ROW EXECUTE PROCEDURE public.update_customer_type_group();
 
-CREATE TRIGGER on_supplier_type_updated
+CREATE TRIGGER update_supplier_type_group
   AFTER UPDATE on public."supplierType"
   FOR EACH ROW EXECUTE PROCEDURE public.update_supplier_type_group();
 

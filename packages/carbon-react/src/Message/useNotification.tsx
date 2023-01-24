@@ -14,7 +14,7 @@ import { ClientOnly } from "../SSR";
 
 const defaultOptions: UseToastOptions = {
   isClosable: true,
-  position: "top-right",
+  position: "bottom-left",
 };
 
 export default function useNotification() {

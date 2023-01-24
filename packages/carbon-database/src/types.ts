@@ -446,6 +446,35 @@ export interface Database {
           memberUserId?: string | null
         }
       }
+      search: {
+        Row: {
+          id: number
+          name: string
+          description: string | null
+          entity: Database["public"]["Enums"]["search_entity"] | null
+          uuid: string | null
+          link: string
+          fts: unknown | null
+        }
+        Insert: {
+          id?: number
+          name: string
+          description?: string | null
+          entity?: Database["public"]["Enums"]["search_entity"] | null
+          uuid?: string | null
+          link: string
+          fts?: unknown | null
+        }
+        Update: {
+          id?: number
+          name?: string
+          description?: string | null
+          entity?: Database["public"]["Enums"]["search_entity"] | null
+          uuid?: string | null
+          link?: string
+          fts?: unknown | null
+        }
+      }
       supplier: {
         Row: {
           id: string
@@ -885,7 +914,15 @@ export interface Database {
       }
     }
     Enums: {
-      [_ in never]: never
+      search_entity:
+        | "People"
+        | "Customer"
+        | "Supplier"
+        | "Job"
+        | "Part"
+        | "Purchase Order"
+        | "Sales Order"
+        | "Document"
     }
   }
 }

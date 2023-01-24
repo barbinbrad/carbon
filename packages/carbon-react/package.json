@@ -33,10 +33,10 @@
     "@react-types/button": "^3.7.0",
     "@react-types/calendar": "^3.0.5",
     "@react-types/datepicker": "^3.1.4",
-    "framer-motion": "^7.5.4",
+    "framer-motion": "^8.5.2",
     "react-colorful": "^5.6.1",
     "react-hook-form": "^7.37.0",
-    "react-icons": "^4.6.0",
+    "react-icons": "^4.7.1",
     "react-select": "^5.5.1"
   },
   "devDependencies": {

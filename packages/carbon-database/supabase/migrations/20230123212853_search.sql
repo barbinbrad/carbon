@@ -18,46 +18,6 @@ ADD COLUMN
 CREATE INDEX index_search_uuid ON public.search (uuid);
 CREATE INDEX index_search_fts ON public.search USING GIN (fts); 
 
--- CREATE FUNCTION public.create_feature_search_result()
--- RETURNS TRIGGER AS $$
--- BEGIN
---   INSERT INTO public.search(name, entity, uuid, link)
---   VALUES (new.name, 'Feature', new.id, '/app/' || LOWER(new.name));
---   RETURN new;
--- END;
--- $$ LANGUAGE plpgsql SECURITY DEFINER;
-
--- CREATE TRIGGER create_feature_search_result
---   AFTER INSERT on public.feature
---   FOR EACH ROW EXECUTE PROCEDURE public.create_feature_search_result();
-
--- CREATE FUNCTION public.update_feature_search_result()
--- RETURNS TRIGGER AS $$
--- BEGIN
---   UPDATE public.search SET name = new.name, link = '/app/' || LOWER(new.name)
---   WHERE entity = 'Feature' AND uuid = new.id;
---   RETURN new;
--- END;
--- $$ LANGUAGE plpgsql SECURITY DEFINER;
-
--- CREATE TRIGGER update_feature_search_result
---   AFTER UPDATE on public.feature
---   FOR EACH ROW EXECUTE PROCEDURE public.update_feature_search_result();
-
-
--- CREATE FUNCTION public.delete_feature_search_result()
--- RETURNS TRIGGER AS $$
--- BEGIN
---   DELETE FROM public.search
---   WHERE entity = 'Feature' AND uuid = old.id;
---   RETURN old;
--- END;
--- $$ LANGUAGE plpgsql SECURITY DEFINER;
-
--- CREATE TRIGGER delete_feature_search_result
---   AFTER DELETE on public.feature
---   FOR EACH ROW EXECUTE PROCEDURE public.delete_feature_search_result();
-
 CREATE FUNCTION public.create_employee_search_result()
 RETURNS TRIGGER AS $$
 DECLARE
@@ -149,3 +109,30 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE TRIGGER update_supplier_search_result
   AFTER UPDATE on public.supplier
   FOR EACH ROW EXECUTE PROCEDURE public.update_supplier_search_result();
+
+ALTER TABLE "search" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users with sales_view can search for customers and sales orders" ON "search"
+  FOR SELECT
+  USING (coalesce(get_my_claim('sales_view')::boolean, false) = true AND entity IN ('Customer', 'Sales Order'));
+
+CREATE POLICY "Users with purchasing_view can search for suppliers and purchase orders" ON "search"
+  FOR SELECT
+  USING (coalesce(get_my_claim('purchasing_view')::boolean, false) = true AND entity IN ('Supplier', 'Purchase Order'));
+
+CREATE POLICY "Users with people_view can search for people" ON "search"
+  FOR SELECT
+  USING (coalesce(get_my_claim('people_view')::boolean, false) = true AND entity = 'People');
+
+-- TODO: documents will probably need some additional filtering
+CREATE POLICY "Users with document_view can search for documents" ON "search"
+  FOR SELECT
+  USING (coalesce(get_my_claim('document_view')::boolean, false) = true AND entity = 'Document');
+
+CREATE POLICY "Users with parts_view can search for parts" ON "search"
+  FOR SELECT
+  USING (coalesce(get_my_claim('parts_view')::boolean, false) = true AND entity = 'Part');
+
+CREATE POLICY "Users with jobs_view can search for jobs" ON "search"
+  FOR SELECT
+  USING (coalesce(get_my_claim('jobs_view')::boolean, false) = true AND entity = 'Job');

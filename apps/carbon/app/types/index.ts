@@ -8,6 +8,12 @@ export type Authenticated<T> = T & {
   permission?: string;
 };
 
+export type AuthenticatedRouteGroup = {
+  name: string;
+  icon?: any;
+  routes: Authenticated<Route>[];
+};
+
 export type FormActionData = Promise<
   TypedResponse<ValidationErrorResponseData> | TypedResponse<Result>
 >;
@@ -27,6 +33,12 @@ export type Route = {
   name: string;
   to: string;
   icon?: any;
+};
+
+export type RouteGroup = {
+  name: string;
+  icon?: any;
+  routes: Route[];
 };
 
 export interface SelectOption extends OptionBase {

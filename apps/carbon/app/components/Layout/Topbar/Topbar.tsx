@@ -1,5 +1,6 @@
 import { useColor } from "@carbon/react";
 import { Button, GridItem, HStack } from "@chakra-ui/react";
+import { Link } from "@remix-run/react";
 import { BiHelpCircle } from "react-icons/bi";
 import { BsChatSquare } from "react-icons/bs";
 import { Search } from "~/components/Search";
@@ -31,6 +32,8 @@ const Topbar = () => {
       <Search />
       <HStack py={2} justifyContent="end">
         <Button
+          as={Link}
+          to="https://github.com/barbinbrad/carbon/discussions/new/choose"
           colorScheme="gray"
           leftIcon={<BiHelpCircle />}
           variant="solid"
@@ -41,6 +44,8 @@ const Topbar = () => {
           Help
         </Button>
         <Button
+          as={Link}
+          to="https://github.com/barbinbrad/carbon/issues/new/choose"
           colorScheme="gray"
           leftIcon={<BsChatSquare />}
           variant="solid"

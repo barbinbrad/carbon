@@ -9,11 +9,11 @@ export const meta: MetaFunction = () => ({
 });
 
 export default function PeopleRoute() {
-  const { links } = usePeopleSidebar();
+  const { groups } = usePeopleSidebar();
 
   return (
     <Grid w="full" h="full" templateColumns="auto 1fr" overflow="auto">
-      <GroupedContentSidebar links={links} />
+      <GroupedContentSidebar groups={groups} />
       <VStack w="full" h="full" spacing={0}>
         <Outlet />
       </VStack>

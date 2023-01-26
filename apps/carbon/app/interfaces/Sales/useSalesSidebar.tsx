@@ -1,9 +1,10 @@
 import { usePermissions } from "~/hooks";
-import type { Authenticated, Route } from "~/types";
+import type { AuthenticatedRouteGroup } from "~/types";
 
-const salesRoutes: Record<string, Authenticated<Route>[]>[] = [
+const salesRoutes: AuthenticatedRouteGroup[] = [
   {
-    Manage: [
+    name: "Manage",
+    routes: [
       {
         name: "Customers",
         to: "/app/sales/customers",
@@ -11,7 +12,8 @@ const salesRoutes: Record<string, Authenticated<Route>[]>[] = [
     ],
   },
   {
-    Configuration: [
+    name: "Configuration",
+    routes: [
       {
         name: "Customer Types",
         to: "/app/sales/customer-types",
@@ -24,25 +26,27 @@ const salesRoutes: Record<string, Authenticated<Route>[]>[] = [
 export default function useSalesSidebar() {
   const permissions = usePermissions();
   return {
-    links: salesRoutes.map((links) =>
-      Object.entries(links).reduce<Record<string, Authenticated<Route[]>>>(
-        (acc, [name, routes]) => {
-          const filteredRoutes = routes.filter((route) => {
-            if (route.role) {
-              return permissions.is(route.role);
-            } else {
-              return true;
-            }
-          });
-
-          if (filteredRoutes.length > 0) {
-            acc[name] = filteredRoutes;
+    groups: salesRoutes
+      .filter((group) => {
+        const filteredRoutes = group.routes.filter((route) => {
+          if (route.role) {
+            return permissions.is(route.role);
+          } else {
+            return true;
           }
+        });
 
-          return acc;
-        },
-        {}
-      )
-    ),
+        return filteredRoutes.length > 0;
+      })
+      .map((group) => ({
+        ...group,
+        routes: group.routes.filter((route) => {
+          if (route.role) {
+            return permissions.is(route.role);
+          } else {
+            return true;
+          }
+        }),
+      })),
   };
 }

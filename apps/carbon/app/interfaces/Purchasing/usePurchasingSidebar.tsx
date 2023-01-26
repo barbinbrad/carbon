@@ -1,9 +1,10 @@
 import { usePermissions } from "~/hooks";
-import type { Authenticated, Route } from "~/types";
+import type { AuthenticatedRouteGroup } from "~/types";
 
-const purchasingRoutes: Record<string, Authenticated<Route>[]>[] = [
+const purchasingRoutes: AuthenticatedRouteGroup[] = [
   {
-    Manage: [
+    name: "Manage",
+    routes: [
       {
         name: "Suppliers",
         to: "/app/purchasing/suppliers",
@@ -11,7 +12,8 @@ const purchasingRoutes: Record<string, Authenticated<Route>[]>[] = [
     ],
   },
   {
-    Configuration: [
+    name: "Configuration",
+    routes: [
       {
         name: "Supplier Types",
         to: "/app/purchasing/supplier-types",
@@ -21,28 +23,30 @@ const purchasingRoutes: Record<string, Authenticated<Route>[]>[] = [
   },
 ];
 
-export default function useSalesSidebar() {
+export default function usePurchasingSidebar() {
   const permissions = usePermissions();
   return {
-    links: purchasingRoutes.map((links) =>
-      Object.entries(links).reduce<Record<string, Authenticated<Route[]>>>(
-        (acc, [name, routes]) => {
-          const filteredRoutes = routes.filter((route) => {
-            if (route.role) {
-              return permissions.is(route.role);
-            } else {
-              return true;
-            }
-          });
-
-          if (filteredRoutes.length > 0) {
-            acc[name] = filteredRoutes;
+    groups: purchasingRoutes
+      .filter((group) => {
+        const filteredRoutes = group.routes.filter((route) => {
+          if (route.role) {
+            return permissions.is(route.role);
+          } else {
+            return true;
           }
+        });
 
-          return acc;
-        },
-        {}
-      )
-    ),
+        return filteredRoutes.length > 0;
+      })
+      .map((group) => ({
+        ...group,
+        routes: group.routes.filter((route) => {
+          if (route.role) {
+            return permissions.is(route.role);
+          } else {
+            return true;
+          }
+        }),
+      })),
   };
 }

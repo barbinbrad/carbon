@@ -1,8 +1,9 @@
-import type { Route } from "~/types";
+import type { Route, RouteGroup } from "~/types";
 
-const usersRoutes: Record<string, Route[]>[] = [
+const usersRoutes: RouteGroup[] = [
   {
-    Manage: [
+    name: "Manage",
+    routes: [
       {
         name: "Employees",
         to: "/app/users/employees",
@@ -22,7 +23,8 @@ const usersRoutes: Record<string, Route[]>[] = [
     ],
   },
   {
-    Configuration: [
+    name: "Configuration",
+    routes: [
       {
         name: "Employee Types",
         to: "/app/users/employee-types",
@@ -32,5 +34,5 @@ const usersRoutes: Record<string, Route[]>[] = [
 ];
 
 export default function useUsersSidebar() {
-  return { links: usersRoutes };
+  return { groups: usersRoutes };
 }

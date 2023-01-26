@@ -1,4 +1,4 @@
 import DebouncedInput from "./DebouncedInput";
-import SearchButton from "./SearchButton";
+import Search from "./Search";
 
-export { DebouncedInput, SearchButton };
+export { DebouncedInput, Search };

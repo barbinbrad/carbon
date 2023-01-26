@@ -68,54 +68,55 @@ export default function ForgotPasswordRoute() {
   const boxBackground = useColor("white");
 
   return (
-    <Box minW="100vw" minH="100vh" bg={useColor("gray.50")}>
-      <VStack spacing={8} mx="auto" maxW="lg" pt={24} px={6}>
-        <Image
-          src={useColorModeValue("/logo-dark.png", "/logo-light.png")}
-          alt="Carbon Logo"
-          maxW={100}
-          marginBottom={3}
-        />
-        {actionData?.success ? (
-          <Alert
-            status="success"
-            variant="subtle"
-            flexDirection="column"
-            alignItems="center"
-            justifyContent="center"
-            textAlign="center"
-            height="240px"
-            p={8}
-          >
-            <AlertIcon boxSize="40px" mr={0} />
-            <AlertTitle mt={4} mb={1} fontSize="lg">
-              Success
-            </AlertTitle>
-            <AlertDescription maxWidth="sm">
-              If you have an account, you should receive an email shortly with a
-              link to log in.
-            </AlertDescription>
-          </Alert>
-        ) : (
-          <Box rounded="lg" bg={boxBackground} boxShadow="lg" w={380} p={8}>
-            <ValidatedForm validator={forgotPasswordValidator} method="post">
-              <VStack spacing={4} alignItems="start">
-                <Text>
-                  Please enter your email address to search for your account.
-                </Text>
-                {actionData?.success === false && (
-                  <Alert status="error">
-                    <AlertIcon />
-                    <AlertTitle>{actionData?.message}</AlertTitle>
-                  </Alert>
-                )}
-                <Input name="email" label="Email" />
-                <Submit w="full">Search</Submit>
-              </VStack>
-            </ValidatedForm>
-          </Box>
+    <>
+      <Image
+        src={useColorModeValue(
+          "/carbon-logo-dark.png",
+          "/carbon-logo-light.png"
         )}
-      </VStack>
-    </Box>
+        alt="Carbon Logo"
+        maxW={100}
+        marginBottom={3}
+      />
+      {actionData?.success ? (
+        <Alert
+          status="success"
+          variant="subtle"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          textAlign="center"
+          height="240px"
+          p={8}
+        >
+          <AlertIcon boxSize="40px" mr={0} />
+          <AlertTitle mt={4} mb={1} fontSize="lg">
+            Success
+          </AlertTitle>
+          <AlertDescription maxWidth="sm">
+            If you have an account, you should receive an email shortly with a
+            link to log in.
+          </AlertDescription>
+        </Alert>
+      ) : (
+        <Box rounded="lg" bg={boxBackground} boxShadow="lg" w={380} p={8}>
+          <ValidatedForm validator={forgotPasswordValidator} method="post">
+            <VStack spacing={4} alignItems="start">
+              <Text>
+                Please enter your email address to search for your account.
+              </Text>
+              {actionData?.success === false && (
+                <Alert status="error">
+                  <AlertIcon />
+                  <AlertTitle>{actionData?.message}</AlertTitle>
+                </Alert>
+              )}
+              <Input name="email" label="Email" />
+              <Submit w="full">Search</Submit>
+            </VStack>
+          </ValidatedForm>
+        </Box>
+      )}
+    </>
   );
 }

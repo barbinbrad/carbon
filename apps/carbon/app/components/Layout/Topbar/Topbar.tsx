@@ -2,7 +2,7 @@ import { useColor } from "@carbon/react";
 import { Button, GridItem, HStack } from "@chakra-ui/react";
 import { BiHelpCircle } from "react-icons/bi";
 import { BsChatSquare } from "react-icons/bs";
-import { SearchButton } from "~/components/Search";
+import { Search } from "~/components/Search";
 import AvatarMenu from "./AvatarMenu";
 import Breadcrumbs from "./Breadcrumbs";
 import useBreadcrumbs from "./useBreadcrumbs";
@@ -28,7 +28,7 @@ const Topbar = () => {
       zIndex={1}
     >
       <Breadcrumbs links={breadcrumbLinks} />
-      <SearchButton />
+      <Search />
       <HStack py={2} justifyContent="end">
         <Button
           colorScheme="gray"

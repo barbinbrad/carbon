@@ -2,13 +2,14 @@ import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { arrayToTree } from "performant-array-to-tree";
 import type { Group } from "~/interfaces/Users/types";
-import { requireResourcePermissions } from "~/services/auth";
+import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { error } from "~/utils/result";
 
 export async function loader({ request }: LoaderArgs) {
-  const authorized = await requireResourcePermissions(request, {});
-  if (!authorized) return json({ groups: [] });
+  const authorized = await requirePermissions(request, {
+    role: "employee",
+  });
 
   const groups = await authorized.client.from("groups_view").select("*");
   if (groups.error) {

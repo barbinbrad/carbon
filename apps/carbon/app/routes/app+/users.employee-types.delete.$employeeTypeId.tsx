@@ -11,6 +11,7 @@ import { notFound } from "~/utils/http";
 export async function loader({ request, params }: LoaderArgs) {
   const { client } = await requirePermissions(request, {
     view: "users",
+    role: "employee",
   });
   const { employeeTypeId } = params;
   if (!employeeTypeId) throw notFound("EmployeeTypeId not found");

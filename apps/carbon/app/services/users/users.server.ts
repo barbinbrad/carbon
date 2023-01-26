@@ -10,7 +10,11 @@ import type {
   Permission,
   User,
 } from "~/interfaces/Users/types";
-import { deleteAuthAccount, sendInviteByEmail } from "~/services/auth";
+import {
+  deleteAuthAccount,
+  sendInviteByEmail,
+  sendMagicLink,
+} from "~/services/auth";
 import { getSupplierContact } from "~/services/purchasing";
 import { getCustomerContact } from "~/services/sales";
 import { requireAuthSession, flash } from "~/services/session";
@@ -192,7 +196,7 @@ export async function createSupplierAccount(
 
   const claims = makeSupplierClaims();
   const claimsUpdate = await setUserClaims(userId, {
-    role: "customer",
+    role: "supplier",
     ...claims,
   });
   if (claimsUpdate.error) {
@@ -457,49 +461,6 @@ function getPermissionCacheKey(userId: string) {
   return `permissions:${userId}`;
 }
 
-export async function getPermissions(
-  request: Request,
-  client: SupabaseClient<Database>
-) {
-  const { userId } = await requireAuthSession(request);
-
-  let permissions: Record<string, Permission> | null = null;
-
-  try {
-    permissions = JSON.parse(
-      (await redis.get(getPermissionCacheKey(userId))) || "null"
-    );
-  } finally {
-    // if we don't have permissions from redis, get them from the database
-    if (!permissions) {
-      const claims = await getClaims(client, userId);
-      if (claims.error || claims.data === null) {
-        throw redirect(
-          "/app",
-          await flash(request, error(claims.error, "Failed to get claims"))
-        );
-      }
-      // convert claims to permissions
-      permissions = makePermissionsFromClaims(claims.data);
-      // store permissions in redis
-
-      await redis.set(
-        getPermissionCacheKey(userId),
-        JSON.stringify(permissions)
-      );
-
-      if (!permissions) {
-        throw redirect(
-          "/app",
-          await flash(request, error(claims, "Failed to parse claims"))
-        );
-      }
-    }
-
-    return permissions;
-  }
-}
-
 export async function getSuppliers(
   client: SupabaseClient<Database>,
   args: GenericQueryFilters & {
@@ -548,6 +509,52 @@ export async function getUserByEmail(email: string) {
     .select("*")
     .eq("email", email)
     .single();
+}
+
+export async function getUserClaims(
+  request: Request,
+  client: SupabaseClient<Database>
+) {
+  const { userId } = await requireAuthSession(request);
+
+  let claims: {
+    permissions: Record<string, Permission>;
+    role: string | null;
+  } | null = null;
+
+  try {
+    claims = JSON.parse(
+      (await redis.get(getPermissionCacheKey(userId))) || "null"
+    );
+  } finally {
+    // if we don't have permissions from redis, get them from the database
+    if (!claims) {
+      const rawClaims = await getClaims(client, userId);
+      if (rawClaims.error || rawClaims.data === null) {
+        throw redirect(
+          "/app",
+          await flash(
+            request,
+            error(rawClaims.error, "Failed to get rawClaims")
+          )
+        );
+      }
+      // convert rawClaims to permissions
+      claims = makePermissionsFromClaims(rawClaims.data);
+      // store claims in redis
+
+      await redis.set(getPermissionCacheKey(userId), JSON.stringify(claims));
+
+      if (!claims) {
+        throw redirect(
+          "/app",
+          await flash(request, error(rawClaims, "Failed to parse claims"))
+        );
+      }
+    }
+
+    return claims;
+  }
 }
 
 export async function getUsers(client: SupabaseClient<Database>) {
@@ -685,6 +692,7 @@ export function makeEmptyPermissionsFromFeatures(data: Feature[]) {
 export function makePermissionsFromClaims(claims: Json[] | null) {
   if (typeof claims !== "object" || claims === null) return null;
   let permissions: Record<string, Permission> = {};
+  let role: string | null = null;
 
   Object.entries(claims).forEach(([key, value]) => {
     if (isClaimPermission(key, value)) {
@@ -711,7 +719,11 @@ export function makePermissionsFromClaims(claims: Json[] | null) {
     }
   });
 
-  return permissions;
+  if ("role" in claims) {
+    role = claims["role"] as string;
+  }
+
+  return { permissions, role };
 }
 
 export function makePermissionsFromEmployeeType(
@@ -765,7 +777,7 @@ export async function resendInvite(
     return error(user.error, "Failed to get user");
   }
 
-  const invite = await sendInviteByEmail(user.data.email);
+  const invite = await sendMagicLink(user.data.email);
   if (invite.error) {
     return error(invite.error, "Failed to send invite");
   }

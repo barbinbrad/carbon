@@ -112,27 +112,35 @@ CREATE TRIGGER update_supplier_search_result
 
 ALTER TABLE "search" ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Users with sales_view can search for customers and sales orders" ON "search"
+CREATE POLICY "Employees with sales_view can search for customers and sales orders" ON "search"
   FOR SELECT
-  USING (coalesce(get_my_claim('sales_view')::boolean, false) = true AND entity IN ('Customer', 'Sales Order'));
+  USING (coalesce(get_my_claim('sales_view')::boolean, false) = true AND entity IN ('Customer', 'Sales Order') AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
 
-CREATE POLICY "Users with purchasing_view can search for suppliers and purchase orders" ON "search"
+-- TODO: customers should be able to search for their sales orders
+
+CREATE POLICY "Employees with purchasing_view can search for suppliers and purchase orders" ON "search"
   FOR SELECT
-  USING (coalesce(get_my_claim('purchasing_view')::boolean, false) = true AND entity IN ('Supplier', 'Purchase Order'));
+  USING (coalesce(get_my_claim('purchasing_view')::boolean, false) = true AND entity IN ('Supplier', 'Purchase Order') AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
 
-CREATE POLICY "Users with people_view can search for people" ON "search"
+-- TODO: suppliers should be able to search for their purchase orders
+
+CREATE POLICY "Employees with people_view can search for people" ON "search"
   FOR SELECT
   USING (coalesce(get_my_claim('people_view')::boolean, false) = true AND entity = 'People');
 
--- TODO: documents will probably need some additional filtering
-CREATE POLICY "Users with document_view can search for documents" ON "search"
+-- TODO: documents should be filtered based on visibility
+CREATE POLICY "Employees with document_view can search for documents" ON "search"
   FOR SELECT
-  USING (coalesce(get_my_claim('document_view')::boolean, false) = true AND entity = 'Document');
+  USING (coalesce(get_my_claim('document_view')::boolean, false) = true AND entity = 'Document' AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
 
-CREATE POLICY "Users with parts_view can search for parts" ON "search"
+CREATE POLICY "Employees with parts_view can search for parts" ON "search"
   FOR SELECT
-  USING (coalesce(get_my_claim('parts_view')::boolean, false) = true AND entity = 'Part');
+  USING (coalesce(get_my_claim('parts_view')::boolean, false) = true AND entity = 'Part' AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
 
-CREATE POLICY "Users with jobs_view can search for jobs" ON "search"
+-- TODO: suppliers should be able to search for parts that they supply
+
+CREATE POLICY "Employees with jobs_view can search for jobs" ON "search"
   FOR SELECT
-  USING (coalesce(get_my_claim('jobs_view')::boolean, false) = true AND entity = 'Job');
+  USING (coalesce(get_my_claim('jobs_view')::boolean, false) = true AND entity = 'Job' AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+-- TODO: customers should be able to search for their jobs

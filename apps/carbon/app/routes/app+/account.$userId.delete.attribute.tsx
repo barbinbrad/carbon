@@ -4,7 +4,7 @@ import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { deleteUserAttributeValue } from "~/services/account";
 import { getAttribute } from "~/services/people";
-import { getPermissions } from "~/services/users";
+import { getUserClaims } from "~/services/users";
 import { assertIsPost } from "~/utils/http";
 import { error, success } from "~/utils/result";
 
@@ -28,8 +28,8 @@ export async function action({ request, params }: ActionArgs) {
   if (!userAttributeValueId || Number.isNaN(Number(userAttributeValueId)))
     throw new Error("No attribute value id provided");
 
-  const clientPermissions = await getPermissions(request, client);
-  const canUpdateAnyUser = clientPermissions["users"]?.update === true;
+  const clientClaims = await getUserClaims(request, client);
+  const canUpdateAnyUser = clientClaims.permissions["users"]?.update === true;
 
   if (!canUpdateAnyUser && userId !== targetUserId) {
     return json(

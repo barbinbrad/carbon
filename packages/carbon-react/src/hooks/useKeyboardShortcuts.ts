@@ -4,28 +4,15 @@ function includes(array: string[], element: string) {
   return array.indexOf(element) >= 0;
 }
 
-/**
- * Hook for listening on key events.
- *
- * @param {Object|Map} keyMap       Key names mapped to event handlers. If a key name exists, its
- *                                  default behavior will be suppressed.
- * @param {Array} whitelistNodes    If target element is in the whitelist nodes array, will not
- *                                  trigger shortcut event
- * @param {Array} whitelistClasses  If target class is in the whitelist classes array, will not
- *                                  trigger shortcut event
- */
-export default function useKeyboardShortcuts(
-  keyMap: { [id: string]: (event: KeyboardEvent) => void },
-  whitelistNodes: string[] = [],
-  whitelistClasses: string[] = []
-) {
+export default function useKeyboardShortcuts(keyMap: {
+  [id: string]: (event: KeyboardEvent) => void;
+}) {
   const [lastKeydown, setLastKeydown] = useState<string | null>();
 
   const handleKeydown = (event: any) => {
     if (
       !keyMap ||
-      includes(whitelistNodes, event.target.nodeName) ||
-      includes(whitelistClasses, event.target.className)
+      includes(["INPUT", "TEXTAREA", "SELECT"], event.target.nodeName)
     ) {
       return;
     }

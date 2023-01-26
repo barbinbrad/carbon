@@ -24,10 +24,10 @@ const IconSidebar = () => {
                 as={Link}
                 to={link.to}
                 variant={isActive ? "solid" : "outline"}
-                colorScheme={isActive ? "blackAlpha" : "gray"}
                 size="lg"
                 borderRadius={0}
-                border="none"
+                borderWidth={1}
+                borderColor={isActive ? "gray.200" : "transparent"}
                 aria-label={link.name}
                 icon={link.icon}
               />

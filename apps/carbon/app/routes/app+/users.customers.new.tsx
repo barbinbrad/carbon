@@ -13,7 +13,8 @@ import { CreateCustomerModal } from "~/interfaces/Users/Customers";
 export async function action({ request }: ActionArgs) {
   assertIsPost(request);
   const { client } = await requirePermissions(request, {
-    view: "users",
+    view: "sales",
+    update: "users",
   });
 
   const validation = await createCustomerValidator.validate(

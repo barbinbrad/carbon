@@ -4,8 +4,8 @@ import type { ReactElement } from "react";
 import type { ValidationErrorResponseData } from "remix-validated-form";
 
 export type Authenticated<T> = T & {
+  role?: Role;
   permission?: string;
-  action?: "view" | "create" | "update" | "delete";
 };
 
 export type FormActionData = Promise<
@@ -20,6 +20,8 @@ export type Result = {
   success: boolean;
   message?: string;
 };
+
+export type Role = "employee" | "customer" | "supplier";
 
 export type Route = {
   name: string;

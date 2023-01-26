@@ -11,7 +11,9 @@ import { notFound } from "~/utils/http";
 export async function loader({ request, params }: LoaderArgs) {
   const { client } = await requirePermissions(request, {
     view: "users",
+    role: "employee",
   });
+
   const { groupId } = params;
   if (!groupId) throw notFound("groupId not found");
 

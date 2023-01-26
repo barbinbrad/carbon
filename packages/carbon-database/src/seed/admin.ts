@@ -7,7 +7,9 @@ const admin = {
   lastName: "Admin",
 };
 
-const claims: Record<string, boolean> = {};
+const claims: Record<string, boolean | string> = {
+  role: "employee",
+};
 
 possibleFeatures.forEach((name) => {
   const moduleName = name.toLowerCase();

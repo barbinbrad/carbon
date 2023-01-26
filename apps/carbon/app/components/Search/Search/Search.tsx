@@ -101,12 +101,33 @@ const SearchModal = ({
     (event: React.KeyboardEvent<HTMLInputElement>) => {
       const results =
         debouncedQuery.length === 0 ? defaultResults : searchResults;
+
+      const scrollToListItem = (index: number) => {
+        const listbox = listboxRef.current;
+        if (listbox) {
+          const listItem = listbox.children[index] as HTMLLIElement;
+          if (listItem) {
+            listItem.scrollIntoView({
+              block: "nearest",
+            });
+          }
+        }
+      };
+
       switch (event.code) {
         case "ArrowDown":
-          setSelectedIndex((prev) => clip(prev + 1, 0, results.length - 1));
+          setSelectedIndex((prev) => {
+            const newIndex = clip(prev + 1, 0, results.length - 1);
+            scrollToListItem(newIndex);
+            return newIndex;
+          });
           break;
         case "ArrowUp":
-          setSelectedIndex((prev) => clip(prev - 1, 0, results.length - 1));
+          setSelectedIndex((prev) => {
+            const newIndex = clip(prev - 1, 0, results.length - 1);
+            scrollToListItem(newIndex);
+            return newIndex;
+          });
           break;
         case "Enter":
           const selectedResult = results[selectedIndex];
@@ -126,17 +147,6 @@ const SearchModal = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [debouncedQuery.length, navigate, searchResults, selectedIndex]
   );
-
-  useEffect(() => {
-    if (listboxRef.current) {
-      const listbox = listboxRef.current;
-      const listboxItems = listbox.querySelectorAll("li");
-      const activeItem = listboxItems[selectedIndex];
-      if (activeItem) {
-        activeItem.scrollIntoView({ block: "nearest" });
-      }
-    }
-  }, [searchResults, selectedIndex]);
 
   useEffect(() => {
     setSelectedIndex(0);
@@ -274,11 +284,7 @@ function Result({
         mt={2}
         px={4}
         py={2}
-        onMouseOver={onHover}
-        _hover={{
-          bg: "gray.900",
-          color: "white",
-        }}
+        onMouseEnter={onHover}
       >
         <ResultIcon entity={result.entity} />
         <VStack alignItems="start" flexGrow={1} spacing={0} w="full">
@@ -317,11 +323,7 @@ function Module({
         mt={2}
         px={4}
         py={2}
-        onMouseOver={onHover}
-        _hover={{
-          bg: "gray.900",
-          color: "white",
-        }}
+        onMouseEnter={onHover}
       >
         {/* {item.icon && ( // @ts-expect-error
           <Icon as={item.icon} {...resultIconProps} />
@@ -340,12 +342,9 @@ function Module({
 
 const SearchButton = (props: ButtonProps) => {
   const searchModal = useDisclosure();
-  useKeyboardShortcuts(
-    {
-      "/": searchModal.onOpen,
-    },
-    ["INPUT", "TEXTAREA", "SELECT"]
-  );
+  useKeyboardShortcuts({
+    "/": searchModal.onOpen,
+  });
 
   return (
     <>

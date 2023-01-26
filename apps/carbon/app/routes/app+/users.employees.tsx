@@ -14,6 +14,7 @@ import { getGenericQueryFilters } from "~/utils/query";
 export async function loader({ request }: LoaderArgs) {
   const { client } = await requirePermissions(request, {
     view: "users",
+    role: "employee",
   });
 
   const url = new URL(request.url);

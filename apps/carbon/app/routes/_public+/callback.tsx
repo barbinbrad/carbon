@@ -20,7 +20,7 @@ import { error } from "~/utils/result";
 export async function loader({ request }: LoaderArgs) {
   const authSession = await getAuthSession(request);
 
-  if (authSession) await destroyAuthSession(request, false);
+  if (authSession) await destroyAuthSession(request);
 
   return json({});
 }

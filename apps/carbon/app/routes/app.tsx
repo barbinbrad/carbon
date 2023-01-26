@@ -1,5 +1,5 @@
 import { useNotification } from "@carbon/react";
-import { Box, Grid, GridItem } from "@chakra-ui/react";
+import { Flex, Grid, GridItem, VStack } from "@chakra-ui/react";
 import { SkipNavContent } from "@chakra-ui/skip-nav";
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
@@ -7,7 +7,7 @@ import { Outlet, useLoaderData } from "@remix-run/react";
 import { useEffect } from "react";
 import { IconSidebar, Topbar } from "~/components/Layout";
 import { getSupabase, SupabaseProvider } from "~/lib/supabase";
-import { getPermissions, getCurrentUser } from "~/services/users";
+import { getUserClaims, getCurrentUser } from "~/services/users";
 import {
   destroyAuthSession,
   getSessionFlash,
@@ -24,13 +24,13 @@ export async function loader({ request }: LoaderArgs) {
   const client = getSupabase(accessToken);
 
   // parallelize the requests
-  const [sessionFlash, permissions, user] = await Promise.all([
+  const [sessionFlash, claims, user] = await Promise.all([
     getSessionFlash(request),
-    getPermissions(request, client),
+    getUserClaims(request, client),
     getCurrentUser(request, client),
   ]);
 
-  if (!permissions || !user) {
+  if (!claims || !user) {
     await destroyAuthSession(request);
   }
 
@@ -43,7 +43,8 @@ export async function loader({ request }: LoaderArgs) {
       },
 
       user,
-      permissions,
+      permissions: claims?.permissions,
+      role: claims?.role,
       result: sessionFlash?.result,
     },
     {
@@ -71,10 +72,12 @@ export default function AppRoute() {
         <GridItem w="full" h="full">
           <Grid templateColumns="auto 1fr" h="full" w="full">
             <IconSidebar />
-            <Box w="full" h="full">
+            <Flex w="full" h="full">
               <SkipNavContent />
-              <Outlet />
-            </Box>
+              <VStack spacing={0} w="full">
+                <Outlet />
+              </VStack>
+            </Flex>
           </Grid>
         </GridItem>
       </Grid>

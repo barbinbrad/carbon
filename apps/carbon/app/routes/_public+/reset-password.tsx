@@ -58,35 +58,36 @@ export default function ResetPasswordRoute() {
   const navigate = useNavigate();
 
   return (
-    <Box minW="100vw" minH="100vh" bg={useColor("gray.50")}>
-      <VStack spacing={8} mx="auto" maxW="lg" pt={24} px={6}>
-        <Image
-          src={useColorModeValue("/logo-dark.png", "/logo-light.png")}
-          alt="Carbon Logo"
-          maxW={100}
-          marginBottom={3}
-        />
+    <>
+      <Image
+        src={useColorModeValue(
+          "/carbon-logo-dark.png",
+          "/carbon-logo-light.png"
+        )}
+        alt="Carbon Logo"
+        maxW={100}
+        marginBottom={3}
+      />
 
-        <Box rounded="lg" bg={boxBackground} boxShadow="lg" w={380} p={8}>
-          <ValidatedForm
-            method="post"
-            action="/reset-password"
-            validator={resetPasswordValidator}
-          >
-            <VStack spacing={4} alignItems="start">
-              <Text>Please select a new password.</Text>
+      <Box rounded="lg" bg={boxBackground} boxShadow="lg" w={380} p={8}>
+        <ValidatedForm
+          method="post"
+          action="/reset-password"
+          validator={resetPasswordValidator}
+        >
+          <VStack spacing={4} alignItems="start">
+            <Text>Please select a new password.</Text>
 
-              <Password name="password" label="New Password" />
-              <HStack spacing={4}>
-                <Submit w="full">Reset Password</Submit>
-                <Button size="md" onClick={() => navigate("/app")}>
-                  Skip
-                </Button>
-              </HStack>
-            </VStack>
-          </ValidatedForm>
-        </Box>
-      </VStack>
-    </Box>
+            <Password name="password" label="New Password" />
+            <HStack spacing={4}>
+              <Submit w="full">Reset Password</Submit>
+              <Button size="md" onClick={() => navigate("/app")}>
+                Skip
+              </Button>
+            </HStack>
+          </VStack>
+        </ValidatedForm>
+      </Box>
+    </>
   );
 }

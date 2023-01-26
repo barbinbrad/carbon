@@ -17,6 +17,7 @@ import { error, success } from "~/utils/result";
 export async function loader({ request, params }: LoaderArgs) {
   const { client } = await requirePermissions(request, {
     view: "sales",
+    role: "employee",
   });
 
   const { customerTypeId } = params;

@@ -117,13 +117,7 @@ const CustomerContact = ({
   ) : (
     <Box>
       {label && <FormLabel>{label}</FormLabel>}
-      <Select
-        isDisabled
-        isLoading={isLoading}
-        options={[]}
-        //@ts-ignore
-        w="full"
-      />
+      <Select isDisabled isLoading={isLoading} options={[]} />
     </Box>
   );
 };

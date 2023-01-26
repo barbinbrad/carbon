@@ -13,20 +13,20 @@ CREATE POLICY "Users can delete their own avatars"
 ON storage.objects FOR DELETE USING (
     bucket_id = 'avatars'
     and (auth.role() = 'authenticated')
-    and storage.filename(name) like concat(auth.uid()::text, '%')
+    and storage.filename(name) LIKE concat(auth.uid()::text, '%')
 );
 
 CREATE POLICY "Users can update their own avatars"
 ON storage.objects FOR UPDATE USING (
     bucket_id = 'avatars'
     and (auth.role() = 'authenticated')
-    and storage.filename(name) like concat(auth.uid()::text, '%')
+    and storage.filename(name) LIKE concat(auth.uid()::text, '%')
 );
 
 CREATE POLICY "Users can insert their own avatars"
-ON storage.objects FOR INSERT with check (
+ON storage.objects FOR INSERT WITH CHECK (
     bucket_id = 'avatars'
     and (auth.role() = 'authenticated')
-    and storage.filename(name) like concat(auth.uid()::text, '%')
+    and storage.filename(name) LIKE concat(auth.uid()::text, '%')
 );
 

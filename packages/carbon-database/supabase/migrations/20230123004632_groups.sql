@@ -228,7 +228,7 @@ RETURNS TABLE (
   "isSupplierOrgGroup" BOOLEAN,
   "isSupplierTypeGroup" BOOLEAN,
   "users" JSONB
-) LANGUAGE "plpgsql" SECURITY DEFINER SET search_path = public
+) LANGUAGE "plpgsql" SECURITY INVOKER SET search_path = public
 AS $$
   BEGIN
     RETURN QUERY

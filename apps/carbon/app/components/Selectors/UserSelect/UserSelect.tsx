@@ -20,13 +20,19 @@ import TreeSelect from "./components/TreeSelect";
 import type { UserSelectProps } from "./types";
 import { UserSelectContext } from "./provider";
 import useUserSelect from "./useUserSelect";
+import { usePermissions } from "~/hooks";
+import { Select } from "@carbon/react";
 
 export default function Component(props: UserSelectProps) {
-  const state = useUserSelect(props);
-  return <UserSelect {...state} />;
+  const permissions = usePermissions();
+
+  if (!permissions.is("employee"))
+    return <Select options={[]} isDisabled placeholder="Select..." />;
+  return <UserSelect {...props} />;
 }
 
-const UserSelect = (state: ReturnType<typeof useUserSelect>) => {
+const UserSelect = (props: UserSelectProps) => {
+  const state = useUserSelect(props);
   const {
     dropdown,
     innerProps: { hideSelections, isMulti, label, readOnly, testID, width },

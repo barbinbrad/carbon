@@ -117,18 +117,6 @@ const SupplierAccountsTable = memo(
               {permissions.can("update", "users") && (
                 <ActionMenu>
                   <MenuItem
-                    icon={<BsPencilSquare />}
-                    onClick={() =>
-                      navigate(
-                        `/x/users/suppliers/${
-                          item.getValue() as string
-                        }?${params.toString()}`
-                      )
-                    }
-                  >
-                    Edit Supplier
-                  </MenuItem>
-                  <MenuItem
                     icon={<BsEnvelope />}
                     onClick={() => {
                       setSelectedUserIds([item.getValue() as string]);

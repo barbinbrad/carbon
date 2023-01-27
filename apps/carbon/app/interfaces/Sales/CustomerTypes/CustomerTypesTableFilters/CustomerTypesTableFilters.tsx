@@ -28,7 +28,7 @@ const CustomerTypesTableFilters = () => {
         />
       </HStack>
       <HStack spacing={2}>
-        {permissions.can("create", "users") && (
+        {permissions.can("create", "sales") && (
           <Button
             as={Link}
             to={`new?${params.toString()}`}

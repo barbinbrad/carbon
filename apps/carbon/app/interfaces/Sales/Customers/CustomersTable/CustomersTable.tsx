@@ -87,7 +87,7 @@ const CustomersTable = memo(({ data, count }: CustomersTableProps) => {
         accessorKey: "id",
         cell: (item) => (
           <Flex justifyContent="end">
-            {permissions.can("update", "users") && (
+            {permissions.can("update", "sales") && (
               <ActionMenu>
                 <MenuItem icon={<BsPencilSquare />}>Edit Customer</MenuItem>
               </ActionMenu>

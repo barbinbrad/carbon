@@ -9,7 +9,7 @@ import {
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo, useState } from "react";
-import { BsEnvelope, BsPencilSquare } from "react-icons/bs";
+import { BsEnvelope } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { Avatar, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
@@ -116,18 +116,6 @@ const CustomerAccountsTable = memo(
             <Flex justifyContent="end">
               {permissions.can("update", "users") && (
                 <ActionMenu>
-                  <MenuItem
-                    icon={<BsPencilSquare />}
-                    onClick={() =>
-                      navigate(
-                        `/x/users/customers/${
-                          item.getValue() as string
-                        }?${params.toString()}`
-                      )
-                    }
-                  >
-                    Edit Customer
-                  </MenuItem>
                   <MenuItem
                     icon={<BsEnvelope />}
                     onClick={() => {

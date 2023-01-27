@@ -6,19 +6,19 @@ const usersRoutes: RouteGroup[] = [
     routes: [
       {
         name: "Employees",
-        to: "/app/users/employees",
+        to: "/x/users/employees",
       },
       {
         name: "Customers",
-        to: "/app/users/customers",
+        to: "/x/users/customers",
       },
       {
         name: "Suppliers",
-        to: "/app/users/suppliers",
+        to: "/x/users/suppliers",
       },
       {
         name: "Groups",
-        to: "/app/users/groups",
+        to: "/x/users/groups",
       },
     ],
   },
@@ -27,7 +27,7 @@ const usersRoutes: RouteGroup[] = [
     routes: [
       {
         name: "Employee Types",
-        to: "/app/users/employee-types",
+        to: "/x/users/employee-types",
       },
     ],
   },

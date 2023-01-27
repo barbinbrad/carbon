@@ -15,7 +15,7 @@ const ProfileForm = ({ user }: ProfileFormProps) => {
       <SectionTitle title="Basic Information" />
       <ValidatedForm
         method="post"
-        action="/app/account/profile"
+        action="/x/account/profile"
         validator={accountProfileValidator}
         defaultValues={user}
       >

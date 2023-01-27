@@ -107,7 +107,7 @@ const CustomersTable = memo(({ data, count }: CustomersTableProps) => {
         data={data}
         withPagination
         onRowClick={(row) =>
-          navigate(`/app/sales/customers/${row.id}?${params.toString()}`)
+          navigate(`/x/sales/customers/${row.id}?${params.toString()}`)
         }
       />
     </>

@@ -49,7 +49,7 @@ const SupplierTypesTable = memo(({ data, count }: SupplierTypesTableProps) => {
               <MenuItem
                 icon={<BsPeopleFill />}
                 onClick={() => {
-                  navigate(`/app/purchasing/suppliers?type=${row.original.id}`);
+                  navigate(`/x/purchasing/suppliers?type=${row.original.id}`);
                 }}
               >
                 View Suppliers
@@ -62,7 +62,7 @@ const SupplierTypesTable = memo(({ data, count }: SupplierTypesTableProps) => {
                 icon={<BsPencilSquare />}
                 onClick={() => {
                   navigate(
-                    `/app/purchasing/supplier-types/${
+                    `/x/purchasing/supplier-types/${
                       row.original.id
                     }?${params.toString()}`
                   );
@@ -78,7 +78,7 @@ const SupplierTypesTable = memo(({ data, count }: SupplierTypesTableProps) => {
                 icon={<IoMdTrash />}
                 onClick={() => {
                   navigate(
-                    `/app/purchasing/supplier-types/delete/${
+                    `/x/purchasing/supplier-types/delete/${
                       row.original.id
                     }?${params.toString()}`
                   );

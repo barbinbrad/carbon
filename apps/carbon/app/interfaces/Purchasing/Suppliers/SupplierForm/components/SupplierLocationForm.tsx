@@ -13,6 +13,7 @@ import {
 import { useParams } from "@remix-run/react";
 import { ValidatedForm } from "remix-validated-form";
 import { Hidden, Input, Submit } from "~/components/Form";
+import { usePermissions } from "~/hooks";
 import type { SupplierLocation } from "~/interfaces/Purchasing/types";
 import { supplierLocationValidator } from "~/services/purchasing";
 
@@ -26,7 +27,12 @@ const SupplierLocationForm = ({
   onClose,
 }: SupplierLocationFormProps) => {
   const { supplierId } = useParams();
+  const permissions = usePermissions();
   const isEditing = !!location?.id;
+  const isDisabled = isEditing
+    ? !permissions.can("update", "purchasing")
+    : !permissions.can("create", "purchasing");
+
   if (Array.isArray(location?.address))
     throw new Error("location.address is an array");
 
@@ -37,8 +43,8 @@ const SupplierLocationForm = ({
         method="post"
         action={
           isEditing
-            ? `/app/purchasing/suppliers/${supplierId}/location/${location?.id}`
-            : `/app/purchasing/suppliers/${supplierId}/location/new`
+            ? `/x/purchasing/suppliers/${supplierId}/location/${location?.id}`
+            : `/x/purchasing/suppliers/${supplierId}/location/new`
         }
         defaultValues={{
           id: location?.id ?? undefined,
@@ -70,7 +76,7 @@ const SupplierLocationForm = ({
           </DrawerBody>
           <DrawerFooter>
             <HStack spacing={2}>
-              <Submit>Save</Submit>
+              <Submit disabled={isDisabled}>Save</Submit>
               <Button
                 size="md"
                 colorScheme="gray"

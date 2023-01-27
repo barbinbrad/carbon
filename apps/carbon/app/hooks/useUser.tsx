@@ -9,7 +9,7 @@ type User = {
 };
 
 export function useUser() {
-  const data = useRouteData<{ user: unknown }>("/app");
+  const data = useRouteData<{ user: unknown }>("/x");
   if (data?.user && isUser(data.user)) {
     return data.user;
   }

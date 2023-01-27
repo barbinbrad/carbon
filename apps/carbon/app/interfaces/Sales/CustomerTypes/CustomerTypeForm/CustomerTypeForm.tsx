@@ -13,6 +13,7 @@ import {
 import { useNavigate } from "@remix-run/react";
 import { ValidatedForm } from "remix-validated-form";
 import { Color, Hidden, Input, Submit } from "~/components/Form";
+import { usePermissions } from "~/hooks";
 import { customerTypeValidator } from "~/services/sales";
 
 type CustomerTypeFormProps = {
@@ -24,10 +25,14 @@ type CustomerTypeFormProps = {
 };
 
 const CustomerTypeForm = ({ initialValues }: CustomerTypeFormProps) => {
+  const permissions = usePermissions();
   const navigate = useNavigate();
   const onClose = () => navigate(-1);
 
   const isEditing = initialValues.id !== undefined;
+  const isDisabled = isEditing
+    ? !permissions.can("update", "purchasing")
+    : !permissions.can("create", "purchasing");
 
   return (
     <Drawer onClose={onClose} isOpen={true} size="sm">
@@ -36,8 +41,8 @@ const CustomerTypeForm = ({ initialValues }: CustomerTypeFormProps) => {
         method="post"
         action={
           isEditing
-            ? `/app/sales/customer-types/${initialValues.id}`
-            : "/app/sales/customer-types/new"
+            ? `/x/sales/customer-types/${initialValues.id}`
+            : "/x/sales/customer-types/new"
         }
         defaultValues={initialValues}
       >
@@ -56,7 +61,7 @@ const CustomerTypeForm = ({ initialValues }: CustomerTypeFormProps) => {
           </DrawerBody>
           <DrawerFooter>
             <HStack spacing={2}>
-              <Submit>Save</Submit>
+              <Submit disabled={isDisabled}>Save</Submit>
               <Button
                 size="md"
                 colorScheme="gray"

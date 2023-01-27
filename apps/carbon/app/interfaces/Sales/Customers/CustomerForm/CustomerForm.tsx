@@ -30,7 +30,7 @@ import type {
   CustomerType,
 } from "~/interfaces/Sales/types";
 import { mapRowsToOptions } from "~/utils/form";
-import { useRouteData } from "~/hooks";
+import { usePermissions, useRouteData } from "~/hooks";
 import { CustomerContacts, CustomerLocations } from "./components";
 
 type CustomerFormProps = {
@@ -52,13 +52,14 @@ const CustomerForm = ({
   contacts,
   locations,
 }: CustomerFormProps) => {
+  const permissions = usePermissions();
   const navigate = useNavigate();
-  const onClose = () => navigate("/app/sales/customers");
+  const onClose = () => navigate("/x/sales/customers");
 
   const routeData = useRouteData<{
     customerTypes: { data: CustomerType[] };
     customerStatuses: { data: CustomerStatus[] };
-  }>("/app/sales/customers");
+  }>("/x/sales/customers");
 
   const customerTypeOptions = routeData?.customerTypes
     ? mapRowsToOptions({
@@ -77,6 +78,9 @@ const CustomerForm = ({
     : [];
 
   const isEditing = initialValues.id !== undefined;
+  const isDisabled = isEditing
+    ? !permissions.can("update", "purchasing")
+    : !permissions.can("create", "purchasing");
 
   return (
     <Drawer onClose={onClose} isOpen size="full">
@@ -84,8 +88,8 @@ const CustomerForm = ({
         method="post"
         action={
           isEditing
-            ? `/app/sales/customers/${initialValues.id}`
-            : "/app/sales/customers/new"
+            ? `/x/sales/customers/${initialValues.id}`
+            : "/x/sales/customers/new"
         }
         validator={customerValidator}
         defaultValues={initialValues}
@@ -151,7 +155,7 @@ const CustomerForm = ({
           </DrawerBody>
           <DrawerFooter>
             <HStack spacing={2}>
-              <Submit>Save</Submit>
+              <Submit disabled={isDisabled}>Save</Submit>
               <Button
                 size="md"
                 colorScheme="gray"

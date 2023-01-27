@@ -59,7 +59,7 @@ const AttributeCategoriesTable = memo(
               <Button
                 onClick={() => {
                   navigate(
-                    `/app/people/attributes/list/${
+                    `/x/people/attributes/list/${
                       row.original.id
                     }?${params.toString()}`
                   );
@@ -75,7 +75,7 @@ const AttributeCategoriesTable = memo(
                 icon={<BsPlus />}
                 onClick={() => {
                   navigate(
-                    `/app/people/attributes/list/${
+                    `/x/people/attributes/list/${
                       row.original.id
                     }/new?${params.toString()}`
                   );
@@ -111,7 +111,7 @@ const AttributeCategoriesTable = memo(
                   icon={<BiAddToQueue />}
                   onClick={() => {
                     navigate(
-                      `/app/people/attributes/list/${
+                      `/x/people/attributes/list/${
                         row.original.id
                       }/new?${params.toString()}`
                     );
@@ -123,7 +123,7 @@ const AttributeCategoriesTable = memo(
                   icon={<BsListUl />}
                   onClick={() => {
                     navigate(
-                      `/app/people/attributes/list/${
+                      `/x/people/attributes/list/${
                         row.original.id
                       }?${params.toString()}`
                     );
@@ -134,7 +134,7 @@ const AttributeCategoriesTable = memo(
                 <MenuItem
                   icon={<BsPencilSquare />}
                   onClick={() => {
-                    navigate(`/app/people/attributes/${row.original.id}`);
+                    navigate(`/x/people/attributes/${row.original.id}`);
                   }}
                 >
                   Edit Attribute Category
@@ -166,7 +166,7 @@ const AttributeCategoriesTable = memo(
         />
 
         <ConfirmDelete
-          action={`/app/people/attributes/delete/${selectedCategory?.id}`}
+          action={`/x/people/attributes/delete/${selectedCategory?.id}`}
           name={selectedCategory?.name ?? ""}
           text={`Are you sure you want to deactivate the ${selectedCategory?.name} attribute category?`}
           isOpen={deleteModal.isOpen}

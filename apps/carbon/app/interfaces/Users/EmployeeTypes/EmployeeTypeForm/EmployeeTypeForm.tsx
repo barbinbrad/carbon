@@ -16,6 +16,7 @@ import { useNavigate } from "@remix-run/react";
 import { useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import { Color, Hidden, Input, Submit } from "~/components/Form";
+import { usePermissions } from "~/hooks";
 import PermissionCheckboxes from "~/interfaces/Users/components/Permission";
 import type { Permission } from "~/interfaces/Users/types";
 import { employeeTypeValidator } from "~/services/users";
@@ -36,6 +37,7 @@ type EmployeeTypeFormProps = {
 };
 
 const EmployeeTypeForm = ({ initialValues }: EmployeeTypeFormProps) => {
+  const userPermissions = usePermissions();
   const navigate = useNavigate();
   const onClose = () => navigate(-1);
 
@@ -51,6 +53,9 @@ const EmployeeTypeForm = ({ initialValues }: EmployeeTypeFormProps) => {
   };
 
   const isEditing = initialValues.id !== undefined;
+  const isDisabled = isEditing
+    ? !userPermissions.can("update", "users")
+    : !userPermissions.can("create", "users");
 
   return (
     <Drawer onClose={onClose} isOpen={true} size="sm">
@@ -59,8 +64,8 @@ const EmployeeTypeForm = ({ initialValues }: EmployeeTypeFormProps) => {
         method="post"
         action={
           isEditing
-            ? `/app/users/employee-types/${initialValues.id}`
-            : "/app/users/employee-types/new"
+            ? `/x/users/employee-types/${initialValues.id}`
+            : "/x/users/employee-types/new"
         }
         defaultValues={initialValues}
       >
@@ -97,7 +102,7 @@ const EmployeeTypeForm = ({ initialValues }: EmployeeTypeFormProps) => {
           </DrawerBody>
           <DrawerFooter>
             <HStack spacing={2}>
-              <Submit>Save</Submit>
+              <Submit disabled={isDisabled}>Save</Submit>
               <Button
                 size="md"
                 colorScheme="gray"

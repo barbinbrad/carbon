@@ -5,11 +5,11 @@ export function getCurrentPath(request: Request) {
 export function makeRedirectToFromHere(request: Request) {
   const currentPath = getCurrentPath(request);
   return new URLSearchParams([
-    ["redirectTo", currentPath.includes("resource") ? "/app" : currentPath],
+    ["redirectTo", currentPath.includes("resource") ? "/x" : currentPath],
   ]);
 }
 
-export function getRedirectTo(request: Request, defaultRedirectTo = "/app") {
+export function getRedirectTo(request: Request, defaultRedirectTo = "/x") {
   const url = new URL(request.url);
   return safeRedirect(url.searchParams.get("redirectTo"), defaultRedirectTo);
 }
@@ -75,7 +75,7 @@ export function assertIsDelete(
  */
 export function safeRedirect(
   to: FormDataEntryValue | string | null | undefined,
-  defaultRedirect = "/app"
+  defaultRedirect = "/x"
 ) {
   if (
     !to ||

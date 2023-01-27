@@ -4,7 +4,7 @@ import { requireAuthSession } from "~/services/session";
 
 export async function loader({ request }: LoaderArgs) {
   await requireAuthSession(request);
-  return redirect("/app");
+  return redirect("/x");
 }
 
 export default function IndexRoute() {

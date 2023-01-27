@@ -80,7 +80,7 @@ const BulkEditPermissions = ({
           <ValidatedForm
             validator={bulkPermissionsValidator}
             method="post"
-            action="/app/users/bulk-edit-permissions"
+            action="/x/users/bulk-edit-permissions"
             onSubmit={onClose}
             defaultValues={{ userIds }}
           >

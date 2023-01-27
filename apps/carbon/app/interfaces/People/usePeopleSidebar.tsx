@@ -6,11 +6,11 @@ const usersRoutes: RouteGroup[] = [
     routes: [
       {
         name: "Attributes",
-        to: "/app/people/attributes",
+        to: "/x/people/attributes",
       },
       {
         name: "Skills",
-        to: "/app/people/skills",
+        to: "/x/people/skills",
       },
     ],
   },

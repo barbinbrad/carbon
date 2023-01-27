@@ -50,7 +50,7 @@ const CreateCustomerModal = () => {
         <ModalBody pb={6}>
           <ValidatedForm
             method="post"
-            action="/app/users/customers/new"
+            action="/x/users/customers/new"
             validator={createCustomerValidator}
             defaultValues={{
               id: params.get("id") ?? "",

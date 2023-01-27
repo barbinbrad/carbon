@@ -142,7 +142,7 @@ function renderTypedForm({
       return (
         <ValidatedForm
           method="post"
-          action={`/app/account/${userId}/attribute`}
+          action={`/x/account/${userId}/attribute`}
           validator={attributeBooleanValidator}
           defaultValues={{
             userAttributeId,
@@ -184,7 +184,7 @@ function renderTypedForm({
       return (
         <ValidatedForm
           method="post"
-          action={`/app/account/${userId}/attribute`}
+          action={`/x/account/${userId}/attribute`}
           validator={attributeTextValidator}
           defaultValues={{
             userAttributeId,
@@ -226,7 +226,7 @@ function renderTypedForm({
       return (
         <ValidatedForm
           method="post"
-          action={`/app/account/${userId}/attribute`}
+          action={`/x/account/${userId}/attribute`}
           validator={attributeTextValidator}
           defaultValues={{
             userAttributeId,
@@ -276,7 +276,7 @@ function renderTypedForm({
       return (
         <ValidatedForm
           method="post"
-          action={`/app/account/${userId}/attribute`}
+          action={`/x/account/${userId}/attribute`}
           validator={attributeNumericValidator}
           defaultValues={{
             userAttributeId,
@@ -318,7 +318,7 @@ function renderTypedForm({
       return (
         <ValidatedForm
           method="post"
-          action={`/app/account/${userId}/attribute`}
+          action={`/x/account/${userId}/attribute`}
           validator={attributeTextValidator}
           defaultValues={{
             userAttributeId,
@@ -360,7 +360,7 @@ function renderTypedForm({
       return (
         <ValidatedForm
           method="post"
-          action={`/app/account/${userId}/attribute`}
+          action={`/x/account/${userId}/attribute`}
           validator={attributeUserValidator}
           defaultValues={{
             userAttributeId,
@@ -633,7 +633,7 @@ function UpdateRemoveButtons({
       {userAttributeValueId && (
         <ValidatedForm
           method="post"
-          action={`/app/account/${userId}/delete/attribute`}
+          action={`/x/account/${userId}/delete/attribute`}
           validator={deleteUserAttributeValueValidator}
           defaultValues={{
             userAttributeId,

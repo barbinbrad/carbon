@@ -30,7 +30,7 @@ import type {
   SupplierType,
 } from "~/interfaces/Purchasing/types";
 import { mapRowsToOptions } from "~/utils/form";
-import { useRouteData } from "~/hooks";
+import { usePermissions, useRouteData } from "~/hooks";
 import { SupplierContacts, SupplierLocations } from "./components";
 
 type SupplierFormProps = {
@@ -52,13 +52,14 @@ const SupplierForm = ({
   contacts,
   locations,
 }: SupplierFormProps) => {
+  const permissions = usePermissions();
   const navigate = useNavigate();
-  const onClose = () => navigate("/app/purchasing/suppliers");
+  const onClose = () => navigate("/x/purchasing/suppliers");
 
   const routeData = useRouteData<{
     supplierTypes: { data: SupplierType[] };
     supplierStatuses: { data: SupplierStatus[] };
-  }>("/app/purchasing/suppliers");
+  }>("/x/purchasing/suppliers");
 
   const supplierTypeOptions = routeData?.supplierTypes
     ? mapRowsToOptions({
@@ -77,6 +78,9 @@ const SupplierForm = ({
     : [];
 
   const isEditing = initialValues.id !== undefined;
+  const isDisabled = isEditing
+    ? !permissions.can("update", "purchasing")
+    : !permissions.can("create", "purchasing");
 
   return (
     <Drawer onClose={onClose} isOpen size="full">
@@ -84,8 +88,8 @@ const SupplierForm = ({
         method="post"
         action={
           isEditing
-            ? `/app/purchasing/suppliers/${initialValues.id}`
-            : "/app/purchasing/suppliers/new"
+            ? `/x/purchasing/suppliers/${initialValues.id}`
+            : "/x/purchasing/suppliers/new"
         }
         validator={supplierValidator}
         defaultValues={initialValues}
@@ -151,7 +155,7 @@ const SupplierForm = ({
           </DrawerBody>
           <DrawerFooter>
             <HStack spacing={2}>
-              <Submit>Save</Submit>
+              <Submit disabled={isDisabled}>Save</Submit>
               <Button
                 size="md"
                 colorScheme="gray"

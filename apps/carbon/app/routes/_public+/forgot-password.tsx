@@ -29,7 +29,7 @@ export const meta: MetaFunction = () => ({
 
 export async function loader({ request }: LoaderArgs) {
   const authSession = await getAuthSession(request);
-  if (authSession) return redirect("/app");
+  if (authSession) return redirect("/x");
   return null;
 }
 

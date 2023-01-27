@@ -78,7 +78,7 @@ const GroupsTable = memo(({ data, count }: GroupsTableProps) => {
                   }
                   icon={<BsPencilSquare />}
                   onClick={() => {
-                    navigate(`/app/users/groups/${row.original.id}`);
+                    navigate(`/x/users/groups/${row.original.id}`);
                   }}
                 >
                   Edit Group
@@ -92,7 +92,7 @@ const GroupsTable = memo(({ data, count }: GroupsTableProps) => {
                   }
                   icon={<IoMdTrash />}
                   onClick={() => {
-                    navigate(`/app/users/groups/delete/${row.original.id}`);
+                    navigate(`/x/users/groups/delete/${row.original.id}`);
                   }}
                 >
                   Delete Group

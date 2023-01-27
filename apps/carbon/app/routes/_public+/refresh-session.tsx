@@ -25,6 +25,6 @@ export async function action({ request }: ActionArgs) {
 
 export function ErrorBoundary() {
   const navigate = useNavigate();
-  navigate("/app");
+  navigate("/x");
   return null;
 }

@@ -4,7 +4,7 @@ import type { Role } from "~/types";
 import { useRouteData } from "./useRouteData";
 
 export function usePermissions() {
-  const data = useRouteData<{ permissions: unknown; role: unknown }>("/app");
+  const data = useRouteData<{ permissions: unknown; role: unknown }>("/x");
 
   if (!isPermissions(data?.permissions) || !isRole(data?.role)) {
     // TODO: force logout -- the likely cause is development changes

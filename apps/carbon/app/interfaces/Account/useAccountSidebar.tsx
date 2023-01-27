@@ -3,27 +3,27 @@ import type { Route } from "~/types";
 const accountRoutes: Route[] = [
   {
     name: "Profile",
-    to: "/app/account/profile",
+    to: "/x/account/profile",
   },
   {
     name: "Personal",
-    to: "/app/account/personal",
+    to: "/x/account/personal",
   },
   {
     name: "Password",
-    to: "/app/account/password",
+    to: "/x/account/password",
   },
   // {
   //   name: "Notifications",
-  //   to: "/app/account/notifications",
+  //   to: "/x/account/notifications",
   // },
   // {
   //   name: "Security",
-  //   to: "/app/account/security",
+  //   to: "/x/account/security",
   // },
   // {
   //   name: "Settings",
-  //   to: "/app/account/settings",
+  //   to: "/x/account/settings",
   // },
 ];
 

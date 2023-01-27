@@ -7,7 +7,7 @@ const purchasingRoutes: AuthenticatedRouteGroup[] = [
     routes: [
       {
         name: "Suppliers",
-        to: "/app/purchasing/suppliers",
+        to: "/x/purchasing/suppliers",
       },
     ],
   },
@@ -16,7 +16,7 @@ const purchasingRoutes: AuthenticatedRouteGroup[] = [
     routes: [
       {
         name: "Supplier Types",
-        to: "/app/purchasing/supplier-types",
+        to: "/x/purchasing/supplier-types",
         role: "employee",
       },
     ],

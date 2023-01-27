@@ -74,7 +74,6 @@ const SupplierContact = ({
       const contact = supplierContactFetcher.data?.data?.find(
         (c) => c.id === newValue
       );
-
       onChange(contact);
     }
   };

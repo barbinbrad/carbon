@@ -13,6 +13,7 @@ import {
 import { useNavigate } from "@remix-run/react";
 import { ValidatedForm } from "remix-validated-form";
 import { Color, Hidden, Input, Submit } from "~/components/Form";
+import { usePermissions } from "~/hooks";
 import { supplierTypeValidator } from "~/services/purchasing";
 
 type SupplierTypeFormProps = {
@@ -24,10 +25,14 @@ type SupplierTypeFormProps = {
 };
 
 const SupplierTypeForm = ({ initialValues }: SupplierTypeFormProps) => {
+  const permissions = usePermissions();
   const navigate = useNavigate();
   const onClose = () => navigate(-1);
 
   const isEditing = initialValues.id !== undefined;
+  const isDisabled = isEditing
+    ? !permissions.can("update", "purchasing")
+    : !permissions.can("create", "purchasing");
 
   return (
     <Drawer onClose={onClose} isOpen={true} size="sm">
@@ -36,8 +41,8 @@ const SupplierTypeForm = ({ initialValues }: SupplierTypeFormProps) => {
         method="post"
         action={
           isEditing
-            ? `/app/purchasing/supplier-types/${initialValues.id}`
-            : "/app/purchasing/supplier-types/new"
+            ? `/x/purchasing/supplier-types/${initialValues.id}`
+            : "/x/purchasing/supplier-types/new"
         }
         defaultValues={initialValues}
       >
@@ -56,7 +61,7 @@ const SupplierTypeForm = ({ initialValues }: SupplierTypeFormProps) => {
           </DrawerBody>
           <DrawerFooter>
             <HStack spacing={2}>
-              <Submit>Save</Submit>
+              <Submit disabled={isDisabled}>Save</Submit>
               <Button
                 size="md"
                 colorScheme="gray"

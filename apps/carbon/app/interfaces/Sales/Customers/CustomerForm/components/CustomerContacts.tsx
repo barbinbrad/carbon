@@ -36,8 +36,6 @@ const CustomerContacts = ({
   const navigate = useNavigate();
   const permissions = usePermissions();
 
-  const canCreateAccount = permissions.can("create", "users");
-
   const [contact, setContact] = useState<CustomerContact | undefined>(
     undefined
   );
@@ -52,15 +50,17 @@ const CustomerContacts = ({
       <VStack alignItems="start" w="full" spacing={4} mb={4}>
         <HStack w="full" justifyContent="space-between">
           <Heading size="md">Contacts</Heading>
-          <IconButton
-            icon={<IoMdAdd />}
-            aria-label="Add contact"
-            variant="outline"
-            onClick={() => {
-              setContact(undefined);
-              contactDrawer.onOpen();
-            }}
-          />
+          {permissions.can("create", "sales") && (
+            <IconButton
+              icon={<IoMdAdd />}
+              aria-label="Add contact"
+              variant="outline"
+              onClick={() => {
+                setContact(undefined);
+                contactDrawer.onOpen();
+              }}
+            />
+          )}
         </HStack>
         {isEmpty && (
           <Text color="gray.500" fontSize="sm">
@@ -77,19 +77,28 @@ const CustomerContacts = ({
                   <Contact
                     contact={contact.contact}
                     user={contact.user}
-                    onDelete={() => {
-                      setContact(contact);
-                      deleteContactModal.onOpen();
-                    }}
-                    onEdit={() => {
-                      setContact(contact);
-                      contactDrawer.onOpen();
-                    }}
+                    onDelete={
+                      permissions.can("delete", "sales")
+                        ? () => {
+                            setContact(contact);
+                            deleteContactModal.onOpen();
+                          }
+                        : undefined
+                    }
+                    onEdit={
+                      permissions.can("update", "sales")
+                        ? () => {
+                            setContact(contact);
+                            contactDrawer.onOpen();
+                          }
+                        : undefined
+                    }
                     onCreateAccount={
-                      canCreateAccount && contact.user === null
+                      permissions.can("create", "users") &&
+                      contact.user === null
                         ? () =>
                             navigate(
-                              `/app/users/customers/new?id=${contact.id}&customer=${customerId}`
+                              `/x/users/customers/new?id=${contact.id}&customer=${customerId}`
                             )
                         : undefined
                     }
@@ -99,7 +108,7 @@ const CustomerContacts = ({
             ))}
           </List>
         )}
-        {isEmpty && (
+        {isEmpty && permissions.can("create", "sales") && (
           <Button
             leftIcon={<IoMdAdd />}
             colorScheme="brand"
@@ -122,7 +131,7 @@ const CustomerContacts = ({
       )}
       {deleteContactModal.isOpen && (
         <ConfirmDelete
-          action={`/app/sales/customers/${customerId}/contact/delete/${contact?.id}`}
+          action={`/x/sales/customers/${customerId}/contact/delete/${contact?.id}`}
           // @ts-ignore
           name={`${contact?.contact.firstName} ${contact?.contact.lastName}`}
           text="Are you sure you want to delete this contact?"

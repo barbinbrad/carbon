@@ -20,6 +20,7 @@ import {
   Submit,
   TextArea,
 } from "~/components/Form";
+import { usePermissions } from "~/hooks";
 import type {
   SupplierContact,
   SupplierLocation,
@@ -38,7 +39,12 @@ const SupplierContactForm = ({
   onClose,
 }: SupplierContactFormProps) => {
   const { supplierId } = useParams();
+  const permissions = usePermissions();
   const isEditing = !!contact?.id;
+  const isDisabled = isEditing
+    ? !permissions.can("update", "purchasing")
+    : !permissions.can("create", "purchasing");
+
   if (Array.isArray(contact?.contact))
     throw new Error("contact.contact is an array");
 
@@ -49,8 +55,8 @@ const SupplierContactForm = ({
         method="post"
         action={
           isEditing
-            ? `/app/purchasing/suppliers/${supplierId}/contact/${contact?.id}`
-            : `/app/purchasing/suppliers/${supplierId}/contact/new`
+            ? `/x/purchasing/suppliers/${supplierId}/contact/${contact?.id}`
+            : `/x/purchasing/suppliers/${supplierId}/contact/new`
         }
         defaultValues={{
           id: contact?.id ?? undefined,
@@ -100,7 +106,7 @@ const SupplierContactForm = ({
           </DrawerBody>
           <DrawerFooter>
             <HStack spacing={2}>
-              <Submit>Save</Submit>
+              <Submit disabled={isDisabled}>Save</Submit>
               <Button
                 size="md"
                 colorScheme="gray"

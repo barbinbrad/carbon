@@ -1,6 +1,5 @@
 import { useColor } from "@carbon/react";
 import { Button, GridItem, HStack } from "@chakra-ui/react";
-import { Link } from "@remix-run/react";
 import { BiHelpCircle } from "react-icons/bi";
 import { BsChatSquare } from "react-icons/bs";
 import { Search } from "~/components/Search";
@@ -14,15 +13,13 @@ const Topbar = () => {
 
   return (
     <GridItem
-      display="grid"
-      gap={4}
-      gridTemplateColumns="1fr auto 1fr"
-      // backdropFilter="auto"
-      // backdropBlur="8px"
       bg={useColor("white")}
       borderBottom={1}
       borderBottomColor={borderColor}
       borderBottomStyle="solid"
+      display="grid"
+      gap={4}
+      gridTemplateColumns="1fr auto 1fr"
       position="sticky"
       px={4}
       top={0}
@@ -31,30 +28,38 @@ const Topbar = () => {
       <Breadcrumbs links={breadcrumbLinks} />
       <Search />
       <HStack py={2} justifyContent="end">
-        <Button
-          as={Link}
-          to="https://github.com/barbinbrad/carbon/discussions/new/choose"
-          colorScheme="gray"
-          leftIcon={<BiHelpCircle />}
-          variant="solid"
-          border={1}
-          borderColor={borderColor}
-          borderStyle="solid"
+        <a
+          target="_blank"
+          href="https://github.com/barbinbrad/carbon/discussions/new/choose"
+          rel="noreferrer"
         >
-          Help
-        </Button>
-        <Button
-          as={Link}
-          to="https://github.com/barbinbrad/carbon/issues/new/choose"
-          colorScheme="gray"
-          leftIcon={<BsChatSquare />}
-          variant="solid"
-          border={1}
-          borderColor={borderColor}
-          borderStyle="solid"
+          <Button
+            colorScheme="gray"
+            leftIcon={<BiHelpCircle />}
+            variant="solid"
+            border={1}
+            borderColor={borderColor}
+            borderStyle="solid"
+          >
+            Help
+          </Button>
+        </a>
+        <a
+          target="_blank"
+          href="https://github.com/barbinbrad/carbon/issues/new/choose"
+          rel="noreferrer"
         >
-          Feedback
-        </Button>
+          <Button
+            colorScheme="gray"
+            leftIcon={<BsChatSquare />}
+            variant="solid"
+            border={1}
+            borderColor={borderColor}
+            borderStyle="solid"
+          >
+            Feedback
+          </Button>
+        </a>
         <AvatarMenu />
       </HStack>
     </GridItem>

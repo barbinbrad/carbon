@@ -13,6 +13,7 @@ import {
 import { useParams } from "@remix-run/react";
 import { ValidatedForm } from "remix-validated-form";
 import { Hidden, Input, Submit } from "~/components/Form";
+import { usePermissions } from "~/hooks";
 import type { CustomerLocation } from "~/interfaces/Sales/types";
 import { customerLocationValidator } from "~/services/sales";
 
@@ -26,7 +27,12 @@ const CustomerLocationForm = ({
   onClose,
 }: CustomerLocationFormProps) => {
   const { customerId } = useParams();
+  const permissions = usePermissions();
   const isEditing = !!location?.id;
+  const isDisabled = isEditing
+    ? !permissions.can("update", "sales")
+    : !permissions.can("create", "sales");
+
   if (Array.isArray(location?.address))
     throw new Error("location.address is an array");
 
@@ -37,8 +43,8 @@ const CustomerLocationForm = ({
         method="post"
         action={
           isEditing
-            ? `/app/sales/customers/${customerId}/location/${location?.id}`
-            : `/app/sales/customers/${customerId}/location/new`
+            ? `/x/sales/customers/${customerId}/location/${location?.id}`
+            : `/x/sales/customers/${customerId}/location/new`
         }
         defaultValues={{
           id: location?.id ?? undefined,
@@ -70,7 +76,7 @@ const CustomerLocationForm = ({
           </DrawerBody>
           <DrawerFooter>
             <HStack spacing={2}>
-              <Submit>Save</Submit>
+              <Submit disabled={isDisabled}>Save</Submit>
               <Button
                 size="md"
                 colorScheme="gray"

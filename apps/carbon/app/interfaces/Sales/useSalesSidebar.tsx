@@ -7,7 +7,7 @@ const salesRoutes: AuthenticatedRouteGroup[] = [
     routes: [
       {
         name: "Customers",
-        to: "/app/sales/customers",
+        to: "/x/sales/customers",
       },
     ],
   },
@@ -16,7 +16,7 @@ const salesRoutes: AuthenticatedRouteGroup[] = [
     routes: [
       {
         name: "Customer Types",
-        to: "/app/sales/customer-types",
+        to: "/x/sales/customer-types",
         role: "employee",
       },
     ],

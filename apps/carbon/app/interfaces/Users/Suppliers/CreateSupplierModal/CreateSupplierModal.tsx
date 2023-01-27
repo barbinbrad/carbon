@@ -50,7 +50,7 @@ const CreateSupplierModal = () => {
         <ModalBody pb={6}>
           <ValidatedForm
             method="post"
-            action="/app/users/suppliers/new"
+            action="/x/users/suppliers/new"
             validator={createSupplierValidator}
             defaultValues={{
               id: params.get("id") ?? "",

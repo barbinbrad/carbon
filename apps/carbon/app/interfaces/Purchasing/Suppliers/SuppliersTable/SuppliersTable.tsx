@@ -107,7 +107,7 @@ const SuppliersTable = memo(({ data, count }: SuppliersTableProps) => {
         data={data}
         withPagination
         onRowClick={(row) =>
-          navigate(`/app/purchasing/suppliers/${row.id}?${params.toString()}`)
+          navigate(`/x/purchasing/suppliers/${row.id}?${params.toString()}`)
         }
       />
     </>

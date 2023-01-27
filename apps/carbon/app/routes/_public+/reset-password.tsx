@@ -50,7 +50,7 @@ export async function action({ request }: ActionArgs) {
     );
   }
 
-  return redirect("/app", await flash(request, success("Password updated")));
+  return redirect("/x", await flash(request, success("Password updated")));
 }
 
 export default function ResetPasswordRoute() {
@@ -81,7 +81,7 @@ export default function ResetPasswordRoute() {
             <Password name="password" label="New Password" />
             <HStack spacing={4}>
               <Submit w="full">Reset Password</Submit>
-              <Button size="md" onClick={() => navigate("/app")}>
+              <Button size="md" onClick={() => navigate("/x")}>
                 Skip
               </Button>
             </HStack>

@@ -50,7 +50,7 @@ const CreateEmployeeModal = () => {
         <ModalBody pb={6}>
           <ValidatedForm
             method="post"
-            action="/app/users/employees/new"
+            action="/x/users/employees/new"
             validator={createEmployeeValidator}
             // @ts-ignore
             fetcher={formFetcher}

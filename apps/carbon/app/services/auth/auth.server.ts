@@ -115,7 +115,7 @@ export async function requirePermissions(
 
   if (!hasRequiredPermissions) {
     throw redirect(
-      "/app",
+      "/x",
       await flash(
         request,
         error({ myClaims, requirePermissions }, "Access Denied")

@@ -65,7 +65,7 @@ const EmployeePermissionsForm = ({
       <ValidatedForm
         validator={employeeValidator}
         method="post"
-        action={`/app/users/employees/${initialValues.id}`}
+        action={`/x/users/employees/${initialValues.id}`}
         defaultValues={initialValues}
       >
         <DrawerOverlay />

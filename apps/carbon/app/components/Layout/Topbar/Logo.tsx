@@ -19,7 +19,7 @@ const Logo = () => {
         border="none"
         aria-label="Carbon"
         icon={<AiOutlineCodeSandbox />}
-        to="/app"
+        to="/x"
       />
     </Box>
   );

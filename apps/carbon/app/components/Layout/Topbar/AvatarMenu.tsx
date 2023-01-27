@@ -29,7 +29,7 @@ const AvatarMenu = () => {
       <MenuList fontSize="sm" boxShadow="xl" minW={48}>
         <MenuItem>Signed in as {name}</MenuItem>
         <MenuDivider />
-        <MenuItem as={Link} to="/app/account/profile" icon={<CgProfile />}>
+        <MenuItem as={Link} to="/x/account/profile" icon={<CgProfile />}>
           My Profile
         </MenuItem>
         <Form method="post" action="/logout">

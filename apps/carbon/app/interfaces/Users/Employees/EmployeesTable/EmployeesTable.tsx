@@ -114,7 +114,7 @@ const EmployeesTable = memo(
                     icon={<BsPencilSquare />}
                     onClick={() =>
                       navigate(
-                        `/app/users/employees/${
+                        `/x/users/employees/${
                           item.getValue() as string
                         }?${params.toString()}`
                       )

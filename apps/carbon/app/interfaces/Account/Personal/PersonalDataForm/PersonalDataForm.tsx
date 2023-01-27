@@ -13,7 +13,7 @@ const PersonalDataForm = ({ personalData }: PersonalDataFormProps) => {
     <Box w="full">
       <ValidatedForm
         method="post"
-        action="/app/account/personal"
+        action="/x/account/personal"
         validator={accountPersonalDataValidator}
         defaultValues={personalData}
       >

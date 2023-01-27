@@ -61,7 +61,7 @@ const ProfilePhotoForm = ({ user }: ProfilePhotoFormProps) => {
     if (path) formData.append("path", path);
     submit(formData, {
       method: "post",
-      action: "/app/account/profile",
+      action: "/x/account/profile",
     });
   };
 

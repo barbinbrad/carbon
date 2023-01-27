@@ -49,7 +49,7 @@ const EmployeeTypesTable = memo(({ data, count }: EmployeeTypesTableProps) => {
               <MenuItem
                 icon={<BsPeopleFill />}
                 onClick={() => {
-                  navigate(`/app/users/employees?type=${row.original.id}`);
+                  navigate(`/x/users/employees?type=${row.original.id}`);
                 }}
               >
                 View Employees
@@ -61,7 +61,7 @@ const EmployeeTypesTable = memo(({ data, count }: EmployeeTypesTableProps) => {
                 icon={<BsPencilSquare />}
                 onClick={() => {
                   navigate(
-                    `/app/users/employee-types/${
+                    `/x/users/employee-types/${
                       row.original.id
                     }?${params.toString()}`
                   );
@@ -76,7 +76,7 @@ const EmployeeTypesTable = memo(({ data, count }: EmployeeTypesTableProps) => {
                 icon={<IoMdTrash />}
                 onClick={() => {
                   navigate(
-                    `/app/users/employee-types/delete/${
+                    `/x/users/employee-types/delete/${
                       row.original.id
                     }?${params.toString()}`
                   );

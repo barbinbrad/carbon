@@ -24,7 +24,7 @@ type DeactivateUsersModalProps = {
 const DeactivateUsersModal = ({
   userIds,
   isOpen,
-  redirectTo = "/app/users/employees",
+  redirectTo = "/x/users/employees",
   onClose,
 }: DeactivateUsersModalProps) => {
   const isSingleUser = userIds.length === 1;
@@ -51,7 +51,7 @@ const DeactivateUsersModal = ({
             </Button>
             <ValidatedForm
               method="post"
-              action="/app/users/deactivate"
+              action="/x/users/deactivate"
               validator={deactivateUsersValidator}
               onSubmit={onClose}
             >

@@ -120,7 +120,7 @@ const SupplierAccountsTable = memo(
                     icon={<BsPencilSquare />}
                     onClick={() =>
                       navigate(
-                        `/app/users/suppliers/${
+                        `/x/users/suppliers/${
                           item.getValue() as string
                         }?${params.toString()}`
                       )
@@ -224,7 +224,7 @@ const SupplierAccountsTable = memo(
           <DeactivateUsersModal
             userIds={selectedUserIds}
             isOpen={deactivateSupplierModal.isOpen}
-            redirectTo="/app/users/suppliers"
+            redirectTo="/x/users/suppliers"
             onClose={deactivateSupplierModal.onClose}
           />
         )}

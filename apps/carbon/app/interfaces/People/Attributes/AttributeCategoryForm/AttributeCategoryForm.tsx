@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { ValidatedForm } from "remix-validated-form";
 import { Boolean, Input, Hidden, Submit } from "~/components/Form";
+import { usePermissions } from "~/hooks";
 import { attributeCategoryValidator } from "~/services/people";
 
 type AttributeCategoryFormProps = {
@@ -27,7 +28,11 @@ const AttributeCategoryForm = ({
   initialValues,
   onClose,
 }: AttributeCategoryFormProps) => {
+  const permissions = usePermissions();
   const isEditing = initialValues.id !== undefined;
+  const isDisabled = isEditing
+    ? !permissions.can("update", "users")
+    : !permissions.can("create", "users");
 
   return (
     <Drawer onClose={onClose} isOpen={true} size="sm">
@@ -36,8 +41,8 @@ const AttributeCategoryForm = ({
         method="post"
         action={
           isEditing
-            ? `/app/people/attributes/${initialValues.id}`
-            : "/app/people/attributes/new"
+            ? `/x/people/attributes/${initialValues.id}`
+            : "/x/people/attributes/new"
         }
         defaultValues={initialValues}
       >
@@ -60,7 +65,7 @@ const AttributeCategoryForm = ({
           </DrawerBody>
           <DrawerFooter>
             <HStack spacing={2} mt={8}>
-              <Submit>Save</Submit>
+              <Submit disabled={isDisabled}>Save</Submit>
               <Button
                 size="md"
                 colorScheme="gray"

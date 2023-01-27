@@ -299,7 +299,7 @@ export async function getCurrentUser(
   const user = await getUserById(client, userId);
   if (user?.error || user?.data === null) {
     throw redirect(
-      "/app",
+      "/x",
       await flash(request, error(user.error, "Failed to get user"))
     );
   }
@@ -532,7 +532,7 @@ export async function getUserClaims(
       const rawClaims = await getClaims(client, userId);
       if (rawClaims.error || rawClaims.data === null) {
         throw redirect(
-          "/app",
+          "/x",
           await flash(
             request,
             error(rawClaims.error, "Failed to get rawClaims")
@@ -541,13 +541,13 @@ export async function getUserClaims(
       }
       // convert rawClaims to permissions
       claims = makePermissionsFromClaims(rawClaims.data);
-      // store claims in redis
 
+      // store claims in redis
       await redis.set(getPermissionCacheKey(userId), JSON.stringify(claims));
 
       if (!claims) {
         throw redirect(
-          "/app",
+          "/x",
           await flash(request, error(rawClaims, "Failed to parse claims"))
         );
       }
@@ -708,13 +708,17 @@ export function makePermissionsFromClaims(claims: Json[] | null) {
 
       switch (action) {
         case "view":
-          permissions[module].view = value as boolean;
+          permissions[module]["view"] = value as boolean;
+          break;
         case "create":
-          permissions[module].create = value as boolean;
+          permissions[module]["create"] = value as boolean;
+          break;
         case "update":
-          permissions[module].update = value as boolean;
+          permissions[module]["update"] = value as boolean;
+          break;
         case "delete":
-          permissions[module].delete = value as boolean;
+          permissions[module]["delete"] = value as boolean;
+          break;
       }
     }
   });

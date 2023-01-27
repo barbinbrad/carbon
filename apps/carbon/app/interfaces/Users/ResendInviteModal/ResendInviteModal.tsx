@@ -51,7 +51,7 @@ const ResendInviteModal = ({
             </Button>
             <ValidatedForm
               method="post"
-              action="/app/users/resend-invite"
+              action="/x/users/resend-invite"
               validator={resendInviteValidator}
               onSubmit={onClose}
               fetcher={fetcher}

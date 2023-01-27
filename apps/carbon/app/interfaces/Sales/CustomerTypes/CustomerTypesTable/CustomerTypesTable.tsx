@@ -49,7 +49,7 @@ const CustomerTypesTable = memo(({ data, count }: CustomerTypesTableProps) => {
               <MenuItem
                 icon={<BsPeopleFill />}
                 onClick={() => {
-                  navigate(`/app/sales/customers?type=${row.original.id}`);
+                  navigate(`/x/sales/customers?type=${row.original.id}`);
                 }}
               >
                 View Customers
@@ -61,7 +61,7 @@ const CustomerTypesTable = memo(({ data, count }: CustomerTypesTableProps) => {
                 icon={<BsPencilSquare />}
                 onClick={() => {
                   navigate(
-                    `/app/sales/customer-types/${
+                    `/x/sales/customer-types/${
                       row.original.id
                     }?${params.toString()}`
                   );
@@ -76,7 +76,7 @@ const CustomerTypesTable = memo(({ data, count }: CustomerTypesTableProps) => {
                 icon={<IoMdTrash />}
                 onClick={() => {
                   navigate(
-                    `/app/sales/customer-types/delete/${
+                    `/x/sales/customer-types/delete/${
                       row.original.id
                     }?${params.toString()}`
                   );

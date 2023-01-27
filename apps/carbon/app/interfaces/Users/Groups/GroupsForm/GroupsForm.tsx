@@ -13,6 +13,7 @@ import {
 import { useNavigate } from "@remix-run/react";
 import { ValidatedForm } from "remix-validated-form";
 import { Hidden, Input, Submit, Users } from "~/components/Form";
+import { usePermissions } from "~/hooks";
 import { groupValidator } from "~/services/users";
 
 type GroupFormProps = {
@@ -24,10 +25,14 @@ type GroupFormProps = {
 };
 
 const GroupForm = ({ initialValues }: GroupFormProps) => {
+  const permissions = usePermissions();
   const navigate = useNavigate();
   const onClose = () => navigate(-1);
 
   const isEditing = initialValues.id !== undefined;
+  const isDisabled = isEditing
+    ? !permissions.can("update", "purchasing")
+    : !permissions.can("create", "purchasing");
 
   return (
     <Drawer onClose={onClose} isOpen={true} size="sm">
@@ -36,8 +41,8 @@ const GroupForm = ({ initialValues }: GroupFormProps) => {
         method="post"
         action={
           isEditing
-            ? `/app/users/groups/${initialValues.id}`
-            : "/app/users/groups/new"
+            ? `/x/users/groups/${initialValues.id}`
+            : "/x/users/groups/new"
         }
         defaultValues={initialValues}
       >

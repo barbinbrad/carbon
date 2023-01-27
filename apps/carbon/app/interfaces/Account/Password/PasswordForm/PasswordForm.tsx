@@ -23,7 +23,7 @@ const PasswordForm = () => {
     <Box w="full">
       <ValidatedForm
         method="post"
-        action="/app/account/password"
+        action="/x/account/password"
         validator={accountPasswordValidator}
       >
         <VStack spacing={4} my={4} w="full" alignItems="start" maxW={440}>

@@ -20,6 +20,7 @@ import {
   Submit,
   Select,
 } from "~/components/Form";
+import { usePermissions } from "~/hooks";
 import { DataType } from "~/interfaces/Users/types";
 import { attributeValidator } from "~/services/people";
 import { mapRowsToOptions } from "~/utils/form";
@@ -50,12 +51,17 @@ const AttributeForm = ({
   dataTypes,
   onClose,
 }: AttributeFormProps) => {
+  const permissions = usePermissions();
   const options = mapRowsToOptions({
     data: dataTypes,
     value: "id",
     label: "label",
   });
   const isEditing = initialValues.id !== undefined;
+  const isDisabled = isEditing
+    ? !permissions.can("update", "users")
+    : !permissions.can("create", "users");
+
   const [isList, setIsList] = useState(
     initialValues.attributeDataTypeId === DataType.List
   );
@@ -74,8 +80,8 @@ const AttributeForm = ({
         method="post"
         action={
           isEditing
-            ? `/app/people/attribute/${initialValues.id}`
-            : "/app/people/attribute/new"
+            ? `/x/people/attribute/${initialValues.id}`
+            : "/x/people/attribute/new"
         }
         defaultValues={initialValues}
       >
@@ -109,7 +115,7 @@ const AttributeForm = ({
           </DrawerBody>
           <DrawerFooter>
             <HStack spacing={2}>
-              <Submit>Save</Submit>
+              <Submit disabled={isDisabled}>Save</Submit>
               <Button
                 size="md"
                 colorScheme="gray"

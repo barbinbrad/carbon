@@ -17,7 +17,7 @@ import { attributeCategoryValidator } from "~/services/people";
 
 type AttributeCategoryFormProps = {
   initialValues: {
-    id?: number;
+    id?: string;
     name: string;
     isPublic: boolean;
   };

@@ -32,7 +32,7 @@ export async function action({ request }: ActionArgs) {
 
   const createAttribute = await insertAttribute(client, {
     name,
-    attributeDataTypeId,
+    attributeDataTypeId: Number(attributeDataTypeId),
     userAttributeCategoryId,
     listOptions,
     canSelfManage,

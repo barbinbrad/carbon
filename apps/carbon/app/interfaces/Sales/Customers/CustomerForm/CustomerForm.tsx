@@ -40,7 +40,7 @@ type CustomerFormProps = {
     description?: string;
     accountManagerId?: string;
     customerTypeId?: string;
-    customerStatusId?: number;
+    customerStatusId?: string;
     taxId?: string;
   };
   contacts?: CustomerContact[];

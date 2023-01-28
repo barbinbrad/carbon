@@ -47,7 +47,7 @@ export interface Database {
       attributeDataType: {
         Row: {
           label: string
-          id: string
+          id: number
           isBoolean: boolean
           isDate: boolean
           isList: boolean
@@ -57,7 +57,7 @@ export interface Database {
         }
         Insert: {
           label: string
-          id?: string
+          id?: number
           isBoolean?: boolean
           isDate?: boolean
           isList?: boolean
@@ -67,7 +67,7 @@ export interface Database {
         }
         Update: {
           label?: string
-          id?: string
+          id?: number
           isBoolean?: boolean
           isDate?: boolean
           isList?: boolean
@@ -391,8 +391,8 @@ export interface Database {
       group: {
         Row: {
           name: string
-          updatedAt: string | null
           id: string
+          updatedAt: string | null
           isIdentityGroup: boolean
           isEmployeeTypeGroup: boolean
           isCustomerOrgGroup: boolean
@@ -403,8 +403,8 @@ export interface Database {
         }
         Insert: {
           name: string
-          updatedAt?: string | null
           id?: string
+          updatedAt?: string | null
           isIdentityGroup?: boolean
           isEmployeeTypeGroup?: boolean
           isCustomerOrgGroup?: boolean
@@ -415,8 +415,8 @@ export interface Database {
         }
         Update: {
           name?: string
-          updatedAt?: string | null
           id?: string
+          updatedAt?: string | null
           isIdentityGroup?: boolean
           isEmployeeTypeGroup?: boolean
           isCustomerOrgGroup?: boolean
@@ -664,7 +664,7 @@ export interface Database {
         Row: {
           name: string
           userAttributeCategoryId: string
-          attributeDataTypeId: string
+          attributeDataTypeId: number
           listOptions: string[] | null
           createdBy: string
           updatedAt: string | null
@@ -678,7 +678,7 @@ export interface Database {
         Insert: {
           name: string
           userAttributeCategoryId: string
-          attributeDataTypeId: string
+          attributeDataTypeId: number
           listOptions?: string[] | null
           createdBy: string
           updatedAt?: string | null
@@ -692,7 +692,7 @@ export interface Database {
         Update: {
           name?: string
           userAttributeCategoryId?: string
-          attributeDataTypeId?: string
+          attributeDataTypeId?: number
           listOptions?: string[] | null
           createdBy?: string
           updatedAt?: string | null

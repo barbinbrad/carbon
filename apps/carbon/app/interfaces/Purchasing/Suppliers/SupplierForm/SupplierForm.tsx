@@ -40,7 +40,7 @@ type SupplierFormProps = {
     description?: string;
     accountManagerId?: string;
     supplierTypeId?: string;
-    supplierStatusId?: number;
+    supplierStatusId?: string;
     taxId?: string;
   };
   contacts?: SupplierContact[];

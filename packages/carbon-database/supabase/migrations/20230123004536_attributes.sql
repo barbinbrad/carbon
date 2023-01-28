@@ -18,7 +18,7 @@ CREATE TABLE "userAttributeCategory" (
 -- ALTER TABLE "userAttributeCategory" ENABLE ROW LEVEL SECURITY;
 
 CREATE TABLE "attributeDataType" (
-  "id" TEXT NOT NULL DEFAULT xid(),
+  "id" SERIAL PRIMARY KEY,
   "label" TEXT NOT NULL,
   "isBoolean" BOOLEAN NOT NULL DEFAULT FALSE,
   "isDate" BOOLEAN NOT NULL DEFAULT FALSE,
@@ -27,7 +27,6 @@ CREATE TABLE "attributeDataType" (
   "isText" BOOLEAN NOT NULL DEFAULT FALSE,
   "isUser" BOOLEAN NOT NULL DEFAULT FALSE,
     
-  CONSTRAINT "attributeDataType_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "userAttributeDataType_singleDataType"
     CHECK (
       (
@@ -98,7 +97,7 @@ CREATE TABLE "userAttribute" (
   "name" TEXT NOT NULL,
   "sortOrder" INTEGER NOT NULL DEFAULT 1,
   "userAttributeCategoryId" TEXT NOT NULL,
-  "attributeDataTypeId" TEXT NOT NULL,
+  "attributeDataTypeId" INTEGER NOT NULL,
   "listOptions" TEXT ARRAY,
   "canSelfManage" BOOLEAN DEFAULT FALSE,
   "active" BOOLEAN DEFAULT TRUE,

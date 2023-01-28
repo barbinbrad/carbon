@@ -24,7 +24,7 @@ export async function action({ request, params }: ActionArgs) {
   const { error: deleteSupplierLocationError } = await deleteSupplierLocation(
     client,
     supplierId,
-    Number(supplierLocationId)
+    supplierLocationId
   );
   if (deleteSupplierLocationError) {
     return redirect(

@@ -5,7 +5,7 @@ import type { AttributeDataType } from "~/interfaces/People/types";
 
 export default function NewAttributeRoute() {
   const { categoryId } = useParams();
-  if (Number.isNaN(categoryId)) throw new Error("categoryId is not a number");
+  if (!categoryId) throw new Error("categoryId is not found");
 
   const navigate = useNavigate();
   const onClose = () => navigate(-1);

@@ -44,7 +44,7 @@ const UserAttributesForm = ({ attributeCategory }: UserAttributesFormProps) => {
   const user = useUser();
   const updateFetcher = useFetcher<{}>();
   const [optimisticUpdates, setOptimisticUpdates] = useState<
-    Record<number, boolean | string | number>
+    Record<string, boolean | string | number>
   >({});
 
   if (

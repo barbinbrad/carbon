@@ -90,7 +90,7 @@ export async function insertAttribute(
   client: SupabaseClient<Database>,
   attribute: {
     name: string;
-    attributeDataTypeId: string;
+    attributeDataTypeId: number;
     userAttributeCategoryId: string;
     listOptions?: string[];
     canSelfManage: boolean;

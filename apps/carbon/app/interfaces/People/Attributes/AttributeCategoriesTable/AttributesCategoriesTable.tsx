@@ -18,7 +18,7 @@ import { IoMdTrash } from "react-icons/io";
 import { Table } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions, useUrlParams } from "~/hooks";
-import type { AttributeCategory } from "~/interfaces/Users/types";
+import type { AttributeCategory } from "~/interfaces/People/types";
 
 type AttributeCategoriesTableProps = {
   data: AttributeCategory[];

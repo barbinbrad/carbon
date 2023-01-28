@@ -25,7 +25,7 @@ DECLARE
 BEGIN
   employee := (SELECT u."fullName" FROM public.user u WHERE u.id = new.id);
   INSERT INTO public.search(name, entity, uuid, link)
-  VALUES (employee, 'People', new.id, '/app/people/' || new.id);
+  VALUES (employee, 'People', new.id, '/x/people/' || new.id);
   RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -43,7 +43,7 @@ BEGIN
     RETURN new;
   END IF;
   IF (old."fullName" <> new."fullName") THEN
-    UPDATE public.search SET name = new."fullName", link = '/app/people/' || new.id
+    UPDATE public.search SET name = new."fullName", link = '/x/people/' || new.id
     WHERE entity = 'People' AND uuid = new.id;
   END IF;
   RETURN new;
@@ -58,7 +58,7 @@ CREATE FUNCTION public.create_customer_search_result()
 RETURNS TRIGGER AS $$
 BEGIN
   INSERT INTO public.search(name, entity, uuid, link)
-  VALUES (new.name, 'Customer', new.id, '/app/sales/customers/' || new.id);
+  VALUES (new.name, 'Customer', new.id, '/x/sales/customers/' || new.id);
   RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -86,7 +86,7 @@ CREATE FUNCTION public.create_supplier_search_result()
 RETURNS TRIGGER AS $$
 BEGIN
   INSERT INTO public.search(name, entity, uuid, link)
-  VALUES (new.name, 'Supplier', new.id, '/app/purchasing/suppliers/' || new.id);
+  VALUES (new.name, 'Supplier', new.id, '/x/purchasing/suppliers/' || new.id);
   RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;

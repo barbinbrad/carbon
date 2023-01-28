@@ -19,8 +19,8 @@ declare global {
       SESSION_SECRET: string;
       SESSION_KEY: string;
       SESSION_ERROR_KEY: string;
-      SESSION_MAX_AGE: number;
-      REFRESH_ACCESS_TOKEN_THRESHOLD: number;
+      // SESSION_MAX_AGE: number;
+      // REFRESH_ACCESS_TOKEN_THRESHOLD: number;
     }
   }
 }

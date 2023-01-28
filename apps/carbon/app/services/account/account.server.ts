@@ -5,8 +5,8 @@ export async function deleteUserAttributeValue(
   client: SupabaseClient<Database>,
   args: {
     userId: string;
-    userAttributeId: number;
-    userAttributeValueId: number;
+    userAttributeId: string;
+    userAttributeValueId: string;
   }
 ) {
   return client
@@ -94,8 +94,8 @@ export async function updatePublicAccount(
 export async function upsertUserAttributeValue(
   client: SupabaseClient<Database>,
   update: {
-    userAttributeValueId?: number | undefined;
-    userAttributeId: number;
+    userAttributeValueId?: string | undefined;
+    userAttributeId: string;
     value: boolean | string | number;
     type: string;
     userId: string;

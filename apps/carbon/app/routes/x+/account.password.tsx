@@ -2,7 +2,7 @@ import type { ActionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/router";
 import { validationError } from "remix-validated-form";
 import { PageTitle } from "~/components/Layout";
-import { getSupabaseAdmin } from "~/lib/supabase";
+import { getSupabaseServiceRole } from "~/lib/supabase";
 import { PasswordForm } from "~/interfaces/Account/Password";
 import { accountPasswordValidator } from "~/services/account";
 import { requirePermissions } from "~/services/auth";
@@ -24,10 +24,11 @@ export async function action({ request }: ActionArgs) {
 
   const { currentPassword, password } = validation.data;
 
-  const confirmPassword = await getSupabaseAdmin().auth.signInWithPassword({
-    email,
-    password: currentPassword,
-  });
+  const confirmPassword =
+    await getSupabaseServiceRole().auth.signInWithPassword({
+      email,
+      password: currentPassword,
+    });
 
   if (confirmPassword.error || !("user" in confirmPassword.data)) {
     return json(
@@ -36,12 +37,10 @@ export async function action({ request }: ActionArgs) {
     );
   }
 
-  const updatePassword = await getSupabaseAdmin().auth.admin.updateUserById(
-    userId,
-    {
+  const updatePassword =
+    await getSupabaseServiceRole().auth.admin.updateUserById(userId, {
       password,
-    }
-  );
+    });
 
   if (updatePassword.error) {
     return json(

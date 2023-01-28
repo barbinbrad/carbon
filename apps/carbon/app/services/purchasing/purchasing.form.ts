@@ -9,7 +9,7 @@ export const supplierValidator = withZod(
     name: z.string().min(1, { message: "Name is required" }),
     description: zfd.text(z.string().optional()),
     supplierTypeId: zfd.text(z.string().optional()),
-    supplierStatusId: zfd.numeric(z.number().optional()),
+    supplierStatusId: zfd.text(z.string().optional()),
     taxId: zfd.text(z.string().optional()),
     accountManagerId: zfd.text(z.string().optional()),
   })
@@ -19,13 +19,13 @@ export const supplierContactValidator = withZod(
   z.object({
     id: zfd.text(z.string().optional()),
     ...contact,
-    supplierLocationId: zfd.numeric(z.number().optional()),
+    supplierLocationId: zfd.text(z.string().optional()),
   })
 );
 
 export const supplierLocationValidator = withZod(
   z.object({
-    id: zfd.numeric(z.number().optional()),
+    id: zfd.text(z.string().optional()),
     ...address,
   })
 );

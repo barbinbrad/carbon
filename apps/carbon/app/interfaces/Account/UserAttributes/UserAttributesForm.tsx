@@ -89,7 +89,7 @@ const UserAttributesForm = ({ attributeCategory }: UserAttributesFormProps) => {
 
 type GenericAttributeRowProps = {
   attribute: {
-    id: number | null;
+    id: string | null;
     name: string | null;
     canSelfManage: boolean | null;
     listOptions: string[] | null;
@@ -97,8 +97,8 @@ type GenericAttributeRowProps = {
   displayValue: string | number | boolean;
   type: DataType;
   updateFetcher: ReturnType<typeof useFetcher>;
-  userAttributeId: number;
-  userAttributeValueId?: number;
+  userAttributeId: string;
+  userAttributeValueId?: string;
   userId: string;
   value: Date | string | number | boolean | null;
   setOptimisticUpdate: (value: boolean | string | number) => void;
@@ -624,8 +624,8 @@ function UpdateRemoveButtons({
   canUpdate: boolean;
   updateFetcher: ReturnType<typeof useFetcher>;
   userId: string;
-  userAttributeId: number;
-  userAttributeValueId?: number;
+  userAttributeId: string;
+  userAttributeValueId?: string;
   onOpen: () => void;
 }) {
   return (

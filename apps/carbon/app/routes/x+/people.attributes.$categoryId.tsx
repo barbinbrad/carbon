@@ -20,13 +20,9 @@ export async function loader({ request, params }: LoaderArgs) {
   });
 
   const { categoryId } = params;
-  if (!categoryId || Number.isNaN(Number(categoryId)))
-    throw notFound("Invalid categoryId");
+  if (!categoryId) throw notFound("Invalid categoryId");
 
-  const attributeCategory = await getAttributeCategory(
-    client,
-    Number(categoryId)
-  );
+  const attributeCategory = await getAttributeCategory(client, categoryId);
   if (attributeCategory.error) {
     return redirect(
       "/x/people/attributes",

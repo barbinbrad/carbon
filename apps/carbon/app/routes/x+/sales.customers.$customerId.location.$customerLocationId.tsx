@@ -30,11 +30,7 @@ export async function action({ request, params }: ActionArgs) {
 
   const { id, addressId, ...address } = validation.data;
 
-  if (id !== Number(customerLocationId))
-    throw badRequest("customerLocationId does not match id from form data");
-
-  if (addressId === undefined)
-    throw badRequest("addressId is undefined from form data");
+  if (!addressId) throw badRequest("addressId is undefined in form data");
 
   const update = await updateCustomerLocation(client, {
     addressId,

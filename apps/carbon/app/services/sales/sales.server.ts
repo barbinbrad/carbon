@@ -1,5 +1,6 @@
 import type { Database } from "@carbon/database";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { getSupabaseServiceRole } from "~/lib/supabase";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
 
@@ -18,7 +19,7 @@ export async function deleteCustomerContact(
 export async function deleteCustomerLocation(
   client: SupabaseClient<Database>,
   customerId: string,
-  customerLocationId: number
+  customerLocationId: string
 ) {
   return client
     .from("customerLocation")
@@ -107,7 +108,7 @@ export async function getCustomers(
   }
 
   if (args.status) {
-    query = query.eq("customerStatusId", Number(args.status));
+    query = query.eq("customerStatusId", args.status);
   }
 
   query = setGenericQueryFilters(query, args, "name");
@@ -172,7 +173,7 @@ export async function insertCustomer(
   customer: {
     name: string;
     customerTypeId?: string;
-    customerStatusId?: number;
+    customerStatusId?: string;
     taxId?: string;
     accountManagerId?: string;
     description?: string;
@@ -206,7 +207,9 @@ export async function insertCustomerContact(
     };
   }
 ) {
-  const insertContact = await client
+  // Need to use service role here because it violates RLS
+  // to select a contact that does not belong to any supplier
+  const insertContact = await getSupabaseServiceRole()
     .from("contact")
     .insert([customerContact.contact])
     .select("id");
@@ -274,7 +277,7 @@ export async function updateCustomer(
     id: string;
     name: string;
     customerTypeId?: string;
-    customerStatusId?: number;
+    customerStatusId?: string;
     taxId?: string;
     accountManagerId?: string;
     description?: string;
@@ -322,7 +325,7 @@ export async function updateCustomerContact(
 export async function updateCustomerLocation(
   client: SupabaseClient<Database>,
   customerLocation: {
-    addressId: number;
+    addressId: string;
     address: {
       addressLine1?: string;
       addressLine2?: string;

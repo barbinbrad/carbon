@@ -20,7 +20,7 @@ export default function NewAttributeRoute() {
       initialValues={{
         name: "",
         attributeDataTypeId: undefined,
-        userAttributeCategoryId: Number(categoryId),
+        userAttributeCategoryId: categoryId,
         canSelfManage: true,
       }}
       dataTypes={attributesRouteData?.dataTypes?.data ?? []}

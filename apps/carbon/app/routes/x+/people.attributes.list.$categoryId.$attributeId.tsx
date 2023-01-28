@@ -18,10 +18,9 @@ export async function loader({ request, params }: LoaderArgs) {
   });
 
   const { categoryId, attributeId } = params;
-  if (!attributeId || Number.isNaN(Number(attributeId)))
-    throw notFound("attributeId not found");
+  if (!attributeId) throw notFound("attributeId not found");
 
-  const attribute = await getAttribute(client, Number(attributeId));
+  const attribute = await getAttribute(client, attributeId);
   if (attribute.error) {
     return redirect(
       `/x/people/attributes/list/${categoryId}`,

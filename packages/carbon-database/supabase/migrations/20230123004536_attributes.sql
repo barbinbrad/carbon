@@ -1,6 +1,6 @@
 
 CREATE TABLE "userAttributeCategory" (
-  "id" SERIAL PRIMARY KEY,
+  "id" TEXT NOT NULL DEFAULT xid(),
   "name" TEXT NOT NULL,
   "public" BOOLEAN DEFAULT FALSE,
   "protected" BOOLEAN DEFAULT FALSE,
@@ -10,6 +10,7 @@ CREATE TABLE "userAttributeCategory" (
   "updatedAt" TIMESTAMP(3),
   "updatedBy" TEXT,
 
+  CONSTRAINT "userAttributeCategory_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "userAttributeCategory_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "userAttributeCategory_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id") 
 );
@@ -17,7 +18,7 @@ CREATE TABLE "userAttributeCategory" (
 -- ALTER TABLE "userAttributeCategory" ENABLE ROW LEVEL SECURITY;
 
 CREATE TABLE "attributeDataType" (
-  "id" SERIAL PRIMARY KEY,
+  "id" TEXT NOT NULL DEFAULT xid(),
   "label" TEXT NOT NULL,
   "isBoolean" BOOLEAN NOT NULL DEFAULT FALSE,
   "isDate" BOOLEAN NOT NULL DEFAULT FALSE,
@@ -26,6 +27,7 @@ CREATE TABLE "attributeDataType" (
   "isText" BOOLEAN NOT NULL DEFAULT FALSE,
   "isUser" BOOLEAN NOT NULL DEFAULT FALSE,
     
+  CONSTRAINT "attributeDataType_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "userAttributeDataType_singleDataType"
     CHECK (
       (
@@ -92,11 +94,11 @@ VALUES
 -- ALTER TABLE "attributeDataType" ENABLE ROW LEVEL SECURITY;
 
 CREATE TABLE "userAttribute" (
-  "id" SERIAL PRIMARY KEY,
+  "id" TEXT NOT NULL DEFAULT xid(),
   "name" TEXT NOT NULL,
   "sortOrder" INTEGER NOT NULL DEFAULT 1,
-  "userAttributeCategoryId" INTEGER NOT NULL,
-  "attributeDataTypeId" INTEGER NOT NULL,
+  "userAttributeCategoryId" TEXT NOT NULL,
+  "attributeDataTypeId" TEXT NOT NULL,
   "listOptions" TEXT ARRAY,
   "canSelfManage" BOOLEAN DEFAULT FALSE,
   "active" BOOLEAN DEFAULT TRUE,
@@ -105,6 +107,7 @@ CREATE TABLE "userAttribute" (
   "updatedAt" TIMESTAMP(3),
   "updatedBy" TEXT,
 
+  CONSTRAINT "userAttribute_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "userAttribute_userAttributeCategoryId_fkey" FOREIGN KEY ("userAttributeCategoryId") REFERENCES "userAttributeCategory"("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "userAttribute_attributeDataTypeId_fkey" FOREIGN KEY ("attributeDataTypeId") REFERENCES "attributeDataType"("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "userAttribute_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
@@ -115,8 +118,8 @@ CREATE TABLE "userAttribute" (
 -- ALTER TABLE "userAttribute" ENABLE ROW LEVEL SECURITY;
 
 CREATE TABLE "userAttributeValue" (
-  "id" SERIAL PRIMARY KEY,
-  "userAttributeId" INTEGER NOT NULL,
+  "id" TEXT NOT NULL DEFAULT xid(),
+  "userAttributeId" TEXT NOT NULL,
   "userId" TEXT NOT NULL,
   "valueBoolean" BOOLEAN,
   "valueDate" DATE,
@@ -192,7 +195,7 @@ CREATE POLICY "Users can view other users attributes if the category is public" 
   );
 
 -- CREATE TABLE employee_personal_data (
--- 	 id SERIAL PRIMARY KEY,
+--   "id" TEXT NOT NULL DEFAULT xid(), 
 --   bank_account_number TEXT,
 --   bank_routing_number TEXT,
 --   drivers_license_number TEXT,

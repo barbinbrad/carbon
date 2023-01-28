@@ -2,7 +2,7 @@ import type { Database, Json } from "@carbon/database";
 import { redis } from "@carbon/redis";
 import { redirect } from "@remix-run/node";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { getSupabaseAdmin } from "~/lib/supabase";
+import { getSupabaseServiceRole } from "~/lib/supabase";
 import type {
   EmployeeRow,
   EmployeeTypePermission,
@@ -504,7 +504,7 @@ export async function getUserById(
 }
 
 export async function getUserByEmail(email: string) {
-  return getSupabaseAdmin()
+  return getSupabaseServiceRole()
     .from("user")
     .select("*")
     .eq("email", email)
@@ -790,7 +790,7 @@ export async function resendInvite(
 }
 
 export async function resetPassword(userId: string, password: string) {
-  return getSupabaseAdmin().auth.admin.updateUserById(userId, {
+  return getSupabaseServiceRole().auth.admin.updateUserById(userId, {
     password,
   });
 }
@@ -799,7 +799,7 @@ async function setUserClaims(
   userId: string,
   claims: Record<string, boolean | string>
 ) {
-  return getSupabaseAdmin().auth.admin.updateUserById(userId, {
+  return getSupabaseServiceRole().auth.admin.updateUserById(userId, {
     app_metadata: claims,
   });
 }

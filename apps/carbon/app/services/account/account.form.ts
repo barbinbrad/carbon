@@ -35,8 +35,8 @@ export const accountPersonalDataValidator = withZod(z.object({}));
 
 const attributeDefaults = {
   type: z.string().min(1, { message: "Type is required" }),
-  userAttributeId: zfd.numeric(),
-  userAttributeValueId: zfd.numeric(z.number().optional()),
+  userAttributeId: z.string().min(20),
+  userAttributeValueId: zfd.text(z.string().optional()),
 };
 
 export const attributeBooleanValidator = withZod(
@@ -69,7 +69,7 @@ export const attributeUserValidator = withZod(
 
 export const deleteUserAttributeValueValidator = withZod(
   z.object({
-    userAttributeId: zfd.numeric(),
-    userAttributeValueId: zfd.numeric(),
+    userAttributeId: z.string().min(20),
+    userAttributeValueId: z.string().min(20),
   })
 );

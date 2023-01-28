@@ -1,5 +1,5 @@
 import { Queue } from "~/lib/bullmq";
-import { getSupabaseAdmin } from "~/lib/supabase";
+import { getSupabaseServiceRole } from "~/lib/supabase";
 import type { Permission } from "~/interfaces/Users/types";
 import { updatePermissions } from "~/services/users";
 
@@ -9,7 +9,7 @@ export type BulkPermissionsQueueData = {
   addOnly: boolean;
 };
 
-const client = getSupabaseAdmin();
+const client = getSupabaseServiceRole();
 
 export const bulkPermissionsQueue = Queue<BulkPermissionsQueueData>(
   "editBulkPermissions:v1",

@@ -1,4 +1,4 @@
-import { getSupabase, getSupabaseAdmin } from "./client";
+import { getSupabase, getSupabaseServiceRole } from "./client";
 import { SupabaseProvider, useSupabase } from "./provider";
 
-export { SupabaseProvider, getSupabase, getSupabaseAdmin, useSupabase };
+export { SupabaseProvider, getSupabase, getSupabaseServiceRole, useSupabase };

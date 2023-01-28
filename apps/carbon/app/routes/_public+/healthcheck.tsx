@@ -1,8 +1,8 @@
-import { getSupabaseAdmin } from "~/lib/supabase";
+import { getSupabaseServiceRole } from "~/lib/supabase";
 
 export async function loader() {
   try {
-    const test = await getSupabaseAdmin()
+    const test = await getSupabaseServiceRole()
       .from("users")
       .select("id", { head: true })
       .single();

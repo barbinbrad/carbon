@@ -1,12 +1,12 @@
 import { Queue } from "~/lib/bullmq";
-import { getSupabaseAdmin } from "~/lib/supabase";
+import { getSupabaseServiceRole } from "~/lib/supabase";
 import { deactivateUser } from "~/services/users";
 
 export type DeactivateUserQueueData = {
   id: string;
 };
 
-const client = getSupabaseAdmin();
+const client = getSupabaseServiceRole();
 
 export const deactivateUsersQueue = Queue<DeactivateUserQueueData>(
   "deactivateUsers:v1",

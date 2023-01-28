@@ -24,7 +24,7 @@ export async function action({ request, params }: ActionArgs) {
   const { error: deleteCustomerLocationError } = await deleteCustomerLocation(
     client,
     customerId,
-    Number(customerLocationId)
+    customerLocationId
   );
   if (deleteCustomerLocationError) {
     return redirect(

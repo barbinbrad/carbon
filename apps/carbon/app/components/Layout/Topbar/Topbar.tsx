@@ -30,7 +30,7 @@ const Topbar = () => {
       <HStack py={2} justifyContent="end">
         <a
           target="_blank"
-          href="https://github.com/barbinbrad/carbon/discussions/new/choose"
+          href="https://github.com/barbinbrad/carbon/issues/new/choose"
           rel="noreferrer"
         >
           <Button
@@ -46,7 +46,7 @@ const Topbar = () => {
         </a>
         <a
           target="_blank"
-          href="https://github.com/barbinbrad/carbon/issues/new/choose"
+          href="https://github.com/barbinbrad/carbon/discussions/new/choose"
           rel="noreferrer"
         >
           <Button

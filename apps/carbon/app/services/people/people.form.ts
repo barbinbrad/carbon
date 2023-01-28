@@ -6,9 +6,9 @@ import { DataType } from "~/interfaces/Users/types";
 export const attributeValidator = withZod(
   z
     .object({
-      id: zfd.numeric(z.number().optional()),
+      id: zfd.text(z.string().optional()),
       name: z.string().min(1, { message: "Name is required" }),
-      userAttributeCategoryId: zfd.numeric(),
+      userAttributeCategoryId: z.string().min(20),
       attributeDataTypeId: zfd.numeric(),
       listOptions: z.string().min(1).array().optional(),
       canSelfManage: zfd.checkbox(),
@@ -29,7 +29,7 @@ export const attributeValidator = withZod(
 
 export const attributeCategoryValidator = withZod(
   z.object({
-    id: zfd.numeric(z.number().optional()),
+    id: zfd.text(z.string().optional()),
     name: z.string().min(1, { message: "Name is required" }),
     isPublic: zfd.checkbox(),
   })

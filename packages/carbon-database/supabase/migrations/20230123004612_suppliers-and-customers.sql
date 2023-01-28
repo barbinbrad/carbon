@@ -29,7 +29,7 @@ CREATE TABLE "contact" (
 
 
 CREATE TABLE "address" (
-  "id" SERIAL PRIMARY KEY,
+  "id" TEXT NOT NULL DEFAULT xid(),
   "addressLine1" TEXT,
   "addressLine2" TEXT,
   "city" TEXT,
@@ -39,14 +39,17 @@ CREATE TABLE "address" (
   "phone" TEXT,
   "fax" TEXT,
 
+  CONSTRAINT "address_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "address_countryId_fkey" FOREIGN KEY ("countryId") REFERENCES "country"("id") ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 CREATE TABLE "supplierStatus" (
-    "id" SERIAL PRIMARY KEY,
+    "id" TEXT NOT NULL DEFAULT xid(),
     "name" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3)
+    "updatedAt" TIMESTAMP(3),
+
+    CONSTRAINT "supplierStatus_pkey" PRIMARY KEY ("id")
 );
 
 INSERT INTO "supplierStatus" ("name") VALUES ('Active'), ('Inactive'), ('Pending'), ('Rejected');
@@ -68,7 +71,7 @@ CREATE TABLE "supplier" (
     "name" TEXT NOT NULL,
     "description" TEXT,
     "supplierTypeId" TEXT,
-    "supplierStatusId" INTEGER,
+    "supplierStatusId" TEXT,
     "taxId" TEXT,
     "accountManagerId" TEXT,
     "logo" TEXT,
@@ -87,10 +90,11 @@ CREATE TABLE "supplier" (
 );
 
 CREATE TABLE "supplierLocation" (
-  "id" SERIAL PRIMARY KEY,
+  "id" TEXT NOT NULL DEFAULT xid(),
   "supplierId" TEXT NOT NULL,
-  "addressId" INTEGER NOT NULL,
+  "addressId" TEXT NOT NULL,
 
+  CONSTRAINT "supplierLocation_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "supplierLocation_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "supplier"("id") ON UPDATE CASCADE ON DELETE CASCADE,
   CONSTRAINT "supplierLocation_addressId_fkey" FOREIGN KEY ("addressId") REFERENCES "address"("id") ON UPDATE CASCADE ON DELETE CASCADE
 );
@@ -99,7 +103,7 @@ CREATE TABLE "supplierContact" (
   "id" TEXT NOT NULL DEFAULT uuid_generate_v4(),
   "supplierId" TEXT NOT NULL,
   "contactId" TEXT NOT NULL,
-  "supplierLocationId" INTEGER,
+  "supplierLocationId" TEXT,
   "userId" TEXT,
 
   CONSTRAINT "supplierContact_pkey" PRIMARY KEY ("id"),
@@ -119,10 +123,12 @@ CREATE TABLE "supplierAccount" (
 );
 
 CREATE TABLE "customerStatus" (
-    "id" SERIAL PRIMARY KEY,
+    "id" TEXT NOT NULL DEFAULT xid(),
     "name" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3)
+    "updatedAt" TIMESTAMP(3),
+
+    CONSTRAINT "customerStatus_pkey" PRIMARY KEY ("id")
 );
 
 INSERT INTO "customerStatus" ("name") VALUES ('Active'), ('Inactive'), ('Prospect'), ('Lead'), ('On Hold'), ('Cancelled'), ('Archived');
@@ -144,7 +150,7 @@ CREATE TABLE "customer" (
     "name" TEXT NOT NULL,
     "description" TEXT,
     "customerTypeId" TEXT,
-    "customerStatusId" INTEGER,
+    "customerStatusId" TEXT,
     "taxId" TEXT,
     "accountManagerId" TEXT,
     "logo" TEXT,
@@ -163,10 +169,11 @@ CREATE TABLE "customer" (
 );
 
 CREATE TABLE "customerLocation" (
-  "id" SERIAL PRIMARY KEY,
+  "id" TEXT NOT NULL DEFAULT xid(),
   "customerId" TEXT NOT NULL,
-  "addressId" INTEGER NOT NULL,
+  "addressId" TEXT NOT NULL,
 
+  CONSTRAINT "customerLocation_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "customerLocation_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "customer"("id") ON UPDATE CASCADE ON DELETE CASCADE,
   CONSTRAINT "customerLocation_addressId_fkey" FOREIGN KEY ("addressId") REFERENCES "address"("id") ON UPDATE CASCADE ON DELETE CASCADE
 );
@@ -175,7 +182,7 @@ CREATE TABLE "customerContact" (
   "id" TEXT NOT NULL DEFAULT uuid_generate_v4(),
   "customerId" TEXT NOT NULL,
   "contactId" TEXT NOT NULL,
-  "customerLocationId" INTEGER,
+  "customerLocationId" TEXT,
   "userId" TEXT,
 
   CONSTRAINT "customerContact_pkey" PRIMARY KEY ("id"),

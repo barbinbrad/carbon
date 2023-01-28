@@ -19,13 +19,9 @@ export async function loader({ request, params }: LoaderArgs) {
   });
 
   const { categoryId } = params;
-  if (!categoryId || Number.isNaN(Number(categoryId)))
-    throw notFound("Invalid categoryId");
+  if (!categoryId) throw notFound("Invalid categoryId");
 
-  const attributeCategory = await getAttributeCategory(
-    client,
-    Number(categoryId)
-  );
+  const attributeCategory = await getAttributeCategory(client, categoryId);
   if (attributeCategory.error) {
     return redirect(
       "/x/people/attributes",
@@ -54,8 +50,8 @@ export async function action({ request }: ActionArgs) {
   }
 
   const updates = Object.entries(JSON.parse(updateMap)).map(
-    ([idString, sortOrderString]) => ({
-      id: Number(idString),
+    ([id, sortOrderString]) => ({
+      id,
       sortOrder: Number(sortOrderString),
       updatedBy: userId,
     })

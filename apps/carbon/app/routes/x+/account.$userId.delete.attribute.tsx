@@ -21,12 +21,10 @@ export async function action({ request, params }: ActionArgs) {
   const formData = await request.formData();
 
   const userAttributeId = formData.get("userAttributeId") as string;
-  if (!userAttributeId || Number.isNaN(Number(userAttributeId)))
-    throw new Error("No attribute id provided");
+  if (!userAttributeId) throw new Error("No attribute id provided");
 
   const userAttributeValueId = formData.get("userAttributeValueId") as string;
-  if (!userAttributeValueId || Number.isNaN(Number(userAttributeValueId)))
-    throw new Error("No attribute value id provided");
+  if (!userAttributeValueId) throw new Error("No attribute value id provided");
 
   const clientClaims = await getUserClaims(request, client);
   const canUpdateAnyUser = clientClaims.permissions["users"]?.update === true;
@@ -40,7 +38,7 @@ export async function action({ request, params }: ActionArgs) {
 
   if (!canUpdateAnyUser && userId === targetUserId) {
     // check if this is a self managed attribute
-    const attribute = await getAttribute(client, Number(userAttributeId));
+    const attribute = await getAttribute(client, userAttributeId);
     if (attribute.error) {
       return json(
         null,
@@ -62,8 +60,8 @@ export async function action({ request, params }: ActionArgs) {
 
   const removeAttributeValue = await deleteUserAttributeValue(client, {
     userId,
-    userAttributeId: Number(userAttributeId),
-    userAttributeValueId: Number(userAttributeValueId),
+    userAttributeId: userAttributeId,
+    userAttributeValueId: userAttributeValueId,
   });
   if (removeAttributeValue.error) {
     return json(

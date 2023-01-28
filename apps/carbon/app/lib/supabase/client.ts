@@ -38,13 +38,13 @@ export const getSupabase = (accessToken?: string) => {
 /**
  * Provides a Supabase Admin Client with full admin privileges
  *
- * It's a per request scoped client, to prevent access token leaking if you don't use it like `getSupabaseAdmin().auth.api`.
+ * It's a per request scoped client, to prevent access token leaking`.
  *
  */
-export const getSupabaseAdmin = () => {
+export const getSupabaseServiceRole = () => {
   if (isBrowser)
     throw new Error(
-      "getSupabaseAdmin is not available in browser and should NOT be used in insecure environments"
+      "getSupabaseServiceRole is not available in browser and should NOT be used in insecure environments"
     );
 
   return getSupabaseClient(SUPABASE_SERVICE_ROLE);

@@ -1,12 +1,12 @@
 import { Queue } from "~/lib/bullmq";
-import { getSupabaseAdmin } from "~/lib/supabase";
+import { getSupabaseServiceRole } from "~/lib/supabase";
 import { resendInvite } from "~/services/users";
 
 export type ResendInvitesQueueData = {
   id: string;
 };
 
-const client = getSupabaseAdmin();
+const client = getSupabaseServiceRole();
 
 export const resendInvitesQueue = Queue<ResendInvitesQueueData>(
   "resendInvites:v1",

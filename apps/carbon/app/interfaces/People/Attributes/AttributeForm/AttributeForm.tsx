@@ -27,9 +27,9 @@ import { mapRowsToOptions } from "~/utils/form";
 
 type AttributeFormProps = {
   initialValues: {
-    id?: number;
+    id?: string;
     name: string;
-    userAttributeCategoryId: number;
+    userAttributeCategoryId: string;
     attributeDataTypeId?: number;
     listOptions?: string[];
     canSelfManage: boolean;

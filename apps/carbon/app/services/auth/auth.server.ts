@@ -6,7 +6,7 @@ import type {
 } from "@supabase/supabase-js";
 import { SERVER_URL } from "~/config/env";
 import { REFRESH_ACCESS_TOKEN_THRESHOLD } from "~/config/env";
-import { getSupabase, getSupabaseAdmin } from "~/lib/supabase";
+import { getSupabase, getSupabaseServiceRole } from "~/lib/supabase";
 import { requireAuthSession, flash, getAuthSession } from "~/services/session";
 import { getUserClaims } from "~/services/users";
 import { error } from "~/utils/result";
@@ -17,7 +17,7 @@ export async function createEmailAuthAccount(
   password: string,
   meta?: Record<string, unknown>
 ) {
-  const { data, error } = await getSupabaseAdmin().auth.admin.createUser({
+  const { data, error } = await getSupabaseServiceRole().auth.admin.createUser({
     email,
     password,
     email_confirm: true,
@@ -32,7 +32,9 @@ export async function createEmailAuthAccount(
 }
 
 export async function deleteAuthAccount(userId: string) {
-  const { error } = await getSupabaseAdmin().auth.admin.deleteUser(userId);
+  const { error } = await getSupabaseServiceRole().auth.admin.deleteUser(
+    userId
+  );
 
   if (error) return null;
 
@@ -40,7 +42,9 @@ export async function deleteAuthAccount(userId: string) {
 }
 
 export async function getAuthAccountByAccessToken(accessToken: string) {
-  const { data, error } = await getSupabaseAdmin().auth.getUser(accessToken);
+  const { data, error } = await getSupabaseServiceRole().auth.getUser(
+    accessToken
+  );
 
   if (!data.user || error) return null;
 
@@ -140,14 +144,14 @@ export async function sendInviteByEmail(
   email: string,
   data?: Record<string, unknown>
 ) {
-  return getSupabaseAdmin().auth.admin.inviteUserByEmail(email, {
+  return getSupabaseServiceRole().auth.admin.inviteUserByEmail(email, {
     redirectTo: `${SERVER_URL}/callback`,
     data,
   });
 }
 
 export async function sendMagicLink(email: string) {
-  return getSupabaseAdmin().auth.signInWithOtp({
+  return getSupabaseServiceRole().auth.signInWithOtp({
     email,
     options: {
       emailRedirectTo: `${SERVER_URL}/callback`,
@@ -156,10 +160,11 @@ export async function sendMagicLink(email: string) {
 }
 
 export async function signInWithEmail(email: string, password: string) {
-  const { data, error } = await getSupabaseAdmin().auth.signInWithPassword({
-    email,
-    password,
-  });
+  const { data, error } =
+    await getSupabaseServiceRole().auth.signInWithPassword({
+      email,
+      password,
+    });
 
   if (!data.session || error) return null;
 
@@ -171,7 +176,7 @@ export async function refreshAccessToken(
 ): Promise<AuthSession | null> {
   if (!refreshToken) return null;
 
-  const { data, error } = await getSupabaseAdmin().auth.refreshSession({
+  const { data, error } = await getSupabaseServiceRole().auth.refreshSession({
     refresh_token: refreshToken,
   });
 

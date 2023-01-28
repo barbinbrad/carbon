@@ -2,7 +2,7 @@ import { z } from "zod";
 import { zfd } from "zod-form-data";
 
 export const address = {
-  addressId: zfd.numeric(z.number().optional()),
+  addressId: zfd.text(z.string().optional()),
   addressLine1: zfd.text(z.string().optional()),
   addressLine2: zfd.text(z.string().optional()),
   city: zfd.text(z.string().optional()),

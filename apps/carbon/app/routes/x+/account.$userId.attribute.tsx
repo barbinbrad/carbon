@@ -28,8 +28,7 @@ export async function action({ request, params }: ActionArgs) {
   const formData = await request.formData();
 
   const attributeId = formData.get("userAttributeId") as string;
-  if (!attributeId || Number.isNaN(Number(attributeId)))
-    throw new Error("No attribute id provided");
+  if (!attributeId) throw new Error("No attribute id provided");
 
   const clientClaims = await getUserClaims(request, client);
   const canUpdateAnyUser = clientClaims.permissions["users"]?.update === true;
@@ -43,7 +42,7 @@ export async function action({ request, params }: ActionArgs) {
 
   if (!canUpdateAnyUser && userId === targetUserId) {
     // check if this is a self managed attribute
-    const attribute = await getAttribute(client, Number(attributeId));
+    const attribute = await getAttribute(client, attributeId);
     if (attribute.error) {
       return json(
         null,

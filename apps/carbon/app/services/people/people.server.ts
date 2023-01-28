@@ -25,7 +25,7 @@ export async function deleteAttributeCategory(
 
 export async function getAttribute(
   client: SupabaseClient<Database>,
-  attributeId: number
+  attributeId: string
 ) {
   return client
     .from("userAttribute")
@@ -62,7 +62,7 @@ export async function getAttributeCategories(
 
 export async function getAttributeCategory(
   client: SupabaseClient<Database>,
-  id: number
+  id: string
 ) {
   return client
     .from("userAttributeCategory")
@@ -90,8 +90,8 @@ export async function insertAttribute(
   client: SupabaseClient<Database>,
   attribute: {
     name: string;
-    attributeDataTypeId: number;
-    userAttributeCategoryId: number;
+    attributeDataTypeId: string;
+    userAttributeCategoryId: string;
     listOptions?: string[];
     canSelfManage: boolean;
     createdBy: string;
@@ -131,7 +131,7 @@ export async function insertAttributeCategory(
 export async function updateAttribute(
   client: SupabaseClient<Database>,
   attribute: {
-    id?: number;
+    id?: string;
     name: string;
     listOptions?: string[];
     canSelfManage: boolean;
@@ -153,7 +153,7 @@ export async function updateAttribute(
 export async function updateAttributeCategory(
   client: SupabaseClient<Database>,
   attributeCategory: {
-    id: number;
+    id: string;
     name: string;
     public: boolean;
     updatedBy: string;
@@ -166,7 +166,7 @@ export async function updateAttributeCategory(
 export async function updateAttributeSortOrder(
   client: SupabaseClient<Database>,
   updates: {
-    id: number;
+    id: string;
     sortOrder: number;
     updatedBy: string;
   }[]

@@ -17,7 +17,7 @@ import { useRef, useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import { Customer, Submit, CustomerContact } from "~/components/Form";
 import { useUrlParams } from "~/hooks";
-import { createCustomerValidator } from "~/services/users";
+import { createCustomerAccountValidator } from "~/services/users";
 import type { Result } from "~/types";
 
 const CreateCustomerModal = () => {
@@ -51,7 +51,7 @@ const CreateCustomerModal = () => {
           <ValidatedForm
             method="post"
             action="/x/users/customers/new"
-            validator={createCustomerValidator}
+            validator={createCustomerAccountValidator}
             defaultValues={{
               id: params.get("id") ?? "",
               customer: params.get("customer") ?? "",

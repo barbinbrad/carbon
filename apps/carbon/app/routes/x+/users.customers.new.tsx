@@ -5,7 +5,7 @@ import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import {
   createCustomerAccount,
-  createCustomerValidator,
+  createCustomerAccountValidator,
 } from "~/services/users";
 import { assertIsPost } from "~/utils/http";
 import { CreateCustomerModal } from "~/interfaces/Users/Customers";
@@ -17,7 +17,7 @@ export async function action({ request }: ActionArgs) {
     update: "users",
   });
 
-  const validation = await createCustomerValidator.validate(
+  const validation = await createCustomerAccountValidator.validate(
     await request.formData()
   );
 

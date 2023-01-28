@@ -14,9 +14,9 @@ export const bulkPermissionsValidator = withZod(
   })
 );
 
-export const createCustomerValidator = withZod(
+export const createCustomerAccountValidator = withZod(
   z.object({
-    id: z.string().min(36, "Customer contact is required"),
+    id: z.string().min(20, "Customer contact is required"),
     customer: z.string().min(36, { message: "Customer is required" }),
   })
 );
@@ -29,13 +29,13 @@ export const createEmployeeValidator = withZod(
       .email("Must be a valid email"),
     firstName: z.string().min(1, { message: "First name is required" }),
     lastName: z.string().min(1, { message: "Last name is required" }),
-    employeeType: z.string().min(36, { message: "Employee type is required" }),
+    employeeType: z.string().min(20, { message: "Employee type is required" }),
   })
 );
 
-export const createSupplierValidator = withZod(
+export const createSupplierAccountValidator = withZod(
   z.object({
-    id: z.string().min(36, "Supplier contact is required"),
+    id: z.string().min(20, "Supplier contact is required"),
     supplier: z.string().min(36, { message: "Supplier is required" }),
   })
 );
@@ -76,7 +76,7 @@ export const employeeTypePermissionsValidator = z.array(
 export const employeeValidator = withZod(
   z.object({
     id: z.string(),
-    employeeType: z.string().min(36, { message: "Employee type is required" }),
+    employeeType: z.string().min(20, { message: "Employee type is required" }),
     data: z
       .string()
       .startsWith("{", { message: "Invalid JSON" })

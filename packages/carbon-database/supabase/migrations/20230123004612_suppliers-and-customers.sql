@@ -5,7 +5,7 @@ CREATE TABLE "country" (
 );
 
 CREATE TABLE "contact" (
-  "id" TEXT NOT NULL DEFAULT uuid_generate_v4(),
+  "id" TEXT NOT NULL DEFAULT xid(),
   "firstName" TEXT NOT NULL,
   "lastName" TEXT NOT NULL,
   "email" TEXT NOT NULL,
@@ -100,7 +100,7 @@ CREATE TABLE "supplierLocation" (
 );
 
 CREATE TABLE "supplierContact" (
-  "id" TEXT NOT NULL DEFAULT uuid_generate_v4(),
+  "id" TEXT NOT NULL DEFAULT xid(),
   "supplierId" TEXT NOT NULL,
   "contactId" TEXT NOT NULL,
   "supplierLocationId" TEXT,
@@ -179,7 +179,7 @@ CREATE TABLE "customerLocation" (
 );
 
 CREATE TABLE "customerContact" (
-  "id" TEXT NOT NULL DEFAULT uuid_generate_v4(),
+  "id" TEXT NOT NULL DEFAULT xid(),
   "customerId" TEXT NOT NULL,
   "contactId" TEXT NOT NULL,
   "customerLocationId" TEXT,

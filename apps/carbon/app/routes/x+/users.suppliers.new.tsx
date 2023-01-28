@@ -5,7 +5,7 @@ import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import {
   createSupplierAccount,
-  createSupplierValidator,
+  createSupplierAccountValidator,
 } from "~/services/users";
 import { assertIsPost } from "~/utils/http";
 import { CreateSupplierModal } from "~/interfaces/Users/Suppliers";
@@ -16,7 +16,7 @@ export async function action({ request }: ActionArgs) {
     view: "users",
   });
 
-  const validation = await createSupplierValidator.validate(
+  const validation = await createSupplierAccountValidator.validate(
     await request.formData()
   );
 

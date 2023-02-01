@@ -2,6 +2,15 @@ import type { RouteGroup } from "~/types";
 
 const usersRoutes: RouteGroup[] = [
   {
+    name: "Manage",
+    routes: [
+      {
+        name: "People",
+        to: "/x/people/all",
+      },
+    ],
+  },
+  {
     name: "Configuration",
     routes: [
       {

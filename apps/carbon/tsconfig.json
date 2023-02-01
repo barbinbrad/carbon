@@ -15,6 +15,7 @@
       "~/*": ["./app/*"]
     },
     "noEmit": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "skipLibCheck": true
   }
 }

@@ -63,7 +63,7 @@ const GroupForm = ({ initialValues }: GroupFormProps) => {
           </DrawerBody>
           <DrawerFooter>
             <HStack spacing={2}>
-              <Submit>Save</Submit>
+              <Submit disabled={isDisabled}>Save</Submit>
               <Button
                 size="md"
                 colorScheme="gray"

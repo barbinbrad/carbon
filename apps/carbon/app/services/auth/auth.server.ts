@@ -7,7 +7,7 @@ import type {
 import { SERVER_URL } from "~/config/env";
 import { REFRESH_ACCESS_TOKEN_THRESHOLD } from "~/config/env";
 import { getSupabase, getSupabaseServiceRole } from "~/lib/supabase";
-import { requireAuthSession, flash, getAuthSession } from "~/services/session";
+import { requireAuthSession, flash } from "~/services/session";
 import { getUserClaims } from "~/services/users";
 import { error } from "~/utils/result";
 import type { AuthSession } from "./types";

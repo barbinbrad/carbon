@@ -4,7 +4,6 @@ import {
   AlertIcon,
   AlertTitle,
   Box,
-  Flex,
   Image,
   VStack,
   useColorModeValue,

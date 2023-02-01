@@ -1,5 +1,7 @@
 import type { Database } from "@carbon/database";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import type { DataType, Employee } from "~/interfaces/Users/types";
+import { getEmployees } from "~/services/users";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
 
@@ -37,13 +39,33 @@ export async function getAttribute(
     .single();
 }
 
+async function getAttributes(
+  client: SupabaseClient<Database>,
+  userIds: string[]
+) {
+  return client
+    .from("userAttributeCategory")
+    .select(
+      `id, name,
+      userAttribute(id, name, listOptions, canSelfManage,
+        attributeDataType(id, isBoolean, isDate, isNumeric, isText, isUser),
+        userAttributeValue(
+          id, userId, valueBoolean, valueDate, valueNumeric, valueText, valueUser
+        )
+      )`
+    )
+    .eq("userAttribute.active", true)
+    .in("userAttribute.userAttributeValue.userId", [userIds])
+    .order("sortOrder", { foreignTable: "userAttribute", ascending: true });
+}
+
 export async function getAttributeCategories(
   client: SupabaseClient<Database>,
-  args: { name: string | null } & GenericQueryFilters
+  args?: { name: string | null } & GenericQueryFilters
 ) {
   let query = client
     .from("userAttributeCategory")
-    .select("id, name, public, protected, userAttribute(id, name)", {
+    .select("name, userAttribute(id, name, attributeDataType(id))", {
       count: "exact",
     })
     .eq("active", true)
@@ -84,6 +106,92 @@ export async function getAttributeCategory(
 
 export async function getAttributeDataTypes(client: SupabaseClient<Database>) {
   return client.from("attributeDataType").select("*");
+}
+
+type UserAttributeId = string;
+
+type PersonAttributeValue = {
+  userAttributeValueId: string;
+  value: boolean | string | number;
+};
+
+type PersonAttributes = Record<UserAttributeId, PersonAttributeValue>;
+
+type Person = Employee & {
+  attributes: PersonAttributes;
+};
+
+export async function getPeople(
+  client: SupabaseClient<Database>,
+  args: GenericQueryFilters & {
+    name: string | null;
+    type: string | null;
+    active: boolean | null;
+  }
+) {
+  const employees = await getEmployees(client, args);
+  if (employees.error) return employees;
+
+  if (!employees.data) throw new Error("Failed to get employee data");
+
+  const userIds = employees.data.map((employee) => {
+    if (!employee.user || Array.isArray(employee.user))
+      throw new Error("employee.user is an array");
+    return employee.user.id;
+  });
+
+  const attributeCategories = await getAttributes(client, userIds);
+  if (attributeCategories.error) return attributeCategories;
+
+  const people: Person[] = employees.data.map((employee) => {
+    if (!employee.user || Array.isArray(employee.user))
+      throw new Error("employee.user is an array");
+
+    const userId = employee.user.id;
+
+    const employeeAttributes =
+      attributeCategories.data.reduce<PersonAttributes>((acc, category) => {
+        if (!category.userAttribute || !Array.isArray(category.userAttribute))
+          return acc;
+        category.userAttribute.forEach((attribute) => {
+          if (
+            attribute.userAttributeValue &&
+            Array.isArray(attribute.userAttributeValue)
+          ) {
+            const userAttributeId = attribute.id;
+            const userAttributeValue = attribute.userAttributeValue.find(
+              (attributeValue) => attributeValue.userId === userId
+            );
+            const value =
+              typeof userAttributeValue?.valueBoolean === "boolean"
+                ? userAttributeValue.valueBoolean
+                : userAttributeValue?.valueDate ||
+                  userAttributeValue?.valueNumeric ||
+                  userAttributeValue?.valueText ||
+                  userAttributeValue?.valueUser;
+
+            if (value && userAttributeValue?.id) {
+              acc[userAttributeId] = {
+                userAttributeValueId: userAttributeValue.id,
+                value,
+              };
+            }
+          }
+        });
+        return acc;
+      }, {});
+
+    return {
+      ...employee,
+      attributes: employeeAttributes,
+    };
+  });
+
+  return {
+    count: employees.count,
+    data: people,
+    error: null,
+  };
 }
 
 export async function insertAttribute(

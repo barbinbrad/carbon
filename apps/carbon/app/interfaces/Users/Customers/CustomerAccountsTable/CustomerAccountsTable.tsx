@@ -30,7 +30,6 @@ const defaultColumnVisibility = {
 
 const CustomerAccountsTable = memo(
   ({ data, count, isEditable = false }: CustomerAccountsTableProps) => {
-    const navigate = useNavigate();
     const permissions = usePermissions();
     const [params] = useUrlParams();
 

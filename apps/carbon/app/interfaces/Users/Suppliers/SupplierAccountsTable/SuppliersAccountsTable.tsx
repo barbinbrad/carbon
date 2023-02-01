@@ -9,7 +9,7 @@ import {
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo, useState } from "react";
-import { BsEnvelope, BsPencilSquare } from "react-icons/bs";
+import { BsEnvelope } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { Avatar, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
@@ -30,7 +30,6 @@ const defaultColumnVisibility = {
 
 const SupplierAccountsTable = memo(
   ({ data, count, isEditable = false }: SupplierAccountsTableProps) => {
-    const navigate = useNavigate();
     const permissions = usePermissions();
     const [params] = useUrlParams();
 

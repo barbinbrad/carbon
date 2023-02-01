@@ -1,4 +1,4 @@
-import type { Route, RouteGroup } from "~/types";
+import type { RouteGroup } from "~/types";
 
 const usersRoutes: RouteGroup[] = [
   {

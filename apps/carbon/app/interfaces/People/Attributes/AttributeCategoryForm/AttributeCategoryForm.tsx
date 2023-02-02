@@ -64,7 +64,7 @@ const AttributeCategoryForm = ({
             </VStack>
           </DrawerBody>
           <DrawerFooter>
-            <HStack spacing={2} mt={8}>
+            <HStack spacing={2}>
               <Submit disabled={isDisabled}>Save</Submit>
               <Button
                 size="md"

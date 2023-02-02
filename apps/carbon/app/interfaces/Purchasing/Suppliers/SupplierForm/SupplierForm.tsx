@@ -57,13 +57,13 @@ const SupplierForm = ({
   const onClose = () => navigate("/x/purchasing/suppliers");
 
   const routeData = useRouteData<{
-    supplierTypes: { data: SupplierType[] };
-    supplierStatuses: { data: SupplierStatus[] };
+    supplierTypes: SupplierType[];
+    supplierStatuses: SupplierStatus[];
   }>("/x/purchasing/suppliers");
 
   const supplierTypeOptions = routeData?.supplierTypes
     ? mapRowsToOptions({
-        data: routeData.supplierTypes.data ?? [],
+        data: routeData.supplierTypes,
         value: "id",
         label: "name",
       })
@@ -71,7 +71,7 @@ const SupplierForm = ({
 
   const supplierStatusOptions = routeData?.supplierStatuses
     ? mapRowsToOptions({
-        data: routeData.supplierStatuses.data ?? [],
+        data: routeData.supplierStatuses,
         value: "id",
         label: "name",
       })

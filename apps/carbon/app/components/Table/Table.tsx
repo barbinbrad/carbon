@@ -78,7 +78,7 @@ const Table = <T extends object>({
   editableComponents = {},
   defaultColumnOrder = [],
   defaultColumnPinning = {
-    left: ["select"],
+    left: ["Select"],
   },
   defaultColumnVisibility = {},
   withFilters = false,
@@ -477,7 +477,7 @@ const Table = <T extends object>({
                           py={2}
                           whiteSpace="nowrap"
                         >
-                          {!header.isPlaceholder ? null : (
+                          {header.isPlaceholder ? null : (
                             <Flex
                               justify="flex-start"
                               align="center"
@@ -672,7 +672,7 @@ const Table = <T extends object>({
 function getRowSelectionColumn<T>(): ColumnDef<T>[] {
   return [
     {
-      id: "select",
+      id: "Select",
       size: 40,
       header: ({ table }) => (
         <IndeterminateCheckbox

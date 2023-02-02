@@ -9,37 +9,34 @@ import {
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo, useState } from "react";
-import { BsEnvelope, BsPencilSquare, BsShieldLock } from "react-icons/bs";
+import {
+  BsChat,
+  BsEnvelope,
+  BsPencilSquare,
+  BsShieldLock,
+} from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { Avatar, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
-import type { Employee } from "~/interfaces/Users/types";
-import { BulkEditPermissionsForm } from "~/interfaces/Users/Employees";
-import { ResendInviteModal, DeactivateUsersModal } from "~/interfaces/Users";
-import { FaBan } from "react-icons/fa";
+import type { AttributeCategory, Person } from "~/interfaces/People/types";
 
-type EmployeesTableProps = {
-  data: Employee[];
+type PeopleTableProps = {
+  attributeCategories: AttributeCategory[];
+  data: Person[];
   count: number;
   isEditable?: boolean;
 };
 
-const defaultColumnVisibility = {
-  user_firstName: false,
-  user_lastName: false,
-};
-
-const EmployeesTable = memo(
-  ({ data, count, isEditable = false }: EmployeesTableProps) => {
+const PeopleTable = memo(
+  ({
+    attributeCategories,
+    data,
+    count,
+    isEditable = false,
+  }: PeopleTableProps) => {
     const navigate = useNavigate();
     const permissions = usePermissions();
     const [params] = useUrlParams();
-
-    const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
-
-    const bulkEditDrawer = useDisclosure();
-    const deactivateEmployeeModal = useDisclosure();
-    const resendInviteModal = useDisclosure();
 
     const rows = useMemo(
       () =>
@@ -60,7 +57,7 @@ const EmployeesTable = memo(
     );
 
     const columns = useMemo<ColumnDef<typeof rows[number]>[]>(() => {
-      return [
+      const defaultColumns: ColumnDef<typeof rows[number]>[] = [
         {
           header: "User",
           cell: ({ row }) => (
@@ -103,18 +100,38 @@ const EmployeesTable = memo(
           header: "Employee Type",
           cell: (item) => item.getValue(),
         },
+      ];
+
+      const additionalColumns: ColumnDef<typeof rows[number]>[] = [];
+
+      attributeCategories.forEach((category) => {
+        if (category.userAttribute && Array.isArray(category.userAttribute)) {
+          category.userAttribute.forEach((attribute) => {
+            additionalColumns.push({
+              id: attribute.id,
+              header: attribute.name,
+              cell: ({ row }) =>
+                row?.original?.attributes?.[attribute?.id]?.value ?? null,
+            });
+          });
+        }
+      });
+
+      return [
+        ...defaultColumns,
+        ...additionalColumns,
         {
           header: () => <VisuallyHidden>Actions</VisuallyHidden>,
           accessorKey: "user.id",
           cell: (item) => (
             <Flex justifyContent="end">
-              {permissions.can("update", "users") && (
+              {permissions.can("update", "people") && (
                 <ActionMenu>
                   <MenuItem
                     icon={<BsPencilSquare />}
                     onClick={() =>
                       navigate(
-                        `/x/users/employees/${
+                        `/x/people/all/${
                           item.getValue() as string
                         }?${params.toString()}`
                       )
@@ -122,99 +139,29 @@ const EmployeesTable = memo(
                   >
                     Edit Employee
                   </MenuItem>
-                  <MenuItem
-                    icon={<BsEnvelope />}
-                    onClick={() => {
-                      setSelectedUserIds([item.getValue() as string]);
-                      resendInviteModal.onOpen();
-                    }}
-                  >
-                    Send Account Invite
-                  </MenuItem>
-                  {
-                    // @ts-ignore
-                    item.row.original.user?.active === true && (
-                      <MenuItem
-                        icon={<IoMdTrash />}
-                        onClick={(e) => {
-                          setSelectedUserIds([item.getValue() as string]);
-                          deactivateEmployeeModal.onOpen();
-                        }}
-                      >
-                        Deactivate Employee
-                      </MenuItem>
-                    )
-                  }
                 </ActionMenu>
               )}
             </Flex>
           ),
         },
       ];
+
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [params]);
 
     const actions = useMemo(() => {
       return [
         {
-          label: "Bulk Edit Permissions",
-          icon: <BsShieldLock />,
-          disabled: !permissions.can("update", "users"),
+          label: "Message Employees",
+          icon: <BsChat />,
+          disabled: !permissions.can("create", "messaging"),
           onClick: (selected: typeof rows) => {
-            setSelectedUserIds(
-              selected.reduce<string[]>((acc, row) => {
-                if (row.user && !Array.isArray(row.user)) {
-                  acc.push(row.user.id);
-                }
-                return acc;
-              }, [])
-            );
-            bulkEditDrawer.onOpen();
-          },
-        },
-        {
-          label: "Send Account Invite",
-          icon: <BsEnvelope />,
-          disabled: !permissions.can("create", "users"),
-          onClick: (selected: typeof rows) => {
-            setSelectedUserIds(
-              selected.reduce<string[]>((acc, row) => {
-                if (row.user && !Array.isArray(row.user)) {
-                  acc.push(row.user.id);
-                }
-                return acc;
-              }, [])
-            );
-            resendInviteModal.onOpen();
-          },
-        },
-        {
-          label: "Deactivate Users",
-          icon: <FaBan />,
-          disabled: !permissions.can("delete", "users"),
-          onClick: (selected: typeof rows) => {
-            setSelectedUserIds(
-              selected.reduce<string[]>((acc, row) => {
-                if (row.user && !Array.isArray(row.user)) {
-                  acc.push(row.user.id);
-                }
-                return acc;
-              }, [])
-            );
-            deactivateEmployeeModal.onOpen();
+            console.log(selected);
           },
         },
       ];
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-    // const editableComponents = useMemo(
-    //   () => ({
-    //     "user.firstName": EditableName,
-    //     "user.lastName": EditableName,
-    //   }),
-    //   []
-    // );
 
     return (
       <>
@@ -223,7 +170,6 @@ const EmployeesTable = memo(
           count={count}
           columns={columns}
           data={rows}
-          defaultColumnVisibility={defaultColumnVisibility}
           defaultColumnPinning={{
             left: ["Select", "User"],
           }}
@@ -232,27 +178,6 @@ const EmployeesTable = memo(
           withPagination
           withSelectableRows={isEditable}
         />
-        {bulkEditDrawer.isOpen && (
-          <BulkEditPermissionsForm
-            userIds={selectedUserIds}
-            isOpen={bulkEditDrawer.isOpen}
-            onClose={bulkEditDrawer.onClose}
-          />
-        )}
-        {deactivateEmployeeModal.isOpen && (
-          <DeactivateUsersModal
-            userIds={selectedUserIds}
-            isOpen={deactivateEmployeeModal.isOpen}
-            onClose={deactivateEmployeeModal.onClose}
-          />
-        )}
-        {resendInviteModal.isOpen && (
-          <ResendInviteModal
-            userIds={selectedUserIds}
-            isOpen={resendInviteModal.isOpen}
-            onClose={resendInviteModal.onClose}
-          />
-        )}
       </>
     );
   }
@@ -291,6 +216,6 @@ const EmployeesTable = memo(
 //   );
 // };
 
-EmployeesTable.displayName = "EmployeeTable";
+PeopleTable.displayName = "EmployeeTable";
 
-export default EmployeesTable;
+export default PeopleTable;

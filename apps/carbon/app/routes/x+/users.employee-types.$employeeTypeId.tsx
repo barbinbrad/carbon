@@ -40,7 +40,7 @@ export async function loader({ request, params }: LoaderArgs) {
   }
 
   return json({
-    employeeType,
+    employeeType: employeeType?.data,
     employeeTypePermissions: makePermissionsFromEmployeeType(
       employeeTypePermissions.data ?? []
     ),
@@ -122,9 +122,9 @@ export default function EditEmployeeTypesRoute() {
     useLoaderData<typeof loader>();
 
   const initialValues = {
-    id: employeeType.data?.id ?? "",
-    name: employeeType.data?.name ?? "",
-    color: employeeType.data?.color ?? "#000000",
+    id: employeeType?.id ?? "",
+    name: employeeType?.name ?? "",
+    color: employeeType?.color ?? "#000000",
     permissions: employeeTypePermissions,
   };
 

@@ -10,9 +10,7 @@ export default function NewAttributeRoute() {
   const navigate = useNavigate();
   const onClose = () => navigate(-1);
   const attributesRouteData = useRouteData<{
-    dataTypes: {
-      data: AttributeDataType[] | null;
-    };
+    dataTypes: AttributeDataType[];
   }>("/x/people/attributes");
 
   return (
@@ -23,7 +21,7 @@ export default function NewAttributeRoute() {
         userAttributeCategoryId: categoryId,
         canSelfManage: true,
       }}
-      dataTypes={attributesRouteData?.dataTypes?.data ?? []}
+      dataTypes={attributesRouteData?.dataTypes ?? []}
       onClose={onClose}
     />
   );

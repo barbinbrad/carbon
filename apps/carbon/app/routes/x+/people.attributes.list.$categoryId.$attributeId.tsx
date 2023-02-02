@@ -41,9 +41,7 @@ export default function EditAttributeRoute() {
   const navigate = useNavigate();
   const onClose = () => navigate(`/x/people/attributes/list/${categoryId}`);
   const attributesRouteData = useRouteData<{
-    dataTypes: {
-      data: AttributeDataType[] | null;
-    };
+    dataTypes: AttributeDataType[];
   }>("/x/people/attributes");
 
   return (
@@ -56,7 +54,7 @@ export default function EditAttributeRoute() {
         canSelfManage: attribute.canSelfManage ?? true,
         listOptions: attribute?.listOptions ?? [],
       }}
-      dataTypes={attributesRouteData?.dataTypes?.data ?? []}
+      dataTypes={attributesRouteData?.dataTypes ?? []}
       onClose={onClose}
     />
   );

@@ -57,13 +57,13 @@ const CustomerForm = ({
   const onClose = () => navigate("/x/sales/customers");
 
   const routeData = useRouteData<{
-    customerTypes: { data: CustomerType[] };
-    customerStatuses: { data: CustomerStatus[] };
+    customerTypes: CustomerType[];
+    customerStatuses: CustomerStatus[];
   }>("/x/sales/customers");
 
   const customerTypeOptions = routeData?.customerTypes
     ? mapRowsToOptions({
-        data: routeData.customerTypes.data ?? [],
+        data: routeData.customerTypes ?? [],
         value: "id",
         label: "name",
       })
@@ -71,7 +71,7 @@ const CustomerForm = ({
 
   const customerStatusOptions = routeData?.customerStatuses
     ? mapRowsToOptions({
-        data: routeData.customerStatuses.data ?? [],
+        data: routeData.customerStatuses ?? [],
         value: "id",
         label: "name",
       })

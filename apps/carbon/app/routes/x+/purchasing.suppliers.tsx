@@ -1,5 +1,6 @@
 import { VStack } from "@chakra-ui/react";
 import type { LoaderArgs } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import {
@@ -12,7 +13,9 @@ import {
   getSupplierStatuses,
   getSupplierTypes,
 } from "~/services/purchasing";
+import { flash } from "~/services/session";
 import { getGenericQueryFilters } from "~/utils/query";
+import { error } from "~/utils/result";
 
 export async function loader({ request }: LoaderArgs) {
   const { client } = await requirePermissions(request, {
@@ -34,23 +37,32 @@ export async function loader({ request }: LoaderArgs) {
     getSupplierStatuses(client),
   ]);
 
-  return json({ suppliers, supplierTypes, supplierStatuses });
+  if (suppliers.error) {
+    redirect(
+      "/x",
+      await flash(request, error(suppliers.error, "Failed to fetch suppliers"))
+    );
+  }
+
+  return json({
+    count: suppliers.count ?? 0,
+    suppliers: suppliers.data ?? [],
+    supplierStatuses: supplierStatuses.data ?? [],
+    supplierTypes: supplierTypes.data ?? [],
+  });
 }
 
 export default function PurchasingSuppliersRoute() {
-  const { suppliers, supplierTypes, supplierStatuses } =
+  const { count, suppliers, supplierTypes, supplierStatuses } =
     useLoaderData<typeof loader>();
 
   return (
     <VStack w="full" h="full" spacing={0}>
       <SuppliersTableFilters
-        supplierTypes={supplierTypes.data ?? []}
-        supplierStatuses={supplierStatuses.data ?? []}
+        supplierTypes={supplierTypes}
+        supplierStatuses={supplierStatuses}
       />
-      <SuppliersTable
-        data={suppliers.data ?? []}
-        count={suppliers.count ?? 0}
-      />
+      <SuppliersTable data={suppliers} count={count} />
       <Outlet />
     </VStack>
   );

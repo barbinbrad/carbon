@@ -1,5 +1,6 @@
 import { VStack } from "@chakra-ui/react";
 import type { LoaderArgs } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import {
@@ -11,7 +12,9 @@ import {
   getAttributeCategories,
   getAttributeDataTypes,
 } from "~/services/people";
+import { flash } from "~/services/session";
 import { getGenericQueryFilters } from "~/utils/query";
+import { error } from "~/utils/result";
 
 export async function loader({ request }: LoaderArgs) {
   const { client } = await requirePermissions(request, {
@@ -29,22 +32,30 @@ export async function loader({ request }: LoaderArgs) {
     getAttributeDataTypes(client),
   ]);
 
+  if (categories.error) {
+    redirect(
+      "/x",
+      await flash(
+        request,
+        error(categories.error, "Failed to fetch attribute categories")
+      )
+    );
+  }
+
   return json({
-    categories,
-    dataTypes,
+    count: categories.count ?? 0,
+    categories: categories.data ?? [],
+    dataTypes: dataTypes.data ?? [],
   });
 }
 
 export default function UserAttributesRoute() {
-  const { categories } = useLoaderData<typeof loader>();
+  const { count, categories } = useLoaderData<typeof loader>();
 
   return (
     <VStack w="full" h="full" spacing={0}>
       <AttributeCategoriesTableFilters />
-      <AttributeCategoriesTable
-        data={categories.data ?? []}
-        count={categories.count ?? 0}
-      />
+      <AttributeCategoriesTable data={categories} count={count} />
       <Outlet />
     </VStack>
   );

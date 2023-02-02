@@ -65,9 +65,12 @@ export async function getAttributeCategories(
 ) {
   let query = client
     .from("userAttributeCategory")
-    .select("name, userAttribute(id, name, attributeDataType(id))", {
-      count: "exact",
-    })
+    .select(
+      "id, name, protected, public, userAttribute(id, name, attributeDataType(id))",
+      {
+        count: "exact",
+      }
+    )
     .eq("active", true)
     .eq("userAttribute.active", true);
 

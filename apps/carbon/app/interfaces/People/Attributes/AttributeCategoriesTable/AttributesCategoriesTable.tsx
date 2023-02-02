@@ -61,7 +61,7 @@ const AttributeCategoriesTable = memo(
                   navigate(
                     `/x/people/attributes/list/${
                       row.original.id
-                    }?${params.toString()}`
+                    }?${params?.toString()}`
                   );
                 }}
               >
@@ -77,7 +77,7 @@ const AttributeCategoriesTable = memo(
                   navigate(
                     `/x/people/attributes/list/${
                       row.original.id
-                    }/new?${params.toString()}`
+                    }/new?${params?.toString()}`
                   );
                 }}
               />
@@ -88,7 +88,7 @@ const AttributeCategoriesTable = memo(
           header: "Visibility",
           accessorKey: "public",
           cell: (item) => {
-            const isPublic = item.getValue<boolean>().toString() === "true";
+            const isPublic = item.getValue<boolean>()?.toString() === "true";
             return (
               <Badge
                 size="sm"
@@ -113,7 +113,7 @@ const AttributeCategoriesTable = memo(
                     navigate(
                       `/x/people/attributes/list/${
                         row.original.id
-                      }/new?${params.toString()}`
+                      }/new?${params?.toString()}`
                     );
                   }}
                 >
@@ -125,7 +125,7 @@ const AttributeCategoriesTable = memo(
                     navigate(
                       `/x/people/attributes/list/${
                         row.original.id
-                      }?${params.toString()}`
+                      }?${params?.toString()}`
                     );
                   }}
                 >
@@ -162,7 +162,7 @@ const AttributeCategoriesTable = memo(
         <Table<typeof data[number]>
           data={data}
           columns={columns}
-          count={count}
+          count={count ?? 0}
         />
 
         <ConfirmDelete

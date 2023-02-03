@@ -50,7 +50,7 @@ async function getAttributes(
       userAttribute(id, name, listOptions, canSelfManage,
         attributeDataType(id, isBoolean, isDate, isNumeric, isText, isUser),
         userAttributeValue(
-          id, userId, valueBoolean, valueDate, valueNumeric, valueText, valueUser
+          id, userId, valueBoolean, valueDate, valueNumeric, valueText, valueUser, user!userAttributeValue_userId_fkey(id, fullName, avatarUrl)
         )
       )`
     )
@@ -113,9 +113,15 @@ export async function getAttributeDataTypes(client: SupabaseClient<Database>) {
 
 type UserAttributeId = string;
 
-type PersonAttributeValue = {
+export type PersonAttributeValue = {
   userAttributeValueId: string;
   value: boolean | string | number;
+  dataType?: DataType;
+  user?: {
+    id: string;
+    fullName: string | null;
+    avatarUrl: string | null;
+  } | null;
 };
 
 type PersonAttributes = Record<UserAttributeId, PersonAttributeValue>;
@@ -159,7 +165,8 @@ export async function getPeople(
         category.userAttribute.forEach((attribute) => {
           if (
             attribute.userAttributeValue &&
-            Array.isArray(attribute.userAttributeValue)
+            Array.isArray(attribute.userAttributeValue) &&
+            !Array.isArray(attribute.attributeDataType)
           ) {
             const userAttributeId = attribute.id;
             const userAttributeValue = attribute.userAttributeValue.find(
@@ -176,7 +183,11 @@ export async function getPeople(
             if (value && userAttributeValue?.id) {
               acc[userAttributeId] = {
                 userAttributeValueId: userAttributeValue.id,
+                dataType: attribute.attributeDataType?.id as DataType,
                 value,
+                user: !Array.isArray(userAttributeValue.user)
+                  ? userAttributeValue.user
+                  : undefined,
               };
             }
           }

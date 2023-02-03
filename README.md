@@ -120,6 +120,6 @@ to the `package.json`:
 
 ```
 {
-"@carbon/react": "*"
+  "@carbon/react": "*"
 }
 ```

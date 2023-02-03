@@ -1,24 +1,13 @@
 import { ActionMenu } from "@carbon/react";
-import {
-  Flex,
-  HStack,
-  MenuItem,
-  useDisclosure,
-  VisuallyHidden,
-} from "@chakra-ui/react";
+import { Flex, HStack, MenuItem, Text, VisuallyHidden } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
-import { memo, useMemo, useState } from "react";
-import {
-  BsChat,
-  BsEnvelope,
-  BsPencilSquare,
-  BsShieldLock,
-} from "react-icons/bs";
-import { IoMdTrash } from "react-icons/io";
+import { memo, useCallback, useMemo } from "react";
+import { BsChat, BsPencilSquare } from "react-icons/bs";
 import { Avatar, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { AttributeCategory, Person } from "~/interfaces/People/types";
+import { DataType } from "~/interfaces/Users/types";
 
 type PeopleTableProps = {
   attributeCategories: AttributeCategory[];
@@ -37,6 +26,53 @@ const PeopleTable = memo(
     const navigate = useNavigate();
     const permissions = usePermissions();
     const [params] = useUrlParams();
+
+    const renderGenericAttribute = useCallback(
+      (
+        value?: string | number | boolean,
+        dataType?: DataType,
+        user?: {
+          id: string;
+          fullName: string | null;
+          avatarUrl: string | null;
+        } | null
+      ) => {
+        if (!value || !dataType) return null;
+
+        if (dataType === DataType.Boolean) {
+          return value === true ? "Yes" : "No";
+        }
+
+        if (dataType === DataType.Date) {
+          return new Date(value as string).toLocaleDateString();
+        }
+
+        if (dataType === DataType.Numeric) {
+          return Number(value).toLocaleString();
+        }
+
+        if (dataType === DataType.Text || dataType === DataType.List) {
+          return value;
+        }
+
+        if (dataType === DataType.User) {
+          if (!user) return null;
+          return (
+            <HStack spacing={2}>
+              <Avatar
+                size="sm"
+                name={user.fullName ?? undefined}
+                path={user.avatarUrl}
+              />
+              <Text>{user.fullName ?? ""}</Text>
+            </HStack>
+          );
+        }
+
+        return "Unknown";
+      },
+      []
+    );
 
     const rows = useMemo(
       () =>
@@ -111,7 +147,11 @@ const PeopleTable = memo(
               id: attribute.id,
               header: attribute.name,
               cell: ({ row }) =>
-                row?.original?.attributes?.[attribute?.id]?.value ?? null,
+                renderGenericAttribute(
+                  row?.original?.attributes?.[attribute?.id]?.value,
+                  row?.original?.attributes?.[attribute?.id]?.dataType,
+                  row?.original?.attributes?.[attribute?.id]?.user
+                ),
             });
           });
         }
@@ -174,6 +214,7 @@ const PeopleTable = memo(
             left: ["Select", "User"],
           }}
           withColumnOrdering
+          withInlineEditing
           withFilters
           withPagination
           withSelectableRows={isEditable}

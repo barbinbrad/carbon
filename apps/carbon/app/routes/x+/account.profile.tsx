@@ -1,10 +1,17 @@
-import { Grid } from "@chakra-ui/react";
+import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  Grid,
+} from "@chakra-ui/react";
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { json } from "@remix-run/router";
 import { validationError } from "remix-validated-form";
-import { PageTitle } from "~/components/Layout";
+import { PageTitle, SectionTitle } from "~/components/Layout";
 import { ProfileForm, ProfilePhotoForm } from "~/interfaces/Account/Profile";
 import { UserAttributesForm } from "~/interfaces/Account/UserAttributes";
 import type { PublicAttributes } from "~/interfaces/Account/types";
@@ -127,9 +134,19 @@ export default function AccountProfile() {
         <ProfileForm user={user} />
         <ProfilePhotoForm user={user} />
       </Grid>
-      {attributes.map((category: PublicAttributes) => (
-        <UserAttributesForm key={category.id} attributeCategory={category} />
-      ))}
+      <Accordion w="full" allowMultiple allowToggle>
+        {attributes.map((category: PublicAttributes) => (
+          <AccordionItem key={category.id}>
+            <AccordionButton>
+              <SectionTitle title={category.name} />
+              <AccordionIcon />
+            </AccordionButton>
+            <AccordionPanel p={0} pb={4}>
+              <UserAttributesForm attributeCategory={category} />
+            </AccordionPanel>
+          </AccordionItem>
+        ))}
+      </Accordion>
     </>
   );
 }

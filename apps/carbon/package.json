@@ -15,7 +15,7 @@
     "@carbon/logger": "*",
     "@carbon/react": "*",
     "@carbon/utils": "*",
-    "@chakra-ui/react": "^2.4.1",
+    "@chakra-ui/react": "^2.4.9",
     "@chakra-ui/skip-nav": "^2.0.13",
     "@emotion/react": "^11.10.4",
     "@emotion/server": "^11.10.0",

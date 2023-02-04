@@ -21,7 +21,7 @@
     "preset": "@carbon/jest/node"
   },
   "dependencies": {
-    "@chakra-ui/react": "^2.4.1",
+    "@chakra-ui/react": "^2.4.9",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@internationalized/date": "^3.0.2",

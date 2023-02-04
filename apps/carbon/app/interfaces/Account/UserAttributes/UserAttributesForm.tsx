@@ -23,7 +23,6 @@ import {
   User,
   Select,
 } from "~/components/Form";
-import { SectionTitle } from "~/components/Layout";
 import { UserSelect } from "~/components/Selectors";
 import { useUser } from "~/hooks";
 import type { PublicAttributes } from "~/interfaces/Account/types";
@@ -57,8 +56,7 @@ const UserAttributesForm = ({ attributeCategory }: UserAttributesFormProps) => {
 
   return (
     <Box w="full">
-      <SectionTitle title={attributeCategory.name} mt={8} />
-      <VStack alignItems="start" my={4} w="full" spacing={4}>
+      <VStack alignItems="start" w="full" spacing={4}>
         {attributeCategory.userAttribute.map((attribute) => {
           const genericProps = getGenericProps(
             attribute,

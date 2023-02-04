@@ -43,7 +43,7 @@ export const CollapsibleSidebar = ({ children }: PropsWithChildren<{}>) => {
           borderColor={useColor("gray.200")}
           position="absolute"
           pl={2}
-          bottom="60px"
+          top="calc(100vh - 135px)"
           color={useColor("gray.700")}
           right="-32px"
           left="auto"

@@ -29,7 +29,7 @@ import { ConfirmDelete } from "~/components/Modals";
 import type {
   Attribute,
   AttributeCategoryDetail as AttributeCategoryDetailType,
-} from "~/interfaces/People/types";
+} from "~/interfaces/Resources/types";
 import { useUrlParams } from "~/hooks";
 
 type AttributeCategoryDetailProps = {
@@ -202,7 +202,7 @@ const AttributeCategoryDetail = ({
       </Drawer>
       <ConfirmDelete
         isOpen={deleteModal.isOpen}
-        action={`/x/people/attribute/delete/${selectedAttribute?.id}`}
+        action={`/x/resources/people/attribute/delete/${selectedAttribute?.id}`}
         name={selectedAttribute?.name ?? ""}
         text={`Are you sure you want to deactivate the ${selectedAttribute?.name} attribute?`}
         onCancel={onDeleteCancel}

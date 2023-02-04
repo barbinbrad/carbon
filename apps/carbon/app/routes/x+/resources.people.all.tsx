@@ -4,9 +4,9 @@ import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import { usePermissions } from "~/hooks";
-import { PeopleTable, PeopleTableFilters } from "~/interfaces/People";
+import { PeopleTable, PeopleTableFilters } from "~/interfaces/Resources";
 import { requirePermissions } from "~/services/auth";
-import { getAttributeCategories, getPeople } from "~/services/people";
+import { getAttributeCategories, getPeople } from "~/services/resources";
 import { flash } from "~/services/session";
 import { getEmployeeTypes } from "~/services/users";
 import { getGenericQueryFilters } from "~/utils/query";
@@ -14,7 +14,7 @@ import { error } from "~/utils/result";
 
 export async function loader({ request }: LoaderArgs) {
   const { client } = await requirePermissions(request, {
-    view: "people",
+    view: "resources",
     role: "employee",
   });
 
@@ -65,7 +65,7 @@ export async function loader({ request }: LoaderArgs) {
   });
 }
 
-export default function () {
+export default function ResourcesPeopleRoute() {
   const { attributeCategories, count, employeeTypes, people } =
     useLoaderData<typeof loader>();
   const permissions = usePermissions();
@@ -77,7 +77,7 @@ export default function () {
         attributeCategories={attributeCategories}
         data={people ?? []}
         count={count ?? 0}
-        isEditable={permissions.can("update", "people")}
+        isEditable={permissions.can("update", "resources")}
       />
       <Outlet />
     </VStack>

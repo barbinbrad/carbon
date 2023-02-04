@@ -2,20 +2,20 @@ import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { redirect, json } from "@remix-run/node";
 import { useLoaderData, useNavigate } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
-import { AttributeCategoryForm } from "~/interfaces/People/Attributes";
+import { AttributeCategoryForm } from "~/interfaces/Resources/Attributes";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import {
   attributeCategoryValidator,
   getAttributeCategory,
   updateAttributeCategory,
-} from "~/services/people";
+} from "~/services/resources";
 import { assertIsPost, notFound } from "~/utils/http";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderArgs) {
   const { client } = await requirePermissions(request, {
-    view: "people",
+    view: "resources",
     role: "employee",
   });
 
@@ -25,7 +25,7 @@ export async function loader({ request, params }: LoaderArgs) {
   const attributeCategory = await getAttributeCategory(client, categoryId);
   if (attributeCategory.error) {
     return redirect(
-      "/x/people/attributes",
+      "/x/resources/people/attributes",
       await flash(
         request,
         error(attributeCategory.error, "Failed to fetch attribute category")
@@ -39,7 +39,7 @@ export async function loader({ request, params }: LoaderArgs) {
 export async function action({ request }: ActionArgs) {
   assertIsPost(request);
   const { client, userId } = await requirePermissions(request, {
-    update: "people",
+    update: "resources",
   });
 
   const validation = await attributeCategoryValidator.validate(
@@ -61,7 +61,7 @@ export async function action({ request }: ActionArgs) {
   });
   if (updateCategory.error) {
     return redirect(
-      "/x/people/attributes",
+      "/x/resources/people/attributes",
       await flash(
         request,
         error(updateCategory.error, "Failed to update attribute category")
@@ -70,7 +70,7 @@ export async function action({ request }: ActionArgs) {
   }
 
   return redirect(
-    "/x/people/attributes",
+    "/x/resources/people/attributes",
     await flash(request, success("Updated attribute category "))
   );
 }
@@ -78,7 +78,7 @@ export async function action({ request }: ActionArgs) {
 export default function EditAttributeCategoryRoute() {
   const { attributeCategory } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
-  const onClose = () => navigate("/x/people/attributes/");
+  const onClose = () => navigate("/x/resources/people/attributes/");
 
   const initialValues = {
     id: attributeCategory?.id,

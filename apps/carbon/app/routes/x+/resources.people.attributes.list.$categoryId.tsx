@@ -2,19 +2,19 @@ import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Outlet, useLoaderData, useNavigate } from "@remix-run/react";
 import { useUrlParams } from "~/hooks";
-import { AttributeCategoryDetail } from "~/interfaces/People/Attributes";
+import { AttributeCategoryDetail } from "~/interfaces/Resources/Attributes";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import {
   getAttributeCategory,
   updateAttributeSortOrder,
-} from "~/services/people";
+} from "~/services/resources";
 import { assertIsPost, notFound } from "~/utils/http";
 import { error } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderArgs) {
   const { client } = await requirePermissions(request, {
-    view: "people",
+    view: "resources",
     role: "employee",
   });
 
@@ -24,7 +24,7 @@ export async function loader({ request, params }: LoaderArgs) {
   const attributeCategory = await getAttributeCategory(client, categoryId);
   if (attributeCategory.error) {
     return redirect(
-      "/x/people/attributes",
+      "/x/resources/people/attributes",
       await flash(
         request,
         error(attributeCategory.error, "Failed to fetch attribute category")
@@ -38,7 +38,7 @@ export async function loader({ request, params }: LoaderArgs) {
 export async function action({ request }: ActionArgs) {
   assertIsPost(request);
   const { client, userId } = await requirePermissions(request, {
-    update: "people",
+    update: "resources",
   });
 
   const updateMap = (await request.formData()).get("updates") as string;
@@ -74,7 +74,8 @@ export default function AttributeCategoryListRoute() {
   const { attributeCategory } = useLoaderData<typeof loader>();
   const [params] = useUrlParams();
   const navigate = useNavigate();
-  const onClose = () => navigate(`/x/people/attributes?${params.toString()}`);
+  const onClose = () =>
+    navigate(`/x/resources/people/attributes?${params.toString()}`);
 
   return (
     <>

@@ -81,7 +81,7 @@ export const employeeTypePermissionsDefinitions: Record<
       delete: true,
       view: true,
     },
-    People: {
+    Resources: {
       create: true,
       update: true,
       delete: true,
@@ -155,7 +155,7 @@ export const employeeTypePermissionsDefinitions: Record<
       delete: false,
       view: true,
     },
-    People: {
+    Resources: {
       create: true,
       update: true,
       delete: true,
@@ -229,7 +229,7 @@ export const employeeTypePermissionsDefinitions: Record<
       delete: false,
       view: false,
     },
-    People: {
+    Resources: {
       create: true,
       update: true,
       delete: true,

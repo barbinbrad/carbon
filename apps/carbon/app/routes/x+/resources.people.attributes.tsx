@@ -6,19 +6,19 @@ import { Outlet, useLoaderData } from "@remix-run/react";
 import {
   AttributeCategoriesTable,
   AttributeCategoriesTableFilters,
-} from "~/interfaces/People/Attributes";
+} from "~/interfaces/Resources/Attributes";
 import { requirePermissions } from "~/services/auth";
 import {
   getAttributeCategories,
   getAttributeDataTypes,
-} from "~/services/people";
+} from "~/services/resources";
 import { flash } from "~/services/session";
 import { getGenericQueryFilters } from "~/utils/query";
 import { error } from "~/utils/result";
 
 export async function loader({ request }: LoaderArgs) {
   const { client } = await requirePermissions(request, {
-    view: "people",
+    view: "resources",
     role: "employee",
   });
 

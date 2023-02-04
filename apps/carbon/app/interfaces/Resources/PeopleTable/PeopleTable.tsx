@@ -6,7 +6,7 @@ import { memo, useCallback, useMemo } from "react";
 import { BsChat, BsPencilSquare } from "react-icons/bs";
 import { Avatar, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
-import type { AttributeCategory, Person } from "~/interfaces/People/types";
+import type { AttributeCategory, Person } from "~/interfaces/Resources/types";
 import { DataType } from "~/interfaces/Users/types";
 
 type PeopleTableProps = {
@@ -165,13 +165,13 @@ const PeopleTable = memo(
           accessorKey: "user.id",
           cell: (item) => (
             <Flex justifyContent="end">
-              {permissions.can("update", "people") && (
+              {permissions.can("update", "resources") && (
                 <ActionMenu>
                   <MenuItem
                     icon={<BsPencilSquare />}
                     onClick={() =>
                       navigate(
-                        `/x/people/all/${
+                        `/x/resources/people/all/${
                           item.getValue() as string
                         }?${params.toString()}`
                       )

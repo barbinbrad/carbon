@@ -3,7 +3,7 @@ import type {
   getAttributeCategories,
   getAttributeCategory,
   getPeople,
-} from "~/services/people";
+} from "~/services/resources";
 
 export type Attribute = NonNullable<
   Awaited<ReturnType<typeof getAttribute>>["data"]

@@ -18,7 +18,7 @@ import { IoMdTrash } from "react-icons/io";
 import { Table } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions, useUrlParams } from "~/hooks";
-import type { AttributeCategory } from "~/interfaces/People/types";
+import type { AttributeCategory } from "~/interfaces/Resources/types";
 
 type AttributeCategoriesTableProps = {
   data: AttributeCategory[];
@@ -59,7 +59,7 @@ const AttributeCategoriesTable = memo(
               <Button
                 onClick={() => {
                   navigate(
-                    `/x/people/attributes/list/${
+                    `/x/resources/people/attributes/list/${
                       row.original.id
                     }?${params?.toString()}`
                   );
@@ -75,7 +75,7 @@ const AttributeCategoriesTable = memo(
                 icon={<BsPlus />}
                 onClick={() => {
                   navigate(
-                    `/x/people/attributes/list/${
+                    `/x/resources/people/attributes/list/${
                       row.original.id
                     }/new?${params?.toString()}`
                   );
@@ -111,7 +111,7 @@ const AttributeCategoriesTable = memo(
                   icon={<BiAddToQueue />}
                   onClick={() => {
                     navigate(
-                      `/x/people/attributes/list/${
+                      `/x/resources/people/attributes/list/${
                         row.original.id
                       }/new?${params?.toString()}`
                     );
@@ -123,7 +123,7 @@ const AttributeCategoriesTable = memo(
                   icon={<BsListUl />}
                   onClick={() => {
                     navigate(
-                      `/x/people/attributes/list/${
+                      `/x/resources/people/attributes/list/${
                         row.original.id
                       }?${params?.toString()}`
                     );
@@ -134,7 +134,9 @@ const AttributeCategoriesTable = memo(
                 <MenuItem
                   icon={<BsPencilSquare />}
                   onClick={() => {
-                    navigate(`/x/people/attributes/${row.original.id}`);
+                    navigate(
+                      `/x/resources/people/attributes/${row.original.id}`
+                    );
                   }}
                 >
                   Edit Attribute Category
@@ -166,7 +168,7 @@ const AttributeCategoriesTable = memo(
         />
 
         <ConfirmDelete
-          action={`/x/people/attributes/delete/${selectedCategory?.id}`}
+          action={`/x/resources/people/attributes/delete/${selectedCategory?.id}`}
           name={selectedCategory?.name ?? ""}
           text={`Are you sure you want to deactivate the ${selectedCategory?.name} attribute category?`}
           isOpen={deleteModal.isOpen}

@@ -2,14 +2,14 @@ import { Grid, VStack } from "@chakra-ui/react";
 import type { MetaFunction } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 import { GroupedContentSidebar } from "~/components/Layout/Sidebar";
-import { usePeopleSidebar } from "~/interfaces/People";
+import { useResourcesSidebar } from "~/interfaces/Resources";
 
 export const meta: MetaFunction = () => ({
-  title: "Carbon | People",
+  title: "Carbon | Resources",
 });
 
-export default function PeopleRoute() {
-  const { groups } = usePeopleSidebar();
+export default function ResourcesRoute() {
+  const { groups } = useResourcesSidebar();
 
   return (
     <Grid w="full" h="full" templateColumns="auto 1fr" overflow="auto">

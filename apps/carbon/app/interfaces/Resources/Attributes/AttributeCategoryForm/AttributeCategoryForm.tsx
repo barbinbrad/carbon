@@ -13,7 +13,7 @@ import {
 import { ValidatedForm } from "remix-validated-form";
 import { Boolean, Input, Hidden, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
-import { attributeCategoryValidator } from "~/services/people";
+import { attributeCategoryValidator } from "~/services/resources";
 
 type AttributeCategoryFormProps = {
   initialValues: {
@@ -41,8 +41,8 @@ const AttributeCategoryForm = ({
         method="post"
         action={
           isEditing
-            ? `/x/people/attributes/${initialValues.id}`
-            : "/x/people/attributes/new"
+            ? `/x/resources/people/attributes/${initialValues.id}`
+            : "/x/resources/people/attributes/new"
         }
         defaultValues={initialValues}
       >

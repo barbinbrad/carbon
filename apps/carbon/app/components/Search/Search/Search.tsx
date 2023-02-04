@@ -35,7 +35,7 @@ type SearchResult = {
   id: number;
   name: string;
   entity:
-    | "People"
+    | "Resource"
     | "Customer"
     | "Supplier"
     | "Job"
@@ -243,7 +243,7 @@ function ResultIcon({ entity }: { entity: SearchResult["entity"] }) {
       return <Icon as={BiListCheck} {...resultIconProps} />;
     case "Part":
       return <Icon as={AiOutlinePartition} {...resultIconProps} />;
-    case "People":
+    case "Resource":
       return <Icon as={CgProfile} {...resultIconProps} />;
     case "Purchase Order":
       return <Icon as={BsCartDash} {...resultIconProps} />;

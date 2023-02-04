@@ -4,14 +4,14 @@ import { redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
-import { attributeValidator, insertAttribute } from "~/services/people";
+import { attributeValidator, insertAttribute } from "~/services/resources";
 import { assertIsPost } from "~/utils/http";
 import { error, success } from "~/utils/result";
 
 export async function action({ request }: ActionArgs) {
   assertIsPost(request);
   const { client, userId } = await requirePermissions(request, {
-    create: "people",
+    create: "resources",
   });
 
   const validation = await attributeValidator.validate(
@@ -49,7 +49,7 @@ export async function action({ request }: ActionArgs) {
   }
 
   return redirect(
-    `/x/people/attributes`,
+    `/x/resources/people/attributes`,
     await flash(request, success("Created attribute"))
   );
 }

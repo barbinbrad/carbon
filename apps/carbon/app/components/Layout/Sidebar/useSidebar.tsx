@@ -69,9 +69,9 @@ const sidebarItems: Authenticated<NavItem>[] = [
     icon: <BiMessage />,
   },
   {
-    permission: "people",
-    name: "People",
-    to: "/x/people",
+    permission: "resources",
+    name: "Resources",
+    to: "/x/resources",
     icon: <BsPeopleFill />,
   },
   {

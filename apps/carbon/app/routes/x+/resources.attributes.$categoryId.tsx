@@ -25,7 +25,7 @@ export async function loader({ request, params }: LoaderArgs) {
   const attributeCategory = await getAttributeCategory(client, categoryId);
   if (attributeCategory.error) {
     return redirect(
-      "/x/resources/people/attributes",
+      "/x/resources/attributes",
       await flash(
         request,
         error(attributeCategory.error, "Failed to fetch attribute category")
@@ -61,7 +61,7 @@ export async function action({ request }: ActionArgs) {
   });
   if (updateCategory.error) {
     return redirect(
-      "/x/resources/people/attributes",
+      "/x/resources/attributes",
       await flash(
         request,
         error(updateCategory.error, "Failed to update attribute category")
@@ -70,7 +70,7 @@ export async function action({ request }: ActionArgs) {
   }
 
   return redirect(
-    "/x/resources/people/attributes",
+    "/x/resources/attributes",
     await flash(request, success("Updated attribute category "))
   );
 }
@@ -78,7 +78,7 @@ export async function action({ request }: ActionArgs) {
 export default function EditAttributeCategoryRoute() {
   const { attributeCategory } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
-  const onClose = () => navigate("/x/resources/people/attributes/");
+  const onClose = () => navigate("/x/resources/attributes/");
 
   const initialValues = {
     id: attributeCategory?.id,

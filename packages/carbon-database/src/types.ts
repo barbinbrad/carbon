@@ -916,6 +916,7 @@ export interface Database {
     Enums: {
       search_entity:
         | "Resource"
+        | "Person"
         | "Customer"
         | "Supplier"
         | "Job"

@@ -3,7 +3,7 @@ import { Flex, HStack, MenuItem, Text, VisuallyHidden } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
-import { BsChat, BsPencilSquare } from "react-icons/bs";
+import { BsPencilSquare } from "react-icons/bs";
 import { Avatar, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { AttributeCategory, Person } from "~/interfaces/Resources/types";
@@ -171,7 +171,7 @@ const PeopleTable = memo(
                     icon={<BsPencilSquare />}
                     onClick={() =>
                       navigate(
-                        `/x/resources/people/all/${
+                        `/x/resources/person/${
                           item.getValue() as string
                         }?${params.toString()}`
                       )
@@ -189,24 +189,24 @@ const PeopleTable = memo(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [params]);
 
-    const actions = useMemo(() => {
-      return [
-        {
-          label: "Message Employees",
-          icon: <BsChat />,
-          disabled: !permissions.can("create", "messaging"),
-          onClick: (selected: typeof rows) => {
-            console.log(selected);
-          },
-        },
-      ];
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    // const actions = useMemo(() => {
+    //   return [
+    //     {
+    //       label: "Message Employees",
+    //       icon: <BsChat />,
+    //       disabled: !permissions.can("create", "messaging"),
+    //       onClick: (selected: typeof rows) => {
+    //         console.log(selected);
+    //       },
+    //     },
+    //   ];
+    //   // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, []);
 
     return (
       <>
         <Table<typeof rows[number]>
-          actions={actions}
+          // actions={actions}
           count={count}
           columns={columns}
           data={rows}
@@ -214,10 +214,10 @@ const PeopleTable = memo(
             left: ["Select", "User"],
           }}
           withColumnOrdering
-          withInlineEditing
+          // withInlineEditing
           withFilters
           withPagination
-          withSelectableRows={isEditable}
+          // withSelectableRows={isEditable}
         />
       </>
     );

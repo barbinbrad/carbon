@@ -80,8 +80,8 @@ const AttributeForm = ({
         method="post"
         action={
           isEditing
-            ? `/x/resources/people/attribute/${initialValues.id}`
-            : "/x/resources/people/attribute/new"
+            ? `/x/resources/attribute/${initialValues.id}`
+            : "/x/resources/attribute/new"
         }
         defaultValues={initialValues}
       >

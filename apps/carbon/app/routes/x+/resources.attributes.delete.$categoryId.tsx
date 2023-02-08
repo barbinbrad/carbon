@@ -13,7 +13,7 @@ export async function action({ request, params }: LoaderArgs) {
   const { categoryId } = params;
   if (!categoryId) {
     return redirect(
-      "/x/resources/people/attributes",
+      "/x/resources/attributes",
       await flash(request, error(params, "Failed to get a category id"))
     );
   }
@@ -21,7 +21,7 @@ export async function action({ request, params }: LoaderArgs) {
   const deactivateAttribute = await deleteAttributeCategory(client, categoryId);
   if (deactivateAttribute.error) {
     return redirect(
-      "/x/resources/people/attributes",
+      "/x/resources/attributes",
       await flash(
         request,
         error(
@@ -33,7 +33,7 @@ export async function action({ request, params }: LoaderArgs) {
   }
 
   return redirect(
-    "/x/resources/people/attributes",
+    "/x/resources/attributes",
     await flash(request, success("Successfully deactivated attribute category"))
   );
 }

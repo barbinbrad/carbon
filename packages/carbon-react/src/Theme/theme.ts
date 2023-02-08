@@ -22,7 +22,12 @@ export const theme = {
         solid: (props: { colorScheme: string }) => {
           const { colorScheme: c } = props;
 
-          if (c !== "brand") return {};
+          if (c !== "brand")
+            return {
+              borderColor: "gray.300",
+              borderWidth: "1px",
+              borderStyle: "solid",
+            };
 
           return {
             bg: `black`,

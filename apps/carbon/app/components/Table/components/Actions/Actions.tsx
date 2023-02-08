@@ -11,13 +11,13 @@ const Actions = <T extends Object>({
   actions,
   selectedRows,
 }: ActionsProps<T>) => {
+  const disabled = selectedRows.length === 0;
   return (
     <Menu isLazy>
       <MenuButton
         as={Button}
         leftIcon={<IoMdCheckboxOutline />}
-        disabled={selectedRows.length === 0}
-        colorScheme={selectedRows.length === 0 ? "gray" : "brand"}
+        colorScheme={disabled ? "gray" : "brand"}
         variant="ghost"
       >
         Actions
@@ -27,7 +27,7 @@ const Actions = <T extends Object>({
           <MenuItem
             key={action.label}
             onClick={() => action.onClick(selectedRows)}
-            disabled={action.disabled}
+            isDisabled={disabled || action.disabled}
             icon={action.icon}
           >
             {action.label}

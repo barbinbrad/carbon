@@ -202,7 +202,7 @@ const AttributeCategoryDetail = ({
       </Drawer>
       <ConfirmDelete
         isOpen={deleteModal.isOpen}
-        action={`/x/resources/people/attribute/delete/${selectedAttribute?.id}`}
+        action={`/x/resources/attribute/delete/${selectedAttribute?.id}`}
         name={selectedAttribute?.name ?? ""}
         text={`Are you sure you want to deactivate the ${selectedAttribute?.name} attribute?`}
         onCancel={onDeleteCancel}

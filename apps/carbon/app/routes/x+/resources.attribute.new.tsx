@@ -49,7 +49,7 @@ export async function action({ request }: ActionArgs) {
   }
 
   return redirect(
-    `/x/resources/people/attributes`,
+    `/x/resources/attributes`,
     await flash(request, success("Created attribute"))
   );
 }

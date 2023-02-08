@@ -11,7 +11,7 @@ export default function NewAttributeRoute() {
   const onClose = () => navigate(-1);
   const attributesRouteData = useRouteData<{
     dataTypes: AttributeDataType[];
-  }>("/x/resources/people/attributes");
+  }>("/x/resources/attributes");
 
   return (
     <AttributeForm

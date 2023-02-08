@@ -27,12 +27,12 @@ export async function action({ request, params }: ActionArgs) {
   });
   if (update.error)
     redirect(
-      "/x/resources/people/attributes",
+      "/x/resources/attributes",
       await flash(request, error(update.error, "Failed to update attribute"))
     );
 
   return redirect(
-    "/x/resources/people/attributes",
+    "/x/resources/attributes",
     await flash(request, success("Successfully updated attribtue"))
   );
 }

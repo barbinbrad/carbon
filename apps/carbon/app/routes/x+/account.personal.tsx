@@ -1,10 +1,4 @@
-import {
-  Accordion,
-  AccordionButton,
-  AccordionIcon,
-  AccordionItem,
-  AccordionPanel,
-} from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import type { LoaderArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
@@ -46,19 +40,13 @@ export default function AccountPersonal() {
         subtitle="This information is private and can only be seen by you and authorized employees."
       />
       {/* <PersonalDataForm personalData={{}} /> */}
-      <Accordion w="full" allowMultiple allowToggle>
-        {attributes.map((category: PrivateAttributes) => (
-          <AccordionItem key={category.id}>
-            <AccordionButton>
-              <SectionTitle title={category.name} />
-              <AccordionIcon />
-            </AccordionButton>
-            <AccordionPanel p={0} pb={4}>
-              <UserAttributesForm attributeCategory={category} />
-            </AccordionPanel>
-          </AccordionItem>
-        ))}
-      </Accordion>
+      {attributes.map((category: PrivateAttributes) => (
+        <Box key={category.id} mb={8} w="full">
+          <SectionTitle title={category.name} />
+
+          <UserAttributesForm attributeCategory={category} />
+        </Box>
+      ))}
     </>
   );
 }

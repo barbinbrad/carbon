@@ -35,7 +35,7 @@ export async function action({ request }: ActionArgs) {
   });
   if (createAttributeCategory.error) {
     return redirect(
-      "/x/resources/people/attributes",
+      "/x/resources/attributes",
       await flash(
         request,
         error(
@@ -47,14 +47,14 @@ export async function action({ request }: ActionArgs) {
   }
 
   return redirect(
-    "/x/resources/people/attributes",
+    "/x/resources/attributes",
     await flash(request, success("Created attribute category "))
   );
 }
 
 export default function NewAttributeCategoryRoute() {
   const navigate = useNavigate();
-  const onClose = () => navigate("/x/resources/people/attributes");
+  const onClose = () => navigate("/x/resources/attributes");
 
   const initialValues = {
     name: "",

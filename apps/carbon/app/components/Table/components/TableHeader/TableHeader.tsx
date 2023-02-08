@@ -28,7 +28,7 @@ type HeaderProps<T> = {
   withSelectableRows: boolean;
 };
 
-const Header = <T extends object>({
+const TableHeader = <T extends object>({
   actions,
   columnAccessors,
   columnOrder,
@@ -102,4 +102,4 @@ const Header = <T extends object>({
   );
 };
 
-export default Header;
+export default TableHeader;

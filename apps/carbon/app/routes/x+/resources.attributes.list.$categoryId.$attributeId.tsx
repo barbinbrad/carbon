@@ -23,7 +23,7 @@ export async function loader({ request, params }: LoaderArgs) {
   const attribute = await getAttribute(client, attributeId);
   if (attribute.error) {
     return redirect(
-      `/x/resources/people/attributes/list/${categoryId}`,
+      `/x/resources/attributes/list/${categoryId}`,
       await flash(request, error(attribute.error, "Failed to fetch attribute"))
     );
   }
@@ -39,11 +39,10 @@ export default function EditAttributeRoute() {
   if (Number.isNaN(categoryId)) throw new Error("categoryId is not a number");
 
   const navigate = useNavigate();
-  const onClose = () =>
-    navigate(`/x/resources/people/attributes/list/${categoryId}`);
+  const onClose = () => navigate(`/x/resources/attributes/list/${categoryId}`);
   const attributesRouteData = useRouteData<{
     dataTypes: AttributeDataType[];
-  }>("/x/resources/people/attributes");
+  }>("/x/resources/attributes");
 
   return (
     <AttributeForm

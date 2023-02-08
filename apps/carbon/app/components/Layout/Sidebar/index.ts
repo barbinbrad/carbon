@@ -1,5 +1,5 @@
 import ContentSidebar from "./ContentSidebar";
-import GroupedContentSidebar from "./GroupContentSidebar";
+import GroupedContentSidebar from "./GroupedContentSidebar";
 import IconSidebar from "./IconSidebar";
 import MultiTabSidebar from "./MultiTabSidebar";
 

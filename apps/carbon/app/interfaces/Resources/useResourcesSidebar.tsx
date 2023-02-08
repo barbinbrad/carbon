@@ -6,7 +6,7 @@ const resourcesRoutes: RouteGroup[] = [
     routes: [
       {
         name: "People",
-        to: "/x/resources/people/all",
+        to: "/x/resources/people",
       },
       {
         name: "Contractors",
@@ -14,15 +14,15 @@ const resourcesRoutes: RouteGroup[] = [
       },
       {
         name: "Equipment",
-        to: "/x/resources/contractors",
+        to: "/x/resources/equipment",
       },
       {
         name: "Facilities",
-        to: "/x/resources/contractors",
+        to: "/x/resources/facilities",
       },
       {
         name: "Crews",
-        to: "/x/resources/contractors",
+        to: "/x/resources/crews",
       },
       // {
       //   name: "Pools",
@@ -34,12 +34,20 @@ const resourcesRoutes: RouteGroup[] = [
     name: "Configuration",
     routes: [
       {
-        name: "Attributes",
-        to: "/x/resources/people/attributes",
+        name: "Abilities",
+        to: "/x/resources/abilities",
       },
       {
-        name: "Skills",
-        to: "/x/resources/people/skills",
+        name: "Attributes",
+        to: "/x/resources/attributes",
+      },
+      {
+        name: "Shifts",
+        to: "/x/resources/shifts",
+      },
+      {
+        name: "Work Centers",
+        to: "/x/resources/work-centers",
       },
     ],
   },

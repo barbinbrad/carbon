@@ -41,8 +41,8 @@ const AttributeCategoryForm = ({
         method="post"
         action={
           isEditing
-            ? `/x/resources/people/attributes/${initialValues.id}`
-            : "/x/resources/people/attributes/new"
+            ? `/x/resources/attributes/${initialValues.id}`
+            : "/x/resources/attributes/new"
         }
         defaultValues={initialValues}
       >

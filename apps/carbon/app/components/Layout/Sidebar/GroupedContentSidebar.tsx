@@ -26,7 +26,7 @@ const GroupedContentSidebar = ({ groups }: { groups: RouteGroup[] }) => {
                 py={4}
                 w="full"
               >
-                <Text color={labelColor} fontSize="sm" pl={3} py={1}>
+                <Text color={labelColor} fontSize="xs" pl={3} py={1}>
                   {group.name}
                 </Text>
                 {group.routes.map((route) => {
@@ -43,6 +43,7 @@ const GroupedContentSidebar = ({ groups }: { groups: RouteGroup[] }) => {
                       borderStyle="solid"
                       borderWidth={1}
                       fontWeight={isActive ? "bold" : "normal"}
+                      leftIcon={route.icon}
                       justifyContent="start"
                       w="full"
                     >

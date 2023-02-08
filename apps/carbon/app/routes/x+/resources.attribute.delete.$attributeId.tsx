@@ -13,7 +13,7 @@ export async function action({ request, params }: LoaderArgs) {
   const { attributeId } = params;
   if (!attributeId) {
     return redirect(
-      "/x/resources/people/attributes",
+      "/x/resources/attributes",
       await flash(request, error(params, "Failed to get an attribute id"))
     );
   }
@@ -21,7 +21,7 @@ export async function action({ request, params }: LoaderArgs) {
   const deactivateAttribute = await deleteAttribute(client, attributeId);
   if (deactivateAttribute.error) {
     return redirect(
-      "/x/resources/people/attributes",
+      "/x/resources/attributes",
       await flash(
         request,
         error(deactivateAttribute.error, "Failed to deactivate attribute")
@@ -30,7 +30,7 @@ export async function action({ request, params }: LoaderArgs) {
   }
 
   return redirect(
-    "/x/resources/people/attributes",
+    "/x/resources/attributes",
     await flash(request, success("Successfully deactivated attribute"))
   );
 }

@@ -24,7 +24,7 @@ export async function loader({ request, params }: LoaderArgs) {
   const attributeCategory = await getAttributeCategory(client, categoryId);
   if (attributeCategory.error) {
     return redirect(
-      "/x/resources/people/attributes",
+      "/x/resources/attributes",
       await flash(
         request,
         error(attributeCategory.error, "Failed to fetch attribute category")
@@ -75,7 +75,7 @@ export default function AttributeCategoryListRoute() {
   const [params] = useUrlParams();
   const navigate = useNavigate();
   const onClose = () =>
-    navigate(`/x/resources/people/attributes?${params.toString()}`);
+    navigate(`/x/resources/attributes?${params.toString()}`);
 
   return (
     <>

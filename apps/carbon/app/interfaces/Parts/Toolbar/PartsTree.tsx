@@ -73,7 +73,7 @@ const PartsTreeExplorer = () => {
               borderRadius={0}
               size="sm"
               onClick={() => toggleNode(node.id)}
-              disabled={!node.children}
+              isDisabled={!node.children}
             >
               <Icon
                 as={BsCaretDownFill}

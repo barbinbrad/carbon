@@ -96,13 +96,13 @@ export const PaginationButtons = ({
           <IconButton
             aria-label="Previous"
             icon={<BsChevronLeft />}
-            disabled={!canPreviousPage}
+            isDisabled={!canPreviousPage}
             onClick={previousPage}
           />
           <IconButton
             aria-label="Next"
             icon={<BsChevronRight />}
-            disabled={!canNextPage}
+            isDisabled={!canNextPage}
             onClick={nextPage}
           />
         </>
@@ -113,14 +113,14 @@ export const PaginationButtons = ({
             of {count}
           </Flex>
           <Button
-            disabled={!canPreviousPage}
+            isDisabled={!canPreviousPage}
             onClick={previousPage}
             leftIcon={<BsChevronLeft />}
           >
             Previous
           </Button>
           <Button
-            disabled={!canNextPage}
+            isDisabled={!canNextPage}
             onClick={nextPage}
             rightIcon={<BsChevronRight />}
           >

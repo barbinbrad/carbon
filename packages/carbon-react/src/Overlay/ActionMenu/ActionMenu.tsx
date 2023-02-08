@@ -15,7 +15,7 @@ const ActionMenu = ({ children, disabled, icon }: ActionMenuProps) => {
         aria-label="Action context menu for row"
         icon={icon ? icon : <BsThreeDotsVertical />}
         colorScheme="gray"
-        disabled={disabled}
+        isDisabled={disabled}
         variant="outline"
         onClick={(e) => e.stopPropagation()}
       />

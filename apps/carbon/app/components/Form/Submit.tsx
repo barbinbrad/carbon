@@ -16,7 +16,7 @@ export const Submit = ({
       size="md"
       colorScheme="brand"
       isLoading={isSubmitting || props.isLoading}
-      disabled={isSubmitting || props.disabled}
+      isDisabled={isSubmitting || props.isDisabled}
       {...props}
     >
       {children}

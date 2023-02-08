@@ -116,7 +116,7 @@ const SupplierContacts = ({
               setContact(undefined);
               contactDrawer.onOpen();
             }}
-            disabled={!isEditing}
+            isDisabled={!isEditing}
           >
             New Contact
           </Button>

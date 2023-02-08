@@ -61,7 +61,7 @@ const SupplierTypeForm = ({ initialValues }: SupplierTypeFormProps) => {
           </DrawerBody>
           <DrawerFooter>
             <HStack spacing={2}>
-              <Submit disabled={isDisabled}>Save</Submit>
+              <Submit isDisabled={isDisabled}>Save</Submit>
               <Button
                 size="md"
                 colorScheme="gray"

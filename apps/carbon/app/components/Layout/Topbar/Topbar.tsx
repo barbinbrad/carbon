@@ -37,9 +37,6 @@ const Topbar = () => {
             colorScheme="gray"
             leftIcon={<BiHelpCircle />}
             variant="solid"
-            border={1}
-            borderColor={borderColor}
-            borderStyle="solid"
           >
             Help
           </Button>
@@ -53,9 +50,6 @@ const Topbar = () => {
             colorScheme="gray"
             leftIcon={<BsChatSquare />}
             variant="solid"
-            border={1}
-            borderColor={borderColor}
-            borderStyle="solid"
           >
             Feedback
           </Button>

@@ -24,7 +24,7 @@ export const theme = {
 
           if (c !== "brand")
             return {
-              borderColor: "gray.300",
+              borderColor: "gray.200",
               borderWidth: "1px",
               borderStyle: "solid",
             };

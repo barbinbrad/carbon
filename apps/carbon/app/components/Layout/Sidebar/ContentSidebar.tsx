@@ -33,9 +33,6 @@ const ContentSidebar = ({ links }: { links: Route[] }) => {
                     as={Link}
                     to={route.to}
                     variant={isActive ? "solid" : "ghost"}
-                    borderColor={isActive ? borderColor : "transparent"}
-                    borderStyle="solid"
-                    borderWidth={1}
                     fontWeight={isActive ? "bold" : "normal"}
                     justifyContent="start"
                     w="full"

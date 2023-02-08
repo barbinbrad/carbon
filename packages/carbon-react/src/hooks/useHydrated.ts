@@ -13,7 +13,7 @@ let hydrating = true;
  * ```tsx
  * const hydrated = useHydrated();
  * return (
- *   <button type="button" disabled={!hydrated} onClick={doSomethingCustom}>
+ *   <button type="button" isDisabled={!hydrated} onClick={doSomethingCustom}>
  *     Click me
  *   </button>
  * );

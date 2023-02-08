@@ -40,7 +40,7 @@ const PasswordForm = () => {
             name="confirmPassword"
             label="Confirm Password"
           />
-          <Submit disabled={!passwordsMatch}>Update Password</Submit>
+          <Submit isDisabled={!passwordsMatch}>Update Password</Submit>
         </VStack>
       </ValidatedForm>
     </Box>

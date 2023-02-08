@@ -98,7 +98,7 @@ const SupplierLocations = ({
               setLocation(undefined);
               locationDrawer.onOpen();
             }}
-            disabled={!isEditing}
+            isDisabled={!isEditing}
           >
             New Location
           </Button>

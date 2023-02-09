@@ -5,9 +5,9 @@ CREATE TABLE "userAttributeCategory" (
   "public" BOOLEAN DEFAULT FALSE,
   "protected" BOOLEAN DEFAULT FALSE,
   "active" BOOLEAN DEFAULT TRUE,
-  "createdAt" TIMESTAMP(3) DEFAULT now() NOT NULL,
+  "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
   "createdBy" TEXT NOT NULL,
-  "updatedAt" TIMESTAMP(3),
+  "updatedAt" TIMESTAMP WITH TIME ZONE,
   "updatedBy" TEXT,
 
   CONSTRAINT "userAttributeCategory_pkey" PRIMARY KEY ("id"),
@@ -101,9 +101,9 @@ CREATE TABLE "userAttribute" (
   "listOptions" TEXT ARRAY,
   "canSelfManage" BOOLEAN DEFAULT FALSE,
   "active" BOOLEAN DEFAULT TRUE,
-  "createdAt" TIMESTAMP(3) DEFAULT NOW() NOT NULL,
+  "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
   "createdBy" TEXT NOT NULL,
-  "updatedAt" TIMESTAMP(3),
+  "updatedAt" TIMESTAMP WITH TIME ZONE,
   "updatedBy" TEXT,
 
   CONSTRAINT "userAttribute_pkey" PRIMARY KEY ("id"),
@@ -125,9 +125,9 @@ CREATE TABLE "userAttributeValue" (
   "valueNumeric" NUMERIC,
   "valueText" TEXT,
   "valueUser" TEXT,
-  "createdAt" TIMESTAMP(3) DEFAULT now() NOT NULL,
+  "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
   "createdBy" TEXT NOT NULL,
-  "updatedAt" TIMESTAMP(3),
+  "updatedAt" TIMESTAMP WITH TIME ZONE,
   "updatedBy" TEXT,
 
   CONSTRAINT "userAttributeValue_singleValue"

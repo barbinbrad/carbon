@@ -111,6 +111,21 @@ export async function getAttributeDataTypes(client: SupabaseClient<Database>) {
   return client.from("attributeDataType").select("*");
 }
 
+export async function getNotes(
+  client: SupabaseClient<Database>,
+  userId: string
+) {
+  return client
+    .from("userNote")
+    .select(
+      // need to use user!notes_createdBy_fkey instead of user because there
+      // are two possible users that could be joined on (the other is userId)
+      "id, note, createdAt, user!notes_createdBy_fkey(id, fullName, avatarUrl)"
+    )
+    .eq("userId", userId)
+    .order("createdAt", { ascending: false });
+}
+
 type UserAttributeId = string;
 
 export type PersonAttributeValue = {
@@ -248,6 +263,17 @@ export async function insertAttributeCategory(
     .from("userAttributeCategory")
     .upsert([attributeCategory])
     .select("id");
+}
+
+export async function insertNote(
+  client: SupabaseClient<Database>,
+  note: {
+    userId: string;
+    note: string;
+    createdBy: string;
+  }
+) {
+  return client.from("userNote").insert([note]).select("id");
 }
 
 export async function updateAttribute(

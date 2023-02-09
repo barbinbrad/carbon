@@ -16,6 +16,7 @@ import {
   getPublicAttributes,
 } from "~/services/account";
 import { requirePermissions } from "~/services/auth";
+import { getNotes } from "~/services/resources";
 import { flash } from "~/services/session";
 import { error } from "~/utils/result";
 
@@ -33,8 +34,9 @@ export async function loader({ request, params }: LoaderArgs) {
     );
   }
 
-  const [user, publicAttributes, privateAttributes] = await Promise.all([
+  const [user, notes, publicAttributes, privateAttributes] = await Promise.all([
     getAccount(client, personId),
+    getNotes(client, personId),
     getPublicAttributes(client, personId),
     getPrivateAttributes(client, personId),
   ]);
@@ -58,13 +60,14 @@ export async function loader({ request, params }: LoaderArgs) {
 
   return json({
     user: user.data,
+    notes: notes.data ?? [],
     publicAttributes: publicAttributes.data,
     privateAttributes: privateAttributes.data ?? [],
   });
 }
 
 export default function PersonRoute() {
-  const { user, publicAttributes, privateAttributes } =
+  const { user, publicAttributes, privateAttributes, notes } =
     useLoaderData<typeof loader>();
   const permissions = usePermissions();
 
@@ -77,9 +80,13 @@ export default function PersonRoute() {
         gridRowGap={8}
         w="full"
       >
-        <PersonTabs />
+        <PersonTabs
+          user={user}
+          publicAttributes={publicAttributes}
+          privateAttributes={privateAttributes}
+        />
         <PersonAbilities />
-        <PersonNotes />
+        <PersonNotes notes={notes} />
       </Grid>
     </Box>
   );

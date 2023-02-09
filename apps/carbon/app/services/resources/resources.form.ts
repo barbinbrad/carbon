@@ -34,3 +34,10 @@ export const attributeCategoryValidator = withZod(
     isPublic: zfd.checkbox(),
   })
 );
+
+export const noteValidator = withZod(
+  z.object({
+    id: zfd.text(z.string().optional()),
+    note: z.string().min(1, { message: "Note is required" }),
+  })
+);

@@ -3,6 +3,7 @@ import type {
   getAttributeCategories,
   getAttributeCategory,
   getPeople,
+  getNotes,
 } from "~/services/resources";
 
 export type Attribute = NonNullable<
@@ -26,6 +27,10 @@ export type AttributeDataType = {
   isNumeric: boolean;
   isText: boolean;
 };
+
+export type Note = NonNullable<
+  Awaited<ReturnType<typeof getNotes>>["data"]
+>[number];
 
 export type Person = NonNullable<
   Awaited<ReturnType<typeof getPeople>>["data"]

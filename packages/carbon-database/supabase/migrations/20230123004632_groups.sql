@@ -7,8 +7,8 @@ CREATE TABLE "group" (
   "isCustomerTypeGroup" BOOLEAN NOT NULL DEFAULT false,
   "isSupplierTypeGroup" BOOLEAN NOT NULL DEFAULT false,
   "isSupplierOrgGroup" BOOLEAN NOT NULL DEFAULT false,
-  "createdAt" TIMESTAMP(3) DEFAULT now() NOT NULL,
-  "updatedAt" TIMESTAMP(3),
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+  "updatedAt" TIMESTAMP WITH TIME ZONE,
   
   CONSTRAINT "group_pkey" PRIMARY KEY ("id")
 );

@@ -1,11 +1,12 @@
-import { Card, CardBody, Heading } from "@chakra-ui/react";
+import { Card, CardBody, CardHeader, Heading } from "@chakra-ui/react";
 
 const PersonAbilities = () => {
   return (
     <Card w="full">
-      <CardBody>
+      <CardHeader>
         <Heading size="md">Abilities</Heading>
-      </CardBody>
+      </CardHeader>
+      <CardBody></CardBody>
     </Card>
   );
 };

@@ -1,8 +1,8 @@
 CREATE TABLE "feature" (
     "id" TEXT NOT NULL DEFAULT uuid_generate_v4(),
     "name" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3),
+    "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    "updatedAt" TIMESTAMP WITH TIME ZONE,
 
     CONSTRAINT "feature_pkey" PRIMARY KEY ("id")
 );
@@ -18,8 +18,8 @@ CREATE TABLE "employeeTypePermission" (
     "delete" BOOLEAN NOT NULL DEFAULT false,
     "update" BOOLEAN NOT NULL DEFAULT false,
     "view" BOOLEAN NOT NULL DEFAULT false,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3),
+    "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    "updatedAt" TIMESTAMP WITH TIME ZONE,
 
     CONSTRAINT "employeeTypePermission_pkey" PRIMARY KEY ("employeeTypeId", "featureId"),
     CONSTRAINT "employeeTypePermission_employeeTypeId_fkey" FOREIGN KEY ("employeeTypeId") REFERENCES "employeeType"("id") ON DELETE CASCADE ON UPDATE CASCADE,

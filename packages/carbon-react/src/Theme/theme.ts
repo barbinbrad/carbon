@@ -48,6 +48,19 @@ export const theme = {
         borderRadius: "md",
       },
     },
+    Card: {
+      baseStyle: {
+        header: {
+          borderColor: "gray.200",
+          borderBottomWidth: "1px",
+          borderBottomStyle: "solid",
+        },
+        footer: {
+          background: "gray.100",
+          display: "block",
+        },
+      },
+    },
     Checkbox: {
       defaultProps: {
         colorScheme: "blackAlpha",

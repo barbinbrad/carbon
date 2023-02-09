@@ -1,3 +1,4 @@
+import { useColor } from "@carbon/react";
 import type { TextareaProps } from "@chakra-ui/react";
 import {
   FormControl,
@@ -37,6 +38,7 @@ const TextArea = forwardRef<HTMLTextAreaElement, FormTextArea>(
             id: name,
             ...rest,
           })}
+          bg={useColor("white")}
           maxLength={characterLimit}
           onChange={onChange}
         />

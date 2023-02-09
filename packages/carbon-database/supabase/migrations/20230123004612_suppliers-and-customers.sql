@@ -46,8 +46,8 @@ CREATE TABLE "address" (
 CREATE TABLE "supplierStatus" (
     "id" TEXT NOT NULL DEFAULT xid(),
     "name" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3),
+    "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    "updatedAt" TIMESTAMP WITH TIME ZONE,
 
     CONSTRAINT "supplierStatus_pkey" PRIMARY KEY ("id")
 );
@@ -59,8 +59,8 @@ CREATE TABLE "supplierType" (
     "name" TEXT NOT NULL,
     "color" TEXT DEFAULT '#000000',
     "protected" BOOLEAN NOT NULL DEFAULT false,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3),
+    "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    "updatedAt" TIMESTAMP WITH TIME ZONE,
 
     CONSTRAINT "supplierType_pkey" PRIMARY KEY ("id"),
     CONSTRAINT "supplierType_colorCheck" CHECK ("color" is null or "color" ~* '^#[a-f0-9]{6}$')
@@ -75,9 +75,9 @@ CREATE TABLE "supplier" (
     "taxId" TEXT,
     "accountManagerId" TEXT,
     "logo" TEXT,
-    "createdAt" TIMESTAMP(3) DEFAULT NOW() NOT NULL,
+    "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
     "createdBy" TEXT,
-    "updatedAt" TIMESTAMP(3),
+    "updatedAt" TIMESTAMP WITH TIME ZONE,
     "updatedBy" TEXT,
 
     CONSTRAINT "supplier_pkey" PRIMARY KEY ("id"),
@@ -125,8 +125,8 @@ CREATE TABLE "supplierAccount" (
 CREATE TABLE "customerStatus" (
     "id" TEXT NOT NULL DEFAULT xid(),
     "name" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3),
+    "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    "updatedAt" TIMESTAMP WITH TIME ZONE,
 
     CONSTRAINT "customerStatus_pkey" PRIMARY KEY ("id")
 );
@@ -138,8 +138,8 @@ CREATE TABLE "customerType" (
     "name" TEXT NOT NULL,
     "color" TEXT DEFAULT '#000000',
     "protected" BOOLEAN NOT NULL DEFAULT false,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3),
+    "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    "updatedAt" TIMESTAMP WITH TIME ZONE,
 
     CONSTRAINT "customerType_pkey" PRIMARY KEY ("id"),
     CONSTRAINT "customerType_colorCheck" CHECK ("color" is null or "color" ~* '^#[a-f0-9]{6}$')
@@ -154,9 +154,9 @@ CREATE TABLE "customer" (
     "taxId" TEXT,
     "accountManagerId" TEXT,
     "logo" TEXT,
-    "createdAt" TIMESTAMP(3) DEFAULT NOW() NOT NULL,
+    "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
     "createdBy" TEXT,
-    "updatedAt" TIMESTAMP(3),
+    "updatedAt" TIMESTAMP WITH TIME ZONE,
     "updatedBy" TEXT,
 
     CONSTRAINT "customer_pkey" PRIMARY KEY ("id"),

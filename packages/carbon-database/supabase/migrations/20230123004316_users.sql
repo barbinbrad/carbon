@@ -7,9 +7,9 @@ CREATE TABLE "user" (
     "about" TEXT NOT NULL DEFAULT '',
     "avatarUrl" TEXT,
     "active" BOOLEAN DEFAULT TRUE,
-    "emailVerified" TIMESTAMP(3),
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT NOW(),
-    "updatedAt" TIMESTAMP(3),
+    "emailVerified" TIMESTAMP WITH TIME ZONE,
+    "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    "updatedAt" TIMESTAMP WITH TIME ZONE,
 
     CONSTRAINT "user_pkey" PRIMARY KEY ("id")
 );

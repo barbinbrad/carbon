@@ -6,8 +6,8 @@ CREATE TABLE "employeeType" (
     "name" TEXT NOT NULL,
     "color" TEXT DEFAULT '#000000',
     "protected" BOOLEAN NOT NULL DEFAULT false,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3),
+    "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    "updatedAt" TIMESTAMP WITH TIME ZONE,
 
     CONSTRAINT "employeeType_pkey" PRIMARY KEY ("id"),
     CONSTRAINT "employeeType_colorCheck" CHECK ("color" is null or "color" ~* '^#[a-f0-9]{6}$')

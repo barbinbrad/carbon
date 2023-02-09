@@ -3,7 +3,6 @@ import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { usePermissions } from "~/hooks";
 import {
   PersonAbilities,
   PersonHeader,
@@ -43,14 +42,14 @@ export async function loader({ request, params }: LoaderArgs) {
 
   if (user.error || !user.data) {
     return redirect(
-      "/x",
+      "/x/resources/people",
       await flash(request, error(user.error, "Failed to get user"))
     );
   }
 
   if (publicAttributes.error) {
     return redirect(
-      "/x",
+      "/x/resources/people",
       await flash(
         request,
         error(publicAttributes.error, "Failed to get user attributes")
@@ -69,7 +68,6 @@ export async function loader({ request, params }: LoaderArgs) {
 export default function PersonRoute() {
   const { user, publicAttributes, privateAttributes, notes } =
     useLoaderData<typeof loader>();
-  const permissions = usePermissions();
 
   return (
     <Box p="4" w="full">

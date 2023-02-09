@@ -18,7 +18,7 @@ import { Fragment } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import { Avatar } from "~/components";
 import { Submit, TextArea } from "~/components/Form";
-import { useUser } from "~/hooks";
+import { usePermissions, useUser } from "~/hooks";
 import type { Note } from "~/interfaces/Resources/types";
 import { noteValidator } from "~/services/resources";
 
@@ -28,8 +28,14 @@ type PersonNoteProps = {
 
 const PersonNotes = ({ notes }: PersonNoteProps) => {
   const user = useUser();
+  const permissions = usePermissions();
+
   const { personId } = useParams();
   if (!personId) throw new Error("Missing personId");
+
+  const canCreate = permissions.can("create", "resources");
+  const canUpdate = permissions.can("update", "resources");
+  const canDelete = permissions.can("delete", "resources");
 
   return (
     <Card w="full">
@@ -70,23 +76,25 @@ const PersonNotes = ({ notes }: PersonNoteProps) => {
           </Box>
         )}
       </CardBody>
-      <CardFooter>
-        <ValidatedForm
-          method="post"
-          action={`/x/resources/person/${personId}/notes/new`}
-          validator={noteValidator}
-        >
-          <VStack spacing={3} w="full">
-            <Grid gridTemplateColumns="auto 1fr" gridColumnGap={4} w="full">
-              <Avatar path={user.avatarUrl} />
-              <TextArea name="note" />
-            </Grid>
-            <Flex justifyContent="flex-end" w="full">
-              <Submit>Comment</Submit>
-            </Flex>
-          </VStack>
-        </ValidatedForm>
-      </CardFooter>
+      {canCreate && (
+        <CardFooter>
+          <ValidatedForm
+            method="post"
+            action={`/x/resources/person/${personId}/notes/new`}
+            validator={noteValidator}
+          >
+            <VStack spacing={3} w="full">
+              <Grid gridTemplateColumns="auto 1fr" gridColumnGap={4} w="full">
+                <Avatar path={user.avatarUrl} />
+                <TextArea name="note" />
+              </Grid>
+              <Flex justifyContent="flex-end" w="full">
+                <Submit>Comment</Submit>
+              </Flex>
+            </VStack>
+          </ValidatedForm>
+        </CardFooter>
+      )}
     </Card>
   );
 };

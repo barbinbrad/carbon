@@ -62,21 +62,22 @@ const PersonNotes = ({ notes }: PersonNoteProps) => {
                       <Text color="gray.500">
                         {formatTimeAgo(note.createdAt)}
                       </Text>
-                      {canUpdate && user.id === note.user?.id && (
-                        <Form
-                          method="post"
-                          action={`/x/resources/person/${personId}/notes/delete/${note.id}`}
-                        >
-                          <Button
-                            type="submit"
-                            variant="link"
-                            fontWeight="normal"
-                            size="md"
+                      {(canDelete || canUpdate) &&
+                        user.id === note.user?.id && (
+                          <Form
+                            method="post"
+                            action={`/x/resources/person/${personId}/notes/delete/${note.id}`}
                           >
-                            Delete
-                          </Button>
-                        </Form>
-                      )}
+                            <Button
+                              type="submit"
+                              variant="link"
+                              fontWeight="normal"
+                              size="md"
+                            >
+                              Delete
+                            </Button>
+                          </Form>
+                        )}
                     </HStack>
                   </VStack>
                 </Fragment>

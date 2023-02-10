@@ -46,7 +46,7 @@ const SelectInput = () => {
         id={`${instanceId}:UserSelectionInput:searchInput:${testID}`}
         data-testid={`UserSelectionInput:searchInput:${testID}`}
         readOnly={disabled}
-        disabled={disabled}
+        isDisabled={disabled}
         onBlur={onInputBlur}
         onChange={onInputChange}
         onFocus={onInputFocus}

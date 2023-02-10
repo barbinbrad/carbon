@@ -1,4 +1,5 @@
 const { flatRoutes } = require("remix-flat-routes");
+const { getDependenciesToBundle } = require("@remix-run/dev");
 
 module.exports = {
   serverBuildTarget: "vercel",

@@ -56,7 +56,9 @@ export const theme = {
           borderBottomStyle: "solid",
         },
         footer: {
-          background: "gray.100",
+          borderTopWidth: "1px",
+          borderTopStyle: "solid",
+          borderColor: "gray.200",
           display: "block",
         },
       },

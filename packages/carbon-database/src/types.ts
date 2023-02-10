@@ -4,944 +4,944 @@ export type Json =
   | boolean
   | null
   | { [key: string]: Json }
-  | Json[];
+  | Json[]
 
 export interface Database {
   public: {
     Tables: {
       address: {
         Row: {
-          addressLine1: string | null;
-          addressLine2: string | null;
-          city: string | null;
-          state: string | null;
-          postalCode: string | null;
-          countryId: number | null;
-          phone: string | null;
-          fax: string | null;
-          id: string;
-        };
+          id: string
+          addressLine1: string | null
+          addressLine2: string | null
+          city: string | null
+          state: string | null
+          postalCode: string | null
+          countryId: number | null
+          phone: string | null
+          fax: string | null
+        }
         Insert: {
-          addressLine1?: string | null;
-          addressLine2?: string | null;
-          city?: string | null;
-          state?: string | null;
-          postalCode?: string | null;
-          countryId?: number | null;
-          phone?: string | null;
-          fax?: string | null;
-          id?: string;
-        };
+          id?: string
+          addressLine1?: string | null
+          addressLine2?: string | null
+          city?: string | null
+          state?: string | null
+          postalCode?: string | null
+          countryId?: number | null
+          phone?: string | null
+          fax?: string | null
+        }
         Update: {
-          addressLine1?: string | null;
-          addressLine2?: string | null;
-          city?: string | null;
-          state?: string | null;
-          postalCode?: string | null;
-          countryId?: number | null;
-          phone?: string | null;
-          fax?: string | null;
-          id?: string;
-        };
-      };
+          id?: string
+          addressLine1?: string | null
+          addressLine2?: string | null
+          city?: string | null
+          state?: string | null
+          postalCode?: string | null
+          countryId?: number | null
+          phone?: string | null
+          fax?: string | null
+        }
+      }
       attributeDataType: {
         Row: {
-          label: string;
-          id: number;
-          isBoolean: boolean;
-          isDate: boolean;
-          isList: boolean;
-          isNumeric: boolean;
-          isText: boolean;
-          isUser: boolean;
-        };
+          id: number
+          label: string
+          isBoolean: boolean
+          isDate: boolean
+          isList: boolean
+          isNumeric: boolean
+          isText: boolean
+          isUser: boolean
+        }
         Insert: {
-          label: string;
-          id?: number;
-          isBoolean?: boolean;
-          isDate?: boolean;
-          isList?: boolean;
-          isNumeric?: boolean;
-          isText?: boolean;
-          isUser?: boolean;
-        };
+          id?: number
+          label: string
+          isBoolean?: boolean
+          isDate?: boolean
+          isList?: boolean
+          isNumeric?: boolean
+          isText?: boolean
+          isUser?: boolean
+        }
         Update: {
-          label?: string;
-          id?: number;
-          isBoolean?: boolean;
-          isDate?: boolean;
-          isList?: boolean;
-          isNumeric?: boolean;
-          isText?: boolean;
-          isUser?: boolean;
-        };
-      };
+          id?: number
+          label?: string
+          isBoolean?: boolean
+          isDate?: boolean
+          isList?: boolean
+          isNumeric?: boolean
+          isText?: boolean
+          isUser?: boolean
+        }
+      }
       contact: {
         Row: {
-          firstName: string;
-          lastName: string;
-          email: string;
-          title: string | null;
-          mobilePhone: string | null;
-          homePhone: string | null;
-          workPhone: string | null;
-          fax: string | null;
-          addressLine1: string | null;
-          addressLine2: string | null;
-          city: string | null;
-          state: string | null;
-          postalCode: string | null;
-          countryId: number | null;
-          birthday: string | null;
-          notes: string | null;
-          id: string;
-        };
+          id: string
+          firstName: string
+          lastName: string
+          email: string
+          title: string | null
+          mobilePhone: string | null
+          homePhone: string | null
+          workPhone: string | null
+          fax: string | null
+          addressLine1: string | null
+          addressLine2: string | null
+          city: string | null
+          state: string | null
+          postalCode: string | null
+          countryId: number | null
+          birthday: string | null
+          notes: string | null
+        }
         Insert: {
-          firstName: string;
-          lastName: string;
-          email: string;
-          title?: string | null;
-          mobilePhone?: string | null;
-          homePhone?: string | null;
-          workPhone?: string | null;
-          fax?: string | null;
-          addressLine1?: string | null;
-          addressLine2?: string | null;
-          city?: string | null;
-          state?: string | null;
-          postalCode?: string | null;
-          countryId?: number | null;
-          birthday?: string | null;
-          notes?: string | null;
-          id?: string;
-        };
+          id?: string
+          firstName: string
+          lastName: string
+          email: string
+          title?: string | null
+          mobilePhone?: string | null
+          homePhone?: string | null
+          workPhone?: string | null
+          fax?: string | null
+          addressLine1?: string | null
+          addressLine2?: string | null
+          city?: string | null
+          state?: string | null
+          postalCode?: string | null
+          countryId?: number | null
+          birthday?: string | null
+          notes?: string | null
+        }
         Update: {
-          firstName?: string;
-          lastName?: string;
-          email?: string;
-          title?: string | null;
-          mobilePhone?: string | null;
-          homePhone?: string | null;
-          workPhone?: string | null;
-          fax?: string | null;
-          addressLine1?: string | null;
-          addressLine2?: string | null;
-          city?: string | null;
-          state?: string | null;
-          postalCode?: string | null;
-          countryId?: number | null;
-          birthday?: string | null;
-          notes?: string | null;
-          id?: string;
-        };
-      };
+          id?: string
+          firstName?: string
+          lastName?: string
+          email?: string
+          title?: string | null
+          mobilePhone?: string | null
+          homePhone?: string | null
+          workPhone?: string | null
+          fax?: string | null
+          addressLine1?: string | null
+          addressLine2?: string | null
+          city?: string | null
+          state?: string | null
+          postalCode?: string | null
+          countryId?: number | null
+          birthday?: string | null
+          notes?: string | null
+        }
+      }
       country: {
         Row: {
-          name: string;
-          code: string;
-          id: number;
-        };
+          id: number
+          name: string
+          code: string
+        }
         Insert: {
-          name: string;
-          code: string;
-          id?: number;
-        };
+          id?: number
+          name: string
+          code: string
+        }
         Update: {
-          name?: string;
-          code?: string;
-          id?: number;
-        };
-      };
+          id?: number
+          name?: string
+          code?: string
+        }
+      }
       customer: {
         Row: {
-          name: string;
-          description: string | null;
-          customerTypeId: string | null;
-          customerStatusId: string | null;
-          taxId: string | null;
-          accountManagerId: string | null;
-          logo: string | null;
-          createdBy: string | null;
-          updatedAt: string | null;
-          updatedBy: string | null;
-          id: string;
-          createdAt: string;
-        };
+          id: string
+          name: string
+          description: string | null
+          customerTypeId: string | null
+          customerStatusId: string | null
+          taxId: string | null
+          accountManagerId: string | null
+          logo: string | null
+          createdAt: string
+          createdBy: string | null
+          updatedAt: string | null
+          updatedBy: string | null
+        }
         Insert: {
-          name: string;
-          description?: string | null;
-          customerTypeId?: string | null;
-          customerStatusId?: string | null;
-          taxId?: string | null;
-          accountManagerId?: string | null;
-          logo?: string | null;
-          createdBy?: string | null;
-          updatedAt?: string | null;
-          updatedBy?: string | null;
-          id?: string;
-          createdAt?: string;
-        };
+          id?: string
+          name: string
+          description?: string | null
+          customerTypeId?: string | null
+          customerStatusId?: string | null
+          taxId?: string | null
+          accountManagerId?: string | null
+          logo?: string | null
+          createdAt?: string
+          createdBy?: string | null
+          updatedAt?: string | null
+          updatedBy?: string | null
+        }
         Update: {
-          name?: string;
-          description?: string | null;
-          customerTypeId?: string | null;
-          customerStatusId?: string | null;
-          taxId?: string | null;
-          accountManagerId?: string | null;
-          logo?: string | null;
-          createdBy?: string | null;
-          updatedAt?: string | null;
-          updatedBy?: string | null;
-          id?: string;
-          createdAt?: string;
-        };
-      };
+          id?: string
+          name?: string
+          description?: string | null
+          customerTypeId?: string | null
+          customerStatusId?: string | null
+          taxId?: string | null
+          accountManagerId?: string | null
+          logo?: string | null
+          createdAt?: string
+          createdBy?: string | null
+          updatedAt?: string | null
+          updatedBy?: string | null
+        }
+      }
       customerAccount: {
         Row: {
-          id: string;
-          customerId: string;
-        };
+          id: string
+          customerId: string
+        }
         Insert: {
-          id: string;
-          customerId: string;
-        };
+          id: string
+          customerId: string
+        }
         Update: {
-          id?: string;
-          customerId?: string;
-        };
-      };
+          id?: string
+          customerId?: string
+        }
+      }
       customerContact: {
         Row: {
-          customerId: string;
-          contactId: string;
-          customerLocationId: string | null;
-          userId: string | null;
-          id: string;
-        };
+          id: string
+          customerId: string
+          contactId: string
+          customerLocationId: string | null
+          userId: string | null
+        }
         Insert: {
-          customerId: string;
-          contactId: string;
-          customerLocationId?: string | null;
-          userId?: string | null;
-          id?: string;
-        };
+          id?: string
+          customerId: string
+          contactId: string
+          customerLocationId?: string | null
+          userId?: string | null
+        }
         Update: {
-          customerId?: string;
-          contactId?: string;
-          customerLocationId?: string | null;
-          userId?: string | null;
-          id?: string;
-        };
-      };
+          id?: string
+          customerId?: string
+          contactId?: string
+          customerLocationId?: string | null
+          userId?: string | null
+        }
+      }
       customerLocation: {
         Row: {
-          customerId: string;
-          addressId: string;
-          id: string;
-        };
+          id: string
+          customerId: string
+          addressId: string
+        }
         Insert: {
-          customerId: string;
-          addressId: string;
-          id?: string;
-        };
+          id?: string
+          customerId: string
+          addressId: string
+        }
         Update: {
-          customerId?: string;
-          addressId?: string;
-          id?: string;
-        };
-      };
+          id?: string
+          customerId?: string
+          addressId?: string
+        }
+      }
       customerStatus: {
         Row: {
-          name: string;
-          updatedAt: string | null;
-          id: string;
-          createdAt: string;
-        };
+          id: string
+          name: string
+          createdAt: string
+          updatedAt: string | null
+        }
         Insert: {
-          name: string;
-          updatedAt?: string | null;
-          id?: string;
-          createdAt?: string;
-        };
+          id?: string
+          name: string
+          createdAt?: string
+          updatedAt?: string | null
+        }
         Update: {
-          name?: string;
-          updatedAt?: string | null;
-          id?: string;
-          createdAt?: string;
-        };
-      };
+          id?: string
+          name?: string
+          createdAt?: string
+          updatedAt?: string | null
+        }
+      }
       customerType: {
         Row: {
-          name: string;
-          updatedAt: string | null;
-          id: string;
-          color: string | null;
-          protected: boolean;
-          createdAt: string;
-        };
+          id: string
+          name: string
+          color: string | null
+          protected: boolean
+          createdAt: string
+          updatedAt: string | null
+        }
         Insert: {
-          name: string;
-          updatedAt?: string | null;
-          id?: string;
-          color?: string | null;
-          protected?: boolean;
-          createdAt?: string;
-        };
+          id?: string
+          name: string
+          color?: string | null
+          protected?: boolean
+          createdAt?: string
+          updatedAt?: string | null
+        }
         Update: {
-          name?: string;
-          updatedAt?: string | null;
-          id?: string;
-          color?: string | null;
-          protected?: boolean;
-          createdAt?: string;
-        };
-      };
+          id?: string
+          name?: string
+          color?: string | null
+          protected?: boolean
+          createdAt?: string
+          updatedAt?: string | null
+        }
+      }
       employee: {
         Row: {
-          id: string;
-          employeeTypeId: string;
-        };
+          id: string
+          employeeTypeId: string
+        }
         Insert: {
-          id: string;
-          employeeTypeId: string;
-        };
+          id: string
+          employeeTypeId: string
+        }
         Update: {
-          id?: string;
-          employeeTypeId?: string;
-        };
-      };
+          id?: string
+          employeeTypeId?: string
+        }
+      }
       employeeType: {
         Row: {
-          name: string;
-          updatedAt: string | null;
-          id: string;
-          color: string | null;
-          protected: boolean;
-          createdAt: string;
-        };
+          id: string
+          name: string
+          color: string | null
+          protected: boolean
+          createdAt: string
+          updatedAt: string | null
+        }
         Insert: {
-          name: string;
-          updatedAt?: string | null;
-          id?: string;
-          color?: string | null;
-          protected?: boolean;
-          createdAt?: string;
-        };
+          id?: string
+          name: string
+          color?: string | null
+          protected?: boolean
+          createdAt?: string
+          updatedAt?: string | null
+        }
         Update: {
-          name?: string;
-          updatedAt?: string | null;
-          id?: string;
-          color?: string | null;
-          protected?: boolean;
-          createdAt?: string;
-        };
-      };
+          id?: string
+          name?: string
+          color?: string | null
+          protected?: boolean
+          createdAt?: string
+          updatedAt?: string | null
+        }
+      }
       employeeTypePermission: {
         Row: {
-          employeeTypeId: string;
-          featureId: string;
-          updatedAt: string | null;
-          create: boolean;
-          delete: boolean;
-          update: boolean;
-          view: boolean;
-          createdAt: string;
-        };
+          employeeTypeId: string
+          featureId: string
+          create: boolean
+          delete: boolean
+          update: boolean
+          view: boolean
+          createdAt: string
+          updatedAt: string | null
+        }
         Insert: {
-          employeeTypeId: string;
-          featureId: string;
-          updatedAt?: string | null;
-          create?: boolean;
-          delete?: boolean;
-          update?: boolean;
-          view?: boolean;
-          createdAt?: string;
-        };
+          employeeTypeId: string
+          featureId: string
+          create?: boolean
+          delete?: boolean
+          update?: boolean
+          view?: boolean
+          createdAt?: string
+          updatedAt?: string | null
+        }
         Update: {
-          employeeTypeId?: string;
-          featureId?: string;
-          updatedAt?: string | null;
-          create?: boolean;
-          delete?: boolean;
-          update?: boolean;
-          view?: boolean;
-          createdAt?: string;
-        };
-      };
+          employeeTypeId?: string
+          featureId?: string
+          create?: boolean
+          delete?: boolean
+          update?: boolean
+          view?: boolean
+          createdAt?: string
+          updatedAt?: string | null
+        }
+      }
       feature: {
         Row: {
-          name: string;
-          updatedAt: string | null;
-          id: string;
-          createdAt: string;
-        };
+          id: string
+          name: string
+          createdAt: string
+          updatedAt: string | null
+        }
         Insert: {
-          name: string;
-          updatedAt?: string | null;
-          id?: string;
-          createdAt?: string;
-        };
+          id?: string
+          name: string
+          createdAt?: string
+          updatedAt?: string | null
+        }
         Update: {
-          name?: string;
-          updatedAt?: string | null;
-          id?: string;
-          createdAt?: string;
-        };
-      };
+          id?: string
+          name?: string
+          createdAt?: string
+          updatedAt?: string | null
+        }
+      }
       group: {
         Row: {
-          name: string;
-          id: string;
-          updatedAt: string | null;
-          isIdentityGroup: boolean;
-          isEmployeeTypeGroup: boolean;
-          isCustomerOrgGroup: boolean;
-          isCustomerTypeGroup: boolean;
-          isSupplierTypeGroup: boolean;
-          isSupplierOrgGroup: boolean;
-          createdAt: string;
-        };
+          id: string
+          name: string
+          isIdentityGroup: boolean
+          isEmployeeTypeGroup: boolean
+          isCustomerOrgGroup: boolean
+          isCustomerTypeGroup: boolean
+          isSupplierTypeGroup: boolean
+          isSupplierOrgGroup: boolean
+          createdAt: string
+          updatedAt: string | null
+        }
         Insert: {
-          name: string;
-          id?: string;
-          updatedAt?: string | null;
-          isIdentityGroup?: boolean;
-          isEmployeeTypeGroup?: boolean;
-          isCustomerOrgGroup?: boolean;
-          isCustomerTypeGroup?: boolean;
-          isSupplierTypeGroup?: boolean;
-          isSupplierOrgGroup?: boolean;
-          createdAt?: string;
-        };
+          id?: string
+          name: string
+          isIdentityGroup?: boolean
+          isEmployeeTypeGroup?: boolean
+          isCustomerOrgGroup?: boolean
+          isCustomerTypeGroup?: boolean
+          isSupplierTypeGroup?: boolean
+          isSupplierOrgGroup?: boolean
+          createdAt?: string
+          updatedAt?: string | null
+        }
         Update: {
-          name?: string;
-          id?: string;
-          updatedAt?: string | null;
-          isIdentityGroup?: boolean;
-          isEmployeeTypeGroup?: boolean;
-          isCustomerOrgGroup?: boolean;
-          isCustomerTypeGroup?: boolean;
-          isSupplierTypeGroup?: boolean;
-          isSupplierOrgGroup?: boolean;
-          createdAt?: string;
-        };
-      };
+          id?: string
+          name?: string
+          isIdentityGroup?: boolean
+          isEmployeeTypeGroup?: boolean
+          isCustomerOrgGroup?: boolean
+          isCustomerTypeGroup?: boolean
+          isSupplierTypeGroup?: boolean
+          isSupplierOrgGroup?: boolean
+          createdAt?: string
+          updatedAt?: string | null
+        }
+      }
       membership: {
         Row: {
-          groupId: string;
-          memberGroupId: string | null;
-          memberUserId: string | null;
-          id: number;
-        };
+          id: number
+          groupId: string
+          memberGroupId: string | null
+          memberUserId: string | null
+        }
         Insert: {
-          groupId: string;
-          memberGroupId?: string | null;
-          memberUserId?: string | null;
-          id?: number;
-        };
+          id?: number
+          groupId: string
+          memberGroupId?: string | null
+          memberUserId?: string | null
+        }
         Update: {
-          groupId?: string;
-          memberGroupId?: string | null;
-          memberUserId?: string | null;
-          id?: number;
-        };
-      };
+          id?: number
+          groupId?: string
+          memberGroupId?: string | null
+          memberUserId?: string | null
+        }
+      }
       search: {
         Row: {
-          id: number;
-          name: string;
-          entity: Database["public"]["Enums"]["search_entity"] | null;
-          uuid: string | null;
-          link: string;
-          description: string | null;
-          fts: unknown | null;
-        };
+          id: number
+          name: string
+          description: string | null
+          entity: Database["public"]["Enums"]["search_entity"] | null
+          uuid: string | null
+          link: string
+          fts: unknown | null
+        }
         Insert: {
-          id?: number;
-          name: string;
-          entity?: Database["public"]["Enums"]["search_entity"] | null;
-          uuid?: string | null;
-          link: string;
-          description?: string | null;
-          fts?: unknown | null;
-        };
+          id?: number
+          name: string
+          description?: string | null
+          entity?: Database["public"]["Enums"]["search_entity"] | null
+          uuid?: string | null
+          link: string
+          fts?: unknown | null
+        }
         Update: {
-          id?: number;
-          name?: string;
-          entity?: Database["public"]["Enums"]["search_entity"] | null;
-          uuid?: string | null;
-          link?: string;
-          description?: string | null;
-          fts?: unknown | null;
-        };
-      };
+          id?: number
+          name?: string
+          description?: string | null
+          entity?: Database["public"]["Enums"]["search_entity"] | null
+          uuid?: string | null
+          link?: string
+          fts?: unknown | null
+        }
+      }
       supplier: {
         Row: {
-          name: string;
-          description: string | null;
-          supplierTypeId: string | null;
-          supplierStatusId: string | null;
-          taxId: string | null;
-          accountManagerId: string | null;
-          logo: string | null;
-          createdBy: string | null;
-          updatedAt: string | null;
-          updatedBy: string | null;
-          id: string;
-          createdAt: string;
-        };
+          id: string
+          name: string
+          description: string | null
+          supplierTypeId: string | null
+          supplierStatusId: string | null
+          taxId: string | null
+          accountManagerId: string | null
+          logo: string | null
+          createdAt: string
+          createdBy: string | null
+          updatedAt: string | null
+          updatedBy: string | null
+        }
         Insert: {
-          name: string;
-          description?: string | null;
-          supplierTypeId?: string | null;
-          supplierStatusId?: string | null;
-          taxId?: string | null;
-          accountManagerId?: string | null;
-          logo?: string | null;
-          createdBy?: string | null;
-          updatedAt?: string | null;
-          updatedBy?: string | null;
-          id?: string;
-          createdAt?: string;
-        };
+          id?: string
+          name: string
+          description?: string | null
+          supplierTypeId?: string | null
+          supplierStatusId?: string | null
+          taxId?: string | null
+          accountManagerId?: string | null
+          logo?: string | null
+          createdAt?: string
+          createdBy?: string | null
+          updatedAt?: string | null
+          updatedBy?: string | null
+        }
         Update: {
-          name?: string;
-          description?: string | null;
-          supplierTypeId?: string | null;
-          supplierStatusId?: string | null;
-          taxId?: string | null;
-          accountManagerId?: string | null;
-          logo?: string | null;
-          createdBy?: string | null;
-          updatedAt?: string | null;
-          updatedBy?: string | null;
-          id?: string;
-          createdAt?: string;
-        };
-      };
+          id?: string
+          name?: string
+          description?: string | null
+          supplierTypeId?: string | null
+          supplierStatusId?: string | null
+          taxId?: string | null
+          accountManagerId?: string | null
+          logo?: string | null
+          createdAt?: string
+          createdBy?: string | null
+          updatedAt?: string | null
+          updatedBy?: string | null
+        }
+      }
       supplierAccount: {
         Row: {
-          id: string;
-          supplierId: string;
-        };
+          id: string
+          supplierId: string
+        }
         Insert: {
-          id: string;
-          supplierId: string;
-        };
+          id: string
+          supplierId: string
+        }
         Update: {
-          id?: string;
-          supplierId?: string;
-        };
-      };
+          id?: string
+          supplierId?: string
+        }
+      }
       supplierContact: {
         Row: {
-          supplierId: string;
-          contactId: string;
-          supplierLocationId: string | null;
-          userId: string | null;
-          id: string;
-        };
+          id: string
+          supplierId: string
+          contactId: string
+          supplierLocationId: string | null
+          userId: string | null
+        }
         Insert: {
-          supplierId: string;
-          contactId: string;
-          supplierLocationId?: string | null;
-          userId?: string | null;
-          id?: string;
-        };
+          id?: string
+          supplierId: string
+          contactId: string
+          supplierLocationId?: string | null
+          userId?: string | null
+        }
         Update: {
-          supplierId?: string;
-          contactId?: string;
-          supplierLocationId?: string | null;
-          userId?: string | null;
-          id?: string;
-        };
-      };
+          id?: string
+          supplierId?: string
+          contactId?: string
+          supplierLocationId?: string | null
+          userId?: string | null
+        }
+      }
       supplierLocation: {
         Row: {
-          supplierId: string;
-          addressId: string;
-          id: string;
-        };
+          id: string
+          supplierId: string
+          addressId: string
+        }
         Insert: {
-          supplierId: string;
-          addressId: string;
-          id?: string;
-        };
+          id?: string
+          supplierId: string
+          addressId: string
+        }
         Update: {
-          supplierId?: string;
-          addressId?: string;
-          id?: string;
-        };
-      };
+          id?: string
+          supplierId?: string
+          addressId?: string
+        }
+      }
       supplierStatus: {
         Row: {
-          name: string;
-          updatedAt: string | null;
-          id: string;
-          createdAt: string;
-        };
+          id: string
+          name: string
+          createdAt: string
+          updatedAt: string | null
+        }
         Insert: {
-          name: string;
-          updatedAt?: string | null;
-          id?: string;
-          createdAt?: string;
-        };
+          id?: string
+          name: string
+          createdAt?: string
+          updatedAt?: string | null
+        }
         Update: {
-          name?: string;
-          updatedAt?: string | null;
-          id?: string;
-          createdAt?: string;
-        };
-      };
+          id?: string
+          name?: string
+          createdAt?: string
+          updatedAt?: string | null
+        }
+      }
       supplierType: {
         Row: {
-          name: string;
-          updatedAt: string | null;
-          id: string;
-          color: string | null;
-          protected: boolean;
-          createdAt: string;
-        };
+          id: string
+          name: string
+          color: string | null
+          protected: boolean
+          createdAt: string
+          updatedAt: string | null
+        }
         Insert: {
-          name: string;
-          updatedAt?: string | null;
-          id?: string;
-          color?: string | null;
-          protected?: boolean;
-          createdAt?: string;
-        };
+          id?: string
+          name: string
+          color?: string | null
+          protected?: boolean
+          createdAt?: string
+          updatedAt?: string | null
+        }
         Update: {
-          name?: string;
-          updatedAt?: string | null;
-          id?: string;
-          color?: string | null;
-          protected?: boolean;
-          createdAt?: string;
-        };
-      };
+          id?: string
+          name?: string
+          color?: string | null
+          protected?: boolean
+          createdAt?: string
+          updatedAt?: string | null
+        }
+      }
       user: {
         Row: {
-          id: string;
-          email: string;
-          firstName: string;
-          lastName: string;
-          avatarUrl: string | null;
-          emailVerified: string | null;
-          updatedAt: string | null;
-          fullName: string | null;
-          about: string;
-          active: boolean | null;
-          createdAt: string;
-        };
+          id: string
+          email: string
+          firstName: string
+          lastName: string
+          fullName: string | null
+          about: string
+          avatarUrl: string | null
+          active: boolean | null
+          emailVerified: string | null
+          createdAt: string
+          updatedAt: string | null
+        }
         Insert: {
-          id: string;
-          email: string;
-          firstName: string;
-          lastName: string;
-          avatarUrl?: string | null;
-          emailVerified?: string | null;
-          updatedAt?: string | null;
-          fullName?: string | null;
-          about?: string;
-          active?: boolean | null;
-          createdAt?: string;
-        };
+          id: string
+          email: string
+          firstName: string
+          lastName: string
+          fullName?: string | null
+          about?: string
+          avatarUrl?: string | null
+          active?: boolean | null
+          emailVerified?: string | null
+          createdAt?: string
+          updatedAt?: string | null
+        }
         Update: {
-          id?: string;
-          email?: string;
-          firstName?: string;
-          lastName?: string;
-          avatarUrl?: string | null;
-          emailVerified?: string | null;
-          updatedAt?: string | null;
-          fullName?: string | null;
-          about?: string;
-          active?: boolean | null;
-          createdAt?: string;
-        };
-      };
+          id?: string
+          email?: string
+          firstName?: string
+          lastName?: string
+          fullName?: string | null
+          about?: string
+          avatarUrl?: string | null
+          active?: boolean | null
+          emailVerified?: string | null
+          createdAt?: string
+          updatedAt?: string | null
+        }
+      }
       userAttribute: {
         Row: {
-          name: string;
-          userAttributeCategoryId: string;
-          attributeDataTypeId: number;
-          listOptions: string[] | null;
-          createdBy: string;
-          updatedAt: string | null;
-          updatedBy: string | null;
-          id: string;
-          sortOrder: number;
-          canSelfManage: boolean | null;
-          active: boolean | null;
-          createdAt: string;
-        };
+          id: string
+          name: string
+          sortOrder: number
+          userAttributeCategoryId: string
+          attributeDataTypeId: number
+          listOptions: string[] | null
+          canSelfManage: boolean | null
+          active: boolean | null
+          createdAt: string
+          createdBy: string
+          updatedAt: string | null
+          updatedBy: string | null
+        }
         Insert: {
-          name: string;
-          userAttributeCategoryId: string;
-          attributeDataTypeId: number;
-          listOptions?: string[] | null;
-          createdBy: string;
-          updatedAt?: string | null;
-          updatedBy?: string | null;
-          id?: string;
-          sortOrder?: number;
-          canSelfManage?: boolean | null;
-          active?: boolean | null;
-          createdAt?: string;
-        };
+          id?: string
+          name: string
+          sortOrder?: number
+          userAttributeCategoryId: string
+          attributeDataTypeId: number
+          listOptions?: string[] | null
+          canSelfManage?: boolean | null
+          active?: boolean | null
+          createdAt?: string
+          createdBy: string
+          updatedAt?: string | null
+          updatedBy?: string | null
+        }
         Update: {
-          name?: string;
-          userAttributeCategoryId?: string;
-          attributeDataTypeId?: number;
-          listOptions?: string[] | null;
-          createdBy?: string;
-          updatedAt?: string | null;
-          updatedBy?: string | null;
-          id?: string;
-          sortOrder?: number;
-          canSelfManage?: boolean | null;
-          active?: boolean | null;
-          createdAt?: string;
-        };
-      };
+          id?: string
+          name?: string
+          sortOrder?: number
+          userAttributeCategoryId?: string
+          attributeDataTypeId?: number
+          listOptions?: string[] | null
+          canSelfManage?: boolean | null
+          active?: boolean | null
+          createdAt?: string
+          createdBy?: string
+          updatedAt?: string | null
+          updatedBy?: string | null
+        }
+      }
       userAttributeCategory: {
         Row: {
-          name: string;
-          createdBy: string;
-          updatedAt: string | null;
-          updatedBy: string | null;
-          id: string;
-          public: boolean | null;
-          protected: boolean | null;
-          active: boolean | null;
-          createdAt: string;
-        };
+          id: string
+          name: string
+          public: boolean | null
+          protected: boolean | null
+          active: boolean | null
+          createdAt: string
+          createdBy: string
+          updatedAt: string | null
+          updatedBy: string | null
+        }
         Insert: {
-          name: string;
-          createdBy: string;
-          updatedAt?: string | null;
-          updatedBy?: string | null;
-          id?: string;
-          public?: boolean | null;
-          protected?: boolean | null;
-          active?: boolean | null;
-          createdAt?: string;
-        };
+          id?: string
+          name: string
+          public?: boolean | null
+          protected?: boolean | null
+          active?: boolean | null
+          createdAt?: string
+          createdBy: string
+          updatedAt?: string | null
+          updatedBy?: string | null
+        }
         Update: {
-          name?: string;
-          createdBy?: string;
-          updatedAt?: string | null;
-          updatedBy?: string | null;
-          id?: string;
-          public?: boolean | null;
-          protected?: boolean | null;
-          active?: boolean | null;
-          createdAt?: string;
-        };
-      };
+          id?: string
+          name?: string
+          public?: boolean | null
+          protected?: boolean | null
+          active?: boolean | null
+          createdAt?: string
+          createdBy?: string
+          updatedAt?: string | null
+          updatedBy?: string | null
+        }
+      }
       userAttributeValue: {
         Row: {
-          userAttributeId: string;
-          userId: string;
-          valueBoolean: boolean | null;
-          valueDate: string | null;
-          valueNumeric: number | null;
-          valueText: string | null;
-          valueUser: string | null;
-          createdBy: string;
-          updatedAt: string | null;
-          updatedBy: string | null;
-          id: string;
-          createdAt: string;
-        };
+          id: string
+          userAttributeId: string
+          userId: string
+          valueBoolean: boolean | null
+          valueDate: string | null
+          valueNumeric: number | null
+          valueText: string | null
+          valueUser: string | null
+          createdAt: string
+          createdBy: string
+          updatedAt: string | null
+          updatedBy: string | null
+        }
         Insert: {
-          userAttributeId: string;
-          userId: string;
-          valueBoolean?: boolean | null;
-          valueDate?: string | null;
-          valueNumeric?: number | null;
-          valueText?: string | null;
-          valueUser?: string | null;
-          createdBy: string;
-          updatedAt?: string | null;
-          updatedBy?: string | null;
-          id?: string;
-          createdAt?: string;
-        };
+          id?: string
+          userAttributeId: string
+          userId: string
+          valueBoolean?: boolean | null
+          valueDate?: string | null
+          valueNumeric?: number | null
+          valueText?: string | null
+          valueUser?: string | null
+          createdAt?: string
+          createdBy: string
+          updatedAt?: string | null
+          updatedBy?: string | null
+        }
         Update: {
-          userAttributeId?: string;
-          userId?: string;
-          valueBoolean?: boolean | null;
-          valueDate?: string | null;
-          valueNumeric?: number | null;
-          valueText?: string | null;
-          valueUser?: string | null;
-          createdBy?: string;
-          updatedAt?: string | null;
-          updatedBy?: string | null;
-          id?: string;
-          createdAt?: string;
-        };
-      };
+          id?: string
+          userAttributeId?: string
+          userId?: string
+          valueBoolean?: boolean | null
+          valueDate?: string | null
+          valueNumeric?: number | null
+          valueText?: string | null
+          valueUser?: string | null
+          createdAt?: string
+          createdBy?: string
+          updatedAt?: string | null
+          updatedBy?: string | null
+        }
+      }
       userNote: {
         Row: {
-          userId: string;
-          note: string;
-          id: string;
-          active: boolean;
-          createdAt: string;
-          createdBy: string;
-          updatedAt: string | null;
-        };
+          id: string
+          userId: string
+          note: string
+          active: boolean
+          createdAt: string
+          createdBy: string
+          updatedAt: string | null
+        }
         Insert: {
-          userId: string;
-          note: string;
-          id?: string;
-          active?: boolean;
-          createdAt?: string;
-          createdBy: string;
-          updatedAt?: string | null;
-        };
+          id?: string
+          userId: string
+          note: string
+          active?: boolean
+          createdAt?: string
+          createdBy: string
+          updatedAt?: string | null
+        }
         Update: {
-          userId?: string;
-          note?: string;
-          id?: string;
-          active?: boolean;
-          createdAt?: string;
-          createdBy?: string;
-          updatedAt?: string | null;
-        };
-      };
-    };
+          id?: string
+          userId?: string
+          note?: string
+          active?: boolean
+          createdAt?: string
+          createdBy?: string
+          updatedAt?: string | null
+        }
+      }
+    }
     Views: {
       group_member: {
         Row: {
-          id: number | null;
-          name: string | null;
-          isIdentityGroup: boolean | null;
-          isEmployeeTypeGroup: boolean | null;
-          isCustomerOrgGroup: boolean | null;
-          isCustomerTypeGroup: boolean | null;
-          isSupplierOrgGroup: boolean | null;
-          isSupplierTypeGroup: boolean | null;
-          groupId: string | null;
-          memberGroupId: string | null;
-          memberUserId: string | null;
-          user: Json | null;
-        };
-      };
+          id: number | null
+          name: string | null
+          isIdentityGroup: boolean | null
+          isEmployeeTypeGroup: boolean | null
+          isCustomerOrgGroup: boolean | null
+          isCustomerTypeGroup: boolean | null
+          isSupplierOrgGroup: boolean | null
+          isSupplierTypeGroup: boolean | null
+          groupId: string | null
+          memberGroupId: string | null
+          memberUserId: string | null
+          user: Json | null
+        }
+      }
       groups_recursive: {
         Row: {
-          groupId: string | null;
-          name: string | null;
-          parentId: string | null;
-          isIdentityGroup: boolean | null;
-          isEmployeeTypeGroup: boolean | null;
-          isCustomerOrgGroup: boolean | null;
-          isCustomerTypeGroup: boolean | null;
-          isSupplierOrgGroup: boolean | null;
-          isSupplierTypeGroup: boolean | null;
-          user: Json | null;
-        };
-      };
+          groupId: string | null
+          name: string | null
+          parentId: string | null
+          isIdentityGroup: boolean | null
+          isEmployeeTypeGroup: boolean | null
+          isCustomerOrgGroup: boolean | null
+          isCustomerTypeGroup: boolean | null
+          isSupplierOrgGroup: boolean | null
+          isSupplierTypeGroup: boolean | null
+          user: Json | null
+        }
+      }
       groups_view: {
         Row: {
-          id: string | null;
-          isEmployeeTypeGroup: boolean | null;
-          isCustomerOrgGroup: boolean | null;
-          isCustomerTypeGroup: boolean | null;
-          isSupplierOrgGroup: boolean | null;
-          isSupplierTypeGroup: boolean | null;
-          name: string | null;
-          parentId: string | null;
-          users: Json | null;
-        };
-      };
-    };
+          id: string | null
+          isEmployeeTypeGroup: boolean | null
+          isCustomerOrgGroup: boolean | null
+          isCustomerTypeGroup: boolean | null
+          isSupplierOrgGroup: boolean | null
+          isSupplierTypeGroup: boolean | null
+          name: string | null
+          parentId: string | null
+          users: Json | null
+        }
+      }
+    }
     Functions: {
       _xid_machine_id: {
-        Args: Record<PropertyKey, never>;
-        Returns: number;
-      };
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
       delete_claim: {
-        Args: { uid: string; claim: string };
-        Returns: string;
-      };
+        Args: { uid: string; claim: string }
+        Returns: string
+      }
       get_claim: {
-        Args: { uid: string; claim: string };
-        Returns: Json;
-      };
+        Args: { uid: string; claim: string }
+        Returns: Json
+      }
       get_claims: {
-        Args: { uid: string };
-        Returns: Json;
-      };
+        Args: { uid: string }
+        Returns: Json
+      }
       get_my_claim: {
-        Args: { claim: string };
-        Returns: Json;
-      };
+        Args: { claim: string }
+        Returns: Json
+      }
       get_my_claims: {
-        Args: Record<PropertyKey, never>;
-        Returns: Json;
-      };
+        Args: Record<PropertyKey, never>
+        Returns: Json
+      }
       groups_for_user: {
-        Args: { uid: string };
-        Returns: Json;
-      };
+        Args: { uid: string }
+        Returns: Json
+      }
       groups_query: {
-        Args: { _name: string; _uid: string };
+        Args: { _name: string; _uid: string }
         Returns: {
-          id: string;
-          name: string;
-          parentId: string;
-          isEmployeeTypeGroup: boolean;
-          isCustomerOrgGroup: boolean;
-          isCustomerTypeGroup: boolean;
-          isSupplierOrgGroup: boolean;
-          isSupplierTypeGroup: boolean;
-          users: Json;
-        }[];
-      };
+          id: string
+          name: string
+          parentId: string
+          isEmployeeTypeGroup: boolean
+          isCustomerOrgGroup: boolean
+          isCustomerTypeGroup: boolean
+          isSupplierOrgGroup: boolean
+          isSupplierTypeGroup: boolean
+          users: Json
+        }[]
+      }
       is_claims_admin: {
-        Args: Record<PropertyKey, never>;
-        Returns: boolean;
-      };
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
       set_claim: {
-        Args: { uid: string; claim: string; value: Json };
-        Returns: string;
-      };
+        Args: { uid: string; claim: string; value: Json }
+        Returns: string
+      }
       users_for_groups: {
-        Args: { groups: string[] };
-        Returns: Json;
-      };
+        Args: { groups: string[] }
+        Returns: Json
+      }
       xid: {
-        Args: { _at: string };
-        Returns: unknown;
-      };
+        Args: { _at: string }
+        Returns: unknown
+      }
       xid_counter: {
-        Args: { _xid: unknown };
-        Returns: number;
-      };
+        Args: { _xid: unknown }
+        Returns: number
+      }
       xid_decode: {
-        Args: { _xid: unknown };
-        Returns: number[];
-      };
+        Args: { _xid: unknown }
+        Returns: number[]
+      }
       xid_encode: {
-        Args: { _id: number[] };
-        Returns: unknown;
-      };
+        Args: { _id: number[] }
+        Returns: unknown
+      }
       xid_machine: {
-        Args: { _xid: unknown };
-        Returns: number[];
-      };
+        Args: { _xid: unknown }
+        Returns: number[]
+      }
       xid_pid: {
-        Args: { _xid: unknown };
-        Returns: number;
-      };
+        Args: { _xid: unknown }
+        Returns: number
+      }
       xid_time: {
-        Args: { _xid: unknown };
-        Returns: string;
-      };
-    };
+        Args: { _xid: unknown }
+        Returns: string
+      }
+    }
     Enums: {
       search_entity:
         | "Resource"
@@ -952,7 +952,8 @@ export interface Database {
         | "Part"
         | "Purchase Order"
         | "Sales Order"
-        | "Document";
-    };
-  };
+        | "Document"
+    }
+  }
 }
+

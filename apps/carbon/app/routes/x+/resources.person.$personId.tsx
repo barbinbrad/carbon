@@ -74,8 +74,8 @@ export default function PersonRoute() {
       <PersonHeader user={user} />
       <Grid
         gridTemplateColumns="5fr 3fr"
-        gridColumnGap={8}
-        gridRowGap={8}
+        gridColumnGap={4}
+        gridRowGap={4}
         w="full"
       >
         <PersonTabs

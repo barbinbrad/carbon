@@ -16,6 +16,11 @@ import type { MetaFunction, LoaderArgs } from "@remix-run/node";
 import { ThemeProvider } from "@carbon/react";
 import { getBrowserEnv } from "~/config/env";
 import { ServerStyleContext, ClientStyleContext } from "~/lib/emotion";
+import Background from "~/styles/background.css";
+
+export function links() {
+  return [{ rel: "stylesheet", href: Background }];
+}
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",

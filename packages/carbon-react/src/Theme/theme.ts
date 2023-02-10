@@ -80,6 +80,11 @@ export const theme = {
       defaultProps: {},
     },
     Input: {
+      baseStyle: {
+        field: {
+          background: "white",
+        },
+      },
       defaultProps: {
         borderRadius: "md",
       },

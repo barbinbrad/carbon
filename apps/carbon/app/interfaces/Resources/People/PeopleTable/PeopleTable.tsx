@@ -213,6 +213,15 @@ const PeopleTable = memo(
           defaultColumnPinning={{
             left: ["Select", "User"],
           }}
+          onRowClick={(row) => {
+            // @ts-ignore
+            row?.user?.id
+              ? navigate(
+                  // @ts-ignore
+                  `/x/resources/person/${row?.user.id}?${params.toString()}`
+                )
+              : console.error("Expected user id to be defined");
+          }}
           withColumnOrdering
           // withInlineEditing
           withFilters

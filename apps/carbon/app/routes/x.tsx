@@ -1,4 +1,4 @@
-import { useNotification } from "@carbon/react";
+import { useNotification, useColor } from "@carbon/react";
 import { Flex, Grid, GridItem, VStack } from "@chakra-ui/react";
 import { SkipNavContent } from "@chakra-ui/skip-nav";
 import type { LoaderArgs } from "@remix-run/node";
@@ -74,7 +74,7 @@ export default function AuthenticatedRoute() {
             <IconSidebar />
             <Flex w="full" h="full">
               <SkipNavContent />
-              <VStack spacing={0} w="full">
+              <VStack spacing={0} w="full" bg={useColor("gray.50")}>
                 <Outlet />
               </VStack>
             </Flex>

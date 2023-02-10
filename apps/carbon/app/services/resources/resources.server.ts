@@ -25,6 +25,13 @@ export async function deleteAttributeCategory(
     .eq("id", attributeCategoryId);
 }
 
+export async function deleteNote(
+  client: SupabaseClient<Database>,
+  noteId: string
+) {
+  return client.from("userNote").update({ active: false }).eq("id", noteId);
+}
+
 export async function getAttribute(
   client: SupabaseClient<Database>,
   attributeId: string
@@ -123,7 +130,8 @@ export async function getNotes(
       "id, note, createdAt, user!notes_createdBy_fkey(id, fullName, avatarUrl)"
     )
     .eq("userId", userId)
-    .order("createdAt", { ascending: false });
+    .eq("active", true)
+    .order("createdAt");
 }
 
 type UserAttributeId = string;

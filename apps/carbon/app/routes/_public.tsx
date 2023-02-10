@@ -1,10 +1,6 @@
 import { Flex, VStack } from "@chakra-ui/react";
 import { Outlet } from "@remix-run/react";
-import background from "~/styles/background.css";
-
-export function links() {
-  return [{ rel: "stylesheet", href: background }];
-}
+import { Background } from "~/components/Layout";
 
 export default function PublicRoute() {
   return (
@@ -14,13 +10,5 @@ export default function PublicRoute() {
       </VStack>
       <Background />
     </Flex>
-  );
-}
-
-function Background() {
-  return (
-    <div className="background">
-      <div className="gradient" />
-    </div>
   );
 }

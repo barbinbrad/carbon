@@ -787,25 +787,28 @@ export interface Database {
         Row: {
           userId: string
           note: string
-          createdBy: string
           id: string
+          active: boolean
           createdAt: string
+          createdBy: string
           updatedAt: string | null
         }
         Insert: {
           userId: string
           note: string
-          createdBy: string
           id?: string
+          active?: boolean
           createdAt?: string
+          createdBy: string
           updatedAt?: string | null
         }
         Update: {
           userId?: string
           note?: string
-          createdBy?: string
           id?: string
+          active?: boolean
           createdAt?: string
+          createdBy?: string
           updatedAt?: string | null
         }
       }

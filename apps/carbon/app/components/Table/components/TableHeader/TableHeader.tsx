@@ -51,6 +51,7 @@ const TableHeader = <T extends object>({
       px={4}
       py={3}
       justifyContent="space-between"
+      bg={useColor("white")}
       borderBottomColor={borderColor}
       borderBottomStyle="solid"
       borderBottomWidth={1}

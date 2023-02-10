@@ -1,3 +1,4 @@
+import { useColor } from "@carbon/react";
 import { Grid, VStack } from "@chakra-ui/react";
 import type { MetaFunction } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
@@ -14,7 +15,7 @@ export default function AccountRoute() {
   return (
     <Grid w="full" h="full" templateColumns="auto 1fr">
       <ContentSidebar links={links} />
-      <VStack w="full" h="full" spacing={0} p={8}>
+      <VStack w="full" h="full" spacing={0} p={8} bg={useColor("white")}>
         <Outlet />
       </VStack>
     </Grid>

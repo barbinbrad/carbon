@@ -13,7 +13,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { useParams } from "@remix-run/react";
+import { Form, useParams } from "@remix-run/react";
 import { Fragment } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import { Avatar } from "~/components";
@@ -44,32 +44,45 @@ const PersonNotes = ({ notes }: PersonNoteProps) => {
       </CardHeader>
       <CardBody>
         {notes.length > 0 ? (
-          <VStack spacing={3} w="full">
-            <Grid gridTemplateColumns="auto 1fr" gridColumnGap={4} w="full">
-              {notes.map((note) => {
-                if (Array.isArray(note.user)) throw new Error("Invalid user");
-                return (
-                  <Fragment key={note.id}>
-                    <Avatar path={user.avatarUrl} />
-                    <VStack spacing={1} w="full" alignItems="start">
-                      <Text fontWeight="bold">{note.user?.fullName}</Text>
-                      <Text>{note.note}</Text>
-                      <HStack spacing={4}>
-                        <Text color="gray.500">
-                          {formatTimeAgo(note.createdAt)}
-                        </Text>
-                        {user.id === note.user?.id && (
-                          <Button variant="link" fontWeight="normal" size="md">
+          <Grid
+            gridTemplateColumns="auto 1fr"
+            gridColumnGap={4}
+            gridRowGap={8}
+            w="full"
+          >
+            {notes.map((note) => {
+              if (Array.isArray(note.user)) throw new Error("Invalid user");
+              return (
+                <Fragment key={note.id}>
+                  <Avatar path={user.avatarUrl} />
+                  <VStack spacing={1} w="full" alignItems="start">
+                    <Text fontWeight="bold">{note.user?.fullName}</Text>
+                    <Text>{note.note}</Text>
+                    <HStack spacing={4}>
+                      <Text color="gray.500">
+                        {formatTimeAgo(note.createdAt)}
+                      </Text>
+                      {canUpdate && user.id === note.user?.id && (
+                        <Form
+                          method="post"
+                          action={`/x/resources/person/${personId}/notes/delete/${note.id}`}
+                        >
+                          <Button
+                            type="submit"
+                            variant="link"
+                            fontWeight="normal"
+                            size="md"
+                          >
                             Delete
                           </Button>
-                        )}
-                      </HStack>
-                    </VStack>
-                  </Fragment>
-                );
-              })}
-            </Grid>
-          </VStack>
+                        </Form>
+                      )}
+                    </HStack>
+                  </VStack>
+                </Fragment>
+              );
+            })}
+          </Grid>
         ) : (
           <Box color="gray.500" p={4} w="full" textAlign="center">
             No notes

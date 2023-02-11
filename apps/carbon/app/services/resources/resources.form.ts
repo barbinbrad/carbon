@@ -41,3 +41,13 @@ export const noteValidator = withZod(
     note: z.string().min(1, { message: "Note is required" }),
   })
 );
+
+export const updateAbilityValidator = withZod(
+  z.object({
+    id: z.string().min(20),
+    data: z
+      .string()
+      .startsWith("{", { message: "Invalid JSON" })
+      .endsWith("}", { message: "Invalid JSON" }),
+  })
+);

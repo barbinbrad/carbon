@@ -6,6 +6,12 @@ import type {
   getNotes,
 } from "~/services/resources";
 
+export type AbilityDatum = {
+  id: number;
+  week: number;
+  value: number;
+};
+
 export type Attribute = NonNullable<
   Awaited<ReturnType<typeof getAttribute>>["data"]
 >;

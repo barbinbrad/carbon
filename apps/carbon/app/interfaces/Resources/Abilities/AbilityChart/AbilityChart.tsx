@@ -7,39 +7,37 @@ import { Group } from "@visx/group";
 import { PatternLines } from "@visx/pattern";
 import { scaleLinear } from "@visx/scale";
 import { AreaClosed, LinePath } from "@visx/shape";
-import { useRef, useState } from "react";
+import { useRef } from "react";
+import type { AbilityDatum } from "~/interfaces/Resources/types";
 
 type AbilityChartProps = {
-  data: Datum[];
+  data: AbilityDatum[];
   parentHeight: number;
   parentWidth: number;
   margin?: { top: number; right: number; bottom: number; left: number };
-};
-
-type Datum = {
-  id: number;
-  week: number;
-  value: number;
+  onDataChange: (data: AbilityDatum[]) => void;
 };
 
 const AbilityChart = ({
   data,
+  onDataChange,
   parentHeight,
   parentWidth,
-  margin = { top: 20, right: 30, bottom: 50, left: 40 },
+  margin = { top: 10, right: 20, bottom: 50, left: 40 },
 }: AbilityChartProps) => {
   const svgRef = useRef<SVGSVGElement>(null);
-  const [points, setPoints] = useState<Datum[]>(data);
 
   if (parentWidth < 50) return null;
 
   const width = parentWidth - margin.left - margin.right;
   const height = parentHeight - margin.top - margin.bottom;
 
-  const x = (d: Datum) => d.week;
-  const y = (d: Datum) => d.value;
+  const condensed = width < 300;
 
-  const lastDataPoint = points[points.length - 1];
+  const x = (d: AbilityDatum) => d.week;
+  const y = (d: AbilityDatum) => d.value;
+
+  const lastDataPoint = data[data.length - 1];
   const maxValue = 100;
 
   const xScale = scaleLinear<number>({
@@ -55,34 +53,39 @@ const AbilityChart = ({
   return (
     <svg ref={svgRef} width={parentWidth} height={parentHeight}>
       <Group top={margin.top} left={margin.left}>
-        <GridRows
-          scale={yScale}
-          width={width}
-          height={height}
-          stroke="#e0e0e0"
-        />
-        <GridColumns
-          scale={xScale}
-          width={width}
-          height={height}
-          stroke="#e0e0e0"
-        />
-        <AxisBottom
-          top={height}
-          scale={xScale}
-          numTicks={width > 520 ? 10 : 5}
-        />
-        <text
-          x={xScale(lastDataPoint.week / 2) - 14}
-          y={yScale(0) + 35}
-          fontSize={10}
-        >
-          Week
-        </text>
-        <AxisLeft scale={yScale} />
-        <text x="-70" y="15" transform="rotate(-90)" fontSize={10}>
-          Efficiency (%)
-        </text>
+        {!condensed && (
+          <>
+            <GridRows
+              scale={yScale}
+              width={width}
+              height={height}
+              stroke="#e0e0e0"
+            />
+            <GridColumns
+              scale={xScale}
+              width={width}
+              height={height}
+              stroke="#e0e0e0"
+            />
+            <AxisBottom
+              top={height}
+              scale={xScale}
+              numTicks={width > 520 ? 10 : 5}
+            />
+            <text
+              x={xScale(lastDataPoint.week / 2) - 14}
+              y={yScale(0) + 35}
+              fontSize={10}
+            >
+              Week
+            </text>
+            <AxisLeft scale={yScale} />
+            <text x="-70" y="15" transform="rotate(-90)" fontSize={10}>
+              Efficiency (%)
+            </text>
+          </>
+        )}
+
         <LinearGradient
           id="fill"
           from="var(--chakra-colors-lime-200)"
@@ -90,6 +93,7 @@ const AbilityChart = ({
           fromOpacity={0.2}
           toOpacity={0}
         />
+
         <PatternLines
           id="diagonalLines"
           height={6}
@@ -100,7 +104,7 @@ const AbilityChart = ({
         />
         <AreaClosed
           stroke="transparent"
-          data={points}
+          data={data}
           yScale={yScale}
           x={(d) => xScale(x(d))}
           y={(d) => yScale(y(d))}
@@ -109,7 +113,7 @@ const AbilityChart = ({
         />
         <AreaClosed
           stroke="transparent"
-          data={points}
+          data={data}
           yScale={yScale}
           x={(d) => xScale(x(d))}
           y={(d) => yScale(y(d))}
@@ -117,7 +121,7 @@ const AbilityChart = ({
           curve={curveNatural}
         />
         <LinePath
-          data={points}
+          data={data}
           y={(d) => yScale(y(d))}
           x={(d) => xScale(x(d))}
           stroke="var(--chakra-colors-lime-700)"
@@ -125,70 +129,71 @@ const AbilityChart = ({
           strokeWidth={2}
           curve={curveNatural}
         />
-        {points.map((d, index) => (
-          <Drag
-            key={`drag-${d.id}`}
-            width={width}
-            height={height}
-            x={xScale(x(d))}
-            y={yScale(y(d))}
-            snapToPointer={false}
-            restrict={
-              index === points.length - 1
-                ? // The last point must be in the top right corner
-                  {
-                    xMin: xScale(lastDataPoint.week),
-                    xMax: xScale(lastDataPoint.week),
-                    yMin: yScale(maxValue),
-                    yMax: yScale(maxValue),
-                  }
-                : index === 0
-                ? // The first point must be at time 0, and less than the second point
-                  {
-                    xMin: xScale(0),
-                    xMax: xScale(0),
-                    yMin: yScale(points[index + 1].value),
-                    yMax: yScale(0),
-                  }
-                : // All other points must be between the previous and next point
-                  {
-                    xMin: xScale(points[index - 1].week),
-                    xMax: xScale(points[index + 1].week),
-                    yMin: yScale(points[index + 1].value),
-                    yMax: yScale(points[index - 1].value),
-                  }
-            }
-            onDragMove={({ dx, dy }) => {
-              const newPoints = [...points];
-              newPoints[index] = {
-                ...newPoints[index],
-                week: newPoints[index].week + xScale.invert(dx),
-                value: newPoints[index].value + yScale.invert(dy) - 100,
-              };
-              setPoints(newPoints);
-            }}
-          >
-            {({ dragStart, dragEnd, dragMove, isDragging, x, y, dx, dy }) => (
-              <circle
-                key={`dot-${d.id}`}
-                cx={x}
-                cy={y}
-                r={isDragging ? 10 : 6}
-                fill={"var(--chakra-colors-lime-700)"}
-                transform={`translate(${dx}, ${dy})`}
-                fillOpacity={0.9}
-                stroke="var(--chakra-colors-lime-900)"
-                strokeWidth={2}
-                onMouseMove={dragMove}
-                onMouseUp={dragEnd}
-                onMouseDown={dragStart}
-                onTouchStart={dragStart}
-                onTouchMove={dragMove}
-                onTouchEnd={dragEnd}
-              />
-            )}
-          </Drag>
-        ))}
+        {!condensed &&
+          data.map((d, index) => (
+            <Drag
+              key={`drag-${d.id}`}
+              width={width}
+              height={height}
+              x={xScale(x(d))}
+              y={yScale(y(d))}
+              snapToPointer={false}
+              restrict={
+                index === data.length - 1
+                  ? // The last point must be in the top right corner
+                    {
+                      xMin: xScale(lastDataPoint.week),
+                      xMax: xScale(lastDataPoint.week),
+                      yMin: yScale(maxValue),
+                      yMax: yScale(maxValue),
+                    }
+                  : index === 0
+                  ? // The first point must be at time 0, and less than the second point
+                    {
+                      xMin: xScale(0),
+                      xMax: xScale(0),
+                      yMin: yScale(data[index + 1].value),
+                      yMax: yScale(0),
+                    }
+                  : // All other data must be between the previous and next point
+                    {
+                      xMin: xScale(data[index - 1].week),
+                      xMax: xScale(data[index + 1].week),
+                      yMin: yScale(data[index + 1].value),
+                      yMax: yScale(data[index - 1].value),
+                    }
+              }
+              onDragMove={({ dx, dy }) => {
+                const newData = [...data];
+                newData[index] = {
+                  ...newData[index],
+                  week: newData[index].week + xScale.invert(dx),
+                  value: newData[index].value + yScale.invert(dy) - 100,
+                };
+                onDataChange(newData);
+              }}
+            >
+              {({ dragStart, dragEnd, dragMove, isDragging, x, y, dx, dy }) => (
+                <circle
+                  key={`dot-${d.id}`}
+                  cx={x}
+                  cy={y}
+                  r={isDragging ? 10 : 6}
+                  fill={"var(--chakra-colors-lime-700)"}
+                  transform={`translate(${dx}, ${dy})`}
+                  fillOpacity={0.9}
+                  stroke="var(--chakra-colors-lime-900)"
+                  strokeWidth={2}
+                  onMouseMove={dragMove}
+                  onMouseUp={dragEnd}
+                  onMouseDown={dragStart}
+                  onTouchStart={dragStart}
+                  onTouchMove={dragMove}
+                  onTouchEnd={dragEnd}
+                />
+              )}
+            </Drag>
+          ))}
       </Group>
     </svg>
   );

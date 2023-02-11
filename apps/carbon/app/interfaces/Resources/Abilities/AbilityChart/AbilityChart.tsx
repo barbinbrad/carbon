@@ -1,5 +1,3 @@
-import { useColor } from "@carbon/react";
-import { Box } from "@chakra-ui/react";
 import { AxisLeft, AxisBottom } from "@visx/axis";
 import { curveNatural } from "@visx/curve";
 import { Drag } from "@visx/drag";
@@ -7,31 +5,9 @@ import { LinearGradient } from "@visx/gradient";
 import { GridRows, GridColumns } from "@visx/grid";
 import { Group } from "@visx/group";
 import { PatternLines } from "@visx/pattern";
-import { ParentSize } from "@visx/responsive";
 import { scaleLinear } from "@visx/scale";
 import { AreaClosed, LinePath } from "@visx/shape";
 import { useRef, useState } from "react";
-
-export default function AbilitiesRoute() {
-  return (
-    <Box w="full" h="50vh" bg={useColor("white")}>
-      <ParentSize>
-        {({ height, width }) => (
-          <AbilityChart
-            parentHeight={height}
-            parentWidth={width}
-            data={[
-              { id: 0, week: 0, value: 10 },
-              { id: 1, week: 1, value: 50 },
-              { id: 2, week: 4, value: 80 },
-              { id: 3, week: 8, value: 100 },
-            ]}
-          />
-        )}
-      </ParentSize>
-    </Box>
-  );
-}
 
 type AbilityChartProps = {
   data: Datum[];
@@ -46,12 +22,12 @@ type Datum = {
   value: number;
 };
 
-function AbilityChart({
+const AbilityChart = ({
   data,
   parentHeight,
   parentWidth,
   margin = { top: 20, right: 30, bottom: 50, left: 40 },
-}: AbilityChartProps) {
+}: AbilityChartProps) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const [points, setPoints] = useState<Datum[]>(data);
 
@@ -216,4 +192,6 @@ function AbilityChart({
       </Group>
     </svg>
   );
-}
+};
+
+export default AbilityChart;

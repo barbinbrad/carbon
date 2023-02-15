@@ -37,7 +37,7 @@ The monorepo follows the Turborepo covention of grouping packages into one of tw
 | Package Name           | Description                                                             |
 | ---------------------- | ----------------------------------------------------------------------- |
 | `eslint-config-carbon` | Shared, extendable eslint configuration for apps and packages           |
-| `@carbon/database`     | Database migrations and types                                           |
+| `@carbon/database`     | Database schema, migrations and types                                   |
 | `@carbon/jest`         | Jest preset configuration shared across apps and packages               |
 | `@carbon/logger`       | Shared logger used across apps                                          |
 | `@carbon/react`        | Shared web-based UI components                                          |
@@ -60,7 +60,7 @@ The monorepo follows the Turborepo covention of grouping packages into one of tw
 Make sure that you have [Docker installed](https://docs.docker.com/desktop/install/mac-install/) and [yarn installed](https://yarnpkg.com/lang/en/docs/install/#debian-stable)
 on your system since this monorepo uses the yarn package manager.
 
-After running the steps below you should be able to access the following apps locally:
+After running the steps below you should be able to access the following apps/containers locally:
 
 | Application     | URL                                                                                                                |
 | --------------- | ------------------------------------------------------------------------------------------------------------------ |
@@ -70,7 +70,7 @@ After running the steps below you should be able to access the following apps lo
 | Inbucket        | [http://localhost:54324/monitor](http://localhost:54324/monitor)                                                   |
 | Redis           | [redis://localhost:6379](redis://localhost:6379)                                                                   |
 
-Then download and initialize the repository dependencies.
+First download and initialize the repository dependencies.
 
 ```bash
 $ yarn           # install dependencies

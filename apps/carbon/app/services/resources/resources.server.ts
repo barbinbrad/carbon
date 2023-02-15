@@ -32,6 +32,25 @@ export async function deleteNote(
   return client.from("userNote").update({ active: false }).eq("id", noteId);
 }
 
+export async function getAbilities(
+  client: SupabaseClient<Database>,
+  args: GenericQueryFilters & { name: string | null }
+) {
+  let query = client
+    .from("ability")
+    .select(`id, name, curve, employeeAbility(user(id, fullName, avatarUrl))`, {
+      count: "exact",
+    })
+    .eq("active", true);
+
+  if (args?.name) {
+    query = query.ilike("name", `%${args.name}%`);
+  }
+
+  query = setGenericQueryFilters(query, args, "name");
+  return query;
+}
+
 export async function getAttribute(
   client: SupabaseClient<Database>,
   attributeId: string

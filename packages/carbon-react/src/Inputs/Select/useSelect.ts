@@ -103,7 +103,6 @@ const useSelect = <
       ...components,
     },
     // Custom select props
-    borderRadius,
     colorScheme,
     size: realSize,
     tagVariant: realTagVariant,

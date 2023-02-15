@@ -33,9 +33,9 @@ export async function loader({ request }: LoaderArgs) {
   }
 
   return json({
-    groups: arrayToTree(groups.data) as Group[],
+    groups: (groups.data ? arrayToTree(groups.data) : []) as Group[],
     error: null,
-    count: groups.count,
+    count: groups.count ?? 0,
   });
 }
 
@@ -45,7 +45,7 @@ export default function GroupsRoute() {
   return (
     <VStack w="full" h="full" spacing={0}>
       <GroupsTableFilters />
-      <GroupsTable data={groups ?? []} count={count ?? 0} />
+      <GroupsTable data={groups} count={count} />
       <Outlet />
     </VStack>
   );

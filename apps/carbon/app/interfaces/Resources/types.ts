@@ -1,10 +1,15 @@
 import type {
+  getAbilities,
   getAttribute,
   getAttributeCategories,
   getAttributeCategory,
   getPeople,
   getNotes,
 } from "~/services/resources";
+
+export type Ability = NonNullable<
+  Awaited<ReturnType<typeof getAbilities>>["data"]
+>[number];
 
 export type AbilityDatum = {
   id: number;

@@ -2,6 +2,7 @@ CREATE TABLE "userNote" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "userId" TEXT NOT NULL,
   "note" TEXT NOT NULL,
+  "noteRichText" JSONB NOT NULL DEFAULT '{}'::jsonb,
   "active" BOOLEAN NOT NULL DEFAULT true,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
   "createdBy" TEXT NOT NULL,

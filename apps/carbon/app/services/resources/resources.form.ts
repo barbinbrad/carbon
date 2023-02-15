@@ -3,6 +3,13 @@ import { z } from "zod";
 import { zfd } from "zod-form-data";
 import { DataType } from "~/interfaces/Users/types";
 
+export const abilityTitleValidator = withZod(
+  z.object({
+    id: z.string().min(20),
+    title: z.string().min(1, { message: "Title is required" }),
+  })
+);
+
 export const attributeValidator = withZod(
   z
     .object({

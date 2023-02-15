@@ -82,11 +82,6 @@ export const theme = {
       defaultProps: {},
     },
     Input: {
-      baseStyle: {
-        field: {
-          background: "white",
-        },
-      },
       defaultProps: {
         borderRadius: "md",
       },
@@ -125,9 +120,9 @@ export const theme = {
     },
     Textarea: {
       variants: {
-        outline: () => focusRingOutlined().field,
-        filled: () => focusRingFilled().field,
-        flushed: () => focusRingFlushed().field,
+        outline: () => focusRingOutlined,
+        filled: () => focusRingFilled,
+        flushed: () => focusRingFlushed,
       },
     },
   },

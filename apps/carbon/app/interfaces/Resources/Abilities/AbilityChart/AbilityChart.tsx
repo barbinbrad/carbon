@@ -15,15 +15,15 @@ type AbilityChartProps = {
   parentHeight: number;
   parentWidth: number;
   margin?: { top: number; right: number; bottom: number; left: number };
-  onDataChange: (data: AbilityDatum[]) => void;
+  onDataChange?: (data: AbilityDatum[]) => void;
 };
 
 const AbilityChart = ({
   data,
-  onDataChange,
   parentHeight,
   parentWidth,
   margin = { top: 10, right: 20, bottom: 50, left: 40 },
+  onDataChange,
 }: AbilityChartProps) => {
   const svgRef = useRef<SVGSVGElement>(null);
 
@@ -32,7 +32,7 @@ const AbilityChart = ({
   const width = parentWidth - margin.left - margin.right;
   const height = parentHeight - margin.top - margin.bottom;
 
-  const condensed = width < 300;
+  const condensed = height < 100;
 
   const x = (d: AbilityDatum) => d.week;
   const y = (d: AbilityDatum) => d.value;
@@ -79,46 +79,51 @@ const AbilityChart = ({
             >
               Week
             </text>
-            <AxisLeft scale={yScale} />
+
             <text x="-70" y="15" transform="rotate(-90)" fontSize={10}>
               Efficiency (%)
             </text>
+
+            <LinearGradient
+              id="fill"
+              from="var(--chakra-colors-lime-200)"
+              to="var(--chakra-colors-gray-500)"
+              fromOpacity={0.2}
+              toOpacity={0}
+            />
+
+            <PatternLines
+              id="diagonalLines"
+              height={6}
+              width={6}
+              stroke="var(--chakra-colors-lime-500)"
+              strokeWidth={1}
+              orientation={["diagonal"]}
+            />
+            <AreaClosed
+              stroke="transparent"
+              data={data}
+              yScale={yScale}
+              x={(d) => xScale(x(d))}
+              y={(d) => yScale(y(d))}
+              fill="url(#fill)"
+              curve={curveNatural}
+            />
+            <AreaClosed
+              stroke="transparent"
+              data={data}
+              yScale={yScale}
+              x={(d) => xScale(x(d))}
+              y={(d) => yScale(y(d))}
+              fill="url(#diagonalLines)"
+              curve={curveNatural}
+            />
           </>
         )}
-
-        <LinearGradient
-          id="fill"
-          from="var(--chakra-colors-lime-200)"
-          to="var(--chakra-colors-gray-500)"
-          fromOpacity={0.2}
-          toOpacity={0}
-        />
-
-        <PatternLines
-          id="diagonalLines"
-          height={6}
-          width={6}
-          stroke="var(--chakra-colors-lime-500)"
-          strokeWidth={1}
-          orientation={["diagonal"]}
-        />
-        <AreaClosed
-          stroke="transparent"
-          data={data}
-          yScale={yScale}
-          x={(d) => xScale(x(d))}
-          y={(d) => yScale(y(d))}
-          fill="url(#fill)"
-          curve={curveNatural}
-        />
-        <AreaClosed
-          stroke="transparent"
-          data={data}
-          yScale={yScale}
-          x={(d) => xScale(x(d))}
-          y={(d) => yScale(y(d))}
-          fill="url(#diagonalLines)"
-          curve={curveNatural}
+        <AxisLeft
+          scale={yScale}
+          numTicks={condensed ? 0 : undefined}
+          hideTicks={condensed}
         />
         <LinePath
           data={data}
@@ -170,7 +175,7 @@ const AbilityChart = ({
                   week: newData[index].week + xScale.invert(dx),
                   value: newData[index].value + yScale.invert(dy) - 100,
                 };
-                onDataChange(newData);
+                onDataChange?.(newData);
               }}
             >
               {({ dragStart, dragEnd, dragMove, isDragging, x, y, dx, dy }) => (

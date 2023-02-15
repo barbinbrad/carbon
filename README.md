@@ -62,14 +62,13 @@ on your system since this monorepo uses the yarn package manager.
 
 After running the steps below you should be able to access the following apps locally:
 
-| Application | URL                                                                                                                |
-| ----------- | ------------------------------------------------------------------------------------------------------------------ |
-| Carbon ERP  | [http://localhost:3000](http://localhost:3000)                                                                     |
-| Postgres    | [postgresql://postgres:postgres@localhost:54322/postgres](postgresql://postgres:postgres@localhost:54322/postgres) |
-
-| Supabase Studio |[http://localhost:54323/project/default](http://localhost:54323/project/default) |
-| Inbucket |[http://localhost:54324/monitor](http://localhost:54324/monitor) |
-| Redis |[redis://localhost:6379](redis://localhost:6379) |
+| Application     | URL                                                                                                                |
+| --------------- | ------------------------------------------------------------------------------------------------------------------ |
+| Carbon ERP      | [http://localhost:3000](http://localhost:3000)                                                                     |
+| Postgres        | [postgresql://postgres:postgres@localhost:54322/postgres](postgresql://postgres:postgres@localhost:54322/postgres) |
+| Supabase Studio | [http://localhost:54323/project/default](http://localhost:54323/project/default)                                   |
+| Inbucket        | [http://localhost:54324/monitor](http://localhost:54324/monitor)                                                   |
+| Redis           | [redis://localhost:6379](redis://localhost:6379)                                                                   |
 
 Then download and initialize the repository dependencies.
 

@@ -12,53 +12,61 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import { ValidatedForm } from "remix-validated-form";
-import { Hidden, Input, Submit, Users } from "~/components/Form";
+import { Hidden, Input, Number, Select, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
-import { groupValidator } from "~/services/users";
+import { abilityValidator } from "~/services/resources";
 
-type GroupFormProps = {
+type AbilityFormProps = {
   initialValues: {
-    id?: string;
     name: string;
-    selections: string[];
+    startingPoint: number;
+    weeks: number;
   };
 };
 
-const GroupForm = ({ initialValues }: GroupFormProps) => {
+const AbilityForm = ({ initialValues }: AbilityFormProps) => {
   const permissions = usePermissions();
   const navigate = useNavigate();
   const onClose = () => navigate(-1);
 
-  const isEditing = initialValues.id !== undefined;
-  const isDisabled = isEditing
-    ? !permissions.can("update", "users")
-    : !permissions.can("create", "users");
+  const isDisabled = !permissions.can("create", "resources");
 
   return (
     <Drawer onClose={onClose} isOpen={true} size="sm">
       <ValidatedForm
-        validator={groupValidator}
+        validator={abilityValidator}
         method="post"
-        action={
-          isEditing
-            ? `/x/users/groups/${initialValues.id}`
-            : "/x/users/groups/new"
-        }
+        action={"/x/resources/abilities/new"}
         defaultValues={initialValues}
       >
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader>{isEditing ? "Edit" : "New"} Group</DrawerHeader>
+          <DrawerHeader>New Ability</DrawerHeader>
           <DrawerBody pb={8}>
             <Hidden name="id" />
             <VStack spacing={4} alignItems="start">
-              <Input name="name" label="Group Name" />
-              <Users
+              <Input name="name" label="Name" />
+              <Select
+                name="startingPoint"
+                label="Learning Curve"
+                options={[
+                  { value: 85, label: "Easy" },
+                  { value: 70, label: "Medium" },
+                  { value: 50, label: "Hard" },
+                ]}
+              />
+              <Number
+                name="weeks"
+                label="Weeks to Efficiency"
+                min={0}
+                max={52}
+              />
+              {/* <Employees
                 name="selections"
                 selectionsMaxHeight={"calc(100vh - 330px)"}
-                label="Group Members"
-              />
+                label="Employees"
+              /> */}
             </VStack>
           </DrawerBody>
           <DrawerFooter>
@@ -80,4 +88,4 @@ const GroupForm = ({ initialValues }: GroupFormProps) => {
   );
 };
 
-export default GroupForm;
+export default AbilityForm;

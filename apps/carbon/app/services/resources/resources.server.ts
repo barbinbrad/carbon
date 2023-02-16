@@ -51,6 +51,20 @@ export async function getAbilities(
   return query;
 }
 
+export async function getAbility(
+  client: SupabaseClient<Database>,
+  abilityId: string
+) {
+  return client
+    .from("ability")
+    .select(`id, name, curve, employeeAbility(user(id, fullName, avatarUrl))`, {
+      count: "exact",
+    })
+    .eq("id", abilityId)
+    .eq("active", true)
+    .single();
+}
+
 export async function getAttribute(
   client: SupabaseClient<Database>,
   attributeId: string
@@ -248,6 +262,22 @@ export async function getPeople(
     data: people,
     error: null,
   };
+}
+
+export async function insertAbility(
+  client: SupabaseClient<Database>,
+  ability: {
+    name: string;
+    curve: {
+      data: {
+        week: number;
+        value: number;
+      }[];
+    };
+    createdBy: string;
+  }
+) {
+  return client.from("ability").insert([ability]).select("id");
 }
 
 export async function insertAttribute(

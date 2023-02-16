@@ -3,6 +3,16 @@ import { z } from "zod";
 import { zfd } from "zod-form-data";
 import { DataType } from "~/interfaces/Users/types";
 
+export const abilityValidator = withZod(
+  z.object({
+    name: z.string().min(1, { message: "Name is required" }),
+    startingPoint: zfd.numeric(
+      z.number().min(0, { message: "Learning curve is required" })
+    ),
+    weeks: zfd.numeric(z.number().min(0, { message: "Weeks is required" })),
+  })
+);
+
 export const abilityTitleValidator = withZod(
   z.object({
     id: z.string().min(20),

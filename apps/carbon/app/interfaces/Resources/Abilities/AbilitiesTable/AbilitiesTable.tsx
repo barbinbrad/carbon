@@ -82,8 +82,8 @@ const AbilitiesTable = memo(({ data, count }: AbilitiesTableProps) => {
           ),
         },
         {
-          header: "Weeks to Mastery",
-          cell: ({ row }) => row.original.weeks,
+          header: "Time to Learn",
+          cell: ({ row }) => `${row.original.weeks} weeks`,
         },
         {
           header: "Efficiency Curve",

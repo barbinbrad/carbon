@@ -63,7 +63,10 @@ export async function loader({ request, params }: LoaderArgs) {
 export default function AbilitiesRoute() {
   const { ability, weeks } = useLoaderData<typeof loader>();
   const editingTitle = useDisclosure();
-  const [data, setData] = useState<AbilityDatum[]>(ability.curve?.data);
+  const [data, setData] = useState<AbilityDatum[]>(
+    // @ts-ignore
+    ability.curve?.data ?? []
+  );
   const [time, setTime] = useState<number>(weeks);
 
   const updateWeeks = (_: string, newWeeks: number) => {

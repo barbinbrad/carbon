@@ -1,0 +1,2077 @@
+# Carbon Database Schema
+
+This file is generated from the migrations in `packages/carbon-database/supabase/migrations`.
+  
+
+
+## `xid`
+
+```sql
+-- xid is a globally unique id generator functions. 
+-- they are 20 characters long and ordered
+-- https://github.com/modfin/pg-xid
+
+CREATE DOMAIN public.xid AS CHAR(20) CHECK (VALUE ~ '^[a-v0-9]{20}$');
+
+CREATE SEQUENCE IF NOT EXISTS public.xid_serial MINVALUE 0 MAXVALUE 16777215 CYCLE; --  ((255<<16) + (255<<8) + 255))
+
+SELECT setval('xid_serial', (random() * 16777215)::INT); --  ((255<<16) + (255<<8) + 255))
+
+CREATE OR REPLACE FUNCTION public._xid_machine_id()
+    RETURNS INT
+    LANGUAGE plpgsql
+    IMMUTABLE
+AS
+$$
+DECLARE
+BEGIN
+    RETURN (SELECT system_identifier & 16777215 FROM pg_control_system());
+END
+$$;
+
+CREATE OR REPLACE FUNCTION public.xid_encode(_id int[])
+    RETURNS public.xid
+    LANGUAGE plpgsql
+AS
+$$
+DECLARE
+    _encoding CHAR(1)[] = '{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v}';
+BEGIN
+    RETURN _encoding[1 + (_id[1] >> 3)]
+               || _encoding[1 + ((_id[2] >> 6) & 31 | (_id[1] << 2) & 31)]
+               || _encoding[1 + ((_id[2] >> 1) & 31)]
+               || _encoding[1 + ((_id[3] >> 4) & 31 | (_id[2] << 4) & 31)]
+               || _encoding[1 + (_id[4] >> 7 | (_id[3] << 1) & 31)]
+               || _encoding[1 + ((_id[4] >> 2) & 31)]
+               || _encoding[1 + (_id[5] >> 5 | (_id[4] << 3) & 31)]
+               || _encoding[1 + (_id[5] & 31)]
+               || _encoding[1 + (_id[6] >> 3)]
+               || _encoding[1 + ((_id[7] >> 6) & 31 | (_id[6] << 2) & 31)]
+               || _encoding[1 + ((_id[7] >> 1) & 31)]
+               || _encoding[1 + ((_id[8] >> 4) & 31 | (_id[7] << 4) & 31)]
+               || _encoding[1 + (_id[9] >> 7 | (_id[8] << 1) & 31)]
+               || _encoding[1 + ((_id[9] >> 2) & 31)]
+               || _encoding[1 + ((_id[10] >> 5) | (_id[9] << 3) & 31)]
+               || _encoding[1 + (_id[10] & 31)]
+               || _encoding[1 + (_id[11] >> 3)]
+               || _encoding[1 + ((_id[12] >> 6) & 31 | (_id[11] << 2) & 31)]
+               || _encoding[1 + ((_id[12] >> 1) & 31)]
+        || _encoding[1 + ((_id[12] << 4) & 31)];
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION public.xid_decode(_xid public.xid)
+    RETURNS int[]
+    LANGUAGE plpgsql
+AS
+$$
+DECLARE
+    _dec int[] = '{255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255}';
+    _b   bytea;
+BEGIN
+    _b := _xid::BYTEA;
+    return ARRAY [
+            ((_dec[get_byte(_b, 0)] << 3) | (_dec[get_byte(_b, 1)] >> 2)) & 255,
+            ((_dec[get_byte(_b, 1)] << 6) | (_dec[get_byte(_b, 2)] << 1) | (_dec[get_byte(_b, 3)] >> 4)) & 255,
+            ((_dec[get_byte(_b, 3)] << 4) | (_dec[get_byte(_b, 4)] >> 1)) & 255,
+            ((_dec[get_byte(_b, 4)] << 7) | (_dec[get_byte(_b, 5)] << 2) | (_dec[get_byte(_b, 6)] >> 3)) & 255,
+        ((_dec[get_byte(_b, 6)] << 5) | (_dec[get_byte(_b, 7)])) & 255,
+            ((_dec[get_byte(_b, 8)] << 3) | (_dec[get_byte(_b, 9)] >> 2)) & 255,
+            ((_dec[get_byte(_b, 9)] << 6) | (_dec[get_byte(_b, 10)] << 1) | (_dec[get_byte(_b, 11)] >> 4)) & 255,
+            ((_dec[get_byte(_b, 11)] << 4) | (_dec[get_byte(_b, 12)] >> 1)) & 255,
+            ((_dec[get_byte(_b, 12)] << 7) | (_dec[get_byte(_b, 13)] << 2) | (_dec[get_byte(_b, 14)] >> 3)) & 255,
+        ((_dec[get_byte(_b, 14)] << 5) | (_dec[get_byte(_b, 15)])) & 255,
+            ((_dec[get_byte(_b, 16)] << 3) | (_dec[get_byte(_b, 17)] >> 2)) & 255,
+            ((_dec[get_byte(_b, 17)] << 6) | (_dec[get_byte(_b, 18)] << 1) | (_dec[get_byte(_b, 19)] >> 4)) & 255
+        ];
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION xid(_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP)
+    RETURNS public.xid
+    LANGUAGE plpgsql
+AS
+$$
+DECLARE
+    _t INT;
+    _m INT;
+    _p INT;
+    _c INT;
+BEGIN
+    _t := floor(EXTRACT(epoch FROM _at));
+    _m := _xid_machine_id();
+    _p := pg_backend_pid();
+    _c := nextval('xid_serial')::INT;
+
+    return public.xid_encode(ARRAY [
+        (_t >> 24) & 255, (_t >> 16) & 255, (_t >> 8) & 255 , _t & 255,
+        (_m >> 16) & 255, (_m >> 8) & 255 , _m & 255,
+        (_p >> 8) & 255, _p & 255,
+        (_c >> 16) & 255, (_c >> 8) & 255 , _c & 255
+        ]);
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION public.xid_time(_xid public.xid)
+    RETURNS TIMESTAMPTZ
+    LANGUAGE plpgsql
+AS
+$$
+DECLARE
+    _id int[];
+BEGIN
+    _id := public.xid_decode(_xid);
+    return to_timestamp((_id[1] << 24)::BIGINT + (_id[2] << 16) + (_id[3] << 8) + (_id[4]));
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION public.xid_machine(_xid public.xid)
+    RETURNS INT[]
+    LANGUAGE plpgsql
+AS
+$$
+DECLARE
+    _id int[];
+BEGIN
+    _id := public.xid_decode(_xid);
+    return ARRAY [_id[5], _id[6], _id[7]];
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION public.xid_pid(_xid public.xid)
+    RETURNS INT
+    LANGUAGE plpgsql
+AS
+$$
+DECLARE
+    _id int[];
+BEGIN
+    _id := public.xid_decode(_xid);
+    return (_id[8] << 8) + (_id[9]);
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION public.xid_counter(_xid public.xid)
+    RETURNS INT
+    LANGUAGE plpgsql
+AS
+$$
+DECLARE
+    _id int[];
+BEGIN
+    _id := public.xid_decode(_xid);
+    return (_id[10] << 16) + (_id[11] << 8) + (_id[12]);
+END;
+$$;
+```
+
+
+
+## `claims`
+
+```sql
+CREATE OR REPLACE FUNCTION is_claims_admin() RETURNS "bool"
+  LANGUAGE "plpgsql" 
+  AS $$
+  BEGIN
+    IF session_user = 'authenticator' THEN
+      --------------------------------------------
+      -- To disallow any authenticated app users
+      -- from editing claims, delete the following
+      -- block of code and replace it with:
+      -- RETURN FALSE;
+      --------------------------------------------
+      IF extract(epoch from now()) > coalesce((current_setting('request.jwt.claims', true)::jsonb)->>'exp', '0')::numeric THEN
+        return false; -- jwt expired
+      END IF; 
+      IF coalesce((current_setting('request.jwt.claims', true)::jsonb)->'app_metadata'->'users_update', 'false')::bool THEN
+        return true; -- user has user_update set to true
+      ELSE
+        return false; -- user does NOT have user_update set to true
+      END IF;
+      --------------------------------------------
+      -- End of block 
+      --------------------------------------------
+    ELSE -- not a user session, probably being called from a trigger or something
+      return true;
+    END IF;
+  END;
+$$;
+
+CREATE OR REPLACE FUNCTION get_my_claims() RETURNS "jsonb"
+    LANGUAGE "sql" STABLE
+    AS $$
+  select 
+  	coalesce(nullif(current_setting('request.jwt.claims', true), '')::jsonb -> 'app_metadata', '{}'::jsonb)::jsonb
+$$;
+CREATE OR REPLACE FUNCTION get_my_claim(claim TEXT) RETURNS "jsonb"
+    LANGUAGE "sql" STABLE
+    AS $$
+  select 
+  	coalesce(nullif(current_setting('request.jwt.claims', true), '')::jsonb -> 'app_metadata' -> claim, null)
+$$;
+
+CREATE OR REPLACE FUNCTION get_claims(uid uuid) RETURNS "jsonb"
+    LANGUAGE "plpgsql" SECURITY DEFINER SET search_path = public
+    AS $$
+    DECLARE retval jsonb;
+    BEGIN
+      IF NOT is_claims_admin() THEN
+          RETURN '{"error":"access denied"}'::jsonb;
+      ELSE
+        select raw_app_meta_data from auth.users into retval where id = uid::uuid;
+        return retval;
+      END IF;
+    END;
+$$;
+
+CREATE OR REPLACE FUNCTION get_claim(uid uuid, claim text) RETURNS "jsonb"
+    LANGUAGE "plpgsql" SECURITY DEFINER SET search_path = public
+    AS $$
+    DECLARE retval jsonb;
+    BEGIN
+      IF NOT is_claims_admin() THEN
+          RETURN '{"error":"access denied"}'::jsonb;
+      ELSE
+        select coalesce(raw_app_meta_data->claim, null) from auth.users into retval where id = uid::uuid;
+        return retval;
+      END IF;
+    END;
+$$;
+
+CREATE OR REPLACE FUNCTION set_claim(uid uuid, claim text, value jsonb) RETURNS "text"
+    LANGUAGE "plpgsql" SECURITY DEFINER SET search_path = public
+    AS $$
+    BEGIN
+      IF NOT is_claims_admin() THEN
+          RETURN 'error: access denied';
+      ELSE        
+        update auth.users set raw_app_meta_data = 
+          raw_app_meta_data || 
+            json_build_object(claim, value)::jsonb where id = uid;
+        return 'OK';
+      END IF;
+    END;
+$$;
+
+CREATE OR REPLACE FUNCTION delete_claim(uid uuid, claim text) RETURNS "text"
+    LANGUAGE "plpgsql" SECURITY DEFINER SET search_path = public
+    AS $$
+    BEGIN
+      IF NOT is_claims_admin() THEN
+          RETURN 'error: access denied';
+      ELSE        
+        update auth.users set raw_app_meta_data = 
+          raw_app_meta_data - claim where id = uid;
+        return 'OK';
+      END IF;
+    END;
+$$;
+NOTIFY pgrst, 'reload schema';
+```
+
+
+
+## `users`
+
+```sql
+CREATE TABLE "user" (
+    "id" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "firstName" TEXT NOT NULL,
+    "lastName" TEXT NOT NULL,
+    "fullName" TEXT GENERATED ALWAYS AS ("firstName" || ' ' || "lastName") STORED,
+    "about" TEXT NOT NULL DEFAULT '',
+    "avatarUrl" TEXT,
+    "active" BOOLEAN DEFAULT TRUE,
+    "emailVerified" TIMESTAMP WITH TIME ZONE,
+    "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    "updatedAt" TIMESTAMP WITH TIME ZONE,
+
+    CONSTRAINT "user_pkey" PRIMARY KEY ("id")
+);
+
+CREATE UNIQUE INDEX "index_user_email_key" ON "user"("email");
+CREATE INDEX "index_user_fullName" ON "user"("fullName");
+
+ALTER TABLE "user" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Claims admin can view/modify users" ON "user" FOR ALL USING (is_claims_admin());
+CREATE POLICY "Users can modify themselves" ON "user" FOR UPDATE WITH CHECK (auth.uid() = id::uuid);
+CREATE POLICY "Anyone that's authenticated can view users" ON "user" FOR SELECT USING (auth.role() = 'authenticated');
+
+```
+
+
+
+## `employee-types`
+
+```sql
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+-- CreateTable
+CREATE TABLE "employeeType" (
+    "id" TEXT NOT NULL DEFAULT uuid_generate_v4(),
+    "name" TEXT NOT NULL,
+    "color" TEXT DEFAULT '#000000',
+    "protected" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    "updatedAt" TIMESTAMP WITH TIME ZONE,
+
+    CONSTRAINT "employeeType_pkey" PRIMARY KEY ("id"),
+    CONSTRAINT "employeeType_colorCheck" CHECK ("color" is null or "color" ~* '^#[a-f0-9]{6}$')
+);
+
+ALTER TABLE "employeeType" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Only claims admin can view/modify permissions for employee types" ON "employeeType" FOR ALL USING (is_claims_admin());
+
+
+```
+
+
+
+## `permissions`
+
+```sql
+CREATE TABLE "feature" (
+    "id" TEXT NOT NULL DEFAULT uuid_generate_v4(),
+    "name" TEXT NOT NULL,
+    "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    "updatedAt" TIMESTAMP WITH TIME ZONE,
+
+    CONSTRAINT "feature_pkey" PRIMARY KEY ("id")
+);
+
+ALTER TABLE "feature" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Only claims admin can view/modify modules" ON "feature" FOR ALL USING (is_claims_admin());
+
+CREATE TABLE "employeeTypePermission" (
+    "employeeTypeId" TEXT NOT NULL,
+    "featureId" TEXT NOT NULL,
+    "create" BOOLEAN NOT NULL DEFAULT false,
+    "delete" BOOLEAN NOT NULL DEFAULT false,
+    "update" BOOLEAN NOT NULL DEFAULT false,
+    "view" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    "updatedAt" TIMESTAMP WITH TIME ZONE,
+
+    CONSTRAINT "employeeTypePermission_pkey" PRIMARY KEY ("employeeTypeId", "featureId"),
+    CONSTRAINT "employeeTypePermission_employeeTypeId_fkey" FOREIGN KEY ("employeeTypeId") REFERENCES "employeeType"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "employeeTypePermission_featureId_fkey" FOREIGN KEY ("featureId") REFERENCES "feature"("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+ALTER TABLE "employeeTypePermission" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Only claims admin can view/modify permissions for employee types" ON "employeeTypePermission" FOR ALL USING (is_claims_admin());
+
+
+
+```
+
+
+
+## `employee`
+
+```sql
+CREATE TABLE "employee" (
+    "id" TEXT NOT NULL,
+    "employeeTypeId" TEXT NOT NULL,
+
+    CONSTRAINT "employee_pkey" PRIMARY KEY ("id"),
+    CONSTRAINT "employee_employeeTypeId_fkey" FOREIGN KEY ("employeeTypeId") REFERENCES "employeeType"("id") ON DELETE NO ACTION ON UPDATE CASCADE,
+    CONSTRAINT "employee_id_fkey" FOREIGN KEY ("id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+ALTER TABLE "employee" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Only claims admin can view/modify employees" ON "employee" FOR ALL USING (is_claims_admin());
+CREATE POLICY "Anyone that's authenticated can view employees" ON "employee" FOR SELECT USING (auth.role() = 'authenticated');
+
+
+```
+
+
+
+## `buckets`
+
+```sql
+INSERT INTO storage.buckets (id, name, public)
+VALUES 
+  ('public', 'public', true), 
+  ('avatars', 'avatars', true),
+  ('private', 'private', false);
+
+CREATE POLICY "Anyone can view avatars"
+ON storage.objects FOR SELECT USING (
+    bucket_id = 'avatars'
+);
+
+CREATE POLICY "Users can delete their own avatars"
+ON storage.objects FOR DELETE USING (
+    bucket_id = 'avatars'
+    and (auth.role() = 'authenticated')
+    and storage.filename(name) LIKE concat(auth.uid()::text, '%')
+);
+
+CREATE POLICY "Users can update their own avatars"
+ON storage.objects FOR UPDATE USING (
+    bucket_id = 'avatars'
+    and (auth.role() = 'authenticated')
+    and storage.filename(name) LIKE concat(auth.uid()::text, '%')
+);
+
+CREATE POLICY "Users can insert their own avatars"
+ON storage.objects FOR INSERT WITH CHECK (
+    bucket_id = 'avatars'
+    and (auth.role() = 'authenticated')
+    and storage.filename(name) LIKE concat(auth.uid()::text, '%')
+);
+
+
+```
+
+
+
+## `attributes`
+
+```sql
+
+CREATE TABLE "userAttributeCategory" (
+  "id" TEXT NOT NULL DEFAULT xid(),
+  "name" TEXT NOT NULL,
+  "public" BOOLEAN DEFAULT FALSE,
+  "protected" BOOLEAN DEFAULT FALSE,
+  "active" BOOLEAN DEFAULT TRUE,
+  "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
+  "createdBy" TEXT NOT NULL,
+  "updatedAt" TIMESTAMP WITH TIME ZONE,
+  "updatedBy" TEXT,
+
+  CONSTRAINT "userAttributeCategory_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "userAttributeCategory_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
+  CONSTRAINT "userAttributeCategory_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id") 
+);
+
+-- ALTER TABLE "userAttributeCategory" ENABLE ROW LEVEL SECURITY;
+
+CREATE TABLE "attributeDataType" (
+  "id" SERIAL PRIMARY KEY,
+  "label" TEXT NOT NULL,
+  "isBoolean" BOOLEAN NOT NULL DEFAULT FALSE,
+  "isDate" BOOLEAN NOT NULL DEFAULT FALSE,
+  "isList" BOOLEAN NOT NULL DEFAULT FALSE,
+  "isNumeric" BOOLEAN NOT NULL DEFAULT FALSE,
+  "isText" BOOLEAN NOT NULL DEFAULT FALSE,
+  "isUser" BOOLEAN NOT NULL DEFAULT FALSE,
+    
+  CONSTRAINT "userAttributeDataType_singleDataType"
+    CHECK (
+      (
+        "isBoolean" = true AND 
+        "isDate" = false AND 
+        "isList" = false AND 
+        "isNumeric" = false AND 
+        "isText" = false AND 
+        "isUser" = false
+      ) 
+      OR (
+        "isBoolean" = false AND 
+        "isDate" = true AND 
+        "isList" = false AND 
+        "isNumeric" = false AND 
+        "isText" = false AND 
+        "isUser" = false
+      ) 
+      OR (
+        "isBoolean" = false AND 
+        "isDate" = false AND 
+        "isList" = true AND 
+        "isNumeric" = false AND 
+        "isText" = false AND 
+        "isUser" = false
+      ) 
+      OR (
+        "isBoolean" = false AND 
+        "isDate" = false AND 
+        "isList" = false AND 
+        "isNumeric" = true AND 
+        "isText" = false AND 
+        "isUser" = false
+      ) 
+      OR (
+        "isBoolean" = false AND 
+        "isDate" = false AND 
+        "isList" = false AND 
+        "isNumeric" = false AND 
+        "isText" = true AND 
+        "isUser" = false
+      ) 
+      OR (
+        "isBoolean" = false AND 
+        "isDate" = false AND 
+        "isList" = false AND 
+        "isNumeric" = false AND 
+        "isText" = false AND 
+        "isUser" = true
+      )
+    )
+);
+
+INSERT INTO "attributeDataType" ("label", "isBoolean", "isDate", "isList", "isNumeric", "isText", "isUser")
+VALUES 
+  ('Yes/No', true, false, false, false, false, false),
+  ('Date', false, true, false, false, false, false),
+  ('List', false, false, true, false, false, false),
+  ('Numeric', false, false, false, true, false, false),
+  ('Text', false, false, false, false, true, false),
+  ('User', false, false, false, false, false, true);
+  
+
+-- ALTER TABLE "attributeDataType" ENABLE ROW LEVEL SECURITY;
+
+CREATE TABLE "userAttribute" (
+  "id" TEXT NOT NULL DEFAULT xid(),
+  "name" TEXT NOT NULL,
+  "sortOrder" INTEGER NOT NULL DEFAULT 1,
+  "userAttributeCategoryId" TEXT NOT NULL,
+  "attributeDataTypeId" INTEGER NOT NULL,
+  "listOptions" TEXT ARRAY,
+  "canSelfManage" BOOLEAN DEFAULT FALSE,
+  "active" BOOLEAN DEFAULT TRUE,
+  "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
+  "createdBy" TEXT NOT NULL,
+  "updatedAt" TIMESTAMP WITH TIME ZONE,
+  "updatedBy" TEXT,
+
+  CONSTRAINT "userAttribute_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "userAttribute_userAttributeCategoryId_fkey" FOREIGN KEY ("userAttributeCategoryId") REFERENCES "userAttributeCategory"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "userAttribute_attributeDataTypeId_fkey" FOREIGN KEY ("attributeDataTypeId") REFERENCES "attributeDataType"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "userAttribute_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
+  CONSTRAINT "userAttribute_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
+
+);
+
+-- ALTER TABLE "userAttribute" ENABLE ROW LEVEL SECURITY;
+
+CREATE TABLE "userAttributeValue" (
+  "id" TEXT NOT NULL DEFAULT xid(),
+  "userAttributeId" TEXT NOT NULL,
+  "userId" TEXT NOT NULL,
+  "valueBoolean" BOOLEAN,
+  "valueDate" DATE,
+  "valueNumeric" NUMERIC,
+  "valueText" TEXT,
+  "valueUser" TEXT,
+  "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
+  "createdBy" TEXT NOT NULL,
+  "updatedAt" TIMESTAMP WITH TIME ZONE,
+  "updatedBy" TEXT,
+
+  CONSTRAINT "userAttributeValue_singleValue"
+    CHECK (
+      (
+        "valueBoolean" IS NOT NULL AND
+        "valueDate" IS NULL AND
+        "valueNumeric" IS NULL AND
+        "valueText" IS NULL AND
+        "valueUser" IS NULL
+      ) 
+      OR (
+        "valueBoolean" IS NULL AND
+        "valueDate" IS NULL AND
+        "valueNumeric" IS NULL AND
+        "valueText" IS NOT NULL AND
+        "valueUser" IS NULL
+      ) 
+      OR (
+        "valueBoolean" IS NULL AND
+        "valueDate" IS NOT NULL AND
+        "valueNumeric" IS NULL AND
+        "valueText" IS NULL AND
+        "valueUser" IS NULL
+      ) 
+      OR (
+        "valueBoolean" IS NULL AND
+        "valueDate" IS NULL AND
+        "valueNumeric" IS NOT NULL AND
+        "valueText" IS NULL AND
+        "valueUser" IS NULL
+      ) 
+      OR (
+        "valueBoolean" IS NULL AND
+        "valueDate" IS NULL AND
+        "valueNumeric" IS NULL AND
+        "valueText" IS NULL AND
+        "valueUser" IS NOT NULL
+      ) 
+    ),
+
+  CONSTRAINT "userAttributeValue_userAttributeId_fkey" FOREIGN KEY ("userAttributeId") REFERENCES "userAttribute"("id") ON DELETE CASCADE,
+  CONSTRAINT "userAttributeValue_valueUser_fkey" FOREIGN KEY ("valueUser") REFERENCES "user"("id") ON DELETE CASCADE,
+  CONSTRAINT "userAttributeValue_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE,
+  CONSTRAINT "userAttributeValue_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
+  CONSTRAINT "userAttributeValue_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id"),
+  CONSTRAINT uq_userAttributeId_userId 
+    UNIQUE ( "userAttributeId", "userId")
+);
+
+ALTER TABLE "userAttributeValue" ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Claims admin can view/modify user attribute values" ON "userAttributeValue" FOR ALL USING (is_claims_admin());
+CREATE POLICY "Users can insert attributes for themselves" ON "userAttributeValue" FOR UPDATE WITH CHECK (auth.uid() = "userId"::uuid);
+CREATE POLICY "Users can modify attributes for themselves" ON "userAttributeValue" FOR UPDATE WITH CHECK (auth.uid() = "userId"::uuid);
+CREATE POLICY "Users can view their own attribtues" ON "userAttributeValue" FOR SELECT USING (auth.uid() = "userId"::uuid);
+CREATE POLICY "Users can view other users attributes if the category is public" ON "userAttributeValue" FOR SELECT 
+  USING (
+    auth.role() = 'authenticated' AND
+    "userAttributeValue"."userAttributeId" IN (
+      SELECT "id" FROM "userAttribute" WHERE "userAttributeCategoryId" IN (
+        SELECT "id" FROM "userAttributeCategory" WHERE "public" = true
+      )
+    )
+  );
+
+-- CREATE TABLE employee_personal_data (
+--   "id" TEXT NOT NULL DEFAULT xid(), 
+--   bank_account_number TEXT,
+--   bank_routing_number TEXT,
+--   drivers_license_number TEXT,
+--   social_security TEXT,
+--   user_id TEXT NOT NULL,
+-- 	 key_id uuid NOT NULL DEFAULT '7da3ce7e-98f0-4c4f-9b63-b3f783eab919'::uuid,
+--   nonce BYTEA DEFAULT pgsodium.crypto_aead_det_noncegen(),
+
+--   CONSTRAINT "employee_personal_data_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE
+-- );
+
+-- SECURITY LABEL FOR pgsodium
+-- 	ON COLUMN employee_personal_data.bank_account
+--   	IS 'ENCRYPT WITH KEY COLUMN key_id ASSOCIATED (user_id) NONCE nonce';
+
+-- SECURITY LABEL FOR pgsodium
+-- 	ON COLUMN employee_personal_data.bank_routing
+--   	IS 'ENCRYPT WITH KEY COLUMN key_id ASSOCIATED (user_id) NONCE nonce';
+
+-- SECURITY LABEL FOR pgsodium
+-- 	ON COLUMN employee_personal_data.drivers_license
+--   	IS 'ENCRYPT WITH KEY COLUMN key_id ASSOCIATED (user_id) NONCE nonce';
+
+-- SECURITY LABEL FOR pgsodium
+-- 	ON COLUMN employee_personal_data.social_security
+--   	IS 'ENCRYPT WITH KEY COLUMN key_id ASSOCIATED (user_id) NONCE nonce';
+
+-- ALTER TABLE "employee_personal_data" ENABLE ROW LEVEL SECURITY;
+```
+
+
+
+## `suppliers-and-customers`
+
+```sql
+CREATE TABLE "country" (
+  "id" SERIAL PRIMARY KEY,
+  "name" TEXT NOT NULL,
+  "code" TEXT NOT NULL
+);
+
+CREATE TABLE "contact" (
+  "id" TEXT NOT NULL DEFAULT xid(),
+  "firstName" TEXT NOT NULL,
+  "lastName" TEXT NOT NULL,
+  "email" TEXT NOT NULL,
+  "title" TEXT,
+  "mobilePhone" TEXT,
+  "homePhone" TEXT,
+  "workPhone" TEXT,
+  "fax" TEXT,
+  "addressLine1" TEXT,
+  "addressLine2" TEXT,
+  "city" TEXT,
+  "state" TEXT,
+  "postalCode" TEXT,
+  "countryId" INTEGER,
+  "birthday" DATE,
+  "notes" TEXT,
+
+  CONSTRAINT "contact_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "contact_countryId_fkey" FOREIGN KEY ("countryId") REFERENCES "country"("id") ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+
+CREATE TABLE "address" (
+  "id" TEXT NOT NULL DEFAULT xid(),
+  "addressLine1" TEXT,
+  "addressLine2" TEXT,
+  "city" TEXT,
+  "state" TEXT,
+  "postalCode" TEXT,
+  "countryId" INTEGER,
+  "phone" TEXT,
+  "fax" TEXT,
+
+  CONSTRAINT "address_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "address_countryId_fkey" FOREIGN KEY ("countryId") REFERENCES "country"("id") ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+CREATE TABLE "supplierStatus" (
+    "id" TEXT NOT NULL DEFAULT xid(),
+    "name" TEXT NOT NULL,
+    "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    "updatedAt" TIMESTAMP WITH TIME ZONE,
+
+    CONSTRAINT "supplierStatus_pkey" PRIMARY KEY ("id")
+);
+
+INSERT INTO "supplierStatus" ("name") VALUES ('Active'), ('Inactive'), ('Pending'), ('Rejected');
+
+CREATE TABLE "supplierType" (
+    "id" TEXT NOT NULL DEFAULT uuid_generate_v4(),
+    "name" TEXT NOT NULL,
+    "color" TEXT DEFAULT '#000000',
+    "protected" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    "updatedAt" TIMESTAMP WITH TIME ZONE,
+
+    CONSTRAINT "supplierType_pkey" PRIMARY KEY ("id"),
+    CONSTRAINT "supplierType_colorCheck" CHECK ("color" is null or "color" ~* '^#[a-f0-9]{6}$')
+);
+
+CREATE TABLE "supplier" (
+    "id" TEXT NOT NULL DEFAULT uuid_generate_v4(),
+    "name" TEXT NOT NULL,
+    "description" TEXT,
+    "supplierTypeId" TEXT,
+    "supplierStatusId" TEXT,
+    "taxId" TEXT,
+    "accountManagerId" TEXT,
+    "logo" TEXT,
+    "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
+    "createdBy" TEXT,
+    "updatedAt" TIMESTAMP WITH TIME ZONE,
+    "updatedBy" TEXT,
+
+    CONSTRAINT "supplier_pkey" PRIMARY KEY ("id"),
+    CONSTRAINT "supplier_supplierTypeId_fkey" FOREIGN KEY ("supplierTypeId") REFERENCES "supplierType"("id") ON UPDATE CASCADE ON DELETE SET NULL,
+    CONSTRAINT "supplier_supplierStatusId_fkey" FOREIGN KEY ("supplierStatusId") REFERENCES "supplierStatus"("id") ON UPDATE CASCADE ON DELETE SET NULL,
+    CONSTRAINT "supplier_accountManagerId_fkey" FOREIGN KEY ("accountManagerId") REFERENCES "user"("id") ON UPDATE CASCADE ON DELETE SET NULL,
+    CONSTRAINT "supplier_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id") ON UPDATE CASCADE ON DELETE SET NULL,
+    CONSTRAINT "supplier_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id") ON UPDATE CASCADE ON DELETE SET NULL,
+    CONSTRAINT "supplier_name_unique" UNIQUE ("name")
+);
+
+CREATE TABLE "supplierLocation" (
+  "id" TEXT NOT NULL DEFAULT xid(),
+  "supplierId" TEXT NOT NULL,
+  "addressId" TEXT NOT NULL,
+
+  CONSTRAINT "supplierLocation_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "supplierLocation_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "supplier"("id") ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT "supplierLocation_addressId_fkey" FOREIGN KEY ("addressId") REFERENCES "address"("id") ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE "supplierContact" (
+  "id" TEXT NOT NULL DEFAULT xid(),
+  "supplierId" TEXT NOT NULL,
+  "contactId" TEXT NOT NULL,
+  "supplierLocationId" TEXT,
+  "userId" TEXT,
+
+  CONSTRAINT "supplierContact_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "supplierContact_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "supplier"("id") ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT "supplierContact_contactId_fkey" FOREIGN KEY ("contactId") REFERENCES "contact"("id") ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT "supplierContact_supplierLocationId_fkey" FOREIGN KEY ("supplierLocationId") REFERENCES "supplierLocation"("id") ON UPDATE CASCADE ON DELETE SET NULL,
+  CONSTRAINT "supplierContact_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON UPDATE CASCADE ON DELETE SET NULL
+);
+
+CREATE TABLE "supplierAccount" (
+    "id" TEXT NOT NULL,
+    "supplierId" TEXT NOT NULL,
+
+    CONSTRAINT "supplierAccount_pkey" PRIMARY KEY ("id"),
+    CONSTRAINT "supplierAccount_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "supplier"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "supplierAccount_id_fkey" FOREIGN KEY ("id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE "customerStatus" (
+    "id" TEXT NOT NULL DEFAULT xid(),
+    "name" TEXT NOT NULL,
+    "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    "updatedAt" TIMESTAMP WITH TIME ZONE,
+
+    CONSTRAINT "customerStatus_pkey" PRIMARY KEY ("id")
+);
+
+INSERT INTO "customerStatus" ("name") VALUES ('Active'), ('Inactive'), ('Prospect'), ('Lead'), ('On Hold'), ('Cancelled'), ('Archived');
+
+CREATE TABLE "customerType" (
+    "id" TEXT NOT NULL DEFAULT uuid_generate_v4(),
+    "name" TEXT NOT NULL,
+    "color" TEXT DEFAULT '#000000',
+    "protected" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    "updatedAt" TIMESTAMP WITH TIME ZONE,
+
+    CONSTRAINT "customerType_pkey" PRIMARY KEY ("id"),
+    CONSTRAINT "customerType_colorCheck" CHECK ("color" is null or "color" ~* '^#[a-f0-9]{6}$')
+);
+
+CREATE TABLE "customer" (
+    "id" TEXT NOT NULL DEFAULT uuid_generate_v4(),
+    "name" TEXT NOT NULL,
+    "description" TEXT,
+    "customerTypeId" TEXT,
+    "customerStatusId" TEXT,
+    "taxId" TEXT,
+    "accountManagerId" TEXT,
+    "logo" TEXT,
+    "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
+    "createdBy" TEXT,
+    "updatedAt" TIMESTAMP WITH TIME ZONE,
+    "updatedBy" TEXT,
+
+    CONSTRAINT "customer_pkey" PRIMARY KEY ("id"),
+    CONSTRAINT "customer_customerTypeId_fkey" FOREIGN KEY ("customerTypeId") REFERENCES "customerType"("id") ON UPDATE CASCADE ON DELETE SET NULL,
+    CONSTRAINT "customer_customerStatusId_fkey" FOREIGN KEY ("customerStatusId") REFERENCES "customerStatus"("id") ON UPDATE CASCADE ON DELETE SET NULL,
+    CONSTRAINT "customer_accountManagerId_fkey" FOREIGN KEY ("accountManagerId") REFERENCES "user"("id") ON UPDATE CASCADE ON DELETE SET NULL,
+    CONSTRAINT "customer_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id") ON UPDATE CASCADE ON DELETE SET NULL,
+    CONSTRAINT "customer_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id") ON UPDATE CASCADE ON DELETE SET NULL,
+    CONSTRAINT "customer_name_unique" UNIQUE ("name")
+);
+
+CREATE TABLE "customerLocation" (
+  "id" TEXT NOT NULL DEFAULT xid(),
+  "customerId" TEXT NOT NULL,
+  "addressId" TEXT NOT NULL,
+
+  CONSTRAINT "customerLocation_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "customerLocation_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "customer"("id") ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT "customerLocation_addressId_fkey" FOREIGN KEY ("addressId") REFERENCES "address"("id") ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE "customerContact" (
+  "id" TEXT NOT NULL DEFAULT xid(),
+  "customerId" TEXT NOT NULL,
+  "contactId" TEXT NOT NULL,
+  "customerLocationId" TEXT,
+  "userId" TEXT,
+
+  CONSTRAINT "customerContact_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "customerContact_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "customer"("id") ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT "customerContact_contactId_fkey" FOREIGN KEY ("contactId") REFERENCES "contact"("id") ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT "customerContact_customerLocationId_fkey" FOREIGN KEY ("customerLocationId") REFERENCES "customerLocation"("id") ON UPDATE CASCADE ON DELETE SET NULL,
+  CONSTRAINT "customerContact_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON UPDATE CASCADE ON DELETE SET NULL
+);
+
+CREATE TABLE "customerAccount" (
+    "id" TEXT NOT NULL,
+    "customerId" TEXT NOT NULL,
+
+    CONSTRAINT "customerAccount_pkey" PRIMARY KEY ("id"),
+    CONSTRAINT "customerAccount_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "customer"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "customerAccount_id_fkey" FOREIGN KEY ("id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+```
+
+
+
+## `groups`
+
+```sql
+CREATE TABLE "group" (
+  "id" TEXT NOT NULL DEFAULT uuid_generate_v4(),
+  "name" TEXT NOT NULL,
+  "isIdentityGroup" BOOLEAN NOT NULL DEFAULT false,
+  "isEmployeeTypeGroup" BOOLEAN NOT NULL DEFAULT false,
+  "isCustomerOrgGroup" BOOLEAN NOT NULL DEFAULT false,
+  "isCustomerTypeGroup" BOOLEAN NOT NULL DEFAULT false,
+  "isSupplierTypeGroup" BOOLEAN NOT NULL DEFAULT false,
+  "isSupplierOrgGroup" BOOLEAN NOT NULL DEFAULT false,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+  "updatedAt" TIMESTAMP WITH TIME ZONE,
+  
+  CONSTRAINT "group_pkey" PRIMARY KEY ("id")
+);
+
+CREATE TABLE "membership" (
+  "id" SERIAL NOT NULL,
+  "groupId" TEXT NOT NULL,
+  "memberGroupId" TEXT,
+  "memberUserId" TEXT,
+
+  CONSTRAINT "membership_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "membership_groupId_fkey" FOREIGN KEY ("groupId") REFERENCES "group"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "membership_memberGroupId_fkey" FOREIGN KEY ("memberGroupId") REFERENCES "group"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "membership_memberUserId_fkey" FOREIGN KEY ("memberUserId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  
+  CONSTRAINT uq_membership
+    UNIQUE ( "groupId", "memberGroupId", "memberUserId" ),
+  
+  CONSTRAINT membership_hasPersonOrGroup
+    CHECK (
+      ("memberGroupId" IS NULL AND "memberUserId" IS NOT NULL) 
+      OR 
+      ("memberGroupId" IS NOT NULL AND "memberUserId" IS NULL)
+    )
+);
+
+CREATE INDEX index_membership_groupId ON "membership" ("groupId");
+CREATE INDEX index_membership_memberGroupId ON "membership" ("memberGroupId");
+CREATE INDEX index_membership_memberUserId ON "membership" ("memberUserId");
+
+CREATE FUNCTION public.create_employee_type_group()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public."group" ("id", "name", "isEmployeeTypeGroup")
+  VALUES (new.id, new.name, TRUE);
+
+  INSERT INTO public."membership"("groupId", "memberGroupId")
+  VALUES ('00000000-0000-0000-0000-000000000000', new.id);
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE FUNCTION public.update_employee_type_group()
+RETURNS TRIGGER AS $$
+BEGIN
+  UPDATE public."group" SET "name" = new.name
+  WHERE "id" = new.id AND "isEmployeeTypeGroup" = TRUE;
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE FUNCTION public.create_user_identity_group()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public."group" ("id", "name", "isIdentityGroup")
+  VALUES (new.id, new."fullName", TRUE);
+
+  INSERT INTO public."membership"("groupId", "memberUserId")
+  VALUES (new.id, new.id);
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE FUNCTION public.update_user_identity_group()
+RETURNS TRIGGER AS $$
+BEGIN
+  update public."group" set "name" = new."fullName"
+  where "id" = new.id and "isIdentityGroup" = TRUE;
+
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+
+CREATE FUNCTION public.add_employee_to_employee_type_group()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public."membership" ("groupId", "memberUserId")
+  VALUES (new."employeeTypeId", new.id);
+
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE FUNCTION public.update_employee_to_employee_type_group()
+RETURNS TRIGGER AS $$
+BEGIN
+  UPDATE public."membership" SET "groupId" = new."employeeTypeId"
+  WHERE "groupId" = old."employeeTypeId" AND "memberUserId" = new.id;
+
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER create_employee_type_group
+  AFTER INSERT on public."employeeType"
+  FOR EACH ROW EXECUTE PROCEDURE public.create_employee_type_group();
+
+CREATE TRIGGER create_user_identity_group
+  AFTER INSERT on public.user
+  FOR EACH ROW EXECUTE PROCEDURE public.create_user_identity_group();    
+
+CREATE TRIGGER add_employee_to_employee_type_group
+  AFTER INSERT on public.employee
+  FOR EACH ROW EXECUTE PROCEDURE public.add_employee_to_employee_type_group();
+
+CREATE TRIGGER update_user_identity_group
+  AFTER UPDATE on public.user
+  FOR EACH ROW EXECUTE PROCEDURE public.update_user_identity_group();
+
+CREATE TRIGGER update_employee_to_employee_type_group
+  AFTER UPDATE on public.employee
+  FOR EACH ROW EXECUTE PROCEDURE public.update_employee_to_employee_type_group();
+
+CREATE TRIGGER update_employee_type_group
+  AFTER UPDATE on public."employeeType"
+  FOR EACH ROW EXECUTE PROCEDURE public.update_employee_type_group();
+
+CREATE VIEW "group_member" AS 
+  SELECT
+    gm.id,
+    g.name,
+    g."isIdentityGroup",
+    g."isEmployeeTypeGroup",
+    g."isCustomerOrgGroup",
+    g."isCustomerTypeGroup",
+    g."isSupplierOrgGroup",
+    g."isSupplierTypeGroup",
+    gm."groupId",
+    gm."memberGroupId",
+    gm."memberUserId",
+    to_jsonb(u) as user
+  FROM 
+    "membership" gm 
+    INNER JOIN "group" g ON g.id = gm."groupId"
+    LEFT OUTER JOIN (
+      SELECT * FROM "user" WHERE active = TRUE
+    ) u ON u.id = gm."memberUserId";
+  
+
+CREATE RECURSIVE VIEW groups_recursive 
+(
+  "groupId", 
+  "name",
+  "parentId",
+  "isIdentityGroup",
+  "isEmployeeTypeGroup",
+  "isCustomerOrgGroup",
+  "isCustomerTypeGroup",
+  "isSupplierOrgGroup",
+  "isSupplierTypeGroup",
+  "user"
+) AS 
+  SELECT 
+    "groupId", 
+    "name", 
+    NULL AS "parentId", 
+    "isIdentityGroup", 
+    "isEmployeeTypeGroup",
+    "isCustomerOrgGroup",
+    "isCustomerTypeGroup",
+    "isSupplierOrgGroup",
+    "isSupplierTypeGroup",
+    "user"
+  FROM group_member
+  UNION ALL 
+  SELECT 
+    g2."groupId", 
+    g2.name, 
+    g1."groupId" AS "parentId", 
+    g1."isIdentityGroup", 
+    g2."isEmployeeTypeGroup",  
+    g2."isCustomerOrgGroup",
+    g2."isCustomerTypeGroup",
+    g2."isSupplierOrgGroup",
+    g2."isSupplierTypeGroup",
+    g2."user"
+  FROM group_member g1 
+  INNER JOIN group_member g2 ON g1."memberGroupId" = g2."groupId";
+
+CREATE VIEW groups_view AS
+  SELECT 
+    "groupId" as "id", 
+    "isEmployeeTypeGroup",
+    "isCustomerOrgGroup",
+    "isCustomerTypeGroup",
+    "isSupplierOrgGroup",
+    "isSupplierTypeGroup",
+    "name", 
+    "parentId", 
+    coalesce(jsonb_agg("user") filter (where "user" is not null), '[]') as users
+  FROM groups_recursive 
+  WHERE "isIdentityGroup" = false
+  GROUP BY 
+    "groupId", 
+    "name", 
+    "parentId", 
+    "isEmployeeTypeGroup", 
+    "isCustomerOrgGroup",
+    "isCustomerTypeGroup",
+    "isSupplierOrgGroup",
+    "isSupplierTypeGroup"
+  ORDER BY "isEmployeeTypeGroup" DESC, "isCustomerTypeGroup" DESC, "isSupplierTypeGroup" DESC, "name" ASC;
+
+
+CREATE OR REPLACE FUNCTION groups_query(
+  _name TEXT DEFAULT '',
+  _uid TEXT DEFAULT NULL
+) 
+RETURNS TABLE (
+  "id" TEXT,
+  "name" TEXT,
+  "parentId" TEXT,
+  "isEmployeeTypeGroup" BOOLEAN,
+  "isCustomerOrgGroup" BOOLEAN,
+  "isCustomerTypeGroup" BOOLEAN,
+  "isSupplierOrgGroup" BOOLEAN,
+  "isSupplierTypeGroup" BOOLEAN,
+  "users" JSONB
+) LANGUAGE "plpgsql" SECURITY INVOKER SET search_path = public
+AS $$
+  BEGIN
+    RETURN QUERY
+      WITH group_ids AS (
+        SELECT g."id" 
+        FROM "group" g
+        WHERE g."isIdentityGroup" = false
+          AND g."name" ILIKE '%' || _name || '%'          
+      )
+      SELECT 
+      g."id",
+      g."name",
+      g."parentId",
+      g."isEmployeeTypeGroup",
+      g."isCustomerOrgGroup",
+      g."isCustomerTypeGroup",
+      g."isSupplierOrgGroup",
+      g."isSupplierTypeGroup",
+      g."users"
+      FROM groups_view g
+      WHERE g."id" IN (SELECT * FROM group_ids)
+        OR g."parentId" IN (SELECT * FROM group_ids);
+  END;
+$$;
+
+CREATE OR REPLACE FUNCTION groups_for_user(uid text) RETURNS "jsonb" -- TODO: return setof string
+  LANGUAGE "plpgsql" SECURITY DEFINER SET search_path = public
+  AS $$
+  DECLARE retval jsonb;
+  BEGIN    
+    WITH RECURSIVE "groupsForUser" AS (
+    SELECT "groupId", "memberGroupId", "memberUserId" FROM "membership"
+    WHERE "memberUserId" = uid::text
+    UNION
+      SELECT g1."groupId", g1."memberGroupId", g1."memberUserId" FROM "membership" g1
+      INNER JOIN "groupsForUser" g2 ON g2."groupId" = g1."memberGroupId"
+    ) SELECT coalesce(jsonb_agg("groupId"), '[]') INTO retval AS groups FROM "groupsForUser";
+    RETURN retval;
+  END;
+$$;
+
+CREATE OR REPLACE FUNCTION users_for_groups(groups text[]) RETURNS "jsonb"
+  LANGUAGE "plpgsql" SECURITY DEFINER SET search_path = public
+  AS $$
+  DECLARE retval jsonb;
+  BEGIN    
+    WITH RECURSIVE "usersForGroups" AS (
+    SELECT "groupId", "memberGroupId", "memberUserId" FROM "membership"
+    WHERE "groupId" = ANY(groups)
+    UNION
+      SELECT g1."groupId", g1."memberGroupId", g1."memberUserId" FROM "membership" g1
+      INNER JOIN "usersForGroups" g2 ON g2."memberGroupId" = g1."groupId"
+    ) SELECT coalesce(jsonb_agg("memberUserId"), '[]') AS groups INTO retval FROM "usersForGroups" WHERE "memberUserId" IS NOT NULL;
+    RETURN retval;
+  END;
+$$;
+
+CREATE FUNCTION public.create_customer_type_group()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public."group" ("id", "name", "isCustomerTypeGroup")
+  VALUES (new.id, new.name, TRUE);
+
+  INSERT INTO public."membership"("groupId", "memberGroupId")
+  VALUES ('11111111-1111-1111-1111-111111111111', new.id);
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE FUNCTION public.create_supplier_type_group()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public."group" ("id", "name", "isSupplierTypeGroup")
+  VALUES (new.id, new.name, TRUE);
+
+  INSERT INTO public."membership"("groupId", "memberGroupId")
+  VALUES ('22222222-2222-2222-2222-222222222222', new.id);
+
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE FUNCTION public.create_customer_org_group()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public."group" ("id", "name", "isCustomerOrgGroup")
+  VALUES (new.id, new.name, TRUE);
+
+  IF new."customerTypeId" IS NOT NULL THEN
+    INSERT INTO public."membership"("groupId", "memberGroupId")
+    VALUES (new."customerTypeId", new.id);
+  END IF;
+
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE FUNCTION public.create_supplier_org_group()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public."group" ("id", "name", "isSupplierOrgGroup")
+  VALUES (new.id, new.name, TRUE);
+
+  IF new."supplierTypeId" IS NOT NULL THEN
+    INSERT INTO public."membership"("groupId", "memberGroupId")
+    VALUES (new."supplierTypeId", new.id);
+  END IF;
+
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE FUNCTION public.add_customer_account_to_customer_group()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public."membership" ("groupId", "memberUserId")
+  VALUES (new."customerId", new.id);
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE FUNCTION public.add_supplier_account_to_supplier_group()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public."membership" ("groupId", "memberUserId")
+  VALUES (new."supplierId", new.id);
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE FUNCTION public.update_customer_type_group()
+RETURNS TRIGGER AS $$
+BEGIN
+  UPDATE public."group" SET "name" = new.name
+  WHERE "id" = new.id AND "isCustomerTypeGroup" = TRUE;
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE FUNCTION public.update_supplier_type_group()
+RETURNS TRIGGER AS $$
+BEGIN
+  UPDATE public."group" SET "name" = new.name
+  WHERE "id" = new.id AND "isSupplierTypeGroup" = TRUE;
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE FUNCTION public.update_customer_to_customer_type_group()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF old."customerTypeId" IS NOT NULL THEN
+    IF new."customerTypeId" IS NOT NULL THEN
+      UPDATE public."membership" SET "groupId" = new."customerTypeId"
+      WHERE "groupId" = old."customerTypeId" AND "memberGroupId" = new.id;
+    ELSE
+      DELETE FROM public."membership" WHERE "groupId" = old."customerTypeId" AND "memberGroupId" = new.id;
+    END IF;
+  ELSE
+    IF new."customerTypeId" IS NOT NULL THEN
+      INSERT INTO public."membership" ("groupId", "memberGroupId")
+      VALUES (new."customerTypeId", new.id);
+    END IF;
+  END IF;
+
+  UPDATE public."group" SET "name" = new.name
+  WHERE "id" = new.id AND "isCustomerOrgGroup" = TRUE;
+  RETURN new;
+
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE FUNCTION public.update_supplier_to_supplier_type_group()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF old."supplierTypeId" IS NOT NULL THEN
+    IF new."supplierTypeId" IS NOT NULL THEN
+      UPDATE public."membership" SET "groupId" = new."supplierTypeId"
+      WHERE "groupId" = old."supplierTypeId" AND "memberGroupId" = new.id;
+    ELSE
+      DELETE FROM public."membership" WHERE "groupId" = old."supplierTypeId" AND "memberGroupId" = new.id;
+    END IF;
+  ELSE
+    IF new."supplierTypeId" IS NOT NULL THEN
+      INSERT INTO public."membership" ("groupId", "memberGroupId")
+      VALUES (new."supplierTypeId", new.id);
+    END IF;
+  END IF;
+
+  UPDATE public."group" SET "name" = new.name
+  WHERE "id" = new.id AND "isSupplierOrgGroup" = TRUE;
+
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER create_customer_type_group
+  AFTER INSERT on public."customerType"
+  FOR EACH ROW EXECUTE PROCEDURE public.create_customer_type_group();
+
+CREATE TRIGGER create_supplier_type_group
+  AFTER INSERT on public."supplierType"
+  FOR EACH ROW EXECUTE PROCEDURE public.create_supplier_type_group();
+
+CREATE TRIGGER create_customer_org_group
+  AFTER INSERT on public.customer
+  FOR EACH ROW EXECUTE PROCEDURE public.create_customer_org_group();
+
+CREATE TRIGGER create_supplier_org_group
+  AFTER INSERT on public.supplier
+  FOR EACH ROW EXECUTE PROCEDURE public.create_supplier_org_group();
+
+CREATE TRIGGER create_customer_account_group
+  AFTER INSERT on public."customerAccount"
+  FOR EACH ROW EXECUTE PROCEDURE public.add_customer_account_to_customer_group();
+
+CREATE TRIGGER create_supplier_account_group
+  AFTER INSERT on public."supplierAccount"
+  FOR EACH ROW EXECUTE PROCEDURE public.add_supplier_account_to_supplier_group();
+
+CREATE TRIGGER create_customer_group
+  AFTER UPDATE on public.customer
+  FOR EACH ROW EXECUTE PROCEDURE public.update_customer_to_customer_type_group();
+
+CREATE TRIGGER create_supplier_group
+  AFTER UPDATE on public.supplier
+  FOR EACH ROW EXECUTE PROCEDURE public.update_supplier_to_supplier_type_group();
+
+CREATE TRIGGER update_customer_type_group
+  AFTER UPDATE on public."customerType"
+  FOR EACH ROW EXECUTE PROCEDURE public.update_customer_type_group();
+
+CREATE TRIGGER update_supplier_type_group
+  AFTER UPDATE on public."supplierType"
+  FOR EACH ROW EXECUTE PROCEDURE public.update_supplier_type_group();
+
+NOTIFY pgrst, 'reload schema';
+
+
+```
+
+
+
+## `search`
+
+```sql
+
+CREATE TYPE search_entity AS enum ('Resource', 'Person', 'Customer', 'Supplier', 'Job', 'Part', 'Purchase Order', 'Sales Order', 'Document');
+
+CREATE TABLE search (
+  id BIGINT PRIMARY KEY GENERATED BY DEFAULT AS IDENTITY,
+  name TEXT NOT NULL,
+  description TEXT DEFAULT '',
+  entity search_entity,
+  uuid TEXT,
+  link TEXT NOT NULL
+);
+
+ALTER TABLE
+  public.search
+ADD COLUMN
+  fts tsvector GENERATED always as (to_tsvector('english', name || ' ' || description)) STORED;
+
+CREATE INDEX index_search_uuid ON public.search (uuid);
+CREATE INDEX index_search_fts ON public.search USING GIN (fts); 
+
+CREATE FUNCTION public.create_employee_search_result()
+RETURNS TRIGGER AS $$
+DECLARE
+  employee TEXT;
+BEGIN
+  employee := (SELECT u."fullName" FROM public.user u WHERE u.id = new.id);
+  INSERT INTO public.search(name, entity, uuid, link)
+  VALUES (employee, 'Person', new.id, '/x/resources/person/' || new.id);
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER create_employee_search_result
+  AFTER INSERT on public.user
+  FOR EACH ROW EXECUTE PROCEDURE public.create_employee_search_result();
+
+CREATE FUNCTION public.update_employee_search_result()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF (new.active = false) THEN
+    DELETE FROM public.search
+    WHERE entity = 'Person' AND uuid = new.id;
+    RETURN new;
+  END IF;
+  IF (old."fullName" <> new."fullName") THEN
+    UPDATE public.search SET name = new."fullName"
+    WHERE entity = 'Person' AND uuid = new.id;
+  END IF;
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER update_employee_search_result
+  AFTER UPDATE on public.user
+  FOR EACH ROW EXECUTE PROCEDURE public.update_employee_search_result();
+
+CREATE FUNCTION public.create_customer_search_result()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public.search(name, entity, uuid, link)
+  VALUES (new.name, 'Customer', new.id, '/x/sales/customers/' || new.id);
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER create_customer_search_result
+  AFTER INSERT on public.customer
+  FOR EACH ROW EXECUTE PROCEDURE public.create_customer_search_result();
+
+CREATE FUNCTION public.update_customer_search_result()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF (old.name <> new.name) THEN
+    UPDATE public.search SET name = new.name
+    WHERE entity = 'Customer' AND uuid = new.id;
+  END IF;
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER update_customer_search_result
+  AFTER UPDATE on public.customer
+  FOR EACH ROW EXECUTE PROCEDURE public.update_customer_search_result();
+
+CREATE FUNCTION public.create_supplier_search_result()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public.search(name, entity, uuid, link)
+  VALUES (new.name, 'Supplier', new.id, '/x/purchasing/suppliers/' || new.id);
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER create_supplier_search_result
+  AFTER INSERT on public.supplier
+  FOR EACH ROW EXECUTE PROCEDURE public.create_supplier_search_result();
+
+CREATE FUNCTION public.update_supplier_search_result()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF (old.name <> new.name) THEN
+    UPDATE public.search SET name = new.name
+    WHERE entity = 'Supplier' AND uuid = new.id;
+  END IF;
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER update_supplier_search_result
+  AFTER UPDATE on public.supplier
+  FOR EACH ROW EXECUTE PROCEDURE public.update_supplier_search_result();
+
+ALTER TABLE "search" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Employees with sales_view can search for customers and sales orders" ON "search"
+  FOR SELECT
+  USING (coalesce(get_my_claim('sales_view')::boolean, false) = true AND entity IN ('Customer', 'Sales Order') AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+-- TODO: customers should be able to search for their sales orders
+
+CREATE POLICY "Employees with purchasing_view can search for suppliers and purchase orders" ON "search"
+  FOR SELECT
+  USING (coalesce(get_my_claim('purchasing_view')::boolean, false) = true AND entity IN ('Supplier', 'Purchase Order') AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+-- TODO: suppliers should be able to search for their purchase orders
+
+CREATE POLICY "Employees with resources_view can search for resources" ON "search"
+  FOR SELECT
+  USING (coalesce(get_my_claim('resources_view')::boolean, false) = true AND entity = 'Resource');
+
+CREATE POLICY "Employees with resources_view can search for people" ON "search"
+  FOR SELECT
+  USING (coalesce(get_my_claim('resources_view')::boolean, false) = true AND entity = 'Person');
+
+-- TODO: documents should be filtered based on visibility
+CREATE POLICY "Employees with document_view can search for documents" ON "search"
+  FOR SELECT
+  USING (coalesce(get_my_claim('document_view')::boolean, false) = true AND entity = 'Document' AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+CREATE POLICY "Employees with parts_view can search for parts" ON "search"
+  FOR SELECT
+  USING (coalesce(get_my_claim('parts_view')::boolean, false) = true AND entity = 'Part' AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+-- TODO: suppliers should be able to search for parts that they supply
+
+CREATE POLICY "Employees with jobs_view can search for jobs" ON "search"
+  FOR SELECT
+  USING (coalesce(get_my_claim('jobs_view')::boolean, false) = true AND entity = 'Job' AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+-- TODO: customers should be able to search for their jobs
+```
+
+
+
+## `rbac`
+
+```sql
+-- contact
+
+ALTER TABLE "contact" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Employees with purchasing_view can view contacts that are suppliers" ON "contact"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('purchasing_view')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+    AND id IN (
+      SELECT "contactId" FROM "supplierContact"
+    )
+  );
+
+CREATE POLICY "Employees with sales_view can view contacts that are customer" ON "contact"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('sales_view')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+    AND id IN (
+      SELECT "contactId" FROM "customerContact"
+    )
+  );
+
+CREATE POLICY "Suppliers with purchasing_view can view contacts from their organization" ON "contact"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('purchasing_view')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"supplier"'::jsonb 
+    AND (
+      id IN (
+        SELECT "contactId" FROM "supplierContact" WHERE "supplierId" IN (
+          SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
+        )
+      )
+    )
+  );
+
+CREATE POLICY "Customers with sales_view can view contacts from their organization" ON "contact"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('sales_view')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"customer"'::jsonb 
+    AND (
+      id IN (
+        SELECT "contactId" FROM "customerContact" WHERE "customerId" IN (
+          SELECT "customerId" FROM "customerAccount" WHERE id::uuid = auth.uid()
+        )
+      )
+    )
+  );
+
+CREATE POLICY "Many employees can create contact" ON "contact"
+  FOR INSERT
+  WITH CHECK (
+    (
+      coalesce(get_my_claim('purchasing_create')::boolean,false) OR
+      coalesce(get_my_claim('sales_create')::boolean,false) OR
+      coalesce(get_my_claim('users_create')::boolean,false)
+    ) AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+);
+
+CREATE POLICY "Suppliers with purchasing_update can create contacts from their organization" ON "contact"
+  FOR INSERT
+  WITH CHECK (
+    coalesce(get_my_claim('purchasing_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"supplier"'::jsonb 
+    AND (
+      id IN (
+        SELECT "contactId" FROM "supplierContact" WHERE "supplierId" IN (
+          SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
+        )
+      )
+    )
+  );
+
+CREATE POLICY "Customers with sales_update can create contacts from their organization" ON "contact"
+  FOR INSERT
+  WITH CHECK (
+    coalesce(get_my_claim('sales_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"customer"'::jsonb 
+    AND (
+      id IN (
+        SELECT "contactId" FROM "customerContact" WHERE "customerId" IN (
+          SELECT "customerId" FROM "customerAccount" WHERE id::uuid = auth.uid()
+        )
+      )
+    )
+  );
+
+CREATE POLICY "Employees with purchasing_update can update supplier contacts" ON "contact"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('purchasing_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+    AND id IN (
+      SELECT "contactId" FROM "supplierContact"
+    )
+  );
+
+CREATE POLICY "Suppliers with purchasing_update can update contacts from their organization" ON "contact"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('purchasing_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"supplier"'::jsonb 
+    AND (
+      id IN (
+        SELECT "contactId" FROM "supplierContact" WHERE "supplierId" IN (
+          SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
+        )
+      )
+    )
+  );
+
+CREATE POLICY "Employees with sales_update can update customer contacts" ON "contact"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('purchasing_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+    AND id IN (
+      SELECT "contactId" FROM "customerContact"
+    )
+  );
+
+CREATE POLICY "Customers with sales_update can update contacts from their organization" ON "contact"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('sales_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"customer"'::jsonb 
+    AND (
+      id IN (
+        SELECT "contactId" FROM "customerContact" WHERE "customerId" IN (
+          SELECT "customerId" FROM "customerAccount" WHERE id::uuid = auth.uid()
+        )
+      )
+    )
+  );
+
+CREATE POLICY "Employees with purchasing_delete can delete supplier contacts" ON "contact"
+  FOR DELETE
+  USING (
+    coalesce(get_my_claim('purchasing_delete')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+    AND id IN (
+      SELECT "contactId" FROM "supplierContact"
+    )
+  );
+
+CREATE POLICY "Suppliers with purchasing_delete can delete contacts from their organization" ON "contact"
+  FOR DELETE
+  USING (
+    coalesce(get_my_claim('purchasing_delete')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"supplier"'::jsonb 
+    AND (
+      id IN (
+        SELECT "contactId" FROM "supplierContact" WHERE "supplierId" IN (
+          SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
+        )
+      )
+    )
+  );
+
+CREATE POLICY "Employees with sales_delete can delete customer contacts" ON "contact"
+  FOR DELETE
+  USING (
+    coalesce(get_my_claim('sales_delete')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+    AND id IN (
+      SELECT "contactId" FROM "customerContact"
+    )
+  );
+
+CREATE POLICY "Customers with sales_delete can delete contacts from their organization" ON "contact"
+  FOR DELETE
+  USING (
+    coalesce(get_my_claim('sales_delete')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"customer"'::jsonb 
+    AND (
+      id IN (
+        SELECT "contactId" FROM "customerContact" WHERE "customerId" IN (
+          SELECT "customerId" FROM "customerAccount" WHERE id::uuid = auth.uid()
+        )
+      )
+    )
+  );
+
+-- customerType
+
+ALTER TABLE "customerType" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Employees with sales_view can view customer types" ON "customerType"
+  FOR SELECT
+  USING (coalesce(get_my_claim('sales_view')::boolean, false) = true AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+CREATE POLICY "Employees with sales_create can create customer types" ON "customerType"
+  FOR INSERT
+  WITH CHECK (coalesce(get_my_claim('sales_create')::boolean,false) AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+CREATE POLICY "Employees with sales_update can update customer types" ON "customerType"
+  FOR UPDATE
+  USING (coalesce(get_my_claim('sales_update')::boolean,false) AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+CREATE POLICY "Employees with sales_delete can delete customer types" ON "customerType"
+  FOR DELETE
+  USING (coalesce(get_my_claim('sales_delete')::boolean, false) = true AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+-- customer
+
+ALTER TABLE "customer" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Employees with sales_view can view customer" ON "customer"
+  FOR SELECT
+  USING (coalesce(get_my_claim('sales_view')::boolean, false) = true AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+CREATE POLICY "Customers with sales_view can their own organization" ON "customer"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('sales_view')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"customer"'::jsonb 
+    AND id IN (
+      SELECT "customerId" FROM "customerAccount" WHERE id::uuid = auth.uid()
+    )
+  );
+
+CREATE POLICY "Employees with sales_create can create customers" ON "customer"
+  FOR INSERT
+  WITH CHECK (coalesce(get_my_claim('sales_create')::boolean,false) AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+CREATE POLICY "Employees with sales_update can update customers" ON "customer"
+  FOR UPDATE
+  USING (coalesce(get_my_claim('sales_update')::boolean,false) AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+CREATE POLICY "Customers with sales_update can their own organization" ON "customer"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('sales_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"customer"'::jsonb 
+    AND id IN (
+      SELECT "customerId" FROM "customerAccount" WHERE id::uuid = auth.uid()
+    )
+  );
+
+CREATE POLICY "Employees with sales_delete can delete customers" ON "customer"
+  FOR DELETE
+  USING (coalesce(get_my_claim('sales_delete')::boolean, false) = true AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+-- customerContact
+
+ALTER TABLE "customerContact" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Employees with sales_view can view customer contact" ON "customerContact"
+  FOR SELECT
+  USING (coalesce(get_my_claim('sales_view')::boolean, false) = true AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+CREATE POLICY "Customers with sales_view can their own customer contacts" ON "customerContact"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('sales_view')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"customer"'::jsonb 
+    AND "customerId" IN (
+      SELECT "customerId" FROM "customerAccount" WHERE id::uuid = auth.uid()
+    )
+  );
+
+CREATE POLICY "Employees with sales_create can create customer contacts" ON "customerContact"
+  FOR INSERT
+  WITH CHECK (coalesce(get_my_claim('sales_create')::boolean,false) AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+CREATE POLICY "Customers with sales_create can create customer contacts" ON "customerContact"
+  FOR INSERT
+  WITH CHECK (coalesce(get_my_claim('sales_create')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"customer"'::jsonb 
+    AND "customerId" IN (
+      SELECT "customerId" FROM "customerAccount" WHERE id::uuid = auth.uid()
+    )
+  );
+
+CREATE POLICY "Employees with sales_update can update customer contacts" ON "customerContact"
+  FOR UPDATE
+  USING (coalesce(get_my_claim('sales_update')::boolean,false) AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+CREATE POLICY "Customers with sales_update can update their customer contacts" ON "customerContact"
+  FOR UPDATE
+  USING (coalesce(get_my_claim('sales_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"customer"'::jsonb 
+    AND "customerId" IN (
+      SELECT "customerId" FROM "customerAccount" WHERE id::uuid = auth.uid()
+    )
+  );
+
+CREATE POLICY "Employees with sales_delete can delete customer contacts" ON "customerContact"
+  FOR DELETE
+  USING (coalesce(get_my_claim('sales_delete')::boolean, false) = true AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+
+-- supplierType
+
+ALTER TABLE "supplierType" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Employees with purchasing_view can view supplier types" ON "supplierType"
+  FOR SELECT
+  USING (coalesce(get_my_claim('purchasing_view')::boolean, false) = true AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+CREATE POLICY "Employees with purchasing_create can create supplier types" ON "supplierType"
+  FOR INSERT
+  WITH CHECK (coalesce(get_my_claim('purchasing_create')::boolean,false) AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+CREATE POLICY "Employees with purchasing_update can update supplier types" ON "supplierType"
+  FOR UPDATE
+  USING (coalesce(get_my_claim('purchasing_update')::boolean,false) AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+CREATE POLICY "Employees with purchasing_delete can delete supplier types" ON "supplierType"
+  FOR DELETE
+  USING (coalesce(get_my_claim('purchasing_delete')::boolean, false) = true AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+-- supplier
+
+ALTER TABLE "supplier" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Employees with purchasing_view can view supplier" ON "supplier"
+  FOR SELECT
+  USING (coalesce(get_my_claim('purchasing_view')::boolean, false) = true AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+CREATE POLICY "Suppliers with purchasing_view can their own organization" ON "supplier"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('purchasing_view')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"supplier"'::jsonb 
+    AND id IN (
+      SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
+    )
+  );
+
+CREATE POLICY "Employees with purchasing_create can create suppliers" ON "supplier"
+  FOR INSERT
+  WITH CHECK (coalesce(get_my_claim('purchasing_create')::boolean,false) AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+CREATE POLICY "Employees with purchasing_update can update suppliers" ON "supplier"
+  FOR UPDATE
+  USING (coalesce(get_my_claim('purchasing_update')::boolean,false) AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+CREATE POLICY "Suppliers with purchasing_update can their own organization" ON "supplier"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('purchasing_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"supplier"'::jsonb 
+    AND id IN (
+      SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
+    )
+  );
+
+CREATE POLICY "Employees with purchasing_delete can delete suppliers" ON "supplier"
+  FOR DELETE
+  USING (coalesce(get_my_claim('purchasing_delete')::boolean, false) = true AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+-- supplierContact
+
+ALTER TABLE "supplierContact" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Employees with purchasing_view can view supplier contact" ON "supplierContact"
+  FOR SELECT
+  USING (coalesce(get_my_claim('purchasing_view')::boolean, false) = true AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+CREATE POLICY "Suppliers with purchasing_view can their own supplier contacts" ON "supplierContact"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('purchasing_view')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"supplier"'::jsonb 
+    AND "supplierId" IN (
+      SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
+    )
+  );
+
+CREATE POLICY "Employees with purchasing_create can create supplier contacts" ON "supplierContact"
+  FOR INSERT
+  WITH CHECK (coalesce(get_my_claim('purchasing_create')::boolean,false) AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+CREATE POLICY "Suppliers with purchasing_create can create supplier contacts" ON "supplierContact"
+  FOR INSERT
+  WITH CHECK (coalesce(get_my_claim('purchasing_create')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"supplier"'::jsonb 
+    AND "supplierId" IN (
+      SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
+    )
+  );
+
+CREATE POLICY "Employees with purchasing_update can update supplier contacts" ON "supplierContact"
+  FOR UPDATE
+  USING (coalesce(get_my_claim('purchasing_update')::boolean,false) AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+CREATE POLICY "Suppliers with purchasing_update can update their supplier contacts" ON "supplierContact"
+  FOR UPDATE
+  USING (coalesce(get_my_claim('purchasing_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"supplier"'::jsonb 
+    AND "supplierId" IN (
+      SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
+    )
+  );
+
+CREATE POLICY "Employees with purchasing_delete can delete supplier contacts" ON "supplierContact"
+  FOR DELETE
+  USING (coalesce(get_my_claim('purchasing_delete')::boolean, false) = true AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+```
+
+
+
+## `notes`
+
+```sql
+CREATE TABLE "userNote" (
+  "id" TEXT NOT NULL DEFAULT xid(),
+  "userId" TEXT NOT NULL,
+  "note" TEXT NOT NULL,
+  "noteRichText" JSONB NOT NULL DEFAULT '{}'::jsonb,
+  "active" BOOLEAN NOT NULL DEFAULT true,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+  "createdBy" TEXT NOT NULL,
+  "updatedAt" TIMESTAMP WITH TIME ZONE,
+
+  CONSTRAINT "notes_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "notes_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "notes_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+ALTER TABLE "userNote" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Employees with resources_view can view notes" ON "userNote"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('resources_view')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Employees with resources_create can insert notes" ON "userNote"
+  FOR INSERT
+  WITH CHECK (   
+    coalesce(get_my_claim('resources_create')::boolean,false) 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+);
+
+CREATE POLICY "Employees with resources_update can update their own notes" ON "userNote"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('resources_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+    AND "createdBy"::uuid = auth.uid()
+  );
+
+CREATE POLICY "Employees with resources_update can delete their own notes" ON "userNote"
+  FOR DELETE
+  USING (
+    coalesce(get_my_claim('resources_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+    AND "createdBy"::uuid = auth.uid()
+  );
+
+CREATE POLICY "Employees with resources_delete can delete any note" ON "userNote"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('resources_delete')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+```
+
+
+
+## `abilities`
+
+```sql
+CREATE TABLE "ability" (
+  "id" TEXT NOT NULL DEFAULT xid(),
+  "name" TEXT NOT NULL UNIQUE,
+  "curve" JSONB NOT NULL DEFAULT '{"data":[{"id":0,"week":0,"value":50},{"id":1,"week":1,"value":80},{"id":2,"week":2,"value":90},{"id":3,"week":3,"value":100}]}'::jsonb,
+  "active" BOOLEAN NOT NULL DEFAULT true,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+  "createdBy" TEXT NOT NULL,
+  "updatedAt" TIMESTAMP WITH TIME ZONE,
+  "updatedBy" TEXT,
+
+  CONSTRAINT "abilities_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "abilities_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "abilities_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+ALTER TABLE "ability" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Employees with resources_view can view abilities" ON "ability"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('resources_view')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Employees with resources_create can insert abilities" ON "ability"
+  FOR INSERT
+  WITH CHECK (   
+    coalesce(get_my_claim('resources_create')::boolean,false) 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+);
+
+CREATE POLICY "Employees with resources_update can update abilities" ON "ability"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('resources_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Employees with resources_delete can delete abilities" ON "ability"
+  FOR DELETE
+  USING (
+    coalesce(get_my_claim('resources_delete')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE TABLE "employeeAbility" (
+  "id" TEXT NOT NULL DEFAULT xid(),
+  "employeeId" TEXT NOT NULL,
+  "abilityId" TEXT NOT NULL,
+  "active" BOOLEAN NOT NULL DEFAULT true,
+  "lastTrainingDate" DATE,
+  "trainingDays" INTEGER NOT NULL DEFAULT 0,
+  "trainingCompleted" BOOLEAN DEFAULT false,
+
+  CONSTRAINT "employeeAbilities_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "employeeAbilities_employeeId_fkey" FOREIGN KEY ("employeeId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "employeeAbilities_abilityId_fkey" FOREIGN KEY ("abilityId") REFERENCES "ability"("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+ALTER TABLE "employeeAbility" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Employees with resources_view can view employeeAbilities" ON "employeeAbility"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('resources_view')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Employees with resources_create can insert employeeAbilities" ON "employeeAbility"
+  FOR INSERT
+  WITH CHECK (   
+    coalesce(get_my_claim('resources_create')::boolean,false) 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+);
+
+CREATE POLICY "Employees with resources_update can update employeeAbilities" ON "employeeAbility"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('resources_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Employees with resources_delete can delete employeeAbilities" ON "employeeAbility"
+  FOR DELETE
+  USING (
+    coalesce(get_my_claim('resources_delete')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+```
+

@@ -1,3 +1,7 @@
+-- xid is a globally unique id generator functions. 
+-- they are 20 characters long and ordered
+-- https://github.com/modfin/pg-xid
+
 CREATE DOMAIN public.xid AS CHAR(20) CHECK (VALUE ~ '^[a-v0-9]{20}$');
 
 CREATE SEQUENCE IF NOT EXISTS public.xid_serial MINVALUE 0 MAXVALUE 16777215 CYCLE; --  ((255<<16) + (255<<8) + 255))

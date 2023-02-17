@@ -12,7 +12,6 @@ export type Ability = NonNullable<
 >[number];
 
 export type AbilityDatum = {
-  id: number;
   week: number;
   value: number;
 };

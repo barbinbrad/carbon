@@ -38,9 +38,12 @@ export async function getAbilities(
 ) {
   let query = client
     .from("ability")
-    .select(`id, name, curve, employeeAbility(user(id, fullName, avatarUrl))`, {
-      count: "exact",
-    })
+    .select(
+      `id, name, curve, shadowWeeks, employeeAbility(user(id, fullName, avatarUrl))`,
+      {
+        count: "exact",
+      }
+    )
     .eq("active", true);
 
   if (args?.name) {
@@ -57,9 +60,12 @@ export async function getAbility(
 ) {
   return client
     .from("ability")
-    .select(`id, name, curve, employeeAbility(user(id, fullName, avatarUrl))`, {
-      count: "exact",
-    })
+    .select(
+      `id, name, curve, shadowWeeks, employeeAbility(user(id, fullName, avatarUrl))`,
+      {
+        count: "exact",
+      }
+    )
     .eq("id", abilityId)
     .eq("active", true)
     .single();
@@ -274,6 +280,7 @@ export async function insertAbility(
         value: number;
       }[];
     };
+    shadowWeeks: number;
     createdBy: string;
   }
 ) {

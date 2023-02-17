@@ -1,4 +1,5 @@
 import type { NumberInputProps } from "@chakra-ui/react";
+import { FormHelperText } from "@chakra-ui/react";
 import {
   FormControl,
   FormErrorMessage,
@@ -16,10 +17,11 @@ type FormNumberProps = NumberInputProps & {
   name: string;
   label?: string;
   isRequired?: boolean;
+  helperText?: string;
 };
 
 const Number = forwardRef<HTMLInputElement, FormNumberProps>(
-  ({ name, label, isRequired, ...rest }, ref) => {
+  ({ name, label, isRequired, helperText, ...rest }, ref) => {
     const { getInputProps, error } = useField(name);
 
     return (
@@ -37,6 +39,7 @@ const Number = forwardRef<HTMLInputElement, FormNumberProps>(
             <NumberDecrementStepper />
           </NumberInputStepper>
         </NumberInput>
+        {helperText && <FormHelperText>{helperText}</FormHelperText>}
         {error && <FormErrorMessage>{error}</FormErrorMessage>}
       </FormControl>
     );

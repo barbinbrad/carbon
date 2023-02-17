@@ -12,6 +12,7 @@ import type { AbilityDatum } from "~/interfaces/Resources/types";
 
 type AbilityChartProps = {
   data: AbilityDatum[];
+  shadowWeeks: number;
   parentHeight: number;
   parentWidth: number;
   margin?: { top: number; right: number; bottom: number; left: number };
@@ -20,6 +21,7 @@ type AbilityChartProps = {
 
 const AbilityChart = ({
   data,
+  shadowWeeks,
   parentHeight,
   parentWidth,
   margin = { top: 10, right: 20, bottom: 50, left: 40 },
@@ -49,6 +51,23 @@ const AbilityChart = ({
     range: [height, 0],
     domain: [0, maxValue],
   });
+
+  const interpolateAt = (week: number) => {
+    // find the point on the data monotoneX curve that is closest to the given week
+    const index = data.findIndex((d) => d.week >= week);
+    const prev = data[index - 1];
+    const next = data[index];
+    if (!prev && !next) return 0;
+    if (!prev) return next.value;
+    if (!next) return prev.value;
+    const ratio = (week - prev.week) / (next.week - prev.week);
+    return prev.value + (next.value - prev.value) * ratio;
+  };
+
+  const shadowData: AbilityDatum[] = [
+    ...data.filter((d) => d.week <= shadowWeeks),
+    { week: shadowWeeks, value: interpolateAt(shadowWeeks) },
+  ];
 
   return (
     <svg ref={svgRef} width={parentWidth} height={parentHeight}>
@@ -96,7 +115,7 @@ const AbilityChart = ({
               id="diagonalLines"
               height={6}
               width={6}
-              stroke="var(--chakra-colors-lime-500)"
+              stroke="var(--chakra-colors-gray-500)"
               strokeWidth={1}
               orientation={["diagonal"]}
             />
@@ -109,9 +128,10 @@ const AbilityChart = ({
               fill="url(#fill)"
               curve={curveNatural}
             />
+
             <AreaClosed
               stroke="transparent"
-              data={data}
+              data={shadowData}
               yScale={yScale}
               x={(d) => xScale(x(d))}
               y={(d) => yScale(y(d))}
@@ -134,10 +154,19 @@ const AbilityChart = ({
           strokeWidth={2}
           curve={curveNatural}
         />
+        <LinePath
+          data={shadowData}
+          y={(d) => yScale(y(d))}
+          x={(d) => xScale(x(d))}
+          stroke="var(--chakra-colors-gray-900)"
+          strokeOpacity="0.5"
+          strokeWidth={2}
+          curve={curveNatural}
+        />
         {!condensed &&
           data.map((d, index) => (
             <Drag
-              key={`drag-${d.id}`}
+              key={`drag-${index}`}
               width={width}
               height={height}
               x={xScale(x(d))}
@@ -180,7 +209,7 @@ const AbilityChart = ({
             >
               {({ dragStart, dragEnd, dragMove, isDragging, x, y, dx, dy }) => (
                 <circle
-                  key={`dot-${d.id}`}
+                  key={`dot-${index}`}
                   cx={x}
                   cy={y}
                   r={isDragging ? 10 : 6}

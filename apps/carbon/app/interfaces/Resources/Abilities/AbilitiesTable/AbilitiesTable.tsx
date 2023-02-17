@@ -26,6 +26,7 @@ const AbilitiesTable = memo(({ data, count }: AbilitiesTableProps) => {
     // @ts-ignore
     weeks: row.curve?.data.at(-1).week,
     curve: row.curve as { data: AbilityDatum[] },
+    shadowWeeks: row.shadowWeeks,
     employees: Array.isArray(row.employeeAbility)
       ? row.employeeAbility.reduce<
           { name: string; avatarUrl: string | null }[]
@@ -93,6 +94,7 @@ const AbilitiesTable = memo(({ data, count }: AbilitiesTableProps) => {
               parentHeight={33}
               parentWidth={200}
               data={row.original.curve.data}
+              shadowWeeks={row.original.shadowWeeks}
               margin={{ top: 0, right: 0, bottom: 0, left: 2 }}
             />
           ),

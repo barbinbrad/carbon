@@ -11,6 +11,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
+import { useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import { Hidden, Input, Number, Select, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
@@ -20,6 +21,7 @@ type AbilityFormProps = {
   initialValues: {
     name: string;
     startingPoint: number;
+    shadowWeeks: number;
     weeks: number;
   };
 };
@@ -28,6 +30,11 @@ const AbilityForm = ({ initialValues }: AbilityFormProps) => {
   const permissions = usePermissions();
   const navigate = useNavigate();
   const onClose = () => navigate(-1);
+  const [maxShadowWeeks, setMaxShadowWeeks] = useState(initialValues.weeks);
+
+  const onWeekChange = (_: string, value: number) => {
+    setMaxShadowWeeks(value);
+  };
 
   const isDisabled = !permissions.can("create", "resources");
 
@@ -58,9 +65,17 @@ const AbilityForm = ({ initialValues }: AbilityFormProps) => {
               />
               <Number
                 name="weeks"
-                label="Weeks to Efficiency"
+                label="Time to Efficiency (Weeks)"
+                onChange={onWeekChange}
                 min={0}
                 max={52}
+              />
+              <Number
+                name="shadowWeeks"
+                label="Time Shadowing (Weeks)"
+                helperText="Non-productive time spent shadowing another employee"
+                min={0}
+                max={maxShadowWeeks}
               />
               {/* <Employees
                 name="selections"

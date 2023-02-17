@@ -4,13 +4,20 @@ import { zfd } from "zod-form-data";
 import { DataType } from "~/interfaces/Users/types";
 
 export const abilityValidator = withZod(
-  z.object({
-    name: z.string().min(1, { message: "Name is required" }),
-    startingPoint: zfd.numeric(
-      z.number().min(0, { message: "Learning curve is required" })
-    ),
-    weeks: zfd.numeric(z.number().min(0, { message: "Weeks is required" })),
-  })
+  z
+    .object({
+      name: z.string().min(1, { message: "Name is required" }),
+      startingPoint: zfd.numeric(
+        z.number().min(0, { message: "Learning curve is required" })
+      ),
+      weeks: zfd.numeric(z.number().min(0, { message: "Weeks is required" })),
+      shadowWeeks: zfd.numeric(
+        z.number().min(0, { message: "Shadow is required" })
+      ),
+    })
+    .refine((schema) => schema.shadowWeeks <= schema.weeks, {
+      message: "name is required when you send color on request",
+    })
 );
 
 export const abilityTitleValidator = withZod(

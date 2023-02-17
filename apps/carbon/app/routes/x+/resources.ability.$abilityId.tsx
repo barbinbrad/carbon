@@ -15,11 +15,11 @@ import {
 import type { LoaderArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useNavigate } from "@remix-run/react";
 import { ParentSize } from "@visx/responsive";
 import { useState } from "react";
 import { IoMdClose } from "react-icons/io";
-import { MdEdit } from "react-icons/md";
+import { MdEdit, MdOutlineArrowBackIos } from "react-icons/md";
 import { ValidatedForm } from "remix-validated-form";
 import { Hidden, Input, Submit } from "~/components/Form";
 import { AbilityChart } from "~/interfaces/Resources/Abilities";
@@ -56,18 +56,24 @@ export async function loader({ request, params }: LoaderArgs) {
 
   return json({
     ability: ability.data,
-    weeks: 4,
+    weeks:
+      // @ts-ignore
+      ability.data.curve?.data[ability.data.curve?.data.length - 1].week ?? 0,
   });
 }
 
 export default function AbilitiesRoute() {
   const { ability, weeks } = useLoaderData<typeof loader>();
+  const navigate = useNavigate();
   const editingTitle = useDisclosure();
   const [data, setData] = useState<AbilityDatum[]>(
     // @ts-ignore
     ability.curve?.data ?? []
   );
   const [time, setTime] = useState<number>(weeks);
+  const [controlledShadowWeeks, setControlledShadowWeeks] = useState<number>(
+    ability.shadowWeeks ?? 0
+  );
 
   const updateWeeks = (_: string, newWeeks: number) => {
     const scale = 1 + (newWeeks - time) / time;
@@ -78,6 +84,10 @@ export default function AbilitiesRoute() {
       }))
     );
     setTime(newWeeks);
+  };
+
+  const updateShadowTime = (_: string, newShadowTime: number) => {
+    setControlledShadowWeeks(newShadowTime);
   };
 
   return (
@@ -95,6 +105,12 @@ export default function AbilitiesRoute() {
             >
               <Hidden name="id" />
               <HStack spacing={2}>
+                <IconButton
+                  aria-label="Back"
+                  variant="ghost"
+                  icon={<MdOutlineArrowBackIos />}
+                  onClick={() => navigate("/x/resources/abilities")}
+                />
                 <Input
                   autoFocus
                   name="title"
@@ -112,13 +128,39 @@ export default function AbilitiesRoute() {
               </HStack>
             </ValidatedForm>
           ) : (
-            <HStack spacing={1} onClick={editingTitle.onOpen}>
+            <HStack spacing={2}>
+              <IconButton
+                aria-label="Back"
+                variant="ghost"
+                icon={<MdOutlineArrowBackIos />}
+                onClick={() => navigate("/x/resources/abilities")}
+              />
               <Heading size="md">{ability.name}</Heading>
-              <IconButton aria-label="Edit" variant="ghost" icon={<MdEdit />} />
+              <IconButton
+                aria-label="Edit"
+                variant="ghost"
+                icon={<MdEdit />}
+                onClick={editingTitle.onOpen}
+              />
             </HStack>
           )}
 
           <HStack spacing={2}>
+            <Text fontSize="sm">Weeks Shadowing:</Text>
+            <NumberInput
+              maxW="100px"
+              size="sm"
+              min={0}
+              max={time}
+              value={controlledShadowWeeks}
+              onChange={updateShadowTime}
+            >
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
             <Text fontSize="sm">Weeks to Learn:</Text>
             <NumberInput
               maxW="100px"
@@ -151,6 +193,7 @@ export default function AbilitiesRoute() {
                 parentHeight={height}
                 parentWidth={width}
                 data={data}
+                shadowWeeks={controlledShadowWeeks}
                 onDataChange={setData}
               />
             )}

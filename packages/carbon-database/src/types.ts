@@ -17,6 +17,7 @@ export interface Database {
           updatedBy: string | null
           id: string
           curve: Json
+          shadowWeeks: number
           active: boolean
           createdAt: string
         }
@@ -27,6 +28,7 @@ export interface Database {
           updatedBy?: string | null
           id?: string
           curve?: Json
+          shadowWeeks?: number
           active?: boolean
           createdAt?: string
         }
@@ -37,6 +39,7 @@ export interface Database {
           updatedBy?: string | null
           id?: string
           curve?: Json
+          shadowWeeks?: number
           active?: boolean
           createdAt?: string
         }

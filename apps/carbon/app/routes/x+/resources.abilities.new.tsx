@@ -44,11 +44,12 @@ export async function action({ request }: ActionArgs) {
     return validationError(validation.error);
   }
 
-  const { name, startingPoint, weeks } = validation.data;
+  const { name, startingPoint, shadowWeeks, weeks } = validation.data;
 
   const createAbility = await insertAbility(client, {
     name,
     curve: makeCurve(startingPoint, weeks),
+    shadowWeeks,
     createdBy: userId,
   });
   if (createAbility.error) {
@@ -96,6 +97,7 @@ export default function NewAbilityRoute() {
   const initialValues = {
     name: "",
     startingPoint: 85,
+    shadowWeeks: 0,
     weeks: 4,
   };
 

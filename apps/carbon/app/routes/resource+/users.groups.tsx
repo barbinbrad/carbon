@@ -7,11 +7,22 @@ import { flash } from "~/services/session";
 import { error } from "~/utils/result";
 
 export async function loader({ request }: LoaderArgs) {
-  const authorized = await requirePermissions(request, {
+  const { client } = await requirePermissions(request, {
     role: "employee",
   });
 
-  const groups = await authorized.client.from("groups_view").select("*");
+  const url = new URL(request.url);
+  const searchParams = new URLSearchParams(url.search);
+  const type = searchParams.get("type");
+
+  const query = client.from("groups_view").select("*");
+
+  if (type === "employee") query.eq("isEmployeeTypeGroup", true);
+  if (type === "customer") query.eq("isCustomerOrgGroup", true);
+  if (type === "supplier") query.eq("isSupplierOrgGroup", true);
+
+  const groups = await query;
+
   if (groups.error) {
     return json(
       { groups: [], error: groups.error },

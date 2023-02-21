@@ -40,6 +40,7 @@ export interface UserSelectProps {
   selections?: SelectionItemInterface[];
   selectionsMaxHeight?: string | number;
   testID?: string;
+  type?: "employee" | "supplier" | "customer";
   usersOnly?: boolean;
   value?: string[] | string; // Will be set when used as a controlled input
   width?: number;

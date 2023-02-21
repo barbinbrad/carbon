@@ -44,7 +44,7 @@ const UserSelect = (props: UserSelectProps) => {
     <UserSelectContext.Provider value={state}>
       {label && <FormLabel>{label}</FormLabel>}
       <Container ref={containerRef} width={width} testID={testID}>
-        {!readOnly && (
+        {!(readOnly && isMulti) && (
           <Combobox>
             <Input />
             {dropdown.isOpen && (

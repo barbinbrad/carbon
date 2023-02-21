@@ -12,36 +12,38 @@ import type {
   UserSelectProps,
 } from "../Selectors/UserSelect/types";
 
-export type UserProps = {
+export type EmployeesProps = {
   name: string;
   label?: string;
   helperText?: string;
 } & UserSelectProps;
 
-const User = ({ name, label, type, helperText, ...props }: UserProps) => {
+const Employees = ({ name, label, helperText, ...props }: EmployeesProps) => {
   const { error, defaultValue, validate } = useField(name);
-  const [selection, setSelection] = useState<string>(defaultValue);
+  const [selections, setSelections] = useState<string[]>(defaultValue);
 
   const handleChange = (items: SelectionItemInterface[]) => {
-    if (items.length > 0) {
-      const item = items[0];
-      setSelection(item.id);
-    } else {
-      setSelection("");
-    }
+    setSelections(items.map((item) => item.id));
     validate();
   };
 
   return (
     <FormControl isInvalid={!!error}>
       {label && <FormLabel htmlFor={name}>{label}</FormLabel>}
-      <input type="hidden" name={name} value={selection} />
+      {selections.map((selection, index) => (
+        <input
+          key={`${name}[${index}]`}
+          type="hidden"
+          name={`${name}[${index}]`}
+          value={selection}
+        />
+      ))}
       <UserSelect
         {...props}
-        type={type}
+        type="employee"
         usersOnly
-        isMulti={false}
-        value={selection}
+        isMulti
+        value={selections}
         onChange={handleChange}
       />
       {helperText && <FormHelperText>{helperText}</FormHelperText>}
@@ -50,4 +52,4 @@ const User = ({ name, label, type, helperText, ...props }: UserProps) => {
   );
 };
 
-export default User;
+export default Employees;

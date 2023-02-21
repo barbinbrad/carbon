@@ -14,16 +14,20 @@ export const abilityValidator = withZod(
       shadowWeeks: zfd.numeric(
         z.number().min(0, { message: "Shadow is required" })
       ),
+      employees: z
+        .array(z.string().min(36, { message: "Invalid selection" }))
+        .min(1, { message: "Group members are required" })
+        .optional(),
     })
     .refine((schema) => schema.shadowWeeks <= schema.weeks, {
       message: "name is required when you send color on request",
     })
 );
 
-export const abilityTitleValidator = withZod(
+export const abilityNameValidator = withZod(
   z.object({
     id: z.string().min(20),
-    title: z.string().min(1, { message: "Title is required" }),
+    name: z.string().min(1, { message: "Name is required" }),
   })
 );
 
@@ -59,6 +63,15 @@ export const attributeCategoryValidator = withZod(
   })
 );
 
+export const employeeAbilityValidator = withZod(
+  z.object({
+    employeeId: z.string().min(36, { message: "Employee is required" }),
+    trainingStatus: z.string().min(1, { message: "Status is required" }),
+    trainingPercent: zfd.numeric(z.number().optional()),
+    trainingDays: zfd.numeric(z.number().optional()),
+  })
+);
+
 export const noteValidator = withZod(
   z.object({
     id: zfd.text(z.string().optional()),
@@ -71,7 +84,7 @@ export const updateAbilityValidator = withZod(
     id: z.string().min(20),
     data: z
       .string()
-      .startsWith("{", { message: "Invalid JSON" })
-      .endsWith("}", { message: "Invalid JSON" }),
+      .startsWith("[", { message: "Invalid JSON" })
+      .endsWith("]", { message: "Invalid JSON" }),
   })
 );

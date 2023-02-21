@@ -1,6 +1,7 @@
 import { useColor } from "@carbon/react";
 import {
   Box,
+  Button,
   Heading,
   HStack,
   IconButton,
@@ -12,26 +13,30 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import type { LoaderArgs } from "@remix-run/node";
+import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useLoaderData, useNavigate } from "@remix-run/react";
+import { Link, Outlet, useLoaderData, useNavigate } from "@remix-run/react";
 import { ParentSize } from "@visx/responsive";
 import { useState } from "react";
-import { IoMdClose } from "react-icons/io";
+import { IoMdAdd, IoMdClose } from "react-icons/io";
 import { MdEdit, MdOutlineArrowBackIos } from "react-icons/md";
-import { ValidatedForm } from "remix-validated-form";
+import { ValidatedForm, validationError } from "remix-validated-form";
 import { Hidden, Input, Submit } from "~/components/Form";
-import { AbilityChart } from "~/interfaces/Resources/Abilities";
+import {
+  AbilityChart,
+  AbilityEmployeesTable,
+} from "~/interfaces/Resources/Abilities";
 import type { AbilityDatum } from "~/interfaces/Resources/types";
 import { requirePermissions } from "~/services/auth";
 import {
-  abilityTitleValidator,
+  abilityNameValidator,
   getAbility,
+  updateAbility,
   updateAbilityValidator,
 } from "~/services/resources";
 import { flash } from "~/services/session";
-import { error } from "~/utils/result";
+import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderArgs) {
   const { client } = await requirePermissions(request, {
@@ -60,6 +65,51 @@ export async function loader({ request, params }: LoaderArgs) {
       // @ts-ignore
       ability.data.curve?.data[ability.data.curve?.data.length - 1].week ?? 0,
   });
+}
+
+export async function action({ request, params }: ActionArgs) {
+  const { client } = await requirePermissions(request, {
+    update: "resources",
+  });
+
+  const { abilityId } = params;
+  if (!abilityId) {
+    throw new Error("Ability ID not found");
+  }
+
+  const formData = await request.formData();
+
+  if (formData.get("intent") === "name") {
+    const validation = await abilityNameValidator.validate(formData);
+    if (validation.error) {
+      return validationError(validation.error);
+    }
+
+    const { name } = validation.data;
+    const updateAbilityName = await updateAbility(client, abilityId, {
+      name,
+    });
+    if (updateAbilityName.error) {
+      return redirect(
+        `/x/resources/ability/${abilityId}`,
+        await flash(
+          request,
+          error(updateAbilityName.error, "Failed to update ability name")
+        )
+      );
+    }
+
+    return redirect(
+      `/x/resources/ability/${abilityId}`,
+      await flash(request, success("Ability name updated"))
+    );
+  }
+
+  if (formData.get("intent") === "curve") {
+    console.log("update curve");
+  }
+
+  return null;
 }
 
 export default function AbilitiesRoute() {
@@ -92,18 +142,20 @@ export default function AbilitiesRoute() {
 
   return (
     <>
-      <Box bg={useColor("white")} w="full">
+      <Box bg={useColor("white")} w="full" position="relative">
         <HStack w="full" justifyContent="space-between" p={4}>
           {editingTitle.isOpen ? (
             <ValidatedForm
-              validator={abilityTitleValidator}
+              validator={abilityNameValidator}
               method="post"
               defaultValues={{
                 id: ability.id,
-                title: ability.name,
+                name: ability.name,
               }}
+              onSubmit={editingTitle.onClose}
             >
               <Hidden name="id" />
+              <Hidden name="intent" value="name" />
               <HStack spacing={2}>
                 <IconButton
                   aria-label="Back"
@@ -113,7 +165,7 @@ export default function AbilitiesRoute() {
                 />
                 <Input
                   autoFocus
-                  name="title"
+                  name="name"
                   variant="unstyled"
                   fontWeight="bold"
                   fontSize="xl"
@@ -178,15 +230,16 @@ export default function AbilitiesRoute() {
             <ValidatedForm
               validator={updateAbilityValidator}
               method="post"
-              action="/x/resources/ability/$abilityId"
+              action={`/x/resources/ability/${ability.id}`}
             >
-              <Hidden name="id" value="1" />
+              <Hidden name="id" value={ability.id} />
+              <Hidden name="intent" value="curve" />
               <Hidden name="data" value={JSON.stringify(data)} />
               <Submit size="sm">Save</Submit>
             </ValidatedForm>
           </HStack>
         </HStack>
-        <Box w="full" h="50vh">
+        <Box w="full" h="33vh">
           <ParentSize>
             {({ height, width }) => (
               <AbilityChart
@@ -199,7 +252,23 @@ export default function AbilitiesRoute() {
             )}
           </ParentSize>
         </Box>
+        <Box position="absolute" bottom={-4} right={4} zIndex={3}>
+          <Button
+            as={Link}
+            to="employee/new"
+            colorScheme="brand"
+            leftIcon={<IoMdAdd />}
+          >
+            New Employee
+          </Button>
+        </Box>
       </Box>
+      <AbilityEmployeesTable
+        employees={ability.employeeAbility ?? []}
+        weeks={weeks}
+        shadowWeeks={ability.shadowWeeks}
+      />
+      <Outlet />
     </>
   );
 }

@@ -4,7 +4,7 @@ import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import { usePermissions } from "~/hooks";
-import { PeopleTable, PeopleTableFilters } from "~/interfaces/Resources";
+import { PeopleTable, PeopleTableFilters } from "~/interfaces/Resources/People";
 import { requirePermissions } from "~/services/auth";
 import { getAttributeCategories, getPeople } from "~/services/resources";
 import { flash } from "~/services/session";

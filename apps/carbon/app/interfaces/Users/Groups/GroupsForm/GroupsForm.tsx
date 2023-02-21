@@ -29,6 +29,8 @@ const GroupForm = ({ initialValues }: GroupFormProps) => {
   const navigate = useNavigate();
   const onClose = () => navigate(-1);
 
+  console.log(initialValues.selections);
+
   const isEditing = initialValues.id !== undefined;
   const isDisabled = isEditing
     ? !permissions.can("update", "users")

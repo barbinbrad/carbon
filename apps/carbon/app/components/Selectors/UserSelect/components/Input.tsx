@@ -15,7 +15,7 @@ import useUserSelectContext from "../provider";
 const SelectInput = () => {
   const {
     aria: { inputProps },
-    innerProps: { disabled, isMulti, placeholder, testID },
+    innerProps: { disabled, isMulti, placeholder, readOnly, testID },
     inputValue,
     instanceId,
     loading,
@@ -45,8 +45,8 @@ const SelectInput = () => {
         {...inputProps}
         id={`${instanceId}:UserSelectionInput:searchInput:${testID}`}
         data-testid={`UserSelectionInput:searchInput:${testID}`}
-        readOnly={disabled}
-        isDisabled={disabled}
+        readOnly={disabled || readOnly}
+        isDisabled={disabled || readOnly}
         onBlur={onInputBlur}
         onChange={onInputChange}
         onFocus={onInputFocus}

@@ -1,18 +1,18 @@
 import { ActionMenu } from "@carbon/react";
 import { AvatarGroup, Flex, MenuItem, VisuallyHidden } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
-import { ParentSize } from "@visx/responsive";
-import { memo } from "react";
+import type { ColumnDef } from "@tanstack/react-table";
+import { memo, useMemo } from "react";
 import { BsPencilSquare } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { Avatar } from "~/components";
 import { Table } from "~/components";
 import { usePermissions } from "~/hooks";
-import type { Ability, AbilityDatum } from "~/interfaces/Resources/types";
+import type { Abilities, AbilityDatum } from "~/interfaces/Resources/types";
 import AbilityChart from "../AbilityChart";
 
 type AbilitiesTableProps = {
-  data: Ability[];
+  data: Abilities;
   count: number;
 };
 
@@ -56,77 +56,81 @@ const AbilitiesTable = memo(({ data, count }: AbilitiesTableProps) => {
       : [],
   }));
 
+  const columns = useMemo<ColumnDef<typeof rows[number]>[]>(() => {
+    return [
+      {
+        accessorKey: "name",
+        header: "Ability",
+        cell: (item) => item.getValue(),
+      },
+      {
+        header: "Employees",
+        // accessorKey: undefined, // makes the column unsortable
+        cell: ({ row }) => (
+          <AvatarGroup max={5} size="sm" spacing={-2}>
+            {row.original.employees.map((employee, index: number) => (
+              <Avatar
+                key={index}
+                name={employee.name ?? undefined}
+                title={employee.name ?? undefined}
+                path={employee.avatarUrl}
+              />
+            ))}
+          </AvatarGroup>
+        ),
+      },
+      {
+        header: "Time to Learn",
+        cell: ({ row }) => `${row.original.weeks} weeks`,
+      },
+      {
+        header: "Efficiency Curve",
+        size: 200,
+        cell: ({ row }) => (
+          <AbilityChart
+            parentHeight={33}
+            parentWidth={200}
+            data={row.original.curve.data}
+            shadowWeeks={row.original.shadowWeeks}
+            margin={{ top: 0, right: 0, bottom: 0, left: 2 }}
+          />
+        ),
+      },
+      {
+        accessorKey: "id",
+        header: () => <VisuallyHidden>Actions</VisuallyHidden>,
+        cell: ({ row }) => (
+          <Flex justifyContent="end">
+            <ActionMenu>
+              <MenuItem
+                icon={<BsPencilSquare />}
+                onClick={() => {
+                  navigate(`/x/resources/ability/${row.original.id}`);
+                }}
+              >
+                Edit Ability
+              </MenuItem>
+              <MenuItem
+                isDisabled={!permissions.can("delete", "resources")}
+                icon={<IoMdTrash />}
+                onClick={() => {
+                  navigate(`/x/resources/ability/delete/${row.original.id}`);
+                }}
+              >
+                Delete Ability
+              </MenuItem>
+            </ActionMenu>
+          </Flex>
+        ),
+      },
+    ];
+  }, [navigate, permissions]);
+
   return (
     <Table<typeof rows[number]>
       data={rows}
       count={count}
-      columns={[
-        {
-          accessorKey: "name",
-          header: "Ability",
-          cell: (item) => item.getValue(),
-        },
-        {
-          header: "Employees",
-          // accessorKey: undefined, // makes the column unsortable
-          cell: ({ row }) => (
-            <AvatarGroup max={5} size="sm" spacing={-2}>
-              {row.original.employees.map((employee, index: number) => (
-                <Avatar
-                  key={index}
-                  name={employee.name ?? undefined}
-                  title={employee.name ?? undefined}
-                  path={employee.avatarUrl}
-                />
-              ))}
-            </AvatarGroup>
-          ),
-        },
-        {
-          header: "Time to Learn",
-          cell: ({ row }) => `${row.original.weeks} weeks`,
-        },
-        {
-          header: "Efficiency Curve",
-          size: 200,
-          cell: ({ row }) => (
-            <AbilityChart
-              parentHeight={33}
-              parentWidth={200}
-              data={row.original.curve.data}
-              shadowWeeks={row.original.shadowWeeks}
-              margin={{ top: 0, right: 0, bottom: 0, left: 2 }}
-            />
-          ),
-        },
-        {
-          accessorKey: "id",
-          header: () => <VisuallyHidden>Actions</VisuallyHidden>,
-          cell: ({ row }) => (
-            <Flex justifyContent="end">
-              <ActionMenu>
-                <MenuItem
-                  icon={<BsPencilSquare />}
-                  onClick={() => {
-                    navigate(`/x/resources/ability/${row.original.id}`);
-                  }}
-                >
-                  Edit Ability
-                </MenuItem>
-                <MenuItem
-                  isDisabled={!permissions.can("delete", "resources")}
-                  icon={<IoMdTrash />}
-                  onClick={() => {
-                    navigate(`/x/resources/ability/delete/${row.original.id}`);
-                  }}
-                >
-                  Delete Ability
-                </MenuItem>
-              </ActionMenu>
-            </Flex>
-          ),
-        },
-      ]}
+      columns={columns}
       onRowClick={(row) => {
         navigate(`/x/resources/ability/${row.id}`);
       }}

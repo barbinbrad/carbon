@@ -8,7 +8,8 @@ import {
   PersonHeader,
   PersonNotes,
   PersonTabs,
-} from "~/interfaces/Resources";
+  PersonSchedule,
+} from "~/interfaces/Resources/Person";
 import {
   getAccount,
   getPrivateAttributes,
@@ -83,8 +84,9 @@ export default function PersonRoute() {
           publicAttributes={publicAttributes}
           privateAttributes={privateAttributes}
         />
-        <PersonAbilities />
+        <PersonSchedule />
         <PersonNotes notes={notes} />
+        <PersonAbilities />
       </Grid>
     </Box>
   );

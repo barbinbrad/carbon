@@ -7,7 +7,12 @@ import { assertIsPost } from "~/utils/http";
 import { error, success } from "~/utils/result";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
-import { abilityValidator, insertAbility } from "~/services/resources";
+import {
+  abilityValidator,
+  deleteAbility,
+  insertAbility,
+  insertEmployeeAbilities,
+} from "~/services/resources";
 
 function makeCurve(startingPoint: number, weeks: number) {
   return {
@@ -44,7 +49,8 @@ export async function action({ request }: ActionArgs) {
     return validationError(validation.error);
   }
 
-  const { name, startingPoint, shadowWeeks, weeks } = validation.data;
+  const { name, startingPoint, shadowWeeks, weeks, employees } =
+    validation.data;
 
   const createAbility = await insertAbility(client, {
     name,
@@ -62,30 +68,35 @@ export async function action({ request }: ActionArgs) {
     );
   }
 
-  // const abilityId = createAbility.data[0]?.id;
-  // if (!abilityId) {
-  //   return json(
-  //     {},
-  //     await flash(request, error(createAbility, "Failed to insert ability"))
-  //   );
-  // }
+  const abilityId = createAbility.data[0]?.id;
+  if (!abilityId) {
+    return json(
+      {},
+      await flash(request, error(createAbility, "Failed to insert ability"))
+    );
+  }
 
-  // const insertAbilityUsers = await upsertAbilityUsers(
-  //   client,
-  //   abilityId,
-  //   selections
-  // );
+  if (employees) {
+    const createEmployeeAbilities = await insertEmployeeAbilities(
+      client,
+      abilityId,
+      employees
+    );
 
-  // if (insertAbilityUsers.error) {
-  //   await deleteAbility(client, abilityId);
-  //   return json(
-  //     {},
-  //     await flash(
-  //       request,
-  //       error(insertAbilityUsers.error, "Failed to insert ability members")
-  //     )
-  //   );
-  // }
+    if (createEmployeeAbilities.error) {
+      await deleteAbility(client, abilityId, true);
+      return json(
+        {},
+        await flash(
+          request,
+          error(
+            createEmployeeAbilities.error,
+            "Failed to insert ability members"
+          )
+        )
+      );
+    }
+  }
 
   return redirect(
     "/x/resources/abilities",
@@ -99,6 +110,7 @@ export default function NewAbilityRoute() {
     startingPoint: 85,
     shadowWeeks: 0,
     weeks: 4,
+    employees: [],
   };
 
   return <AbilityForm initialValues={initialValues} />;

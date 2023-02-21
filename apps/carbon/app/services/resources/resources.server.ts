@@ -5,6 +5,16 @@ import { getEmployees } from "~/services/users";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
 
+export async function deleteAbility(
+  client: SupabaseClient<Database>,
+  abilityId: string,
+  hardDelete = false
+) {
+  return hardDelete
+    ? client.from("ability").delete().eq("id", abilityId)
+    : client.from("ability").update({ active: false }).eq("id", abilityId);
+}
+
 export async function deleteAttribute(
   client: SupabaseClient<Database>,
   attributeId: string
@@ -23,6 +33,16 @@ export async function deleteAttributeCategory(
     .from("userAttributeCategory")
     .update({ active: false })
     .eq("id", attributeCategoryId);
+}
+
+export async function deleteEmployeeAbility(
+  client: SupabaseClient<Database>,
+  employeeAbilityId: string
+) {
+  return client
+    .from("employeeAbility")
+    .update({ active: false })
+    .eq("id", employeeAbilityId);
 }
 
 export async function deleteNote(
@@ -44,7 +64,9 @@ export async function getAbilities(
         count: "exact",
       }
     )
-    .eq("active", true);
+    .eq("active", true)
+    .eq("employeeAbility.active", true)
+    .eq("employeeAbility.user.active", true);
 
   if (args?.name) {
     query = query.ilike("name", `%${args.name}%`);
@@ -61,13 +83,15 @@ export async function getAbility(
   return client
     .from("ability")
     .select(
-      `id, name, curve, shadowWeeks, employeeAbility(user(id, fullName, avatarUrl))`,
+      `id, name, curve, shadowWeeks, employeeAbility(id, user(id, fullName, avatarUrl, active), lastTrainingDate, trainingDays, trainingCompleted)`,
       {
         count: "exact",
       }
     )
     .eq("id", abilityId)
     .eq("active", true)
+    .eq("employeeAbility.active", true)
+    .eq("employeeAbility.user.active", true)
     .single();
 }
 
@@ -155,6 +179,22 @@ export async function getAttributeCategory(
 
 export async function getAttributeDataTypes(client: SupabaseClient<Database>) {
   return client.from("attributeDataType").select("*");
+}
+
+export async function getEmployeeAbility(
+  client: SupabaseClient<Database>,
+  abilityId: string,
+  employeeId: string
+) {
+  return client
+    .from("employeeAbility")
+    .select(
+      `id, lastTrainingDate, trainingDays, trainingCompleted, user(id, fullName, avatarUrl)`
+    )
+    .eq("abilityId", abilityId)
+    .eq("id", employeeId)
+    .eq("active", true)
+    .single();
 }
 
 export async function getNotes(
@@ -287,6 +327,20 @@ export async function insertAbility(
   return client.from("ability").insert([ability]).select("id");
 }
 
+export async function insertEmployeeAbilities(
+  client: SupabaseClient<Database>,
+  abilityId: string,
+  employeeIds: string[]
+) {
+  const employeeAbilities = employeeIds.map((employeeId) => ({
+    abilityId,
+    employeeId,
+    trainingCompleted: true,
+  }));
+
+  return client.from("employeeAbility").insert(employeeAbilities).select("id");
+}
+
 export async function insertAttribute(
   client: SupabaseClient<Database>,
   attribute: {
@@ -340,6 +394,16 @@ export async function insertNote(
   return client.from("userNote").insert([note]).select("id");
 }
 
+export async function updateAbility(
+  client: SupabaseClient<Database>,
+  id: string,
+  ability: Partial<{
+    name: string;
+  }>
+) {
+  return client.from("ability").update(ability).eq("id", id);
+}
+
 export async function updateAttribute(
   client: SupabaseClient<Database>,
   attribute: {
@@ -387,4 +451,43 @@ export async function updateAttributeSortOrder(
     client.from("userAttribute").update({ sortOrder, updatedBy }).eq("id", id)
   );
   return Promise.all(updatePromises);
+}
+
+export async function upsertEmployeeAbility(
+  client: SupabaseClient<Database>,
+  employeeAbility: {
+    id?: string;
+    abilityId: string;
+    employeeId: string;
+    trainingCompleted: boolean;
+    trainingDays?: number;
+  }
+) {
+  const { id, ...update } = employeeAbility;
+  if (id) {
+    return client
+      .from("employeeAbility")
+      .update({ ...update })
+      .eq("id", id);
+  }
+
+  const deactivatedId = await client
+    .from("employeeAbility")
+    .select("id")
+    .eq("employeeId", employeeAbility.employeeId)
+    .eq("abilityId", employeeAbility.abilityId)
+    .eq("active", false)
+    .single();
+
+  if (deactivatedId.data?.id) {
+    return client
+      .from("employeeAbility")
+      .update({ ...update, active: true })
+      .eq("id", deactivatedId.data.id);
+  }
+
+  return client
+    .from("employeeAbility")
+    .insert([{ ...update }])
+    .select("id");
 }

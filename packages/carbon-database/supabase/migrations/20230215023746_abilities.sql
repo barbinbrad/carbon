@@ -55,7 +55,9 @@ CREATE TABLE "employeeAbility" (
 
   CONSTRAINT "employeeAbilities_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "employeeAbilities_employeeId_fkey" FOREIGN KEY ("employeeId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT "employeeAbilities_abilityId_fkey" FOREIGN KEY ("abilityId") REFERENCES "ability"("id") ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT "employeeAbilities_abilityId_fkey" FOREIGN KEY ("abilityId") REFERENCES "ability"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+
+  CONSTRAINT uq_employeeAbility_employeeId_abilityId UNIQUE ( "employeeId", "abilityId")
 );
 
 ALTER TABLE "employeeAbility" ENABLE ROW LEVEL SECURITY;

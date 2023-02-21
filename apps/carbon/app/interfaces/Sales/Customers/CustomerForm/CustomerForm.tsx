@@ -15,10 +15,10 @@ import {
 import { useNavigate } from "@remix-run/react";
 import { ValidatedForm } from "remix-validated-form";
 import {
+  Employee,
   Input,
   Select,
   Submit,
-  User,
   TextArea,
   Hidden,
 } from "~/components/Form";
@@ -123,7 +123,7 @@ const CustomerForm = ({
                       options={customerTypeOptions}
                       placeholder="Select Customer Type"
                     />
-                    <User name="accountManagerId" label="Account Manager" />
+                    <Employee name="accountManagerId" label="Account Manager" />
                     <Select
                       name="customerStatusId"
                       label="Customer Status"

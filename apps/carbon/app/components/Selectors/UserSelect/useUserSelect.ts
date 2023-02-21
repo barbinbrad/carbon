@@ -54,9 +54,9 @@ export default function useUserSelect(props: UserSelectProps) {
 
   useEffect(() => {
     if (groupsFetcher.type === "init") {
-      groupsFetcher.load(`/resource/users/groups`);
+      groupsFetcher.load(`/resource/users/groups?type=${innerProps.type}`);
     }
-  }, [groupsFetcher]);
+  }, [groupsFetcher, innerProps.type]);
 
   /* Refs */
   const containerRef = useRef<HTMLDivElement>(null);
@@ -183,11 +183,11 @@ export default function useUserSelect(props: UserSelectProps) {
   }, [optionGroups, innerProps.value]);
 
   const makeFilteredOptionGroups = useCallback(
-    (filter?: string): OptionGroup[] =>
+    (query?: string): OptionGroup[] =>
       optionGroups.reduce((acc, group) => {
-        if (filter?.trim()) {
+        if (query?.trim()) {
           const matches = group.items.filter((item) =>
-            searchTermStartsWordInString(item.label, filter)
+            stringContainsTerm(item.label, query)
           );
           if (matches && matches.length) {
             return acc.concat({
@@ -814,17 +814,16 @@ function makeSelectionItemsById(
   return result;
 }
 
-function searchTermStartsWordInString(string: string, searchTerm: string) {
-  const stringLowerCase = string.toLocaleLowerCase().trim();
-  const searchTermLowerCase = searchTerm.toLocaleLowerCase().trim();
-  if (stringLowerCase.startsWith(searchTermLowerCase)) {
+function stringContainsTerm(input: string, filter: string) {
+  const i = input.toLocaleLowerCase().trim();
+  const f = filter.toLocaleLowerCase().trim();
+  if (i.startsWith(f)) {
     return true;
   }
-  const searchTermWords = words(searchTermLowerCase);
-  const stringWords = words(stringLowerCase);
-  return stringWords.some((stringWord) =>
-    searchTermWords.some((searchTermWord) =>
-      stringWord.startsWith(searchTermWord)
-    )
+
+  const filterTokens = words(f);
+  const inputTokens = words(i);
+  return filterTokens.every((fToken) =>
+    inputTokens.some((iToken) => iToken.startsWith(fToken))
   );
 }

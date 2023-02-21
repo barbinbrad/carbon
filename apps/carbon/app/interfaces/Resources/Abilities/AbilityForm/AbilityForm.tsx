@@ -13,7 +13,14 @@ import {
 import { useNavigate } from "@remix-run/react";
 import { useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
-import { Hidden, Input, Number, Select, Submit } from "~/components/Form";
+import {
+  Employees,
+  Hidden,
+  Input,
+  Number,
+  Select,
+  Submit,
+} from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { abilityValidator } from "~/services/resources";
 
@@ -23,6 +30,7 @@ type AbilityFormProps = {
     startingPoint: number;
     shadowWeeks: number;
     weeks: number;
+    employees: string[];
   };
 };
 
@@ -77,11 +85,12 @@ const AbilityForm = ({ initialValues }: AbilityFormProps) => {
                 min={0}
                 max={maxShadowWeeks}
               />
-              {/* <Employees
-                name="selections"
+              <Employees
+                name="employees"
                 selectionsMaxHeight={"calc(100vh - 330px)"}
                 label="Employees"
-              /> */}
+                helperText="Employees who already have this ability"
+              />
             </VStack>
           </DrawerBody>
           <DrawerFooter>

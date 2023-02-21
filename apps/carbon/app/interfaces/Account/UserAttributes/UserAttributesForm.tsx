@@ -16,11 +16,11 @@ import { ValidatedForm } from "remix-validated-form";
 import {
   Boolean as BooleanInput,
   DatePicker,
+  Employee,
   Input,
   Hidden,
   Number as NumberInput,
   Submit,
-  User,
   Select,
 } from "~/components/Form";
 import { UserSelect } from "~/components/Selectors";
@@ -383,7 +383,7 @@ function renderTypedForm({
               <Hidden name="type" value="user" />
               <Hidden name="userAttributeId" />
               <Hidden name="userAttributeValueId" />
-              <User name="value" />
+              <Employee name="value" />
             </Box>
             <HStack justifyContent="end" w="full" alignSelf="center">
               <Submit size="sm" type="submit">

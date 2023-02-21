@@ -9,7 +9,9 @@
     "build": "turbo run build",
     "build:packages": "turbo run build --filter=./packages/*",
     "clean": "turbo run clean && rm -rf node_modules && rm -rf supabase",
+    "predb:rebuild": "tsx scripts/generate-schema-md.ts",
     "db:rebuild": "run-s db:kill db:start setup",
+    "postdb:rebuild": "tsx scripts/generate-db-types.ts",
     "db:init": "turbo run db:init",
     "db:start": "run-p db:start:database db:start:redis",
     "db:start:database": "yarn workspace @carbon/database supabase start",
@@ -32,9 +34,7 @@
     "initialize": "run-s db:init db:start",
     "lint": "turbo run lint",
     "setup": "turbo run setup",
-    "test": "turbo run test",
-    "predb:rebuild": "tsx scripts/generate-schema-md.ts",
-    "postdb:rebuild": "tsx scripts/generate-db-types.ts"
+    "test": "turbo run test"
   },
   "devDependencies": {
     "npm-run-all": "^4.1.5",

@@ -7,8 +7,20 @@ import {
   TabPanel,
   TabPanels,
 } from "@chakra-ui/react";
+import { ProfileForm } from "~/interfaces/Account/Profile";
+import type {
+  PublicAttributes,
+  PrivateAttributes,
+} from "~/interfaces/Account/types";
+import type { User } from "~/interfaces/Users/types";
 
-const PersonsTabs = () => {
+type PersonTabsProps = {
+  user: User;
+  publicAttributes: PublicAttributes[];
+  privateAttributes: PrivateAttributes[];
+};
+
+const PersonsTabs = ({ user }: PersonTabsProps) => {
   return (
     <Card w="full">
       <CardBody>
@@ -21,7 +33,7 @@ const PersonsTabs = () => {
 
           <TabPanels>
             <TabPanel>
-              <p>Profile</p>
+              <ProfileForm user={user} />
             </TabPanel>
             <TabPanel>
               <p>Personal attributes</p>

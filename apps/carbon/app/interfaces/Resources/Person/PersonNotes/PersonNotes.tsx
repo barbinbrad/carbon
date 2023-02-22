@@ -96,6 +96,7 @@ const PersonNotes = ({ notes }: PersonNoteProps) => {
             method="post"
             action={`/x/resources/person/${personId}/notes/new`}
             validator={noteValidator}
+            resetAfterSubmit
           >
             <VStack spacing={3} w="full">
               <Grid gridTemplateColumns="auto 1fr" gridColumnGap={4} w="full">

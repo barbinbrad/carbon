@@ -296,7 +296,7 @@ export async function getCurrentUser(
 ) {
   const { userId } = await requireAuthSession(request);
 
-  const user = await getUserById(client, userId);
+  const user = await getUser(client, userId);
   if (user?.error || user?.data === null) {
     throw redirect(
       "/x",
@@ -491,10 +491,7 @@ export async function getSuppliers(
   return query;
 }
 
-export async function getUserById(
-  client: SupabaseClient<Database>,
-  id: string
-) {
+export async function getUser(client: SupabaseClient<Database>, id: string) {
   return client
     .from("user")
     .select("*")
@@ -776,7 +773,7 @@ export async function resendInvite(
   client: SupabaseClient<Database>,
   userId: string
 ): Promise<Result> {
-  const user = await getUserById(client, userId);
+  const user = await getUser(client, userId);
   if (user.error || !user.data) {
     return error(user.error, "Failed to get user");
   }

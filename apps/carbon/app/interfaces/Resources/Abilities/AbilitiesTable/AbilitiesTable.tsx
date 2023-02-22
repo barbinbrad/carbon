@@ -114,7 +114,7 @@ const AbilitiesTable = memo(({ data, count }: AbilitiesTableProps) => {
                 isDisabled={!permissions.can("delete", "resources")}
                 icon={<IoMdTrash />}
                 onClick={() => {
-                  navigate(`/x/resources/ability/delete/${row.original.id}`);
+                  navigate(`/x/resources/abilities/delete/${row.original.id}`);
                 }}
               >
                 Delete Ability
@@ -127,14 +127,7 @@ const AbilitiesTable = memo(({ data, count }: AbilitiesTableProps) => {
   }, [navigate, permissions]);
 
   return (
-    <Table<typeof rows[number]>
-      data={rows}
-      count={count}
-      columns={columns}
-      onRowClick={(row) => {
-        navigate(`/x/resources/ability/${row.id}`);
-      }}
-    />
+    <Table<typeof rows[number]> data={rows} count={count} columns={columns} />
   );
 });
 

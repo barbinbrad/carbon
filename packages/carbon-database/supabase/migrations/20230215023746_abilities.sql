@@ -1,8 +1,8 @@
 CREATE TABLE "ability" (
   "id" TEXT NOT NULL DEFAULT xid(),
-  "name" TEXT NOT NULL UNIQUE,
+  "name" TEXT NOT NULL,
   "curve" JSONB NOT NULL DEFAULT '{"data":[{"id":0,"week":0,"value":50},{"id":1,"week":1,"value":80},{"id":2,"week":2,"value":90},{"id":3,"week":3,"value":100}]}'::jsonb,
-  "shadowWeeks" INTEGER NOT NULL DEFAULT 0,
+  "shadowWeeks" NUMERIC NOT NULL DEFAULT 0,
   "active" BOOLEAN NOT NULL DEFAULT true,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
   "createdBy" TEXT NOT NULL,
@@ -50,7 +50,7 @@ CREATE TABLE "employeeAbility" (
   "abilityId" TEXT NOT NULL,
   "active" BOOLEAN NOT NULL DEFAULT true,
   "lastTrainingDate" DATE,
-  "trainingDays" INTEGER NOT NULL DEFAULT 0,
+  "trainingDays" NUMERIC NOT NULL DEFAULT 0,
   "trainingCompleted" BOOLEAN DEFAULT false,
 
   CONSTRAINT "employeeAbilities_pkey" PRIMARY KEY ("id"),

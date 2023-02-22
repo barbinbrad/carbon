@@ -399,6 +399,13 @@ export async function updateAbility(
   id: string,
   ability: Partial<{
     name: string;
+    curve: {
+      data: {
+        week: number;
+        value: number;
+      }[];
+    };
+    shadowWeeks: number;
   }>
 ) {
   return client.from("ability").update(ability).eq("id", id);

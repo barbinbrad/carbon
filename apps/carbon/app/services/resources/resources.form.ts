@@ -24,9 +24,20 @@ export const abilityValidator = withZod(
     })
 );
 
+export const abilityCurveValidator = withZod(
+  z.object({
+    data: z
+      .string()
+      .startsWith("[", { message: "Invalid JSON" })
+      .endsWith("]", { message: "Invalid JSON" }),
+    shadowWeeks: zfd.numeric(
+      z.number().min(0, { message: "Time shadowing is required" })
+    ),
+  })
+);
+
 export const abilityNameValidator = withZod(
   z.object({
-    id: z.string().min(20),
     name: z.string().min(1, { message: "Name is required" }),
   })
 );
@@ -76,15 +87,5 @@ export const noteValidator = withZod(
   z.object({
     id: zfd.text(z.string().optional()),
     note: z.string().min(1, { message: "Note is required" }),
-  })
-);
-
-export const updateAbilityValidator = withZod(
-  z.object({
-    id: z.string().min(20),
-    data: z
-      .string()
-      .startsWith("[", { message: "Invalid JSON" })
-      .endsWith("]", { message: "Invalid JSON" }),
   })
 );

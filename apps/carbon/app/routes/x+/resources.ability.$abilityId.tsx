@@ -33,7 +33,7 @@ import {
   abilityNameValidator,
   getAbility,
   updateAbility,
-  updateAbilityValidator,
+  abilityCurveValidator,
 } from "~/services/resources";
 import { flash } from "~/services/session";
 import { error, success } from "~/utils/result";
@@ -98,18 +98,36 @@ export async function action({ request, params }: ActionArgs) {
         )
       );
     }
-
-    return redirect(
-      `/x/resources/ability/${abilityId}`,
-      await flash(request, success("Ability name updated"))
-    );
   }
 
   if (formData.get("intent") === "curve") {
-    console.log("update curve");
+    const validation = await abilityCurveValidator.validate(formData);
+    if (validation.error) {
+      return validationError(validation.error);
+    }
+
+    const { data, shadowWeeks } = validation.data;
+    const updateAbilityCurve = await updateAbility(client, abilityId, {
+      curve: {
+        data: JSON.parse(data),
+      },
+      shadowWeeks,
+    });
+    if (updateAbilityCurve.error) {
+      return redirect(
+        `/x/resources/ability/${abilityId}`,
+        await flash(
+          request,
+          error(updateAbilityCurve.error, "Failed to update ability data")
+        )
+      );
+    }
   }
 
-  return null;
+  return redirect(
+    `/x/resources/ability/${abilityId}`,
+    await flash(request, success("Ability updated"))
+  );
 }
 
 export default function AbilitiesRoute() {
@@ -148,13 +166,12 @@ export default function AbilitiesRoute() {
             <ValidatedForm
               validator={abilityNameValidator}
               method="post"
+              action={`/x/resources/ability/${ability.id}`}
               defaultValues={{
-                id: ability.id,
                 name: ability.name,
               }}
               onSubmit={editingTitle.onClose}
             >
-              <Hidden name="id" />
               <Hidden name="intent" value="name" />
               <HStack spacing={2}>
                 <IconButton
@@ -228,13 +245,13 @@ export default function AbilitiesRoute() {
               </NumberInputStepper>
             </NumberInput>
             <ValidatedForm
-              validator={updateAbilityValidator}
+              validator={abilityCurveValidator}
               method="post"
               action={`/x/resources/ability/${ability.id}`}
             >
-              <Hidden name="id" value={ability.id} />
               <Hidden name="intent" value="curve" />
               <Hidden name="data" value={JSON.stringify(data)} />
+              <Hidden name="shadowWeeks" value={controlledShadowWeeks} />
               <Submit size="sm">Save</Submit>
             </ValidatedForm>
           </HStack>

@@ -27,7 +27,9 @@ export async function loader({ request, params }: LoaderArgs) {
     );
   }
 
-  return json(employeeType);
+  return json({
+    employeeType: employeeType.data,
+  });
 }
 
 export async function action({ request, params }: ActionArgs) {
@@ -67,18 +69,18 @@ export async function action({ request, params }: ActionArgs) {
 
 export default function DeleteEmployeeTypeRoute() {
   const { employeeTypeId } = useParams();
-  const { data } = useLoaderData<typeof loader>();
+  const { employeeType } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
 
-  if (!employeeTypeId || !data) return null; // TODO - handle this better (404?)
+  if (!employeeTypeId || !employeeType) return null; // TODO - handle this better (404?)
 
   const onCancel = () => navigate("/x/users/employee-types");
 
   return (
     <ConfirmDelete
       action={`/x/users/employee-types/delete/${employeeTypeId}`}
-      name={data.name}
-      text={`Are you sure you want to delete the employee type: ${data.name}? This cannot be undone.`}
+      name={employeeType.name}
+      text={`Are you sure you want to delete the employee type: ${employeeType.name}? This cannot be undone.`}
       onCancel={onCancel}
     />
   );

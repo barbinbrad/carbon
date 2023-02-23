@@ -13,7 +13,7 @@ export {
   DatePicker,
   DateTimePicker,
   DateRangePicker,
-  TimePicker,
   Select,
+  TimePicker,
   createFilter,
 };

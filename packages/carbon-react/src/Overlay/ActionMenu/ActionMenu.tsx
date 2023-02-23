@@ -12,7 +12,7 @@ const ActionMenu = ({ children, disabled, icon }: ActionMenuProps) => {
     <Menu isLazy>
       <MenuButton
         as={IconButton}
-        aria-label="Action context menu for row"
+        aria-label="Expand options"
         icon={icon ? icon : <BsThreeDotsVertical />}
         colorScheme="gray"
         isDisabled={disabled}

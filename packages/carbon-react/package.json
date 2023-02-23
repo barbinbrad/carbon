@@ -34,10 +34,15 @@
     "@react-types/calendar": "^3.0.5",
     "@react-types/datepicker": "^3.1.4",
     "framer-motion": "^8.5.2",
+    "nanoid": "^4.0.1",
     "react-colorful": "^5.6.1",
     "react-hook-form": "^7.37.0",
     "react-icons": "^4.7.1",
-    "react-select": "^5.5.1"
+    "react-select": "^5.5.1",
+    "slate": "^0.88.1",
+    "slate-history": "^0.86.0",
+    "slate-hyperscript": "^0.77.0",
+    "slate-react": "^0.91.2"
   },
   "devDependencies": {
     "@carbon/jest": "*",

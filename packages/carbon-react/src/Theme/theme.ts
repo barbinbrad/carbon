@@ -3,9 +3,12 @@ import {
   focusRingFlushed,
   focusRingOutlined,
 } from "./focusRing";
+import { fonts } from "./fonts";
 import { colors } from "./palette";
 
+
 export const theme = {
+  fonts,
   colors,
   styles: {
     global: {

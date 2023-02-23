@@ -851,32 +851,32 @@ export interface Database {
         Row: {
           userId: string
           note: string
+          createdBy: string
           id: string
           noteRichText: Json
           active: boolean
-          createdBy: string
-          updatedAt: string | null
           createdAt: string
+          updatedAt: string | null
         }
         Insert: {
           userId: string
           note: string
+          createdBy: string
           id?: string
           noteRichText?: Json
           active?: boolean
-          createdBy: string
-          updatedAt?: string | null
           createdAt?: string
+          updatedAt?: string | null
         }
         Update: {
           userId?: string
           note?: string
+          createdBy?: string
           id?: string
           noteRichText?: Json
           active?: boolean
-          createdBy?: string
-          updatedAt?: string | null
           createdAt?: string
+          updatedAt?: string | null
         }
       }
     }

@@ -86,8 +86,8 @@ $ cp ./.env.example ./.env
 After you've set the enviroment variables to the output of `db:start` you can run
 
 ```bash
-$ yarn db:rebuild     # run db migrations and seed script
-$ yarn build          # build the packages
+$ yarn db:build     # run db migrations and seed script
+$ yarn build        # build the packages
 ```
 
 Finally, start the apps and packages:
@@ -105,7 +105,7 @@ $ yarn db:kill   # stop and delete all database containers
 To restart and reseed the database, you can run:
 
 ```bash
-$ yarn db:rebuild # runs db:kill, db:start, and setup
+$ yarn db:build # runs db:kill, db:start, and setup
 ```
 
 To run a particular application, use the `yarn workspace` command.

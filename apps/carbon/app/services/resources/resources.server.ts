@@ -184,7 +184,7 @@ export async function getAttributeDataTypes(client: SupabaseClient<Database>) {
 export async function getEmployeeAbility(
   client: SupabaseClient<Database>,
   abilityId: string,
-  employeeId: string
+  employeeAbilityId: string
 ) {
   return client
     .from("employeeAbility")
@@ -192,9 +192,22 @@ export async function getEmployeeAbility(
       `id, lastTrainingDate, trainingDays, trainingCompleted, user(id, fullName, avatarUrl)`
     )
     .eq("abilityId", abilityId)
-    .eq("id", employeeId)
+    .eq("id", employeeAbilityId)
     .eq("active", true)
     .single();
+}
+
+export async function getEmployeeAbilities(
+  client: SupabaseClient<Database>,
+  employeeId: string
+) {
+  return client
+    .from("employeeAbility")
+    .select(
+      `id, lastTrainingDate, trainingDays, trainingCompleted, ability(id, name, curve, shadowWeeks)`
+    )
+    .eq("employeeId", employeeId)
+    .eq("active", true);
 }
 
 export async function getNotes(

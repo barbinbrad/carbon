@@ -11,6 +11,7 @@ import {
   PersonTabs,
   PersonSchedule,
 } from "~/interfaces/Resources/Person";
+import logger from "~/lib/logger";
 import {
   accountProfileValidator,
   getAccount,
@@ -19,7 +20,7 @@ import {
   updatePublicAccount,
 } from "~/services/account";
 import { requirePermissions } from "~/services/auth";
-import { getNotes } from "~/services/resources";
+import { getEmployeeAbilities, getNotes } from "~/services/resources";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
 import { error, success } from "~/utils/result";
@@ -38,12 +39,14 @@ export async function loader({ request, params }: LoaderArgs) {
     );
   }
 
-  const [user, notes, publicAttributes, privateAttributes] = await Promise.all([
-    getAccount(client, personId),
-    getNotes(client, personId),
-    getPublicAttributes(client, personId),
-    getPrivateAttributes(client, personId),
-  ]);
+  const [user, notes, publicAttributes, privateAttributes, employeeAbilities] =
+    await Promise.all([
+      getAccount(client, personId),
+      getNotes(client, personId),
+      getPublicAttributes(client, personId),
+      getPrivateAttributes(client, personId),
+      getEmployeeAbilities(client, personId),
+    ]);
 
   if (user.error || !user.data) {
     return redirect(
@@ -52,21 +55,17 @@ export async function loader({ request, params }: LoaderArgs) {
     );
   }
 
-  if (publicAttributes.error) {
-    return redirect(
-      "/x/resources/people",
-      await flash(
-        request,
-        error(publicAttributes.error, "Failed to get user attributes")
-      )
-    );
-  }
+  if (notes.error) logger.error(notes.error);
+  if (publicAttributes.error) logger.error(publicAttributes.error);
+  if (privateAttributes.error) logger.error(privateAttributes.error);
+  if (employeeAbilities.error) logger.error(employeeAbilities.error);
 
   return json({
     user: user.data,
     notes: notes.data ?? [],
-    publicAttributes: publicAttributes.data,
+    publicAttributes: publicAttributes.data ?? [],
     privateAttributes: privateAttributes.data ?? [],
+    employeeAbilities: employeeAbilities.data ?? [],
   });
 }
 
@@ -111,8 +110,13 @@ export async function action({ request, params }: ActionArgs) {
 }
 
 export default function PersonRoute() {
-  const { user, publicAttributes, privateAttributes, notes } =
-    useLoaderData<typeof loader>();
+  const {
+    user,
+    publicAttributes,
+    privateAttributes,
+    notes,
+    employeeAbilities,
+  } = useLoaderData<typeof loader>();
 
   return (
     <Box p="4" w="full">
@@ -128,7 +132,7 @@ export default function PersonRoute() {
         </VStack>
         <VStack spacing={4}>
           <PersonSchedule />
-          <PersonAbilities />
+          <PersonAbilities abilities={employeeAbilities} />
         </VStack>
       </Grid>
     </Box>

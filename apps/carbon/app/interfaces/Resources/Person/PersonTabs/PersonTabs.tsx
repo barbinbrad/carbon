@@ -20,7 +20,11 @@ type PersonTabsProps = {
   privateAttributes: PrivateAttributes[];
 };
 
-const PersonsTabs = ({ user }: PersonTabsProps) => {
+const PersonsTabs = ({
+  user,
+  publicAttributes,
+  privateAttributes,
+}: PersonTabsProps) => {
   return (
     <Card w="full">
       <CardBody>

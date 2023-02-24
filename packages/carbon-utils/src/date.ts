@@ -12,6 +12,23 @@ const DIVISIONS: { amount: number; name: Intl.RelativeTimeFormatUnit }[] = [
   { amount: Number.POSITIVE_INFINITY, name: "years" },
 ];
 
+const defaultFormatOptions: Intl.DateTimeFormatOptions = {
+  dateStyle: "medium",
+};
+
+export function formatDate(
+  isoString?: string | null,
+  options?: Intl.DateTimeFormatOptions
+) {
+  if (!isoString) return "";
+  const date = new Date(isoString);
+
+  return new Intl.DateTimeFormat(
+    undefined,
+    options || defaultFormatOptions
+  ).format(date);
+}
+
 export function formatTimeAgo(isoString: string) {
   let duration = (new Date(isoString).getTime() - new Date().getTime()) / 1000;
 

@@ -5,6 +5,7 @@ import { validationError } from "remix-validated-form";
 import { useRouteData } from "~/hooks";
 import { EmployeeAbilityForm } from "~/interfaces/Resources/Abilities";
 import type { Ability } from "~/interfaces/Resources/types";
+import { getTrainingStatus } from "~/interfaces/Resources/types";
 import { AbilityEmployeeStatus } from "~/interfaces/Resources/types";
 import { requirePermissions } from "~/services/auth";
 import {
@@ -120,19 +121,6 @@ export default function EmployeeAbilityRoute() {
       onClose={() => navigate(-1)}
     />
   );
-}
-
-function getTrainingStatus(
-  employeeAbility: {
-    lastTrainingDate: string | null;
-    trainingDays: number;
-    trainingCompleted: boolean | null;
-  } | null
-) {
-  if (!employeeAbility) return undefined;
-  if (employeeAbility.trainingCompleted) return AbilityEmployeeStatus.Complete;
-  if (employeeAbility.trainingDays > 0) return AbilityEmployeeStatus.InProgress;
-  return AbilityEmployeeStatus.NotStarted;
 }
 
 function getTrainingPercent(traniningDays?: number, weeks?: number) {

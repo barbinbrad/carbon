@@ -10,7 +10,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { parseDate } from "@internationalized/date";
-import { useFetcher } from "@remix-run/react";
+import { useFetcher, useParams } from "@remix-run/react";
 import { useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import {
@@ -24,7 +24,7 @@ import {
   Select,
 } from "~/components/Form";
 import { UserSelect } from "~/components/Selectors";
-import { useUser } from "~/hooks";
+import { usePermissions, useUser } from "~/hooks";
 import type { PublicAttributes } from "~/interfaces/Account/types";
 import { DataType } from "~/interfaces/Users/types";
 import {
@@ -40,11 +40,19 @@ type UserAttributesFormProps = {
 };
 
 const UserAttributesForm = ({ attributeCategory }: UserAttributesFormProps) => {
+  const { personId } = useParams();
+  const permissions = usePermissions();
   const user = useUser();
   const updateFetcher = useFetcher<{}>();
   const [optimisticUpdates, setOptimisticUpdates] = useState<
-    Record<string, boolean | string | number>
+    Record<string, boolean | string | number | undefined>
   >({});
+
+  const isAuthorized = !personId;
+  if (!isAuthorized && !permissions.can("update", "resources"))
+    throw new Error("Unauthorized");
+
+  const userId = isAuthorized ? user.id : personId;
 
   if (
     !attributeCategory ||
@@ -67,7 +75,10 @@ const UserAttributesForm = ({ attributeCategory }: UserAttributesFormProps) => {
             <GenericAttributeRow
               key={attribute.id}
               attribute={attribute}
-              setOptimisticUpdate={(value: boolean | string | number) =>
+              isAuthorized={isAuthorized}
+              setOptimisticUpdate={(
+                value: boolean | string | number | undefined
+              ) =>
                 setOptimisticUpdates((prev) => ({
                   ...prev,
                   [attribute.id]: value,
@@ -75,7 +86,7 @@ const UserAttributesForm = ({ attributeCategory }: UserAttributesFormProps) => {
               }
               // @ts-ignore
               updateFetcher={updateFetcher}
-              userId={user.id}
+              userId={userId}
               {...genericProps}
             />
           );
@@ -93,13 +104,14 @@ type GenericAttributeRowProps = {
     listOptions: string[] | null;
   };
   displayValue: string | number | boolean;
+  isAuthorized: boolean;
   type: DataType;
   updateFetcher: ReturnType<typeof useFetcher>;
   userAttributeId: string;
   userAttributeValueId?: string;
   userId: string;
   value: Date | string | number | boolean | null;
-  setOptimisticUpdate: (value: boolean | string | number) => void;
+  setOptimisticUpdate: (value: boolean | string | number | undefined) => void;
 };
 
 const GenericAttributeRow = (props: GenericAttributeRowProps) => {
@@ -419,8 +431,16 @@ function renderTypedDisplay({
   borderColor,
   ...props
 }: GenericAttributeRowProps & { borderColor: string; onOpen: () => void }) {
-  const { attribute, displayValue, type, userAttributeValueId, value, onOpen } =
-    props;
+  const {
+    attribute,
+    displayValue,
+    isAuthorized,
+    type,
+    userAttributeValueId,
+    value,
+    onOpen,
+    setOptimisticUpdate,
+  } = props;
   switch (type) {
     case DataType.Boolean:
       return (
@@ -442,7 +462,7 @@ function renderTypedDisplay({
           )}
           <HStack justifyContent="end" w="full" alignSelf="center">
             <Button
-              isDisabled={!attribute.canSelfManage ?? true}
+              isDisabled={!isAuthorized && (!attribute.canSelfManage ?? true)}
               variant="ghost"
               onClick={onOpen}
             >
@@ -469,12 +489,14 @@ function renderTypedDisplay({
           <Text alignSelf="center">{displayValue}</Text>
           <UpdateRemoveButtons
             canRemove={
-              attribute.canSelfManage === true &&
-              !!value &&
-              !!userAttributeValueId
+              !isAuthorized ||
+              (attribute.canSelfManage === true &&
+                !!value &&
+                !!userAttributeValueId)
             }
-            canUpdate={attribute.canSelfManage ?? false}
+            canUpdate={!isAuthorized || (attribute.canSelfManage ?? false)}
             {...props}
+            onSubmit={setOptimisticUpdate}
           />
         </Grid>
       );
@@ -493,9 +515,12 @@ function renderTypedDisplay({
           </Text>
           <Text alignSelf="center">{displayValue.toLocaleString("en-US")}</Text>
           <UpdateRemoveButtons
-            canRemove={attribute.canSelfManage === true && !!value}
-            canUpdate={attribute.canSelfManage ?? false}
+            canRemove={
+              !isAuthorized || (attribute.canSelfManage === true && !!value)
+            }
+            canUpdate={!isAuthorized || (attribute.canSelfManage ?? false)}
             {...props}
+            onSubmit={setOptimisticUpdate}
           />
         </Grid>
       );
@@ -519,9 +544,12 @@ function renderTypedDisplay({
           )}
 
           <UpdateRemoveButtons
-            canRemove={attribute.canSelfManage === true && !!value}
-            canUpdate={attribute.canSelfManage ?? false}
+            canRemove={
+              !isAuthorized || (attribute.canSelfManage === true && !!value)
+            }
+            canUpdate={!isAuthorized || (attribute.canSelfManage ?? false)}
             {...props}
+            onSubmit={setOptimisticUpdate}
           />
         </Grid>
       );
@@ -617,6 +645,7 @@ function UpdateRemoveButtons({
   userAttributeId,
   userAttributeValueId,
   onOpen,
+  onSubmit,
 }: {
   canRemove: boolean;
   canUpdate: boolean;
@@ -625,6 +654,7 @@ function UpdateRemoveButtons({
   userAttributeId: string;
   userAttributeValueId?: string;
   onOpen: () => void;
+  onSubmit: (value: string | boolean | number | undefined) => void;
 }) {
   return (
     <HStack justifyContent="end" w="full" alignSelf="center">
@@ -638,6 +668,7 @@ function UpdateRemoveButtons({
             userAttributeValueId,
           }}
           fetcher={updateFetcher}
+          onSubmit={() => onSubmit(undefined)}
         >
           <Hidden name="userAttributeId" />
           <Hidden name="userAttributeValueId" />

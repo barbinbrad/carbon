@@ -27,7 +27,8 @@ export async function action({ request, params }: ActionArgs) {
   if (!userAttributeValueId) throw new Error("No attribute value id provided");
 
   const clientClaims = await getUserClaims(request, client);
-  const canUpdateAnyUser = clientClaims.permissions["users"]?.update === true;
+  const canUpdateAnyUser =
+    clientClaims.permissions["resources"]?.update === true;
 
   if (!canUpdateAnyUser && userId !== targetUserId) {
     return json(
@@ -59,7 +60,7 @@ export async function action({ request, params }: ActionArgs) {
   }
 
   const removeAttributeValue = await deleteUserAttributeValue(client, {
-    userId,
+    userId: targetUserId,
     userAttributeId: userAttributeId,
     userAttributeValueId: userAttributeValueId,
   });

@@ -7,7 +7,6 @@ import { validationError } from "remix-validated-form";
 import {
   PersonAbilities,
   PersonHeader,
-  PersonNotes,
   PersonTabs,
   PersonSchedule,
 } from "~/interfaces/Resources/Person";
@@ -127,8 +126,8 @@ export default function PersonRoute() {
             user={user}
             publicAttributes={publicAttributes}
             privateAttributes={privateAttributes}
+            notes={notes}
           />
-          <PersonNotes notes={notes} />
         </VStack>
         <VStack spacing={4}>
           <PersonSchedule />

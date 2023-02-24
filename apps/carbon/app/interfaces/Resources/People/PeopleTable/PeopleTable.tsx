@@ -1,5 +1,12 @@
 import { ActionMenu } from "@carbon/react";
-import { Flex, HStack, MenuItem, Text, VisuallyHidden } from "@chakra-ui/react";
+import {
+  Flex,
+  HStack,
+  Link,
+  MenuItem,
+  Text,
+  VisuallyHidden,
+} from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
@@ -106,12 +113,19 @@ const PeopleTable = memo(
                 path={row.original.user?.avatarUrl}
               />
 
-              <span>
+              <Link
+                onClick={() => {
+                  navigate(
+                    // @ts-ignore
+                    `/x/resources/person/${row?.original.user.id}`
+                  );
+                }}
+              >
                 {
                   // @ts-ignore
-                  `${row.original.user?.firstName} ${row.original.user?.lastName}`
+                  row.original.user?.fullName
                 }
-              </span>
+              </Link>
             </HStack>
           ),
         },
@@ -212,15 +226,6 @@ const PeopleTable = memo(
           data={rows}
           defaultColumnPinning={{
             left: ["Select", "User"],
-          }}
-          onRowClick={(row) => {
-            // @ts-ignore
-            row?.user?.id
-              ? navigate(
-                  // @ts-ignore
-                  `/x/resources/person/${row?.user.id}?${params.toString()}`
-                )
-              : console.error("Expected user id to be defined");
           }}
           withColumnOrdering
           // withInlineEditing

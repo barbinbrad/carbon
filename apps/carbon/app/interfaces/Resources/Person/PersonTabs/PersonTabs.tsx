@@ -54,20 +54,32 @@ const PersonsTabs = ({
               <ProfileForm user={user} />
             </TabPanel>
             <TabPanel>
-              {publicAttributes.map((category: PublicAttributes) => (
-                <Box key={category.id} mb={8} w="full">
-                  <SectionTitle title={category.name} />
-                  <UserAttributesForm attributeCategory={category} />
+              {publicAttributes.length ? (
+                publicAttributes.map((category: PublicAttributes) => (
+                  <Box key={category.id} mb={8} w="full">
+                    <SectionTitle title={category.name} />
+                    <UserAttributesForm attributeCategory={category} />
+                  </Box>
+                ))
+              ) : (
+                <Box color="gray.500" p={4} w="full" textAlign="center">
+                  No public attributes
                 </Box>
-              ))}
+              )}
             </TabPanel>
             <TabPanel>
-              {privateAttributes.map((category: PrivateAttributes) => (
-                <Box key={category.id} mb={8} w="full">
-                  <SectionTitle title={category.name} />
-                  <UserAttributesForm attributeCategory={category} />
+              {privateAttributes.length ? (
+                privateAttributes.map((category: PrivateAttributes) => (
+                  <Box key={category.id} mb={8} w="full">
+                    <SectionTitle title={category.name} />
+                    <UserAttributesForm attributeCategory={category} />
+                  </Box>
+                ))
+              ) : (
+                <Box color="gray.500" p={4} w="full" textAlign="center">
+                  No private attributes
                 </Box>
-              ))}
+              )}
             </TabPanel>
             <TabPanel>
               <PersonNotes notes={notes} />

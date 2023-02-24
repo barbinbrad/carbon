@@ -1,6 +1,7 @@
 import { useColor } from "@carbon/react";
 import { Box, IconButton, Tooltip, VStack } from "@chakra-ui/react";
 import { Link, useMatches } from "@remix-run/react";
+import { BsFillHexagonFill } from "react-icons/bs";
 import { useSidebar } from "./useSidebar";
 
 const IconSidebar = () => {
@@ -10,11 +11,20 @@ const IconSidebar = () => {
   return (
     <Box
       h="full"
-      bg={useColor("white")}
       borderRight={1}
       borderRightColor={useColor("gray.200")}
       borderRightStyle="solid"
     >
+      <IconButton
+        aria-label="Home"
+        as={Link}
+        to="/"
+        variant="ghost"
+        size="lg"
+        icon={<BsFillHexagonFill />}
+        mb={4}
+      />
+
       <VStack spacing={0} top={50} position="sticky">
         {links.map((link) => {
           const isActive = matchedPaths.includes(link.to);

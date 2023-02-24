@@ -67,11 +67,11 @@ export default function AuthenticatedRoute() {
 
   return (
     <SupabaseProvider session={session}>
-      <Grid h="100vh" w="100vw" templateRows="auto 1fr">
-        <Topbar />
+      <Grid h="100vh" w="100vw" templateColumns="auto 1fr">
+        <IconSidebar />
         <GridItem w="full" h="full">
-          <Grid templateColumns="auto 1fr" h="full" w="full">
-            <IconSidebar />
+          <Grid templateRows="auto 1fr" h="full" w="full">
+            <Topbar />
             <Flex w="full" h="full">
               <SkipNavContent />
               <VStack spacing={0} w="full" bg={useColor("gray.50")}>

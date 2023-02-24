@@ -1,5 +1,5 @@
 import { useMatches } from "@remix-run/react";
-import { IoHomeSharp } from "react-icons/io5";
+
 import type { Route } from "~/types";
 
 export default function useBreadcrumbs(): Route[] {
@@ -7,8 +7,6 @@ export default function useBreadcrumbs(): Route[] {
 
   const result = matches.reduce<Route[]>((acc, match) => {
     switch (match.id) {
-      case "root":
-        return acc.concat({ to: "/x", name: "Home", icon: <IoHomeSharp /> });
       case "routes/x+/account":
         return acc.concat({
           name: "Account",

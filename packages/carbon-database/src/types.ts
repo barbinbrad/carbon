@@ -490,6 +490,32 @@ export interface Database {
           createdAt?: string
         }
       }
+      location: {
+        Row: {
+          name: string
+          timezone: string
+          latitude: number
+          longitude: number
+          id: string
+          active: boolean
+        }
+        Insert: {
+          name: string
+          timezone: string
+          latitude: number
+          longitude: number
+          id?: string
+          active?: boolean
+        }
+        Update: {
+          name?: string
+          timezone?: string
+          latitude?: number
+          longitude?: number
+          id?: string
+          active?: boolean
+        }
+      }
       membership: {
         Row: {
           groupId: string
@@ -537,6 +563,32 @@ export interface Database {
           link?: string
           description?: string | null
           fts?: unknown | null
+        }
+      }
+      shift: {
+        Row: {
+          name: string
+          startTime: string
+          endTime: string
+          locationId: string
+          id: string
+          active: boolean
+        }
+        Insert: {
+          name: string
+          startTime: string
+          endTime: string
+          locationId: string
+          id?: string
+          active?: boolean
+        }
+        Update: {
+          name?: string
+          startTime?: string
+          endTime?: string
+          locationId?: string
+          id?: string
+          active?: boolean
         }
       }
       supplier: {
@@ -851,32 +903,32 @@ export interface Database {
         Row: {
           userId: string
           note: string
-          createdBy: string
           id: string
           noteRichText: Json
           active: boolean
-          createdAt: string
+          createdBy: string
           updatedAt: string | null
+          createdAt: string
         }
         Insert: {
           userId: string
           note: string
-          createdBy: string
           id?: string
           noteRichText?: Json
           active?: boolean
-          createdAt?: string
+          createdBy: string
           updatedAt?: string | null
+          createdAt?: string
         }
         Update: {
           userId?: string
           note?: string
-          createdBy?: string
           id?: string
           noteRichText?: Json
           active?: boolean
-          createdAt?: string
+          createdBy?: string
           updatedAt?: string | null
+          createdAt?: string
         }
       }
     }

@@ -8,7 +8,8 @@
     "dev": "PORT=3000 remix dev",
     "start": "remix-serve api/build",
     "clean": "rm -rf .cache && rm -rf node_modules && rm -rf api/build && rm -rf public/build",
-    "lint": "tsc && TIMING=1 eslint \"app/**/*.ts*\""
+    "lint": "TIMING=1 eslint \"app/**/*.ts*\"",
+    "types": "tsc"
   },
   "dependencies": {
     "@carbon/database": "*",

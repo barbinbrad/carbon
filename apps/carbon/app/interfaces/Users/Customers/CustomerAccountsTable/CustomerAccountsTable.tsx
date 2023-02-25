@@ -6,7 +6,6 @@ import {
   VisuallyHidden,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo, useState } from "react";
 import { BsEnvelope } from "react-icons/bs";

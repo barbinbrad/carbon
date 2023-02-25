@@ -157,7 +157,7 @@ const AbilityEmployeesTable = ({
         ),
       },
     ];
-  }, []);
+  }, [abilityId, navigate, permissions]);
 
   if (!abilityId) return null;
 

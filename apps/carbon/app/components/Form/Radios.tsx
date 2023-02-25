@@ -12,7 +12,7 @@ import { useField } from "remix-validated-form";
 type RadiosProps = {
   name: string;
   label?: string;
-  options: { label: string; value: string | number }[];
+  options: { label: string; value: string }[];
   direction?: StackDirection;
 };
 

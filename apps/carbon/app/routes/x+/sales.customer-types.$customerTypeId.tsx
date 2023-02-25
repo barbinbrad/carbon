@@ -33,7 +33,7 @@ export async function loader({ request, params }: LoaderArgs) {
   }
 
   return json({
-    customerType,
+    customerType: customerType?.data ?? null,
   });
 }
 
@@ -79,9 +79,9 @@ export default function EditCustomerTypesRoute() {
   const { customerType } = useLoaderData<typeof loader>();
 
   const initialValues = {
-    id: customerType.data?.id ?? undefined,
-    name: customerType.data?.name ?? "",
-    color: customerType.data?.color ?? "#000000",
+    id: customerType?.id ?? undefined,
+    name: customerType?.name ?? "",
+    color: customerType?.color ?? "#000000",
   };
 
   return <CustomerTypeForm initialValues={initialValues} />;

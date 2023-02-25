@@ -52,7 +52,7 @@ const resourcesRoutes: RouteGroup[] = [
     routes: [
       {
         name: "Eqiupment Types",
-        to: "/x/resources/attributes",
+        to: "/x/resources/equipment-types",
       },
       {
         name: "Processes",

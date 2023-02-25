@@ -374,6 +374,23 @@ export interface Database {
           trainingCompleted?: boolean | null
         }
       }
+      employeeShift: {
+        Row: {
+          employeeId: string
+          shiftId: string
+          id: string
+        }
+        Insert: {
+          employeeId: string
+          shiftId: string
+          id?: string
+        }
+        Update: {
+          employeeId?: string
+          shiftId?: string
+          id?: string
+        }
+      }
       employeeType: {
         Row: {
           name: string
@@ -494,24 +511,24 @@ export interface Database {
         Row: {
           name: string
           timezone: string
-          latitude: number
-          longitude: number
+          latitude: number | null
+          longitude: number | null
           id: string
           active: boolean
         }
         Insert: {
           name: string
           timezone: string
-          latitude: number
-          longitude: number
+          latitude?: number | null
+          longitude?: number | null
           id?: string
           active?: boolean
         }
         Update: {
           name?: string
           timezone?: string
-          latitude?: number
-          longitude?: number
+          latitude?: number | null
+          longitude?: number | null
           id?: string
           active?: boolean
         }

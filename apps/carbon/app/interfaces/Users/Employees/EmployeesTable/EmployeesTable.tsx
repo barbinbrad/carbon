@@ -44,7 +44,7 @@ const EmployeesTable = memo(
     const rows = useMemo(
       () =>
         data.map((d) => {
-          // we should only have one user and employee per employee id
+          // we should have one user and employee per employee id
           if (
             d.user === null ||
             d.employeeType === null ||

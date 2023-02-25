@@ -210,6 +210,26 @@ export async function getEmployeeAbilities(
     .eq("active", true);
 }
 
+export async function getLocations(
+  client: SupabaseClient<Database>,
+  args?: GenericQueryFilters & { name: string | null }
+) {
+  let query = client
+    .from("location")
+    .select(`id, name, latitude, longitude, timezone`, { count: "exact" })
+    .eq("active", true);
+
+  if (args?.name) {
+    query = query.ilike("name", `%${args.name}%`);
+  }
+
+  if (args) {
+    query = setGenericQueryFilters(query, args, "name");
+  }
+
+  return query;
+}
+
 export async function getNotes(
   client: SupabaseClient<Database>,
   userId: string
@@ -224,6 +244,33 @@ export async function getNotes(
     .eq("userId", userId)
     .eq("active", true)
     .order("createdAt");
+}
+
+export async function getShifts(
+  client: SupabaseClient<Database>,
+  args: GenericQueryFilters & { name: string | null; location: string | null }
+) {
+  let query = client
+    .from("shift")
+    .select(
+      `id, name, startTime, endTime, employeeShift(user(id, fullName, avatarUrl)), location(name)`,
+      {
+        count: "exact",
+      }
+    )
+    .eq("active", true)
+    .eq("employeeShift.user.active", true);
+
+  if (args?.name) {
+    query = query.ilike("name", `%${args.name}%`);
+  }
+
+  if (args.location) {
+    query = query.eq("locationId", args.location);
+  }
+
+  query = setGenericQueryFilters(query, args, "name");
+  return query;
 }
 
 type UserAttributeId = string;

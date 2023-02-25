@@ -1,5 +1,5 @@
 import { Box, useColorModeValue } from "@chakra-ui/react";
-import { forwardRef } from "react";
+import { forwardRef, useId } from "react";
 import type { HTMLAttributes } from "react";
 
 export type StyledFieldProps = HTMLAttributes<HTMLElement> & {
@@ -8,6 +8,13 @@ export type StyledFieldProps = HTMLAttributes<HTMLElement> & {
 
 export const StyledField = forwardRef<HTMLDivElement, StyledFieldProps>(
   function Field({ children, ...otherProps }, ref) {
+    const instanceId = useId();
+    if ("id" in otherProps && otherProps.id) {
+      otherProps.id = instanceId;
+    }
+    if ("aria-describedby" in otherProps && otherProps["aria-describedby"]) {
+      otherProps["aria-describedby"] = instanceId;
+    }
     return (
       <Box
         position="relative"
@@ -24,7 +31,7 @@ export const StyledField = forwardRef<HTMLDivElement, StyledFieldProps>(
         }}
         _focusWithin={{
           borderColor: "gray.500",
-          boxShadow: "0 0 0 1px var(--chakra-colors-blue-500)",
+          boxShadow: "0 0 0 2px var(--chakra-ui-focus-ring-color)",
         }}
         {...otherProps}
         ref={ref}

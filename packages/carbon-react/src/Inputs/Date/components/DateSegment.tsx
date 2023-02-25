@@ -4,7 +4,7 @@ import type {
   DateSegment as DateSegmentType,
   useDateFieldState,
 } from "@react-stately/datepicker";
-import { useRef } from "react";
+import { useId, useRef } from "react";
 import { useColor } from "../../../hooks";
 
 export const DateSegment = ({
@@ -14,8 +14,16 @@ export const DateSegment = ({
   segment: DateSegmentType;
   state: ReturnType<typeof useDateFieldState>;
 }) => {
+  const instanceId = useId();
   const ref = useRef<HTMLDivElement>(null);
   const { segmentProps } = useDateSegment(segment, state, ref);
+
+  if ("id" in segmentProps && segmentProps.id) {
+    segmentProps.id = instanceId;
+  }
+  if ("aria-describedby" in segmentProps && segmentProps["aria-describedby"]) {
+    segmentProps["aria-describedby"] = instanceId;
+  }
 
   const lighter = useColor("gray.500");
   const light = useColor("gray.600");
@@ -24,6 +32,7 @@ export const DateSegment = ({
   return (
     <Box
       {...segmentProps}
+      id={instanceId}
       ref={ref}
       style={{
         ...segmentProps.style,

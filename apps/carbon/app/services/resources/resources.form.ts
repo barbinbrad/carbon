@@ -89,3 +89,12 @@ export const noteValidator = withZod(
     note: z.string().min(1, { message: "Note is required" }),
   })
 );
+
+export const shiftValidator = withZod(
+  z.object({
+    id: zfd.text(z.string().optional()),
+    name: z.string().min(1, { message: "Name is required" }),
+    startTime: z.string().min(1, { message: "Start time is required" }),
+    endTime: z.string().min(1, { message: "End time is required" }),
+  })
+);

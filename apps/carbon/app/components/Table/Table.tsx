@@ -8,9 +8,6 @@ import {
   Grid,
   Table as ChakraTable,
   Tbody,
-  Td,
-  Th,
-  Tr,
   Thead,
   chakra,
 } from "@chakra-ui/react";
@@ -18,7 +15,6 @@ import type {
   ColumnDef,
   ColumnOrderState,
   ColumnPinningState,
-  Row as RowType,
   RowSelectionState,
 } from "@tanstack/react-table";
 import {
@@ -26,18 +22,16 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-// import { AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useVirtual } from "react-virtual";
-import { AiFillCaretUp, AiFillCaretDown } from "react-icons/ai";
+import { FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
 import {
   TableHeader,
   IndeterminateCheckbox,
   Pagination,
-  // Td,
-  // Th,
-  // Tr,
-  // spring,
+  Th,
+  Tr,
+  spring,
   usePagination,
   useSort,
   Row,
@@ -379,29 +373,6 @@ const Table = <T extends object>({
   const rows = table.getRowModel().rows;
   const rowsAreClickable = !editMode && typeof onRowClick === "function";
 
-  const rowVirtualizer = useVirtual({
-    parentRef: tableContainerRef,
-    size: rows.length,
-    overscan: 10,
-  });
-
-  // const columnVirtualizer = useVirtual({
-  //   horizontal: true,
-  //   size: table.getVisibleLeafColumns().length,
-  //   parentRef: tableContainerRef,
-  //   estimateSize: useCallback(() => 250, []),
-  //   overscan: 5,
-  // });
-
-  const { virtualItems: virtualRows, totalSize: totalRows } = rowVirtualizer;
-
-  const virtualPaddingTop =
-    virtualRows.length > 0 ? virtualRows?.[0]?.start || 0 : 0;
-  const virutalPaddingBottom =
-    virtualRows.length > 0
-      ? totalRows - (virtualRows?.[virtualRows.length - 1]?.end || 0)
-      : 0;
-
   const defaultBackground = useColor("white");
   const borderColor = useColor("gray.200");
   const rowBackground = useColor("gray.50");
@@ -459,7 +430,10 @@ const Table = <T extends object>({
                       const sortable =
                         withSimpleSorting &&
                         accessorKey &&
+                        accessorKey !== "id" &&
+                        !accessorKey.endsWith(".id") &&
                         header.column.columnDef.enableSorting !== false;
+
                       const sorted = isSorted(accessorKey ?? "");
 
                       return (
@@ -472,7 +446,7 @@ const Table = <T extends object>({
                               : undefined
                           }
                           cursor={sortable ? "pointer" : undefined}
-                          // transition={spring}
+                          transition={spring}
                           colSpan={header.colSpan}
                           px={4}
                           py={2}
@@ -492,10 +466,12 @@ const Table = <T extends object>({
                               <chakra.span pl="4">
                                 {sorted ? (
                                   sorted === -1 ? (
-                                    <AiFillCaretDown aria-label="sorted descending" />
+                                    <FaSortDown aria-label="sorted descending" />
                                   ) : (
-                                    <AiFillCaretUp aria-label="sorted ascending" />
+                                    <FaSortUp aria-label="sorted ascending" />
                                   )
+                                ) : sortable ? (
+                                  <FaSort aria-label="sort" />
                                 ) : null}
                               </chakra.span>
                             </Flex>
@@ -507,44 +483,32 @@ const Table = <T extends object>({
                 ))}
               </Thead>
               <Tbody>
-                {virtualPaddingTop > 0 && (
-                  <Tr>
-                    <Td style={{ height: `${virtualPaddingTop}px` }} />
-                  </Tr>
-                )}
-                {/* <AnimatePresence> */}
-                {virtualRows.map((virtualRow) => {
-                  const row = rows[virtualRow.index] as RowType<T>;
-
-                  return (
-                    <Row
-                      key={row.id}
-                      borderColor={borderColor}
-                      backgroundColor={rowBackground}
-                      editableComponents={editableComponents}
-                      isEditing={isEditing}
-                      isEditMode={editMode}
-                      isFrozenColumn
-                      selectedCell={selectedCell}
-                      // @ts-ignore
-                      row={row}
-                      withColumnOrdering={withColumnOrdering}
-                      onCellClick={onCellClick}
-                      onCellUpdate={onCellEditUpdate}
-                      onRowClick={
-                        rowsAreClickable
-                          ? () => onRowClick(row.original)
-                          : undefined
-                      }
-                    />
-                  );
-                })}
-                {/* </AnimatePresence> */}
-                {virutalPaddingBottom > 0 && (
-                  <Tr>
-                    <Td style={{ height: `${virutalPaddingBottom}px` }} />
-                  </Tr>
-                )}
+                <AnimatePresence>
+                  {rows.map((row) => {
+                    return (
+                      <Row
+                        key={row.id}
+                        borderColor={borderColor}
+                        backgroundColor={rowBackground}
+                        editableComponents={editableComponents}
+                        isEditing={isEditing}
+                        isEditMode={editMode}
+                        isFrozenColumn
+                        selectedCell={selectedCell}
+                        // @ts-ignore
+                        row={row}
+                        withColumnOrdering={withColumnOrdering}
+                        onCellClick={onCellClick}
+                        onCellUpdate={onCellEditUpdate}
+                        onRowClick={
+                          rowsAreClickable
+                            ? () => onRowClick(row.original)
+                            : undefined
+                        }
+                      />
+                    );
+                  })}
+                </AnimatePresence>
               </Tbody>
             </ChakraTable>
           ) : null}
@@ -559,9 +523,12 @@ const Table = <T extends object>({
                 <Tr key={headerGroup.id} h={10}>
                   {headerGroup.headers.map((header) => {
                     const accessorKey = getAccessorKey(header.column.columnDef);
+
                     const sortable =
                       withSimpleSorting &&
                       accessorKey &&
+                      accessorKey !== "id" &&
+                      !accessorKey.endsWith(".id") &&
                       header.column.columnDef.enableSorting !== false;
                     const sorted = isSorted(accessorKey ?? "");
 
@@ -578,8 +545,8 @@ const Table = <T extends object>({
                         borderRightStyle="solid"
                         borderRightWidth={editMode ? 1 : undefined}
                         cursor={sortable ? "pointer" : undefined}
-                        // layout
-                        // transition={spring}
+                        layout
+                        transition={spring}
                         px={4}
                         py={3}
                         w={header.getSize()}
@@ -599,10 +566,15 @@ const Table = <T extends object>({
                             <chakra.span pl="4">
                               {sorted ? (
                                 sorted === -1 ? (
-                                  <AiFillCaretDown aria-label="sorted descending" />
+                                  <FaSortDown aria-label="sorted descending" />
                                 ) : (
-                                  <AiFillCaretUp aria-label="sorted ascending" />
+                                  <FaSortUp aria-label="sorted ascending" />
                                 )
+                              ) : sortable ? (
+                                <FaSort
+                                  aria-label="sort"
+                                  style={{ opacity: 0.4 }}
+                                />
                               ) : null}
                             </chakra.span>
                           </Flex>
@@ -614,51 +586,39 @@ const Table = <T extends object>({
               ))}
             </Thead>
             <Tbody>
-              {virtualPaddingTop > 0 && (
-                <Tr>
-                  <Td style={{ height: `${virtualPaddingTop}px` }} />
-                </Tr>
-              )}
-              {/* <AnimatePresence> */}
-              {virtualRows.map((virtualRow) => {
-                const row = rows[virtualRow.index] as RowType<T>;
-
-                return (
-                  <Row
-                    key={row.id}
-                    borderColor={borderColor}
-                    backgroundColor={rowBackground}
-                    // @ts-ignore
-                    editableComponents={editableComponents}
-                    isEditing={isEditing}
-                    isEditMode={editMode}
-                    pinnedColumns={
-                      columnPinning?.left
-                        ? columnPinning.left?.length -
-                          (withSelectableRows ? 1 : 0)
-                        : 0
-                    }
-                    selectedCell={selectedCell}
-                    // @ts-ignore
-                    row={row}
-                    rowIsClickable={rowsAreClickable}
-                    withColumnOrdering={withColumnOrdering}
-                    onCellClick={onCellClick}
-                    onCellUpdate={onCellEditUpdate}
-                    onRowClick={
-                      rowsAreClickable
-                        ? () => onRowClick(row.original)
-                        : undefined
-                    }
-                  />
-                );
-              })}
-              {/* </AnimatePresence> */}
-              {virutalPaddingBottom > 0 && (
-                <Tr>
-                  <Td style={{ height: `${virutalPaddingBottom}px` }} />
-                </Tr>
-              )}
+              <AnimatePresence>
+                {rows.map((row) => {
+                  return (
+                    <Row
+                      key={row.id}
+                      borderColor={borderColor}
+                      backgroundColor={rowBackground}
+                      // @ts-ignore
+                      editableComponents={editableComponents}
+                      isEditing={isEditing}
+                      isEditMode={editMode}
+                      pinnedColumns={
+                        columnPinning?.left
+                          ? columnPinning.left?.length -
+                            (withSelectableRows ? 1 : 0)
+                          : 0
+                      }
+                      selectedCell={selectedCell}
+                      // @ts-ignore
+                      row={row}
+                      rowIsClickable={rowsAreClickable}
+                      withColumnOrdering={withColumnOrdering}
+                      onCellClick={onCellClick}
+                      onCellUpdate={onCellEditUpdate}
+                      onRowClick={
+                        rowsAreClickable
+                          ? () => onRowClick(row.original)
+                          : undefined
+                      }
+                    />
+                  );
+                })}
+              </AnimatePresence>
             </Tbody>
           </ChakraTable>
         </Grid>

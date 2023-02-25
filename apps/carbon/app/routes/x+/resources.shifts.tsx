@@ -3,13 +3,10 @@ import type { LoaderArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
-import {
-  AbilitiesTable,
-  AbilitiesTableFilters,
-} from "~/interfaces/Resources/Abilities";
+import { ShiftsTable, ShiftsTableFilters } from "~/interfaces/Resources/Shifts";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
-import { getAbilities } from "~/services/resources";
+import { getLocations, getShifts } from "~/services/resources";
 import { getGenericQueryFilters } from "~/utils/query";
 import { error } from "~/utils/result";
 
@@ -22,30 +19,35 @@ export async function loader({ request }: LoaderArgs) {
   const url = new URL(request.url);
   const searchParams = new URLSearchParams(url.search);
   const name = searchParams.get("name");
+  const location = searchParams.get("location");
   const { limit, offset, sorts } = getGenericQueryFilters(searchParams);
 
-  const abilities = await getAbilities(client, { name, limit, offset, sorts });
+  const [shifts, locations] = await Promise.all([
+    getShifts(client, { name, location, limit, offset, sorts }),
+    getLocations(client),
+  ]);
 
-  if (abilities.error) {
+  if (shifts.error) {
     return redirect(
       "/x/resources",
-      await flash(request, error(abilities.error, "Failed to load abilities"))
+      await flash(request, error(shifts.error, "Failed to load shifts"))
     );
   }
 
   return json({
-    abilities: abilities.data ?? [],
-    count: abilities.count ?? 0,
+    shifts: shifts.data ?? [],
+    locations: locations.data ?? [],
+    count: shifts.count ?? 0,
   });
 }
 
-export default function AbilitiesRoute() {
-  const { abilities, count } = useLoaderData<typeof loader>();
+export default function ShiftsRoute() {
+  const { shifts, locations, count } = useLoaderData<typeof loader>();
 
   return (
     <VStack w="full" h="full" spacing={0}>
-      <AbilitiesTableFilters />
-      <AbilitiesTable data={abilities} count={count} />
+      <ShiftsTableFilters locations={locations} />
+      <ShiftsTable data={shifts} count={count} />
       <Outlet />
     </VStack>
   );

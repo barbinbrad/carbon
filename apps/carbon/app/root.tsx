@@ -1,5 +1,5 @@
 // root.tsx
-import React, { useContext, useEffect } from "react";
+import { ThemeProvider } from "@carbon/react";
 import { SkipNavLink } from "@chakra-ui/skip-nav";
 import { withEmotionCache } from "@emotion/react";
 import {
@@ -12,8 +12,8 @@ import {
   useLoaderData,
 } from "@remix-run/react";
 import { json } from "@remix-run/node";
-import type { MetaFunction, LoaderArgs } from "@remix-run/node";
-import { ThemeProvider } from "@carbon/react";
+import type { MetaFunction } from "@remix-run/node";
+import React, { useContext, useEffect } from "react";
 import { getBrowserEnv } from "~/config/env";
 import { ServerStyleContext, ClientStyleContext } from "~/lib/emotion";
 import Background from "~/styles/background.css";
@@ -32,7 +32,7 @@ interface DocumentProps {
   children: React.ReactNode;
 }
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader() {
   const { SUPABASE_API_URL, SUPABASE_ANON_PUBLIC } = getBrowserEnv();
   return json({
     env: {

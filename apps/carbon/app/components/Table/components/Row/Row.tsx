@@ -1,6 +1,5 @@
 import type { Row as RowType } from "@tanstack/react-table";
-import { Tr } from "@chakra-ui/react";
-// import { Tr, spring } from "../Animations";
+import { Tr, spring } from "../Animations";
 import Cell from "../Cell";
 import type { EditableTableCellComponent, Position } from "../../types";
 import { useColor } from "@carbon/react";
@@ -43,9 +42,9 @@ const Row = <T extends object>({
     <Tr
       key={row.id}
       bg={isFrozenColumn ? frozenBackgroundColor : undefined}
-      // exit={{ opacity: 0 }}
-      // layout
-      // transition={spring}
+      exit={{ opacity: 0 }}
+      layout
+      transition={spring}
       onClick={onRowClick}
       _hover={{
         cursor: rowIsClickable ? "pointer" : undefined,

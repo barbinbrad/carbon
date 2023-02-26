@@ -45,11 +45,26 @@ export async function deleteEmployeeAbility(
     .eq("id", employeeAbilityId);
 }
 
+export async function deleteLocation(
+  client: SupabaseClient<Database>,
+  locationId: string
+) {
+  return client.from("location").delete().eq("id", locationId);
+}
+
 export async function deleteNote(
   client: SupabaseClient<Database>,
   noteId: string
 ) {
   return client.from("userNote").update({ active: false }).eq("id", noteId);
+}
+
+export async function deleteShift(
+  client: SupabaseClient<Database>,
+  shiftId: string
+) {
+  // TODO: Set all employeeShifts to null
+  return client.from("shift").update({ active: false }).eq("id", shiftId);
 }
 
 export async function getAbilities(
@@ -210,6 +225,17 @@ export async function getEmployeeAbilities(
     .eq("active", true);
 }
 
+export async function getLocation(
+  client: SupabaseClient<Database>,
+  locationId: string
+) {
+  return client
+    .from("location")
+    .select(`id, name, latitude, longitude, timezone`)
+    .eq("id", locationId)
+    .single();
+}
+
 export async function getLocations(
   client: SupabaseClient<Database>,
   args?: GenericQueryFilters & { name: string | null }
@@ -230,6 +256,10 @@ export async function getLocations(
   return query;
 }
 
+export async function getLocationsList(client: SupabaseClient<Database>) {
+  return client.from("location").select(`id, name`).eq("active", true);
+}
+
 export async function getNotes(
   client: SupabaseClient<Database>,
   userId: string
@@ -246,6 +276,20 @@ export async function getNotes(
     .order("createdAt");
 }
 
+export async function getShift(
+  client: SupabaseClient<Database>,
+  shiftId: string
+) {
+  return client
+    .from("shift")
+    .select(
+      `id, name, startTime, endTime, locationId, employeeShift(user(id, fullName, avatarUrl)), location(name, timezone)`
+    )
+    .eq("id", shiftId)
+    .eq("active", true)
+    .single();
+}
+
 export async function getShifts(
   client: SupabaseClient<Database>,
   args: GenericQueryFilters & { name: string | null; location: string | null }
@@ -253,7 +297,7 @@ export async function getShifts(
   let query = client
     .from("shift")
     .select(
-      `id, name, startTime, endTime, employeeShift(user(id, fullName, avatarUrl)), location(name)`,
+      `id, name, startTime, endTime, locationId, employeeShift(user(id, fullName, avatarUrl)), location(name, timezone)`,
       {
         count: "exact",
       }
@@ -269,7 +313,7 @@ export async function getShifts(
     query = query.eq("locationId", args.location);
   }
 
-  query = setGenericQueryFilters(query, args, "name");
+  query = setGenericQueryFilters(query, args, "locationId");
   return query;
 }
 
@@ -557,4 +601,45 @@ export async function upsertEmployeeAbility(
     .from("employeeAbility")
     .insert([{ ...update }])
     .select("id");
+}
+
+export async function upsertLocation(
+  client: SupabaseClient<Database>,
+  location: {
+    id?: string;
+    name: string;
+    timezone: string;
+    latitude: number | null;
+    longitude: number | null;
+  }
+) {
+  const { id, ...update } = location;
+  if (id) {
+    return client
+      .from("location")
+      .update({ ...update })
+      .eq("id", id);
+  }
+  return client.from("location").insert([update]).select("id");
+}
+
+export async function upsertShift(
+  client: SupabaseClient<Database>,
+  shift: {
+    id?: string;
+    name: string;
+    startTime: string;
+    endTime: string;
+    locationId: string;
+  }
+) {
+  const { id, ...update } = shift;
+  if (id) {
+    return client
+      .from("shift")
+      .update({ ...update })
+      .eq("id", id);
+  }
+
+  return client.from("shift").insert([update]).select("id");
 }

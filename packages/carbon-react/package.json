@@ -21,10 +21,10 @@
     "preset": "@carbon/jest/node"
   },
   "dependencies": {
-    "@chakra-ui/react": "^2.4.9",
+    "@chakra-ui/react": "^2.5.1",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
-    "@internationalized/date": "^3.0.2",
+    "@internationalized/date": "^3.1.0",
     "@react-aria/button": "^3.6.4",
     "@react-aria/calendar": "^3.0.5",
     "@react-aria/datepicker": "^3.2.1",

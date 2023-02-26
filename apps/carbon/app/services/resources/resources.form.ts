@@ -83,6 +83,25 @@ export const employeeAbilityValidator = withZod(
   })
 );
 
+export const locationValidator = withZod(
+  z
+    .object({
+      id: zfd.text(z.string().optional()),
+      name: z.string().min(1, { message: "Name is required" }),
+      timezone: z.string().min(1, { message: "Timezone is required" }),
+      latitude: zfd.numeric(z.number().optional()),
+      longitude: zfd.numeric(z.number().optional()),
+    })
+    .superRefine(({ latitude, longitude }, ctx) => {
+      if ((latitude && !longitude) || (!latitude && longitude)) {
+        ctx.addIssue({
+          code: "custom",
+          message: "Both latitude and longitude are required",
+        });
+      }
+    })
+);
+
 export const noteValidator = withZod(
   z.object({
     id: zfd.text(z.string().optional()),
@@ -96,5 +115,6 @@ export const shiftValidator = withZod(
     name: z.string().min(1, { message: "Name is required" }),
     startTime: z.string().min(1, { message: "Start time is required" }),
     endTime: z.string().min(1, { message: "End time is required" }),
+    locationId: z.string().min(1, { message: "Location is required" }),
   })
 );

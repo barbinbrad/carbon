@@ -1,52 +1,51 @@
 import { VStack } from "@chakra-ui/react";
 import type { LoaderArgs } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
-import { arrayToTree } from "performant-array-to-tree";
-import { GroupsTable, GroupsTableFilters } from "~/interfaces/Users/Groups";
-import type { Group } from "~/interfaces/Users/types";
+import {
+  LocationsTable,
+  LocationsTableFilters,
+} from "~/interfaces/Resources/Locations";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
-import { getGroups } from "~/services/users";
+import { getLocations } from "~/services/resources";
 import { getGenericQueryFilters } from "~/utils/query";
 import { error } from "~/utils/result";
 
 export async function loader({ request }: LoaderArgs) {
   const { client } = await requirePermissions(request, {
-    view: "users",
+    view: "resources",
     role: "employee",
   });
 
   const url = new URL(request.url);
   const searchParams = new URLSearchParams(url.search);
   const name = searchParams.get("name");
-  const uid = searchParams.get("uid");
   const { limit, offset, sorts } = getGenericQueryFilters(searchParams);
 
-  const groups = await getGroups(client, { name, uid, limit, offset, sorts });
+  const locations = await getLocations(client, { name, limit, offset, sorts });
 
-  if (groups.error) {
-    return json(
-      { groups: [], count: 0, error: groups.error },
-      await flash(request, error(groups.error, "Failed to load groups"))
+  if (locations.error) {
+    return redirect(
+      "/x/resources",
+      await flash(request, error(locations.error, "Failed to load locations"))
     );
   }
 
   return json({
-    groups: (groups.data ? arrayToTree(groups.data) : []) as Group[],
-    error: null,
-    count: groups.count ?? 0,
+    locations: locations.data ?? [],
+    count: locations.count ?? 0,
   });
 }
 
-export default function GroupsRoute() {
-  const { groups, count } = useLoaderData<typeof loader>();
+export default function LocationsRoute() {
+  const { locations, count } = useLoaderData<typeof loader>();
 
   return (
     <VStack w="full" h="full" spacing={0}>
-      <GroupsTableFilters />
-      {/* @ts-ignore */}
-      <GroupsTable data={groups} count={count} />
+      <LocationsTableFilters />
+      <LocationsTable data={locations} count={count} />
       <Outlet />
     </VStack>
   );

@@ -107,7 +107,7 @@ const ShiftsTable = memo(({ data, count }: ShiftsTableProps) => {
               <MenuItem
                 icon={<BsPencilSquare />}
                 onClick={() => {
-                  navigate(`/x/resources/shift/${row.original.id}`);
+                  navigate(`/x/resources/shifts/${row.original.id}`);
                 }}
               >
                 Edit Shift

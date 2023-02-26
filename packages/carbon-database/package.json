@@ -26,7 +26,7 @@
   },
   "devDependencies": {
     "@carbon/tsconfig": "*",
-    "@supabase/supabase-js": "^2.2.1",
+    "@supabase/supabase-js": "^2.8.0",
     "@types/node": "^16.17.1",
     "@types/uuid": "^8.3.4",
     "dotenv": "16.0.3",

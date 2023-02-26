@@ -4,7 +4,6 @@ CREATE TABLE "location" (
   "timezone" TEXT NOT NULL,
   "latitude" NUMERIC,
   "longitude" NUMERIC,
-  "active" BOOLEAN NOT NULL DEFAULT true,
 
   CONSTRAINT "location_pkey" PRIMARY KEY ("id")
 );

@@ -14,6 +14,7 @@ import { useNavigate } from "@remix-run/react";
 import { useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import {
+  Boolean,
   Employees,
   Hidden,
   Input,
@@ -39,6 +40,7 @@ const AbilityForm = ({ initialValues }: AbilityFormProps) => {
   const navigate = useNavigate();
   const onClose = () => navigate(-1);
   const [maxShadowWeeks, setMaxShadowWeeks] = useState(initialValues.weeks);
+  // const [equipmentRequired, setEquipmentRequired] = useState(initialValues.equipmentType !== undefined);
 
   const onWeekChange = (_: string, value: number) => {
     setMaxShadowWeeks(value);
@@ -62,6 +64,12 @@ const AbilityForm = ({ initialValues }: AbilityFormProps) => {
             <Hidden name="id" />
             <VStack spacing={4} alignItems="start">
               <Input name="name" label="Name" />
+              {/* <Boolean
+                name="machineOperator"
+                label="Equipment Required"
+                description="This ability requires specific equipment"
+
+              /> */}
               <Select
                 name="startingPoint"
                 label="Learning Curve"

@@ -514,7 +514,6 @@ export interface Database {
           latitude: number | null
           longitude: number | null
           id: string
-          active: boolean
         }
         Insert: {
           name: string
@@ -522,7 +521,6 @@ export interface Database {
           latitude?: number | null
           longitude?: number | null
           id?: string
-          active?: boolean
         }
         Update: {
           name?: string
@@ -530,7 +528,6 @@ export interface Database {
           latitude?: number | null
           longitude?: number | null
           id?: string
-          active?: boolean
         }
       }
       membership: {
@@ -589,6 +586,13 @@ export interface Database {
           endTime: string
           locationId: string
           id: string
+          sunday: boolean
+          monday: boolean
+          tuesday: boolean
+          wednesday: boolean
+          thursday: boolean
+          friday: boolean
+          saturday: boolean
           active: boolean
         }
         Insert: {
@@ -597,6 +601,13 @@ export interface Database {
           endTime: string
           locationId: string
           id?: string
+          sunday?: boolean
+          monday?: boolean
+          tuesday?: boolean
+          wednesday?: boolean
+          thursday?: boolean
+          friday?: boolean
+          saturday?: boolean
           active?: boolean
         }
         Update: {
@@ -605,6 +616,13 @@ export interface Database {
           endTime?: string
           locationId?: string
           id?: string
+          sunday?: boolean
+          monday?: boolean
+          tuesday?: boolean
+          wednesday?: boolean
+          thursday?: boolean
+          friday?: boolean
+          saturday?: boolean
           active?: boolean
         }
       }

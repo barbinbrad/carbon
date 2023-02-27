@@ -33,6 +33,7 @@ const IconSidebar = () => {
               <IconButton
                 as={Link}
                 to={link.to}
+                colorScheme={isActive ? link.color ?? "brand" : undefined}
                 variant={isActive ? "solid" : "outline"}
                 size="lg"
                 borderRadius={0}

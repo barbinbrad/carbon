@@ -8,6 +8,7 @@ import {
   TabPanels,
   Box,
   Icon,
+  VStack,
 } from "@chakra-ui/react";
 import { BiLockAlt } from "react-icons/bi";
 import { SectionTitle } from "~/components/Layout";
@@ -18,11 +19,17 @@ import type {
 } from "~/interfaces/Account/types";
 import { UserAttributesForm } from "~/interfaces/Account/UserAttributes";
 import type { User } from "~/interfaces/Users/types";
-import { PersonNotes } from "~/interfaces/Resources/Person";
+import { PersonJob, PersonNotes } from "~/interfaces/Resources/Person";
 import type { Note } from "~/interfaces/Resources/types";
 
 type PersonTabsProps = {
   user: User;
+  job: {
+    title?: string;
+    locationId?: string;
+    shiftId?: string;
+    managerId?: string;
+  };
   publicAttributes: PublicAttributes[];
   privateAttributes: PrivateAttributes[];
   notes: Note[];
@@ -30,6 +37,7 @@ type PersonTabsProps = {
 
 const PersonsTabs = ({
   user,
+  job,
   publicAttributes,
   privateAttributes,
   notes,
@@ -40,6 +48,7 @@ const PersonsTabs = ({
         <Tabs colorScheme="gray">
           <TabList>
             <Tab>Profile</Tab>
+            <Tab>Job</Tab>
             <Tab>Public</Tab>
             <Tab>
               <Icon as={BiLockAlt} h={4} w={4} mr={2} /> Private
@@ -52,6 +61,9 @@ const PersonsTabs = ({
           <TabPanels>
             <TabPanel>
               <ProfileForm user={user} />
+            </TabPanel>
+            <TabPanel>
+              <PersonJob job={job} />
             </TabPanel>
             <TabPanel>
               {publicAttributes.length ? (

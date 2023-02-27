@@ -242,8 +242,7 @@ export async function getLocations(
 ) {
   let query = client
     .from("location")
-    .select(`id, name, latitude, longitude, timezone`, { count: "exact" })
-    .eq("active", true);
+    .select(`id, name, latitude, longitude, timezone`, { count: "exact" });
 
   if (args?.name) {
     query = query.ilike("name", `%${args.name}%`);
@@ -257,7 +256,7 @@ export async function getLocations(
 }
 
 export async function getLocationsList(client: SupabaseClient<Database>) {
-  return client.from("location").select(`id, name`).eq("active", true);
+  return client.from("location").select(`id, name`);
 }
 
 export async function getNotes(
@@ -314,6 +313,19 @@ export async function getShifts(
   }
 
   query = setGenericQueryFilters(query, args, "locationId");
+  return query;
+}
+
+export async function getShiftsList(
+  client: SupabaseClient<Database>,
+  locationId: string | null
+) {
+  let query = client.from("shift").select(`id, name`).eq("active", true);
+
+  if (locationId) {
+    query = query.eq("locationId", locationId);
+  }
+
   return query;
 }
 

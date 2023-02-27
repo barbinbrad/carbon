@@ -8,7 +8,9 @@ import {
   PersonAbilities,
   PersonHeader,
   PersonTabs,
-  PersonSchedule,
+  PersonJob,
+  PersonDaysOff,
+  PersonOvertime,
 } from "~/interfaces/Resources/Person";
 import logger from "~/lib/logger";
 import {
@@ -124,13 +126,20 @@ export default function PersonRoute() {
         <VStack spacing={4}>
           <PersonTabs
             user={user}
+            job={{
+              title: "Software Engineer",
+              locationId: "cfsopqp820j020fjo510",
+              shiftId: "cfsoq3p820j02vfjo51g",
+              managerId: "",
+            }}
             publicAttributes={publicAttributes}
             privateAttributes={privateAttributes}
             notes={notes}
           />
         </VStack>
         <VStack spacing={4}>
-          <PersonSchedule />
+          <PersonDaysOff />
+          <PersonOvertime />
           <PersonAbilities abilities={employeeAbilities} />
         </VStack>
       </Grid>

@@ -83,6 +83,13 @@ export const employeeAbilityValidator = withZod(
   })
 );
 
+export const employeeShiftValidator = withZod(
+  z.object({
+    locationId: z.string().min(20, { message: "Location is required" }),
+    shiftId: z.string().min(20, { message: "Shift is required" }),
+  })
+);
+
 export const locationValidator = withZod(
   z
     .object({

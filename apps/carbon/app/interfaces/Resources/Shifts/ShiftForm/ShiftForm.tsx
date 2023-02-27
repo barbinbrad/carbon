@@ -1,5 +1,7 @@
 import {
   Button,
+  Checkbox,
+  CheckboxGroup,
   Drawer,
   DrawerBody,
   DrawerCloseButton,
@@ -7,7 +9,10 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
+  FormControl,
+  FormLabel,
   HStack,
+  Stack,
   VStack,
 } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
@@ -56,9 +61,32 @@ const ShiftForm = ({ initialValues }: ShiftFormProps) => {
             <Hidden name="id" />
             <VStack spacing={4} alignItems="start">
               <Input name="name" label="Shift Name" />
+              <Location name="locationId" label="Location" />
               <TimePicker name="startTime" label="Start Time" />
               <TimePicker name="endTime" label="End Time" />
-              <Location name="locationId" label="Location" />
+              <CheckboxGroup
+                colorScheme="blackAlpha"
+                defaultValue={[
+                  "monday",
+                  "tuesday",
+                  "wednesday",
+                  "thursday",
+                  "friday",
+                ]}
+              >
+                <FormControl>
+                  <FormLabel>Days</FormLabel>
+                  <VStack w="full" alignItems="start">
+                    <Checkbox value="sunday">Sunday</Checkbox>
+                    <Checkbox value="monday">Monday</Checkbox>
+                    <Checkbox value="tuesday">Tuesday</Checkbox>
+                    <Checkbox value="wednesday">Wednesday</Checkbox>
+                    <Checkbox value="thursday">Thursday</Checkbox>
+                    <Checkbox value="friday">Friday</Checkbox>
+                    <Checkbox value="saturday">Saturday</Checkbox>
+                  </VStack>
+                </FormControl>
+              </CheckboxGroup>
             </VStack>
           </DrawerBody>
           <DrawerFooter>

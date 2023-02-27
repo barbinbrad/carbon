@@ -20,6 +20,7 @@ export type FormActionData = Promise<
 
 export type NavItem = Omit<Route, "icon"> & {
   icon: ReactElement;
+  color?: string;
 };
 
 export type Result = {

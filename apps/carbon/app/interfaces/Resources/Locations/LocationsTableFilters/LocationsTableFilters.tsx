@@ -36,7 +36,7 @@ const LocationsTableFilters = () => {
             colorScheme="brand"
             leftIcon={<IoMdAdd />}
           >
-            New Shift
+            New Location
           </Button>
         )}
       </HStack>

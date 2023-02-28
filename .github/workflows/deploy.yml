@@ -21,11 +21,8 @@ jobs:
       SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
 
     steps:
-      - name: Setup repository
+      - name: Checkout code
       - uses: actions/checkout@v3
-
-      - name: Check out code
-        uses: actions/checkout@v2
 
       - uses: actions/cache@v2
         with:

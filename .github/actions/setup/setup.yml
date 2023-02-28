@@ -45,5 +45,5 @@ runs:
         version: ${{ inputs.supabase-version }}
 
     - name: 📦 Install dependencies
-      run: yarn install
+      run: yarn
       shell: bash

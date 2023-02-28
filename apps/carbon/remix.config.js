@@ -1,5 +1,14 @@
-const path = require("path");
+const path = require("node:path");
 const { flatRoutes } = require("remix-flat-routes");
+const glob = require("glob");
+
+const packages = glob
+  .sync("packages/**/package.json", {
+    cwd: path.join(__dirname, "..", ".."),
+    ignore: ["**/node_modules/**"],
+    absolute: true,
+  })
+  .map((pkg) => path.dirname(pkg));
 
 module.exports = {
   serverBuildTarget: "vercel",
@@ -20,12 +29,5 @@ module.exports = {
     "@carbon/react",
     "@carbon/utils",
   ],
-  watchPaths: async () => {
-    return [
-      "../../packages/carbon-react/src/**/*",
-      "../../packages/carbon-database/src/**/*",
-      "../../packages/carbon-logger/src/**/*",
-      "../../packages/carbon-utils/src/**/*",
-    ];
-  },
+  watchPaths: packages,
 };

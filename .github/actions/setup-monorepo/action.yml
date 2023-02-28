@@ -19,3 +19,4 @@ runs:
     - name: Install dependecies
       if: steps.yarn-cache.outputs.cache-hit != 'true'
       run: yarn install --frozen-lockfile
+      shell: bash

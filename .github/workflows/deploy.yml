@@ -6,9 +6,13 @@ on:
       - main
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   deploy:
-    name: 🚀 supabase
+    name: supabase
     runs-on: ubuntu-latest
 
     env:
@@ -17,12 +21,11 @@ jobs:
       SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
 
     steps:
+      - name: Setup repository
       - uses: actions/checkout@v3
 
+      - name: Setup monorepo
       - uses: ./.github/actions/setup
 
-      - uses: supabase/setup-cli@v1
-        with:
-          version: latest
-
+      - name: 🚀 Deploy
       - run: yarn deploy

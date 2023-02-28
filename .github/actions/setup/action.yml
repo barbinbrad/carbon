@@ -14,5 +14,10 @@ runs:
       with:
         node-version: ${{ inputs.node-version }}
 
-    - name: Install packages
+    - name: 🏗 Setup Supabase
+      uses: supabase/setup-cli@v1
+      with:
+        version: ${{ inputs.supabase-version }}
+
+    - name: 📦 Install packages
       run: yarn install --frozen-lockfile

@@ -27,7 +27,7 @@ export async function loader({ request, params }: LoaderArgs) {
     );
   }
 
-  return json(supplierType);
+  return json({ supplierType: supplierType.data });
 }
 
 export async function action({ request, params }: ActionArgs) {
@@ -65,17 +65,17 @@ export async function action({ request, params }: ActionArgs) {
 
 export default function DeleteSupplierTypeRoute() {
   const { supplierTypeId } = useParams();
-  const { data } = useLoaderData<typeof loader>();
+  const { supplierType } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
 
-  if (!supplierTypeId || !data) return null; // TODO - handle this better (404?)
+  if (!supplierTypeId || !supplierType) return null; // TODO - handle this better (404?)
 
   const onCancel = () => navigate("/x/purchasing/supplier-types");
   return (
     <ConfirmDelete
       action={`/x/purchasing/supplier-types/delete/${supplierTypeId}`}
-      name={data.name}
-      text={`Are you sure you want to delete the supplier type: ${data.name}? This cannot be undone.`}
+      name={supplierType.name}
+      text={`Are you sure you want to delete the supplier type: ${supplierType.name}? This cannot be undone.`}
       onCancel={onCancel}
     />
   );

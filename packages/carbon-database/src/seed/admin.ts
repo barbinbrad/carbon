@@ -1,7 +1,7 @@
 import { possibleFeatures } from "./features";
 
 const admin = {
-  email: "admin@carbon.app",
+  email: "admin@carbon.us.org",
   password: "carbon",
   firstName: "Carbon",
   lastName: "Admin",

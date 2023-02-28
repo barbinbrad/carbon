@@ -25,7 +25,7 @@ export async function loader({ request, params }: LoaderArgs) {
     );
   }
 
-  return json(group);
+  return json({ group: group.data });
 }
 
 export async function action({ request, params }: ActionArgs) {
@@ -57,18 +57,18 @@ export async function action({ request, params }: ActionArgs) {
 
 export default function DeleteEmployeeTypeRoute() {
   const { groupId } = useParams();
-  const { data } = useLoaderData<typeof loader>();
+  const { group } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
 
-  if (!groupId || !data) return null; // TODO - handle this better (404?)
+  if (!groupId || !group) return null; // TODO - handle this better (404?)
 
   const onCancel = () => navigate("/x/users/groups");
 
   return (
     <ConfirmDelete
       action={`/x/users/groups/delete/${groupId}`}
-      name={data.name}
-      text={`Are you sure you want to delete the group: ${data.name}? This cannot be undone.`}
+      name={group.name}
+      text={`Are you sure you want to delete the group: ${group.name}? This cannot be undone.`}
       onCancel={onCancel}
     />
   );

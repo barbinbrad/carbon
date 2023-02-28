@@ -4,7 +4,7 @@ import type {
   AuthSession as SupabaseAuthSession,
   SupabaseClient,
 } from "@supabase/supabase-js";
-import { SERVER_URL } from "~/config/env";
+import { VERCEL_URL } from "~/config/env";
 import { REFRESH_ACCESS_TOKEN_THRESHOLD } from "~/config/env";
 import { getSupabase, getSupabaseServiceRole } from "~/lib/supabase";
 import { requireAuthSession, flash } from "~/services/session";
@@ -145,7 +145,7 @@ export async function sendInviteByEmail(
   data?: Record<string, unknown>
 ) {
   return getSupabaseServiceRole().auth.admin.inviteUserByEmail(email, {
-    redirectTo: `${SERVER_URL}/callback`,
+    redirectTo: `${VERCEL_URL}/callback`,
     data,
   });
 }
@@ -154,7 +154,7 @@ export async function sendMagicLink(email: string) {
   return getSupabaseServiceRole().auth.signInWithOtp({
     email,
     options: {
-      emailRedirectTo: `${SERVER_URL}/callback`,
+      emailRedirectTo: `${VERCEL_URL}/callback`,
     },
   });
 }

@@ -14,7 +14,7 @@ declare global {
     interface ProcessEnv {
       SUPABASE_URL: string;
       SUPABASE_SERVICE_ROLE: string;
-      SERVER_URL: string;
+      VERCEL_URL: string;
       SUPABASE_ANON_PUBLIC: string;
       SESSION_SECRET: string;
       SESSION_KEY: string;
@@ -50,7 +50,7 @@ function getEnv(
 /**
  * Server env
  */
-export const SERVER_URL = getEnv("SERVER_URL");
+export const VERCEL_URL = getEnv("VERCEL_URL");
 export const SUPABASE_SERVICE_ROLE = getEnv("SUPABASE_SERVICE_ROLE");
 export const SESSION_SECRET = getEnv("SESSION_SECRET");
 export const SESSION_KEY = "authenticated";

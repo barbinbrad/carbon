@@ -5,6 +5,10 @@
       "outputs": ["dist/**", "build/**", "api/**", "public/build/**"],
       "dependsOn": ["^build"]
     },
+    "carbon#build": {
+      "dependsOn": ["^build"],
+      "outputs": ["api/index.js", "api/build/**", "public/build/**"]
+    },
     "test": {
       "outputs": ["coverage/**"],
       "dependsOn": []

@@ -1,5 +1,5 @@
+const path = require("path");
 const { flatRoutes } = require("remix-flat-routes");
-const { getDependenciesToBundle } = require("@remix-run/dev");
 
 module.exports = {
   serverBuildTarget: "vercel",
@@ -11,9 +11,7 @@ module.exports = {
   assetsBuildDirectory: "public/build",
   routes: async (defineRoutes) => {
     return flatRoutes("routes", defineRoutes, {
-      basePath: "/", // optional base path (defaults to /)
-      paramPrefixChar: "$", // optional specify param prefix
-      ignoredRouteFiles: [], // same as remix config
+      appDir: path.resolve(path.dirname(""), "app"),
     });
   },
   serverDependenciesToBundle: [

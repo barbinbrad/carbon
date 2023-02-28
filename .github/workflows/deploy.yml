@@ -24,21 +24,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - uses: actions/cache@v2
-        with:
-          path: "**/node_modules"
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+      - name: 📦 Install dependencies
+        uses: ./.github/actions/setup-monorepo
 
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v2
-        with:
-          cache: yarn
-          cache-dependency-path: yarn.lock
-          node-version: 18.x
-
-      - name: Install dependecies
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
-        run: yarn install --frozen-lockfile
-
-      - name: 🚀 Deploy
+      - name: 🚀 Sync local database with supabase remote
         run: yarn deploy

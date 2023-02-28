@@ -24,8 +24,24 @@ jobs:
       - name: Setup repository
       - uses: actions/checkout@v3
 
-      - name: Setup monorepo
-      - uses: ./.github/actions/setup
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2
+        with:
+          cache: yarn
+          cache-dependency-path: yarn.lock
+          node-version: 18.x
+
+      - name: Install dependecies
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile
 
       - name: 🚀 Deploy
       - run: yarn deploy

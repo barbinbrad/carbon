@@ -20,16 +20,11 @@ import type {
 import { UserAttributesForm } from "~/interfaces/Account/UserAttributes";
 import type { User } from "~/interfaces/Users/types";
 import { PersonJob, PersonNotes } from "~/interfaces/Resources/Person";
-import type { Note } from "~/interfaces/Resources/types";
+import type { EmployeeJob, Note } from "~/interfaces/Resources/types";
 
 type PersonTabsProps = {
   user: User;
-  job: {
-    title?: string;
-    locationId?: string;
-    shiftId?: string;
-    managerId?: string;
-  };
+  job: EmployeeJob;
   publicAttributes: PublicAttributes[];
   privateAttributes: PrivateAttributes[];
   notes: Note[];

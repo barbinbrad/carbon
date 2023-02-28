@@ -14,6 +14,7 @@
       "outputs": []
     },
     "dev": {
+      "dependsOn": ["^build"],
       "cache": false
     },
     "clean": {
@@ -37,22 +38,17 @@
       "cache": false
     },
     "db:push": {
-      "outputs": [],
-      "dependsOn": ["^generate"]
+      "outputs": []
     },
     "db:pull": {
       "outputs": []
     },
     "db:seed": {
       "outputs": [],
-      "dependsOn": ["^generate"],
       "cache": false
     },
     "db:migrate:force": {
       "outputs": []
-    },
-    "generate": {
-      "dependsOn": ["^generate"]
     },
     "setup": {
       "cache": false,

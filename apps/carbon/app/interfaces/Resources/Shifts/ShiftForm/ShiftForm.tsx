@@ -1,6 +1,6 @@
 import {
   Button,
-  Checkbox,
+  Checkbox as ChakraCheckbox,
   CheckboxGroup,
   Drawer,
   DrawerBody,
@@ -16,8 +16,15 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
-import { ValidatedForm } from "remix-validated-form";
-import { Hidden, Input, Location, Submit, TimePicker } from "~/components/Form";
+import { useControlField, useField, ValidatedForm } from "remix-validated-form";
+import {
+  Boolean,
+  Hidden,
+  Input,
+  Location,
+  Submit,
+  TimePicker,
+} from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { shiftValidator } from "~/services/resources";
 
@@ -28,6 +35,13 @@ type ShiftFormProps = {
     startTime?: string;
     endTime?: string;
     locationId?: string;
+    monday?: boolean;
+    tuesday?: boolean;
+    wednesday?: boolean;
+    thursday?: boolean;
+    friday?: boolean;
+    saturday?: boolean;
+    sunday?: boolean;
   };
 };
 
@@ -64,29 +78,19 @@ const ShiftForm = ({ initialValues }: ShiftFormProps) => {
               <Location name="locationId" label="Location" />
               <TimePicker name="startTime" label="Start Time" />
               <TimePicker name="endTime" label="End Time" />
-              <CheckboxGroup
-                colorScheme="blackAlpha"
-                defaultValue={[
-                  "monday",
-                  "tuesday",
-                  "wednesday",
-                  "thursday",
-                  "friday",
-                ]}
-              >
-                <FormControl>
-                  <FormLabel>Days</FormLabel>
-                  <VStack w="full" alignItems="start">
-                    <Checkbox value="sunday">Sunday</Checkbox>
-                    <Checkbox value="monday">Monday</Checkbox>
-                    <Checkbox value="tuesday">Tuesday</Checkbox>
-                    <Checkbox value="wednesday">Wednesday</Checkbox>
-                    <Checkbox value="thursday">Thursday</Checkbox>
-                    <Checkbox value="friday">Friday</Checkbox>
-                    <Checkbox value="saturday">Saturday</Checkbox>
-                  </VStack>
-                </FormControl>
-              </CheckboxGroup>
+
+              <FormControl>
+                <FormLabel>Days</FormLabel>
+                <VStack w="full" alignItems="start">
+                  <Boolean name="monday" description="Monday" />
+                  <Boolean name="tuesday" description="Tuesday" />
+                  <Boolean name="wednesday" description="Wednesday" />
+                  <Boolean name="thursday" description="Thursday" />
+                  <Boolean name="friday" description="Friday" />
+                  <Boolean name="saturday" description="Saturday" />
+                  <Boolean name="sunday" description="Sunday" />
+                </VStack>
+              </FormControl>
             </VStack>
           </DrawerBody>
           <DrawerFooter>

@@ -42,6 +42,10 @@ const resourcesRoutes: RouteGroup[] = [
         to: "/x/resources/attributes",
       },
       {
+        name: "Holidays",
+        to: "/x/resources/holidays",
+      },
+      {
         name: "Shifts",
         to: "/x/resources/shifts",
       },

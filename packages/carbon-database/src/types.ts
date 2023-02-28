@@ -374,6 +374,29 @@ export interface Database {
           trainingCompleted?: boolean | null
         }
       }
+      employeeJob: {
+        Row: {
+          id: string
+          locationId: string | null
+          shiftId: string | null
+          managerId: string | null
+          title: string | null
+        }
+        Insert: {
+          id: string
+          locationId?: string | null
+          shiftId?: string | null
+          managerId?: string | null
+          title?: string | null
+        }
+        Update: {
+          id?: string
+          locationId?: string | null
+          shiftId?: string | null
+          managerId?: string | null
+          title?: string | null
+        }
+      }
       employeeShift: {
         Row: {
           employeeId: string

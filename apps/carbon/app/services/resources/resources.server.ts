@@ -225,6 +225,17 @@ export async function getEmployeeAbilities(
     .eq("active", true);
 }
 
+export async function getEmployeeJob(
+  client: SupabaseClient<Database>,
+  employeeId: string
+) {
+  return client
+    .from("employeeJob")
+    .select("title, locationId, shiftId, managerId")
+    .eq("id", employeeId)
+    .single();
+}
+
 export async function getLocation(
   client: SupabaseClient<Database>,
   locationId: string
@@ -282,7 +293,9 @@ export async function getShift(
   return client
     .from("shift")
     .select(
-      `id, name, startTime, endTime, locationId, employeeShift(user(id, fullName, avatarUrl)), location(name, timezone)`
+      `id, name, startTime, endTime, locationId,
+      monday, tuesday, wednesday, thursday, friday, saturday, sunday, 
+      employeeShift(user(id, fullName, avatarUrl)), location(name, timezone)`
     )
     .eq("id", shiftId)
     .eq("active", true)
@@ -296,7 +309,9 @@ export async function getShifts(
   let query = client
     .from("shift")
     .select(
-      `id, name, startTime, endTime, locationId, employeeShift(user(id, fullName, avatarUrl)), location(name, timezone)`,
+      `id, name, startTime, endTime, locationId, 
+      monday, tuesday, wednesday, thursday, friday, saturday, sunday,
+      employeeShift(user(id, fullName, avatarUrl)), location(name, timezone)`,
       {
         count: "exact",
       }
@@ -615,6 +630,21 @@ export async function upsertEmployeeAbility(
     .select("id");
 }
 
+export async function upsertEmployeeJob(
+  client: SupabaseClient<Database>,
+  employeeId: string,
+  employeeJob: {
+    title: string | null;
+    locationId: string | null;
+    shiftId: string | null;
+    managerId: string | null;
+  }
+) {
+  return client
+    .from("employeeJob")
+    .upsert([{ id: employeeId, ...employeeJob }]);
+}
+
 export async function upsertLocation(
   client: SupabaseClient<Database>,
   location: {
@@ -643,6 +673,13 @@ export async function upsertShift(
     startTime: string;
     endTime: string;
     locationId: string;
+    monday: boolean;
+    tuesday: boolean;
+    wednesday: boolean;
+    thursday: boolean;
+    friday: boolean;
+    saturday: boolean;
+    sunday: boolean;
   }
 ) {
   const { id, ...update } = shift;

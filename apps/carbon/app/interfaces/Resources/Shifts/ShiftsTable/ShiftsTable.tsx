@@ -1,5 +1,11 @@
 import { ActionMenu } from "@carbon/react";
-import { AvatarGroup, Flex, MenuItem, VisuallyHidden } from "@chakra-ui/react";
+import {
+  AvatarGroup,
+  Badge,
+  Flex,
+  MenuItem,
+  VisuallyHidden,
+} from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo } from "react";
@@ -24,6 +30,13 @@ const ShiftsTable = memo(({ data, count }: ShiftsTableProps) => {
     name: row.name,
     startTime: row.startTime,
     endTime: row.endTime,
+    monday: row.monday,
+    tuesday: row.tuesday,
+    wednesday: row.wednesday,
+    thursday: row.thursday,
+    friday: row.friday,
+    saturday: row.saturday,
+    sunday: row.sunday,
     location: {
       name: Array.isArray(row.location)
         ? row.location[0].name
@@ -99,6 +112,10 @@ const ShiftsTable = memo(({ data, count }: ShiftsTableProps) => {
         cell: (item) => item.getValue(),
       },
       {
+        header: "Days",
+        cell: ({ row }) => renderDays(row.original),
+      },
+      {
         accessorKey: "id",
         header: () => <VisuallyHidden>Actions</VisuallyHidden>,
         cell: ({ row }) => (
@@ -126,7 +143,26 @@ const ShiftsTable = memo(({ data, count }: ShiftsTableProps) => {
         ),
       },
     ];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigate, permissions]);
+
+  const renderDays = (row: typeof rows[number]) => {
+    const days = [
+      row.monday && "M",
+      row.tuesday && "Tu",
+      row.wednesday && "W",
+      row.thursday && "Th",
+      row.friday && "F",
+      row.saturday && "Sa",
+      row.sunday && "Su",
+    ].filter(Boolean);
+
+    return days.map((day) => (
+      <Badge key={day as string} mr={0.5}>
+        {day}
+      </Badge>
+    ));
+  };
 
   return (
     <Table<typeof rows[number]> data={rows} count={count} columns={columns} />

@@ -11,21 +11,17 @@ import { useEffect, useMemo, useState } from "react";
 import { useControlField, useField, ValidatedForm } from "remix-validated-form";
 import { Employee, Hidden, Input, Location, Submit } from "~/components/Form";
 import { SectionTitle } from "~/components/Layout";
-import type { Shift } from "~/interfaces/Resources/types";
+import type { EmployeeJob } from "~/interfaces/Resources/types";
 import type { getShiftsList } from "~/services/resources";
-import { employeeShiftValidator } from "~/services/resources";
+import { employeeJobValidator } from "~/services/resources";
 import { mapRowsToOptions } from "~/utils/form";
 
 type PersonJobProps = {
-  job: {
-    title?: string;
-    locationId?: string;
-    shiftId?: string;
-    managerId?: string;
-  };
+  job: EmployeeJob;
 };
 
 const PersonJob = ({ job }: PersonJobProps) => {
+  console.log(job);
   const shiftFetcher = useFetcher<Awaited<ReturnType<typeof getShiftsList>>>();
   const [location, setLocation] = useState<string | null>(
     job.locationId ?? null
@@ -53,9 +49,14 @@ const PersonJob = ({ job }: PersonJobProps) => {
   return (
     <Box w="full">
       <ValidatedForm
-        validator={employeeShiftValidator}
+        validator={employeeJobValidator}
         method="post"
-        defaultValues={job}
+        defaultValues={{
+          locationId: job.locationId ?? undefined,
+          title: job.title ?? undefined,
+          managerId: job.managerId ?? undefined,
+          shiftId: job.shiftId ?? undefined,
+        }}
       >
         <SectionTitle title="Job" />
         <VStack w="full" alignItems="start" spacing={4}>
@@ -65,7 +66,10 @@ const PersonJob = ({ job }: PersonJobProps) => {
             label="Location"
             onChange={onLocationChange}
           />
-          <ShiftByLocation shifts={shifts} initialShift={job.shiftId} />
+          <ShiftByLocation
+            shifts={shifts}
+            initialShift={job.shiftId ?? undefined}
+          />
           <Employee name="managerId" label="Manager" />
           <Hidden name="intent" value="job" />
           <Submit size="sm">Save</Submit>

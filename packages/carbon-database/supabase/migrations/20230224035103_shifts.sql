@@ -130,3 +130,46 @@ CREATE POLICY "Employees with resources_delete can delete employee shifts" ON "e
     coalesce(get_my_claim('resources_delete')::boolean, false) = true 
     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
   );
+
+
+CREATE TABLE "employeeJob" (
+  "id" TEXT NOT NULL,
+  "locationId" TEXT,
+  "shiftId" TEXT,
+  "managerId" TEXT,
+  "title" TEXT,
+
+  CONSTRAINT "employeeJob_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "employeeJob_id_fkey" FOREIGN KEY ("id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "employeeJob_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "location"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "employeeJob_shiftId_fkey" FOREIGN KEY ("shiftId") REFERENCES "shift"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "employeeJob_managerId_fkey" FOREIGN KEY ("managerId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE POLICY "Employees can view employee jobs" ON "employeeJob"
+  FOR SELECT
+  USING (
+    auth.role() = 'authenticated' 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Employees with resources_create can insert employee jobs" ON "employeeJob"
+  FOR INSERT
+  WITH CHECK (   
+    coalesce(get_my_claim('resources_create')::boolean,false) 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+);
+
+CREATE POLICY "Employees with resources_update can update employee jobs" ON "employeeJob"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('resources_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Employees with resources_delete can delete employee jobs" ON "employeeJob"
+  FOR DELETE
+  USING (
+    coalesce(get_my_claim('resources_delete')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );

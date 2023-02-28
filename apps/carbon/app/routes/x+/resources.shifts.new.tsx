@@ -1,4 +1,3 @@
-import { getLocalTimeZone } from "@internationalized/date";
 import type { ActionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
@@ -42,6 +41,13 @@ export default function NewShiftRoute() {
   const initialValues = {
     name: "",
     locationId: "",
+    monday: true,
+    tuesday: true,
+    wednesday: true,
+    thursday: true,
+    friday: true,
+    saturday: false,
+    sunday: false,
   };
 
   return <ShiftForm initialValues={initialValues} />;

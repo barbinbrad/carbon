@@ -83,10 +83,12 @@ export const employeeAbilityValidator = withZod(
   })
 );
 
-export const employeeShiftValidator = withZod(
+export const employeeJobValidator = withZod(
   z.object({
-    locationId: z.string().min(20, { message: "Location is required" }),
-    shiftId: z.string().min(20, { message: "Shift is required" }),
+    title: z.string().min(1, { message: "Title is required" }),
+    locationId: zfd.text(z.string().optional()),
+    shiftId: zfd.text(z.string().optional()),
+    managerId: zfd.text(z.string().optional()),
   })
 );
 
@@ -123,5 +125,12 @@ export const shiftValidator = withZod(
     startTime: z.string().min(1, { message: "Start time is required" }),
     endTime: z.string().min(1, { message: "End time is required" }),
     locationId: z.string().min(1, { message: "Location is required" }),
+    monday: zfd.checkbox(),
+    tuesday: zfd.checkbox(),
+    wednesday: zfd.checkbox(),
+    thursday: zfd.checkbox(),
+    friday: zfd.checkbox(),
+    saturday: zfd.checkbox(),
+    sunday: zfd.checkbox(),
   })
 );

@@ -9,6 +9,7 @@ import type {
   getEmployeeAbilities,
   getShifts,
   getLocations,
+  getEmployeeJob,
 } from "~/services/resources";
 
 export type Ability = NonNullable<
@@ -72,6 +73,10 @@ export type AttributeDataType = {
 export type EmployeeAbility = NonNullable<
   Awaited<ReturnType<typeof getEmployeeAbilities>>["data"]
 >[number];
+
+export type EmployeeJob = NonNullable<
+  Awaited<ReturnType<typeof getEmployeeJob>>["data"]
+>;
 
 export type Note = NonNullable<
   Awaited<ReturnType<typeof getNotes>>["data"]

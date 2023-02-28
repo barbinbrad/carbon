@@ -9,7 +9,6 @@ import { flash } from "~/services/session";
 import { getShift, shiftValidator, upsertShift } from "~/services/resources";
 import { assertIsPost, notFound } from "~/utils/http";
 import { error, success } from "~/utils/result";
-import { getLocalTimeZone } from "@internationalized/date";
 
 export async function loader({ request, params }: LoaderArgs) {
   const { client } = await requirePermissions(request, {
@@ -75,6 +74,13 @@ export default function ShiftRoute() {
     startTime: shift.startTime,
     endTime: shift.endTime,
     locationId: shift.locationId,
+    monday: shift.monday,
+    tuesday: shift.tuesday,
+    wednesday: shift.wednesday,
+    thursday: shift.thursday,
+    friday: shift.friday,
+    saturday: shift.saturday,
+    sunday: shift.sunday,
   };
 
   return <ShiftForm initialValues={initialValues} />;

@@ -26,6 +26,7 @@
     "db:pull": "turbo run db:pull",
     "db:seed": "turbo run db:seed --no-cache",
     "db:migrate:force": "turbo run db:migrate:force --no-cache",
+    "deploy": "turbo run deploy",
     "dev": "turbo run dev --no-cache --parallel --continue --filter=./apps/* --filter=./packages/*",
     "dev:apps": "turbo run dev --no-cache --parallel --continue --filter=./apps/*",
     "dev:docs": "turbo run dev --no-cache --parallel --continue --filter=./docs/*",

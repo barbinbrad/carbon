@@ -57,6 +57,8 @@ The monorepo follows the Turborepo covention of grouping packages into one of tw
 
 ## Local Development
 
+<!-- TODO: requirements for Upstash, Supabase, Github -->
+
 Make sure that you have [Docker installed](https://docs.docker.com/desktop/install/mac-install/) and [yarn installed](https://yarnpkg.com/lang/en/docs/install/#debian-stable)
 on your system since this monorepo uses the yarn package manager.
 

@@ -5,6 +5,9 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "packages/carbon-database/**"
+      - "package-lock.json"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}

@@ -76,3 +76,7 @@ export function getBrowserEnv() {
     SUPABASE_ANON_PUBLIC,
   };
 }
+
+export function isVercel() {
+  return VERCEL_URL.includes("vercel.app");
+}

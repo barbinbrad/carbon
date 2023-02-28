@@ -11,7 +11,7 @@ module.exports = {
   assetsBuildDirectory: "public/build",
   routes: async (defineRoutes) => {
     return flatRoutes("routes", defineRoutes, {
-      appDir: path.resolve(path.dirname(""), "app"),
+      appDir: path.resolve(__dirname, "app"),
     });
   },
   serverDependenciesToBundle: [

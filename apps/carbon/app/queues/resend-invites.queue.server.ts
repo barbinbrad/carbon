@@ -9,10 +9,7 @@ export type ResendInvitesQueueData = {
 
 const client = getSupabaseServiceRole();
 
-export const resendInvitesQueue = isVercel()
-  ? {
-      addBulk: () => Promise.resolve(),
-    }
-  : Queue<ResendInvitesQueueData>("resendInvites:v1", async (job) => {
-      await resendInvite(client, job.data.id);
-    });
+export const resendInvitesQueue = isVercel();
+Queue<ResendInvitesQueueData>("resendInvites:v1", async (job) => {
+  await resendInvite(client, job.data.id);
+});

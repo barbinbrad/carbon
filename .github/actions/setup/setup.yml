@@ -6,14 +6,6 @@ inputs:
     description: Version of Node to use
     default: 18.x
 
-  yarn-version:
-    description: Version of pnpm to use
-    default: 1.22
-
-  supabase-version:
-    description: Version of Supabase CLI to use
-    default: latest
-
 runs:
   using: composite
   steps:
@@ -22,28 +14,5 @@ runs:
       with:
         node-version: ${{ inputs.node-version }}
 
-    - name: 🏗 Setup yarn
-      uses: pnpm/action-setup@v2
-      with:
-        version: ${{ inputs.pnpm-version }}
-
-    - name: Get yarn cache directory path
-      id: yarn-cache-dir-path
-      run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
-
-    - uses: actions/cache@v3
-      id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-      with:
-        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-yarn-
-
-    - name: 🏗 Setup Supabase
-      uses: supabase/setup-cli@v1
-      with:
-        version: ${{ inputs.supabase-version }}
-
-    - name: 📦 Install dependencies
-      run: yarn
-      shell: bash
+    - name: Install packages
+      run: yarn install --frozen-lockfile

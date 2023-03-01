@@ -17,6 +17,7 @@ const RichText = ({ name, output = "html", ...props }: RichTextProps) => {
     <FormControl isInvalid={!!error}>
       <Editor
         content={defaultValue}
+        // @ts-ignore
         onChange={setValue}
         output={output}
         {...props}

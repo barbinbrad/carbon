@@ -1,4 +1,4 @@
-import { useColor } from "@carbon/react";
+import { HTML, useColor } from "@carbon/react";
 import { formatTimeAgo } from "@carbon/utils";
 import {
   Box,
@@ -13,7 +13,7 @@ import { Form, useParams } from "@remix-run/react";
 import { Fragment } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import { Avatar } from "~/components";
-import { Submit, TextArea } from "~/components/Form";
+import { Submit } from "~/components/Form";
 import RichText from "~/components/Form/RichText";
 import { SectionTitle } from "~/components/Layout";
 import { usePermissions, useUser } from "~/hooks";
@@ -54,7 +54,7 @@ const PersonNotes = ({ notes }: PersonNoteProps) => {
                 <Avatar path={user.avatarUrl} />
                 <VStack spacing={1} w="full" alignItems="start">
                   <Text fontWeight="bold">{note.user?.fullName}</Text>
-                  <Text>{note.note}</Text>
+                  <HTML text={note.note} />
                   <HStack spacing={4}>
                     <Text color="gray.500">
                       {formatTimeAgo(note.createdAt)}

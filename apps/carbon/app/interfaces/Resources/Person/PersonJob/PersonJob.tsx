@@ -21,7 +21,6 @@ type PersonJobProps = {
 };
 
 const PersonJob = ({ job }: PersonJobProps) => {
-  console.log(job);
   const shiftFetcher = useFetcher<Awaited<ReturnType<typeof getShiftsList>>>();
   const [location, setLocation] = useState<string | null>(
     job.locationId ?? null

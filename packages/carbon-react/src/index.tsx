@@ -1,3 +1,4 @@
+import HTML from "./HTML";
 import type { OptionBase, OptionProps, GroupBase } from "./Inputs";
 import {
   DatePicker,
@@ -31,6 +32,7 @@ export {
   DateTimePicker,
   DateRangePicker,
   Editor,
+  HTML,
   Loading,
   Select,
   ThemeProvider,

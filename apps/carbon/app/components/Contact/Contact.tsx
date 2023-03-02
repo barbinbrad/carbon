@@ -1,8 +1,7 @@
-import { ActionMenu } from "@carbon/react";
+import { ActionMenu, Dot } from "@carbon/react";
 import { Avatar, Grid, MenuItem, Text, VStack } from "@chakra-ui/react";
 import { BsPencilSquare, BsShieldLock } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Dot } from "~/components";
 
 type ContactProps = {
   contact: {

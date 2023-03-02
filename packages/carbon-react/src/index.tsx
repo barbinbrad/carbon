@@ -1,3 +1,4 @@
+import Dot from "./Dot";
 import HTML from "./HTML";
 import type { OptionBase, OptionProps, GroupBase } from "./Inputs";
 import {
@@ -31,6 +32,7 @@ export {
   DatePicker,
   DateTimePicker,
   DateRangePicker,
+  Dot,
   Editor,
   HTML,
   Loading,

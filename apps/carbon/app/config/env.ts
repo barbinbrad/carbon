@@ -19,8 +19,6 @@ declare global {
       SESSION_SECRET: string;
       SESSION_KEY: string;
       SESSION_ERROR_KEY: string;
-      // SESSION_MAX_AGE: number;
-      // REFRESH_ACCESS_TOKEN_THRESHOLD: number;
     }
   }
 }
@@ -50,13 +48,13 @@ function getEnv(
 /**
  * Server env
  */
-export const VERCEL_URL = getEnv("VERCEL_URL");
 export const SUPABASE_SERVICE_ROLE = getEnv("SUPABASE_SERVICE_ROLE");
 export const SESSION_SECRET = getEnv("SESSION_SECRET");
 export const SESSION_KEY = "authenticated";
 export const SESSION_ERROR_KEY = "error";
 export const SESSION_MAX_AGE = 60 * 60 * 24 * 7; // 7 days;
 export const REFRESH_ACCESS_TOKEN_THRESHOLD = 60 * 10; // 10 minutes left before token expires
+export const VERCEL_URL = getEnv("VERCEL_URL");
 
 /**
  * Shared envs

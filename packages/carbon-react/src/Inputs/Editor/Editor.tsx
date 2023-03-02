@@ -3,24 +3,13 @@ import { Box, VStack } from "@chakra-ui/react";
 import { Color } from "@tiptap/extension-color";
 import ListItem from "@tiptap/extension-list-item";
 import TextStyle from "@tiptap/extension-text-style";
-import { EditorContent, useEditor } from "@tiptap/react";
+import { EditorContent, useEditor as useEditorInternal } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { useEffect } from "react";
 import { Toolbar } from "./Toolbar";
 
-export type EditorProps = Omit<BoxProps, "onChange"> & {
-  content?: string;
-  onChange?: (text: string) => void;
-  output?: "html" | "json" | "text";
-};
-
-export const Editor = ({
-  content,
-  onChange,
-  output = "html",
-  ...props
-}: EditorProps) => {
-  const editor = useEditor({
+export const useEditor = (content: string) => {
+  const editor = useEditorInternal({
     extensions: [
       Color.configure({ types: [TextStyle.name, ListItem.name] }),
       TextStyle,
@@ -38,33 +27,14 @@ export const Editor = ({
     content,
   });
 
-  useEffect(() => {
-    if (editor && onChange && typeof onChange === "function") {
-      editor.on("update", () => {
-        switch (output) {
-          case "html":
-            onChange(editor.getHTML());
-            break;
-          case "json":
-            onChange(JSON.stringify(editor.getJSON()));
-            break;
-          case "text":
-            onChange(editor.getText());
-            break;
-          default:
-            onChange(editor.getHTML());
-            break;
-        }
-      });
-    }
+  return editor;
+};
 
-    return () => {
-      if (editor && onChange && typeof onChange === "function") {
-        editor.off("update");
-      }
-    };
-  }, [editor, onChange, output]);
+export type EditorProps = Omit<BoxProps, "onChange"> & {
+  editor: ReturnType<typeof useEditor>;
+};
 
+export const Editor = ({ editor, ...props }: EditorProps) => {
   if (!editor) {
     return null;
   }

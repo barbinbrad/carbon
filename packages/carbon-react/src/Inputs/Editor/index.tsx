@@ -1,3 +1,3 @@
-import { Editor } from "./Editor";
+import { Editor, useEditor } from "./Editor";
 
-export { Editor };
+export { Editor, useEditor };

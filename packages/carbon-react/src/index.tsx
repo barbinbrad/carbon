@@ -9,6 +9,7 @@ import {
   Select,
   TimePicker,
   createFilter,
+  useEditor,
 } from "./Inputs";
 import Loading from "./Loading";
 import { ActionMenu } from "./Overlay";
@@ -43,6 +44,7 @@ export {
   theme,
   useColor,
   useDebounce,
+  useEditor,
   useEscape,
   useHydrated,
   useInterval,

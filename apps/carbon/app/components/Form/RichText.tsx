@@ -50,12 +50,7 @@ const RichText = ({ name, output = "html", ...props }: RichTextProps) => {
 
   return (
     <FormControl isInvalid={!!error}>
-      <Editor
-        editor={editor}
-        // @ts-ignore
-        onChange={setValue}
-        {...props}
-      />
+      <Editor editor={editor} {...props} />
       <Input
         {...getInputProps({
           // @ts-ignore

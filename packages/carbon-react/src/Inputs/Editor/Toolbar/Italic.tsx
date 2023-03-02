@@ -6,7 +6,6 @@ const Italic: EditorComponent = ({ editor }) => {
   return (
     <ToolbarButton
       label="Italic"
-      // @ts-ignore
       onClick={() => editor.chain().focus().toggleItalic().run()}
       isActive={editor.isActive("italic")}
       icon={<BsTypeItalic />}

@@ -6,7 +6,6 @@ const HorizontalRule: EditorComponent = ({ editor }) => {
   return (
     <ToolbarButton
       label="Horizontal rule"
-      // @ts-ignore
       onClick={() => editor.chain().focus().setHorizontalRule().run()}
       icon={<MdHorizontalRule />}
       disabled={!editor.isEditable}

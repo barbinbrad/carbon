@@ -6,7 +6,6 @@ const UnorderedList: EditorComponent = ({ editor }) => {
   return (
     <ToolbarButton
       label="Bullet list"
-      // @ts-ignore
       onClick={() => editor.chain().focus().toggleBulletList().run()}
       isActive={editor.isActive("bulletList")}
       icon={<BsListUl />}

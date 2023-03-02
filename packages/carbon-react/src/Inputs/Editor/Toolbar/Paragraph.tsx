@@ -6,7 +6,6 @@ const Paragraph: EditorComponent = ({ editor }) => {
   return (
     <ToolbarButton
       label="Normal text"
-      // @ts-ignore
       onClick={() => editor.chain().focus().setParagraph().run()}
       isActive={editor.isActive("paragraph")}
       icon={<BsType />}

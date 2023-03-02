@@ -2,11 +2,11 @@ import type { IconButtonProps } from "@chakra-ui/react";
 import { IconButton, Tooltip } from "@chakra-ui/react";
 import * as React from "react";
 
-interface ToolbarButtonProps extends Omit<IconButtonProps, "aria-label"> {
+type ToolbarButtonProps = Omit<IconButtonProps, "aria-label"> & {
   label: string;
-}
+};
 
-const ToolbarButton: React.FC<ToolbarButtonProps> = ({ label, ...rest }) => {
+const ToolbarButton = ({ label, ...rest }: ToolbarButtonProps) => {
   return (
     <Tooltip label={label}>
       <IconButton

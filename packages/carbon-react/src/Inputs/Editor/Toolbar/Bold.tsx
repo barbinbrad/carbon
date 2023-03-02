@@ -6,7 +6,6 @@ const Bold: EditorComponent = ({ editor }) => {
   return (
     <ToolbarButton
       label="Bold"
-      // @ts-ignore
       onClick={() => editor.chain().focus().toggleBold().run()}
       isActive={editor.isActive("bold")}
       icon={<BsTypeBold />}

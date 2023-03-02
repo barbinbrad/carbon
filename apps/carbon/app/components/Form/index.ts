@@ -13,6 +13,7 @@ import Number from "./Number";
 import Password from "./Password";
 import Phone from "./Phone";
 import Radios from "./Radios";
+import RichText from "./RichText";
 import Select from "./Select";
 import Slider from "./Slider";
 import Submit from "./Submit";
@@ -40,6 +41,7 @@ export {
   Password,
   Phone,
   Radios,
+  RichText,
   Select,
   Slider,
   Submit,

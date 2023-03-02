@@ -6,7 +6,6 @@ const BlockQuote: EditorComponent = ({ editor }) => {
   return (
     <ToolbarButton
       label="Blockquote"
-      // @ts-ignore
       onClick={() => editor.chain().focus().toggleBlockquote().run()}
       isActive={editor.isActive("blockquote")}
       icon={<GoQuote />}

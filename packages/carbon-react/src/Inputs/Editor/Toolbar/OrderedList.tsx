@@ -6,7 +6,6 @@ const OrderedList: EditorComponent = ({ editor }) => {
   return (
     <ToolbarButton
       label="Numbered list"
-      // @ts-ignore
       onClick={() => editor.chain().focus().toggleOrderedList().run()}
       isActive={editor.isActive("orderedList")}
       icon={<BsListOl />}

@@ -6,7 +6,6 @@ const Strike: EditorComponent = ({ editor }) => {
   return (
     <ToolbarButton
       label="Strike"
-      // @ts-ignore
       onClick={() => editor.chain().focus().toggleStrike().run()}
       isActive={editor.isActive("strike")}
       icon={<BsTypeStrikethrough />}

@@ -6,7 +6,6 @@ const Code: EditorComponent = ({ editor }) => {
   return (
     <ToolbarButton
       label="Code"
-      // @ts-ignore
       onClick={() => editor.chain().focus().toggleCode().run()}
       isActive={editor.isActive("code")}
       icon={<BsCode />}

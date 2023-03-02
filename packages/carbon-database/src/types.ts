@@ -20,6 +20,10 @@ export interface Database {
           shadowWeeks: number
           active: boolean
           createdAt: string
+          requiresEquipment: boolean
+          equipmentTypeId: string | null
+          requiresWorkCell: boolean
+          workCellTypeId: string | null
         }
         Insert: {
           name: string
@@ -31,6 +35,10 @@ export interface Database {
           shadowWeeks?: number
           active?: boolean
           createdAt?: string
+          requiresEquipment?: boolean
+          equipmentTypeId?: string | null
+          requiresWorkCell?: boolean
+          workCellTypeId?: string | null
         }
         Update: {
           name?: string
@@ -42,6 +50,10 @@ export interface Database {
           shadowWeeks?: number
           active?: boolean
           createdAt?: string
+          requiresEquipment?: boolean
+          equipmentTypeId?: string | null
+          requiresWorkCell?: boolean
+          workCellTypeId?: string | null
         }
       }
       address: {
@@ -185,6 +197,52 @@ export interface Database {
           name?: string
           code?: string
           id?: number
+        }
+      }
+      crew: {
+        Row: {
+          name: string
+          description: string | null
+          crewLeaderId: string | null
+          groupId: string
+          workCellId: string | null
+          id: string
+        }
+        Insert: {
+          name: string
+          description?: string | null
+          crewLeaderId?: string | null
+          groupId: string
+          workCellId?: string | null
+          id?: string
+        }
+        Update: {
+          name?: string
+          description?: string | null
+          crewLeaderId?: string | null
+          groupId?: string
+          workCellId?: string | null
+          id?: string
+        }
+      }
+      crewAbility: {
+        Row: {
+          crewId: string
+          abilityId: string
+          id: string
+          active: boolean
+        }
+        Insert: {
+          crewId: string
+          abilityId: string
+          id?: string
+          active?: boolean
+        }
+        Update: {
+          crewId?: string
+          abilityId?: string
+          id?: string
+          active?: boolean
         }
       }
       customer: {
@@ -331,6 +389,23 @@ export interface Database {
           createdAt?: string
         }
       }
+      department: {
+        Row: {
+          name: string
+          id: string
+          color: string
+        }
+        Insert: {
+          name: string
+          id?: string
+          color?: string
+        }
+        Update: {
+          name?: string
+          id?: string
+          color?: string
+        }
+      }
       employee: {
         Row: {
           id: string
@@ -381,6 +456,8 @@ export interface Database {
           shiftId: string | null
           managerId: string | null
           title: string | null
+          departmentId: string | null
+          workCellId: string | null
         }
         Insert: {
           id: string
@@ -388,6 +465,8 @@ export interface Database {
           shiftId?: string | null
           managerId?: string | null
           title?: string | null
+          departmentId?: string | null
+          workCellId?: string | null
         }
         Update: {
           id?: string
@@ -395,6 +474,8 @@ export interface Database {
           shiftId?: string | null
           managerId?: string | null
           title?: string | null
+          departmentId?: string | null
+          workCellId?: string | null
         }
       }
       employeeShift: {
@@ -419,7 +500,7 @@ export interface Database {
           name: string
           updatedAt: string | null
           id: string
-          color: string | null
+          color: string
           protected: boolean
           createdAt: string
         }
@@ -427,7 +508,7 @@ export interface Database {
           name: string
           updatedAt?: string | null
           id?: string
-          color?: string | null
+          color?: string
           protected?: boolean
           createdAt?: string
         }
@@ -435,7 +516,7 @@ export interface Database {
           name?: string
           updatedAt?: string | null
           id?: string
-          color?: string | null
+          color?: string
           protected?: boolean
           createdAt?: string
         }
@@ -470,6 +551,52 @@ export interface Database {
           update?: boolean
           view?: boolean
           createdAt?: string
+        }
+      }
+      equipment: {
+        Row: {
+          name: string
+          description: string | null
+          equipmentTypeId: string
+          workCellId: string | null
+          id: string
+          operatorsRequired: number
+        }
+        Insert: {
+          name: string
+          description?: string | null
+          equipmentTypeId: string
+          workCellId?: string | null
+          id?: string
+          operatorsRequired?: number
+        }
+        Update: {
+          name?: string
+          description?: string | null
+          equipmentTypeId?: string
+          workCellId?: string | null
+          id?: string
+          operatorsRequired?: number
+        }
+      }
+      equipmentType: {
+        Row: {
+          name: string
+          description: string | null
+          id: string
+          color: string
+        }
+        Insert: {
+          name: string
+          description?: string | null
+          id?: string
+          color?: string
+        }
+        Update: {
+          name?: string
+          description?: string | null
+          id?: string
+          color?: string
         }
       }
       feature: {
@@ -961,32 +1088,87 @@ export interface Database {
         Row: {
           userId: string
           note: string
+          createdBy: string
           id: string
           noteRichText: Json
           active: boolean
-          createdBy: string
-          updatedAt: string | null
           createdAt: string
+          updatedAt: string | null
         }
         Insert: {
           userId: string
           note: string
+          createdBy: string
           id?: string
           noteRichText?: Json
           active?: boolean
-          createdBy: string
-          updatedAt?: string | null
           createdAt?: string
+          updatedAt?: string | null
         }
         Update: {
           userId?: string
           note?: string
+          createdBy?: string
           id?: string
           noteRichText?: Json
           active?: boolean
-          createdBy?: string
-          updatedAt?: string | null
           createdAt?: string
+          updatedAt?: string | null
+        }
+      }
+      workCell: {
+        Row: {
+          name: string
+          description: string | null
+          defaultProcessId: string
+          departmentId: string
+          locationId: string | null
+          workCellTypeId: string
+          id: string
+          defaultStandardFactor: Database["public"]["Enums"]["factor"]
+          setupHours: number
+        }
+        Insert: {
+          name: string
+          description?: string | null
+          defaultProcessId: string
+          departmentId: string
+          locationId?: string | null
+          workCellTypeId: string
+          id?: string
+          defaultStandardFactor?: Database["public"]["Enums"]["factor"]
+          setupHours?: number
+        }
+        Update: {
+          name?: string
+          description?: string | null
+          defaultProcessId?: string
+          departmentId?: string
+          locationId?: string | null
+          workCellTypeId?: string
+          id?: string
+          defaultStandardFactor?: Database["public"]["Enums"]["factor"]
+          setupHours?: number
+        }
+      }
+      workCellType: {
+        Row: {
+          name: string
+          description: string | null
+          id: string
+          color: string
+        }
+        Insert: {
+          name: string
+          description?: string | null
+          id?: string
+          color?: string
+        }
+        Update: {
+          name?: string
+          description?: string | null
+          id?: string
+          color?: string
         }
       }
     }
@@ -1120,6 +1302,18 @@ export interface Database {
       }
     }
     Enums: {
+      factor:
+        | "Hours/Piece"
+        | "Hours/100 Pieces"
+        | "Hours/1000 Pieces"
+        | "Minutes/Piece"
+        | "Minutes/100 Pieces"
+        | "Minutes/1000 Pieces"
+        | "Pieces/Hour"
+        | "Pieces/Minute"
+        | "Seconds/Piece"
+        | "Total Hours"
+        | "Total Minutes"
       search_entity:
         | "Resource"
         | "Person"

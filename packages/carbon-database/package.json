@@ -22,7 +22,7 @@
     "db:setup": "supabase db reset",
     "dev": "tsup --watch",
     "lint": "TIMING=1 eslint \"src/**/*.ts*\"",
-    "setup": "run-s db:setup db:seed",
+    "setup": "tsx src/seed.ts",
     "deploy": "supabase link --project-ref $SUPABASE_PROJECT_ID && supabase db push"
   },
   "devDependencies": {

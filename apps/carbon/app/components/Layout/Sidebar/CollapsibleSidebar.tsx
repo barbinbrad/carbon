@@ -25,12 +25,13 @@ export const CollapsibleSidebar = ({ children }: PropsWithChildren<{}>) => {
       animate={sidebar.isOpen ? "visible" : "hidden"}
       initial={variants.visible}
       variants={variants}
-      h="full"
       bg={useColor("white")}
       borderRight={1}
       borderRightColor={useColor("gray.300")}
       borderRightStyle="solid"
       position="relative"
+      h="calc(100vh - 50px)"
+      overflowY="scroll"
     >
       <Tooltip label={sidebar.isOpen ? "Collapse" : "Expand"} placement="right">
         <IconButton

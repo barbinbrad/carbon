@@ -1,3 +1,4 @@
+import Button from "./Button";
 import Dot from "./Dot";
 import HTML from "./HTML";
 import type { OptionBase, OptionProps, GroupBase } from "./Inputs";
@@ -29,6 +30,7 @@ export type { OptionBase, OptionProps, GroupBase };
 
 export {
   ActionMenu,
+  Button,
   ClientOnly,
   DatePicker,
   DateTimePicker,

@@ -5,7 +5,7 @@ import {
 } from "./focusRing";
 import { fonts } from "./fonts";
 import { colors } from "./palette";
-
+import { semanticTokens } from "./tokens";
 
 export const theme = {
   fonts,
@@ -19,7 +19,14 @@ export const theme = {
   },
   components: {
     Button: {
-      baseStyle: {},
+      baseStyle: {
+        transition: "transform 0.08s ease-out, background 0.3s, opacity 0.3s",
+        _active: { transform: "scale(0.96)" },
+        _disabled: {
+          pointerEvents: "none",
+          opacity: 0.5,
+        },
+      },
       sizes: {},
       variants: {
         solid: (props: { colorScheme: string }) => {
@@ -135,4 +142,5 @@ export const theme = {
   defaultProps: {
     colorScheme: "gray",
   },
+  semanticTokens,
 };

@@ -17,6 +17,7 @@ import type { Employee } from "~/interfaces/Users/types";
 import { BulkEditPermissionsForm } from "~/interfaces/Users/Employees";
 import { ResendInviteModal, DeactivateUsersModal } from "~/interfaces/Users";
 import { FaBan } from "react-icons/fa";
+import { useRealtime } from "~/hooks/useRealtime";
 
 type EmployeesTableProps = {
   data: Employee[];
@@ -31,6 +32,8 @@ const defaultColumnVisibility = {
 
 const EmployeesTable = memo(
   ({ data, count, isEditable = false }: EmployeesTableProps) => {
+    useRealtime(["user"]);
+
     const navigate = useNavigate();
     const permissions = usePermissions();
     const [params] = useUrlParams();

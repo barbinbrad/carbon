@@ -1,23 +1,15 @@
-import { ActionMenu } from "@carbon/react";
-import {
-  Flex,
-  HStack,
-  MenuItem,
-  useDisclosure,
-  VisuallyHidden,
-} from "@chakra-ui/react";
+import { HStack, MenuItem, useDisclosure } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
-import { memo, useMemo, useState } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 import { BsEnvelope, BsPencilSquare, BsShieldLock } from "react-icons/bs";
+import { FaBan } from "react-icons/fa";
 import { IoMdTrash } from "react-icons/io";
 import { Avatar, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { Employee } from "~/interfaces/Users/types";
 import { BulkEditPermissionsForm } from "~/interfaces/Users/Employees";
 import { ResendInviteModal, DeactivateUsersModal } from "~/interfaces/Users";
-import { FaBan } from "react-icons/fa";
-import { useRealtime } from "~/hooks/useRealtime";
 
 type EmployeesTableProps = {
   data: Employee[];
@@ -32,8 +24,6 @@ const defaultColumnVisibility = {
 
 const EmployeesTable = memo(
   ({ data, count, isEditable = false }: EmployeesTableProps) => {
-    useRealtime(["user"]);
-
     const navigate = useNavigate();
     const permissions = usePermissions();
     const [params] = useUrlParams();
@@ -106,53 +96,6 @@ const EmployeesTable = memo(
           header: "Employee Type",
           cell: (item) => item.getValue(),
         },
-        {
-          header: () => <VisuallyHidden>Actions</VisuallyHidden>,
-          accessorKey: "user.id",
-          cell: (item) => (
-            <Flex justifyContent="end">
-              {permissions.can("update", "users") && (
-                <ActionMenu>
-                  <MenuItem
-                    icon={<BsPencilSquare />}
-                    onClick={() =>
-                      navigate(
-                        `/x/users/employees/${
-                          item.getValue() as string
-                        }?${params.toString()}`
-                      )
-                    }
-                  >
-                    Edit Employee
-                  </MenuItem>
-                  <MenuItem
-                    icon={<BsEnvelope />}
-                    onClick={() => {
-                      setSelectedUserIds([item.getValue() as string]);
-                      resendInviteModal.onOpen();
-                    }}
-                  >
-                    Send Account Invite
-                  </MenuItem>
-                  {
-                    // @ts-ignore
-                    item.row.original.user?.active === true && (
-                      <MenuItem
-                        icon={<IoMdTrash />}
-                        onClick={(e) => {
-                          setSelectedUserIds([item.getValue() as string]);
-                          deactivateEmployeeModal.onOpen();
-                        }}
-                      >
-                        Deactivate Employee
-                      </MenuItem>
-                    )
-                  }
-                </ActionMenu>
-              )}
-            </Flex>
-          ),
-        },
       ];
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [params]);
@@ -211,6 +154,45 @@ const EmployeesTable = memo(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    const renderContextMenu = useCallback(
+      ({ user }: typeof rows[number]) => {
+        if (Array.isArray(user) || user === null) return null;
+        return (
+          <>
+            <MenuItem
+              icon={<BsPencilSquare />}
+              onClick={() =>
+                navigate(`/x/users/employees/${user.id}?${params.toString()}`)
+              }
+            >
+              Edit Employee
+            </MenuItem>
+            <MenuItem
+              icon={<BsEnvelope />}
+              onClick={() => {
+                setSelectedUserIds([user.id]);
+                resendInviteModal.onOpen();
+              }}
+            >
+              Send Account Invite
+            </MenuItem>
+            {user.active === true && (
+              <MenuItem
+                icon={<IoMdTrash />}
+                onClick={(e) => {
+                  setSelectedUserIds([user.id]);
+                  deactivateEmployeeModal.onOpen();
+                }}
+              >
+                Deactivate Employee
+              </MenuItem>
+            )}
+          </>
+        );
+      },
+      [deactivateEmployeeModal, navigate, params, resendInviteModal]
+    );
+
     // const editableComponents = useMemo(
     //   () => ({
     //     "user.firstName": EditableName,
@@ -230,6 +212,7 @@ const EmployeesTable = memo(
           defaultColumnPinning={{
             left: ["Select", "User"],
           }}
+          renderContextMenu={renderContextMenu}
           withColumnOrdering
           withFilters
           withPagination

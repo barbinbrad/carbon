@@ -3,11 +3,12 @@ import { Tr, spring } from "../Animations";
 import Cell from "../Cell";
 import type { EditableTableCellComponent, Position } from "../../types";
 import { useColor } from "@carbon/react";
+import type { MutableRefObject } from "react";
 
 type RowProps<T> = {
   borderColor: string;
   backgroundColor: string;
-  editableComponents: Record<string, EditableTableCellComponent<T>>;
+  editableComponents: Record<string, EditableTableCellComponent<T> | object>;
   isEditing: boolean;
   isEditMode: boolean;
   isFrozenColumn?: boolean;
@@ -15,6 +16,7 @@ type RowProps<T> = {
   selectedCell: Position;
   row: RowType<T>;
   rowIsClickable?: boolean;
+  rowRef?: MutableRefObject<HTMLTableRowElement | null>;
   withColumnOrdering: boolean;
   onCellClick: (row: number, column: number) => void;
   onCellUpdate: (row: number, columnId: string) => (value: unknown) => void;
@@ -31,6 +33,7 @@ const Row = <T extends object>({
   pinnedColumns = 0,
   row,
   rowIsClickable = false,
+  rowRef,
   selectedCell,
   withColumnOrdering,
   onCellClick,
@@ -46,6 +49,7 @@ const Row = <T extends object>({
       layout
       transition={spring}
       onClick={onRowClick}
+      ref={rowRef}
       _hover={{
         cursor: rowIsClickable ? "pointer" : undefined,
         backgroundColor,

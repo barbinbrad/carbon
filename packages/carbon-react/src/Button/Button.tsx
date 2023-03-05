@@ -1,4 +1,3 @@
-import * as React from "react";
 import type { ButtonProps as ChakraButtonProps } from "@chakra-ui/react";
 import { Box, Button as ChakraButton } from "@chakra-ui/react";
 import BorderMask from "./BorderMask";

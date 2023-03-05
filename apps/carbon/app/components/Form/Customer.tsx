@@ -32,7 +32,7 @@ const Customer = ({
 
   useEffect(() => {
     if (customerFetcher.type === "init") {
-      customerFetcher.load("/resource/sales/customers");
+      customerFetcher.load("/api/sales/customers");
     }
   }, [customerFetcher]);
 

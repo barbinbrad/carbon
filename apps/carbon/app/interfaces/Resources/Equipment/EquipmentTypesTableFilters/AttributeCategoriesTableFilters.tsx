@@ -5,7 +5,7 @@ import { IoMdAdd } from "react-icons/io";
 import { DebouncedInput } from "~/components/Search";
 import { usePermissions, useUrlParams } from "~/hooks";
 
-const AttributeCategoriesTableFilters = () => {
+const EquipmentTypesTableFilters = () => {
   const permissions = usePermissions();
   const [params] = useUrlParams();
   const borderColor = useColor("gray.200");
@@ -35,7 +35,7 @@ const AttributeCategoriesTableFilters = () => {
             colorScheme="brand"
             leftIcon={<IoMdAdd />}
           >
-            New Attribute Category
+            New Equipment Type
           </Button>
         )}
       </HStack>
@@ -43,4 +43,4 @@ const AttributeCategoriesTableFilters = () => {
   );
 };
 
-export default AttributeCategoriesTableFilters;
+export default EquipmentTypesTableFilters;

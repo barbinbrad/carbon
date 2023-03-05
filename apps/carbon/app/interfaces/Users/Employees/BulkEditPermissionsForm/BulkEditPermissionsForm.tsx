@@ -54,7 +54,7 @@ const BulkEditPermissions = ({
 
   useEffect(() => {
     if (emptyPermissionsFetcher.type === "init") {
-      emptyPermissionsFetcher.load("/resource/users/empty-permissions");
+      emptyPermissionsFetcher.load("/api/users/empty-permissions");
     }
   }, [emptyPermissionsFetcher]);
 

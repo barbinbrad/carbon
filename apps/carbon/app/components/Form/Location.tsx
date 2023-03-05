@@ -32,7 +32,7 @@ const Location = ({
 
   useEffect(() => {
     if (locationFetcher.type === "init") {
-      locationFetcher.load("/resource/resources/locations");
+      locationFetcher.load("/api/resources/locations");
     }
   }, [locationFetcher]);
 

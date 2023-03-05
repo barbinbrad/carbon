@@ -38,7 +38,7 @@ const CustomerContact = ({
 
   useEffect(() => {
     customerContactFetcher.load(
-      `/resource/sales/customer-contacts?customerId=${customer}`
+      `/api/sales/customer-contacts?customerId=${customer}`
     );
     if (initialLoad.current) {
       initialLoad.current = false;

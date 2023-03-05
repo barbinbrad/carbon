@@ -31,7 +31,7 @@ const PersonJob = ({ job }: PersonJobProps) => {
   };
 
   useEffect(() => {
-    shiftFetcher.load(`/resource/resources/shifts?location=${location}`);
+    shiftFetcher.load(`/api/resources/shifts?location=${location}`);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 

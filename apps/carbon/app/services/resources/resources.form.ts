@@ -92,6 +92,15 @@ export const employeeJobValidator = withZod(
   })
 );
 
+export const equipmentTypeValidator = withZod(
+  z.object({
+    id: z.string(),
+    name: z.string().min(1, { message: "Name is required" }),
+    description: z.string(),
+    color: z.string(),
+  })
+);
+
 export const locationValidator = withZod(
   z
     .object({

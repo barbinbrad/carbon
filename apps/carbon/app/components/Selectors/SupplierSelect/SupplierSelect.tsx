@@ -17,7 +17,7 @@ const SupplierSelect = ({ value, onChange }: SupplierSelectProps) => {
 
   useEffect(() => {
     if (supplierFetcher.type === "init") {
-      supplierFetcher.load("/resource/purchasing/suppliers");
+      supplierFetcher.load("/api/purchasing/suppliers");
     }
   }, [supplierFetcher]);
 

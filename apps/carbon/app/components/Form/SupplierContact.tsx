@@ -38,7 +38,7 @@ const SupplierContact = ({
 
   useEffect(() => {
     supplierContactFetcher.load(
-      `/resource/purchasing/supplier-contacts?supplierId=${supplier}`
+      `/api/purchasing/supplier-contacts?supplierId=${supplier}`
     );
     if (initialLoad.current) {
       initialLoad.current = false;

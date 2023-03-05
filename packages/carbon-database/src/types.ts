@@ -20,9 +20,7 @@ export interface Database {
           shadowWeeks: number
           active: boolean
           createdAt: string
-          requiresEquipment: boolean
           equipmentTypeId: string | null
-          requiresWorkCell: boolean
           workCellTypeId: string | null
         }
         Insert: {
@@ -35,9 +33,7 @@ export interface Database {
           shadowWeeks?: number
           active?: boolean
           createdAt?: string
-          requiresEquipment?: boolean
           equipmentTypeId?: string | null
-          requiresWorkCell?: boolean
           workCellTypeId?: string | null
         }
         Update: {
@@ -50,9 +46,7 @@ export interface Database {
           shadowWeeks?: number
           active?: boolean
           createdAt?: string
-          requiresEquipment?: boolean
           equipmentTypeId?: string | null
-          requiresWorkCell?: boolean
           workCellTypeId?: string | null
         }
       }
@@ -559,44 +553,74 @@ export interface Database {
           description: string | null
           equipmentTypeId: string
           workCellId: string | null
+          createdBy: string
+          updatedBy: string | null
+          updatedAt: string | null
           id: string
           operatorsRequired: number
+          active: boolean
+          createdAt: string
         }
         Insert: {
           name: string
           description?: string | null
           equipmentTypeId: string
           workCellId?: string | null
+          createdBy: string
+          updatedBy?: string | null
+          updatedAt?: string | null
           id?: string
           operatorsRequired?: number
+          active?: boolean
+          createdAt?: string
         }
         Update: {
           name?: string
           description?: string | null
           equipmentTypeId?: string
           workCellId?: string | null
+          createdBy?: string
+          updatedBy?: string | null
+          updatedAt?: string | null
           id?: string
           operatorsRequired?: number
+          active?: boolean
+          createdAt?: string
         }
       }
       equipmentType: {
         Row: {
           name: string
           description: string | null
+          createdBy: string
+          updatedBy: string | null
+          updatedAt: string | null
           id: string
           color: string
+          active: boolean
+          createdAt: string
         }
         Insert: {
           name: string
           description?: string | null
+          createdBy: string
+          updatedBy?: string | null
+          updatedAt?: string | null
           id?: string
           color?: string
+          active?: boolean
+          createdAt?: string
         }
         Update: {
           name?: string
           description?: string | null
+          createdBy?: string
+          updatedBy?: string | null
+          updatedAt?: string | null
           id?: string
           color?: string
+          active?: boolean
+          createdAt?: string
         }
       }
       feature: {

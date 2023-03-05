@@ -54,7 +54,7 @@ export default function useUserSelect(props: UserSelectProps) {
 
   useEffect(() => {
     if (groupsFetcher.type === "init") {
-      groupsFetcher.load(`/resource/users/groups?type=${innerProps.type}`);
+      groupsFetcher.load(`/api/users/groups?type=${innerProps.type}`);
     }
   }, [groupsFetcher, innerProps.type]);
 

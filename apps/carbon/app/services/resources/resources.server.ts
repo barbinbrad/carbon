@@ -236,6 +236,41 @@ export async function getEmployeeJob(
     .single();
 }
 
+export async function getEquipmentType(
+  client: SupabaseClient<Database>,
+  equipmentTypeId: string
+) {
+  return client
+    .from("equipmentType")
+    .select("id, name, color, description")
+    .eq("active", true)
+    .eq("id", equipmentTypeId)
+    .single();
+}
+
+export async function getEquipmentTypes(
+  client: SupabaseClient<Database>,
+  args?: { name: string | null } & GenericQueryFilters
+) {
+  let query = client
+    .from("equipmentType")
+    .select("id, name, color, description, equipment(id, name)", {
+      count: "exact",
+    })
+    .eq("active", true)
+    .eq("equipment.active", true);
+
+  if (args?.name) {
+    query = query.ilike("name", `%${args.name}%`);
+  }
+
+  if (args) {
+    query = setGenericQueryFilters(query, args, "name");
+  }
+
+  return query;
+}
+
 export async function getLocation(
   client: SupabaseClient<Database>,
   locationId: string
@@ -643,6 +678,33 @@ export async function upsertEmployeeJob(
   return client
     .from("employeeJob")
     .upsert([{ id: employeeId, ...employeeJob }]);
+}
+
+export async function upsertEquipmentType(
+  client: SupabaseClient<Database>,
+  equipmentType:
+    | {
+        name: string;
+        description: string;
+        color: string;
+        createdBy: string;
+      }
+    | {
+        id: string;
+        name: string;
+        description: string;
+        color: string;
+        updatedBy: string;
+      }
+) {
+  if ("id" in equipmentType) {
+    const { id, ...update } = equipmentType;
+    return client
+      .from("equipmentType")
+      .update({ ...update })
+      .eq("id", id);
+  }
+  return client.from("equipmentType").insert([equipmentType]).select("id");
 }
 
 export async function upsertLocation(

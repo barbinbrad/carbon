@@ -4,9 +4,7 @@ export function getCurrentPath(request: Request) {
 
 export function makeRedirectToFromHere(request: Request) {
   const currentPath = getCurrentPath(request);
-  return new URLSearchParams([
-    ["redirectTo", currentPath.includes("resource") ? "/x" : currentPath],
-  ]);
+  return new URLSearchParams([["redirectTo", currentPath]]);
 }
 
 export function getRedirectTo(request: Request, defaultRedirectTo = "/x") {

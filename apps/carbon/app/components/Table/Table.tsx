@@ -1,6 +1,8 @@
-import { useColor, useEscape } from "@carbon/react";
+import { ActionMenu, ContextMenu, useColor, useEscape } from "@carbon/react";
 import { clip } from "@carbon/utils";
 import type { ThemeTypings } from "@chakra-ui/react";
+import { MenuList } from "@chakra-ui/react";
+import { VisuallyHidden } from "@chakra-ui/react";
 import { VStack } from "@chakra-ui/react";
 import {
   Box,
@@ -61,6 +63,7 @@ interface TableProps<T extends object> {
   withSimpleSorting?: boolean;
   onRowClick?: (row: T) => void;
   onSelectedRowsChange?: (selectedRows: T[]) => void;
+  renderContextMenu?: (row: T) => JSX.Element | null;
 }
 
 const Table = <T extends object>({
@@ -83,6 +86,7 @@ const Table = <T extends object>({
   withSimpleSorting = true,
   onRowClick,
   onSelectedRowsChange,
+  renderContextMenu,
 }: TableProps<T>) => {
   const tableContainerRef = useRef<HTMLDivElement>(null);
 
@@ -132,11 +136,21 @@ const Table = <T extends object>({
     [columns]
   );
 
+  const internalColumns = useMemo(() => {
+    let result: ColumnDef<T>[] = [];
+    if (withSelectableRows) {
+      result.push(...getRowSelectionColumn<T>());
+    }
+    result.push(...columns);
+    if (renderContextMenu) {
+      result.push(...getActionColumn<T>(renderContextMenu));
+    }
+    return result;
+  }, [columns, renderContextMenu, withSelectableRows]);
+
   const table = useReactTable({
     data: internalData,
-    columns: withSelectableRows
-      ? getRowSelectionColumn<T>().concat(columns)
-      : columns,
+    columns: internalColumns,
     state: {
       columnVisibility,
       columnOrder,
@@ -485,7 +499,37 @@ const Table = <T extends object>({
               <Tbody>
                 <AnimatePresence>
                   {rows.map((row) => {
-                    return (
+                    return renderContextMenu ? (
+                      <ContextMenu<HTMLTableRowElement>
+                        renderMenu={() => (
+                          <MenuList>{renderContextMenu(row.original)}</MenuList>
+                        )}
+                      >
+                        {(ref) => (
+                          <Row
+                            key={row.id}
+                            borderColor={borderColor}
+                            backgroundColor={rowBackground}
+                            editableComponents={editableComponents}
+                            isEditing={isEditing}
+                            isEditMode={editMode}
+                            isFrozenColumn
+                            selectedCell={selectedCell}
+                            // @ts-ignore
+                            row={row}
+                            rowRef={ref}
+                            withColumnOrdering={withColumnOrdering}
+                            onCellClick={onCellClick}
+                            onCellUpdate={onCellEditUpdate}
+                            onRowClick={
+                              rowsAreClickable
+                                ? () => onRowClick(row.original)
+                                : undefined
+                            }
+                          />
+                        )}
+                      </ContextMenu>
+                    ) : (
                       <Row
                         key={row.id}
                         borderColor={borderColor}
@@ -588,7 +632,44 @@ const Table = <T extends object>({
             <Tbody>
               <AnimatePresence>
                 {rows.map((row) => {
-                  return (
+                  return renderContextMenu ? (
+                    <ContextMenu<HTMLTableRowElement>
+                      renderMenu={() => (
+                        <MenuList>{renderContextMenu(row.original)}</MenuList>
+                      )}
+                    >
+                      {(ref) => (
+                        <Row
+                          key={row.id}
+                          borderColor={borderColor}
+                          backgroundColor={rowBackground}
+                          // @ts-ignore
+                          editableComponents={editableComponents}
+                          isEditing={isEditing}
+                          isEditMode={editMode}
+                          pinnedColumns={
+                            columnPinning?.left
+                              ? columnPinning.left?.length -
+                                (withSelectableRows ? 1 : 0)
+                              : 0
+                          }
+                          selectedCell={selectedCell}
+                          // @ts-ignore
+                          row={row}
+                          rowIsClickable={rowsAreClickable}
+                          rowRef={ref}
+                          withColumnOrdering={withColumnOrdering}
+                          onCellClick={onCellClick}
+                          onCellUpdate={onCellEditUpdate}
+                          onRowClick={
+                            rowsAreClickable
+                              ? () => onRowClick(row.original)
+                              : undefined
+                          }
+                        />
+                      )}
+                    </ContextMenu>
+                  ) : (
                     <Row
                       key={row.id}
                       borderColor={borderColor}
@@ -652,6 +733,22 @@ function getRowSelectionColumn<T>(): ColumnDef<T>[] {
             onChange: row.getToggleSelectedHandler(),
           }}
         />
+      ),
+    },
+  ];
+}
+
+function getActionColumn<T>(
+  renderContextMenu: (item: T) => JSX.Element | null
+): ColumnDef<T>[] {
+  return [
+    {
+      id: "Actions",
+      header: () => <VisuallyHidden>Actions</VisuallyHidden>,
+      cell: (item) => (
+        <Flex justifyContent="end">
+          <ActionMenu>{renderContextMenu(item.row.original)}</ActionMenu>
+        </Flex>
       ),
     },
   ];

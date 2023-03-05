@@ -10,55 +10,55 @@ import {
   HStack,
   VStack,
 } from "@chakra-ui/react";
-import { useNavigate } from "@remix-run/react";
 import { ValidatedForm } from "remix-validated-form";
-import { Hidden, Input, Submit, Users } from "~/components/Form";
+import { Input, Hidden, Submit, TextArea, Color } from "~/components/Form";
 import { usePermissions } from "~/hooks";
-import { groupValidator } from "~/services/users";
+import { equipmentTypeValidator } from "~/services/resources";
 
-type GroupFormProps = {
+type EquipmentTypeFormProps = {
   initialValues: {
     id?: string;
     name: string;
-    selections: string[];
+    color: string;
+    description: string;
   };
+  onClose: () => void;
 };
 
-const GroupForm = ({ initialValues }: GroupFormProps) => {
+const EquipmentTypeForm = ({
+  initialValues,
+  onClose,
+}: EquipmentTypeFormProps) => {
   const permissions = usePermissions();
-  const navigate = useNavigate();
-  const onClose = () => navigate(-1);
-
   const isEditing = initialValues.id !== undefined;
   const isDisabled = isEditing
-    ? !permissions.can("update", "users")
-    : !permissions.can("create", "users");
+    ? !permissions.can("update", "resources")
+    : !permissions.can("create", "resources");
 
   return (
     <Drawer onClose={onClose} isOpen={true} size="sm">
       <ValidatedForm
-        validator={groupValidator}
+        validator={equipmentTypeValidator}
         method="post"
         action={
           isEditing
-            ? `/x/users/groups/${initialValues.id}`
-            : "/x/users/groups/new"
+            ? `/x/resources/equipment/${initialValues.id}`
+            : "/x/resources/equipment/new"
         }
         defaultValues={initialValues}
       >
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader>{isEditing ? "Edit" : "New"} Group</DrawerHeader>
+          <DrawerHeader>
+            {isEditing ? "Edit" : "New"} Equipment Type
+          </DrawerHeader>
           <DrawerBody pb={8}>
             <Hidden name="id" />
             <VStack spacing={4} alignItems="start">
-              <Input name="name" label="Group Name" />
-              <Users
-                name="selections"
-                selectionsMaxHeight={"calc(100vh - 330px)"}
-                label="Group Members"
-              />
+              <Input name="name" label="Name" />
+              <TextArea name="description" label="Description" />
+              <Color name="color" label="Color" />
             </VStack>
           </DrawerBody>
           <DrawerFooter>
@@ -80,4 +80,4 @@ const GroupForm = ({ initialValues }: GroupFormProps) => {
   );
 };
 
-export default GroupForm;
+export default EquipmentTypeForm;

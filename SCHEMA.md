@@ -2352,9 +2352,16 @@ CREATE TABLE "equipmentType" (
   "name" TEXT NOT NULL UNIQUE,
   "color" TEXT NOT NULL DEFAULT '#000000',
   "description" TEXT,
+  "active" BOOLEAN NOT NULL DEFAULT true,
+  "createdBy" TEXT NOT NULL,
+  "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
+  "updatedBy" TEXT,
+  "updatedAt" TIMESTAMP,
 
   CONSTRAINT "equipmentType_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "equipmentType_colorCheck" CHECK ("color" is null or "color" ~* '^#[a-f0-9]{6}$')
+  CONSTRAINT "equipmentType_colorCheck" CHECK ("color" is null or "color" ~* '^#[a-f0-9]{6}$'),
+  CONSTRAINT "equipmentType_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "equipmentType_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE "equipment" (
@@ -2364,17 +2371,22 @@ CREATE TABLE "equipment" (
   "equipmentTypeId" TEXT NOT NULL,
   "operatorsRequired" NUMERIC NOT NULL DEFAULT 1,
   "workCellId" TEXT,
+  "active" BOOLEAN NOT NULL DEFAULT true,
+  "createdBy" TEXT NOT NULL,
+  "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
+  "updatedBy" TEXT,
+  "updatedAt" TIMESTAMP,
 
   CONSTRAINT "equipment_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "equipment_equipmentTypeId_fkey" FOREIGN KEY ("equipmentTypeId") REFERENCES "equipmentType"("id") ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT "equipment_workCellId_fkey" FOREIGN KEY ("workCellId") REFERENCES "workCell"("id") ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT "equipment_workCellId_fkey" FOREIGN KEY ("workCellId") REFERENCES "workCell"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "equipment_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "equipment_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 ALTER TABLE "ability" 
-  ADD COLUMN "requiresEquipment" BOOLEAN NOT NULL DEFAULT false,
-  ADD COLUMN "equipmentTypeId" TEXT,
-  ADD COLUMN "requiresWorkCell" BOOLEAN NOT NULL DEFAULT false,
-  ADD COLUMN "workCellTypeId" TEXT;
+  ADD COLUMN "equipmentTypeId" TEXT REFERENCES "equipmentType"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD COLUMN "workCellTypeId" TEXT REFERENCES "workCellType"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 
 ```

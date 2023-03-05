@@ -27,7 +27,7 @@ const CreateEmployeeModal = () => {
 
   useEffect(() => {
     if (employeeTypeFetcher.type === "init") {
-      employeeTypeFetcher.load("/resource/users/employee-types");
+      employeeTypeFetcher.load("/api/users/employee-types");
     }
   }, [employeeTypeFetcher]);
 

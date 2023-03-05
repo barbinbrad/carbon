@@ -7,147 +7,147 @@ export default function useBreadcrumbs(): Route[] {
 
   const result = matches.reduce<Route[]>((acc, match) => {
     switch (match.id) {
-      case "routes/x+/account":
+      case "routes/x+/account+/_layout":
         return acc.concat({
           name: "Account",
           to: match.pathname,
         });
-      case "routes/x+/account.profile":
+      case "routes/x+/account+/profile":
         return acc.concat({
           name: "Profile",
           to: match.pathname,
         });
-      case "routes/x+/account.personal":
+      case "routes/x+/account+/personal":
         return acc.concat({
           name: "Personal",
           to: match.pathname,
         });
-      case "routes/x+/account.password":
+      case "routes/x+/account+/password":
         return acc.concat({
           name: "Password",
           to: match.pathname,
         });
-      case "routes/x+/account.notifications":
+      case "routes/x+/account+/notifications":
         return acc.concat({
           name: "Notifications",
           to: match.pathname,
         });
-      case "routes/x+/account.security":
+      case "routes/x+/account+/security":
         return acc.concat({
           name: "Security",
           to: match.pathname,
         });
-      case "routes/x+/account.settings":
+      case "routes/x+/account+/settings":
         return acc.concat({
           name: "Settings",
           to: match.pathname,
         });
-      case "routes/x+/parts":
+      case "routes/x+/parts+/index":
         return acc.concat({
           name: "Parts",
           to: match.pathname,
         });
-      case "routes/x+/resources":
+      case "routes/x+/resources+/_layout":
         return acc.concat({
           name: "Resources",
           to: match.pathname,
         });
-      case "routes/x+/resources.abilities":
+      case "routes/x+/resources+/abilities":
         return acc.concat({
           name: "Abilities",
           to: match.pathname,
         });
-      case "routes/x+/resources.ability.$abilityId":
+      case "routes/x+/resources+/ability.$abilityId":
         return acc.concat({
           name: "Abilities",
           to: "/x/resources/abilities",
         });
-      case "routes/x+/resources.people":
+      case "routes/x+/resources+/equipment":
+        return acc.concat({
+          name: "Equipment",
+          to: match.pathname,
+        });
+      case "routes/x+/resources+/people":
         return acc.concat({
           name: "People",
           to: match.pathname,
         });
-      case "routes/x+/resources.person.$personId":
+      case "routes/x+/resources+/person.$personId":
         return acc.concat({
           name: "People",
           to: "/x/resources/people",
         });
-      case "routes/x+/resources.attributes":
+      case "routes/x+/resources+/attributes":
         return acc.concat({
           name: "Attributes",
           to: match.pathname,
         });
-      case "routes/x+/purchasing":
+      case "routes/x+/purchasing+/_layout":
         return acc.concat({
           name: "Purchasing",
           to: match.pathname,
         });
-      case "routes/x+/purchasing.suppliers":
+      case "routes/x+/purchasing+/suppliers":
         return acc.concat({
           name: "Suppliers",
           to: match.pathname,
         });
-      case "routes/x+/purchasing.supplier-types":
+      case "routes/x+/purchasing+/supplier-types":
         return acc.concat({
           name: "Supplier Types",
           to: match.pathname,
         });
-      case "routes/x+/sales":
+      case "routes/x+/sales+/_layout":
         return acc.concat({
           name: "Sales",
           to: match.pathname,
         });
-      case "routes/x+/sales.customers":
+      case "routes/x+/sales+/customers":
         return acc.concat({
           name: "Customers",
           to: match.pathname,
         });
-      case "routes/x+/sales.customer-types":
+      case "routes/x+/sales+/customer-types":
         return acc.concat({
           name: "Customer Types",
           to: match.pathname,
         });
-      case "routes/x+/users":
+      case "routes/x+/users+/_layout":
         return acc.concat({
           name: "Users",
           to: match.pathname,
         });
-      case "routes/x+/users.attributes":
+      case "routes/x+/users+/attributes":
         return acc.concat({
           name: "Attributes",
           to: match.pathname,
         });
-      case "routes/x+/users.employees":
+      case "routes/x+/users+/employees":
         return acc.concat({
           name: "Employees",
           to: match.pathname,
         });
-      case "routes/x+/users.employee-types":
+      case "routes/x+/users+/employee-types":
         return acc.concat({
           name: "Employee Types",
           to: match.pathname,
         });
-      case "routes/x+/users.customers":
+      case "routes/x+/users+/customers":
         return acc.concat({
           name: "Customers",
           to: match.pathname,
         });
-      case "routes/x+/users.suppliers":
+      case "routes/x+/users+/suppliers":
         return acc.concat({
           name: "Suppliers",
           to: match.pathname,
         });
-      case "routes/x+/users.groups":
+      case "routes/x+/users+/groups":
         return acc.concat({
           name: "Groups",
           to: match.pathname,
         });
-      case "routes/x+/users.$personId":
-        return acc.concat({
-          name: match.params.personId!,
-          to: `/x/users/${match.params.personId}`,
-        });
-      case "routes/x+/users.new":
+      case "routes/x+/users+/new":
         return acc.concat({
           name: "New",
           to: match.pathname,

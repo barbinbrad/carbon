@@ -5,7 +5,7 @@ import { BsEnvelope } from "react-icons/bs";
 import { FaBan } from "react-icons/fa";
 import { IoMdTrash } from "react-icons/io";
 import { Avatar, Table } from "~/components";
-import { usePermissions, useUrlParams } from "~/hooks";
+import { usePermissions } from "~/hooks";
 import type { Supplier } from "~/interfaces/Users/types";
 import { ResendInviteModal, DeactivateUsersModal } from "~/interfaces/Users";
 
@@ -23,7 +23,6 @@ const defaultColumnVisibility = {
 const SupplierAccountsTable = memo(
   ({ data, count, isEditable = false }: SupplierAccountsTableProps) => {
     const permissions = usePermissions();
-    const [params] = useUrlParams();
 
     const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
 

@@ -8,7 +8,6 @@ import {
   TabPanels,
   Box,
   Icon,
-  VStack,
 } from "@chakra-ui/react";
 import { BiLockAlt } from "react-icons/bi";
 import { SectionTitle } from "~/components/Layout";

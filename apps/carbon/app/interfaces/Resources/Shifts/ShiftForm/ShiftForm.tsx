@@ -1,7 +1,5 @@
 import {
   Button,
-  Checkbox as ChakraCheckbox,
-  CheckboxGroup,
   Drawer,
   DrawerBody,
   DrawerCloseButton,
@@ -12,11 +10,10 @@ import {
   FormControl,
   FormLabel,
   HStack,
-  Stack,
   VStack,
 } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
-import { useControlField, useField, ValidatedForm } from "remix-validated-form";
+import { ValidatedForm } from "remix-validated-form";
 import {
   Boolean,
   Hidden,

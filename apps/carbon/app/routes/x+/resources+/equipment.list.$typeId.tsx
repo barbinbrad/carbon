@@ -1,4 +1,4 @@
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import type { LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Outlet, useLoaderData, useNavigate } from "@remix-run/react";
 import { useUrlParams } from "~/hooks";
@@ -6,7 +6,7 @@ import { EquipmentTypeDetail } from "~/interfaces/Resources/Equipment";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { getEquipmentType } from "~/services/resources";
-import { assertIsPost, notFound } from "~/utils/http";
+import { notFound } from "~/utils/http";
 import { error } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderArgs) {

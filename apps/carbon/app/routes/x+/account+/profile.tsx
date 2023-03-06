@@ -1,12 +1,4 @@
-import { ContextMenu } from "@carbon/react";
-import {
-  Box,
-  Grid,
-  MenuDivider,
-  MenuGroup,
-  MenuItem,
-  MenuList,
-} from "@chakra-ui/react";
+import { Box, Grid } from "@chakra-ui/react";
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";

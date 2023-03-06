@@ -14,7 +14,6 @@ import { useNavigate } from "@remix-run/react";
 import { useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import {
-  Boolean,
   Employees,
   Hidden,
   Input,

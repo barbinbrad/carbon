@@ -8,7 +8,6 @@ import {
   PersonAbilities,
   PersonHeader,
   PersonTabs,
-  PersonJob,
   PersonDaysOff,
   PersonOvertime,
 } from "~/interfaces/Resources/Person";
@@ -62,6 +61,8 @@ export async function loader({ request, params }: LoaderArgs) {
     getEmployeeAbilities(client, personId),
     getEmployeeJob(client, personId),
   ]);
+
+  console.log("remove");
 
   if (user.error || !user.data) {
     return redirect(

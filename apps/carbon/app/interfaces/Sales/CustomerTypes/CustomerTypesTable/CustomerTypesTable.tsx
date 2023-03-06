@@ -1,8 +1,7 @@
-import { ActionMenu } from "@carbon/react";
-import { Box, Flex, MenuItem, VisuallyHidden } from "@chakra-ui/react";
+import { Box, MenuItem } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
-import { memo, useMemo } from "react";
+import { memo, useCallback, useMemo } from "react";
 import { BsPencilSquare, BsPeopleFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { Table } from "~/components";
@@ -40,60 +39,56 @@ const CustomerTypesTable = memo(({ data, count }: CustomerTypesTableProps) => {
           />
         ),
       },
-      {
-        accessorKey: "id",
-        header: () => <VisuallyHidden>Actions</VisuallyHidden>,
-        cell: ({ row }) => (
-          <Flex justifyContent="end">
-            <ActionMenu>
-              <MenuItem
-                icon={<BsPeopleFill />}
-                onClick={() => {
-                  navigate(`/x/sales/customers?type=${row.original.id}`);
-                }}
-              >
-                View Customers
-              </MenuItem>
-              <MenuItem
-                isDisabled={
-                  row.original.protected || !permissions.can("update", "sales")
-                }
-                icon={<BsPencilSquare />}
-                onClick={() => {
-                  navigate(
-                    `/x/sales/customer-types/${
-                      row.original.id
-                    }?${params.toString()}`
-                  );
-                }}
-              >
-                Edit Customer Type
-              </MenuItem>
-              <MenuItem
-                isDisabled={
-                  row.original.protected || !permissions.can("delete", "sales")
-                }
-                icon={<IoMdTrash />}
-                onClick={() => {
-                  navigate(
-                    `/x/sales/customer-types/delete/${
-                      row.original.id
-                    }?${params.toString()}`
-                  );
-                }}
-              >
-                Delete Customer Type
-              </MenuItem>
-            </ActionMenu>
-          </Flex>
-        ),
-      },
     ];
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params]);
+  }, []);
+
+  const renderContextMenu = useCallback(
+    (row: typeof data[number]) => {
+      return (
+        <>
+          <MenuItem
+            icon={<BsPeopleFill />}
+            onClick={() => {
+              navigate(`/x/sales/customers?type=${row.id}`);
+            }}
+          >
+            View Customers
+          </MenuItem>
+          <MenuItem
+            isDisabled={row.protected || !permissions.can("update", "sales")}
+            icon={<BsPencilSquare />}
+            onClick={() => {
+              navigate(
+                `/x/sales/customer-types/${row.id}?${params.toString()}`
+              );
+            }}
+          >
+            Edit Customer Type
+          </MenuItem>
+          <MenuItem
+            isDisabled={row.protected || !permissions.can("delete", "sales")}
+            icon={<IoMdTrash />}
+            onClick={() => {
+              navigate(
+                `/x/sales/customer-types/delete/${row.id}?${params.toString()}`
+              );
+            }}
+          >
+            Delete Customer Type
+          </MenuItem>
+        </>
+      );
+    },
+    [navigate, params, permissions]
+  );
 
   return (
-    <Table<typeof data[number]> data={data} columns={columns} count={count} />
+    <Table<typeof data[number]>
+      data={data}
+      columns={columns}
+      count={count}
+      renderContextMenu={renderContextMenu}
+    />
   );
 });
 

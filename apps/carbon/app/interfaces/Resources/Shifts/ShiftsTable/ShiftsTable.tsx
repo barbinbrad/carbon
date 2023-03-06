@@ -8,12 +8,12 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
-import { memo, useMemo } from "react";
+import { memo, useCallback, useMemo } from "react";
 import { BsPencilSquare } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { Avatar } from "~/components";
 import { Table } from "~/components";
-import { usePermissions } from "~/hooks";
+import { usePermissions, useUrlParams } from "~/hooks";
 import type { Shift } from "~/interfaces/Resources/types";
 
 type ShiftsTableProps = {
@@ -24,6 +24,7 @@ type ShiftsTableProps = {
 const ShiftsTable = memo(({ data, count }: ShiftsTableProps) => {
   const navigate = useNavigate();
   const permissions = usePermissions();
+  const [params] = useUrlParams();
 
   const rows = data.map((row) => ({
     id: row.id,
@@ -73,6 +74,24 @@ const ShiftsTable = memo(({ data, count }: ShiftsTableProps) => {
       : [],
   }));
 
+  const renderDays = useCallback((row: typeof rows[number]) => {
+    const days = [
+      row.monday && "M",
+      row.tuesday && "Tu",
+      row.wednesday && "W",
+      row.thursday && "Th",
+      row.friday && "F",
+      row.saturday && "Sa",
+      row.sunday && "Su",
+    ].filter(Boolean);
+
+    return days.map((day) => (
+      <Badge key={day as string} mr={0.5}>
+        {day}
+      </Badge>
+    ));
+  }, []);
+
   const columns = useMemo<ColumnDef<typeof rows[number]>[]>(() => {
     return [
       {
@@ -115,57 +134,45 @@ const ShiftsTable = memo(({ data, count }: ShiftsTableProps) => {
         header: "Days",
         cell: ({ row }) => renderDays(row.original),
       },
-      {
-        accessorKey: "id",
-        header: () => <VisuallyHidden>Actions</VisuallyHidden>,
-        cell: ({ row }) => (
-          <Flex justifyContent="end">
-            <ActionMenu>
-              <MenuItem
-                icon={<BsPencilSquare />}
-                onClick={() => {
-                  navigate(`/x/resources/shifts/${row.original.id}`);
-                }}
-              >
-                Edit Shift
-              </MenuItem>
-              <MenuItem
-                isDisabled={!permissions.can("delete", "resources")}
-                icon={<IoMdTrash />}
-                onClick={() => {
-                  navigate(`/x/resources/shifts/delete/${row.original.id}`);
-                }}
-              >
-                Delete Shift
-              </MenuItem>
-            </ActionMenu>
-          </Flex>
-        ),
-      },
     ];
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [navigate, permissions]);
+  }, [renderDays]);
 
-  const renderDays = (row: typeof rows[number]) => {
-    const days = [
-      row.monday && "M",
-      row.tuesday && "Tu",
-      row.wednesday && "W",
-      row.thursday && "Th",
-      row.friday && "F",
-      row.saturday && "Sa",
-      row.sunday && "Su",
-    ].filter(Boolean);
-
-    return days.map((day) => (
-      <Badge key={day as string} mr={0.5}>
-        {day}
-      </Badge>
-    ));
-  };
+  const renderContextMenu = useCallback(
+    (row: typeof rows[number]) => {
+      return (
+        <>
+          <MenuItem
+            icon={<BsPencilSquare />}
+            onClick={() => {
+              navigate(`/x/resources/shifts/${row.id}?${params.toString()}}`);
+            }}
+          >
+            Edit Shift
+          </MenuItem>
+          <MenuItem
+            isDisabled={!permissions.can("delete", "resources")}
+            icon={<IoMdTrash />}
+            onClick={() => {
+              navigate(
+                `/x/resources/shifts/delete/${row.id}?${params.toString()}`
+              );
+            }}
+          >
+            Delete Shift
+          </MenuItem>
+        </>
+      );
+    },
+    [navigate, params, permissions]
+  );
 
   return (
-    <Table<typeof rows[number]> data={rows} count={count} columns={columns} />
+    <Table<typeof rows[number]>
+      data={rows}
+      count={count}
+      columns={columns}
+      renderContextMenu={renderContextMenu}
+    />
   );
 });
 

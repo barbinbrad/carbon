@@ -501,13 +501,13 @@ const Table = <T extends object>({
                   {rows.map((row) => {
                     return renderContextMenu ? (
                       <ContextMenu<HTMLTableRowElement>
+                        key={row.id}
                         renderMenu={() => (
                           <MenuList>{renderContextMenu(row.original)}</MenuList>
                         )}
                       >
                         {(ref) => (
                           <Row
-                            key={row.id}
                             borderColor={borderColor}
                             backgroundColor={rowBackground}
                             editableComponents={editableComponents}
@@ -634,13 +634,13 @@ const Table = <T extends object>({
                 {rows.map((row) => {
                   return renderContextMenu ? (
                     <ContextMenu<HTMLTableRowElement>
+                      key={row.id}
                       renderMenu={() => (
                         <MenuList>{renderContextMenu(row.original)}</MenuList>
                       )}
                     >
                       {(ref) => (
                         <Row
-                          key={row.id}
                           borderColor={borderColor}
                           backgroundColor={rowBackground}
                           // @ts-ignore

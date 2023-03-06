@@ -1,12 +1,4 @@
-import { ActionMenu } from "@carbon/react";
-import {
-  Button,
-  ButtonGroup,
-  Flex,
-  IconButton,
-  MenuItem,
-  VisuallyHidden,
-} from "@chakra-ui/react";
+import { Button, ButtonGroup, IconButton, MenuItem } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo } from "react";
@@ -82,22 +74,28 @@ const SuppliersTable = memo(({ data, count }: SuppliersTableProps) => {
           </ButtonGroup>
         ),
       },
-      {
-        header: () => <VisuallyHidden>Actions</VisuallyHidden>,
-        accessorKey: "id",
-        cell: (item) => (
-          <Flex justifyContent="end">
-            {permissions.can("update", "users") && (
-              <ActionMenu>
-                <MenuItem icon={<BsPencilSquare />}>Edit Supplier</MenuItem>
-              </ActionMenu>
-            )}
-          </Flex>
-        ),
-      },
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
+
+  const renderContextMenu = useMemo(() => {
+    return permissions.can("update", "purchasing")
+      ? (row: Supplier) => {
+          return (
+            <MenuItem
+              icon={<BsPencilSquare />}
+              onClick={() =>
+                navigate(
+                  `/x/purchasing/suppliers/${row.id}?${params.toString()}`
+                )
+              }
+            >
+              Edit Supplier
+            </MenuItem>
+          );
+        }
+      : undefined;
+  }, [navigate, params, permissions]);
 
   return (
     <>
@@ -106,9 +104,7 @@ const SuppliersTable = memo(({ data, count }: SuppliersTableProps) => {
         columns={columns}
         data={data}
         withPagination
-        onRowClick={(row) =>
-          navigate(`/x/purchasing/suppliers/${row.id}?${params.toString()}`)
-        }
+        renderContextMenu={renderContextMenu}
       />
     </>
   );

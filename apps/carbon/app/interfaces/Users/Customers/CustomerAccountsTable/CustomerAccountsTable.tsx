@@ -1,20 +1,13 @@
-import { ActionMenu } from "@carbon/react";
-import {
-  Flex,
-  HStack,
-  MenuItem,
-  VisuallyHidden,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { HStack, MenuItem, useDisclosure } from "@chakra-ui/react";
 import type { ColumnDef } from "@tanstack/react-table";
-import { memo, useMemo, useState } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 import { BsEnvelope } from "react-icons/bs";
+import { FaBan } from "react-icons/fa";
 import { IoMdTrash } from "react-icons/io";
 import { Avatar, Table } from "~/components";
-import { usePermissions, useUrlParams } from "~/hooks";
+import { usePermissions } from "~/hooks";
 import type { Customer } from "~/interfaces/Users/types";
 import { ResendInviteModal, DeactivateUsersModal } from "~/interfaces/Users";
-import { FaBan } from "react-icons/fa";
 
 type CustomerAccountsTableProps = {
   data: Customer[];
@@ -30,7 +23,6 @@ const defaultColumnVisibility = {
 const CustomerAccountsTable = memo(
   ({ data, count, isEditable = false }: CustomerAccountsTableProps) => {
     const permissions = usePermissions();
-    const [params] = useUrlParams();
 
     const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
 
@@ -107,44 +99,8 @@ const CustomerAccountsTable = memo(
             return customerType ? customerType.name : "";
           },
         },
-        {
-          header: () => <VisuallyHidden>Actions</VisuallyHidden>,
-          accessorKey: "user.id",
-          cell: (item) => (
-            <Flex justifyContent="end">
-              {permissions.can("update", "users") && (
-                <ActionMenu>
-                  <MenuItem
-                    icon={<BsEnvelope />}
-                    onClick={() => {
-                      setSelectedUserIds([item.getValue() as string]);
-                      resendInviteModal.onOpen();
-                    }}
-                  >
-                    Send Account Invite
-                  </MenuItem>
-                  {
-                    // @ts-ignore
-                    item.row.original.user?.active === true && (
-                      <MenuItem
-                        icon={<IoMdTrash />}
-                        onClick={(e) => {
-                          setSelectedUserIds([item.getValue() as string]);
-                          deactivateCustomerModal.onOpen();
-                        }}
-                      >
-                        Deactivate Customer
-                      </MenuItem>
-                    )
-                  }
-                </ActionMenu>
-              )}
-            </Flex>
-          ),
-        },
       ];
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [params]);
+    }, []);
 
     const actions = useMemo(() => {
       return [
@@ -192,6 +148,40 @@ const CustomerAccountsTable = memo(
     //   []
     // );
 
+    const renderContextMenu = useCallback(
+      (row: typeof data[number]) => {
+        if (Array.isArray(row.user) || !row.user) {
+          return null;
+        }
+        const userId = row.user.id as string;
+        return (
+          <>
+            <MenuItem
+              icon={<BsEnvelope />}
+              onClick={() => {
+                setSelectedUserIds([userId]);
+                resendInviteModal.onOpen();
+              }}
+            >
+              Send Account Invite
+            </MenuItem>
+            {row.user?.active === true && (
+              <MenuItem
+                icon={<IoMdTrash />}
+                onClick={(e) => {
+                  setSelectedUserIds([userId]);
+                  deactivateCustomerModal.onOpen();
+                }}
+              >
+                Deactivate Customer
+              </MenuItem>
+            )}
+          </>
+        );
+      },
+      [deactivateCustomerModal, resendInviteModal]
+    );
+
     return (
       <>
         <Table<typeof rows[number]>
@@ -200,6 +190,7 @@ const CustomerAccountsTable = memo(
           columns={columns}
           data={rows}
           defaultColumnVisibility={defaultColumnVisibility}
+          renderContextMenu={renderContextMenu}
           withColumnOrdering
           withFilters
           withPagination

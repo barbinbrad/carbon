@@ -1,12 +1,4 @@
-import { ActionMenu } from "@carbon/react";
-import {
-  Flex,
-  HStack,
-  Link,
-  MenuItem,
-  Text,
-  VisuallyHidden,
-} from "@chakra-ui/react";
+import { HStack, Link, MenuItem, Text } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
@@ -171,37 +163,8 @@ const PeopleTable = memo(
         }
       });
 
-      return [
-        ...defaultColumns,
-        ...additionalColumns,
-        {
-          header: () => <VisuallyHidden>Actions</VisuallyHidden>,
-          accessorKey: "user.id",
-          cell: (item) => (
-            <Flex justifyContent="end">
-              {permissions.can("update", "resources") && (
-                <ActionMenu>
-                  <MenuItem
-                    icon={<BsPencilSquare />}
-                    onClick={() =>
-                      navigate(
-                        `/x/resources/person/${
-                          item.getValue() as string
-                        }?${params.toString()}`
-                      )
-                    }
-                  >
-                    Edit Employee
-                  </MenuItem>
-                </ActionMenu>
-              )}
-            </Flex>
-          ),
-        },
-      ];
-
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [params]);
+      return [...defaultColumns, ...additionalColumns];
+    }, [attributeCategories, navigate, renderGenericAttribute]);
 
     // const actions = useMemo(() => {
     //   return [
@@ -217,6 +180,26 @@ const PeopleTable = memo(
     //   // eslint-disable-next-line react-hooks/exhaustive-deps
     // }, []);
 
+    const renderContextMenu = useMemo(() => {
+      return permissions.can("update", "users")
+        ? (row: typeof rows[number]) => {
+            return (
+              <MenuItem
+                icon={<BsPencilSquare />}
+                onClick={() =>
+                  navigate(
+                    // @ts-ignore
+                    `/x/resources/person/${row.user?.id}?${params.toString()}`
+                  )
+                }
+              >
+                Edit Employee
+              </MenuItem>
+            );
+          }
+        : undefined;
+    }, [navigate, params, permissions]);
+
     return (
       <>
         <Table<typeof rows[number]>
@@ -227,6 +210,7 @@ const PeopleTable = memo(
           defaultColumnPinning={{
             left: ["Select", "User"],
           }}
+          renderContextMenu={renderContextMenu}
           withColumnOrdering
           // withInlineEditing
           withFilters

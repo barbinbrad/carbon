@@ -1,8 +1,7 @@
-import { ActionMenu } from "@carbon/react";
-import { AvatarGroup, Flex, MenuItem, VisuallyHidden } from "@chakra-ui/react";
+import { AvatarGroup, MenuItem } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
-import { memo, useMemo } from "react";
+import { memo, useCallback, useMemo } from "react";
 import { BsPencilSquare } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { Avatar } from "~/components";
@@ -96,38 +95,43 @@ const AbilitiesTable = memo(({ data, count }: AbilitiesTableProps) => {
           />
         ),
       },
-      {
-        accessorKey: "id",
-        header: () => <VisuallyHidden>Actions</VisuallyHidden>,
-        cell: ({ row }) => (
-          <Flex justifyContent="end">
-            <ActionMenu>
-              <MenuItem
-                icon={<BsPencilSquare />}
-                onClick={() => {
-                  navigate(`/x/resources/ability/${row.original.id}`);
-                }}
-              >
-                Edit Ability
-              </MenuItem>
-              <MenuItem
-                isDisabled={!permissions.can("delete", "resources")}
-                icon={<IoMdTrash />}
-                onClick={() => {
-                  navigate(`/x/resources/abilities/delete/${row.original.id}`);
-                }}
-              >
-                Delete Ability
-              </MenuItem>
-            </ActionMenu>
-          </Flex>
-        ),
-      },
     ];
-  }, [navigate, permissions]);
+  }, []);
+
+  const renderContextMenu = useCallback(
+    (row: typeof rows[number]) => {
+      return (
+        <>
+          <MenuItem
+            icon={<BsPencilSquare />}
+            onClick={() => {
+              navigate(`/x/resources/ability/${row.id}`);
+            }}
+          >
+            Edit Ability
+          </MenuItem>
+          <MenuItem
+            isDisabled={!permissions.can("delete", "resources")}
+            icon={<IoMdTrash />}
+            onClick={() => {
+              navigate(`/x/resources/abilities/delete/${row.id}`);
+            }}
+          >
+            Delete Ability
+          </MenuItem>
+        </>
+      );
+    },
+    [navigate, permissions]
+  );
 
   return (
-    <Table<typeof rows[number]> data={rows} count={count} columns={columns} />
+    <Table<typeof rows[number]>
+      data={rows}
+      count={count}
+      columns={columns}
+      renderContextMenu={renderContextMenu}
+    />
   );
 });
 

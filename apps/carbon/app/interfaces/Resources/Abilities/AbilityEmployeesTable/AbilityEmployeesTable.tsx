@@ -1,15 +1,7 @@
-import { ActionMenu } from "@carbon/react";
-import {
-  Badge,
-  Flex,
-  HStack,
-  MenuItem,
-  Progress,
-  VisuallyHidden,
-} from "@chakra-ui/react";
+import { Badge, HStack, MenuItem, Progress } from "@chakra-ui/react";
 import { useNavigate, useParams } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { BsPencilSquare } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { Avatar, Table } from "~/components";
@@ -124,48 +116,46 @@ const AbilityEmployeesTable = ({
           );
         },
       },
-      {
-        accessorKey: "id",
-        header: () => <VisuallyHidden>Actions</VisuallyHidden>,
-        cell: ({ row }) => (
-          <Flex justifyContent="end">
-            <ActionMenu>
-              <MenuItem
-                isDisabled={!permissions.can("update", "resources")}
-                icon={<BsPencilSquare />}
-                onClick={() => {
-                  navigate(
-                    `/x/resources/ability/${abilityId}/employee/${row.original.id}`
-                  );
-                }}
-              >
-                Edit Employee Ability
-              </MenuItem>
-              <MenuItem
-                isDisabled={!permissions.can("delete", "resources")}
-                icon={<IoMdTrash />}
-                onClick={() => {
-                  navigate(
-                    `/x/resources/ability/${abilityId}/employee/delete/${row.original.id}`
-                  );
-                }}
-              >
-                Delete Employee Ability
-              </MenuItem>
-            </ActionMenu>
-          </Flex>
-        ),
-      },
     ];
-  }, [abilityId, navigate, permissions]);
+  }, []);
+
+  const renderContextMenu = useCallback(
+    (row: typeof rows[number]) => {
+      return (
+        <>
+          <MenuItem
+            isDisabled={!permissions.can("update", "resources")}
+            icon={<BsPencilSquare />}
+            onClick={() => {
+              navigate(`/x/resources/ability/${abilityId}/employee/${row.id}`);
+            }}
+          >
+            Edit Employee Ability
+          </MenuItem>
+          <MenuItem
+            isDisabled={!permissions.can("delete", "resources")}
+            icon={<IoMdTrash />}
+            onClick={() => {
+              navigate(
+                `/x/resources/ability/${abilityId}/employee/delete/${row.id}`
+              );
+            }}
+          >
+            Delete Employee Ability
+          </MenuItem>
+        </>
+      );
+    },
+    [abilityId, navigate, permissions]
+  );
 
   if (!abilityId) return null;
-
   return (
     <Table<typeof rows[number]>
       data={rows}
       count={rows.length}
       columns={columns}
+      renderContextMenu={renderContextMenu}
       withPagination={false}
     />
   );

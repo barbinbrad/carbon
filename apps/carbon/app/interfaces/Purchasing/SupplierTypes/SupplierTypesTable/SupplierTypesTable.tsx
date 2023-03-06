@@ -1,8 +1,7 @@
-import { ActionMenu } from "@carbon/react";
-import { Box, Flex, MenuItem, VisuallyHidden } from "@chakra-ui/react";
+import { Box, MenuItem } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
-import { memo, useMemo } from "react";
+import { memo, useCallback, useMemo } from "react";
 import { BsPencilSquare, BsPeopleFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { Table } from "~/components";
@@ -40,62 +39,62 @@ const SupplierTypesTable = memo(({ data, count }: SupplierTypesTableProps) => {
           />
         ),
       },
-      {
-        accessorKey: "id",
-        header: () => <VisuallyHidden>Actions</VisuallyHidden>,
-        cell: ({ row }) => (
-          <Flex justifyContent="end">
-            <ActionMenu>
-              <MenuItem
-                icon={<BsPeopleFill />}
-                onClick={() => {
-                  navigate(`/x/purchasing/suppliers?type=${row.original.id}`);
-                }}
-              >
-                View Suppliers
-              </MenuItem>
-              <MenuItem
-                isDisabled={
-                  row.original.protected ||
-                  !permissions.can("update", "purchasing")
-                }
-                icon={<BsPencilSquare />}
-                onClick={() => {
-                  navigate(
-                    `/x/purchasing/supplier-types/${
-                      row.original.id
-                    }?${params.toString()}`
-                  );
-                }}
-              >
-                Edit Supplier Type
-              </MenuItem>
-              <MenuItem
-                isDisabled={
-                  row.original.protected ||
-                  !permissions.can("delete", "purchasing")
-                }
-                icon={<IoMdTrash />}
-                onClick={() => {
-                  navigate(
-                    `/x/purchasing/supplier-types/delete/${
-                      row.original.id
-                    }?${params.toString()}`
-                  );
-                }}
-              >
-                Delete Supplier Type
-              </MenuItem>
-            </ActionMenu>
-          </Flex>
-        ),
-      },
     ];
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params]);
+  }, []);
+
+  const renderContextMenu = useCallback(
+    (row: typeof data[number]) => {
+      return (
+        <>
+          <MenuItem
+            icon={<BsPeopleFill />}
+            onClick={() => {
+              navigate(`/x/purchasing/suppliers?type=${row.id}`);
+            }}
+          >
+            View Suppliers
+          </MenuItem>
+          <MenuItem
+            isDisabled={
+              row.protected || !permissions.can("update", "purchasing")
+            }
+            icon={<BsPencilSquare />}
+            onClick={() => {
+              navigate(
+                `/x/purchasing/supplier-types/${row.id}?${params.toString()}`
+              );
+            }}
+          >
+            Edit Supplier Type
+          </MenuItem>
+          <MenuItem
+            isDisabled={
+              row.protected || !permissions.can("delete", "purchasing")
+            }
+            icon={<IoMdTrash />}
+            onClick={() => {
+              navigate(
+                `/x/purchasing/supplier-types/delete/${
+                  row.id
+                }?${params.toString()}`
+              );
+            }}
+          >
+            Delete Supplier Type
+          </MenuItem>
+        </>
+      );
+    },
+    [navigate, params, permissions]
+  );
 
   return (
-    <Table<typeof data[number]> data={data} columns={columns} count={count} />
+    <Table<typeof data[number]>
+      data={data}
+      columns={columns}
+      count={count}
+      renderContextMenu={renderContextMenu}
+    />
   );
 });
 

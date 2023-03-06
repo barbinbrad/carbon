@@ -75,8 +75,8 @@ After running the steps below you should be able to access the following apps/co
 First download and initialize the repository dependencies.
 
 ```bash
-$ yarn           # install dependencies
-$ yarn db:start  # pull and start the containers
+$ yarn             # install dependencies
+$ yarn init        # pull and start the containers
 ```
 
 Copy the environment variables from the initialization script to an `.env` file:

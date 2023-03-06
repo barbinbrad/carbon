@@ -82,22 +82,25 @@ const CustomersTable = memo(({ data, count }: CustomersTableProps) => {
           </ButtonGroup>
         ),
       },
-      {
-        header: () => <VisuallyHidden>Actions</VisuallyHidden>,
-        accessorKey: "id",
-        cell: (item) => (
-          <Flex justifyContent="end">
-            {permissions.can("update", "sales") && (
-              <ActionMenu>
-                <MenuItem icon={<BsPencilSquare />}>Edit Customer</MenuItem>
-              </ActionMenu>
-            )}
-          </Flex>
-        ),
-      },
     ];
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params]);
+  }, []);
+
+  const renderContextMenu = useMemo(() => {
+    return permissions.can("update", "sales")
+      ? (row: Customer) => {
+          return (
+            <MenuItem
+              icon={<BsPencilSquare />}
+              onClick={() =>
+                navigate(`/x/sales/customers/${row.id}?${params.toString()}`)
+              }
+            >
+              Edit Customer
+            </MenuItem>
+          );
+        }
+      : undefined;
+  }, [navigate, params, permissions]);
 
   return (
     <>
@@ -105,10 +108,8 @@ const CustomersTable = memo(({ data, count }: CustomersTableProps) => {
         count={count}
         columns={columns}
         data={data}
+        renderContextMenu={renderContextMenu}
         withPagination
-        onRowClick={(row) =>
-          navigate(`/x/sales/customers/${row.id}?${params.toString()}`)
-        }
       />
     </>
   );

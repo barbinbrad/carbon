@@ -1,17 +1,14 @@
-import { ActionMenu } from "@carbon/react";
 import {
   Badge,
   Button,
   ButtonGroup,
-  Flex,
   IconButton,
   MenuItem,
   useDisclosure,
-  VisuallyHidden,
 } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
-import { memo, useMemo, useState } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 import { BiAddToQueue } from "react-icons/bi";
 import { BsPencilSquare, BsListUl, BsPlus } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
@@ -100,62 +97,56 @@ const AttributeCategoriesTable = memo(
             );
           },
         },
-
-        {
-          accessorKey: "id",
-          header: () => <VisuallyHidden>Actions</VisuallyHidden>,
-          cell: ({ row }) => (
-            <Flex justifyContent="end">
-              <ActionMenu>
-                <MenuItem
-                  icon={<BiAddToQueue />}
-                  onClick={() => {
-                    navigate(
-                      `/x/resources/attributes/list/${
-                        row.original.id
-                      }/new?${params?.toString()}`
-                    );
-                  }}
-                >
-                  New Attribute
-                </MenuItem>
-                <MenuItem
-                  icon={<BsListUl />}
-                  onClick={() => {
-                    navigate(
-                      `/x/resources/attributes/list/${
-                        row.original.id
-                      }?${params?.toString()}`
-                    );
-                  }}
-                >
-                  View Attributes
-                </MenuItem>
-                <MenuItem
-                  icon={<BsPencilSquare />}
-                  onClick={() => {
-                    navigate(`/x/resources/attributes/${row.original.id}`);
-                  }}
-                >
-                  Edit Attribute Category
-                </MenuItem>
-                <MenuItem
-                  isDisabled={
-                    row.original.protected ||
-                    !permissions.can("delete", "users")
-                  }
-                  icon={<IoMdTrash />}
-                  onClick={() => onDelete(row.original)}
-                >
-                  Delete Category
-                </MenuItem>
-              </ActionMenu>
-            </Flex>
-          ),
-        },
       ];
+    }, [navigate, params]);
+
+    const renderContextMenu = useCallback(
+      (row: typeof data[number]) => {
+        return (
+          <>
+            <MenuItem
+              icon={<BiAddToQueue />}
+              onClick={() => {
+                navigate(
+                  `/x/resources/attributes/list/${
+                    row.id
+                  }/new?${params?.toString()}`
+                );
+              }}
+            >
+              New Attribute
+            </MenuItem>
+            <MenuItem
+              icon={<BsListUl />}
+              onClick={() => {
+                navigate(
+                  `/x/resources/attributes/list/${row.id}?${params?.toString()}`
+                );
+              }}
+            >
+              View Attributes
+            </MenuItem>
+            <MenuItem
+              icon={<BsPencilSquare />}
+              onClick={() => {
+                navigate(`/x/resources/attributes/${row.id}`);
+              }}
+            >
+              Edit Attribute Category
+            </MenuItem>
+            <MenuItem
+              isDisabled={row.protected || !permissions.can("delete", "users")}
+              icon={<IoMdTrash />}
+              onClick={() => onDelete(row)}
+            >
+              Delete Category
+            </MenuItem>
+          </>
+        );
+      },
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [params]);
+      [navigate, params, permissions]
+    );
 
     return (
       <>
@@ -163,6 +154,7 @@ const AttributeCategoriesTable = memo(
           data={data}
           columns={columns}
           count={count ?? 0}
+          renderContextMenu={renderContextMenu}
         />
 
         <ConfirmDelete

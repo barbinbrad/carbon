@@ -242,7 +242,7 @@ export async function getEquipmentType(
 ) {
   return client
     .from("equipmentType")
-    .select("id, name, color, description")
+    .select("id, name, color, description, equipment(id, name)")
     .eq("active", true)
     .eq("id", equipmentTypeId)
     .single();

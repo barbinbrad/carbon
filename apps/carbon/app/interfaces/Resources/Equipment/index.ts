@@ -1,13 +1,13 @@
-// import AttributeForm from "./AttributeForm";
+// import EquipmentForm from "./EquipmentForm";
 import EquipmentTypesTable from "./EquipmentTypesTable";
 import EquipmentTypesTableFilters from "./EquipmentTypesTableFilters";
-// import AttributeCategoryDetail from "./AttributeCategoryDetail";
+import EquipmentTypeDetail from "./EquipmentTypeDetail";
 import EquipmentTypeForm from "./EquipmentTypeForm";
 
 export {
-  // AttributeForm,
+  // EquipmentForm,
   EquipmentTypesTable,
   EquipmentTypesTableFilters,
-  // EquipmentTypeDetail,
+  EquipmentTypeDetail,
   EquipmentTypeForm,
 };

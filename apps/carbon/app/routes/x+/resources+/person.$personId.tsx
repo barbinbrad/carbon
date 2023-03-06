@@ -62,8 +62,6 @@ export async function loader({ request, params }: LoaderArgs) {
     getEmployeeJob(client, personId),
   ]);
 
-  console.log("remove");
-
   if (user.error || !user.data) {
     return redirect(
       "/x/resources/people",

@@ -236,6 +236,20 @@ export async function getEmployeeJob(
     .single();
 }
 
+export async function getEquipment(
+  client: SupabaseClient<Database>,
+  equipmentId: string
+) {
+  return client
+    .from("equipment")
+    .select(
+      "id, name, description, operatorsRequired, equipmentType(id, name), workCell(id, name)"
+    )
+    .eq("id", equipmentId)
+    .eq("active", true)
+    .single();
+}
+
 export async function getEquipmentType(
   client: SupabaseClient<Database>,
   equipmentTypeId: string
@@ -678,6 +692,37 @@ export async function upsertEmployeeJob(
   return client
     .from("employeeJob")
     .upsert([{ id: employeeId, ...employeeJob }]);
+}
+
+export async function upsertEquipment(
+  client: SupabaseClient<Database>,
+  equipment:
+    | {
+        name: string;
+        description: string;
+        equipmentTypeId: string;
+        operatorsRequired?: number;
+        workCellId?: string;
+        createdBy: string;
+      }
+    | {
+        id: string;
+        name: string;
+        description: string;
+        equipmentTypeId: string;
+        operatorsRequired?: number;
+        workCellId?: string;
+        updatedBy: string;
+      }
+) {
+  if ("id" in equipment) {
+    const { id, ...update } = equipment;
+    return client
+      .from("equipment")
+      .update({ ...update })
+      .eq("id", id);
+  }
+  return client.from("equipment").insert([equipment]).select("id");
 }
 
 export async function upsertEquipmentType(

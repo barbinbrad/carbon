@@ -19,10 +19,10 @@ export async function loader({ request, params }: LoaderArgs) {
     role: "employee",
   });
 
-  const { equipmentTypeId } = params;
-  if (!equipmentTypeId) throw notFound("Invalid equipmentTypeId");
+  const { typeId } = params;
+  if (!typeId) throw notFound("Invalid equipment type id");
 
-  const equipmentType = await getEquipmentType(client, equipmentTypeId);
+  const equipmentType = await getEquipmentType(client, typeId);
   if (equipmentType.error) {
     return redirect(
       "/x/resources/equipment",

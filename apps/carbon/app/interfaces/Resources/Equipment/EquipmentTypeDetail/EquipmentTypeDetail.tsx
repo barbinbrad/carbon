@@ -1,3 +1,4 @@
+import { ActionMenu } from "@carbon/react";
 import {
   Button,
   Drawer,
@@ -8,11 +9,11 @@ import {
   DrawerHeader,
   DrawerOverlay,
   HStack,
-  IconButton,
-  List,
-  ListItem,
+  MenuItem,
+  StackDivider,
   Text,
   useDisclosure,
+  VStack,
 } from "@chakra-ui/react";
 import { Link } from "@remix-run/react";
 import { useState } from "react";
@@ -53,6 +54,19 @@ const EquipmentTypeDetail = ({
     deleteModal.onClose();
   };
 
+  const renderContextMenu = (equipment: Equipment) => {
+    return (
+      <>
+        <MenuItem as={Link} to={equipment.id} icon={<BsPencilSquare />}>
+          Edit Unit
+        </MenuItem>
+        <MenuItem onClick={() => onDelete(equipment)} icon={<IoMdTrash />}>
+          Delete Unit
+        </MenuItem>
+      </>
+    );
+  };
+
   return (
     <>
       <Drawer onClose={onClose} isOpen={true} size="sm">
@@ -62,30 +76,26 @@ const EquipmentTypeDetail = ({
           <DrawerHeader>{equipmentType.name}</DrawerHeader>
           <DrawerBody>
             {Array.isArray(equipmentType?.equipment) && (
-              <List spacing={2}>
+              <VStack
+                alignItems="start"
+                divider={<StackDivider borderColor="gray.200" />}
+                spacing={4}
+                w="full"
+              >
                 {equipmentType.equipment.map((equipment) => {
                   return (
-                    <ListItem key={equipment.id}>
-                      <HStack>
-                        <Text flexGrow={1}>{equipment.name}</Text>
-                        <IconButton
-                          as={Link}
-                          to={equipment.id}
-                          aria-label="Edit"
-                          icon={<BsPencilSquare />}
-                          variant="outline"
-                        />
-                        <IconButton
-                          aria-label="Delete"
-                          icon={<IoMdTrash />}
-                          variant="outline"
-                          onClick={() => onDelete(equipment)}
-                        />
-                      </HStack>
-                    </ListItem>
+                    <HStack key={equipment.id} w="full">
+                      <VStack spacing={0} flexGrow={1} alignItems="start">
+                        <Text fontWeight="bold">{equipment.name}</Text>
+                        <Text fontSize="sm" color="gray.500">
+                          Work Center T00D00
+                        </Text>
+                      </VStack>
+                      <ActionMenu>{renderContextMenu(equipment)}</ActionMenu>
+                    </HStack>
                   );
                 })}
-              </List>
+              </VStack>
             )}
           </DrawerBody>
           <DrawerFooter>

@@ -1,11 +1,11 @@
-// import EquipmentForm from "./EquipmentForm";
+import EquipmentForm from "./EquipmentForm";
 import EquipmentTypesTable from "./EquipmentTypesTable";
 import EquipmentTypesTableFilters from "./EquipmentTypesTableFilters";
 import EquipmentTypeDetail from "./EquipmentTypeDetail";
 import EquipmentTypeForm from "./EquipmentTypeForm";
 
 export {
-  // EquipmentForm,
+  EquipmentForm,
   EquipmentTypesTable,
   EquipmentTypesTableFilters,
   EquipmentTypeDetail,

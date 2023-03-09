@@ -553,6 +553,7 @@ export interface Database {
           description: string | null;
           equipmentTypeId: string;
           workCellId: string | null;
+          activeDate: string | null;
           createdBy: string;
           updatedBy: string | null;
           updatedAt: string | null;
@@ -567,6 +568,7 @@ export interface Database {
           description?: string | null;
           equipmentTypeId: string;
           workCellId?: string | null;
+          activeDate?: string | null;
           createdBy: string;
           updatedBy?: string | null;
           updatedAt?: string | null;
@@ -581,6 +583,7 @@ export interface Database {
           description?: string | null;
           equipmentTypeId?: string;
           workCellId?: string | null;
+          activeDate?: string | null;
           createdBy?: string;
           updatedBy?: string | null;
           updatedAt?: string | null;
@@ -1147,35 +1150,47 @@ export interface Database {
         Row: {
           name: string;
           description: string | null;
-          defaultProcessId: string;
           departmentId: string;
           locationId: string | null;
           workCellTypeId: string;
+          activeDate: string | null;
+          createdBy: string;
+          updatedBy: string | null;
+          updatedAt: string | null;
           id: string;
           defaultStandardFactor: Database["public"]["Enums"]["factor"];
-          setupHours: number;
+          active: boolean;
+          createdAt: string;
         };
         Insert: {
           name: string;
           description?: string | null;
-          defaultProcessId: string;
           departmentId: string;
           locationId?: string | null;
           workCellTypeId: string;
+          activeDate?: string | null;
+          createdBy: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
           id?: string;
           defaultStandardFactor?: Database["public"]["Enums"]["factor"];
-          setupHours?: number;
+          active?: boolean;
+          createdAt?: string;
         };
         Update: {
           name?: string;
           description?: string | null;
-          defaultProcessId?: string;
           departmentId?: string;
           locationId?: string | null;
           workCellTypeId?: string;
+          activeDate?: string | null;
+          createdBy?: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
           id?: string;
           defaultStandardFactor?: Database["public"]["Enums"]["factor"];
-          setupHours?: number;
+          active?: boolean;
+          createdAt?: string;
         };
       };
       workCellType: {
@@ -1184,18 +1199,21 @@ export interface Database {
           description: string | null;
           id: string;
           color: string;
+          active: boolean;
         };
         Insert: {
           name: string;
           description?: string | null;
           id?: string;
           color?: string;
+          active?: boolean;
         };
         Update: {
           name?: string;
           description?: string | null;
           id?: string;
           color?: string;
+          active?: boolean;
         };
       };
     };

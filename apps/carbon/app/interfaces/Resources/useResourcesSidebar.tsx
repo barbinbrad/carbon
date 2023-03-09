@@ -54,8 +54,8 @@ const resourcesRoutes: RouteGroup[] = [
         to: "/x/resources/shifts",
       },
       {
-        name: "Work Centers",
-        to: "/x/resources/work-centers",
+        name: "Work Cells",
+        to: "/x/resources/work-cells",
       },
     ],
   },

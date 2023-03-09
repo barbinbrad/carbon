@@ -2294,6 +2294,7 @@ CREATE TABLE "workCellType" (
   "name" TEXT NOT NULL UNIQUE,
   "color" TEXT NOT NULL DEFAULT '#000000',
   "description" TEXT,
+  "active" BOOLEAN NOT NULL DEFAULT true,
 
   CONSTRAINT "workCellType_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "workCellType_colorCheck" CHECK ("color" is null or "color" ~* '^#[a-f0-9]{6}$')
@@ -2303,15 +2304,18 @@ CREATE TABLE "workCell" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "name" TEXT NOT NULL,
   "description" TEXT,
-  "defaultProcessId" TEXT NOT NULL,
   "defaultStandardFactor" factor NOT NULL DEFAULT 'Hours/Piece',
   "departmentId" TEXT NOT NULL,
   "locationId" TEXT,
-  "setupHours" NUMERIC NOT NULL DEFAULT 0,
   "workCellTypeId" TEXT NOT NULL,
+  "active" BOOLEAN NOT NULL DEFAULT true,
+  "activeDate" DATE,
+  "createdBy" TEXT NOT NULL,
+  "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
+  "updatedBy" TEXT,
+  "updatedAt" TIMESTAMP,
 
   CONSTRAINT "workCell_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "workCell_defaultProcessId_fkey" FOREIGN KEY ("defaultProcessId") REFERENCES "ability"("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "workCell_workCellTypeId_fkey" FOREIGN KEY ("workCellTypeId") REFERENCES "workCellType"("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "workCell_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "location"("id") ON DELETE CASCADE ON UPDATE CASCADE,
 
@@ -2373,6 +2377,7 @@ CREATE TABLE "equipment" (
   "setupHours" NUMERIC NOT NULL DEFAULT 0,
   "workCellId" TEXT,
   "active" BOOLEAN NOT NULL DEFAULT true,
+  "activeDate" DATE,
   "createdBy" TEXT NOT NULL,
   "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
   "updatedBy" TEXT,
@@ -2384,6 +2389,8 @@ CREATE TABLE "equipment" (
   CONSTRAINT "equipment_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "equipment_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+-- TODO: insert/update search results with triggers
 
 ALTER TABLE "ability" 
   ADD COLUMN "equipmentTypeId" TEXT REFERENCES "equipmentType"("id") ON DELETE CASCADE ON UPDATE CASCADE,

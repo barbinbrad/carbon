@@ -1,3 +1,3 @@
-import AttributeCategoriesTableFilters from "./AttributeCategoriesTableFilters";
+import EquipmentTypesTableFilters from "./EquipmentTypesTableFilters";
 
-export default AttributeCategoriesTableFilters;
+export default EquipmentTypesTableFilters;

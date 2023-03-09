@@ -510,6 +510,29 @@ export async function getPeople(
   };
 }
 
+export async function getWorkCellTypes(
+  client: SupabaseClient<Database>,
+  args?: { name: string | null } & GenericQueryFilters
+) {
+  let query = client
+    .from("workCellType")
+    .select("id, name, color, description, workCell(id, name)", {
+      count: "exact",
+    })
+    .eq("active", true)
+    .eq("workCell.active", true);
+
+  if (args?.name) {
+    query = query.ilike("name", `%${args.name}%`);
+  }
+
+  if (args) {
+    query = setGenericQueryFilters(query, args, "name");
+  }
+
+  return query;
+}
+
 export async function insertAbility(
   client: SupabaseClient<Database>,
   ability: {

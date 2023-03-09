@@ -6,13 +6,12 @@ import { useRouteData } from "~/hooks";
 import type { Ability } from "~/interfaces/Resources/types";
 import { requirePermissions } from "~/services/auth";
 import { deleteEmployeeAbility } from "~/services/resources";
-// import { deleteEmployeeAbility } from "~/services/resources";
 import { flash } from "~/services/session";
 import { error, success } from "~/utils/result";
 
 export async function action({ request, params }: ActionArgs) {
   const { client } = await requirePermissions(request, {
-    delete: "sales",
+    delete: "resources",
   });
 
   const { abilityId, id } = params;
@@ -36,7 +35,7 @@ export async function action({ request, params }: ActionArgs) {
   );
 }
 
-export default function DeleteCustomerTypeRoute() {
+export default function DeleteEmployeeAbilityRoute() {
   const navigate = useNavigate();
   const { abilityId, id } = useParams();
   const routeData = useRouteData<{
@@ -49,7 +48,7 @@ export default function DeleteCustomerTypeRoute() {
     ? routeData.ability.employeeAbility.find((ea) => ea.id === id)
     : undefined;
 
-  const onCancel = () => navigate("/x/sales/customer-types");
+  const onCancel = () => navigate(`/x/resources/ability/${abilityId}`);
 
   const name =
     (Array.isArray(employee?.user)

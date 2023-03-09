@@ -7,7 +7,7 @@ import { error, success } from "~/utils/result";
 
 export async function action({ request, params }: LoaderArgs) {
   const { client } = await requirePermissions(request, {
-    update: "resources",
+    delete: "resources",
   });
 
   const { attributeId } = params;

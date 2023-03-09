@@ -99,6 +99,7 @@ export const equipmentValidator = withZod(
     description: z.string(),
     equipmentTypeId: z.string().min(1, { message: "Type is required" }),
     operatorsRequired: zfd.numeric(z.number().optional()),
+    setupHours: zfd.numeric(z.number().optional()),
     workCellId: zfd.text(z.string().optional()),
   })
 );

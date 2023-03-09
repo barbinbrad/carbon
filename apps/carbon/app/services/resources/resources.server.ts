@@ -45,6 +45,26 @@ export async function deleteEmployeeAbility(
     .eq("id", employeeAbilityId);
 }
 
+export async function deleteEquipment(
+  client: SupabaseClient<Database>,
+  equipmentId: string
+) {
+  return client
+    .from("equipment")
+    .update({ active: false })
+    .eq("id", equipmentId);
+}
+
+export async function deleteEquipmentType(
+  client: SupabaseClient<Database>,
+  equipmentTypeId: string
+) {
+  return client
+    .from("equipmentType")
+    .update({ active: false })
+    .eq("id", equipmentTypeId);
+}
+
 export async function deleteLocation(
   client: SupabaseClient<Database>,
   locationId: string
@@ -243,7 +263,7 @@ export async function getEquipment(
   return client
     .from("equipment")
     .select(
-      "id, name, description, operatorsRequired, equipmentType(id, name), workCell(id, name)"
+      "id, name, description, operatorsRequired, setupHours, equipmentType(id, name), workCell(id, name)"
     )
     .eq("id", equipmentId)
     .eq("active", true)
@@ -702,6 +722,7 @@ export async function upsertEquipment(
         description: string;
         equipmentTypeId: string;
         operatorsRequired?: number;
+        setupHours?: number;
         workCellId?: string;
         createdBy: string;
       }

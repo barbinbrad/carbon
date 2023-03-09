@@ -2370,6 +2370,7 @@ CREATE TABLE "equipment" (
   "description" TEXT,
   "equipmentTypeId" TEXT NOT NULL,
   "operatorsRequired" NUMERIC NOT NULL DEFAULT 1,
+  "setupHours" NUMERIC NOT NULL DEFAULT 0,
   "workCellId" TEXT,
   "active" BOOLEAN NOT NULL DEFAULT true,
   "createdBy" TEXT NOT NULL,

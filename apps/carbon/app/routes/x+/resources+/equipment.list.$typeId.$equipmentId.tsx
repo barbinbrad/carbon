@@ -60,6 +60,7 @@ export default function EditEquipmentRoute() {
         description: equipment?.description ?? "",
         equipmentTypeId: equipment?.equipmentType?.id ?? typeId,
         operatorsRequired: equipment?.operatorsRequired ?? 1,
+        setupHours: equipment?.setupHours ?? 0,
         workCellId: equipment?.workCell?.id,
       }}
       equipmentTypes={equipmentRouteData?.equipmentTypes ?? []}

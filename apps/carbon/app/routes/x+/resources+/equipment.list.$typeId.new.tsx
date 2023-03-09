@@ -19,6 +19,7 @@ export default function NewEquipmentRoute() {
         name: "",
         description: "",
         operatorsRequired: 1,
+        setupHours: 0,
         equipmentTypeId: typeId,
       }}
       equipmentTypes={equipmentRouteData?.equipmentTypes ?? []}

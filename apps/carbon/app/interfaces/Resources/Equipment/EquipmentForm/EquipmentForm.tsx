@@ -30,6 +30,7 @@ type EquipmentFormProps = {
     description: string;
     equipmentTypeId: string;
     operatorsRequired: number;
+    setupHours: number;
     workCellId?: string;
   };
   equipmentTypes: {
@@ -80,6 +81,12 @@ const EquipmentForm = ({
                 name="equipmentTypeId"
                 label="Equipment Type"
                 options={options}
+              />
+              <Number
+                name="setupHours"
+                label="Setup Hours"
+                min={0}
+                max={100} // this seems like a reasonable max?
               />
               <Number
                 name="operatorsRequired"

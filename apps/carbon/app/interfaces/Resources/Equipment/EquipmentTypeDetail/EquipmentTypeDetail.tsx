@@ -112,9 +112,9 @@ const EquipmentTypeDetail = ({
       </Drawer>
       <ConfirmDelete
         isOpen={deleteModal.isOpen}
-        action={`/x/resources/equipment/delete/${selectedEquipment?.id}`}
+        action={`/x/resources/equipment/unit/delete/${selectedEquipment?.id}`}
         name={selectedEquipment?.name ?? ""}
-        text={`Are you sure you want to deactivate the ${selectedEquipment?.name} equipment?`}
+        text={`Are you sure you want to deactivate ${selectedEquipment?.name}?`}
         onCancel={onDeleteCancel}
       />
     </>

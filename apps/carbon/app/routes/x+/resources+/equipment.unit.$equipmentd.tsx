@@ -42,12 +42,12 @@ export async function action({ request }: ActionArgs) {
       "/x/resources/equipment/",
       await flash(
         request,
-        error(updateEquipment.error, "Failed to update attribute")
+        error(updateEquipment.error, "Failed to update equipment")
       )
     );
 
   return redirect(
     `/x/resources/equipment/list/${update.equipmentTypeId}`,
-    await flash(request, success("Successfully updated attribtue"))
+    await flash(request, success("Successfully updated equipment"))
   );
 }

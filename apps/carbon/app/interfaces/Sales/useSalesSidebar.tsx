@@ -12,7 +12,7 @@ const salesRoutes: AuthenticatedRouteGroup[] = [
     ],
   },
   {
-    name: "Configuration",
+    name: "Configure",
     routes: [
       {
         name: "Customer Types",

@@ -15,15 +15,10 @@ import { ValidatedForm } from "remix-validated-form";
 import { Hidden, Input, Number, Submit, Timezone } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { locationValidator } from "~/services/resources";
+import type { TypeOfValidator } from "~/types/validators";
 
 type LocationFormProps = {
-  initialValues: {
-    id?: string;
-    name: string;
-    timezone: string;
-    latitude?: number;
-    longitude?: number;
-  };
+  initialValues: TypeOfValidator<typeof locationValidator>;
 };
 
 const LocationForm = ({ initialValues }: LocationFormProps) => {

@@ -13,47 +13,47 @@ import {
 import { useNavigate } from "@remix-run/react";
 import { ValidatedForm } from "remix-validated-form";
 import { Color, Hidden, Input, Submit } from "~/components/Form";
+import Department from "~/components/Form/Department";
 import { usePermissions } from "~/hooks";
-import { supplierTypeValidator } from "~/services/purchasing";
+import { departmentValidator } from "~/services/resources";
 import type { TypeOfValidator } from "~/types/validators";
 
-type SupplierTypeFormProps = {
-  initialValues: TypeOfValidator<typeof supplierTypeValidator>;
+type DepartmentFormProps = {
+  initialValues: TypeOfValidator<typeof departmentValidator>;
 };
 
-const SupplierTypeForm = ({ initialValues }: SupplierTypeFormProps) => {
+const DepartmentForm = ({ initialValues }: DepartmentFormProps) => {
   const permissions = usePermissions();
   const navigate = useNavigate();
   const onClose = () => navigate(-1);
 
   const isEditing = initialValues.id !== undefined;
   const isDisabled = isEditing
-    ? !permissions.can("update", "purchasing")
-    : !permissions.can("create", "purchasing");
+    ? !permissions.can("update", "resources")
+    : !permissions.can("create", "resources");
 
   return (
     <Drawer onClose={onClose} isOpen={true} size="sm">
       <ValidatedForm
-        validator={supplierTypeValidator}
+        validator={departmentValidator}
         method="post"
         action={
           isEditing
-            ? `/x/purchasing/supplier-types/${initialValues.id}`
-            : "/x/purchasing/supplier-types/new"
+            ? `/x/resources/departments/${initialValues.id}`
+            : "/x/resources/departments/new"
         }
         defaultValues={initialValues}
       >
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader>
-            {isEditing ? "Edit" : "New"} Supplier Type
-          </DrawerHeader>
+          <DrawerHeader>{isEditing ? "Edit" : "New"} Department</DrawerHeader>
           <DrawerBody pb={8}>
             <Hidden name="id" />
             <VStack spacing={4} alignItems="start">
-              <Input name="name" label="Supplier Type" />
+              <Input name="name" label="Department Name" />
               <Color name="color" label="Color" />
+              <Department name="parentDepartmentId" label="Parent Department" />
             </VStack>
           </DrawerBody>
           <DrawerFooter>
@@ -75,4 +75,4 @@ const SupplierTypeForm = ({ initialValues }: SupplierTypeFormProps) => {
   );
 };
 
-export default SupplierTypeForm;
+export default DepartmentForm;

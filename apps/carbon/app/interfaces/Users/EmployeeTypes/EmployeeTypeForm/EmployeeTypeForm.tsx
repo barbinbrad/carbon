@@ -20,12 +20,10 @@ import { usePermissions } from "~/hooks";
 import PermissionCheckboxes from "~/interfaces/Users/components/Permission";
 import type { Permission } from "~/interfaces/Users/types";
 import { employeeTypeValidator } from "~/services/users";
+import type { TypeOfValidator } from "~/types/validators";
 
 type EmployeeTypeFormProps = {
-  initialValues: {
-    id?: string;
-    name: string;
-    color: string;
+  initialValues: TypeOfValidator<typeof employeeTypeValidator> & {
     permissions: Record<
       string,
       {

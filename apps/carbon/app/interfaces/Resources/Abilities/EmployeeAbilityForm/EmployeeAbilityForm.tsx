@@ -18,15 +18,12 @@ import { usePermissions } from "~/hooks";
 import type { Ability } from "~/interfaces/Resources/types";
 import { AbilityEmployeeStatus } from "~/interfaces/Resources/types";
 import { employeeAbilityValidator } from "~/services/resources";
+import type { TypeOfValidator } from "~/types/validators";
 
 type EmployeeAbilityFormProps = {
   ability?: Ability;
+  initialValues: TypeOfValidator<typeof employeeAbilityValidator>;
   weeks: number;
-  initialValues: {
-    employeeId?: string;
-    trainingStatus?: AbilityEmployeeStatus;
-    trainingPercent?: number;
-  };
   onClose: () => void;
 };
 
@@ -34,8 +31,8 @@ const defaultPercent = 50;
 
 const EmployeeAbilityForm = ({
   ability,
-  weeks,
   initialValues,
+  weeks,
   onClose,
 }: EmployeeAbilityFormProps) => {
   const { id } = useParams();

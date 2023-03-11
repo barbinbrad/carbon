@@ -4,12 +4,12 @@ import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import {
-  WorkCellTypesTable,
-  WorkCellTypesTableFilters,
-} from "~/interfaces/Resources/WorkCells";
+  DepartmentsTable,
+  DepartmentsTableFilters,
+} from "~/interfaces/Resources/Departments";
 import { requirePermissions } from "~/services/auth";
-import { getWorkCellTypes } from "~/services/resources";
 import { flash } from "~/services/session";
+import { getDepartments } from "~/services/resources";
 import { getGenericQueryFilters } from "~/utils/query";
 import { error } from "~/utils/result";
 
@@ -24,36 +24,36 @@ export async function loader({ request }: LoaderArgs) {
   const name = searchParams.get("name");
   const { limit, offset, sorts } = getGenericQueryFilters(searchParams);
 
-  const workCellTypes = await getWorkCellTypes(client, {
+  const departments = await getDepartments(client, {
     name,
     limit,
     offset,
     sorts,
   });
 
-  if (workCellTypes.error) {
-    redirect(
-      "/x",
+  if (departments.error) {
+    return redirect(
+      "/x/resources",
       await flash(
         request,
-        error(workCellTypes.error, "Failed to fetch equipment types")
+        error(departments.error, "Failed to load departments")
       )
     );
   }
 
   return json({
-    count: workCellTypes.count ?? 0,
-    workCellTypes: workCellTypes.data ?? [],
+    departments: departments.data ?? [],
+    count: departments.count ?? 0,
   });
 }
 
-export default function UserAttributesRoute() {
-  const { count, workCellTypes } = useLoaderData<typeof loader>();
+export default function Route() {
+  const { departments, count } = useLoaderData<typeof loader>();
 
   return (
     <VStack w="full" h="full" spacing={0}>
-      <WorkCellTypesTableFilters />
-      <WorkCellTypesTable data={workCellTypes} count={count} />
+      <DepartmentsTableFilters />
+      <DepartmentsTable data={departments} count={count} />
       <Outlet />
     </VStack>
   );

@@ -11,7 +11,7 @@ import { error, success } from "~/utils/result";
 
 export async function action({ request }: ActionArgs) {
   assertIsPost(request);
-  const { client } = await requirePermissions(request, {
+  const { client, userId } = await requirePermissions(request, {
     create: "resources",
   });
 
@@ -28,6 +28,7 @@ export async function action({ request }: ActionArgs) {
     timezone,
     latitude: latitude ?? null,
     longitude: longitude ?? null,
+    createdBy: userId,
   });
 
   if (createLocation.error) {

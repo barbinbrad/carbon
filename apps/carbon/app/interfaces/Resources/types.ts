@@ -1,18 +1,19 @@
 import type {
+  getAbility,
+  getAbilities,
   getAttribute,
   getAttributeCategories,
   getAttributeCategory,
-  getPeople,
-  getNotes,
-  getAbility,
-  getAbilities,
+  getDepartments,
   getEmployeeAbilities,
-  getShifts,
-  getLocations,
   getEmployeeJob,
   getEquipmentTypes,
   getEquipmentType,
   getEquipment,
+  getLocations,
+  getNotes,
+  getPeople,
+  getShifts,
   getWorkCellTypes,
 } from "~/services/resources";
 
@@ -73,6 +74,10 @@ export type AttributeDataType = {
   isNumeric: boolean;
   isText: boolean;
 };
+
+export type Department = NonNullable<
+  Awaited<ReturnType<typeof getDepartments>>["data"]
+>[number];
 
 export type EmployeeAbility = NonNullable<
   Awaited<ReturnType<typeof getEmployeeAbilities>>["data"]

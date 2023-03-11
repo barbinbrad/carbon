@@ -4,6 +4,10 @@ CREATE TABLE "location" (
   "timezone" TEXT NOT NULL,
   "latitude" NUMERIC,
   "longitude" NUMERIC,
+  "createdBy" TEXT NOT NULL,
+  "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
+  "updatedBy" TEXT,
+  "updatedAt" TIMESTAMP,
 
   CONSTRAINT "location_pkey" PRIMARY KEY ("id")
 );

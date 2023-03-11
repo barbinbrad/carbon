@@ -1,5 +1,12 @@
+import type { Validator } from "remix-validated-form";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
+
+export type TypeOfValidator<U extends Validator<any>> = U extends Validator<
+  infer T
+>
+  ? T
+  : unknown;
 
 export const address = {
   addressId: zfd.text(z.string().optional()),

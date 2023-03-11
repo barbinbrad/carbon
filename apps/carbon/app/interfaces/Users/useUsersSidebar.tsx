@@ -23,7 +23,7 @@ const usersRoutes: RouteGroup[] = [
     ],
   },
   {
-    name: "Configuration",
+    name: "Configure",
     routes: [
       {
         name: "Employee Types",

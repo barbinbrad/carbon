@@ -52,6 +52,7 @@ export default function useBreadcrumbs(): Route[] {
           name: "Resources",
           to: match.pathname,
         });
+
       case "routes/x+/resources+/abilities":
         return acc.concat({
           name: "Abilities",
@@ -62,9 +63,24 @@ export default function useBreadcrumbs(): Route[] {
           name: "Abilities",
           to: "/x/resources/abilities",
         });
+      case "routes/x+/resources+/attributes":
+        return acc.concat({
+          name: "Attributes",
+          to: match.pathname,
+        });
+      case "routes/x+/resources+/departments":
+        return acc.concat({
+          name: "Departments",
+          to: match.pathname,
+        });
       case "routes/x+/resources+/equipment":
         return acc.concat({
           name: "Equipment",
+          to: match.pathname,
+        });
+      case "routes/x+/resources+/locations":
+        return acc.concat({
+          name: "Locations",
           to: match.pathname,
         });
       case "routes/x+/resources+/people":
@@ -77,9 +93,15 @@ export default function useBreadcrumbs(): Route[] {
           name: "People",
           to: "/x/resources/people",
         });
-      case "routes/x+/resources+/attributes":
+
+      case "routes/x+/resources+/shifts":
         return acc.concat({
-          name: "Attributes",
+          name: "Shifts",
+          to: match.pathname,
+        });
+      case "routes/x+/resources+/work-cells":
+        return acc.concat({
+          name: "Work Cells",
           to: match.pathname,
         });
       case "routes/x+/purchasing+/_layout":

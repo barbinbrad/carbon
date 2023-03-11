@@ -32,17 +32,10 @@ import type {
 import { mapRowsToOptions } from "~/utils/form";
 import { usePermissions, useRouteData } from "~/hooks";
 import { SupplierContacts, SupplierLocations } from "./components";
+import type { TypeOfValidator } from "~/types/validators";
 
 type SupplierFormProps = {
-  initialValues: {
-    id?: string;
-    name: string;
-    description?: string;
-    accountManagerId?: string;
-    supplierTypeId?: string;
-    supplierStatusId?: string;
-    taxId?: string;
-  };
+  initialValues: TypeOfValidator<typeof supplierValidator>;
   contacts?: SupplierContact[];
   locations?: SupplierLocation[];
 };

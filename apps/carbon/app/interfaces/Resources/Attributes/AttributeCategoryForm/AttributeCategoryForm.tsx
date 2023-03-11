@@ -14,13 +14,10 @@ import { ValidatedForm } from "remix-validated-form";
 import { Boolean, Input, Hidden, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { attributeCategoryValidator } from "~/services/resources";
+import type { TypeOfValidator } from "~/types/validators";
 
 type AttributeCategoryFormProps = {
-  initialValues: {
-    id?: string;
-    name: string;
-    isPublic: boolean;
-  };
+  initialValues: TypeOfValidator<typeof attributeCategoryValidator>;
   onClose: () => void;
 };
 

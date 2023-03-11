@@ -581,7 +581,7 @@ export async function insertEmployee(
 
 export async function insertEmployeeType(
   client: SupabaseClient<Database>,
-  employeeType: { id?: string; name: string; color: string | null }
+  employeeType: { id?: string; name: string; color?: string }
 ) {
   return client.from("employeeType").insert([employeeType]).select("id");
 }
@@ -873,7 +873,7 @@ export async function updatePermissions(
 
 export async function upsertEmployeeType(
   client: SupabaseClient<Database>,
-  employeeType: { id?: string; name: string; color: string | null }
+  employeeType: { id?: string; name: string; color?: string }
 ) {
   return client.from("employeeType").upsert([employeeType]).select("id");
 }

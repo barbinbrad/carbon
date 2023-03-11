@@ -1,5 +1,6 @@
 import { withZod } from "@remix-validated-form/with-zod";
 import { z } from "zod";
+import { zfd } from "zod-form-data";
 
 export const bulkPermissionsValidator = withZod(
   z.object({
@@ -51,7 +52,7 @@ export const deactivateUsersValidator = withZod(
 
 export const employeeTypeValidator = withZod(
   z.object({
-    id: z.string(),
+    id: zfd.text(z.string().optional()),
     name: z.string().min(1, { message: "Name is required" }),
     color: z.string(),
     data: z

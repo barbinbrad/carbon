@@ -66,7 +66,7 @@ export async function action({ request }: ActionArgs) {
 
   const createEmployeeType = await insertEmployeeType(client, {
     name,
-    color: color || null,
+    color: color ?? undefined,
   });
   if (createEmployeeType.error) {
     return json(
@@ -119,6 +119,7 @@ export default function NewEmployeeTypesRoute() {
   const initialValues = {
     name: "",
     color: "#000000",
+    data: "",
     permissions,
   };
 

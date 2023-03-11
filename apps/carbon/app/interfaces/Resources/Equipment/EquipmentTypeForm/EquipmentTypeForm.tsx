@@ -14,14 +14,10 @@ import { ValidatedForm } from "remix-validated-form";
 import { Input, Hidden, Submit, TextArea, Color } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { equipmentTypeValidator } from "~/services/resources";
+import type { TypeOfValidator } from "~/types/validators";
 
 type EquipmentTypeFormProps = {
-  initialValues: {
-    id?: string;
-    name: string;
-    color: string;
-    description: string;
-  };
+  initialValues: TypeOfValidator<typeof equipmentTypeValidator>;
   onClose: () => void;
 };
 

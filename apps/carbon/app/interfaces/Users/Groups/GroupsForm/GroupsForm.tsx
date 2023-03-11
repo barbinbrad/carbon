@@ -15,13 +15,10 @@ import { ValidatedForm } from "remix-validated-form";
 import { Hidden, Input, Submit, Users } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { groupValidator } from "~/services/users";
+import type { TypeOfValidator } from "~/types/validators";
 
 type GroupFormProps = {
-  initialValues: {
-    id?: string;
-    name: string;
-    selections: string[];
-  };
+  initialValues: TypeOfValidator<typeof groupValidator>;
 };
 
 const GroupForm = ({ initialValues }: GroupFormProps) => {

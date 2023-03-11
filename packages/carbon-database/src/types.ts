@@ -386,18 +386,33 @@ export interface Database {
       department: {
         Row: {
           name: string;
+          parentDepartmentId: string | null;
+          createdBy: string;
+          updatedBy: string | null;
+          updatedAt: string | null;
           id: string;
           color: string;
+          createdAt: string;
         };
         Insert: {
           name: string;
+          parentDepartmentId?: string | null;
+          createdBy: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
           id?: string;
           color?: string;
+          createdAt?: string;
         };
         Update: {
           name?: string;
+          parentDepartmentId?: string | null;
+          createdBy?: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
           id?: string;
           color?: string;
+          createdAt?: string;
         };
       };
       employee: {
@@ -552,6 +567,7 @@ export interface Database {
           name: string;
           description: string | null;
           equipmentTypeId: string;
+          locationId: string;
           workCellId: string | null;
           activeDate: string | null;
           createdBy: string;
@@ -567,6 +583,7 @@ export interface Database {
           name: string;
           description?: string | null;
           equipmentTypeId: string;
+          locationId: string;
           workCellId?: string | null;
           activeDate?: string | null;
           createdBy: string;
@@ -582,6 +599,7 @@ export interface Database {
           name?: string;
           description?: string | null;
           equipmentTypeId?: string;
+          locationId?: string;
           workCellId?: string | null;
           activeDate?: string | null;
           createdBy?: string;
@@ -693,21 +711,33 @@ export interface Database {
           timezone: string;
           latitude: number | null;
           longitude: number | null;
+          createdBy: string;
+          updatedBy: string | null;
+          updatedAt: string | null;
           id: string;
+          createdAt: string;
         };
         Insert: {
           name: string;
           timezone: string;
           latitude?: number | null;
           longitude?: number | null;
+          createdBy: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
           id?: string;
+          createdAt?: string;
         };
         Update: {
           name?: string;
           timezone?: string;
           latitude?: number | null;
           longitude?: number | null;
+          createdBy?: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
           id?: string;
+          createdAt?: string;
         };
       };
       membership: {

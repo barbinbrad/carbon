@@ -24,22 +24,10 @@ import {
 } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { shiftValidator } from "~/services/resources";
+import type { TypeOfValidator } from "~/types/validators";
 
 type ShiftFormProps = {
-  initialValues: {
-    id?: string;
-    name: string;
-    startTime?: string;
-    endTime?: string;
-    locationId?: string;
-    monday?: boolean;
-    tuesday?: boolean;
-    wednesday?: boolean;
-    thursday?: boolean;
-    friday?: boolean;
-    saturday?: boolean;
-    sunday?: boolean;
-  };
+  initialValues: TypeOfValidator<typeof shiftValidator>;
 };
 
 const ShiftForm = ({ initialValues }: ShiftFormProps) => {

@@ -23,15 +23,10 @@ import {
 } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { abilityValidator } from "~/services/resources";
+import type { TypeOfValidator } from "~/types/validators";
 
 type AbilityFormProps = {
-  initialValues: {
-    name: string;
-    startingPoint: number;
-    shadowWeeks: number;
-    weeks: number;
-    employees: string[];
-  };
+  initialValues: TypeOfValidator<typeof abilityValidator>;
 };
 
 const AbilityForm = ({ initialValues }: AbilityFormProps) => {

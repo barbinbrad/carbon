@@ -2089,6 +2089,10 @@ CREATE TABLE "location" (
   "timezone" TEXT NOT NULL,
   "latitude" NUMERIC,
   "longitude" NUMERIC,
+  "createdBy" TEXT NOT NULL,
+  "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
+  "updatedBy" TEXT,
+  "updatedAt" TIMESTAMP,
 
   CONSTRAINT "location_pkey" PRIMARY KEY ("id")
 );
@@ -2284,9 +2288,15 @@ CREATE TABLE "department" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "name" TEXT NOT NULL UNIQUE,
   "color" TEXT NOT NULL DEFAULT '#000000',
+  "parentDepartmentId" TEXT,
+  "createdBy" TEXT NOT NULL,
+  "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
+  "updatedBy" TEXT,
+  "updatedAt" TIMESTAMP,
 
   CONSTRAINT "department_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "department_colorCheck" CHECK ("color" is null or "color" ~* '^#[a-f0-9]{6}$')
+  CONSTRAINT "department_colorCheck" CHECK ("color" is null or "color" ~* '^#[a-f0-9]{6}$'),
+  CONSTRAINT "department_parentDepartmentId_fkey" FOREIGN KEY ("parentDepartmentId") REFERENCES "department"("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE "workCellType" (
@@ -2375,6 +2385,7 @@ CREATE TABLE "equipment" (
   "equipmentTypeId" TEXT NOT NULL,
   "operatorsRequired" NUMERIC NOT NULL DEFAULT 1,
   "setupHours" NUMERIC NOT NULL DEFAULT 0,
+  "locationId" TEXT NOT NULL,
   "workCellId" TEXT,
   "active" BOOLEAN NOT NULL DEFAULT true,
   "activeDate" DATE,
@@ -2395,7 +2406,6 @@ CREATE TABLE "equipment" (
 ALTER TABLE "ability" 
   ADD COLUMN "equipmentTypeId" TEXT REFERENCES "equipmentType"("id") ON DELETE CASCADE ON UPDATE CASCADE,
   ADD COLUMN "workCellTypeId" TEXT REFERENCES "workCellType"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
 
 ```
 

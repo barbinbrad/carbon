@@ -7,7 +7,7 @@ import { CollapsibleSidebar } from "./CollapsibleSidebar";
 const GroupedContentSidebar = ({ groups }: { groups: RouteGroup[] }) => {
   const matches = useMatches();
   const borderColor = useColor("gray.200");
-  const labelColor = useColor("gray.500");
+  const labelColor = useColor("gray.400");
 
   return (
     <CollapsibleSidebar>
@@ -26,7 +26,14 @@ const GroupedContentSidebar = ({ groups }: { groups: RouteGroup[] }) => {
                 py={4}
                 w="full"
               >
-                <Text color={labelColor} fontSize="xs" pl={3} py={1}>
+                <Text
+                  color={labelColor}
+                  fontSize="xs"
+                  fontWeight="bold"
+                  pl={3}
+                  py={1}
+                  textTransform="uppercase"
+                >
                   {group.name}
                 </Text>
                 {group.routes.map((route) => {

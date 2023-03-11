@@ -74,6 +74,15 @@ export const attributeCategoryValidator = withZod(
   })
 );
 
+export const departmentValidator = withZod(
+  z.object({
+    id: zfd.text(z.string().optional()),
+    name: z.string().min(1, { message: "Name is required" }),
+    color: z.string(),
+    parentDepartmentId: zfd.text(z.string().optional()),
+  })
+);
+
 export const employeeAbilityValidator = withZod(
   z.object({
     employeeId: z.string().min(36, { message: "Employee is required" }),
@@ -99,8 +108,9 @@ export const equipmentValidator = withZod(
     description: z.string(),
     equipmentTypeId: z.string().min(1, { message: "Type is required" }),
     operatorsRequired: zfd.numeric(z.number().optional()),
-    setupHours: zfd.numeric(z.number().optional()),
+    locationId: z.string().min(1, { message: "Location is required" }),
     workCellId: zfd.text(z.string().optional()),
+    setupHours: zfd.numeric(z.number().optional()),
   })
 );
 
@@ -153,5 +163,26 @@ export const shiftValidator = withZod(
     friday: zfd.checkbox(),
     saturday: zfd.checkbox(),
     sunday: zfd.checkbox(),
+  })
+);
+
+export const workCellValidator = withZod(
+  z.object({
+    id: zfd.text(z.string().optional()),
+    name: z.string().min(1, { message: "Name is required" }),
+    description: z.string(),
+    deparmentId: z.string().min(1, { message: "Department is required" }),
+    locationId: z.string().min(1, { message: "Location is required" }),
+    workCellTypeId: z.string().min(1, { message: "Type is required" }),
+    activeDate: zfd.text(z.string().optional()),
+  })
+);
+
+export const workCellTypeValidator = withZod(
+  z.object({
+    id: zfd.text(z.string().optional()),
+    name: z.string().min(1, { message: "Name is required" }),
+    description: z.string(),
+    color: z.string(),
   })
 );

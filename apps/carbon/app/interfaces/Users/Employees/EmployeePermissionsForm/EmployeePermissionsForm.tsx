@@ -20,13 +20,12 @@ import { Hidden, Select, Submit } from "~/components/Form";
 import PermissionCheckboxes from "~/interfaces/Users/components/Permission";
 import type { EmployeeType, Permission } from "~/interfaces/Users/types";
 import { employeeValidator } from "~/services/users";
+import type { TypeOfValidator } from "~/types/validators";
 import { mapRowsToOptions } from "~/utils/form";
 
 type EmployeePermissionsFormProps = {
   name: string;
-  initialValues: {
-    id: string;
-    employeeType: string;
+  initialValues: TypeOfValidator<typeof employeeValidator> & {
     permissions: Record<string, Permission>;
   };
 };

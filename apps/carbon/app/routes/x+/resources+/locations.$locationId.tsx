@@ -39,7 +39,7 @@ export async function loader({ request, params }: LoaderArgs) {
 
 export async function action({ request }: ActionArgs) {
   assertIsPost(request);
-  const { client } = await requirePermissions(request, {
+  const { client, userId } = await requirePermissions(request, {
     create: "resources",
   });
 
@@ -50,6 +50,7 @@ export async function action({ request }: ActionArgs) {
   }
 
   const { id, name, timezone, latitude, longitude } = validation.data;
+  if (!id) throw notFound("Location ID was not found");
 
   const createLocation = await upsertLocation(client, {
     id,
@@ -57,6 +58,7 @@ export async function action({ request }: ActionArgs) {
     timezone,
     latitude: latitude ?? null,
     longitude: longitude ?? null,
+    updatedBy: userId,
   });
 
   if (createLocation.error) {

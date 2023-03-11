@@ -35,6 +35,13 @@ export async function deleteAttributeCategory(
     .eq("id", attributeCategoryId);
 }
 
+export async function deleteDepartment(
+  client: SupabaseClient<Database>,
+  departmentId: string
+) {
+  return client.from("department").delete().eq("id", departmentId);
+}
+
 export async function deleteEmployeeAbility(
   client: SupabaseClient<Database>,
   employeeAbilityId: string
@@ -214,6 +221,42 @@ export async function getAttributeCategory(
 
 export async function getAttributeDataTypes(client: SupabaseClient<Database>) {
   return client.from("attributeDataType").select("*");
+}
+
+export async function getDepartment(
+  client: SupabaseClient<Database>,
+  departmentId: string
+) {
+  return client
+    .from("department")
+    .select(`id, name, color, parentDepartmentId`)
+    .eq("id", departmentId)
+    .single();
+}
+
+export async function getDepartments(
+  client: SupabaseClient<Database>,
+  args?: GenericQueryFilters & { name: string | null }
+) {
+  let query = client
+    .from("department")
+    .select(`id, name, color, department(id, name)`, {
+      count: "exact",
+    });
+
+  if (args?.name) {
+    query = query.ilike("name", `%${args.name}%`);
+  }
+
+  if (args) {
+    query = setGenericQueryFilters(query, args, "name");
+  }
+
+  return query;
+}
+
+export async function getDepartmentsList(client: SupabaseClient<Database>) {
+  return client.from("department").select(`id, name`);
 }
 
 export async function getEmployeeAbility(
@@ -510,6 +553,24 @@ export async function getPeople(
   };
 }
 
+export async function getWorkCellList(
+  client: SupabaseClient<Database>,
+  locationId: string | null,
+  workCellTypeId: string | null
+) {
+  let query = client.from("shift").select(`id, name`).eq("active", true);
+
+  if (locationId) {
+    query = query.eq("locationId", locationId);
+  }
+
+  if (workCellTypeId) {
+    query = query.eq("workCellTypeId", workCellTypeId);
+  }
+
+  return query;
+}
+
 export async function getWorkCellTypes(
   client: SupabaseClient<Database>,
   args?: { name: string | null } & GenericQueryFilters
@@ -683,6 +744,29 @@ export async function updateAttributeSortOrder(
   return Promise.all(updatePromises);
 }
 
+export async function upsertDepartment(
+  client: SupabaseClient<Database>,
+  department:
+    | {
+        name: string;
+        color?: string;
+        parentDepartmentId?: string;
+        createdBy: string;
+      }
+    | {
+        id: string;
+        name: string;
+        color?: string;
+        parentDepartmentId?: string;
+        updatedBy: string;
+      }
+) {
+  if ("id" in department) {
+    return client.from("department").update(department).eq("id", department.id);
+  }
+  return client.from("department").insert(department).select("id");
+}
+
 export async function upsertEmployeeAbility(
   client: SupabaseClient<Database>,
   employeeAbility: {
@@ -744,6 +828,7 @@ export async function upsertEquipment(
         name: string;
         description: string;
         equipmentTypeId: string;
+        locationId: string;
         operatorsRequired?: number;
         setupHours?: number;
         workCellId?: string;
@@ -754,6 +839,7 @@ export async function upsertEquipment(
         name: string;
         description: string;
         equipmentTypeId: string;
+        locationId: string;
         operatorsRequired?: number;
         workCellId?: string;
         updatedBy: string;
@@ -798,22 +884,27 @@ export async function upsertEquipmentType(
 
 export async function upsertLocation(
   client: SupabaseClient<Database>,
-  location: {
-    id?: string;
-    name: string;
-    timezone: string;
-    latitude: number | null;
-    longitude: number | null;
-  }
+  location:
+    | {
+        name: string;
+        timezone: string;
+        latitude: number | null;
+        longitude: number | null;
+        createdBy: string;
+      }
+    | {
+        id: string;
+        name: string;
+        timezone: string;
+        latitude: number | null;
+        longitude: number | null;
+        updatedBy: string;
+      }
 ) {
-  const { id, ...update } = location;
-  if (id) {
-    return client
-      .from("location")
-      .update({ ...update })
-      .eq("id", id);
+  if ("id" in location) {
+    return client.from("location").update(location).eq("id", location.id);
   }
-  return client.from("location").insert([update]).select("id");
+  return client.from("location").insert([location]).select("id");
 }
 
 export async function upsertShift(

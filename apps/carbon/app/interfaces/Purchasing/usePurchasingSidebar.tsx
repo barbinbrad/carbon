@@ -12,7 +12,7 @@ const purchasingRoutes: AuthenticatedRouteGroup[] = [
     ],
   },
   {
-    name: "Configuration",
+    name: "Configure",
     routes: [
       {
         name: "Supplier Types",

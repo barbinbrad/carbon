@@ -27,7 +27,7 @@ const resourcesRoutes: RouteGroup[] = [
     ],
   },
   {
-    name: "Configuration",
+    name: "Configure",
     routes: [
       {
         name: "Abilities",

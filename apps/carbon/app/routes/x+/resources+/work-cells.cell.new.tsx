@@ -4,7 +4,7 @@ import { redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
-import { equipmentValidator, upsertEquipment } from "~/services/resources";
+import { workCellValidator, upsertWorkCell } from "~/services/resources";
 import { assertIsPost } from "~/utils/http";
 import { error, success } from "~/utils/result";
 
@@ -14,9 +14,7 @@ export async function action({ request }: ActionArgs) {
     create: "resources",
   });
 
-  const validation = await equipmentValidator.validate(
-    await request.formData()
-  );
+  const validation = await workCellValidator.validate(await request.formData());
 
   if (validation.error) {
     return validationError(validation.error);
@@ -25,35 +23,33 @@ export async function action({ request }: ActionArgs) {
   const {
     name,
     description,
-    equipmentTypeId,
+    workCellTypeId,
     locationId,
-    operatorsRequired,
-    setupHours,
-    workCellId,
+    departmentId,
+    activeDate,
   } = validation.data;
 
-  const insertEquipment = await upsertEquipment(client, {
+  const insertWorkCell = await upsertWorkCell(client, {
     name,
     description,
-    equipmentTypeId,
+    workCellTypeId,
     locationId,
-    operatorsRequired,
-    setupHours,
-    workCellId,
+    departmentId,
+    activeDate,
     createdBy: userId,
   });
-  if (insertEquipment.error) {
+  if (insertWorkCell.error) {
     return json(
       {},
       await flash(
         request,
-        error(insertEquipment.error, "Failed to create equipment")
+        error(insertWorkCell.error, "Failed to create work cell")
       )
     );
   }
 
   return redirect(
-    `/x/resources/equipment`,
-    await flash(request, success("Created equipment"))
+    `/x/resources/work-cells`,
+    await flash(request, success("Created workCell"))
   );
 }

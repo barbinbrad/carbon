@@ -7,7 +7,7 @@ import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
 import { error, success } from "~/utils/result";
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request, params }: ActionArgs) {
   assertIsPost(request);
   const { client, userId } = await requirePermissions(request, {
     update: "resources",
@@ -21,8 +21,8 @@ export async function action({ request }: ActionArgs) {
     return validationError(validation.error);
   }
 
-  const { id, ...update } = validation.data;
-  if (!id) {
+  const { equipmentId } = params;
+  if (!equipmentId) {
     return redirect(
       "/x/resources/equipment",
       await flash(
@@ -33,8 +33,8 @@ export async function action({ request }: ActionArgs) {
   }
 
   const updateEquipment = await upsertEquipment(client, {
-    id,
-    ...update,
+    id: equipmentId,
+    ...validation.data,
     updatedBy: userId,
   });
   if (updateEquipment.error)
@@ -47,7 +47,7 @@ export async function action({ request }: ActionArgs) {
     );
 
   return redirect(
-    `/x/resources/equipment/list/${update.equipmentTypeId}`,
+    `/x/resources/equipment/list/${validation.data.equipmentTypeId}`,
     await flash(request, success("Successfully updated equipment"))
   );
 }

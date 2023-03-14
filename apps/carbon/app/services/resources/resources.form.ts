@@ -116,7 +116,7 @@ export const equipmentValidator = withZod(
 
 export const equipmentTypeValidator = withZod(
   z.object({
-    id: z.string(),
+    id: zfd.text(z.string().optional()),
     name: z.string().min(1, { message: "Name is required" }),
     description: z.string(),
     color: z.string(),
@@ -171,7 +171,7 @@ export const workCellValidator = withZod(
     id: zfd.text(z.string().optional()),
     name: z.string().min(1, { message: "Name is required" }),
     description: z.string(),
-    deparmentId: z.string().min(1, { message: "Department is required" }),
+    departmentId: z.string().min(1, { message: "Department is required" }),
     locationId: z.string().min(1, { message: "Location is required" }),
     workCellTypeId: z.string().min(1, { message: "Type is required" }),
     activeDate: zfd.text(z.string().optional()),

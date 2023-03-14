@@ -10,22 +10,42 @@ import {
   HStack,
   VStack,
 } from "@chakra-ui/react";
-import { useNavigate } from "@remix-run/react";
 import { ValidatedForm } from "remix-validated-form";
-import { Color, Department, Hidden, Input, Submit } from "~/components/Form";
+import {
+  Input,
+  Hidden,
+  Location,
+  Submit,
+  Select,
+  TextArea,
+  Department,
+  DatePicker,
+} from "~/components/Form";
 import { usePermissions } from "~/hooks";
-import { departmentValidator } from "~/services/resources";
+import { workCellValidator } from "~/services/resources";
 import type { TypeOfValidator } from "~/types/validators";
+import { mapRowsToOptions } from "~/utils/form";
 
-type DepartmentFormProps = {
-  initialValues: TypeOfValidator<typeof departmentValidator>;
+type WorkCellFormProps = {
+  initialValues: TypeOfValidator<typeof workCellValidator>;
+  workCellTypes: {
+    id: string;
+    name: string;
+  }[];
+  onClose: () => void;
 };
 
-const DepartmentForm = ({ initialValues }: DepartmentFormProps) => {
+const WorkCellForm = ({
+  initialValues,
+  workCellTypes,
+  onClose,
+}: WorkCellFormProps) => {
   const permissions = usePermissions();
-  const navigate = useNavigate();
-  const onClose = () => navigate(-1);
-
+  const options = mapRowsToOptions({
+    data: workCellTypes,
+    value: "id",
+    label: "name",
+  });
   const isEditing = initialValues.id !== undefined;
   const isDisabled = isEditing
     ? !permissions.can("update", "resources")
@@ -34,25 +54,32 @@ const DepartmentForm = ({ initialValues }: DepartmentFormProps) => {
   return (
     <Drawer onClose={onClose} isOpen={true} size="sm">
       <ValidatedForm
-        validator={departmentValidator}
+        validator={workCellValidator}
         method="post"
         action={
           isEditing
-            ? `/x/resources/departments/${initialValues.id}`
-            : "/x/resources/departments/new"
+            ? `/x/resources/work-cells/cell/${initialValues.id}`
+            : "/x/resources/work-cells/cell/new"
         }
         defaultValues={initialValues}
       >
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader>{isEditing ? "Edit" : "New"} Department</DrawerHeader>
+          <DrawerHeader>{isEditing ? "Edit" : "New"} Work Cell</DrawerHeader>
           <DrawerBody pb={8}>
             <Hidden name="id" />
-            <VStack spacing={4} alignItems="start">
-              <Input name="name" label="Department Name" />
-              <Color name="color" label="Color" />
-              <Department name="parentDepartmentId" label="Parent Department" />
+            <VStack spacing={2} alignItems="start">
+              <Input name="name" label="Name" />
+              <TextArea name="description" label="Description" />
+              <Select
+                name="workCellTypeId"
+                label="Work Cell Type"
+                options={options}
+              />
+              <Location name="locationId" label="Location" />
+              <Department name="departmentId" label="Department" />
+              <DatePicker name="activeDate" label="Active Date" />
             </VStack>
           </DrawerBody>
           <DrawerFooter>
@@ -74,4 +101,4 @@ const DepartmentForm = ({ initialValues }: DepartmentFormProps) => {
   );
 };
 
-export default DepartmentForm;
+export default WorkCellForm;

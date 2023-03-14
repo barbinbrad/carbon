@@ -129,7 +129,7 @@ const WorkCellTypesTable = memo(({ data, count }: WorkCellTypesTableProps) => {
             );
           }}
         >
-          View WorkCell
+          View Work Cell
         </MenuItem>
         <MenuItem
           icon={<BsPencilSquare />}
@@ -137,14 +137,14 @@ const WorkCellTypesTable = memo(({ data, count }: WorkCellTypesTableProps) => {
             navigate(`/x/resources/work-cells/${row.id}`);
           }}
         >
-          Edit WorkCell Type
+          Edit Work Cell Type
         </MenuItem>
         <MenuItem
           isDisabled={!permissions.can("delete", "users")}
           icon={<IoMdTrash />}
           onClick={() => onDelete(row)}
         >
-          Delete WorkCell Type
+          Delete Work Cell Type
         </MenuItem>
       </>
     ),

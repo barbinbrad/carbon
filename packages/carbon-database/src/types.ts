@@ -1227,23 +1227,35 @@ export interface Database {
         Row: {
           name: string;
           description: string | null;
+          createdBy: string;
+          updatedBy: string | null;
+          updatedAt: string | null;
           id: string;
           color: string;
           active: boolean;
+          createdAt: string;
         };
         Insert: {
           name: string;
           description?: string | null;
+          createdBy: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
           id?: string;
           color?: string;
           active?: boolean;
+          createdAt?: string;
         };
         Update: {
           name?: string;
           description?: string | null;
+          createdBy?: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
           id?: string;
           color?: string;
           active?: boolean;
+          createdAt?: string;
         };
       };
     };

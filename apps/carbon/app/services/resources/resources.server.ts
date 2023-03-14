@@ -94,6 +94,13 @@ export async function deleteShift(
   return client.from("shift").update({ active: false }).eq("id", shiftId);
 }
 
+export async function deleteWorkCell(
+  client: SupabaseClient<Database>,
+  workCellId: string
+) {
+  return client.from("workCell").update({ active: false }).eq("id", workCellId);
+}
+
 export async function getAbilities(
   client: SupabaseClient<Database>,
   args: GenericQueryFilters & { name: string | null }
@@ -553,6 +560,20 @@ export async function getPeople(
   };
 }
 
+export async function getWorkCell(
+  client: SupabaseClient<Database>,
+  workCellId: string
+) {
+  return client
+    .from("workCell")
+    .select(
+      "id, name, description, activeDate, workCellType(id, name), location(id, name), department(id, name)"
+    )
+    .eq("id", workCellId)
+    .eq("active", true)
+    .single();
+}
+
 export async function getWorkCellList(
   client: SupabaseClient<Database>,
   locationId: string | null,
@@ -569,6 +590,20 @@ export async function getWorkCellList(
   }
 
   return query;
+}
+
+export async function getWorkCellType(
+  client: SupabaseClient<Database>,
+  workCellTypeId: string
+) {
+  return client
+    .from("workCellType")
+    .select(
+      "id, name, color, description, workCell(id, name, location(id, name), department(id, name))"
+    )
+    .eq("active", true)
+    .eq("id", workCellTypeId)
+    .single();
 }
 
 export async function getWorkCellTypes(
@@ -933,4 +968,66 @@ export async function upsertShift(
   }
 
   return client.from("shift").insert([update]).select("id");
+}
+
+export async function upsertWorkCell(
+  client: SupabaseClient<Database>,
+  workCell:
+    | {
+        name: string;
+        description: string;
+        workCellTypeId: string;
+        locationId: string;
+        departmentId: string;
+        activeDate?: string;
+        createdBy: string;
+      }
+    | {
+        id: string;
+        name: string;
+        description: string;
+        workCellTypeId: string;
+        locationId: string;
+        departmentId: string;
+        activeDate?: string;
+        updatedBy: string;
+      }
+) {
+  if ("id" in workCell) {
+    console.log("updating work cell", workCell);
+    const { id, ...update } = workCell;
+    return client
+      .from("workCell")
+      .update({ ...update })
+      .eq("id", id);
+  }
+  console.log("inserting work cell", workCell);
+  return client.from("workCell").insert([workCell]).select("id");
+}
+
+export async function upsertWorkCellType(
+  client: SupabaseClient<Database>,
+  workCellType:
+    | {
+        name: string;
+        description: string;
+        color: string;
+        createdBy: string;
+      }
+    | {
+        id: string;
+        name: string;
+        description: string;
+        color: string;
+        updatedBy: string;
+      }
+) {
+  if ("id" in workCellType) {
+    const { id, ...update } = workCellType;
+    return client
+      .from("workCellType")
+      .update({ ...update })
+      .eq("id", id);
+  }
+  return client.from("workCellType").insert([workCellType]).select("id");
 }

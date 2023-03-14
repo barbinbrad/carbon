@@ -4,6 +4,7 @@ import Color from "./Color";
 import Customer from "./Customer";
 import CustomerContact from "./CustomerContact";
 import DatePicker from "./DatePicker";
+import Department from "./Department";
 import Employee from "./Employee";
 import Employees from "./Employees";
 import Hidden from "./Hidden";
@@ -32,6 +33,7 @@ export {
   Customer,
   CustomerContact,
   DatePicker,
+  Department,
   Employee,
   Employees,
   Hidden,

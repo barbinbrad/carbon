@@ -120,6 +120,7 @@ export const equipmentTypeValidator = withZod(
     name: z.string().min(1, { message: "Name is required" }),
     description: z.string(),
     color: z.string(),
+    requiredAbility: zfd.text(z.string().optional()),
   })
 );
 
@@ -184,5 +185,6 @@ export const workCellTypeValidator = withZod(
     name: z.string().min(1, { message: "Name is required" }),
     description: z.string(),
     color: z.string(),
+    requiredAbility: zfd.text(z.string().optional()),
   })
 );

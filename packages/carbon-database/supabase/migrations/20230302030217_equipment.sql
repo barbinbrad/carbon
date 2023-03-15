@@ -33,6 +33,7 @@ CREATE TABLE "workCellType" (
   "name" TEXT NOT NULL UNIQUE,
   "color" TEXT NOT NULL DEFAULT '#000000',
   "description" TEXT,
+  "requiredAbility" TEXT,
   "active" BOOLEAN NOT NULL DEFAULT true,
   "createdBy" TEXT NOT NULL,
   "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
@@ -41,6 +42,7 @@ CREATE TABLE "workCellType" (
 
   CONSTRAINT "workCellType_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "workCellType_colorCheck" CHECK ("color" is null or "color" ~* '^#[a-f0-9]{6}$'),
+  CONSTRAINT "workCellType_requiredAbility_fkey" FOREIGN KEY ("requiredAbility") REFERENCES "ability"("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "workCellType_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "workCellType_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -101,6 +103,7 @@ CREATE TABLE "equipmentType" (
   "name" TEXT NOT NULL UNIQUE,
   "color" TEXT NOT NULL DEFAULT '#000000',
   "description" TEXT,
+  "requiredAbility" TEXT,
   "active" BOOLEAN NOT NULL DEFAULT true,
   "createdBy" TEXT NOT NULL,
   "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
@@ -109,6 +112,7 @@ CREATE TABLE "equipmentType" (
 
   CONSTRAINT "equipmentType_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "equipmentType_colorCheck" CHECK ("color" is null or "color" ~* '^#[a-f0-9]{6}$'),
+  CONSTRAINT "equipmentType_requiredAbility_fkey" FOREIGN KEY ("requiredAbility") REFERENCES "ability"("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "equipmentType_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "equipmentType_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -137,7 +141,3 @@ CREATE TABLE "equipment" (
 );
 
 -- TODO: insert/update search results with triggers
-
-ALTER TABLE "ability" 
-  ADD COLUMN "equipmentTypeId" TEXT REFERENCES "equipmentType"("id") ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD COLUMN "workCellTypeId" TEXT REFERENCES "workCellType"("id") ON DELETE CASCADE ON UPDATE CASCADE;

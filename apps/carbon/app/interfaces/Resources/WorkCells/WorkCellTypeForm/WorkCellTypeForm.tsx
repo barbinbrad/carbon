@@ -11,7 +11,14 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { ValidatedForm } from "remix-validated-form";
-import { Input, Hidden, Submit, TextArea, Color } from "~/components/Form";
+import {
+  Input,
+  Hidden,
+  Submit,
+  TextArea,
+  Color,
+  Ability,
+} from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { workCellTypeValidator } from "~/services/resources";
 import type { TypeOfValidator } from "~/types/validators";
@@ -55,6 +62,7 @@ const WorkCellTypeForm = ({
               <Input name="name" label="Name" />
               <TextArea name="description" label="Description" />
               <Color name="color" label="Color" />
+              <Ability name="requiredAbility" label="Required Ability" />
             </VStack>
           </DrawerBody>
           <DrawerFooter>

@@ -20,8 +20,6 @@ export interface Database {
           shadowWeeks: number;
           active: boolean;
           createdAt: string;
-          equipmentTypeId: string | null;
-          workCellTypeId: string | null;
         };
         Insert: {
           name: string;
@@ -33,8 +31,6 @@ export interface Database {
           shadowWeeks?: number;
           active?: boolean;
           createdAt?: string;
-          equipmentTypeId?: string | null;
-          workCellTypeId?: string | null;
         };
         Update: {
           name?: string;
@@ -46,8 +42,6 @@ export interface Database {
           shadowWeeks?: number;
           active?: boolean;
           createdAt?: string;
-          equipmentTypeId?: string | null;
-          workCellTypeId?: string | null;
         };
       };
       address: {
@@ -616,6 +610,7 @@ export interface Database {
         Row: {
           name: string;
           description: string | null;
+          requiredAbility: string | null;
           createdBy: string;
           updatedBy: string | null;
           updatedAt: string | null;
@@ -627,6 +622,7 @@ export interface Database {
         Insert: {
           name: string;
           description?: string | null;
+          requiredAbility?: string | null;
           createdBy: string;
           updatedBy?: string | null;
           updatedAt?: string | null;
@@ -638,6 +634,7 @@ export interface Database {
         Update: {
           name?: string;
           description?: string | null;
+          requiredAbility?: string | null;
           createdBy?: string;
           updatedBy?: string | null;
           updatedAt?: string | null;
@@ -1227,6 +1224,7 @@ export interface Database {
         Row: {
           name: string;
           description: string | null;
+          requiredAbility: string | null;
           createdBy: string;
           updatedBy: string | null;
           updatedAt: string | null;
@@ -1238,6 +1236,7 @@ export interface Database {
         Insert: {
           name: string;
           description?: string | null;
+          requiredAbility?: string | null;
           createdBy: string;
           updatedBy?: string | null;
           updatedAt?: string | null;
@@ -1249,6 +1248,7 @@ export interface Database {
         Update: {
           name?: string;
           description?: string | null;
+          requiredAbility?: string | null;
           createdBy?: string;
           updatedBy?: string | null;
           updatedAt?: string | null;

@@ -101,6 +101,16 @@ export async function deleteWorkCell(
   return client.from("workCell").update({ active: false }).eq("id", workCellId);
 }
 
+export async function deleteWorkCellType(
+  client: SupabaseClient<Database>,
+  workCellTypeId: string
+) {
+  return client
+    .from("workCellType")
+    .update({ active: false })
+    .eq("id", workCellTypeId);
+}
+
 export async function getAbilities(
   client: SupabaseClient<Database>,
   args: GenericQueryFilters & { name: string | null }
@@ -123,6 +133,10 @@ export async function getAbilities(
 
   query = setGenericQueryFilters(query, args, "name");
   return query;
+}
+
+export async function getAbilitiesList(client: SupabaseClient<Database>) {
+  return client.from("ability").select(`id, name`);
 }
 
 export async function getAbility(
@@ -326,7 +340,9 @@ export async function getEquipmentType(
 ) {
   return client
     .from("equipmentType")
-    .select("id, name, color, description, equipment(id, name)")
+    .select(
+      "id, name, color, description, requiredAbility, equipment(id, name)"
+    )
     .eq("active", true)
     .eq("id", equipmentTypeId)
     .single();
@@ -338,9 +354,12 @@ export async function getEquipmentTypes(
 ) {
   let query = client
     .from("equipmentType")
-    .select("id, name, color, description, equipment(id, name)", {
-      count: "exact",
-    })
+    .select(
+      "id, name, color, description, requiredAbility, equipment(id, name)",
+      {
+        count: "exact",
+      }
+    )
     .eq("active", true)
     .eq("equipment.active", true);
 
@@ -579,7 +598,7 @@ export async function getWorkCellList(
   locationId: string | null,
   workCellTypeId: string | null
 ) {
-  let query = client.from("shift").select(`id, name`).eq("active", true);
+  let query = client.from("workCell").select(`id, name`).eq("active", true);
 
   if (locationId) {
     query = query.eq("locationId", locationId);
@@ -599,7 +618,7 @@ export async function getWorkCellType(
   return client
     .from("workCellType")
     .select(
-      "id, name, color, description, workCell(id, name, location(id, name), department(id, name))"
+      "id, name, color, description, requiredAbility, workCell(id, name, location(id, name), department(id, name))"
     )
     .eq("active", true)
     .eq("id", workCellTypeId)
@@ -612,9 +631,12 @@ export async function getWorkCellTypes(
 ) {
   let query = client
     .from("workCellType")
-    .select("id, name, color, description, workCell(id, name)", {
-      count: "exact",
-    })
+    .select(
+      "id, name, color, description, requiredAbility, workCell(id, name)",
+      {
+        count: "exact",
+      }
+    )
     .eq("active", true)
     .eq("workCell.active", true);
 
@@ -896,6 +918,7 @@ export async function upsertEquipmentType(
     | {
         name: string;
         description: string;
+        requiredAbility?: string;
         color: string;
         createdBy: string;
       }
@@ -903,6 +926,7 @@ export async function upsertEquipmentType(
         id: string;
         name: string;
         description: string;
+        requiredAbility?: string;
         color: string;
         updatedBy: string;
       }
@@ -1001,7 +1025,6 @@ export async function upsertWorkCell(
       .update({ ...update })
       .eq("id", id);
   }
-  console.log("inserting work cell", workCell);
   return client.from("workCell").insert([workCell]).select("id");
 }
 
@@ -1012,6 +1035,7 @@ export async function upsertWorkCellType(
         name: string;
         description: string;
         color: string;
+        requiredAbility?: string;
         createdBy: string;
       }
     | {
@@ -1019,6 +1043,7 @@ export async function upsertWorkCellType(
         name: string;
         description: string;
         color: string;
+        requiredAbility?: string;
         updatedBy: string;
       }
 ) {

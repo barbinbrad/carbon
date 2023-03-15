@@ -7,15 +7,15 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
-  // FormControl,
-  // FormErrorMessage,
-  // FormLabel,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
   HStack,
   VStack,
 } from "@chakra-ui/react";
 import { useFetcher } from "@remix-run/react";
-import { useEffect, useState } from "react";
-import { ValidatedForm } from "remix-validated-form";
+import { useEffect, useMemo, useState } from "react";
+import { useControlField, useField, ValidatedForm } from "remix-validated-form";
 import {
   Input,
   Hidden,
@@ -67,19 +67,21 @@ const EquipmentForm = ({
   };
 
   useEffect(() => {
-    workCellFetcher.load(`/api/resources/work-cells?location=${location}`);
+    if (location) {
+      workCellFetcher.load(`/api/resources/work-cells?location=${location}`);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
-  // const workCells = useMemo(
-  //   () =>
-  //     mapRowsToOptions({
-  //       data: workCellFetcher.data?.data ?? [],
-  //       value: "id",
-  //       label: "name",
-  //     }),
-  //   [workCellFetcher.data]
-  // );
+  const workCells = useMemo(
+    () =>
+      mapRowsToOptions({
+        data: workCellFetcher.data?.data ?? [],
+        value: "id",
+        label: "name",
+      }),
+    [workCellFetcher.data]
+  );
 
   return (
     <Drawer onClose={onClose} isOpen={true} size="sm">
@@ -112,10 +114,10 @@ const EquipmentForm = ({
                 label="Location"
                 onChange={onLocationChange}
               />
-              {/* <WorkCellsByLocation
+              <WorkCellsByLocation
                 workCells={workCells}
                 initialWorkCell={initialValues.workCellId ?? undefined}
-              /> */}
+              />
               <Number
                 name="setupHours"
                 label="Setup Hours"
@@ -149,7 +151,6 @@ const EquipmentForm = ({
   );
 };
 
-/*
 const WORK_CELL_FIELD = "workCellId";
 
 const WorkCellsByLocation = ({
@@ -183,14 +184,14 @@ const WorkCellsByLocation = ({
           id: WORK_CELL_FIELD,
         })}
         options={workCells}
+        // @ts-ignore
         value={workCell}
         onChange={setWorkCell}
-        // @ts-ignore
         w="full"
       />
       {error && <FormErrorMessage>{error}</FormErrorMessage>}
     </FormControl>
   );
 };
-*/
+
 export default EquipmentForm;

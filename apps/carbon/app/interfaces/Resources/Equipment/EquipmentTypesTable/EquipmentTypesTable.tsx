@@ -2,6 +2,8 @@ import {
   Box,
   Button,
   ButtonGroup,
+  HStack,
+  Icon,
   IconButton,
   MenuItem,
   Text,
@@ -11,7 +13,12 @@ import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo, useState } from "react";
 import { BiAddToQueue } from "react-icons/bi";
-import { BsPencilSquare, BsListUl, BsPlus } from "react-icons/bs";
+import {
+  BsPencilSquare,
+  BsListUl,
+  BsPlus,
+  BsFillCheckCircleFill,
+} from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { Table } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
@@ -48,7 +55,18 @@ const EquipmentTypesTable = memo(
         {
           accessorKey: "name",
           header: "Equipment Type",
-          cell: (item) => item.getValue(),
+          cell: ({ row }) => (
+            <HStack>
+              <span>{row.original.name}</span>
+              {row.original.requiredAbility && (
+                <Icon
+                  as={BsFillCheckCircleFill}
+                  color="green.500"
+                  title="Requires ability"
+                />
+              )}
+            </HStack>
+          ),
         },
         {
           accessorKey: "description",

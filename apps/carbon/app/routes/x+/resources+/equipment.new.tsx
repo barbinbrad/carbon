@@ -26,12 +26,13 @@ export async function action({ request }: ActionArgs) {
     return validationError(validation.error);
   }
 
-  const { name, description, color } = validation.data;
+  const { name, description, color, requiredAbility } = validation.data;
 
   const createEquipmentType = await upsertEquipmentType(client, {
     name,
     description,
     color,
+    requiredAbility,
     createdBy: userId,
   });
   if (createEquipmentType.error) {

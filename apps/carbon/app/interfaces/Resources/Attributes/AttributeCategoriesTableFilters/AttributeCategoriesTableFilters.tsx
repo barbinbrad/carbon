@@ -28,7 +28,7 @@ const AttributeCategoriesTableFilters = () => {
         />
       </HStack>
       <HStack spacing={2}>
-        {permissions.can("update", "users") && (
+        {permissions.can("update", "resources") && (
           <Button
             as={Link}
             to={`new?${params.toString()}`}

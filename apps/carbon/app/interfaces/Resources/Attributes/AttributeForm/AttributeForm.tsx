@@ -53,8 +53,8 @@ const AttributeForm = ({
   });
   const isEditing = initialValues.id !== undefined;
   const isDisabled = isEditing
-    ? !permissions.can("update", "users")
-    : !permissions.can("create", "users");
+    ? !permissions.can("update", "resources")
+    : !permissions.can("create", "resources");
 
   const [isList, setIsList] = useState(
     initialValues.attributeDataTypeId === DataType.List

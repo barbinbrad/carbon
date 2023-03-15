@@ -181,7 +181,7 @@ const PeopleTable = memo(
     // }, []);
 
     const renderContextMenu = useMemo(() => {
-      return permissions.can("update", "users")
+      return permissions.can("update", "resources")
         ? (row: typeof rows[number]) => {
             return (
               <MenuItem

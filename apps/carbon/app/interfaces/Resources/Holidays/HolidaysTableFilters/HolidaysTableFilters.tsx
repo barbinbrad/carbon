@@ -39,13 +39,16 @@ const HolidaysTableFilters = ({ years }: HolidaysTableFiltersProps) => {
         <Select
           // @ts-ignore
           size="sm"
-          defaultValue={{
-            label: new Date().getFullYear().toString(),
-            value: new Date().getFullYear(),
-          }}
-          value={yearsOptions.filter(
-            (year) => year.value.toString() === params.get("year")
-          )}
+          value={
+            params.get("year")
+              ? yearsOptions.filter(
+                  (year) => year.value.toString() === params.get("year")
+                )
+              : {
+                  label: new Date().getFullYear().toString(),
+                  value: new Date().getFullYear(),
+                }
+          }
           options={yearsOptions}
           onChange={(selected) => {
             setParams({ year: selected?.value });

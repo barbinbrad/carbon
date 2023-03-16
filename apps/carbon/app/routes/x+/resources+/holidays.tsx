@@ -28,7 +28,7 @@ export async function loader({ request }: LoaderArgs) {
   const [holidays, years] = await Promise.all([
     getHolidays(client, {
       name,
-      year: year ? parseInt(year) : null,
+      year: year ? parseInt(year) : new Date().getFullYear(),
       limit,
       offset,
       sorts,

@@ -1,4 +1,5 @@
+import HolidayForm from "./HolidayForm";
 import HolidaysTable from "./HolidaysTable";
 import HolidaysTableFilters from "./HolidaysTableFilters";
 
-export { HolidaysTable, HolidaysTableFilters };
+export { HolidayForm, HolidaysTable, HolidaysTableFilters };

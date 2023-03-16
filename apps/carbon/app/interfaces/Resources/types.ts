@@ -16,6 +16,7 @@ import type {
   getShifts,
   getWorkCellTypes,
   getWorkCellType,
+  getHolidays,
 } from "~/services/resources";
 
 export type Ability = NonNullable<
@@ -99,6 +100,14 @@ export type EquipmentType = NonNullable<
 export type EquipmentTypeDetail = NonNullable<
   Awaited<ReturnType<typeof getEquipmentType>>["data"]
 >;
+
+export type Holiday = NonNullable<
+  Awaited<ReturnType<typeof getHolidays>>["data"]
+>[number];
+
+export type Location = NonNullable<
+  Awaited<ReturnType<typeof getLocations>>["data"]
+>[number];
 
 export type Note = NonNullable<
   Awaited<ReturnType<typeof getNotes>>["data"]

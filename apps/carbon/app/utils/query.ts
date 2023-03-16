@@ -97,7 +97,8 @@ export function setGenericQueryFilters<
 >(
   query: PostgrestFilterBuilder<T, U, V>,
   args: GenericQueryFilters,
-  defaultSort?: string
+  defaultSort?: string,
+  defaultAsc = true
 ): PostgrestFilterBuilder<T, U, V> {
   args.filters?.forEach((filter) => {
     if (!filter.value) return;
@@ -122,7 +123,7 @@ export function setGenericQueryFilters<
     });
   } else if (defaultSort) {
     query = query.order(defaultSort, {
-      ascending: true,
+      ascending: defaultAsc,
     });
   }
 

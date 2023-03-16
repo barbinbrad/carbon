@@ -702,6 +702,38 @@ export interface Database {
           createdAt?: string;
         };
       };
+      holiday: {
+        Row: {
+          name: string;
+          date: string;
+          createdBy: string;
+          updatedBy: string | null;
+          updatedAt: string | null;
+          id: string;
+          year: number | null;
+          createdAt: string;
+        };
+        Insert: {
+          name: string;
+          date: string;
+          createdBy: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          id?: string;
+          year?: number | null;
+          createdAt?: string;
+        };
+        Update: {
+          name?: string;
+          date?: string;
+          createdBy?: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          id?: string;
+          year?: number | null;
+          createdAt?: string;
+        };
+      };
       location: {
         Row: {
           name: string;
@@ -1301,6 +1333,11 @@ export interface Database {
           name: string | null;
           parentId: string | null;
           users: Json | null;
+        };
+      };
+      holiday_years: {
+        Row: {
+          year: number | null;
         };
       };
     };

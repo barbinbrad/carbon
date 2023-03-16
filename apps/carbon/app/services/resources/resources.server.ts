@@ -374,6 +374,33 @@ export async function getEquipmentTypes(
   return query;
 }
 
+export async function getHolidays(
+  client: SupabaseClient<Database>,
+  args?: GenericQueryFilters & { name: string | null; year: number | null }
+) {
+  let query = client.from("holiday").select(`id, name, date, year`, {
+    count: "exact",
+  });
+
+  if (args?.name) {
+    query = query.ilike("name", `%${args.name}%`);
+  }
+
+  if (args?.year) {
+    query = query.eq("year", args.year);
+  }
+
+  if (args) {
+    query = setGenericQueryFilters(query, args, "date");
+  }
+
+  return query;
+}
+
+export function getHolidayYears(client: SupabaseClient<Database>) {
+  return client.from("holiday_years").select("year");
+}
+
 export async function getLocation(
   client: SupabaseClient<Database>,
   locationId: string

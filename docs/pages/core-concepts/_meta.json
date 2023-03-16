@@ -1,0 +1,6 @@
+{
+  "permissions": "Permissions",
+  "fetching": "Data Fetching",
+  "writing": "Data Writes",
+  "realtime": "Realtime"
+}

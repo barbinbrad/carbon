@@ -25,7 +25,7 @@ export default {
   },
   darkMode: true,
   footer: {
-    text: `LFG. Teamworks ${new Date().getFullYear()} © All rights reserved.`,
+    text: `Carbon ERP ${new Date().getFullYear()}. All rights reserved.`,
   },
   editLink: {
     text: `View this page on GitHub`,

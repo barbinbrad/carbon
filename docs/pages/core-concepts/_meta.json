@@ -2,5 +2,7 @@
   "permissions": "Permissions",
   "fetching": "Data Fetching",
   "writing": "Data Writes",
-  "realtime": "Realtime"
+  "realtime": "Realtime",
+  "serverless": "Serverless",
+  "integration": "APIs"
 }

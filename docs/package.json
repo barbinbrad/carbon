@@ -14,7 +14,8 @@
     "nextra": "^2.2.19",
     "nextra-theme-docs": "^2.2.19",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.7.1"
   },
   "devDependencies": {
     "@carbon/tsconfig": "*",

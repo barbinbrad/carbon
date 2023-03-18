@@ -85,7 +85,7 @@ Copy the environment variables from the initialization script to an `.env` file:
 $ cp ./.env.example ./.env
 ```
 
-After you've set the enviroment variables to the output of `db:start` you can run
+After you've set the enviroment variables to the output of `yarn init` you can run
 
 ```bash
 $ yarn db:build     # run db migrations and seed script

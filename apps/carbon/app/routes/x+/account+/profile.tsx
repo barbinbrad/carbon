@@ -5,16 +5,17 @@ import { useLoaderData } from "@remix-run/react";
 import { json } from "@remix-run/router";
 import { validationError } from "remix-validated-form";
 import { PageTitle, SectionTitle } from "~/components/Layout";
-import { ProfileForm, ProfilePhotoForm } from "~/interfaces/Account/Profile";
-import { UserAttributesForm } from "~/interfaces/Account/UserAttributes";
-import type { PublicAttributes } from "~/interfaces/Account/types";
 import {
+  ProfileForm,
+  ProfilePhotoForm,
+  UserAttributesForm,
   accountProfileValidator,
   getAccount,
   getPublicAttributes,
   updateAvatar,
   updatePublicAccount,
-} from "~/services/account";
+} from "~/modules/account";
+import type { PublicAttributes } from "~/modules/account";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";

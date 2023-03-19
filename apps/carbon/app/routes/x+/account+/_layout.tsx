@@ -3,7 +3,7 @@ import { Grid, VStack } from "@chakra-ui/react";
 import type { MetaFunction } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 import { ContentSidebar } from "~/components/Layout/Sidebar";
-import { useAccountSidebar } from "~/interfaces/Account";
+import { useAccountSidebar } from "~/modules/account";
 
 export const meta: MetaFunction = () => ({
   title: "Carbon | My Account",

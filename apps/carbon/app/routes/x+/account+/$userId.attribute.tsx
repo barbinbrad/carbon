@@ -6,10 +6,10 @@ import {
   attributeNumericValidator,
   attributeTextValidator,
   attributeUserValidator,
-} from "~/services/account";
+  upsertUserAttributeValue,
+} from "~/modules/account";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
-import { upsertUserAttributeValue } from "~/services/account";
 import { getAttribute } from "~/services/resources";
 import { getUserClaims } from "~/services/users";
 import { assertIsPost } from "~/utils/http";

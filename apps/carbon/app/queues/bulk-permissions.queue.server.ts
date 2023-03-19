@@ -1,7 +1,7 @@
 import { Queue } from "~/lib/bullmq";
 import { getSupabaseServiceRole } from "~/lib/supabase";
-import type { Permission } from "~/interfaces/Users/types";
-import { updatePermissions } from "~/services/users";
+import type { Permission } from "~/modules/users";
+import { updatePermissions } from "~/modules/users";
 
 export type BulkPermissionsQueueData = {
   id: string;

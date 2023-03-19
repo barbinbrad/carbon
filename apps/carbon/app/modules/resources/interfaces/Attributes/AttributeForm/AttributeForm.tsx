@@ -21,8 +21,8 @@ import {
   Select,
 } from "~/components/Form";
 import { usePermissions } from "~/hooks";
-import { DataType } from "~/interfaces/Users/types";
 import { attributeValidator } from "~/modules/resources";
+import { DataType } from "~/modules/users";
 import type { TypeOfValidator } from "~/types/validators";
 import { mapRowsToOptions } from "~/utils/form";
 

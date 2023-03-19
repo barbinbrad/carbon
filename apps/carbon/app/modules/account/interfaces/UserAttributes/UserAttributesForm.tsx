@@ -33,7 +33,7 @@ import {
   deleteUserAttributeValueValidator,
 } from "~/modules/account";
 import type { PublicAttributes } from "~/modules/account";
-import { DataType } from "~/interfaces/Users/types";
+import { DataType } from "~/modules/users";
 
 type UserAttributesFormProps = {
   attributeCategory?: PublicAttributes;

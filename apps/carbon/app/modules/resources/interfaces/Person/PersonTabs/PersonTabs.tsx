@@ -13,9 +13,9 @@ import { BiLockAlt } from "react-icons/bi";
 import { SectionTitle } from "~/components/Layout";
 import { ProfileForm, UserAttributesForm } from "~/modules/account";
 import type { PublicAttributes, PrivateAttributes } from "~/modules/account";
-import type { User } from "~/interfaces/Users/types";
 import { PersonJob, PersonNotes } from "~/modules/resources";
 import type { EmployeeJob, Note } from "~/modules/resources";
+import type { User } from "~/modules/users";
 
 type PersonTabsProps = {
   user: User;

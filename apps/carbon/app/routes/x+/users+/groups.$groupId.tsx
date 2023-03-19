@@ -3,15 +3,15 @@ import { json } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
-import { GroupForm } from "~/interfaces/Users/Groups";
-import { requirePermissions } from "~/services/auth";
-import { flash } from "~/services/session";
 import {
+  GroupForm,
   getGroupMembers,
   groupValidator,
   upsertGroup,
   upsertGroupMembers,
-} from "~/services/users";
+} from "~/modules/users";
+import { requirePermissions } from "~/services/auth";
+import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
 import { error, success } from "~/utils/result";
 

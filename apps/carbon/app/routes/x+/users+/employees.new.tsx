@@ -4,11 +4,11 @@ import { validationError } from "remix-validated-form";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import {
+  CreateEmployeeModal,
   createEmployeeAccount,
   createEmployeeValidator,
-} from "~/services/users";
+} from "~/modules/users";
 import { assertIsPost } from "~/utils/http";
-import { CreateEmployeeModal } from "~/interfaces/Users/Employees";
 
 export async function action({ request }: ActionArgs) {
   assertIsPost(request);

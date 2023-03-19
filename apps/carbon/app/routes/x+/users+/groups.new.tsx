@@ -2,17 +2,17 @@ import type { ActionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
-import { GroupForm } from "~/interfaces/Users/Groups";
-import { flash } from "~/services/session";
-import { assertIsPost } from "~/utils/http";
-import { error, success } from "~/utils/result";
-import { requirePermissions } from "~/services/auth";
 import {
+  GroupForm,
   insertGroup,
   deleteGroup,
   groupValidator,
   upsertGroupMembers,
-} from "~/services/users";
+} from "~/modules/users";
+import { flash } from "~/services/session";
+import { assertIsPost } from "~/utils/http";
+import { error, success } from "~/utils/result";
+import { requirePermissions } from "~/services/auth";
 
 export async function action({ request }: ActionArgs) {
   assertIsPost(request);
@@ -69,6 +69,7 @@ export async function action({ request }: ActionArgs) {
 
 export default function NewGroupRoute() {
   const initialValues = {
+    id: "",
     name: "",
     selections: [],
   };

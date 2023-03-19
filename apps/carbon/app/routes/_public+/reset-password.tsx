@@ -15,7 +15,7 @@ import { useNavigate } from "@remix-run/react";
 import { ValidatedForm, validationError } from "remix-validated-form";
 import { Password, Submit } from "~/components/Form";
 import { resetPasswordValidator } from "~/services/auth";
-import { resetPassword } from "~/services/users";
+import { resetPassword } from "~/modules/users";
 import { requireAuthSession, flash } from "~/services/session";
 import { error, success } from "~/utils/result";
 import { assertIsPost } from "~/utils/http";

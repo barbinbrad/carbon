@@ -3,8 +3,8 @@ import { useParams } from "@remix-run/react";
 import { ValidatedForm } from "remix-validated-form";
 import { Hidden, Input, Submit, TextArea } from "~/components/Form";
 import { SectionTitle } from "~/components/Layout";
-import type { User } from "~/interfaces/Users/types";
 import { accountProfileValidator } from "~/modules/account";
+import type { User } from "~/modules/users";
 
 type ProfileFormProps = {
   user: User;

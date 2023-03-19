@@ -6,7 +6,7 @@ import { BsPencilSquare } from "react-icons/bs";
 import { Avatar, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { AttributeCategory, Person } from "~/modules/resources";
-import { DataType } from "~/interfaces/Users/types";
+import { DataType } from "~/modules/users";
 
 type PeopleTableProps = {
   attributeCategories: AttributeCategory[];

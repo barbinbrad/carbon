@@ -18,7 +18,7 @@ import { ValidatedForm, validationError } from "remix-validated-form";
 import { Input, Submit } from "~/components/Form";
 import { getAuthSession } from "~/services/session";
 import { forgotPasswordValidator, sendMagicLink } from "~/services/auth";
-import { getUserByEmail } from "~/services/users";
+import { getUserByEmail } from "~/modules/users";
 import { assertIsPost } from "~/utils/http";
 import type { FormActionData, Result } from "~/types";
 import { error, success } from "~/utils/result";

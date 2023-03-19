@@ -1,11 +1,11 @@
 import type { ActionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
+import { resendInvite, resendInviteValidator } from "~/modules/users";
 import type { ResendInvitesQueueData } from "~/queues";
 import { resendInvitesQueue } from "~/queues";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
-import { resendInvite, resendInviteValidator } from "~/services/users";
 import { error, success } from "~/utils/result";
 
 export async function action({ request }: ActionArgs) {

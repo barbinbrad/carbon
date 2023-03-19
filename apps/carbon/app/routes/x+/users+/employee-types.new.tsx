@@ -3,16 +3,16 @@ import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
-import { EmployeeTypeForm } from "~/interfaces/Users/EmployeeTypes";
-import { requirePermissions } from "~/services/auth";
 import {
+  EmployeeTypeForm,
   employeeTypeValidator,
   employeeTypePermissionsValidator,
   getFeatures,
   insertEmployeeType,
   makeEmptyPermissionsFromFeatures,
   upsertEmployeeTypePermissions,
-} from "~/services/users";
+} from "~/modules/users";
+import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
 import { error, success } from "~/utils/result";
@@ -123,5 +123,10 @@ export default function NewEmployeeTypesRoute() {
     permissions,
   };
 
-  return <EmployeeTypeForm initialValues={initialValues} />;
+  return (
+    <EmployeeTypeForm
+      //@ts-expect-error
+      initialValues={initialValues}
+    />
+  );
 }

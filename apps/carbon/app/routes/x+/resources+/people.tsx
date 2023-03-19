@@ -12,7 +12,7 @@ import {
 } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
-import { getEmployeeTypes } from "~/services/users";
+import { getEmployeeTypes } from "~/modules/users";
 import { getGenericQueryFilters } from "~/utils/query";
 import { error } from "~/utils/result";
 

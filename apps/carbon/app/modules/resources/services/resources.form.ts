@@ -1,7 +1,7 @@
 import { withZod } from "@remix-validated-form/with-zod";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
-import { DataType } from "~/interfaces/Users/types";
+import { DataType } from "~/modules/users";
 
 export const abilityValidator = withZod(
   z

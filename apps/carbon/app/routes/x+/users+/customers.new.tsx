@@ -1,14 +1,14 @@
 import type { ActionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
-import { requirePermissions } from "~/services/auth";
-import { flash } from "~/services/session";
 import {
+  CreateCustomerModal,
   createCustomerAccount,
   createCustomerAccountValidator,
-} from "~/services/users";
+} from "~/modules/users";
+import { requirePermissions } from "~/services/auth";
+import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
-import { CreateCustomerModal } from "~/interfaces/Users/Customers";
 
 export async function action({ request }: ActionArgs) {
   assertIsPost(request);

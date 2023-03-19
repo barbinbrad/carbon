@@ -1,17 +1,16 @@
 import { VStack } from "@chakra-ui/react";
 import type { LoaderArgs } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import { usePermissions } from "~/hooks";
+import { getCustomerTypes } from "~/modules/sales";
 import {
   CustomerAccountsTable,
   CustomerAccountsTableFilters,
-} from "~/interfaces/Users/Customers";
+  getCustomers,
+} from "~/modules/users";
 import { requirePermissions } from "~/services/auth";
-import { getCustomerTypes } from "~/modules/sales";
 import { flash } from "~/services/session";
-import { getCustomers } from "~/services/users";
 import { getGenericQueryFilters } from "~/utils/query";
 import { error } from "~/utils/result";
 

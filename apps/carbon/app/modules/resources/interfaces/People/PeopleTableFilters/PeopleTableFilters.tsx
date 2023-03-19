@@ -4,7 +4,7 @@ import { Link } from "@remix-run/react";
 import { IoMdAdd } from "react-icons/io";
 import { DebouncedInput } from "~/components/Search";
 import { usePermissions, useUrlParams } from "~/hooks";
-import type { EmployeeType } from "~/interfaces/Users/types";
+import type { EmployeeType } from "~/modules/users";
 import { mapRowsToOptions } from "~/utils/form";
 
 type PeopleTableFiltersProps = {

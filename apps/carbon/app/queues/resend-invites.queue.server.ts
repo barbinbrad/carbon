@@ -1,6 +1,6 @@
 import { Queue } from "~/lib/bullmq";
 import { getSupabaseServiceRole } from "~/lib/supabase";
-import { resendInvite } from "~/services/users";
+import { resendInvite } from "~/modules/users";
 
 export type ResendInvitesQueueData = {
   id: string;

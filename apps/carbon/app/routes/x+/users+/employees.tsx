@@ -1,16 +1,16 @@
 import { VStack } from "@chakra-ui/react";
 import type { LoaderArgs } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import { usePermissions } from "~/hooks";
 import {
   EmployeesTable,
   EmployeesTableFilters,
-} from "~/interfaces/Users/Employees";
+  getEmployees,
+  getEmployeeTypes,
+} from "~/modules/users";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
-import { getEmployees, getEmployeeTypes } from "~/services/users";
 import { getGenericQueryFilters } from "~/utils/query";
 import { error } from "~/utils/result";
 

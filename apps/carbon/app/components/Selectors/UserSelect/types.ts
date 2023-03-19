@@ -8,7 +8,7 @@ import type {
   RefObject,
 } from "react";
 
-import type { User, Group } from "~/interfaces/Users/types";
+import type { User, Group } from "~/modules/users";
 
 export type ComboBoxRefs = {
   containerRef: RefObject<HTMLDivElement>;

@@ -3,17 +3,17 @@ import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
-import { EmployeeTypeForm } from "~/interfaces/Users/EmployeeTypes";
-import { requirePermissions } from "~/services/auth";
 import {
+  EmployeeTypeForm,
   employeeTypeValidator,
+  employeeTypePermissionsValidator,
   getEmployeeType,
   getPermissionsByEmployeeType,
   makePermissionsFromEmployeeType,
-  employeeTypePermissionsValidator,
   upsertEmployeeType,
   upsertEmployeeTypePermissions,
-} from "~/services/users";
+} from "~/modules/users";
+import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
 import { error, success } from "~/utils/result";
@@ -62,6 +62,7 @@ export async function action({ request }: ActionArgs) {
   }
 
   const { id, name, color, data } = validation.data;
+  if (!id) throw notFound("id not found");
 
   const permissions = JSON.parse(data);
   const jsonValidation =
@@ -79,7 +80,7 @@ export async function action({ request }: ActionArgs) {
   const updateEmployeeType = await upsertEmployeeType(client, {
     id,
     name,
-    color: color || null,
+    color: color ?? undefined,
   });
 
   if (updateEmployeeType.error) {
@@ -128,5 +129,10 @@ export default function EditEmployeeTypesRoute() {
     permissions: employeeTypePermissions,
   };
 
-  return <EmployeeTypeForm initialValues={initialValues} />;
+  return (
+    <EmployeeTypeForm
+      // @ts-expect-error
+      initialValues={initialValues}
+    />
+  );
 }

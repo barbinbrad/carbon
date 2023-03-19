@@ -1,7 +1,7 @@
 import type { Database } from "@carbon/database";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { DataType, Employee } from "~/interfaces/Users/types";
-import { getEmployees } from "~/services/users";
+import type { DataType, Employee } from "~/modules/users";
+import { getEmployees } from "~/modules/users";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
 

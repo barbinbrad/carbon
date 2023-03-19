@@ -3,11 +3,10 @@ import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import { arrayToTree } from "performant-array-to-tree";
-import { GroupsTable, GroupsTableFilters } from "~/interfaces/Users/Groups";
-import type { Group } from "~/interfaces/Users/types";
+import type { Group } from "~/modules/users";
+import { GroupsTable, GroupsTableFilters, getGroups } from "~/modules/users";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
-import { getGroups } from "~/services/users";
 import { getGenericQueryFilters } from "~/utils/query";
 import { error } from "~/utils/result";
 

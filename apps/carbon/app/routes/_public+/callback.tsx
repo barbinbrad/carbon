@@ -6,7 +6,7 @@ import { useFetcher } from "@remix-run/react";
 import { callbackValidator } from "~/services/auth/auth.form";
 import { getSupabase } from "~/lib/supabase";
 import { refreshAccessToken } from "~/services/auth";
-import { getUserByEmail } from "~/services/users";
+import { getUserByEmail } from "~/modules/users";
 import {
   commitAuthSession,
   destroyAuthSession,

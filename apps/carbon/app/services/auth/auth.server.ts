@@ -8,7 +8,7 @@ import { VERCEL_URL } from "~/config/env";
 import { REFRESH_ACCESS_TOKEN_THRESHOLD } from "~/config/env";
 import { getSupabase, getSupabaseServiceRole } from "~/lib/supabase";
 import { requireAuthSession, flash } from "~/services/session";
-import { getUserClaims } from "~/services/users";
+import { getUserClaims } from "~/modules/users";
 import { error } from "~/utils/result";
 import type { AuthSession } from "./types";
 

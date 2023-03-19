@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import type { Permission } from "~/interfaces/Users/types";
+import type { Permission } from "~/modules/users";
 import type { Role } from "~/types";
 import { useRouteData } from "./useRouteData";
 

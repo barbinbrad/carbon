@@ -4,7 +4,7 @@ import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { deleteUserAttributeValue } from "~/modules/account";
 import { getAttribute } from "~/modules/resources";
-import { getUserClaims } from "~/services/users";
+import { getUserClaims } from "~/modules/users";
 import { assertIsPost } from "~/utils/http";
 import { error, success } from "~/utils/result";
 

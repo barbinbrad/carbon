@@ -25,15 +25,15 @@ import {
 } from "~/components/Form";
 import { UserSelect } from "~/components/Selectors";
 import { usePermissions, useUser } from "~/hooks";
-import type { PublicAttributes } from "~/interfaces/Account/types";
-import { DataType } from "~/interfaces/Users/types";
 import {
   attributeBooleanValidator,
   attributeNumericValidator,
   attributeTextValidator,
   attributeUserValidator,
   deleteUserAttributeValueValidator,
-} from "~/services/account";
+} from "~/modules/account";
+import type { PublicAttributes } from "~/modules/account";
+import { DataType } from "~/interfaces/Users/types";
 
 type UserAttributesFormProps = {
   attributeCategory?: PublicAttributes;

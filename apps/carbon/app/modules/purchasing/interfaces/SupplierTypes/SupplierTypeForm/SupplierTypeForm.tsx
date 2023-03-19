@@ -14,7 +14,7 @@ import { useNavigate } from "@remix-run/react";
 import { ValidatedForm } from "remix-validated-form";
 import { Color, Hidden, Input, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
-import { supplierTypeValidator } from "~/services/purchasing";
+import { supplierTypeValidator } from "~/modules/purchasing";
 import type { TypeOfValidator } from "~/types/validators";
 
 type SupplierTypeFormProps = {

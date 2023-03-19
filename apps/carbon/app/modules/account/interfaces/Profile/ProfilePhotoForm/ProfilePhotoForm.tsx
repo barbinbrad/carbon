@@ -5,7 +5,7 @@ import type { ChangeEvent } from "react";
 import { useRef } from "react";
 import { Avatar } from "~/components";
 import { useSupabase } from "~/lib/supabase";
-import type { Account } from "~/interfaces/Account/types";
+import type { Account } from "~/modules/account";
 
 type ProfilePhotoFormProps = {
   user: Account;

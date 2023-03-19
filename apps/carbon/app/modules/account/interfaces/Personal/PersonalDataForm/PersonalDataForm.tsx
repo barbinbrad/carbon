@@ -1,8 +1,8 @@
 import { Box, Grid, VStack } from "@chakra-ui/react";
 import { ValidatedForm } from "remix-validated-form";
 import { Submit } from "~/components/Form";
-import type { PersonalData } from "~/interfaces/Account/types";
-import { accountPersonalDataValidator } from "~/services/account";
+import type { PersonalData } from "~/modules/account";
+import { accountPersonalDataValidator } from "~/modules/account";
 
 type PersonalDataFormProps = {
   personalData: PersonalData;

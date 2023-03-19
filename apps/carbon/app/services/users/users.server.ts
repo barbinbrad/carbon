@@ -10,12 +10,12 @@ import type {
   Permission,
   User,
 } from "~/interfaces/Users/types";
+import { getSupplierContact } from "~/modules/purchasing";
 import {
   deleteAuthAccount,
   sendInviteByEmail,
   sendMagicLink,
 } from "~/services/auth";
-import { getSupplierContact } from "~/services/purchasing";
 import { getCustomerContact } from "~/services/sales";
 import { requireAuthSession, flash } from "~/services/session";
 import type { Result } from "~/types";

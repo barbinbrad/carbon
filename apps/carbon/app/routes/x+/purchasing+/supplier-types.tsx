@@ -5,9 +5,9 @@ import { Outlet, useLoaderData } from "@remix-run/react";
 import {
   SupplierTypesTable,
   SupplierTypesTableFilters,
-} from "~/interfaces/Purchasing/SupplierTypes";
+  getSupplierTypes,
+} from "~/modules/purchasing";
 import { requirePermissions } from "~/services/auth";
-import { getSupplierTypes } from "~/services/purchasing";
 import { getGenericQueryFilters } from "~/utils/query";
 
 export async function loader({ request }: LoaderArgs) {

@@ -19,7 +19,7 @@ import {
   getPrivateAttributes,
   getPublicAttributes,
   updatePublicAccount,
-} from "~/services/account";
+} from "~/modules/account";
 import { requirePermissions } from "~/services/auth";
 import {
   employeeJobValidator,

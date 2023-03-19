@@ -1,11 +1,11 @@
 import type { ActionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
-import { requirePermissions } from "~/services/auth";
 import {
   insertSupplierLocation,
   supplierLocationValidator,
-} from "~/services/purchasing";
+} from "~/modules/purchasing";
+import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
 import { error, success } from "~/utils/result";

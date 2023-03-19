@@ -8,8 +8,8 @@ import {
   SupplierAccountsTable,
   SupplierAccountsTableFilters,
 } from "~/interfaces/Users/Suppliers";
+import { getSupplierTypes } from "~/modules/purchasing";
 import { requirePermissions } from "~/services/auth";
-import { getSupplierTypes } from "~/services/purchasing";
 import { flash } from "~/services/session";
 import { getSuppliers } from "~/services/users";
 import { getGenericQueryFilters } from "~/utils/query";

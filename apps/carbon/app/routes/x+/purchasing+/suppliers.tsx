@@ -6,13 +6,11 @@ import { Outlet, useLoaderData } from "@remix-run/react";
 import {
   SuppliersTable,
   SuppliersTableFilters,
-} from "~/interfaces/Purchasing/Suppliers";
-import { requirePermissions } from "~/services/auth";
-import {
   getSuppliers,
   getSupplierStatuses,
   getSupplierTypes,
-} from "~/services/purchasing";
+} from "~/modules/purchasing";
+import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { getGenericQueryFilters } from "~/utils/query";
 import { error } from "~/utils/result";

@@ -5,7 +5,7 @@ import { memo, useMemo } from "react";
 import { BsPencilSquare, BsPlus } from "react-icons/bs";
 import { Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
-import type { Supplier } from "~/interfaces/Purchasing/types";
+import type { Supplier } from "~/modules/purchasing";
 
 type SuppliersTableProps = {
   data: Supplier[];

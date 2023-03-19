@@ -2,7 +2,7 @@ import { Button, Heading, HStack, Text, VStack } from "@chakra-ui/react";
 import { BsEnvelopeFill } from "react-icons/bs";
 import { Avatar } from "~/components";
 import { usePermissions } from "~/hooks";
-import type { Account } from "~/interfaces/Account/types";
+import type { Account } from "~/modules/account";
 
 const PersonHeader = ({ user }: { user: Account }) => {
   const permissions = usePermissions();

@@ -21,11 +21,8 @@ import {
   TextArea,
 } from "~/components/Form";
 import { usePermissions } from "~/hooks";
-import type {
-  SupplierContact,
-  SupplierLocation,
-} from "~/interfaces/Purchasing/types";
-import { supplierContactValidator } from "~/services/purchasing";
+import type { SupplierContact, SupplierLocation } from "~/modules/purchasing";
+import { supplierContactValidator } from "~/modules/purchasing";
 
 type SupplierContactFormProps = {
   contact?: SupplierContact;

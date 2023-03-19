@@ -4,10 +4,7 @@ import { Link } from "@remix-run/react";
 import { IoMdAdd } from "react-icons/io";
 import { DebouncedInput } from "~/components/Search";
 import { usePermissions, useUrlParams } from "~/hooks";
-import type {
-  SupplierStatus,
-  SupplierType,
-} from "~/interfaces/Purchasing/types";
+import type { SupplierStatus, SupplierType } from "~/modules/purchasing";
 import { mapRowsToOptions } from "~/utils/form";
 
 type SuppliersTableFiltersProps = {

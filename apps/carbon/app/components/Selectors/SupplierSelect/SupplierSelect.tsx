@@ -1,7 +1,7 @@
 import { Select, createFilter } from "@carbon/react";
 import { useFetcher } from "@remix-run/react";
 import { useEffect } from "react";
-import type { getSuppliersList } from "~/services/purchasing";
+import type { getSuppliersList } from "~/modules/purchasing";
 import { mapRowsToOptions } from "~/utils/form";
 
 type SupplierSelectProps = {

@@ -15,7 +15,7 @@ import { IoMdAdd } from "react-icons/io";
 import { Address } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions } from "~/hooks";
-import type { SupplierLocation } from "~/interfaces/Purchasing/types";
+import type { SupplierLocation } from "~/modules/purchasing";
 import SupplierLocationForm from "./SupplierLocationForm";
 
 type SupplierLocationProps = {

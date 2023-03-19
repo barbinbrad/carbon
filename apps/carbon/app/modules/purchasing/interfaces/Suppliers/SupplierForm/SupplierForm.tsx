@@ -22,17 +22,17 @@ import {
   TextArea,
   Hidden,
 } from "~/components/Form";
-import { supplierValidator } from "~/services/purchasing";
+import { usePermissions, useRouteData } from "~/hooks";
+import { supplierValidator } from "~/modules/purchasing";
 import type {
   SupplierContact,
   SupplierLocation,
   SupplierStatus,
   SupplierType,
-} from "~/interfaces/Purchasing/types";
+} from "~/modules/purchasing";
 import { mapRowsToOptions } from "~/utils/form";
-import { usePermissions, useRouteData } from "~/hooks";
-import { SupplierContacts, SupplierLocations } from "./components";
 import type { TypeOfValidator } from "~/types/validators";
+import { SupplierContacts, SupplierLocations } from "./components";
 
 type SupplierFormProps = {
   initialValues: TypeOfValidator<typeof supplierValidator>;

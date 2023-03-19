@@ -2,12 +2,12 @@ import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
-import { SupplierTypeForm } from "~/interfaces/Purchasing/SupplierTypes";
-import { requirePermissions } from "~/services/auth";
 import {
+  SupplierTypeForm,
   supplierTypeValidator,
   upsertSupplierType,
-} from "~/services/purchasing";
+} from "~/modules/purchasing";
+import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
 import { error, success } from "~/utils/result";

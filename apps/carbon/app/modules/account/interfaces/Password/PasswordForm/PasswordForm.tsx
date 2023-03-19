@@ -2,7 +2,7 @@ import { Box, VStack } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import { Password, Submit } from "~/components/Form";
-import { accountPasswordValidator } from "~/services/account";
+import { accountPasswordValidator } from "~/modules/account";
 
 const PasswordForm = () => {
   const [passwordsMatch, setPasswordsMatch] = useState(false);

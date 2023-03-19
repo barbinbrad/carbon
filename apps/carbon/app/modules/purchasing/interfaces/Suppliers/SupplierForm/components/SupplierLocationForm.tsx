@@ -14,8 +14,8 @@ import { useParams } from "@remix-run/react";
 import { ValidatedForm } from "remix-validated-form";
 import { Hidden, Input, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
-import type { SupplierLocation } from "~/interfaces/Purchasing/types";
-import { supplierLocationValidator } from "~/services/purchasing";
+import type { SupplierLocation } from "~/modules/purchasing";
+import { supplierLocationValidator } from "~/modules/purchasing";
 
 type SupplierLocationFormProps = {
   location?: SupplierLocation;

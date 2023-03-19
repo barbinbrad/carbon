@@ -11,12 +11,8 @@ import {
 } from "@chakra-ui/react";
 import { BiLockAlt } from "react-icons/bi";
 import { SectionTitle } from "~/components/Layout";
-import { ProfileForm } from "~/interfaces/Account/Profile";
-import type {
-  PublicAttributes,
-  PrivateAttributes,
-} from "~/interfaces/Account/types";
-import { UserAttributesForm } from "~/interfaces/Account/UserAttributes";
+import { ProfileForm, UserAttributesForm } from "~/modules/account";
+import type { PublicAttributes, PrivateAttributes } from "~/modules/account";
 import type { User } from "~/interfaces/Users/types";
 import { PersonJob, PersonNotes } from "~/interfaces/Resources/Person";
 import type { EmployeeJob, Note } from "~/interfaces/Resources/types";

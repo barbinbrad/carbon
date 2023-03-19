@@ -12,14 +12,11 @@ import {
 import { useNavigate, useParams } from "@remix-run/react";
 import { useState } from "react";
 import { IoMdAdd } from "react-icons/io";
-import type {
-  SupplierContact,
-  SupplierLocation,
-} from "~/interfaces/Purchasing/types";
 import { Contact } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
-import SupplierContactForm from "./SupplierContactsForm";
 import { usePermissions } from "~/hooks";
+import type { SupplierContact, SupplierLocation } from "~/modules/purchasing";
+import SupplierContactForm from "./SupplierContactsForm";
 
 type SupplierContactProps = {
   contacts?: SupplierContact[];

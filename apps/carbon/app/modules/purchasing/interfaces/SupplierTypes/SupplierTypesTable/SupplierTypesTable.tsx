@@ -6,7 +6,7 @@ import { BsPencilSquare, BsPeopleFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
-import type { SupplierType } from "~/interfaces/Purchasing/types";
+import type { SupplierType } from "~/modules/purchasing";
 
 type SupplierTypesTableProps = {
   data: SupplierType[];

@@ -3,13 +3,13 @@ import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
-import { SupplierTypeForm } from "~/interfaces/Purchasing/SupplierTypes";
-import { requirePermissions } from "~/services/auth";
 import {
-  supplierTypeValidator,
+  SupplierTypeForm,
   getSupplierType,
+  supplierTypeValidator,
   upsertSupplierType,
-} from "~/services/purchasing";
+} from "~/modules/purchasing";
+import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
 import { error, success } from "~/utils/result";
@@ -25,6 +25,15 @@ export async function loader({ request, params }: LoaderArgs) {
 
   const supplierType = await getSupplierType(client, supplierTypeId);
 
+  if (supplierType.error) {
+    return redirect(
+      "/x/purchasing/supplier-types",
+      await flash(
+        request,
+        error(supplierType.error, "Failed to get supplier type")
+      )
+    );
+  }
   if (supplierType?.data?.protected) {
     return redirect(
       "/x/purchasing/supplier-types",
@@ -33,7 +42,7 @@ export async function loader({ request, params }: LoaderArgs) {
   }
 
   return json({
-    supplierType,
+    supplierType: supplierType.data,
   });
 }
 
@@ -79,9 +88,9 @@ export default function EditSupplierTypesRoute() {
   const { supplierType } = useLoaderData<typeof loader>();
 
   const initialValues = {
-    id: supplierType.data?.id ?? undefined,
-    name: supplierType.data?.name ?? "",
-    color: supplierType.data?.color ?? "#000000",
+    id: supplierType.id ?? undefined,
+    name: supplierType.name ?? "",
+    color: supplierType.color ?? "#000000",
   };
 
   return <SupplierTypeForm initialValues={initialValues} />;

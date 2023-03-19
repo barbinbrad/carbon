@@ -22,8 +22,7 @@ const GroupedContentSidebar = ({ groups }: { groups: RouteGroup[] }) => {
                 borderBottomStyle={"solid"}
                 borderBottomWidth={1}
                 borderBottomColor={borderColor}
-                px={2}
-                py={4}
+                p={2}
                 w="full"
               >
                 <Text

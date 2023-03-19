@@ -322,7 +322,7 @@ export async function getEmployeeJob(
 ) {
   return client
     .from("employeeJob")
-    .select("title, locationId, shiftId, managerId")
+    .select("title, locationId, shiftId, managerId, startDate")
     .eq("id", employeeId)
     .single();
 }
@@ -913,6 +913,7 @@ export async function upsertEmployeeJob(
   employeeId: string,
   employeeJob: {
     title: string | null;
+    startDate: string | null;
     locationId: string | null;
     shiftId: string | null;
     managerId: string | null;

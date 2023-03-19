@@ -128,10 +128,12 @@ export async function action({ request, params }: ActionArgs) {
       return validationError(validation.error);
     }
 
-    const { title, locationId, shiftId, managerId } = validation.data;
+    const { title, startDate, locationId, shiftId, managerId } =
+      validation.data;
 
     const updateJob = await upsertEmployeeJob(client, personId, {
       title: title ?? null,
+      startDate: startDate ?? null,
       locationId: locationId ?? null,
       shiftId: shiftId ?? null,
       managerId: managerId ?? null,

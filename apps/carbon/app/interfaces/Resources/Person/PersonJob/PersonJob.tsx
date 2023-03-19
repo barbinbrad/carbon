@@ -9,7 +9,14 @@ import {
 import { useFetcher } from "@remix-run/react";
 import { useEffect, useMemo, useState } from "react";
 import { useControlField, useField, ValidatedForm } from "remix-validated-form";
-import { Employee, Hidden, Input, Location, Submit } from "~/components/Form";
+import {
+  DatePicker,
+  Employee,
+  Hidden,
+  Input,
+  Location,
+  Submit,
+} from "~/components/Form";
 import { SectionTitle } from "~/components/Layout";
 import type { EmployeeJob } from "~/interfaces/Resources/types";
 import type { getShiftsList } from "~/services/resources";
@@ -60,6 +67,7 @@ const PersonJob = ({ job }: PersonJobProps) => {
         <SectionTitle title="Job" />
         <VStack w="full" alignItems="start" spacing={4}>
           <Input name="title" label="Title" />
+          <DatePicker name="startDate" label="Start Date" />
           <Location
             name="locationId"
             label="Location"

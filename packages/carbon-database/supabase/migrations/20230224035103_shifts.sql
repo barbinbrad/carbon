@@ -142,6 +142,7 @@ CREATE TABLE "employeeJob" (
   "shiftId" TEXT,
   "managerId" TEXT,
   "title" TEXT,
+  "startDate" DATE,
 
   CONSTRAINT "employeeJob_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "employeeJob_id_fkey" FOREIGN KEY ("id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE,

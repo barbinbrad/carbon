@@ -17,12 +17,12 @@ const resourcesRoutes: RouteGroup[] = [
         to: "/x/resources/equipment",
       },
       {
-        name: "Facilities",
-        to: "/x/resources/facilities",
+        name: "Partners",
+        to: "/x/resources/partners",
       },
       {
-        name: "Crews",
-        to: "/x/resources/crews",
+        name: "Work Cells",
+        to: "/x/resources/work-cells",
       },
     ],
   },
@@ -52,10 +52,6 @@ const resourcesRoutes: RouteGroup[] = [
       {
         name: "Shifts",
         to: "/x/resources/shifts",
-      },
-      {
-        name: "Work Cells",
-        to: "/x/resources/work-cells",
       },
     ],
   },

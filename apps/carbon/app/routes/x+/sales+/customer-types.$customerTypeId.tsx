@@ -3,13 +3,13 @@ import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
-import { CustomerTypeForm } from "~/interfaces/Sales/CustomerTypes";
+import { CustomerTypeForm } from "~/modules/sales";
 import { requirePermissions } from "~/services/auth";
 import {
   customerTypeValidator,
   getCustomerType,
   upsertCustomerType,
-} from "~/services/sales";
+} from "~/modules/sales";
 import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
 import { error, success } from "~/utils/result";

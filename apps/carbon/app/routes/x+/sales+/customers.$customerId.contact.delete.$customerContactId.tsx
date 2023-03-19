@@ -1,7 +1,7 @@
 import type { ActionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
+import { deleteCustomerContact } from "~/modules/sales";
 import { requirePermissions } from "~/services/auth";
-import { deleteCustomerContact } from "~/services/sales";
 import { flash } from "~/services/session";
 import { error, success } from "~/utils/result";
 

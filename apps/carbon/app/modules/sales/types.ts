@@ -4,7 +4,7 @@ import type {
   getCustomers,
   getCustomerStatuses,
   getCustomerTypes,
-} from "~/services/sales";
+} from "./services";
 
 export type Customer = NonNullable<
   Awaited<ReturnType<typeof getCustomers>>["data"]

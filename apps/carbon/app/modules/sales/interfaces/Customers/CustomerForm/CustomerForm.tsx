@@ -22,13 +22,13 @@ import {
   TextArea,
   Hidden,
 } from "~/components/Form";
-import { customerValidator } from "~/services/sales";
+import { customerValidator } from "~/modules/sales";
 import type {
   CustomerContact,
   CustomerLocation,
   CustomerStatus,
   CustomerType,
-} from "~/interfaces/Sales/types";
+} from "~/modules/sales";
 import { mapRowsToOptions } from "~/utils/form";
 import { usePermissions, useRouteData } from "~/hooks";
 import { CustomerContacts, CustomerLocations } from "./components";

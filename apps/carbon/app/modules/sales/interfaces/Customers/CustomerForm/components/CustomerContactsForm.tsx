@@ -21,11 +21,8 @@ import {
   TextArea,
 } from "~/components/Form";
 import { usePermissions } from "~/hooks";
-import type {
-  CustomerContact,
-  CustomerLocation,
-} from "~/interfaces/Sales/types";
-import { customerContactValidator } from "~/services/sales";
+import type { CustomerContact, CustomerLocation } from "~/modules/sales";
+import { customerContactValidator } from "~/modules/sales";
 
 type CustomerContactFormProps = {
   contact?: CustomerContact;

@@ -1,9 +1,12 @@
 import type { ActionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
-import { CustomerForm } from "~/interfaces/Sales/Customers";
+import {
+  CustomerForm,
+  insertCustomer,
+  customerValidator,
+} from "~/modules/sales";
 import { requirePermissions } from "~/services/auth";
-import { insertCustomer, customerValidator } from "~/services/sales";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
 import { error, success } from "~/utils/result";

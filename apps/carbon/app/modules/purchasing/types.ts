@@ -4,7 +4,7 @@ import type {
   getSuppliers,
   getSupplierStatuses,
   getSupplierTypes,
-} from "~/modules/purchasing";
+} from "./services";
 
 export type Supplier = NonNullable<
   Awaited<ReturnType<typeof getSuppliers>>["data"]

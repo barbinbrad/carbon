@@ -5,9 +5,9 @@ import { Outlet, useLoaderData } from "@remix-run/react";
 import {
   CustomerTypesTable,
   CustomerTypesTableFilters,
-} from "~/interfaces/Sales/CustomerTypes";
+  getCustomerTypes,
+} from "~/modules/sales";
 import { requirePermissions } from "~/services/auth";
-import { getCustomerTypes } from "~/services/sales";
 import { getGenericQueryFilters } from "~/utils/query";
 
 export async function loader({ request }: LoaderArgs) {

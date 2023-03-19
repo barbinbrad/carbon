@@ -1,17 +1,16 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
-import { CustomerForm } from "~/interfaces/Sales/Customers";
-import { requirePermissions } from "~/services/auth";
 import {
+  CustomerForm,
   getCustomer,
   getCustomerContacts,
   getCustomerLocations,
   customerValidator,
   updateCustomer,
-} from "~/services/sales";
+} from "~/modules/sales";
+import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
 import { error, success } from "~/utils/result";

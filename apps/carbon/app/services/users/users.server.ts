@@ -16,7 +16,7 @@ import {
   sendInviteByEmail,
   sendMagicLink,
 } from "~/services/auth";
-import { getCustomerContact } from "~/services/sales";
+import { getCustomerContact } from "~/modules/sales";
 import { requireAuthSession, flash } from "~/services/session";
 import type { Result } from "~/types";
 import type { GenericQueryFilters } from "~/utils/query";

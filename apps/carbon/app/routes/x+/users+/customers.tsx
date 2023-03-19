@@ -9,7 +9,7 @@ import {
   CustomerAccountsTableFilters,
 } from "~/interfaces/Users/Customers";
 import { requirePermissions } from "~/services/auth";
-import { getCustomerTypes } from "~/services/sales";
+import { getCustomerTypes } from "~/modules/sales";
 import { flash } from "~/services/session";
 import { getCustomers } from "~/services/users";
 import { getGenericQueryFilters } from "~/utils/query";

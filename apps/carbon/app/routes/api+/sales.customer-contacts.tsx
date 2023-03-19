@@ -1,7 +1,7 @@
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
+import { getCustomerContacts } from "~/modules/sales";
 import { requirePermissions } from "~/services/auth";
-import { getCustomerContacts } from "~/services/sales";
 import { flash } from "~/services/session";
 import { error } from "~/utils/result";
 

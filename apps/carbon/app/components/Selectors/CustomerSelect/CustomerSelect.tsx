@@ -1,7 +1,7 @@
 import { Select, createFilter } from "@carbon/react";
 import { useFetcher } from "@remix-run/react";
 import { useEffect } from "react";
-import type { getCustomersList } from "~/services/sales";
+import type { getCustomersList } from "~/modules/sales";
 import { mapRowsToOptions } from "~/utils/form";
 
 type CustomerSelectProps = {

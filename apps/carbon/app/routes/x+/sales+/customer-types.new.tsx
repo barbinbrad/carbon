@@ -2,9 +2,12 @@ import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
-import { CustomerTypeForm } from "~/interfaces/Sales/CustomerTypes";
+import {
+  CustomerTypeForm,
+  customerTypeValidator,
+  upsertCustomerType,
+} from "~/modules/sales";
 import { requirePermissions } from "~/services/auth";
-import { customerTypeValidator, upsertCustomerType } from "~/services/sales";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
 import { error, success } from "~/utils/result";

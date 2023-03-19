@@ -6,7 +6,7 @@ import { BsPencilSquare, BsPeopleFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
-import type { CustomerType } from "~/interfaces/Sales/types";
+import type { CustomerType } from "~/modules/sales";
 
 type CustomerTypesTableProps = {
   data: CustomerType[];

@@ -2,7 +2,7 @@ import { Grid, VStack } from "@chakra-ui/react";
 import type { MetaFunction } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 import { GroupedContentSidebar } from "~/components/Layout/Sidebar";
-import { useSalesSidebar } from "~/interfaces/Sales";
+import { useSalesSidebar } from "~/modules/sales";
 
 export const meta: MetaFunction = () => ({
   title: "Carbon | Sales",

@@ -15,7 +15,7 @@ import { IoMdAdd } from "react-icons/io";
 import { Address } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions } from "~/hooks";
-import type { CustomerLocation } from "~/interfaces/Sales/types";
+import type { CustomerLocation } from "~/modules/sales";
 import CustomerLocationForm from "./CustomerLocationForm";
 
 type CustomerLocationProps = {

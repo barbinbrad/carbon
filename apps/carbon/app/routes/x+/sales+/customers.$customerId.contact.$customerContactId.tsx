@@ -1,11 +1,11 @@
 import type { ActionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
-import { requirePermissions } from "~/services/auth";
 import {
   updateCustomerContact,
   customerContactValidator,
-} from "~/services/sales";
+} from "~/modules/sales";
+import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, badRequest, notFound } from "~/utils/http";
 import { error, success } from "~/utils/result";

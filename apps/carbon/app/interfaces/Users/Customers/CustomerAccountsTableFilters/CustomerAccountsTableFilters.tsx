@@ -4,7 +4,7 @@ import { Link } from "@remix-run/react";
 import { IoMdAdd } from "react-icons/io";
 import { DebouncedInput } from "~/components/Search";
 import { usePermissions, useUrlParams } from "~/hooks";
-import type { CustomerType } from "~/interfaces/Sales/types";
+import type { CustomerType } from "~/modules/sales";
 import { mapRowsToOptions } from "~/utils/form";
 
 type CustomerAccountsTableFiltersProps = {

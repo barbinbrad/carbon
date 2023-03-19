@@ -5,7 +5,7 @@ import { memo, useMemo } from "react";
 import { BsPencilSquare, BsPlus } from "react-icons/bs";
 import { Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
-import type { Customer } from "~/interfaces/Sales/types";
+import type { Customer } from "~/modules/sales";
 
 type CustomersTableProps = {
   data: Customer[];

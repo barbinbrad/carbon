@@ -25,7 +25,7 @@ export function links() {
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
   title: "Carbon ERP",
-  viewport: "width=device-width,initial-scale=1",
+  viewport: "width=device-width",
 });
 
 interface DocumentProps {

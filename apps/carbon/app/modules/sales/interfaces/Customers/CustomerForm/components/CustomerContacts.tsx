@@ -12,14 +12,11 @@ import {
 import { useNavigate, useParams } from "@remix-run/react";
 import { useState } from "react";
 import { IoMdAdd } from "react-icons/io";
-import type {
-  CustomerContact,
-  CustomerLocation,
-} from "~/interfaces/Sales/types";
 import { Contact } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
-import CustomerContactForm from "./CustomerContactsForm";
+import type { CustomerContact, CustomerLocation } from "~/modules/sales";
 import { usePermissions } from "~/hooks";
+import CustomerContactForm from "./CustomerContactsForm";
 
 type CustomerContactProps = {
   contacts?: CustomerContact[];

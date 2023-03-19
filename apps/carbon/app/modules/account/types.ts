@@ -1,4 +1,4 @@
-import type { getAccount, getPublicAttributes } from "~/modules/account";
+import type { getAccount, getPublicAttributes } from "./services";
 
 export type Account = NonNullable<
   Awaited<ReturnType<typeof getAccount>>["data"]

@@ -9,7 +9,7 @@ import {
 import { useFetcher } from "@remix-run/react";
 import { useEffect, useMemo } from "react";
 import { useField } from "remix-validated-form";
-import type { getCustomersList } from "~/services/sales";
+import type { getCustomersList } from "~/modules/sales";
 import { mapRowsToOptions } from "~/utils/form";
 import type { SelectProps } from "./Select";
 

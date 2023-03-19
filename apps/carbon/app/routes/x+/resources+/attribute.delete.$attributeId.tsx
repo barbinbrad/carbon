@@ -1,7 +1,7 @@
 import type { LoaderArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
+import { deleteAttribute } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
-import { deleteAttribute } from "~/services/resources";
 import { flash } from "~/services/session";
 import { error, success } from "~/utils/result";
 

@@ -2,13 +2,13 @@ import type { ActionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { useNavigate } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
-import { EquipmentTypeForm } from "~/interfaces/Resources/Equipment";
 import { requirePermissions } from "~/services/auth";
-import { flash } from "~/services/session";
 import {
+  EquipmentTypeForm,
   equipmentTypeValidator,
   upsertEquipmentType,
-} from "~/services/resources";
+} from "~/modules/resources";
+import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
 import { error, success } from "~/utils/result";
 

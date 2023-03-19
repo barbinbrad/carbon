@@ -3,14 +3,14 @@ import { json } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
-import { DepartmentForm } from "~/interfaces/Resources/Departments";
+import {
+  DepartmentForm,
+  departmentValidator,
+  getDepartment,
+  upsertDepartment,
+} from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
-import {
-  getDepartment,
-  departmentValidator,
-  upsertDepartment,
-} from "~/services/resources";
 import { assertIsPost, notFound } from "~/utils/http";
 import { error, success } from "~/utils/result";
 

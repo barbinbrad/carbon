@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "@remix-run/react";
 import { useRouteData } from "~/hooks";
-import { EquipmentForm } from "~/interfaces/Resources/Equipment";
-import type { EquipmentType } from "~/interfaces/Resources/types";
+import { EquipmentForm } from "~/modules/resources";
+import type { EquipmentType } from "~/modules/resources";
 
 export default function NewEquipmentRoute() {
   const { typeId } = useParams();

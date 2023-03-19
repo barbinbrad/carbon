@@ -2,17 +2,17 @@ import type { ActionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
-import { AbilityForm } from "~/interfaces/Resources/Abilities";
-import { assertIsPost } from "~/utils/http";
-import { error, success } from "~/utils/result";
-import { requirePermissions } from "~/services/auth";
-import { flash } from "~/services/session";
 import {
+  AbilityForm,
   abilityValidator,
   deleteAbility,
   insertAbility,
   insertEmployeeAbilities,
-} from "~/services/resources";
+} from "~/modules/resources";
+import { requirePermissions } from "~/services/auth";
+import { flash } from "~/services/session";
+import { assertIsPost } from "~/utils/http";
+import { error, success } from "~/utils/result";
 
 function makeCurve(startingPoint: number, weeks: number) {
   return {

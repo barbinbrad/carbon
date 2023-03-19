@@ -2,9 +2,12 @@ import { getLocalTimeZone } from "@internationalized/date";
 import type { ActionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
-import { LocationForm } from "~/interfaces/Resources/Locations";
+import {
+  LocationForm,
+  locationValidator,
+  upsertLocation,
+} from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
-import { locationValidator, upsertLocation } from "~/services/resources";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
 import { error, success } from "~/utils/result";

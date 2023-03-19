@@ -6,10 +6,11 @@ import { Outlet, useLoaderData } from "@remix-run/react";
 import {
   HolidaysTable,
   HolidaysTableFilters,
-} from "~/interfaces/Resources/Holidays";
+  getHolidays,
+  getHolidayYears,
+} from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
-import { getHolidays, getHolidayYears } from "~/services/resources";
 import { getGenericQueryFilters } from "~/utils/query";
 import { error } from "~/utils/result";
 

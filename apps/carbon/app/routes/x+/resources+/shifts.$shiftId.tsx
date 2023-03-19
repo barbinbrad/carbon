@@ -3,10 +3,14 @@ import { json } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
-import { ShiftForm } from "~/interfaces/Resources/Shifts";
+import {
+  ShiftForm,
+  getShift,
+  shiftValidator,
+  upsertShift,
+} from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
-import { getShift, shiftValidator, upsertShift } from "~/services/resources";
 import { assertIsPost, notFound } from "~/utils/http";
 import { error, success } from "~/utils/result";
 

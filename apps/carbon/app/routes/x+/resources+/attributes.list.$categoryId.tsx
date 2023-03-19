@@ -2,13 +2,13 @@ import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Outlet, useLoaderData, useNavigate } from "@remix-run/react";
 import { useUrlParams } from "~/hooks";
-import { AttributeCategoryDetail } from "~/interfaces/Resources/Attributes";
-import { requirePermissions } from "~/services/auth";
-import { flash } from "~/services/session";
 import {
+  AttributeCategoryDetail,
   getAttributeCategory,
   updateAttributeSortOrder,
-} from "~/services/resources";
+} from "~/modules/resources";
+import { requirePermissions } from "~/services/auth";
+import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
 import { error } from "~/utils/result";
 

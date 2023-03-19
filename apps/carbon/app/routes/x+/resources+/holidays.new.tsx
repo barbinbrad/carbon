@@ -1,9 +1,12 @@
 import type { ActionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
-import { HolidayForm } from "~/interfaces/Resources/Holidays";
 import { requirePermissions } from "~/services/auth";
-import { holidayValidator, upsertHoliday } from "~/services/resources";
+import {
+  HolidayForm,
+  holidayValidator,
+  upsertHoliday,
+} from "~/modules/resources";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
 import { error, success } from "~/utils/result";

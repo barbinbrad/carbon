@@ -1,14 +1,13 @@
 import { VStack } from "@chakra-ui/react";
 import type { LoaderArgs } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import {
   WorkCellTypesTable,
   WorkCellTypesTableFilters,
-} from "~/interfaces/Resources/WorkCells";
+  getWorkCellTypes,
+} from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
-import { getWorkCellTypes } from "~/services/resources";
 import { flash } from "~/services/session";
 import { getGenericQueryFilters } from "~/utils/query";
 import { error } from "~/utils/result";

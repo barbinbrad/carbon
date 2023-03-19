@@ -3,7 +3,7 @@ import { json } from "@remix-run/node";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { deleteUserAttributeValue } from "~/modules/account";
-import { getAttribute } from "~/services/resources";
+import { getAttribute } from "~/modules/resources";
 import { getUserClaims } from "~/services/users";
 import { assertIsPost } from "~/utils/http";
 import { error, success } from "~/utils/result";

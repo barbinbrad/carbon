@@ -6,9 +6,9 @@ import { Outlet, useLoaderData } from "@remix-run/react";
 import {
   EquipmentTypesTable,
   EquipmentTypesTableFilters,
-} from "~/interfaces/Resources/Equipment";
+  getEquipmentTypes,
+} from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
-import { getEquipmentTypes } from "~/services/resources";
 import { flash } from "~/services/session";
 import { getGenericQueryFilters } from "~/utils/query";
 import { error } from "~/utils/result";

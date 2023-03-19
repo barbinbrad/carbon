@@ -3,14 +3,14 @@ import { redirect } from "@remix-run/node";
 import { useNavigate, useParams } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
 import { useRouteData } from "~/hooks";
-import { EmployeeAbilityForm } from "~/interfaces/Resources/Abilities";
-import type { Ability } from "~/interfaces/Resources/types";
-import { AbilityEmployeeStatus } from "~/interfaces/Resources/types";
+import { EmployeeAbilityForm } from "~/modules/resources/interfaces/Abilities";
+import type { Ability } from "~/modules/resources";
+import { AbilityEmployeeStatus } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import {
   employeeAbilityValidator,
   upsertEmployeeAbility,
-} from "~/services/resources";
+} from "~/modules/resources";
 import { flash } from "~/services/session";
 import { error, success } from "~/utils/result";
 
@@ -74,6 +74,7 @@ export default function NewEmployeeAbilityRoute() {
   return (
     <EmployeeAbilityForm
       initialValues={{
+        // @ts-expect-error
         employeeId: undefined,
       }}
       ability={abilitiesRouteData?.ability}

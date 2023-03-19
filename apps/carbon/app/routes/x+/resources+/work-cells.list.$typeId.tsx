@@ -2,10 +2,9 @@ import type { LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Outlet, useLoaderData, useNavigate } from "@remix-run/react";
 import { useUrlParams } from "~/hooks";
-import { WorkCellTypeDetail } from "~/interfaces/Resources/WorkCells";
+import { WorkCellTypeDetail, getWorkCellType } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
-import { getWorkCellType } from "~/services/resources";
 import { notFound } from "~/utils/http";
 import { error } from "~/utils/result";
 

@@ -3,8 +3,8 @@ import { json } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { useLoaderData, useNavigate, useParams } from "@remix-run/react";
 import { ConfirmDelete } from "~/components/Modals";
+import { deleteWorkCell, getWorkCell } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
-import { deleteWorkCell, getWorkCell } from "~/services/resources";
 import { flash } from "~/services/session";
 import { error, success } from "~/utils/result";
 

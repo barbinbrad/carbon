@@ -3,14 +3,14 @@ import { json } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
-import { HolidayForm } from "~/interfaces/Resources/Holidays";
-import { requirePermissions } from "~/services/auth";
-import { flash } from "~/services/session";
 import {
+  HolidayForm,
   getHoliday,
   holidayValidator,
   upsertHoliday,
-} from "~/services/resources";
+} from "~/modules/resources";
+import { requirePermissions } from "~/services/auth";
+import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
 import { error, success } from "~/utils/result";
 

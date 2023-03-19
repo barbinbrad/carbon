@@ -1,15 +1,14 @@
 import { VStack } from "@chakra-ui/react";
 import type { LoaderArgs } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import {
   AbilitiesTable,
   AbilitiesTableFilters,
-} from "~/interfaces/Resources/Abilities";
+  getAbilities,
+} from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
-import { getAbilities } from "~/services/resources";
 import { getGenericQueryFilters } from "~/utils/query";
 import { error } from "~/utils/result";
 

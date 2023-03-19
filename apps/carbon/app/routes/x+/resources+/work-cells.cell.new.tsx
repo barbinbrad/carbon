@@ -2,9 +2,9 @@ import type { ActionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
+import { workCellValidator, upsertWorkCell } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
-import { workCellValidator, upsertWorkCell } from "~/services/resources";
 import { assertIsPost } from "~/utils/http";
 import { error, success } from "~/utils/result";
 

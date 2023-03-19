@@ -2,14 +2,14 @@ import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { redirect, json } from "@remix-run/node";
 import { useLoaderData, useNavigate } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
-import { AttributeCategoryForm } from "~/interfaces/Resources/Attributes";
-import { requirePermissions } from "~/services/auth";
-import { flash } from "~/services/session";
 import {
+  AttributeCategoryForm,
   attributeCategoryValidator,
   getAttributeCategory,
   updateAttributeCategory,
-} from "~/services/resources";
+} from "~/modules/resources";
+import { requirePermissions } from "~/services/auth";
+import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
 import { error, success } from "~/utils/result";
 

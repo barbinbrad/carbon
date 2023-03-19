@@ -6,10 +6,10 @@ import { Outlet, useLoaderData } from "@remix-run/react";
 import {
   LocationsTable,
   LocationsTableFilters,
-} from "~/interfaces/Resources/Locations";
+  getLocations,
+} from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
-import { getLocations } from "~/services/resources";
 import { getGenericQueryFilters } from "~/utils/query";
 import { error } from "~/utils/result";
 

@@ -3,9 +3,9 @@ import { redirect } from "@remix-run/node";
 import { useNavigate, useParams } from "@remix-run/react";
 import { ConfirmDelete } from "~/components/Modals";
 import { useRouteData } from "~/hooks";
-import type { Ability } from "~/interfaces/Resources/types";
+import type { Ability } from "~/modules/resources";
+import { deleteEmployeeAbility } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
-import { deleteEmployeeAbility } from "~/services/resources";
 import { flash } from "~/services/session";
 import { error, success } from "~/utils/result";
 

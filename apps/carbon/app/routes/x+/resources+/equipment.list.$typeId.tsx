@@ -2,10 +2,9 @@ import type { LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Outlet, useLoaderData, useNavigate } from "@remix-run/react";
 import { useUrlParams } from "~/hooks";
-import { EquipmentTypeDetail } from "~/interfaces/Resources/Equipment";
+import { EquipmentTypeDetail, getEquipmentType } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
-import { getEquipmentType } from "~/services/resources";
 import { notFound } from "~/utils/http";
 import { error } from "~/utils/result";
 

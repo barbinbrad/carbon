@@ -26,15 +26,13 @@ import { Hidden, Input, Submit } from "~/components/Form";
 import {
   AbilityChart,
   AbilityEmployeesTable,
-} from "~/interfaces/Resources/Abilities";
-import type { AbilityDatum } from "~/interfaces/Resources/types";
-import { requirePermissions } from "~/services/auth";
-import {
+  abilityCurveValidator,
   abilityNameValidator,
   getAbility,
   updateAbility,
-  abilityCurveValidator,
-} from "~/services/resources";
+} from "~/modules/resources";
+import type { AbilityDatum } from "~/modules/resources";
+import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { error, success } from "~/utils/result";
 

@@ -1,7 +1,7 @@
 import type { LoaderArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
+import { deleteWorkCellType } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
-import { deleteWorkCellType } from "~/services/resources";
 import { flash } from "~/services/session";
 import { error, success } from "~/utils/result";
 

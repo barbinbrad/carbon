@@ -3,10 +3,14 @@ import type { LoaderArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
-import { ShiftsTable, ShiftsTableFilters } from "~/interfaces/Resources/Shifts";
+import {
+  ShiftsTable,
+  ShiftsTableFilters,
+  getLocations,
+  getShifts,
+} from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
-import { getLocations, getShifts } from "~/services/resources";
 import { getGenericQueryFilters } from "~/utils/query";
 import { error } from "~/utils/result";
 

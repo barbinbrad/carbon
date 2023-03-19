@@ -3,16 +3,16 @@ import { redirect } from "@remix-run/node";
 import { useLoaderData, useNavigate, useParams } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
 import { useRouteData } from "~/hooks";
-import { EmployeeAbilityForm } from "~/interfaces/Resources/Abilities";
-import type { Ability } from "~/interfaces/Resources/types";
-import { getTrainingStatus } from "~/interfaces/Resources/types";
-import { AbilityEmployeeStatus } from "~/interfaces/Resources/types";
-import { requirePermissions } from "~/services/auth";
+import { EmployeeAbilityForm } from "~/modules/resources/interfaces/Abilities";
+import type { Ability } from "~/modules/resources";
 import {
+  AbilityEmployeeStatus,
   employeeAbilityValidator,
   getEmployeeAbility,
+  getTrainingStatus,
   upsertEmployeeAbility,
-} from "~/services/resources";
+} from "~/modules/resources";
+import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { error, success } from "~/utils/result";
 
@@ -104,9 +104,10 @@ export default function EmployeeAbilityRoute() {
   if (Array.isArray(employeeAbility?.user)) {
     throw new Error("employeeAbility.user is an array");
   }
+
   const initialValues = {
-    employeeId: employeeAbility?.user?.id,
-    trainingStatus: getTrainingStatus(employeeAbility),
+    employeeId: employeeAbility?.user?.id ?? "",
+    trainingStatus: getTrainingStatus(employeeAbility) ?? "",
     trainingPercent: getTrainingPercent(
       employeeAbility?.trainingDays,
       routeData?.weeks

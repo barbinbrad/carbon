@@ -6,10 +6,10 @@ import { Outlet, useLoaderData } from "@remix-run/react";
 import {
   DepartmentsTable,
   DepartmentsTableFilters,
-} from "~/interfaces/Resources/Departments";
+  getDepartments,
+} from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
-import { getDepartments } from "~/services/resources";
 import { getGenericQueryFilters } from "~/utils/query";
 import { error } from "~/utils/result";
 

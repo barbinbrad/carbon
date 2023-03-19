@@ -10,7 +10,7 @@ import {
 } from "~/modules/account";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
-import { getAttribute } from "~/services/resources";
+import { getAttribute } from "~/modules/resources";
 import { getUserClaims } from "~/services/users";
 import { assertIsPost } from "~/utils/http";
 import { error, success } from "~/utils/result";

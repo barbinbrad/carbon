@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "@remix-run/react";
 import { useRouteData } from "~/hooks";
-import { WorkCellForm } from "~/interfaces/Resources/WorkCells";
-import type { WorkCellType } from "~/interfaces/Resources/types";
+import { WorkCellForm } from "~/modules/resources";
+import type { WorkCellType } from "~/modules/resources";
 
 export default function NewWorkCellRoute() {
   const { typeId } = useParams();

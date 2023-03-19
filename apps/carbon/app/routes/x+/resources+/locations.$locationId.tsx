@@ -3,14 +3,14 @@ import { json } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
-import { LocationForm } from "~/interfaces/Resources/Locations";
-import { requirePermissions } from "~/services/auth";
-import { flash } from "~/services/session";
 import {
+  LocationForm,
   getLocation,
   locationValidator,
   upsertLocation,
-} from "~/services/resources";
+} from "~/modules/resources";
+import { requirePermissions } from "~/services/auth";
+import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
 import { error, success } from "~/utils/result";
 import { getLocalTimeZone } from "@internationalized/date";

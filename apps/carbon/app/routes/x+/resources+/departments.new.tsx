@@ -1,9 +1,12 @@
 import type { ActionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
-import { DepartmentForm } from "~/interfaces/Resources/Departments";
+import {
+  DepartmentForm,
+  departmentValidator,
+  upsertDepartment,
+} from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
-import { departmentValidator, upsertDepartment } from "~/services/resources";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
 import { error, success } from "~/utils/result";

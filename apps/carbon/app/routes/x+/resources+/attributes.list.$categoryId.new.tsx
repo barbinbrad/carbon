@@ -1,7 +1,8 @@
 import { useNavigate, useParams } from "@remix-run/react";
 import { useRouteData } from "~/hooks";
-import { AttributeForm } from "~/interfaces/Resources/Attributes";
-import type { AttributeDataType } from "~/interfaces/Resources/types";
+import { AttributeForm } from "~/modules/resources";
+import type { AttributeDataType } from "~/modules/resources";
+import { DataType } from "~/interfaces/Users/types";
 
 export default function NewAttributeRoute() {
   const { categoryId } = useParams();
@@ -17,7 +18,7 @@ export default function NewAttributeRoute() {
     <AttributeForm
       initialValues={{
         name: "",
-        attributeDataTypeId: undefined,
+        attributeDataTypeId: DataType.Text,
         userAttributeCategoryId: categoryId,
         canSelfManage: true,
       }}

@@ -1,7 +1,7 @@
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
+import { getWorkCellList } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
-import { getWorkCellList } from "~/services/resources";
 
 export async function loader({ request }: LoaderArgs) {
   const authorized = await requirePermissions(request, {

@@ -1,9 +1,8 @@
 import type { ActionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
-import { ShiftForm } from "~/interfaces/Resources/Shifts";
+import { ShiftForm, shiftValidator, upsertShift } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
-import { shiftValidator, upsertShift } from "~/services/resources";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
 import { error, success } from "~/utils/result";
@@ -48,6 +47,8 @@ export default function NewShiftRoute() {
     friday: true,
     saturday: false,
     sunday: false,
+    startTime: "08:00",
+    endTime: "17:00",
   };
 
   return <ShiftForm initialValues={initialValues} />;

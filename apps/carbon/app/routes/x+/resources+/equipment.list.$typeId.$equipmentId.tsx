@@ -3,10 +3,9 @@ import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData, useNavigate, useParams } from "@remix-run/react";
 import { useRouteData } from "~/hooks";
-import { EquipmentForm } from "~/interfaces/Resources/Equipment";
-import type { EquipmentType } from "~/interfaces/Resources/types";
+import type { EquipmentType } from "~/modules/resources";
+import { EquipmentForm, getEquipment } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
-import { getEquipment } from "~/services/resources";
 import { flash } from "~/services/session";
 import { notFound } from "~/utils/http";
 import { error } from "~/utils/result";
@@ -47,6 +46,7 @@ export default function EditEquipmentRoute() {
     !equipment ||
     !typeId ||
     Array.isArray(equipment.equipmentType) ||
+    Array.isArray(equipment.location) ||
     Array.isArray(equipment.workCell)
   ) {
     return null;
@@ -58,6 +58,7 @@ export default function EditEquipmentRoute() {
         id: equipment?.id,
         name: equipment?.name ?? "",
         description: equipment?.description ?? "",
+        locationId: equipment?.location?.id ?? "",
         equipmentTypeId: equipment?.equipmentType?.id ?? typeId,
         operatorsRequired: equipment?.operatorsRequired ?? 1,
         setupHours: equipment?.setupHours ?? 0,

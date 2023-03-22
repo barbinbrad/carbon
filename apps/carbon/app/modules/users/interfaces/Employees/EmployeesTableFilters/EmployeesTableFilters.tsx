@@ -39,7 +39,7 @@ const EmployeesTableFilters = ({
           param="name"
           size="sm"
           minW={180}
-          placeholder="Search by name"
+          placeholder="Filter by name"
         />
         <Select
           // @ts-ignore

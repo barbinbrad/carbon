@@ -82,8 +82,6 @@ const SearchModal = ({
           ? tokens.map((token) => `"${token}"`).join(" <-> ")
           : q;
 
-      console.log(supabase);
-
       const result = await supabase
         ?.from("search")
         .select()

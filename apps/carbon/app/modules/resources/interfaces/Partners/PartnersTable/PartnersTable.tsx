@@ -1,4 +1,4 @@
-import { MenuItem } from "@chakra-ui/react";
+import { Avatar, HStack, Link, MenuItem } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
@@ -22,12 +22,12 @@ const PartnersTable = memo(({ data, count }: PartnersTableProps) => {
     if (Array.isArray(row.supplier)) {
       return {
         ...row,
-        supplier: row.supplier[0].name,
+        supplierName: row.supplier[0].name,
       };
     }
     return {
       ...row,
-      supplier: row.supplier?.name,
+      supplierName: row.supplier?.name,
     };
   });
 
@@ -36,7 +36,19 @@ const PartnersTable = memo(({ data, count }: PartnersTableProps) => {
       {
         accessorKey: "supplier",
         header: "Supplier",
-        cell: (item) => item.getValue(),
+        cell: ({ row }) => (
+          <HStack spacing={2}>
+            <Avatar size="sm" name={row.original.supplierName} />
+
+            <Link
+              onClick={() => {
+                navigate(`/x/purchasing/suppliers/${row?.original.id}`);
+              }}
+            >
+              {row.original.supplierName}
+            </Link>
+          </HStack>
+        ),
       },
       {
         accessorKey: "hoursPerWeek",
@@ -44,7 +56,7 @@ const PartnersTable = memo(({ data, count }: PartnersTableProps) => {
         cell: (item) => item.getValue(),
       },
     ];
-  }, []);
+  }, [navigate]);
 
   const renderContextMenu = useCallback(
     (row: typeof rows[number]) => {

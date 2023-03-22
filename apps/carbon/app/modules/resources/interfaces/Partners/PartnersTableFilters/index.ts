@@ -1,3 +1,3 @@
-import LocationsTableFilters from "./LocationsTableFilters";
+import PartnersTableFilters from "./PartnersTableFilters";
 
-export default LocationsTableFilters;
+export default PartnersTableFilters;

@@ -796,29 +796,29 @@ export interface Database {
         Row: {
           id: string;
           createdBy: string;
-          createdAt: string;
           updatedBy: string | null;
           updatedAt: string | null;
           hoursPerWeek: number;
           active: boolean;
+          createdAt: string;
         };
         Insert: {
           id: string;
           createdBy: string;
-          createdAt: string;
           updatedBy?: string | null;
           updatedAt?: string | null;
           hoursPerWeek?: number;
           active?: boolean;
+          createdAt?: string;
         };
         Update: {
           id?: string;
           createdBy?: string;
-          createdAt?: string;
           updatedBy?: string | null;
           updatedAt?: string | null;
           hoursPerWeek?: number;
           active?: boolean;
+          createdAt?: string;
         };
       };
       search: {

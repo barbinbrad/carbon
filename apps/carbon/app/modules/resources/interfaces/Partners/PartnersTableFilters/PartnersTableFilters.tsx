@@ -25,7 +25,7 @@ const LocationsTableFilters = () => {
           param="name"
           size="sm"
           minW={180}
-          placeholder="Search by name"
+          placeholder="Filter by name"
         />
       </HStack>
       <HStack spacing={2}>
@@ -36,7 +36,7 @@ const LocationsTableFilters = () => {
             colorScheme="brand"
             leftIcon={<IoMdAdd />}
           >
-            New Location
+            New Partner
           </Button>
         )}
       </HStack>

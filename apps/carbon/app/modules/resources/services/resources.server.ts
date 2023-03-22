@@ -93,6 +93,13 @@ export async function deleteNote(
   return client.from("userNote").update({ active: false }).eq("id", noteId);
 }
 
+export async function deletePartner(
+  client: SupabaseClient<Database>,
+  partnerId: string
+) {
+  return client.from("partner").delete().eq("id", partnerId);
+}
+
 export async function deleteShift(
   client: SupabaseClient<Database>,
   shiftId: string
@@ -469,20 +476,32 @@ export async function getNotes(
     .order("createdAt");
 }
 
+export async function getPartner(
+  client: SupabaseClient<Database>,
+  partnerId: string
+) {
+  return client
+    .from("partner")
+    .select(`id, hoursPerWeek, supplier(name)`)
+    .eq("id", partnerId)
+    .single();
+}
+
 export async function getPartners(
   client: SupabaseClient<Database>,
   args?: GenericQueryFilters & { name: string | null }
 ) {
   let query = client
     .from("partner")
-    .select(`id, supplier(name), hoursPerWeek`, { count: "exact" });
+    .select(`id, supplier(name), hoursPerWeek`, { count: "exact" })
+    .eq("active", true);
 
   if (args?.name) {
     query = query.ilike("name", `%${args.name}%`);
   }
 
   if (args) {
-    query = setGenericQueryFilters(query, args, "supplier.name");
+    query = setGenericQueryFilters(query, args, "supplier(name)");
   }
 
   return query;
@@ -1050,6 +1069,26 @@ export async function upsertLocation(
     return client.from("location").update(location).eq("id", location.id);
   }
   return client.from("location").insert([location]).select("id");
+}
+
+export async function upsertPartner(
+  client: SupabaseClient<Database>,
+  partner:
+    | {
+        id: string;
+        hoursPerWeek?: number;
+        createdBy: string;
+      }
+    | {
+        id: string;
+        hoursPerWeek?: number;
+        updatedBy: string;
+      }
+) {
+  if ("updatedBy" in partner) {
+    return client.from("partner").update(partner).eq("id", partner.id);
+  }
+  return client.from("partner").insert([partner]);
 }
 
 export async function upsertShift(

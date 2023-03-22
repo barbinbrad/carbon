@@ -24,7 +24,7 @@ const EmployeeTypesTableFilters = () => {
           param="name"
           size="sm"
           minW={180}
-          placeholder="Search by name"
+          placeholder="Filter by name"
         />
       </HStack>
       <HStack spacing={2}>

@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import { ValidatedForm } from "remix-validated-form";
-import { Hidden, Number, Submit, Supplier } from "~/components/Form";
+import { Number, Submit, Supplier } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { partnerValidator } from "~/modules/resources";
 import type { TypeOfValidator } from "~/types/validators";
@@ -26,7 +26,7 @@ const SupplierForm = ({ initialValues }: SupplierFormProps) => {
   const navigate = useNavigate();
   const onClose = () => navigate(-1);
 
-  const isEditing = initialValues.id !== undefined;
+  const isEditing = initialValues.id !== "";
   const isDisabled = isEditing
     ? !permissions.can("update", "resources")
     : !permissions.can("create", "resources");
@@ -48,12 +48,12 @@ const SupplierForm = ({ initialValues }: SupplierFormProps) => {
           <DrawerCloseButton />
           <DrawerHeader>{isEditing ? "Edit" : "New"} Supplier</DrawerHeader>
           <DrawerBody pb={8}>
-            <Hidden name="id" />
             <VStack spacing={4} alignItems="start">
               <Supplier name="id" label="Supplier" />
               <Number
                 name="hoursPerWeek"
                 label="Hours per Week"
+                helperText="The number of hours per week the supplier is available to work."
                 min={0}
                 max={10000}
               />

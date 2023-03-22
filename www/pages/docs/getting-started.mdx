@@ -1,0 +1,60 @@
+---
+title: Getting started with Carbon ERP
+description: Carbon ERP is a high-performance, open-source ERP for manufacturing.
+---
+
+# Getting Started
+
+Before getting started with development, it's good to have a basic understanding of our [tech stack](/stack).
+
+You'll also need to have [Docker installed](https://docs.docker.com/desktop/install/mac-install/) and [yarn installed](https://yarnpkg.com/lang/en/docs/install/#debian-stable)
+on your system since this monorepo uses the yarn package manager.
+
+After running the steps below you should be able to access the following apps/containers locally:
+
+| Application     | URL                                                                                                                |
+| --------------- | ------------------------------------------------------------------------------------------------------------------ |
+| Carbon ERP      | [http://localhost:3000](http://localhost:3000)                                                                     |
+| Postgres        | [postgresql://postgres:postgres@localhost:54322/postgres](postgresql://postgres:postgres@localhost:54322/postgres) |
+| Supabase Studio | [http://localhost:54323/project/default](http://localhost:54323/project/default)                                   |
+| Inbucket        | [http://localhost:54324/monitor](http://localhost:54324/monitor)                                                   |
+| Redis           | [redis://localhost:6379](redis://localhost:6379)                                                                   |
+
+First download and initialize the repository dependencies.
+
+```bash
+$ git clone https://github.com/barbinbrad/carbon
+$ yarn             # install dependencies
+$ yarn init        # pull and start the containers
+```
+
+Copy the environment variables from the initialization script to an `.env` file:
+
+```bash
+$ cp ./.env.example ./.env
+```
+
+After you've set the enviroment variables to the output of `yarn init` you can run
+
+```bash
+$ yarn db:build     # run db migrations and seed script
+$ yarn build        # build the packages
+```
+
+Finally, start the apps and packages:
+
+```bash
+$ yarn dev         # yarn dev in all apps & packages
+```
+
+To kill the database containers in a non-recoverable way, you can run:
+
+```bash
+$ yarn db:kill   # stop and delete all database containers
+```
+
+To restart and reseed the database, you can run:
+
+```bash
+$ yarn db:build # runs db:kill, db:start, and setup
+```

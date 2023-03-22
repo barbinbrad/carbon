@@ -469,6 +469,25 @@ export async function getNotes(
     .order("createdAt");
 }
 
+export async function getPartners(
+  client: SupabaseClient<Database>,
+  args?: GenericQueryFilters & { name: string | null }
+) {
+  let query = client
+    .from("partner")
+    .select(`id, supplier(name), hoursPerWeek`, { count: "exact" });
+
+  if (args?.name) {
+    query = query.ilike("name", `%${args.name}%`);
+  }
+
+  if (args) {
+    query = setGenericQueryFilters(query, args, "supplier.name");
+  }
+
+  return query;
+}
+
 export async function getShift(
   client: SupabaseClient<Database>,
   shiftId: string

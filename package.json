@@ -2,7 +2,7 @@
   "private": true,
   "workspaces": [
     "apps/*",
-    "docs",
+    "www",
     "packages/*"
   ],
   "scripts": {
@@ -29,7 +29,7 @@
     "deploy": "turbo run deploy",
     "dev": "turbo run dev --no-cache --parallel --continue --filter=./apps/* --filter=./packages/*",
     "dev:apps": "turbo run dev --no-cache --parallel --continue --filter=./apps/*",
-    "dev:docs": "turbo run dev --no-cache --parallel --continue --filter=./docs",
+    "dev:www": "turbo run dev --no-cache --parallel --continue --filter=./www",
     "dev:packages": "turbo run dev --no-cache --parallel --continue --filter=./packages/*",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "init": "run-s db:init db:start",
@@ -52,7 +52,7 @@
     "node": ">=16"
   },
   "lint-staged": {
-    "(apps|docs|packages)/**/*.{js,ts,jsx,tsx}": [
+    "(apps|packages|www)/**/*.{js,ts,jsx,tsx}": [
       "prettier --write",
       "eslint --fix --max-warnings=0"
     ],

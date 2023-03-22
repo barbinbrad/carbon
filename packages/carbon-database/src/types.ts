@@ -792,6 +792,35 @@ export interface Database {
           id?: number;
         };
       };
+      partner: {
+        Row: {
+          id: string;
+          createdBy: string;
+          createdAt: string;
+          updatedBy: string | null;
+          updatedAt: string | null;
+          hoursPerWeek: number;
+          active: boolean;
+        };
+        Insert: {
+          id: string;
+          createdBy: string;
+          createdAt: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          hoursPerWeek?: number;
+          active?: boolean;
+        };
+        Update: {
+          id?: string;
+          createdBy?: string;
+          createdAt?: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          hoursPerWeek?: number;
+          active?: boolean;
+        };
+      };
       search: {
         Row: {
           id: number;

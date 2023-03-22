@@ -45,6 +45,7 @@ const GroupedContentSidebar = ({ groups }: { groups: RouteGroup[] }) => {
                       as={Link}
                       to={route.to}
                       variant={isActive ? "solid" : "ghost"}
+                      border="none"
                       fontWeight={isActive ? "bold" : "normal"}
                       leftIcon={route.icon}
                       justifyContent="start"

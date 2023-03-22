@@ -12,6 +12,7 @@ import type {
   getEquipment,
   getLocations,
   getNotes,
+  getPartners,
   getPeople,
   getShifts,
   getWorkCellTypes,
@@ -111,6 +112,10 @@ export type Location = NonNullable<
 
 export type Note = NonNullable<
   Awaited<ReturnType<typeof getNotes>>["data"]
+>[number];
+
+export type Partner = NonNullable<
+  Awaited<ReturnType<typeof getPartners>>["data"]
 >[number];
 
 export type Person = NonNullable<

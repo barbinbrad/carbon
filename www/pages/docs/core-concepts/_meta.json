@@ -1,0 +1,8 @@
+{
+  "permissions": "Permissions",
+  "fetching": "Data Fetching",
+  "writing": "Data Writes",
+  "realtime": "Realtime",
+  "serverless": "Serverless",
+  "integration": "APIs"
+}

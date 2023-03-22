@@ -159,6 +159,13 @@ export const noteValidator = withZod(
   })
 );
 
+export const partnerValidator = withZod(
+  z.object({
+    id: z.string().min(36, { message: "Partner is required" }),
+    hoursPerWeek: zfd.numeric(z.number().optional()),
+  })
+);
+
 export const shiftValidator = withZod(
   z.object({
     id: zfd.text(z.string().optional()),

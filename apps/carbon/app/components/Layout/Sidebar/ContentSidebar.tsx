@@ -32,6 +32,7 @@ const ContentSidebar = ({ links }: { links: Route[] }) => {
                     as={Link}
                     to={route.to}
                     variant={isActive ? "solid" : "ghost"}
+                    border="none"
                     fontWeight={isActive ? "bold" : "normal"}
                     justifyContent="start"
                     w="full"

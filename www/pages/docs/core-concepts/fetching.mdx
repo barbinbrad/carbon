@@ -71,3 +71,44 @@ export default function Route() {
   );
 }
 ```
+
+Here's an example of two services that fetch data from the database. The `.server.ts` file extension ensures that the code is only executed on the server:
+
+```tsx
+// app/modules/resources/resources.server.ts
+
+export async function getPartner(
+  client: SupabaseClient<Database>,
+  partnerId: string
+) {
+  // select a single row from the partner table
+  return client
+    .from("partner")
+    .select(`id, hoursPerWeek, supplier(name)`)
+    .eq("id", partnerId)
+    .single();
+}
+
+export async function getPartners(
+  client: SupabaseClient<Database>,
+  args?: GenericQueryFilters & { name: string | null }
+) {
+  // select the partner id, supplier name, and hours per week
+  let query = client
+    .from("partner")
+    .select(`id, supplier(name), hoursPerWeek`, { count: "exact" })
+    .eq("active", true);
+
+  if (args?.name) {
+    // if a name argument is provided, filter by name
+    query = query.ilike("name", `%${args.name}%`);
+  }
+
+  if (args) {
+    // sort by supplier name by default
+    query = setGenericQueryFilters(query, args, "supplier(name)");
+  }
+
+  return query;
+}
+```

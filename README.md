@@ -75,6 +75,7 @@ After running the steps below you should be able to access the following apps/co
 First download and initialize the repository dependencies.
 
 ```bash
+$ nvm use          # use node v18
 $ yarn             # install dependencies
 $ yarn init        # pull and start the containers
 ```

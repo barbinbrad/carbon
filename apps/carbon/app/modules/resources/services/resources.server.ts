@@ -480,28 +480,21 @@ export async function getPartner(
   client: SupabaseClient<Database>,
   partnerId: string
 ) {
-  return client
-    .from("partner")
-    .select(`id, hoursPerWeek, supplier(name)`)
-    .eq("id", partnerId)
-    .single();
+  return client.from("partners_query").select("*").eq("id", partnerId).single();
 }
 
 export async function getPartners(
   client: SupabaseClient<Database>,
   args?: GenericQueryFilters & { name: string | null }
 ) {
-  let query = client
-    .from("partner")
-    .select(`id, supplier(name), hoursPerWeek`, { count: "exact" })
-    .eq("active", true);
+  let query = client.from("partners_query").select("*").eq("active", true);
 
   if (args?.name) {
-    query = query.ilike("name", `%${args.name}%`);
+    query = query.ilike("supplierName", `%${args.name}%`);
   }
 
   if (args) {
-    query = setGenericQueryFilters(query, args, "supplier(name)");
+    query = setGenericQueryFilters(query, args, "supplierName");
   }
 
   return query;

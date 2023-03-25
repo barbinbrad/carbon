@@ -1372,6 +1372,24 @@ export interface Database {
           year: number | null;
         };
       };
+      partners_query: {
+        Row: {
+          supplierLocationId: string | null;
+          active: boolean | null;
+          hoursPerWeek: number | null;
+          supplierId: string | null;
+          supplierName: string | null;
+          id: string | null;
+          addressLine1: string | null;
+          addressLine2: string | null;
+          city: string | null;
+          state: string | null;
+          postalCode: string | null;
+          countryId: number | null;
+          phone: string | null;
+          fax: string | null;
+        };
+      };
     };
     Functions: {
       _xid_machine_id: {

@@ -18,18 +18,11 @@ const PartnersTable = memo(({ data, count }: PartnersTableProps) => {
   const permissions = usePermissions();
   const [params] = useUrlParams();
 
-  const rows = data.map((row) => {
-    if (Array.isArray(row.supplier)) {
-      return {
-        ...row,
-        supplierName: row.supplier[0].name,
-      };
-    }
-    return {
-      ...row,
-      supplierName: row.supplier?.name,
-    };
-  });
+  const rows = data.map((row) => ({
+    ...row,
+  }));
+
+  console.log(rows);
 
   const columns = useMemo<ColumnDef<typeof rows[number]>[]>(() => {
     return [
@@ -38,16 +31,24 @@ const PartnersTable = memo(({ data, count }: PartnersTableProps) => {
         header: "Supplier",
         cell: ({ row }) => (
           <HStack spacing={2}>
-            <Avatar size="sm" name={row.original.supplierName} />
+            <Avatar size="sm" name={row.original.supplierName ?? ""} />
 
             <Link
               onClick={() => {
-                navigate(`/x/purchasing/suppliers/${row?.original.id}`);
+                navigate(`/x/purchasing/suppliers/${row?.original.supplierId}`);
               }}
             >
               {row.original.supplierName}
             </Link>
           </HStack>
+        ),
+      },
+      {
+        header: "Location",
+        cell: ({ row }) => (
+          <>
+            {row.original.city}, {row.original.state}
+          </>
         ),
       },
       {

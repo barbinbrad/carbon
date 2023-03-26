@@ -50,6 +50,7 @@ export async function action({ request }: ActionArgs) {
 export default function NewPartnerRoute() {
   const initialValues = {
     id: "",
+    supplierId: "",
     hoursPerWeek: 0,
   };
 

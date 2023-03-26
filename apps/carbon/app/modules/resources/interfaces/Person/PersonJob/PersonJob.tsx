@@ -7,7 +7,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useFetcher } from "@remix-run/react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { useControlField, useField, ValidatedForm } from "remix-validated-form";
 import {
   DatePicker,
@@ -29,18 +29,16 @@ type PersonJobProps = {
 
 const PersonJob = ({ job }: PersonJobProps) => {
   const shiftFetcher = useFetcher<Awaited<ReturnType<typeof getShiftsList>>>();
-  const [location, setLocation] = useState<string | null>(
-    job.locationId ?? null
-  );
 
   const onLocationChange = ({ value }: { value: string | number }) => {
-    setLocation(value as string);
+    if (value) shiftFetcher.load(`/api/resources/shifts?location=${value}`);
   };
 
   useEffect(() => {
-    shiftFetcher.load(`/api/resources/shifts?location=${location}`);
+    if (job.locationId)
+      shiftFetcher.load(`/api/resources/shifts?location=${job.locationId}`);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location]);
+  }, []);
 
   const shifts = useMemo(
     () =>

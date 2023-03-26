@@ -161,7 +161,8 @@ export const noteValidator = withZod(
 
 export const partnerValidator = withZod(
   z.object({
-    id: z.string().min(20, { message: "Partner is required" }),
+    id: z.string().min(20, { message: "Supplier Location is required" }),
+    supplierId: z.string().min(20, { message: "Supplier is required" }),
     hoursPerWeek: zfd.numeric(
       z.number().min(0, { message: "Hours are required" })
     ),

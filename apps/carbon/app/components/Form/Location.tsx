@@ -8,66 +8,85 @@ import {
 } from "@chakra-ui/react";
 import { useFetcher } from "@remix-run/react";
 import { useEffect, useMemo } from "react";
-import { useField } from "remix-validated-form";
-import type { getLocationsList } from "~/modules/resources";
-import { mapRowsToOptions } from "~/utils/form";
+import { useControlField, useField } from "remix-validated-form";
+import type { getLocations } from "~/modules/resources";
 import type { SelectProps } from "./Select";
 
-type LocationSelectProps = Omit<SelectProps, "options">;
+type LocationSelectProps = Omit<SelectProps, "options"> & {
+  location?: string;
+};
 
 const Location = ({
   name,
   label = "Location",
+  location,
   helperText,
   isLoading,
   isReadOnly,
-  placeholder,
+  placeholder = "Select Location",
   onChange,
   ...props
 }: LocationSelectProps) => {
-  const { getInputProps, error, defaultValue } = useField(name);
+  const { error, defaultValue } = useField(name);
+  const [value, setValue] = useControlField<string | undefined>(name);
 
   const locationFetcher =
-    useFetcher<Awaited<ReturnType<typeof getLocationsList>>>();
+    useFetcher<Awaited<ReturnType<typeof getLocations>>>();
 
   useEffect(() => {
-    if (locationFetcher.type === "init") {
-      locationFetcher.load("/api/resources/locations");
-    }
-  }, [locationFetcher]);
+    locationFetcher.load(`/api/resources/locations`);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const options = useMemo(
     () =>
-      mapRowsToOptions({
-        data: locationFetcher.data?.data,
-        value: "id",
-        label: "name",
-      }),
+      locationFetcher.data?.data
+        ? locationFetcher.data?.data.map((c) => ({
+            value: c.id,
+            label: c.name,
+          }))
+        : [],
     [locationFetcher.data]
   );
 
-  const initialValue = useMemo(
-    () => options.filter((option) => option.value === defaultValue),
-    [defaultValue, options]
+  const handleChange = (selection: {
+    value: string | number;
+    label: string;
+  }) => {
+    const newValue = (selection.value as string) || undefined;
+    setValue(newValue);
+    if (onChange && typeof onChange === "function") {
+      onChange(selection);
+    }
+  };
+
+  const controlledValue = useMemo(
+    // @ts-ignore
+    () => options.find((option) => option.value === value),
+    [value, options]
   );
+
+  // so that we can call onChange on load
+  useEffect(() => {
+    if (controlledValue && controlledValue.value === defaultValue) {
+      handleChange(controlledValue);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [controlledValue?.value]);
 
   // TODO: hack for default value
   return locationFetcher.state !== "loading" ? (
     <FormControl isInvalid={!!error}>
       {label && <FormLabel htmlFor={name}>{label}</FormLabel>}
+      <input type="hidden" name={name} id={name} value={value} />
       <Select
-        {...getInputProps({
-          // @ts-ignore
-          id: name,
-        })}
         {...props}
-        defaultValue={initialValue}
-        isReadOnly={isReadOnly}
+        value={controlledValue}
         isLoading={isLoading}
         options={options}
         placeholder={placeholder}
         // @ts-ignore
-        onChange={onChange ?? undefined}
+        onChange={handleChange}
       />
       {error ? (
         <FormErrorMessage>{error}</FormErrorMessage>
@@ -78,7 +97,12 @@ const Location = ({
   ) : (
     <Box>
       {label && <FormLabel>{label}</FormLabel>}
-      <Select isDisabled isLoading options={[]} />
+      <Select
+        isDisabled
+        isLoading={isLoading}
+        options={[]}
+        //@ts-ignore
+      />
     </Box>
   );
 };

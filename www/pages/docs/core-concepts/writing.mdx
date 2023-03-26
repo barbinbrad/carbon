@@ -55,7 +55,7 @@ Here's an example of how they work together on the client-side:
 
 ```tsx
 import { ValidatedForm } from "remix-validated-form";
-import { Boolean, Hidden, Input, Numeric} from "~/components/Form";
+import { Boolean, Hidden, Input, Numeric, Submit } from "~/components/Form";
 import { personValidator } from "~/modules/people";
 
 
@@ -69,8 +69,9 @@ const Form = ({initialValues}: FormProps) => {
     >
       <Hidden name="id" />
       <Input name="name" label="Name">
-      <Numeric name="age" min={0} max={100} />
+      <Numeric name="age" min={0} />
       <Boolean name="male" label="Male" />
+      <Submit>Save</Submit>
     </ValidatedForm>
   )
 }

@@ -2508,7 +2508,8 @@ CREATE VIEW "partners_query" AS
     p."hoursPerWeek", 
     s.id AS "supplierId", 
     s.name AS "supplierName", 
-    a.* 
+    a.city,
+    a.state
   FROM "partner" p 
     INNER JOIN "supplierLocation" sl 
       ON sl.id = p.id

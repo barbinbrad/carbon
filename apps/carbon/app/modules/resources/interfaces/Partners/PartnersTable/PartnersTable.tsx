@@ -22,8 +22,6 @@ const PartnersTable = memo(({ data, count }: PartnersTableProps) => {
     ...row,
   }));
 
-  console.log(rows);
-
   const columns = useMemo<ColumnDef<typeof rows[number]>[]>(() => {
     return [
       {
@@ -66,7 +64,11 @@ const PartnersTable = memo(({ data, count }: PartnersTableProps) => {
           <MenuItem
             icon={<BsPencilSquare />}
             onClick={() => {
-              navigate(`/x/resources/partners/${row.id}?${params.toString()}`);
+              navigate(
+                `/x/resources/partners/${
+                  row.supplierLocationId
+                }?${params.toString()}`
+              );
             }}
           >
             Edit Partner
@@ -76,7 +78,9 @@ const PartnersTable = memo(({ data, count }: PartnersTableProps) => {
             icon={<IoMdTrash />}
             onClick={() => {
               navigate(
-                `/x/resources/partners/delete/${row.id}?${params.toString()}`
+                `/x/resources/partners/delete/${
+                  row.supplierLocationId
+                }?${params.toString()}`
               );
             }}
           >

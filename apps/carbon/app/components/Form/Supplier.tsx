@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { useFetcher } from "@remix-run/react";
 import { useEffect, useMemo } from "react";
-import { useField } from "remix-validated-form";
+import { useControlField, useField } from "remix-validated-form";
 import type { getSuppliersList } from "~/modules/purchasing";
 import { mapRowsToOptions } from "~/utils/form";
 import type { SelectProps } from "./Select";
@@ -26,6 +26,7 @@ const Supplier = ({
   ...props
 }: SupplierSelectProps) => {
   const { getInputProps, error, defaultValue } = useField(name);
+  const [value, setValue] = useControlField<string | undefined>(name);
 
   const supplierFetcher =
     useFetcher<Awaited<ReturnType<typeof getSuppliersList>>>();
@@ -46,10 +47,30 @@ const Supplier = ({
     [supplierFetcher.data]
   );
 
-  const initialValue = useMemo(
-    () => options.filter((option) => option.value === defaultValue),
-    [defaultValue, options]
+  const handleChange = (selection: {
+    value: string | number;
+    label: string;
+  }) => {
+    const newValue = (selection.value as string) || undefined;
+    setValue(newValue);
+    if (onChange && typeof onChange === "function") {
+      onChange(selection);
+    }
+  };
+
+  const controlledValue = useMemo(
+    // @ts-ignore
+    () => options.find((option) => option.value === value),
+    [value, options]
   );
+
+  // so that we can call onChange on load
+  useEffect(() => {
+    if (controlledValue && controlledValue.value === defaultValue) {
+      handleChange(controlledValue);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [controlledValue?.value]);
 
   // TODO: hack for default value
   return supplierFetcher.state !== "loading" ? (
@@ -61,14 +82,14 @@ const Supplier = ({
           id: name,
         })}
         {...props}
-        defaultValue={initialValue}
-        isReadOnly={isReadOnly}
+        value={controlledValue}
         isLoading={isLoading}
         options={options}
         placeholder={placeholder}
-        w="full"
         // @ts-ignore
-        onChange={onChange ?? undefined}
+        w="full"
+        isReadOnly={isReadOnly}
+        onChange={handleChange}
       />
       {error ? (
         <FormErrorMessage>{error}</FormErrorMessage>

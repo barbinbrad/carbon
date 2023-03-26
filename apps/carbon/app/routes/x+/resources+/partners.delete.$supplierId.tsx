@@ -1,6 +1,6 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { useLoaderData, useNavigate, useParams } from "@remix-run/react";
+import { useLoaderData, useNavigate } from "@remix-run/react";
 import { ConfirmDelete } from "~/components/Modals";
 import { deletePartner, getPartner } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
@@ -61,22 +61,18 @@ export async function action({ request, params }: ActionArgs) {
 }
 
 export default function DeletePartnerRoute() {
-  const { supplierId } = useParams();
   const { partner } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
-
-  if (!supplierId || !partner || !partner.supplier) return null;
-  const name = Array.isArray(partner.supplier)
-    ? partner.supplier[0].name
-    : partner.supplier.name;
 
   const onCancel = () => navigate("/x/resources/partners");
 
   return (
     <ConfirmDelete
-      action={`/x/resources/partners/delete/${supplierId}`}
-      name={name}
-      text={`Are you sure you want to delete the partner: ${name}? This cannot be undone.`}
+      action={`/x/resources/partners/delete/${partner.supplierLocationId}`}
+      name={partner.supplierName ?? ""}
+      text={`Are you sure you want to delete the partner: ${
+        partner.supplierName ?? ""
+      }? This cannot be undone.`}
       onCancel={onCancel}
     />
   );

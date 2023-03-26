@@ -480,7 +480,11 @@ export async function getPartner(
   client: SupabaseClient<Database>,
   partnerId: string
 ) {
-  return client.from("partners_query").select("*").eq("id", partnerId).single();
+  return client
+    .from("partners_query")
+    .select("*")
+    .eq("supplierLocationId", partnerId)
+    .single();
 }
 
 export async function getPartners(
@@ -1136,7 +1140,6 @@ export async function upsertWorkCell(
       }
 ) {
   if ("id" in workCell) {
-    console.log("updating work cell", workCell);
     const { id, ...update } = workCell;
     return client
       .from("workCell")

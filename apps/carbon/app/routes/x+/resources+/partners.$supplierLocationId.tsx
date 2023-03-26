@@ -19,10 +19,10 @@ export async function loader({ request, params }: LoaderArgs) {
     view: "resources",
   });
 
-  const { supplierId } = params;
-  if (!supplierId) throw notFound("Partner ID was not found");
+  const { supplierLocationId } = params;
+  if (!supplierLocationId) throw notFound("Partner ID was not found");
 
-  const partner = await getPartner(client, supplierId);
+  const partner = await getPartner(client, supplierLocationId);
 
   if (partner.error) {
     return redirect(
@@ -77,8 +77,9 @@ export default function PartnerRoute() {
   const { partner } = useLoaderData<typeof loader>();
 
   const initialValues = {
-    id: partner.id,
-    hoursPerWeek: partner.hoursPerWeek,
+    id: partner.supplierLocationId ?? "",
+    supplierId: partner.supplierId ?? "",
+    hoursPerWeek: partner.hoursPerWeek ?? 0,
   };
 
   return <PartnerForm initialValues={initialValues} />;

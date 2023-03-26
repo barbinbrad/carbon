@@ -8,66 +8,85 @@ import {
 } from "@chakra-ui/react";
 import { useFetcher } from "@remix-run/react";
 import { useEffect, useMemo } from "react";
-import { useField } from "remix-validated-form";
+import { useControlField, useField } from "remix-validated-form";
 import type { getDepartmentsList } from "~/modules/resources";
-import { mapRowsToOptions } from "~/utils/form";
 import type { SelectProps } from "./Select";
 
-type DepartmentSelectProps = Omit<SelectProps, "options">;
+type DepartmentSelectProps = Omit<SelectProps, "options"> & {
+  department?: string;
+};
 
 const Department = ({
   name,
   label = "Department",
+  department,
   helperText,
   isLoading,
   isReadOnly,
-  placeholder,
+  placeholder = "Select Department",
   onChange,
   ...props
 }: DepartmentSelectProps) => {
-  const { getInputProps, error, defaultValue } = useField(name);
+  const { error, defaultValue } = useField(name);
+  const [value, setValue] = useControlField<string | undefined>(name);
 
   const departmentFetcher =
     useFetcher<Awaited<ReturnType<typeof getDepartmentsList>>>();
 
   useEffect(() => {
-    if (departmentFetcher.type === "init") {
-      departmentFetcher.load("/api/resources/departments");
-    }
-  }, [departmentFetcher]);
+    departmentFetcher.load(`/api/resources/departments`);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const options = useMemo(
     () =>
-      mapRowsToOptions({
-        data: departmentFetcher.data?.data,
-        value: "id",
-        label: "name",
-      }),
+      departmentFetcher.data?.data
+        ? departmentFetcher.data?.data.map((c) => ({
+            value: c.id,
+            label: c.name,
+          }))
+        : [],
     [departmentFetcher.data]
   );
 
-  const initialValue = useMemo(
-    () => options.filter((option) => option.value === defaultValue),
-    [defaultValue, options]
+  const handleChange = (selection: {
+    value: string | number;
+    label: string;
+  }) => {
+    const newValue = (selection.value as string) || undefined;
+    setValue(newValue);
+    if (onChange && typeof onChange === "function") {
+      onChange(selection);
+    }
+  };
+
+  const controlledValue = useMemo(
+    // @ts-ignore
+    () => options.find((option) => option.value === value),
+    [value, options]
   );
+
+  // so that we can call onChange on load
+  useEffect(() => {
+    if (controlledValue && controlledValue.value === defaultValue) {
+      handleChange(controlledValue);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [controlledValue?.value]);
 
   // TODO: hack for default value
   return departmentFetcher.state !== "loading" ? (
     <FormControl isInvalid={!!error}>
       {label && <FormLabel htmlFor={name}>{label}</FormLabel>}
+      <input type="hidden" name={name} id={name} value={value} />
       <Select
-        {...getInputProps({
-          // @ts-ignore
-          id: name,
-        })}
         {...props}
-        defaultValue={initialValue}
-        isReadOnly={isReadOnly}
+        value={controlledValue}
         isLoading={isLoading}
         options={options}
         placeholder={placeholder}
         // @ts-ignore
-        onChange={onChange ?? undefined}
+        onChange={handleChange}
       />
       {error ? (
         <FormErrorMessage>{error}</FormErrorMessage>
@@ -78,7 +97,12 @@ const Department = ({
   ) : (
     <Box>
       {label && <FormLabel>{label}</FormLabel>}
-      <Select isDisabled isLoading options={[]} />
+      <Select
+        isDisabled
+        isLoading={isLoading}
+        options={[]}
+        //@ts-ignore
+      />
     </Box>
   );
 };

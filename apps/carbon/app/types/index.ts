@@ -3,6 +3,12 @@ import type { TypedResponse } from "@remix-run/node";
 import type { ReactElement } from "react";
 import type { ValidationErrorResponseData } from "remix-validated-form";
 
+export type Action = {
+  label: string;
+  icon: ReactElement;
+  onClick: () => void;
+};
+
 export type Authenticated<T> = T & {
   role?: Role;
   permission?: string;

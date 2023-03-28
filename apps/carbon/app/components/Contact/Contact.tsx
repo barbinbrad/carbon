@@ -1,7 +1,6 @@
 import { ActionMenu, Dot } from "@carbon/react";
 import { Avatar, Grid, MenuItem, Text, VStack } from "@chakra-ui/react";
-import { BsPencilSquare, BsShieldLock } from "react-icons/bs";
-import { IoMdTrash } from "react-icons/io";
+import type { Action } from "~/types";
 
 type ContactProps = {
   contact: {
@@ -13,9 +12,7 @@ type ContactProps = {
     id: string;
     active: boolean | null;
   } | null;
-  onCreateAccount?: () => void;
-  onEdit?: () => void;
-  onDelete?: () => void;
+  actions: Action[];
 };
 
 enum UserStatus {
@@ -24,13 +21,7 @@ enum UserStatus {
   None,
 }
 
-const Contact = ({
-  contact,
-  user,
-  onEdit,
-  onDelete,
-  onCreateAccount,
-}: ContactProps) => {
+const Contact = ({ contact, user, actions }: ContactProps) => {
   const name = `${contact.firstName ?? ""} ${contact.lastName ?? ""}`;
   const userStatus = user
     ? user.active
@@ -55,23 +46,17 @@ const Contact = ({
           {contact.email ?? ""}
         </Text>
       </VStack>
-      {(onEdit || onDelete || onCreateAccount) && (
+      {actions.length > 0 && (
         <ActionMenu>
-          {onEdit && (
-            <MenuItem icon={<BsPencilSquare />} onClick={onEdit}>
-              Edit Contact
+          {actions.map((action) => (
+            <MenuItem
+              key={action.label}
+              icon={action.icon}
+              onClick={action.onClick}
+            >
+              {action.label}
             </MenuItem>
-          )}
-          {onDelete && (
-            <MenuItem icon={<IoMdTrash />} onClick={onDelete}>
-              Delete Contact
-            </MenuItem>
-          )}
-          {onCreateAccount && (
-            <MenuItem icon={<BsShieldLock />} onClick={onCreateAccount}>
-              Create Account
-            </MenuItem>
-          )}
+          ))}
         </ActionMenu>
       )}
     </Grid>

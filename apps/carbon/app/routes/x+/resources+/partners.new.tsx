@@ -1,6 +1,7 @@
 import type { ActionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
+import { useUrlParams } from "~/hooks";
 import {
   PartnerForm,
   partnerValidator,
@@ -23,11 +24,12 @@ export async function action({ request }: ActionArgs) {
     return validationError(validation.error);
   }
 
-  const { id, hoursPerWeek } = validation.data;
+  const { id, hoursPerWeek, abilities } = validation.data;
 
   const createPartner = await upsertPartner(client, {
     id,
     hoursPerWeek,
+    abilities,
     createdBy: userId,
   });
 
@@ -48,10 +50,12 @@ export async function action({ request }: ActionArgs) {
 }
 
 export default function NewPartnerRoute() {
+  const [params] = useUrlParams();
   const initialValues = {
-    id: "",
-    supplierId: "",
+    id: params.get("id") ?? "",
+    supplierId: params.get("supplierId") ?? "",
     hoursPerWeek: 0,
+    abilities: [] as string[],
   };
 
   return <PartnerForm initialValues={initialValues} />;

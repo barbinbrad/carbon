@@ -10,13 +10,14 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "@remix-run/react";
-import { useState } from "react";
-import { IoMdAdd } from "react-icons/io";
+import { useCallback, useState } from "react";
+import { IoMdAdd, IoMdTrash } from "react-icons/io";
 import { Contact } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import type { CustomerContact, CustomerLocation } from "~/modules/sales";
 import { usePermissions } from "~/hooks";
 import CustomerContactForm from "./CustomerContactsForm";
+import { BsPencilSquare } from "react-icons/bs";
 
 type CustomerContactProps = {
   contacts?: CustomerContact[];
@@ -41,6 +42,47 @@ const CustomerContacts = ({
   const deleteContactModal = useDisclosure();
 
   const isEmpty = contacts === undefined || contacts?.length === 0;
+
+  const getActions = useCallback(
+    (contact: CustomerContact) => {
+      const actions = [];
+      if (permissions.can("update", "sales")) {
+        actions.push({
+          label: "Edit Contact",
+          icon: <BsPencilSquare />,
+          onClick: () => {
+            setContact(contact);
+            contactDrawer.onOpen();
+          },
+        });
+      }
+      if (permissions.can("delete", "sales")) {
+        actions.push({
+          label: "Delete Contact",
+          icon: <IoMdTrash />,
+          onClick: () => {
+            setContact(contact);
+            deleteContactModal.onOpen();
+          },
+        });
+      }
+
+      if (permissions.can("create", "users") && contact.user === null) {
+        actions.push({
+          label: "Create Account",
+          icon: <IoMdAdd />,
+          onClick: () => {
+            navigate(
+              `/x/users/customers/new?id=${contact.id}&customer=${customerId}`
+            );
+          },
+        });
+      }
+
+      return actions;
+    },
+    [permissions, customerId, contactDrawer, deleteContactModal, navigate]
+  );
 
   return (
     <>
@@ -74,31 +116,7 @@ const CustomerContacts = ({
                   <Contact
                     contact={contact.contact}
                     user={contact.user}
-                    onDelete={
-                      permissions.can("delete", "sales")
-                        ? () => {
-                            setContact(contact);
-                            deleteContactModal.onOpen();
-                          }
-                        : undefined
-                    }
-                    onEdit={
-                      permissions.can("update", "sales")
-                        ? () => {
-                            setContact(contact);
-                            contactDrawer.onOpen();
-                          }
-                        : undefined
-                    }
-                    onCreateAccount={
-                      permissions.can("create", "users") &&
-                      contact.user === null
-                        ? () =>
-                            navigate(
-                              `/x/users/customers/new?id=${contact.id}&customer=${customerId}`
-                            )
-                        : undefined
-                    }
+                    actions={getActions(contact)}
                   />
                 ) : null}
               </ListItem>

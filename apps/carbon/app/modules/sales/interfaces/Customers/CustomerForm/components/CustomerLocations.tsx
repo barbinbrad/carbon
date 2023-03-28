@@ -10,8 +10,9 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useParams } from "@remix-run/react";
-import { useState } from "react";
-import { IoMdAdd } from "react-icons/io";
+import { useCallback, useState } from "react";
+import { BsPencilSquare } from "react-icons/bs";
+import { IoMdAdd, IoMdTrash } from "react-icons/io";
 import { Address } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions } from "~/hooks";
@@ -38,6 +39,34 @@ const CustomerLocations = ({
   );
 
   const isEmpty = locations === undefined || locations?.length === 0;
+
+  const getActions = useCallback(
+    (location: CustomerLocation) => {
+      const actions = [];
+      if (permissions.can("update", "purchasing")) {
+        actions.push({
+          label: "Edit Location",
+          icon: <BsPencilSquare />,
+          onClick: () => {
+            setLocation(location);
+            locationDrawer.onOpen();
+          },
+        });
+      }
+      if (permissions.can("delete", "purchasing")) {
+        actions.push({
+          label: "Delete Location",
+          icon: <IoMdTrash />,
+          onClick: () => {
+            setLocation(location);
+            deleteContactModal.onOpen();
+          },
+        });
+      }
+      return actions;
+    },
+    [permissions, locationDrawer, deleteContactModal]
+  );
 
   return (
     <>
@@ -68,22 +97,7 @@ const CustomerLocations = ({
                 {location.address && !Array.isArray(location.address) ? (
                   <Address
                     address={location.address}
-                    onDelete={
-                      permissions.can("delete", "sales")
-                        ? () => {
-                            setLocation(location);
-                            deleteContactModal.onOpen();
-                          }
-                        : undefined
-                    }
-                    onEdit={
-                      permissions.can("update", "sales")
-                        ? () => {
-                            setLocation(location);
-                            locationDrawer.onOpen();
-                          }
-                        : undefined
-                    }
+                    actions={getActions(location)}
                   />
                 ) : null}
               </ListItem>

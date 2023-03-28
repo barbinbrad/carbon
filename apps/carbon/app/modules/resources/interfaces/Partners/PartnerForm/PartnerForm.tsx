@@ -17,7 +17,7 @@ import {
 import { useFetcher, useNavigate } from "@remix-run/react";
 import { useEffect, useMemo } from "react";
 import { useControlField, useField, ValidatedForm } from "remix-validated-form";
-import { Number, Submit, Supplier } from "~/components/Form";
+import { Abilities, Number, Submit, Supplier } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import type { getSupplierLocations } from "~/modules/purchasing";
 import { partnerValidator } from "~/modules/resources";
@@ -96,6 +96,7 @@ const SupplierForm = ({ initialValues }: SupplierFormProps) => {
                 initialLocation={initialValues.id}
                 isReadOnly={isEditing}
               />
+              <Abilities name="abilities" label="Abilities" />
               <Number
                 name="hoursPerWeek"
                 label="Hours per Week"

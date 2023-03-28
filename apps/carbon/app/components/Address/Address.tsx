@@ -1,7 +1,7 @@
 import { ActionMenu } from "@carbon/react";
 import { Grid, Icon, MenuItem, Text, VStack } from "@chakra-ui/react";
-import { BsPencilSquare, BsPinMapFill } from "react-icons/bs";
-import { IoMdTrash } from "react-icons/io";
+import { BsPinMapFill } from "react-icons/bs";
+import type { Action } from "~/types";
 
 type AddressProps = {
   address: {
@@ -10,11 +10,10 @@ type AddressProps = {
     addressLine1: string | null;
     postalCode: string | null;
   };
-  onEdit?: () => void;
-  onDelete?: () => void;
+  actions: Action[];
 };
 
-const Address = ({ address, onEdit, onDelete }: AddressProps) => {
+const Address = ({ address, actions }: AddressProps) => {
   const location = `${address.city ?? ""}, ${address.state ?? ""}`;
   const addressZip = `${address.addressLine1 ?? ""} ${
     address.postalCode ?? ""
@@ -30,18 +29,17 @@ const Address = ({ address, onEdit, onDelete }: AddressProps) => {
           {addressZip}
         </Text>
       </VStack>
-      {(onEdit || onDelete) && (
+      {actions.length > 0 && (
         <ActionMenu>
-          {onEdit && (
-            <MenuItem icon={<BsPencilSquare />} onClick={onEdit}>
-              Edit Location
+          {actions.map((action) => (
+            <MenuItem
+              key={action.label}
+              icon={action.icon}
+              onClick={action.onClick}
+            >
+              {action.label}
             </MenuItem>
-          )}
-          {onDelete && (
-            <MenuItem icon={<IoMdTrash />} onClick={onDelete}>
-              Delete Location
-            </MenuItem>
-          )}
+          ))}
         </ActionMenu>
       )}
     </Grid>

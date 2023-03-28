@@ -48,12 +48,13 @@ export async function action({ request }: ActionArgs) {
     return validationError(validation.error);
   }
 
-  const { id, hoursPerWeek } = validation.data;
+  const { id, hoursPerWeek, abilities } = validation.data;
   if (!id) throw notFound("Partner ID was not found");
 
   const updatePartner = await upsertPartner(client, {
     id,
     hoursPerWeek,
+    abilities,
     updatedBy: userId,
   });
 
@@ -80,6 +81,7 @@ export default function PartnerRoute() {
     id: partner.supplierLocationId ?? "",
     supplierId: partner.supplierId ?? "",
     hoursPerWeek: partner.hoursPerWeek ?? 0,
+    abilities: partner.abilityIds ?? ([] as string[]),
   };
 
   return <PartnerForm initialValues={initialValues} />;

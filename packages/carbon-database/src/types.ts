@@ -821,6 +821,26 @@ export interface Database {
           createdAt?: string;
         };
       };
+      partnerAbility: {
+        Row: {
+          partnerId: string;
+          abilityId: string;
+          createdBy: string;
+          createdAt: string;
+        };
+        Insert: {
+          partnerId: string;
+          abilityId: string;
+          createdBy: string;
+          createdAt?: string;
+        };
+        Update: {
+          partnerId?: string;
+          abilityId?: string;
+          createdBy?: string;
+          createdAt?: string;
+        };
+      };
       search: {
         Row: {
           id: number;
@@ -1381,6 +1401,7 @@ export interface Database {
           supplierName: string | null;
           city: string | null;
           state: string | null;
+          abilityIds: string[] | null;
         };
       };
     };

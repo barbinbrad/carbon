@@ -166,6 +166,9 @@ export const partnerValidator = withZod(
     hoursPerWeek: zfd.numeric(
       z.number().min(0, { message: "Hours are required" })
     ),
+    abilities: z
+      .array(z.string().min(20, { message: "Invalid ability" }))
+      .min(1, { message: "An ability is required" }),
   })
 );
 

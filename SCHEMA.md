@@ -2501,6 +2501,18 @@ CREATE TABLE "partner" (
   CONSTRAINT "partner_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
 
+CREATE TABLE "partnerAbility" (
+  "partnerId" TEXT NOT NULL,
+  "abilityId" TEXT NOT NULL,
+  "createdBy" TEXT NOT NULL,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+
+  CONSTRAINT "partnerAbility_pkey" PRIMARY KEY ("partnerId", "abilityId"),
+  CONSTRAINT "partnerAbility_partnerId_fkey" FOREIGN KEY ("partnerId") REFERENCES "partner"("id"),
+  CONSTRAINT "partnerAbility_abilityId_fkey" FOREIGN KEY ("abilityId") REFERENCES "ability"("id"),
+  CONSTRAINT "partnerAbility_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id")
+);
+
 CREATE VIEW "partners_query" AS
   SELECT 
     p.id AS "supplierLocationId", 
@@ -2509,7 +2521,8 @@ CREATE VIEW "partners_query" AS
     s.id AS "supplierId", 
     s.name AS "supplierName", 
     a.city,
-    a.state
+    a.state,
+    array_agg(pa."abilityId") AS "abilityIds"
   FROM "partner" p 
     INNER JOIN "supplierLocation" sl 
       ON sl.id = p.id
@@ -2517,6 +2530,10 @@ CREATE VIEW "partners_query" AS
       ON s.id = sl."supplierId"
     INNER JOIN "address" a 
       ON a.id = sl."addressId"
+    INNER JOIN "partnerAbility" pa
+      ON pa."partnerId" = p.id
+  WHERE p."active" = true
+  GROUP BY p.id, p.active, p."hoursPerWeek", s.id, a.id, s.name, a.city, a.state
 ;
 ```
 

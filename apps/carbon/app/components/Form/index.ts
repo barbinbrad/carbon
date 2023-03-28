@@ -1,3 +1,4 @@
+import Abilities from "./Abilities";
 import Ability from "./Ability";
 import Array from "./Array";
 import Boolean from "./Boolean";
@@ -28,6 +29,7 @@ import User from "./User";
 import Users from "./Users";
 
 export {
+  Abilities,
   Ability,
   Array,
   Boolean,

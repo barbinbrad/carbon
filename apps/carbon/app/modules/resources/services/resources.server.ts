@@ -1070,22 +1070,52 @@ export async function upsertLocation(
 
 export async function upsertPartner(
   client: SupabaseClient<Database>,
-  partner:
+  partnerWithAbilities:
     | {
         id: string;
         hoursPerWeek?: number;
+        abilities: string[];
         createdBy: string;
       }
     | {
         id: string;
         hoursPerWeek?: number;
+        abilities: string[];
         updatedBy: string;
       }
 ) {
+  const { abilities, ...partner } = partnerWithAbilities;
   if ("updatedBy" in partner) {
-    return client.from("partner").update(partner).eq("id", partner.id);
+    const updatePartner = await client
+      .from("partner")
+      .update(partner)
+      .eq("id", partner.id);
+    if (updatePartner.error) {
+      return updatePartner;
+    }
+    const deletePartnerAbilities = await client
+      .from("partnerAbility")
+      .delete()
+      .eq("partnerId", partner.id);
+    if (deletePartnerAbilities.error) {
+      return deletePartnerAbilities;
+    }
+  } else {
+    const createPartner = await client.from("partner").insert([partner]);
+    if (createPartner.error) {
+      return createPartner;
+    }
   }
-  return client.from("partner").insert([partner]);
+
+  const partnerAbilities = abilities.map((ability) => {
+    return {
+      partnerId: partner.id,
+      abilityId: ability,
+      createdBy: "createdBy" in partner ? partner.createdBy : partner.updatedBy,
+    };
+  });
+
+  return client.from("partnerAbility").insert(partnerAbilities);
 }
 
 export async function upsertShift(

@@ -9,9 +9,10 @@ import {
   VStack,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useParams } from "@remix-run/react";
-import { useState } from "react";
-import { IoMdAdd } from "react-icons/io";
+import { useNavigate, useParams } from "@remix-run/react";
+import { useCallback, useState } from "react";
+import { BsPencilSquare } from "react-icons/bs";
+import { IoMdAdd, IoMdTrash } from "react-icons/io";
 import { Address } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions } from "~/hooks";
@@ -27,6 +28,7 @@ const SupplierLocations = ({
   locations = [],
   isEditing = false,
 }: SupplierLocationProps) => {
+  const navigate = useNavigate();
   const permissions = usePermissions();
   const locationDrawer = useDisclosure();
   const deleteContactModal = useDisclosure();
@@ -38,6 +40,45 @@ const SupplierLocations = ({
   );
 
   const isEmpty = locations === undefined || locations?.length === 0;
+
+  const getActions = useCallback(
+    (location: SupplierLocation) => {
+      const actions = [];
+      if (permissions.can("update", "purchasing")) {
+        actions.push({
+          label: "Edit Location",
+          icon: <BsPencilSquare />,
+          onClick: () => {
+            setLocation(location);
+            locationDrawer.onOpen();
+          },
+        });
+      }
+      if (permissions.can("delete", "purchasing")) {
+        actions.push({
+          label: "Delete Location",
+          icon: <IoMdTrash />,
+          onClick: () => {
+            setLocation(location);
+            deleteContactModal.onOpen();
+          },
+        });
+      }
+      if (permissions.can("create", "resources")) {
+        actions.push({
+          label: "Add Partner",
+          icon: <IoMdAdd />,
+          onClick: () => {
+            navigate(
+              `/x/resources/partners/new?id=${location.id}&supplierId=${supplierId}`
+            );
+          },
+        });
+      }
+      return actions;
+    },
+    [permissions, locationDrawer, deleteContactModal, navigate, supplierId]
+  );
 
   return (
     <>
@@ -68,22 +109,7 @@ const SupplierLocations = ({
                 {location.address && !Array.isArray(location.address) ? (
                   <Address
                     address={location.address}
-                    onDelete={
-                      permissions.can("delete", "purchasing")
-                        ? () => {
-                            setLocation(location);
-                            deleteContactModal.onOpen();
-                          }
-                        : undefined
-                    }
-                    onEdit={
-                      permissions.can("update", "purchasing")
-                        ? () => {
-                            setLocation(location);
-                            locationDrawer.onOpen();
-                          }
-                        : undefined
-                    }
+                    actions={getActions(location)}
                   />
                 ) : null}
               </ListItem>

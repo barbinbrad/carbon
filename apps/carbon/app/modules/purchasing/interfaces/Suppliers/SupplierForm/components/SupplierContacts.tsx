@@ -10,8 +10,9 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "@remix-run/react";
-import { useState } from "react";
-import { IoMdAdd } from "react-icons/io";
+import { useCallback, useState } from "react";
+import { BsPencilSquare } from "react-icons/bs";
+import { IoMdAdd, IoMdTrash } from "react-icons/io";
 import { Contact } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions } from "~/hooks";
@@ -41,6 +42,47 @@ const SupplierContacts = ({
   const deleteContactModal = useDisclosure();
 
   const isEmpty = contacts === undefined || contacts?.length === 0;
+
+  const getActions = useCallback(
+    (contact: SupplierContact) => {
+      const actions = [];
+      if (permissions.can("update", "purchasing")) {
+        actions.push({
+          label: "Edit Contact",
+          icon: <BsPencilSquare />,
+          onClick: () => {
+            setContact(contact);
+            contactDrawer.onOpen();
+          },
+        });
+      }
+      if (permissions.can("delete", "purchasing")) {
+        actions.push({
+          label: "Delete Contact",
+          icon: <IoMdTrash />,
+          onClick: () => {
+            setContact(contact);
+            deleteContactModal.onOpen();
+          },
+        });
+      }
+
+      if (permissions.can("create", "users") && contact.user === null) {
+        actions.push({
+          label: "Create Account",
+          icon: <IoMdAdd />,
+          onClick: () => {
+            navigate(
+              `/x/users/suppliers/new?id=${contact.id}&supplier=${supplierId}`
+            );
+          },
+        });
+      }
+
+      return actions;
+    },
+    [permissions, supplierId, contactDrawer, deleteContactModal, navigate]
+  );
 
   return (
     <>
@@ -74,31 +116,7 @@ const SupplierContacts = ({
                   <Contact
                     contact={contact.contact}
                     user={contact.user}
-                    onDelete={
-                      permissions.can("delete", "purchasing")
-                        ? () => {
-                            setContact(contact);
-                            deleteContactModal.onOpen();
-                          }
-                        : undefined
-                    }
-                    onEdit={
-                      permissions.can("update", "purchasing")
-                        ? () => {
-                            setContact(contact);
-                            contactDrawer.onOpen();
-                          }
-                        : undefined
-                    }
-                    onCreateAccount={
-                      permissions.can("create", "users") &&
-                      contact.user === null
-                        ? () =>
-                            navigate(
-                              `/x/users/suppliers/new?id=${contact.id}&supplier=${supplierId}`
-                            )
-                        : undefined
-                    }
+                    actions={getActions(contact)}
                   />
                 ) : null}
               </ListItem>

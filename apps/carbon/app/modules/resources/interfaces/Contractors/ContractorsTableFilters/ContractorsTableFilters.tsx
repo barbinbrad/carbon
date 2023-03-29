@@ -7,11 +7,13 @@ import { usePermissions, useUrlParams } from "~/hooks";
 import type { Ability } from "~/modules/resources/types";
 import { mapRowsToOptions } from "~/utils/form";
 
-type PartnersTableFiltersProps = {
+type ContractorsTableFiltersProps = {
   abilities: Partial<Ability>[];
 };
 
-const PartnersTableFilters = ({ abilities }: PartnersTableFiltersProps) => {
+const ContractorsTableFilters = ({
+  abilities,
+}: ContractorsTableFiltersProps) => {
   const [params, setParams] = useUrlParams();
   const permissions = usePermissions();
   const abilitiesOptions = mapRowsToOptions({
@@ -62,7 +64,7 @@ const PartnersTableFilters = ({ abilities }: PartnersTableFiltersProps) => {
             colorScheme="brand"
             leftIcon={<IoMdAdd />}
           >
-            New Partner
+            New Contractor
           </Button>
         )}
       </HStack>
@@ -70,4 +72,4 @@ const PartnersTableFilters = ({ abilities }: PartnersTableFiltersProps) => {
   );
 };
 
-export default PartnersTableFilters;
+export default ContractorsTableFilters;

@@ -74,6 +74,19 @@ export const attributeCategoryValidator = withZod(
   })
 );
 
+export const contractorValidator = withZod(
+  z.object({
+    id: z.string().min(20, { message: "Supplier Contact is required" }),
+    supplierId: z.string().min(20, { message: "Supplier is required" }),
+    hoursPerWeek: zfd.numeric(
+      z.number().min(0, { message: "Hours are required" })
+    ),
+    abilities: z
+      .array(z.string().min(20, { message: "Invalid ability" }))
+      .min(1, { message: "An ability is required" }),
+  })
+);
+
 export const departmentValidator = withZod(
   z.object({
     id: zfd.text(z.string().optional()),

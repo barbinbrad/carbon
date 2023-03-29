@@ -20,8 +20,8 @@ CREATE TABLE "partnerAbility" (
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
 
   CONSTRAINT "partnerAbility_pkey" PRIMARY KEY ("partnerId", "abilityId"),
-  CONSTRAINT "partnerAbility_partnerId_fkey" FOREIGN KEY ("partnerId") REFERENCES "partner"("id"),
-  CONSTRAINT "partnerAbility_abilityId_fkey" FOREIGN KEY ("abilityId") REFERENCES "ability"("id"),
+  CONSTRAINT "partnerAbility_partnerId_fkey" FOREIGN KEY ("partnerId") REFERENCES "partner"("id") ON DELETE CASCADE,
+  CONSTRAINT "partnerAbility_abilityId_fkey" FOREIGN KEY ("abilityId") REFERENCES "ability"("id") ON DELETE CASCADE,
   CONSTRAINT "partnerAbility_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id")
 );
 

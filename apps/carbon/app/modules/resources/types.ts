@@ -18,6 +18,7 @@ import type {
   getWorkCellTypes,
   getWorkCellType,
   getHolidays,
+  getContractors,
 } from "./services";
 
 export type Ability = NonNullable<
@@ -77,6 +78,10 @@ export type AttributeDataType = {
   isNumeric: boolean;
   isText: boolean;
 };
+
+export type Contractor = NonNullable<
+  Awaited<ReturnType<typeof getContractors>>["data"]
+>[number];
 
 export type Department = NonNullable<
   Awaited<ReturnType<typeof getDepartments>>["data"]

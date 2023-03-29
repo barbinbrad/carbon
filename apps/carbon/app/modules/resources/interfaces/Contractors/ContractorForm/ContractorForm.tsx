@@ -19,16 +19,16 @@ import { useEffect, useMemo } from "react";
 import { useControlField, useField, ValidatedForm } from "remix-validated-form";
 import { Abilities, Number, Submit, Supplier } from "~/components/Form";
 import { usePermissions } from "~/hooks";
-import type { getSupplierLocations } from "~/modules/purchasing";
-import { partnerValidator } from "~/modules/resources";
+import type { getSupplierContacts } from "~/modules/purchasing";
+import { contractorValidator } from "~/modules/resources";
 import type { TypeOfValidator } from "~/types/validators";
 import { mapRowsToOptions } from "~/utils/form";
 
-type PartnerFormProps = {
-  initialValues: TypeOfValidator<typeof partnerValidator>;
+type ContractorFormProps = {
+  initialValues: TypeOfValidator<typeof contractorValidator>;
 };
 
-const PartnerForm = ({ initialValues }: PartnerFormProps) => {
+const ContractorForm = ({ initialValues }: ContractorFormProps) => {
   const permissions = usePermissions();
   const navigate = useNavigate();
   const onClose = () => navigate(-1);
@@ -38,51 +38,51 @@ const PartnerForm = ({ initialValues }: PartnerFormProps) => {
     ? !permissions.can("update", "resources")
     : !permissions.can("create", "resources");
 
-  const supplierLocationFetcher =
-    useFetcher<Awaited<ReturnType<typeof getSupplierLocations>>>();
+  const supplierContactsFetcher =
+    useFetcher<Awaited<ReturnType<typeof getSupplierContacts>>>();
 
   const onSupplierChange = ({ value }: { value: string | number }) => {
     if (value)
-      supplierLocationFetcher.load(
-        `/api/purchasing/supplier-locations?supplierId=${value}`
+      supplierContactsFetcher.load(
+        `/api/purchasing/supplier-contacts?supplierId=${value}`
       );
   };
 
   useEffect(() => {
     if (initialValues.supplierId)
-      supplierLocationFetcher.load(
+      supplierContactsFetcher.load(
         `/api/purchasing/supplier-locations?supplierId=${initialValues.supplierId}`
       );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const supplierLocations = useMemo(
+  const supplierContacts = useMemo(
     () =>
       mapRowsToOptions({
-        data: supplierLocationFetcher.data?.data ?? [],
+        data: supplierContactsFetcher.data?.data ?? [],
         value: "id",
         // @ts-ignore
-        label: (row) => `${row.address.city}, ${row.address.state}`,
+        label: (row) => `${row.contact.firstName} ${row.contact.lastName}`,
       }),
-    [supplierLocationFetcher.data]
+    [supplierContactsFetcher.data]
   );
 
   return (
     <Drawer onClose={onClose} isOpen={true} size="sm">
       <ValidatedForm
-        validator={partnerValidator}
+        validator={contractorValidator}
         method="post"
         action={
           isEditing
-            ? `/x/resources/partners/${initialValues.id}`
-            : "/x/resources/partners/new"
+            ? `/x/resources/contractors/${initialValues.id}`
+            : "/x/resources/contractors/new"
         }
         defaultValues={initialValues}
       >
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader>{isEditing ? "Edit" : "New"} Partner</DrawerHeader>
+          <DrawerHeader>{isEditing ? "Edit" : "New"} Contractor</DrawerHeader>
           <DrawerBody pb={8}>
             <VStack spacing={4} alignItems="start">
               <Supplier
@@ -91,9 +91,9 @@ const PartnerForm = ({ initialValues }: PartnerFormProps) => {
                 isReadOnly={isEditing}
                 onChange={onSupplierChange}
               />
-              <SupplierLocationsBySupplier
-                supplierLocations={supplierLocations}
-                initialLocation={initialValues.id}
+              <SupplierContactsBySupplier
+                supplierContacts={supplierContacts}
+                initialContact={initialValues.id}
                 isReadOnly={isEditing}
               />
               <Abilities name="abilities" label="Abilities" />
@@ -124,46 +124,45 @@ const PartnerForm = ({ initialValues }: PartnerFormProps) => {
     </Drawer>
   );
 };
+const SUPPLIER_CONTACT_FIELD = "id";
 
-const SUPPLIER_LOCATION_FIELD = "id";
-
-const SupplierLocationsBySupplier = ({
-  supplierLocations,
-  initialLocation,
+const SupplierContactsBySupplier = ({
+  supplierContacts,
+  initialContact,
   isReadOnly,
 }: {
-  supplierLocations: { value: string | number; label: string }[];
-  initialLocation?: string;
+  supplierContacts: { value: string | number; label: string }[];
+  initialContact?: string;
   isReadOnly: boolean;
 }) => {
-  const { error, getInputProps } = useField(SUPPLIER_LOCATION_FIELD);
+  const { error, getInputProps } = useField(SUPPLIER_CONTACT_FIELD);
 
-  const [supplierLocation, setSupplierLocation] = useControlField<{
+  const [supplierContact, setSupplierContact] = useControlField<{
     value: string | number;
     label: string;
-  } | null>(SUPPLIER_LOCATION_FIELD);
+  } | null>(SUPPLIER_CONTACT_FIELD);
 
   useEffect(() => {
     // if the initial value is in the options, set it, otherwise set to null
-    if (supplierLocations) {
-      setSupplierLocation(
-        supplierLocations.find((s) => s.value === initialLocation) ?? null
+    if (supplierContacts) {
+      setSupplierContact(
+        supplierContacts.find((s) => s.value === initialContact) ?? null
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [supplierLocations, initialLocation]);
+  }, [supplierContacts, initialContact]);
 
   return (
     <FormControl isInvalid={!!error}>
-      <FormLabel htmlFor={SUPPLIER_LOCATION_FIELD}>Supplier Location</FormLabel>
+      <FormLabel htmlFor={SUPPLIER_CONTACT_FIELD}>Supplier Contact</FormLabel>
       <Select
         {...getInputProps({
           // @ts-ignore
-          id: SUPPLIER_LOCATION_FIELD,
+          id: SUPPLIER_CONTACT_FIELD,
         })}
-        options={supplierLocations}
-        value={supplierLocation}
-        onChange={setSupplierLocation}
+        options={supplierContacts}
+        value={supplierContact}
+        onChange={setSupplierContact}
         // @ts-ignore
         isReadOnly={isReadOnly}
         w="full"
@@ -173,4 +172,4 @@ const SupplierLocationsBySupplier = ({
   );
 };
 
-export default PartnerForm;
+export default ContractorForm;

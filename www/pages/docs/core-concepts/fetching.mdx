@@ -3,7 +3,7 @@ title: Data Fetching in Carbon ERP
 description: Conventions for fetching data in Carbon ERP
 ---
 
-import { Callout } from "nextra-theme-docs";
+import { Callout, Tabs, Tab } from "nextra-theme-docs";
 
 # Fetching
 
@@ -113,7 +113,57 @@ export async function getPartners(
 }
 ```
 
+If a query becomes complex, the convention is to create a SQL view in the database and query that instead. Here's an example of a view that joins the `partner` and `supplier` tables:
+
+<Tabs
+  items={[
+    "SQL",
+    "TypeScript",
+  ]}
+>   
+  <Tab>
+```sql
+CREATE VIEW "partners_query" AS
+  SELECT 
+    p.id AS "supplierLocationId", 
+    p."active", 
+    p."hoursPerWeek", 
+    s.id AS "supplierId", 
+    s.name AS "supplierName", 
+    a.city,
+    a.state,
+    array_agg(pa."abilityId") AS "abilityIds"
+  FROM "partner" p 
+    INNER JOIN "supplierLocation" sl 
+      ON sl.id = p.id
+    INNER JOIN "supplier" s
+      ON s.id = sl."supplierId"
+    INNER JOIN "address" a 
+      ON a.id = sl."addressId"
+    INNER JOIN "partnerAbility" pa
+      ON pa."partnerId" = p.id
+  WHERE p."active" = true
+  GROUP BY p.id, p.active, p."hoursPerWeek", s.id, a.id, s.name, a.city, a.state
+;
+```
+  </Tab>
+  <Tab>
+```ts
+export async function getPartner(
+  client: SupabaseClient<Database>,
+  partnerId: string
+) {
+  return client
+    .from("partners_query")
+    .select("*")
+    .eq("supplierLocationId", partnerId)
+    .single();
+}
+```
+  </Tab>
+</Tabs>
 <Callout>
   For more information on query building, see the [Supabase
   documentation](https://supabase.io/docs/reference/javascript/select)
 </Callout>
+```

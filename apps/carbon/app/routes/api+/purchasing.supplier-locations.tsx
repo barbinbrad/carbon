@@ -19,16 +19,16 @@ export async function loader({ request }: LoaderArgs) {
       data: [],
     });
 
-  const contacts = await getSupplierLocations(authorized.client, supplierId);
-  if (contacts.error) {
+  const locations = await getSupplierLocations(authorized.client, supplierId);
+  if (locations.error) {
     return json(
-      contacts,
+      locations,
       await flash(
         request,
-        error(contacts.error, "Failed to get supplier contacts")
+        error(locations.error, "Failed to get supplier locations")
       )
     );
   }
 
-  return json(contacts);
+  return json(locations);
 }

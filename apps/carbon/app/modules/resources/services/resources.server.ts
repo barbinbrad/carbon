@@ -35,6 +35,13 @@ export async function deleteAttributeCategory(
     .eq("id", attributeCategoryId);
 }
 
+export async function deleteContractor(
+  client: SupabaseClient<Database>,
+  contractorId: string
+) {
+  return client.from("contractor").delete().eq("id", contractorId);
+}
+
 export async function deleteDepartment(
   client: SupabaseClient<Database>,
   departmentId: string
@@ -256,6 +263,38 @@ export async function getAttributeCategory(
 
 export async function getAttributeDataTypes(client: SupabaseClient<Database>) {
   return client.from("attributeDataType").select("*");
+}
+
+export async function getContractor(
+  client: SupabaseClient<Database>,
+  contractorId: string
+) {
+  return client
+    .from("contractors_query")
+    .select("*")
+    .eq("supplierContactId", contractorId)
+    .single();
+}
+
+export async function getContractors(
+  client: SupabaseClient<Database>,
+  args?: GenericQueryFilters & { name: string | null; ability: string | null }
+) {
+  let query = client.from("contractors_query").select("*").eq("active", true);
+
+  if (args?.name) {
+    query = query.ilike("supplierName", `%${args.name}%`);
+  }
+
+  if (args?.ability) {
+    query.contains("abilityIds", [args.ability]);
+  }
+
+  if (args) {
+    query = setGenericQueryFilters(query, args, "supplierName");
+  }
+
+  return query;
 }
 
 export async function getDepartment(
@@ -489,12 +528,16 @@ export async function getPartner(
 
 export async function getPartners(
   client: SupabaseClient<Database>,
-  args?: GenericQueryFilters & { name: string | null }
+  args?: GenericQueryFilters & { name: string | null; ability: string | null }
 ) {
   let query = client.from("partners_query").select("*").eq("active", true);
 
   if (args?.name) {
     query = query.ilike("supplierName", `%${args.name}%`);
+  }
+
+  if (args?.ability) {
+    query.contains("abilityIds", [args.ability]);
   }
 
   if (args) {
@@ -879,6 +922,59 @@ export async function updateAttributeSortOrder(
     client.from("userAttribute").update({ sortOrder, updatedBy }).eq("id", id)
   );
   return Promise.all(updatePromises);
+}
+
+export async function upsertContractor(
+  client: SupabaseClient<Database>,
+  contractorWithAbilities:
+    | {
+        id: string;
+        hoursPerWeek?: number;
+        abilities: string[];
+        createdBy: string;
+      }
+    | {
+        id: string;
+        hoursPerWeek?: number;
+        abilities: string[];
+        updatedBy: string;
+      }
+) {
+  const { abilities, ...contractor } = contractorWithAbilities;
+  if ("updatedBy" in contractor) {
+    const updateContractor = await client
+      .from("contractor")
+      .update(contractor)
+      .eq("id", contractor.id);
+    if (updateContractor.error) {
+      return updateContractor;
+    }
+    const deleteContractorAbilities = await client
+      .from("contractorAbility")
+      .delete()
+      .eq("contractorId", contractor.id);
+    if (deleteContractorAbilities.error) {
+      return deleteContractorAbilities;
+    }
+  } else {
+    const createContractor = await client
+      .from("contractor")
+      .insert([contractor]);
+    if (createContractor.error) {
+      return createContractor;
+    }
+  }
+
+  const contractorAbilities = abilities.map((ability) => {
+    return {
+      contractorId: contractor.id,
+      abilityId: ability,
+      createdBy:
+        "createdBy" in contractor ? contractor.createdBy : contractor.updatedBy,
+    };
+  });
+
+  return client.from("contractorAbility").insert(contractorAbilities);
 }
 
 export async function upsertDepartment(

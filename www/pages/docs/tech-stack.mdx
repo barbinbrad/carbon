@@ -27,15 +27,13 @@ We chose TypeScript because it allows us to use a single, strongly-typed languag
 
 [React](https://reactjs.org) is a JavaScript library for building user interfaces. It's the most popular frontend framework in the world, and it's used by many of the biggest companies in the world, including Facebook, Netflix, and Airbnb.
 
-React is a component-based framework, which means that you can build your UI out of small, reusable components. This makes it easy to build complex UIs, and it also makes it easy to reuse code across different parts of your application.
-
-React is also declarative, which means that you describe what you want your UI to look like, and React will take care of updating the UI whenever the data changes. This makes it easy to build complex UIs, and it also makes it easy to reuse code across different parts of your application.
-
-We have a package called [@carbon/react](https://github.com/barbinbrad/carbon/tree/main/packages/carbon-react/src) that has a bunch of React components that you can use to build your UI. You can also use any other React component library that you want.
+We have a package called [@carbon/react](https://github.com/barbinbrad/carbon/tree/main/packages/carbon-react/src) that has a bunch of React pre-built components that you can use to build your UI. You can also use any other React component library.
 
 ## Chakra UI
 
 [Chakra UI](https://chakra-ui.com) is a lightweight and flexible component library that gives us accessibility, full-control, and simplicty. It implements the WAI-ARIA spec behaviors with some basic primitive components (like Button and Modal) while providing an easy-to-modify API for customizing the design.
+
+Here's an example of a Chakra UI button:
 
 ```jsx
 import { Button } from "@chakra-ui/react";
@@ -55,7 +53,7 @@ There are a lot of other component libraries out there, but we chose Chakra UI b
 
 [Remix](https://remix.run) is a framework for building full-stack web applications. It's built on top of React, and it allows us to co-locate server-side code and client-side code in the same files. When combined with TypeScript and Supabase, this gives us type-safety from the database to the UI.
 
-Remix makes for a beautiful developer experience. It's use of [loaders, actions and components](https://remix.run/blog/remix-data-flow) **minimizes the amount of code that needs written while maximzing performance**. To learn more about Remix, check out their documentation, and take a look at some files from our [routes](https://github.com/barbinbrad/carbon/tree/main/apps/carbon/app/routes) directory.
+Remix makes for a beautiful developer experience. It's use of nested routes, [loaders, actions and components](https://remix.run/blog/remix-data-flow) **minimizes the amount of code that needs written while maximzing performance**. To learn more about Remix, check out their documentation, and take a look at some files from our [routes](https://github.com/barbinbrad/carbon/tree/main/apps/carbon/app/routes) directory.
 
 Here's a slightly-simplified example of how a Remix route works:
 

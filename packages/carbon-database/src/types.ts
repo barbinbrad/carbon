@@ -170,6 +170,55 @@ export interface Database {
           id?: string;
         };
       };
+      contractor: {
+        Row: {
+          id: string;
+          createdBy: string;
+          updatedBy: string | null;
+          updatedAt: string | null;
+          hoursPerWeek: number;
+          active: boolean;
+          createdAt: string;
+        };
+        Insert: {
+          id: string;
+          createdBy: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          hoursPerWeek?: number;
+          active?: boolean;
+          createdAt?: string;
+        };
+        Update: {
+          id?: string;
+          createdBy?: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          hoursPerWeek?: number;
+          active?: boolean;
+          createdAt?: string;
+        };
+      };
+      contractorAbility: {
+        Row: {
+          contractorId: string;
+          abilityId: string;
+          createdBy: string;
+          createdAt: string;
+        };
+        Insert: {
+          contractorId: string;
+          abilityId: string;
+          createdBy: string;
+          createdAt?: string;
+        };
+        Update: {
+          contractorId?: string;
+          abilityId?: string;
+          createdBy?: string;
+          createdAt?: string;
+        };
+      };
       country: {
         Row: {
           name: string;
@@ -1344,6 +1393,19 @@ export interface Database {
       };
     };
     Views: {
+      contractors_query: {
+        Row: {
+          supplierContactId: string | null;
+          active: boolean | null;
+          hoursPerWeek: number | null;
+          supplierId: string | null;
+          supplierName: string | null;
+          firstName: string | null;
+          lastName: string | null;
+          email: string | null;
+          abilityIds: string[] | null;
+        };
+      };
       group_member: {
         Row: {
           id: number | null;

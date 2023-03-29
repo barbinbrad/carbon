@@ -79,6 +79,18 @@ const SupplierContacts = ({
         });
       }
 
+      if (permissions.can("create", "resources")) {
+        actions.push({
+          label: "Add Contractor",
+          icon: <IoMdAdd />,
+          onClick: () => {
+            navigate(
+              `/x/resources/contractors/new?id=${contact.id}&supplierId=${supplierId}`
+            );
+          },
+        });
+      }
+
       return actions;
     },
     [permissions, supplierId, contactDrawer, deleteContactModal, navigate]

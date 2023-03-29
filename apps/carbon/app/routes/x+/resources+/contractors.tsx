@@ -4,9 +4,9 @@ import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import {
-  PartnersTable,
-  PartnersTableFilters,
-  getPartners,
+  ContractorsTable,
+  ContractorsTableFilters,
+  getContractors,
   getAbilitiesList,
 } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
@@ -26,8 +26,8 @@ export async function loader({ request }: LoaderArgs) {
   const ability = searchParams.get("ability");
   const { limit, offset, sorts } = getGenericQueryFilters(searchParams);
 
-  const [partners, abilities] = await Promise.all([
-    getPartners(client, {
+  const [contractors, abilities] = await Promise.all([
+    getContractors(client, {
       name,
       limit,
       offset,
@@ -37,27 +37,30 @@ export async function loader({ request }: LoaderArgs) {
     getAbilitiesList(client),
   ]);
 
-  if (partners.error) {
+  if (contractors.error) {
     return redirect(
       "/x/resources",
-      await flash(request, error(partners.error, "Failed to load partners"))
+      await flash(
+        request,
+        error(contractors.error, "Failed to load contractors")
+      )
     );
   }
 
   return json({
-    partners: partners.data ?? [],
+    contractors: contractors.data ?? [],
     abilities: abilities.data ?? [],
-    count: partners.count ?? 0,
+    count: contractors.count ?? 0,
   });
 }
 
 export default function Route() {
-  const { partners, abilities, count } = useLoaderData<typeof loader>();
+  const { contractors, abilities, count } = useLoaderData<typeof loader>();
 
   return (
     <VStack w="full" h="full" spacing={0}>
-      <PartnersTableFilters abilities={abilities} />
-      <PartnersTable data={partners} count={count} />
+      <ContractorsTableFilters abilities={abilities} />
+      <ContractorsTable data={contractors} count={count} />
       <Outlet />
     </VStack>
   );

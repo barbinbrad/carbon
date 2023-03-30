@@ -716,6 +716,149 @@ export interface Database {
           createdAt?: string;
         };
       };
+      glAccount: {
+        Row: {
+          id: string;
+          divisionId: string;
+          chartId: string;
+          name: string;
+          description: string;
+          createdBy: string;
+          updatedBy: string | null;
+          updatedAt: string | null;
+          active: boolean;
+          createdAt: string;
+        };
+        Insert: {
+          id: string;
+          divisionId: string;
+          chartId: string;
+          name: string;
+          description: string;
+          createdBy: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          active?: boolean;
+          createdAt?: string;
+        };
+        Update: {
+          id?: string;
+          divisionId?: string;
+          chartId?: string;
+          name?: string;
+          description?: string;
+          createdBy?: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          active?: boolean;
+          createdAt?: string;
+        };
+      };
+      glAccountCategory: {
+        Row: {
+          name: string;
+          categoryType: Database["public"]["Enums"]["accountCategoryType"];
+          createdBy: string;
+          updatedBy: string | null;
+          updatedAt: string | null;
+          id: string;
+          createdAt: string;
+        };
+        Insert: {
+          name: string;
+          categoryType: Database["public"]["Enums"]["accountCategoryType"];
+          createdBy: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          id?: string;
+          createdAt?: string;
+        };
+        Update: {
+          name?: string;
+          categoryType?: Database["public"]["Enums"]["accountCategoryType"];
+          createdBy?: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          id?: string;
+          createdAt?: string;
+        };
+      };
+      glChart: {
+        Row: {
+          id: string;
+          name: string;
+          accountCategoryId: string;
+          accountType: Database["public"]["Enums"]["glAccountType"];
+          cashFlowType: Database["public"]["Enums"]["glCashFlowType"] | null;
+          createdBy: string;
+          updatedBy: string | null;
+          updatedAt: string | null;
+          normalBalance: Database["public"]["Enums"]["glNormalBalance"];
+          cashAndCashEquivalents: boolean;
+          createdAt: string;
+          parentAccountId: string | null;
+          parentChartId: string | null;
+        };
+        Insert: {
+          id: string;
+          name: string;
+          accountCategoryId: string;
+          accountType: Database["public"]["Enums"]["glAccountType"];
+          cashFlowType?: Database["public"]["Enums"]["glCashFlowType"] | null;
+          createdBy: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          normalBalance?: Database["public"]["Enums"]["glNormalBalance"];
+          cashAndCashEquivalents?: boolean;
+          createdAt?: string;
+          parentAccountId?: string | null;
+          parentChartId?: string | null;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          accountCategoryId?: string;
+          accountType?: Database["public"]["Enums"]["glAccountType"];
+          cashFlowType?: Database["public"]["Enums"]["glCashFlowType"] | null;
+          createdBy?: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          normalBalance?: Database["public"]["Enums"]["glNormalBalance"];
+          cashAndCashEquivalents?: boolean;
+          createdAt?: string;
+          parentAccountId?: string | null;
+          parentChartId?: string | null;
+        };
+      };
+      glDivision: {
+        Row: {
+          id: string;
+          name: string;
+          createdBy: string;
+          updatedBy: string | null;
+          updatedAt: string | null;
+          createdAt: string;
+          retainedEarningsAccountId: string;
+        };
+        Insert: {
+          id: string;
+          name: string;
+          createdBy: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          createdAt?: string;
+          retainedEarningsAccountId: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          createdBy?: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          createdAt?: string;
+          retainedEarningsAccountId?: string;
+        };
+      };
       group: {
         Row: {
           name: string;
@@ -839,6 +982,53 @@ export interface Database {
           memberGroupId?: string | null;
           memberUserId?: string | null;
           id?: number;
+        };
+      };
+      partAccount: {
+        Row: {
+          partGroupId: string;
+          salesAccountId: string;
+          discountAccountId: string;
+          inventoryAccountId: string;
+          costOfGoodsSoldLaborAccountId: string | null;
+          costOfGoodsSoldMaterialAccountId: string | null;
+          costOfGoodsSoldOverheadAccountId: string | null;
+          costOfGoodsSoldSubcontractorAccountId: string | null;
+          createdBy: string;
+          updatedBy: string | null;
+          updatedAt: string | null;
+          id: string;
+          createdAt: string;
+        };
+        Insert: {
+          partGroupId: string;
+          salesAccountId: string;
+          discountAccountId: string;
+          inventoryAccountId: string;
+          costOfGoodsSoldLaborAccountId?: string | null;
+          costOfGoodsSoldMaterialAccountId?: string | null;
+          costOfGoodsSoldOverheadAccountId?: string | null;
+          costOfGoodsSoldSubcontractorAccountId?: string | null;
+          createdBy: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          id?: string;
+          createdAt?: string;
+        };
+        Update: {
+          partGroupId?: string;
+          salesAccountId?: string;
+          discountAccountId?: string;
+          inventoryAccountId?: string;
+          costOfGoodsSoldLaborAccountId?: string | null;
+          costOfGoodsSoldMaterialAccountId?: string | null;
+          costOfGoodsSoldOverheadAccountId?: string | null;
+          costOfGoodsSoldSubcontractorAccountId?: string | null;
+          createdBy?: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          id?: string;
+          createdAt?: string;
         };
       };
       partGroup: {
@@ -1584,6 +1774,12 @@ export interface Database {
       };
     };
     Enums: {
+      accountCategoryType:
+        | "Asset"
+        | "Liability"
+        | "Equity"
+        | "Revenue"
+        | "Expense";
       factor:
         | "Hours/Piece"
         | "Hours/100 Pieces"
@@ -1596,6 +1792,9 @@ export interface Database {
         | "Seconds/Piece"
         | "Total Hours"
         | "Total Minutes";
+      glAccountType: "Balance Sheet" | "Income Statement";
+      glCashFlowType: "Operating" | "Investing" | "Financing";
+      glNormalBalance: "Debit" | "Credit";
       search_entity:
         | "Resource"
         | "Person"

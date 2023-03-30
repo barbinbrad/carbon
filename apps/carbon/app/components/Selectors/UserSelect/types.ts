@@ -37,7 +37,7 @@ export interface UserSelectProps {
   readOnly?: boolean;
   renderInput?: ReactNode;
   resetAfterSelection?: boolean;
-  selections?: SelectionItemInterface[];
+  selections?: IndividualOrGroup[];
   selectionsMaxHeight?: string | number;
   testID?: string;
   type?: "employee" | "supplier" | "customer";
@@ -46,16 +46,16 @@ export interface UserSelectProps {
   width?: number;
   onBlur?: (e: any) => void;
   onCancel?: () => void;
-  onChange?: (selectionsList: SelectionItemInterface[]) => void;
+  onChange?: (selectionsList: IndividualOrGroup[]) => void;
   onCheckedSelectionsChange?: (
-    checkedSelectionsList: SelectionItemInterface[]
+    checkedSelectionsList: IndividualOrGroup[]
   ) => void;
 }
 
 export type OptionGroup = {
   uid: string;
   expanded: boolean;
-  items: SelectionItemInterface[];
+  items: IndividualOrGroup[];
   name: string;
 };
 
@@ -85,11 +85,9 @@ type SelectionGroupWithOptions = Group["data"] & {
   children?: Group[];
 } & SelectionOptions;
 
-export type SelectionItemInterface =
-  | UserWithOptions
-  | SelectionGroupWithOptions;
+export type IndividualOrGroup = UserWithOptions | SelectionGroupWithOptions;
 
-export type SelectionItemsById = Record<string, SelectionItemInterface>;
+export type SelectionItemsById = Record<string, IndividualOrGroup>;
 
 export interface SelectInputProps {
   aria?: Omit<InputHTMLAttributes<HTMLInputElement>, "size">;
@@ -114,8 +112,8 @@ export interface UserTreeSelectProps {
   groupTypeFilter?: string;
   innerProps: UserSelectProps;
   instanceId: string;
-  itemOnSelect?: (selectableItem: SelectionItemInterface) => void;
-  itemOnStage?: (selectableItem: SelectionItemInterface) => void;
+  itemOnSelect?: (selectableItem: IndividualOrGroup) => void;
+  itemOnStage?: (selectableItem: IndividualOrGroup) => void;
   loading: boolean;
   multi?: boolean;
   refs: ComboBoxRefs;

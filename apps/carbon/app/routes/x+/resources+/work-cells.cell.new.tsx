@@ -50,6 +50,6 @@ export async function action({ request }: ActionArgs) {
 
   return redirect(
     `/x/resources/work-cells`,
-    await flash(request, success("Created workCell"))
+    await flash(request, success("Created work cell"))
   );
 }

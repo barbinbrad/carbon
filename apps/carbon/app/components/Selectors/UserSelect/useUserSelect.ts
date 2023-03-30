@@ -8,9 +8,9 @@ import { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import type { Group } from "~/modules/users";
 
 import type {
+  IndividualOrGroup,
   OptionGroup,
   SelectionItemsById,
-  SelectionItemInterface,
   UserSelectionGenericQueryFilters,
   UserSelectProps,
   TreeNode,
@@ -28,7 +28,7 @@ const defaultProps = {
   queryFilters: {} as UserSelectionGenericQueryFilters,
   readOnly: false,
   resetAfterSelection: false,
-  selections: [] as SelectionItemInterface[],
+  selections: [] as IndividualOrGroup[],
   selectionsMaxHeight: 400,
   showAvatars: false,
   testID: "UserSelect",
@@ -94,8 +94,8 @@ export default function useUserSelect(props: UserSelectProps) {
     const makeGroupItems = (
       group: Group,
       groupId: string
-    ): SelectionItemInterface[] => {
-      const result: SelectionItemInterface[] = [];
+    ): IndividualOrGroup[] => {
+      const result: IndividualOrGroup[] = [];
 
       if (!innerProps.usersOnly) {
         result.push({
@@ -152,12 +152,12 @@ export default function useUserSelect(props: UserSelectProps) {
   /* Pre-populate controlled component after data loads */
   useEffect(() => {
     if (innerProps.value && optionGroups && optionGroups.length > 0) {
-      const flattened = optionGroups.reduce(
+      const flattened = optionGroups.reduce<IndividualOrGroup[]>(
         (acc, group) => acc.concat(group.items),
-        [] as SelectionItemInterface[]
+        []
       );
       if (Array.isArray(innerProps.value)) {
-        const selections = flattened.reduce((acc, item) => {
+        const selections = flattened.reduce<SelectionItemsById>((acc, item) => {
           if (innerProps.value!.includes(item.id)) {
             return {
               ...acc,
@@ -165,7 +165,7 @@ export default function useUserSelect(props: UserSelectProps) {
             };
           }
           return acc;
-        }, {} as SelectionItemsById);
+        }, {});
         if (Object.keys(selections).length > 0) {
           setSelectionItemsById(selections);
         }
@@ -417,7 +417,7 @@ export default function useUserSelect(props: UserSelectProps) {
   }, []);
 
   const onChange = useCallback(
-    (selections: SelectionItemInterface[]) => {
+    (selections: IndividualOrGroup[]) => {
       if (innerProps.onChange && typeof innerProps.onChange === "function") {
         innerProps.onChange(selections);
       }
@@ -426,7 +426,7 @@ export default function useUserSelect(props: UserSelectProps) {
   );
 
   const onCheckedChange = useCallback(
-    (selections: SelectionItemInterface[]) => {
+    (selections: IndividualOrGroup[]) => {
       if (
         innerProps.onCheckedSelectionsChange &&
         typeof innerProps.onChange === "function"
@@ -438,7 +438,7 @@ export default function useUserSelect(props: UserSelectProps) {
   );
 
   const onSelect = useCallback(
-    (selectionItem?: SelectionItemInterface) => {
+    (selectionItem?: IndividualOrGroup) => {
       if (selectionItem === undefined) return;
       setSelectionItemsById((previousSelections) => {
         const nextSelections = innerProps.isMulti
@@ -471,7 +471,7 @@ export default function useUserSelect(props: UserSelectProps) {
   );
 
   const onDeselect = useCallback(
-    (selectionItem: SelectionItemInterface) => {
+    (selectionItem: IndividualOrGroup) => {
       if (selectionItem === undefined) return;
       const { id } = selectionItem;
       setSelectionItemsById((previousSelections) => {
@@ -489,7 +489,7 @@ export default function useUserSelect(props: UserSelectProps) {
   );
 
   const onToggle = useCallback(
-    (selectionItem?: SelectionItemInterface) => {
+    (selectionItem?: IndividualOrGroup) => {
       if (selectionItem === undefined) return;
       if (selectionItem.id in selectionItemsById) {
         onDeselect(selectionItem);
@@ -501,7 +501,7 @@ export default function useUserSelect(props: UserSelectProps) {
   );
 
   const onToggleChecked = useCallback(
-    (selectionItem?: SelectionItemInterface) => {
+    (selectionItem?: IndividualOrGroup) => {
       if (selectionItem === undefined) return;
       setSelectionItemsById((previousSelections) => {
         const nextSelections = {
@@ -550,7 +550,7 @@ export default function useUserSelect(props: UserSelectProps) {
   );
 
   const onExplode = useCallback(
-    (selectionItem: SelectionItemInterface) => {
+    (selectionItem: IndividualOrGroup) => {
       if (!("users" in selectionItem)) return;
 
       const { id, users, children } = selectionItem;
@@ -778,21 +778,21 @@ function getGroupId(instanceId: string, groupId: string) {
   return `${instanceId}_${groupId}_group`;
 }
 
-function checked(item: SelectionItemInterface): SelectionItemInterface {
+function checked(item: IndividualOrGroup): IndividualOrGroup {
   return {
     ...item,
     isChecked: true,
   };
 }
 
-export function isGroup(item: SelectionItemInterface) {
+export function isGroup(item: IndividualOrGroup) {
   return (
     ("users" in item && item.users?.length > 0) ||
     ("children" in item && item?.children?.length)
   );
 }
 
-function toggleChecked(item: SelectionItemInterface): SelectionItemInterface {
+function toggleChecked(item: IndividualOrGroup): IndividualOrGroup {
   return {
     ...item,
     isChecked: !item.isChecked || false,
@@ -800,7 +800,7 @@ function toggleChecked(item: SelectionItemInterface): SelectionItemInterface {
 }
 
 function makeSelectionItemsById(
-  input: SelectionItemInterface[],
+  input: IndividualOrGroup[],
   isMulti: boolean
 ): SelectionItemsById {
   const result: SelectionItemsById = {};

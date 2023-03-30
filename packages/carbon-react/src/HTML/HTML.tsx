@@ -1,6 +1,6 @@
 import { Box } from "@chakra-ui/react";
 import { sanitize } from "dompurify";
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import { reset } from "../Theme";
 
 type HTMLProps = {
@@ -8,11 +8,8 @@ type HTMLProps = {
 };
 
 const HTML = ({ text }: HTMLProps) => {
-  const [html, setHtml] = useState<string>("");
-  const sanitizedHtml = { __html: html };
-
-  useEffect(() => {
-    setHtml(sanitize(text));
+  const sanitizedHtml = useMemo(() => {
+    return { __html: sanitize(text) };
   }, [text]);
 
   return (

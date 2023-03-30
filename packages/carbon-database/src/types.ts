@@ -841,6 +841,38 @@ export interface Database {
           id?: number;
         };
       };
+      partGroup: {
+        Row: {
+          name: string;
+          description: string;
+          createdBy: string;
+          updatedBy: string | null;
+          updatedAt: string | null;
+          id: string;
+          active: boolean;
+          createdAt: string;
+        };
+        Insert: {
+          name: string;
+          description: string;
+          createdBy: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          id?: string;
+          active?: boolean;
+          createdAt?: string;
+        };
+        Update: {
+          name?: string;
+          description?: string;
+          createdBy?: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          id?: string;
+          active?: boolean;
+          createdAt?: string;
+        };
+      };
       partner: {
         Row: {
           id: string;

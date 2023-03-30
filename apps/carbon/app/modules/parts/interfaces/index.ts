@@ -1,3 +1,4 @@
-import { PartsTree } from "./Toolbar";
+import PartsTree from "./PartsTree";
+import usePartsSidebar from "./usePartsSidebar";
 
-export { PartsTree };
+export { PartsTree, usePartsSidebar };

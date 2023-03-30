@@ -8,7 +8,7 @@ import { useState } from "react";
 import { useField } from "remix-validated-form";
 import { UserSelect } from "../Selectors";
 import type {
-  SelectionItemInterface,
+  IndividualOrGroup,
   UserSelectProps,
 } from "../Selectors/UserSelect/types";
 
@@ -22,7 +22,7 @@ const Employees = ({ name, label, helperText, ...props }: EmployeesProps) => {
   const { error, defaultValue, validate } = useField(name);
   const [selections, setSelections] = useState<string[]>(defaultValue);
 
-  const handleChange = (items: SelectionItemInterface[]) => {
+  const handleChange = (items: IndividualOrGroup[]) => {
     setSelections(items.map((item) => item.id));
     validate();
   };

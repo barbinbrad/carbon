@@ -8,7 +8,7 @@ import { useState } from "react";
 import { useField } from "remix-validated-form";
 import { UserSelect } from "../Selectors";
 import type {
-  SelectionItemInterface,
+  IndividualOrGroup,
   UserSelectProps,
 } from "../Selectors/UserSelect/types";
 
@@ -22,7 +22,7 @@ const User = ({ name, label, type, helperText, ...props }: UserProps) => {
   const { error, defaultValue, validate } = useField(name);
   const [selection, setSelection] = useState<string>(defaultValue);
 
-  const handleChange = (items: SelectionItemInterface[]) => {
+  const handleChange = (items: IndividualOrGroup[]) => {
     if (items.length > 0) {
       const item = items[0];
       setSelection(item.id);

@@ -961,6 +961,65 @@ export interface Database {
           id?: number;
         };
       };
+      part: {
+        Row: {
+          id: string;
+          partGroupId: string;
+          partType: Database["public"]["Enums"]["partType"];
+          replenishmentSystem: Database["public"]["Enums"]["replenishmentSystem"];
+          manufacutringPolicy: Database["public"]["Enums"]["manufacutringPolicy"];
+          costingMethod: Database["public"]["Enums"]["costingMethod"];
+          name: string;
+          description: string | null;
+          approvedBy: string | null;
+          fromDate: string | null;
+          toDate: string | null;
+          createdBy: string;
+          updatedBy: string | null;
+          updatedAt: string | null;
+          active: boolean;
+          approved: boolean;
+          createdAt: string;
+        };
+        Insert: {
+          id: string;
+          partGroupId: string;
+          partType: Database["public"]["Enums"]["partType"];
+          replenishmentSystem: Database["public"]["Enums"]["replenishmentSystem"];
+          manufacutringPolicy: Database["public"]["Enums"]["manufacutringPolicy"];
+          costingMethod: Database["public"]["Enums"]["costingMethod"];
+          name: string;
+          description?: string | null;
+          approvedBy?: string | null;
+          fromDate?: string | null;
+          toDate?: string | null;
+          createdBy: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          active?: boolean;
+          approved?: boolean;
+          createdAt?: string;
+        };
+        Update: {
+          id?: string;
+          partGroupId?: string;
+          partType?: Database["public"]["Enums"]["partType"];
+          replenishmentSystem?: Database["public"]["Enums"]["replenishmentSystem"];
+          manufacutringPolicy?: Database["public"]["Enums"]["manufacutringPolicy"];
+          costingMethod?: Database["public"]["Enums"]["costingMethod"];
+          name?: string;
+          description?: string | null;
+          approvedBy?: string | null;
+          fromDate?: string | null;
+          toDate?: string | null;
+          createdBy?: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          active?: boolean;
+          approved?: boolean;
+          createdAt?: string;
+        };
+      };
       partAccount: {
         Row: {
           partGroupId: string;
@@ -1752,6 +1811,7 @@ export interface Database {
     };
     Enums: {
       consolidatedRate: "Average" | "Current" | "Historical";
+      costingMethod: "Standard" | "Average" | "LIFO" | "FIFO";
       factor:
         | "Hours/Piece"
         | "Hours/100 Pieces"
@@ -1785,6 +1845,9 @@ export interface Database {
         | "Other Expense";
       glAccountType: "Balance Sheet" | "Income Statement";
       glNormalBalance: "Debit" | "Credit";
+      manufacutringPolicy: "Make to Order" | "Make to Stock";
+      partType: "Inventory" | "Non-Inventory" | "Service";
+      replenishmentSystem: "Purchased" | "Manufactured";
       search_entity:
         | "Resource"
         | "Person"

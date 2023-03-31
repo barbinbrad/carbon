@@ -44,3 +44,54 @@ CREATE TABLE "partAccount" (
   CONSTRAINT "partAccount_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "partAccount_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
+
+CREATE TYPE "partType" AS ENUM (
+  'Inventory',
+  'Non-Inventory',
+  'Service'
+);
+
+CREATE TYPE "replenishmentSystem" AS ENUM (
+  'Purchased',
+  'Manufactured',
+  'Purchased and Manufactured'
+);
+
+CREATE TYPE "manufacutringPolicy" AS ENUM (
+  'Make to Order',
+  'Make to Stock'
+);
+
+
+CREATE TYPE "costingMethod" AS ENUM (
+  'Standard',
+  'Average',
+  'LIFO',
+  'FIFO'
+);
+
+CREATE TABLE "part" (
+  "id" TEXT NOT NULL,
+  "partGroupId" TEXT NOT NULL,
+  "partType" "partType" NOT NULL,
+  "replenishmentSystem" "replenishmentSystem" NOT NULL,
+  "manufacutringPolicy" "manufacutringPolicy" NOT NULL,
+  "costingMethod" "costingMethod" NOT NULL,
+  "name" TEXT NOT NULL,
+  "description" TEXT,
+  "active" BOOLEAN NOT NULL DEFAULT true,
+  "approved" BOOLEAN NOT NULL DEFAULT false,
+  "approvedBy" TEXT,
+  "fromDate" DATE,
+  "toDate" DATE,
+  "createdBy" TEXT NOT NULL,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+  "updatedBy" TEXT,
+  "updatedAt" TIMESTAMP WITH TIME ZONE,
+
+  CONSTRAINT "part_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "part_partGroupId_fkey" FOREIGN KEY ("partGroupId") REFERENCES "partGroup"("id") ON DELETE CASCADE,
+  CONSTRAINT "part_approvedBy_fkey" FOREIGN KEY ("approvedBy") REFERENCES "user"("id"),
+  CONSTRAINT "part_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
+  CONSTRAINT "part_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
+);

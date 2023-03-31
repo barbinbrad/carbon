@@ -27,6 +27,12 @@ export const employeeTypePermissionsDefinitions: Record<
   >
 > = {
   Admin: {
+    Accounting: {
+      create: true,
+      update: true,
+      delete: true,
+      view: true,
+    },
     Parts: {
       create: true,
       update: true,
@@ -101,6 +107,12 @@ export const employeeTypePermissionsDefinitions: Record<
     },
   },
   "Project Manager": {
+    Accounting: {
+      create: false,
+      update: false,
+      delete: false,
+      view: false,
+    },
     Parts: {
       create: true,
       update: true,
@@ -175,6 +187,12 @@ export const employeeTypePermissionsDefinitions: Record<
     },
   },
   Sales: {
+    Accounting: {
+      create: false,
+      update: false,
+      delete: false,
+      view: false,
+    },
     Parts: {
       create: false,
       update: false,

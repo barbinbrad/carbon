@@ -21,10 +21,6 @@ const partsRoutes: RouteGroup[] = [
         name: "Part Groups",
         to: "/x/parts/groups",
       },
-      {
-        name: "Part Accounts",
-        to: "/x/parts/accounts",
-      },
     ],
   },
 ];

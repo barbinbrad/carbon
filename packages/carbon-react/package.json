@@ -43,7 +43,7 @@
     "framer-motion": "^10.0.0",
     "is-hotkey": "^0.2.0",
     "react-colorful": "^5.6.1",
-    "react-icons": "^4.7.1",
+    "react-icons": "^4.8.0",
     "react-select": "^5.5.1"
   },
   "devDependencies": {

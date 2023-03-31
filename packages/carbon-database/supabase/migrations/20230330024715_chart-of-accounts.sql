@@ -1,23 +1,41 @@
-CREATE TYPE "accountCategoryType" AS ENUM (
-  'Asset',
-  'Liability',
-  'Equity',
-  'Revenue',
-  'Expense'
-);
-
-CREATE TABLE "glAccountCategory" (
+CREATE TABLE "currency" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "name" TEXT NOT NULL,
-  "categoryType" "accountCategoryType" NOT NULL,
+  "isoCode" TEXT NOT NULL,
+  "symbol" TEXT,
+  "symbolPlacementBefore" BOOLEAN NOT NULL DEFAULT true,
+  "exchangeRate" NUMERIC(10,4) NOT NULL DEFAULT 1.0000,
+  "currencyPrecision" INTEGER NOT NULL DEFAULT 2,
+  "isBaseCurrency" BOOLEAN NOT NULL DEFAULT false,
   "createdBy" TEXT NOT NULL,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   "updatedBy" TEXT,
   "updatedAt" TIMESTAMP WITH TIME ZONE,
 
-  CONSTRAINT "glAccountCategory_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "glAccountCategory_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
-  CONSTRAINT "glAccountCategory_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
+  CONSTRAINT "currency_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "currency_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
+  CONSTRAINT "currency_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
+);
+
+CREATE TYPE "glAccountCategory" AS ENUM (
+  'Bank',
+  'Accounts Receivable',
+  'Inventory',
+  'Other Current Asset',
+  'Fixed Asset',
+  'Accumulated Depreciation',
+  'Other Asset',
+  'Accounts Payable',
+  'Other Current Liability',
+  'Long Term Liability',
+  'Equity - No Close',
+  'Equity - Close',
+  'Retained Earnings',
+  'Income',
+  'Cost of Goods Sold',
+  'Expense',
+  'Other Income',
+  'Other Expense'
 );
 
 CREATE TYPE "glAccountType" AS ENUM (
@@ -30,72 +48,63 @@ CREATE TYPE "glNormalBalance" AS ENUM (
   'Credit'
 );
 
-CREATE TYPE "glCashFlowType" AS ENUM (
-  'Operating',
-  'Investing',
-  'Financing'
+CREATE TABLE "accountCategory" (
+  "id" TEXT NOT NULL DEFAULT xid(),
+  "category" "glAccountCategory" NOT NULL,
+  "type" "glAccountType" NOT NULL,
+  "normalBalance" "glNormalBalance" NOT NULL,
+
+  CONSTRAINT "accountCategory_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "accountCategory_category_type_key" UNIQUE ("category")
 );
 
-CREATE TABLE "glChart" (
-  "id" TEXT NOT NULL,
-  "name" TEXT NOT NULL,
-  "accountCategoryId" TEXT NOT NULL,
-  "accountType" "glAccountType" NOT NULL,
-  "normalBalance" "glNormalBalance" NOT NULL DEFAULT 'Debit',
-  "cashFlowType" "glCashFlowType",
-  "cashAndCashEquivalents" BOOLEAN NOT NULL DEFAULT false,
-  "createdBy" TEXT NOT NULL,
-  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-  "updatedBy" TEXT,
-  "updatedAt" TIMESTAMP WITH TIME ZONE,
+INSERT INTO "accountCategory" ("category", "type", "normalBalance")
+VALUES 
+  ('Bank', 'Balance Sheet', 'Credit'),
+  ('Accounts Receivable', 'Balance Sheet', 'Credit'),
+  ('Inventory', 'Balance Sheet', 'Debit'),
+  ('Other Current Asset', 'Balance Sheet', 'Debit'),
+  ('Fixed Asset', 'Balance Sheet', 'Debit'),
+  ('Accumulated Depreciation', 'Balance Sheet', 'Credit'),
+  ('Other Asset', 'Balance Sheet', 'Debit'),
+  ('Accounts Payable', 'Balance Sheet', 'Debit'),
+  ('Other Current Liability', 'Balance Sheet', 'Debit'),
+  ('Long Term Liability', 'Balance Sheet', 'Debit'),
+  ('Equity - No Close', 'Balance Sheet', 'Credit'),
+  ('Equity - Close', 'Balance Sheet', 'Credit'),
+  ('Retained Earnings', 'Balance Sheet', 'Credit'),
+  ('Income', 'Income Statement', 'Credit'),
+  ('Cost of Goods Sold', 'Income Statement', 'Debit'),
+  ('Expense', 'Income Statement', 'Debit'),
+  ('Other Income', 'Income Statement', 'Credit'),
+  ('Other Expense', 'Income Statement', 'Debit');
 
-  CONSTRAINT "glChart_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "glChart_accountCategoryId_fkey" FOREIGN KEY ("accountCategoryId") REFERENCES "glAccountCategory"("id"),
-  CONSTRAINT "glChart_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
-  CONSTRAINT "glChart_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
+CREATE TYPE "consolidatedRate" AS ENUM (
+  'Average',
+  'Current',
+  'Historical'
 );
 
-CREATE TABLE "glDivision" (
-  "id" TEXT NOT NULL,
-  "name" TEXT NOT NULL,
-  "createdBy" TEXT NOT NULL,
-  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-  "updatedBy" TEXT,
-  "updatedAt" TIMESTAMP WITH TIME ZONE,
-
-  CONSTRAINT "glDivision_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "glDivision_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
-  CONSTRAINT "glDivision_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
-);
-
-CREATE TABLE "glAccount" (
-  "id" TEXT NOT NULL,
-  "divisionId" TEXT NOT NULL,
-  "chartId" TEXT NOT NULL,
+CREATE TABLE "account" (
+  "number" TEXT NOT NULL,
   "name" TEXT NOT NULL,
   "description" TEXT NOT NULL,
+  "accountCategoryId" TEXT NOT NULL,
+  "controlAccount" BOOLEAN NOT NULL DEFAULT false,
+  "cashAccount" BOOLEAN NOT NULL DEFAULT false,
+  "consolidatedRate" "consolidatedRate",
+  "currencyId" TEXT,
+  "parentAccountNumber" TEXT,
   "active" BOOLEAN NOT NULL DEFAULT true,
   "createdBy" TEXT NOT NULL,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   "updatedBy" TEXT,
   "updatedAt" TIMESTAMP WITH TIME ZONE,
 
-  CONSTRAINT "glAccount_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "glAccount_accountId_key" UNIQUE ("id", "divisionId", "chartId"),
-  CONSTRAINT "glAccount_divisionId_fkey" FOREIGN KEY ("divisionId") REFERENCES "glDivision"("id"),
-  CONSTRAINT "glAccount_chartId_fkey" FOREIGN KEY ("chartId") REFERENCES "glChart"("id"),
-  CONSTRAINT "glAccount_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
-  CONSTRAINT "glAccount_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
+  CONSTRAINT "account_pkey" PRIMARY KEY ("number"),
+  CONSTRAINT "account_name_key" UNIQUE ("name"),
+  CONSTRAINT "account_accountCategoryId_fkey" FOREIGN KEY ("accountCategoryId") REFERENCES "accountCategory"("id"),
+  CONSTRAINT "account_parentAccountNumber_fkey" FOREIGN KEY ("parentAccountNumber") REFERENCES "account"("number"),
+  CONSTRAINT "account_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
+  CONSTRAINT "account_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
-
-ALTER TABLE "glChart" 
-  ADD COLUMN "parentAccountId" TEXT,
-  ADD COLUMN "parentChartId" TEXT,
-  ADD CONSTRAINT "glChart_parentAccountId_fkey" FOREIGN KEY ("parentAccountId") REFERENCES "glAccount"("id"),
-  ADD CONSTRAINT "glChart_parentChartId_fkey" FOREIGN KEY ("parentChartId") REFERENCES "glChart"("id");
-
-ALTER TABLE "glDivision"
-  ADD COLUMN "retainedEarningsAccountId" TEXT NOT NULL,
-  ADD CONSTRAINT "glDivision_retainedEarningsAccountId_fkey" FOREIGN KEY ("retainedEarningsAccountId") REFERENCES "glAccount"("id");
-  
-

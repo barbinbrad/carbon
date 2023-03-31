@@ -11,12 +11,19 @@ import {
 import { CgProfile } from "react-icons/cg";
 // import { GoSettings } from "react-icons/go";
 import { HiOutlineCube, HiOutlineDocumentDuplicate } from "react-icons/hi";
+import { TbPigMoney } from "react-icons/tb";
 import { usePermissions } from "~/hooks";
 
 export function useSidebar() {
   const permissions = usePermissions();
 
   const sidebarItems: Authenticated<NavItem>[] = [
+    {
+      permission: "accounting",
+      name: "Accounting",
+      to: "/x/accounting",
+      icon: <TbPigMoney />,
+    },
     {
       permission: "parts",
       name: "Parts",

@@ -44,6 +44,82 @@ export interface Database {
           createdAt?: string;
         };
       };
+      account: {
+        Row: {
+          number: string;
+          name: string;
+          description: string;
+          accountCategoryId: string;
+          consolidatedRate:
+            | Database["public"]["Enums"]["consolidatedRate"]
+            | null;
+          currencyId: string | null;
+          parentAccountNumber: string | null;
+          createdBy: string;
+          updatedBy: string | null;
+          updatedAt: string | null;
+          controlAccount: boolean;
+          cashAccount: boolean;
+          active: boolean;
+          createdAt: string;
+        };
+        Insert: {
+          number: string;
+          name: string;
+          description: string;
+          accountCategoryId: string;
+          consolidatedRate?:
+            | Database["public"]["Enums"]["consolidatedRate"]
+            | null;
+          currencyId?: string | null;
+          parentAccountNumber?: string | null;
+          createdBy: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          controlAccount?: boolean;
+          cashAccount?: boolean;
+          active?: boolean;
+          createdAt?: string;
+        };
+        Update: {
+          number?: string;
+          name?: string;
+          description?: string;
+          accountCategoryId?: string;
+          consolidatedRate?:
+            | Database["public"]["Enums"]["consolidatedRate"]
+            | null;
+          currencyId?: string | null;
+          parentAccountNumber?: string | null;
+          createdBy?: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          controlAccount?: boolean;
+          cashAccount?: boolean;
+          active?: boolean;
+          createdAt?: string;
+        };
+      };
+      accountCategory: {
+        Row: {
+          category: Database["public"]["Enums"]["glAccountCategory"];
+          type: Database["public"]["Enums"]["glAccountType"];
+          normalBalance: Database["public"]["Enums"]["glNormalBalance"];
+          id: string;
+        };
+        Insert: {
+          category: Database["public"]["Enums"]["glAccountCategory"];
+          type: Database["public"]["Enums"]["glAccountType"];
+          normalBalance: Database["public"]["Enums"]["glNormalBalance"];
+          id?: string;
+        };
+        Update: {
+          category?: Database["public"]["Enums"]["glAccountCategory"];
+          type?: Database["public"]["Enums"]["glAccountType"];
+          normalBalance?: Database["public"]["Enums"]["glNormalBalance"];
+          id?: string;
+        };
+      };
       address: {
         Row: {
           addressLine1: string | null;
@@ -280,6 +356,50 @@ export interface Database {
           abilityId?: string;
           id?: string;
           active?: boolean;
+        };
+      };
+      currency: {
+        Row: {
+          name: string;
+          isoCode: string;
+          symbol: string | null;
+          createdBy: string;
+          updatedBy: string | null;
+          updatedAt: string | null;
+          id: string;
+          symbolPlacementBefore: boolean;
+          exchangeRate: number;
+          currencyPrecision: number;
+          isBaseCurrency: boolean;
+          createdAt: string;
+        };
+        Insert: {
+          name: string;
+          isoCode: string;
+          symbol?: string | null;
+          createdBy: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          id?: string;
+          symbolPlacementBefore?: boolean;
+          exchangeRate?: number;
+          currencyPrecision?: number;
+          isBaseCurrency?: boolean;
+          createdAt?: string;
+        };
+        Update: {
+          name?: string;
+          isoCode?: string;
+          symbol?: string | null;
+          createdBy?: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          id?: string;
+          symbolPlacementBefore?: boolean;
+          exchangeRate?: number;
+          currencyPrecision?: number;
+          isBaseCurrency?: boolean;
+          createdAt?: string;
         };
       };
       customer: {
@@ -714,149 +834,6 @@ export interface Database {
           updatedAt?: string | null;
           id?: string;
           createdAt?: string;
-        };
-      };
-      glAccount: {
-        Row: {
-          id: string;
-          divisionId: string;
-          chartId: string;
-          name: string;
-          description: string;
-          createdBy: string;
-          updatedBy: string | null;
-          updatedAt: string | null;
-          active: boolean;
-          createdAt: string;
-        };
-        Insert: {
-          id: string;
-          divisionId: string;
-          chartId: string;
-          name: string;
-          description: string;
-          createdBy: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          active?: boolean;
-          createdAt?: string;
-        };
-        Update: {
-          id?: string;
-          divisionId?: string;
-          chartId?: string;
-          name?: string;
-          description?: string;
-          createdBy?: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          active?: boolean;
-          createdAt?: string;
-        };
-      };
-      glAccountCategory: {
-        Row: {
-          name: string;
-          categoryType: Database["public"]["Enums"]["accountCategoryType"];
-          createdBy: string;
-          updatedBy: string | null;
-          updatedAt: string | null;
-          id: string;
-          createdAt: string;
-        };
-        Insert: {
-          name: string;
-          categoryType: Database["public"]["Enums"]["accountCategoryType"];
-          createdBy: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          id?: string;
-          createdAt?: string;
-        };
-        Update: {
-          name?: string;
-          categoryType?: Database["public"]["Enums"]["accountCategoryType"];
-          createdBy?: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          id?: string;
-          createdAt?: string;
-        };
-      };
-      glChart: {
-        Row: {
-          id: string;
-          name: string;
-          accountCategoryId: string;
-          accountType: Database["public"]["Enums"]["glAccountType"];
-          cashFlowType: Database["public"]["Enums"]["glCashFlowType"] | null;
-          createdBy: string;
-          updatedBy: string | null;
-          updatedAt: string | null;
-          normalBalance: Database["public"]["Enums"]["glNormalBalance"];
-          cashAndCashEquivalents: boolean;
-          createdAt: string;
-          parentAccountId: string | null;
-          parentChartId: string | null;
-        };
-        Insert: {
-          id: string;
-          name: string;
-          accountCategoryId: string;
-          accountType: Database["public"]["Enums"]["glAccountType"];
-          cashFlowType?: Database["public"]["Enums"]["glCashFlowType"] | null;
-          createdBy: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          normalBalance?: Database["public"]["Enums"]["glNormalBalance"];
-          cashAndCashEquivalents?: boolean;
-          createdAt?: string;
-          parentAccountId?: string | null;
-          parentChartId?: string | null;
-        };
-        Update: {
-          id?: string;
-          name?: string;
-          accountCategoryId?: string;
-          accountType?: Database["public"]["Enums"]["glAccountType"];
-          cashFlowType?: Database["public"]["Enums"]["glCashFlowType"] | null;
-          createdBy?: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          normalBalance?: Database["public"]["Enums"]["glNormalBalance"];
-          cashAndCashEquivalents?: boolean;
-          createdAt?: string;
-          parentAccountId?: string | null;
-          parentChartId?: string | null;
-        };
-      };
-      glDivision: {
-        Row: {
-          id: string;
-          name: string;
-          createdBy: string;
-          updatedBy: string | null;
-          updatedAt: string | null;
-          createdAt: string;
-          retainedEarningsAccountId: string;
-        };
-        Insert: {
-          id: string;
-          name: string;
-          createdBy: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          createdAt?: string;
-          retainedEarningsAccountId: string;
-        };
-        Update: {
-          id?: string;
-          name?: string;
-          createdBy?: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          createdAt?: string;
-          retainedEarningsAccountId?: string;
         };
       };
       group: {
@@ -1774,12 +1751,7 @@ export interface Database {
       };
     };
     Enums: {
-      accountCategoryType:
-        | "Asset"
-        | "Liability"
-        | "Equity"
-        | "Revenue"
-        | "Expense";
+      consolidatedRate: "Average" | "Current" | "Historical";
       factor:
         | "Hours/Piece"
         | "Hours/100 Pieces"
@@ -1792,8 +1764,26 @@ export interface Database {
         | "Seconds/Piece"
         | "Total Hours"
         | "Total Minutes";
+      glAccountCategory:
+        | "Bank"
+        | "Accounts Receivable"
+        | "Inventory"
+        | "Other Current Asset"
+        | "Fixed Asset"
+        | "Accumulated Depreciation"
+        | "Other Asset"
+        | "Accounts Payable"
+        | "Other Current Liability"
+        | "Long Term Liability"
+        | "Equity - No Close"
+        | "Equity - Close"
+        | "Retained Earnings"
+        | "Income"
+        | "Cost of Goods Sold"
+        | "Expense"
+        | "Other Income"
+        | "Other Expense";
       glAccountType: "Balance Sheet" | "Income Statement";
-      glCashFlowType: "Operating" | "Investing" | "Financing";
       glNormalBalance: "Debit" | "Credit";
       search_entity:
         | "Resource"

@@ -2,24 +2,6 @@ CREATE TABLE "partGroup" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "name" TEXT NOT NULL,
   "description" TEXT NOT NULL,
-  "active" BOOLEAN NOT NULL DEFAULT true,
-  "createdBy" TEXT NOT NULL,
-  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-  "updatedBy" TEXT,
-  "updatedAt" TIMESTAMP WITH TIME ZONE,
-
-  CONSTRAINT "partGroup_pkey" PRIMARY KEY ("id"),
-  -- name must be unique
-  CONSTRAINT "partGroup_name_key" UNIQUE ("name"),
-  -- name must be less than 10 characters
-  CONSTRAINT "partGroup_name_check" CHECK (char_length("name") <= 10),
-  CONSTRAINT "partGroup_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
-  CONSTRAINT "partGroup_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
-);
-
-CREATE TABLE "partAccount" (
-  "id" TEXT NOT NULL DEFAULT xid(),
-  "partGroupId" TEXT NOT NULL,
   "salesAccountId" TEXT NOT NULL,
   "discountAccountId" TEXT NOT NULL,
   "inventoryAccountId" TEXT NOT NULL,
@@ -27,22 +9,23 @@ CREATE TABLE "partAccount" (
   "costOfGoodsSoldMaterialAccountId" TEXT,
   "costOfGoodsSoldOverheadAccountId" TEXT,
   "costOfGoodsSoldSubcontractorAccountId" TEXT,
+  "active" BOOLEAN NOT NULL DEFAULT true,
   "createdBy" TEXT NOT NULL,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   "updatedBy" TEXT,
   "updatedAt" TIMESTAMP WITH TIME ZONE,
 
-  CONSTRAINT "partAccount_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "partAccount_partGroupId_fkey" FOREIGN KEY ("partGroupId") REFERENCES "partGroup"("id") ON DELETE CASCADE,
-  CONSTRAINT "partAccount_salesAccountId_fkey" FOREIGN KEY ("salesAccountId") REFERENCES "account"("number") ON DELETE CASCADE,
-  CONSTRAINT "partAccount_discountAccountId_fkey" FOREIGN KEY ("discountAccountId") REFERENCES "account"("number") ON DELETE CASCADE,
-  CONSTRAINT "partAccount_inventoryAccountId_fkey" FOREIGN KEY ("inventoryAccountId") REFERENCES "account"("number") ON DELETE CASCADE,
-  CONSTRAINT "partAccount_costOfGoodsSoldLaborAccountId_fkey" FOREIGN KEY ("costOfGoodsSoldLaborAccountId") REFERENCES "account"("number") ON DELETE CASCADE,
-  CONSTRAINT "partAccount_costOfGoodsSoldMaterialAccountId_fkey" FOREIGN KEY ("costOfGoodsSoldMaterialAccountId") REFERENCES "account"("number") ON DELETE CASCADE,
-  CONSTRAINT "partAccount_costOfGoodsSoldOverheadAccountId_fkey" FOREIGN KEY ("costOfGoodsSoldOverheadAccountId") REFERENCES "account"("number") ON DELETE CASCADE,
-  CONSTRAINT "partAccount_costOfGoodsSoldSubcontractorAccountId_fkey" FOREIGN KEY ("costOfGoodsSoldSubcontractorAccountId") REFERENCES "account"("number") ON DELETE CASCADE,
-  CONSTRAINT "partAccount_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
-  CONSTRAINT "partAccount_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
+  CONSTRAINT "partGroup_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "partGroup_name_key" UNIQUE ("name"),
+  CONSTRAINT "partGroup_salesAccountId_fkey" FOREIGN KEY ("salesAccountId") REFERENCES "account"("number") ON DELETE CASCADE,
+  CONSTRAINT "partGroup_discountAccountId_fkey" FOREIGN KEY ("discountAccountId") REFERENCES "account"("number") ON DELETE CASCADE,
+  CONSTRAINT "partGroup_inventoryAccountId_fkey" FOREIGN KEY ("inventoryAccountId") REFERENCES "account"("number") ON DELETE CASCADE,
+  CONSTRAINT "partGroup_costOfGoodsSoldLaborAccountId_fkey" FOREIGN KEY ("costOfGoodsSoldLaborAccountId") REFERENCES "account"("number") ON DELETE CASCADE,
+  CONSTRAINT "partGroup_costOfGoodsSoldMaterialAccountId_fkey" FOREIGN KEY ("costOfGoodsSoldMaterialAccountId") REFERENCES "account"("number") ON DELETE CASCADE,
+  CONSTRAINT "partGroup_costOfGoodsSoldOverheadAccountId_fkey" FOREIGN KEY ("costOfGoodsSoldOverheadAccountId") REFERENCES "account"("number") ON DELETE CASCADE,
+  CONSTRAINT "partGroup_costOfGoodsSoldSubcontractorAccountId_fkey" FOREIGN KEY ("costOfGoodsSoldSubcontractorAccountId") REFERENCES "account"("number") ON DELETE CASCADE,
+  CONSTRAINT "partGroup_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
+  CONSTRAINT "partGroup_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
 
 CREATE TYPE "partType" AS ENUM (
@@ -51,19 +34,19 @@ CREATE TYPE "partType" AS ENUM (
   'Service'
 );
 
-CREATE TYPE "replenishmentSystem" AS ENUM (
+CREATE TYPE "partReplenishmentSystem" AS ENUM (
   'Purchased',
   'Manufactured',
   'Purchased and Manufactured'
 );
 
-CREATE TYPE "manufacutringPolicy" AS ENUM (
+CREATE TYPE "partManufacutringPolicy" AS ENUM (
   'Make to Order',
   'Make to Stock'
 );
 
 
-CREATE TYPE "costingMethod" AS ENUM (
+CREATE TYPE "partCostingMethod" AS ENUM (
   'Standard',
   'Average',
   'LIFO',
@@ -72,13 +55,13 @@ CREATE TYPE "costingMethod" AS ENUM (
 
 CREATE TABLE "part" (
   "id" TEXT NOT NULL,
-  "partGroupId" TEXT NOT NULL,
-  "partType" "partType" NOT NULL,
-  "replenishmentSystem" "replenishmentSystem" NOT NULL,
-  "manufacutringPolicy" "manufacutringPolicy" NOT NULL,
-  "costingMethod" "costingMethod" NOT NULL,
   "name" TEXT NOT NULL,
   "description" TEXT,
+  "partGroupId" TEXT NOT NULL,
+  "partType" "partType" NOT NULL,
+  "replenishmentSystem" "partReplenishmentSystem" NOT NULL,
+  "manufacutringPolicy" "partManufacutringPolicy" NOT NULL DEFAULT 'Make to Stock',
+  "costingMethod" "partCostingMethod" NOT NULL,
   "active" BOOLEAN NOT NULL DEFAULT true,
   "approved" BOOLEAN NOT NULL DEFAULT false,
   "approvedBy" TEXT,
@@ -94,4 +77,61 @@ CREATE TABLE "part" (
   CONSTRAINT "part_approvedBy_fkey" FOREIGN KEY ("approvedBy") REFERENCES "user"("id"),
   CONSTRAINT "part_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "part_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
+);
+
+
+CREATE FUNCTION public.create_part_search_result()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public.search(name, description, entity, uuid, link)
+  VALUES (new.name, new.name || ' ' || new.description, 'Part', new.id, '/x/parts/' || new.id);
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER create_part_search_result
+  AFTER INSERT on public.part
+  FOR EACH ROW EXECUTE PROCEDURE public.create_part_search_result();
+
+CREATE FUNCTION public.update_part_search_result()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF (old.name <> new.name OR old.description <> new.description) THEN
+    UPDATE public.search SET name = new.name, description = new.name || ' ' || new.description
+    WHERE entity = 'Part' AND uuid = new.id;
+  END IF;
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER update_part_search_result
+  AFTER UPDATE on public.customer
+  FOR EACH ROW EXECUTE PROCEDURE public.update_part_search_result();
+
+
+CREATE TABLE "partUnitSalePrice" (
+  "partId" TEXT NOT NULL,
+  "unitSalePrice" NUMERIC(15,5) NOT NULL,
+  "currencyId" TEXT NOT NULL,
+  "fromDate" DATE,
+  "toDate" DATE,
+
+  CONSTRAINT "partUnitSalePrice_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part"("id") ON DELETE CASCADE
+);
+
+CREATE INDEX "partUnitSalePrice_partId_index" ON "partUnitSalePrice" ("partId");
+
+CREATE TABLE "bin" (
+  "id" TEXT NOT NULL,
+  "locationId" TEXT NOT NULL,
+  "active" BOOLEAN NOT NULL DEFAULT true,
+  "createdBy" TEXT NOT NULL,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+  "updatedBy" TEXT,
+  "updatedAt" TIMESTAMP WITH TIME ZONE,
+
+  CONSTRAINT "bin_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "bin_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "location"("id") ON DELETE CASCADE,
+  CONSTRAINT "bin_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
+  CONSTRAINT "bin_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );

@@ -8,7 +8,7 @@ import type { MutableRefObject } from "react";
 type RowProps<T> = {
   borderColor: string;
   backgroundColor: string;
-  editableComponents: Record<string, EditableTableCellComponent<T> | object>;
+  editableComponents?: Record<string, EditableTableCellComponent<T> | object>;
   isEditing: boolean;
   isEditMode: boolean;
   isFrozenColumn?: boolean;
@@ -68,10 +68,9 @@ const Row = <T extends object>({
             selectedCell?.column === columnIndex + pinnedColumns;
 
         return (
-          <Cell
+          <Cell<T>
             key={cell.id}
             borderColor={borderColor}
-            // @ts-ignore
             cell={cell}
             columnIndex={columnIndex}
             // @ts-ignore

@@ -18,7 +18,7 @@ type CellProps<T> = {
   borderColor: string;
   cell: CellType<T, unknown>;
   columnIndex: number;
-  editableComponents: Record<string, EditableTableCellComponent<T>>;
+  editableComponents?: Record<string, EditableTableCellComponent<T>>;
   isSelected: boolean;
   isEditing: boolean;
   isEditMode: boolean;
@@ -41,7 +41,9 @@ const Cell = <T extends object>({
   const accessorKey = getAccessorKey(cell.column.columnDef);
 
   const hasEditableTableCellComponent =
-    accessorKey !== undefined && accessorKey in editableComponents;
+    accessorKey !== undefined &&
+    editableComponents &&
+    accessorKey in editableComponents;
 
   return (
     <Td
@@ -118,4 +120,4 @@ export const MemoizedCell = memo(
     next.isEditing === prev.isEditing &&
     next.isEditMode === prev.isEditMode &&
     next.cell.column.columnDef.id !== "select"
-);
+) as typeof Cell;

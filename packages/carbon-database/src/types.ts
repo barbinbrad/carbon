@@ -48,8 +48,8 @@ export interface Database {
         Row: {
           number: string;
           name: string;
-          description: string;
-          accountCategoryId: string;
+          description: string | null;
+          accountCategoryId: string | null;
           consolidatedRate:
             | Database["public"]["Enums"]["consolidatedRate"]
             | null;
@@ -66,8 +66,8 @@ export interface Database {
         Insert: {
           number: string;
           name: string;
-          description: string;
-          accountCategoryId: string;
+          description?: string | null;
+          accountCategoryId?: string | null;
           consolidatedRate?:
             | Database["public"]["Enums"]["consolidatedRate"]
             | null;
@@ -84,8 +84,8 @@ export interface Database {
         Update: {
           number?: string;
           name?: string;
-          description?: string;
-          accountCategoryId?: string;
+          description?: string | null;
+          accountCategoryId?: string | null;
           consolidatedRate?:
             | Database["public"]["Enums"]["consolidatedRate"]
             | null;
@@ -185,6 +185,35 @@ export interface Database {
           isNumeric?: boolean;
           isText?: boolean;
           isUser?: boolean;
+        };
+      };
+      bin: {
+        Row: {
+          id: string;
+          locationId: string;
+          createdBy: string;
+          updatedBy: string | null;
+          updatedAt: string | null;
+          active: boolean;
+          createdAt: string;
+        };
+        Insert: {
+          id: string;
+          locationId: string;
+          createdBy: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          active?: boolean;
+          createdAt?: string;
+        };
+        Update: {
+          id?: string;
+          locationId?: string;
+          createdBy?: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          active?: boolean;
+          createdAt?: string;
         };
       };
       contact: {
@@ -964,65 +993,66 @@ export interface Database {
       part: {
         Row: {
           id: string;
-          partGroupId: string;
-          partType: Database["public"]["Enums"]["partType"];
-          replenishmentSystem: Database["public"]["Enums"]["replenishmentSystem"];
-          manufacutringPolicy: Database["public"]["Enums"]["manufacutringPolicy"];
-          costingMethod: Database["public"]["Enums"]["costingMethod"];
           name: string;
           description: string | null;
+          partGroupId: string;
+          partType: Database["public"]["Enums"]["partType"];
+          replenishmentSystem: Database["public"]["Enums"]["partReplenishmentSystem"];
+          costingMethod: Database["public"]["Enums"]["partCostingMethod"];
           approvedBy: string | null;
           fromDate: string | null;
           toDate: string | null;
           createdBy: string;
           updatedBy: string | null;
           updatedAt: string | null;
+          manufacutringPolicy: Database["public"]["Enums"]["partManufacutringPolicy"];
           active: boolean;
           approved: boolean;
           createdAt: string;
         };
         Insert: {
           id: string;
-          partGroupId: string;
-          partType: Database["public"]["Enums"]["partType"];
-          replenishmentSystem: Database["public"]["Enums"]["replenishmentSystem"];
-          manufacutringPolicy: Database["public"]["Enums"]["manufacutringPolicy"];
-          costingMethod: Database["public"]["Enums"]["costingMethod"];
           name: string;
           description?: string | null;
+          partGroupId: string;
+          partType: Database["public"]["Enums"]["partType"];
+          replenishmentSystem: Database["public"]["Enums"]["partReplenishmentSystem"];
+          costingMethod: Database["public"]["Enums"]["partCostingMethod"];
           approvedBy?: string | null;
           fromDate?: string | null;
           toDate?: string | null;
           createdBy: string;
           updatedBy?: string | null;
           updatedAt?: string | null;
+          manufacutringPolicy?: Database["public"]["Enums"]["partManufacutringPolicy"];
           active?: boolean;
           approved?: boolean;
           createdAt?: string;
         };
         Update: {
           id?: string;
-          partGroupId?: string;
-          partType?: Database["public"]["Enums"]["partType"];
-          replenishmentSystem?: Database["public"]["Enums"]["replenishmentSystem"];
-          manufacutringPolicy?: Database["public"]["Enums"]["manufacutringPolicy"];
-          costingMethod?: Database["public"]["Enums"]["costingMethod"];
           name?: string;
           description?: string | null;
+          partGroupId?: string;
+          partType?: Database["public"]["Enums"]["partType"];
+          replenishmentSystem?: Database["public"]["Enums"]["partReplenishmentSystem"];
+          costingMethod?: Database["public"]["Enums"]["partCostingMethod"];
           approvedBy?: string | null;
           fromDate?: string | null;
           toDate?: string | null;
           createdBy?: string;
           updatedBy?: string | null;
           updatedAt?: string | null;
+          manufacutringPolicy?: Database["public"]["Enums"]["partManufacutringPolicy"];
           active?: boolean;
           approved?: boolean;
           createdAt?: string;
         };
       };
-      partAccount: {
+      partGroup: {
         Row: {
-          partGroupId: string;
+          name: string;
+          description: string;
           salesAccountId: string;
           discountAccountId: string;
           inventoryAccountId: string;
@@ -1034,10 +1064,12 @@ export interface Database {
           updatedBy: string | null;
           updatedAt: string | null;
           id: string;
+          active: boolean;
           createdAt: string;
         };
         Insert: {
-          partGroupId: string;
+          name: string;
+          description: string;
           salesAccountId: string;
           discountAccountId: string;
           inventoryAccountId: string;
@@ -1049,10 +1081,12 @@ export interface Database {
           updatedBy?: string | null;
           updatedAt?: string | null;
           id?: string;
+          active?: boolean;
           createdAt?: string;
         };
         Update: {
-          partGroupId?: string;
+          name?: string;
+          description?: string;
           salesAccountId?: string;
           discountAccountId?: string;
           inventoryAccountId?: string;
@@ -1060,37 +1094,6 @@ export interface Database {
           costOfGoodsSoldMaterialAccountId?: string | null;
           costOfGoodsSoldOverheadAccountId?: string | null;
           costOfGoodsSoldSubcontractorAccountId?: string | null;
-          createdBy?: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          id?: string;
-          createdAt?: string;
-        };
-      };
-      partGroup: {
-        Row: {
-          name: string;
-          description: string;
-          createdBy: string;
-          updatedBy: string | null;
-          updatedAt: string | null;
-          id: string;
-          active: boolean;
-          createdAt: string;
-        };
-        Insert: {
-          name: string;
-          description: string;
-          createdBy: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          id?: string;
-          active?: boolean;
-          createdAt?: string;
-        };
-        Update: {
-          name?: string;
-          description?: string;
           createdBy?: string;
           updatedBy?: string | null;
           updatedAt?: string | null;
@@ -1148,11 +1151,34 @@ export interface Database {
           createdAt?: string;
         };
       };
+      partUnitSalePrice: {
+        Row: {
+          partId: string;
+          unitSalePrice: number;
+          currencyId: string;
+          fromDate: string | null;
+          toDate: string | null;
+        };
+        Insert: {
+          partId: string;
+          unitSalePrice: number;
+          currencyId: string;
+          fromDate?: string | null;
+          toDate?: string | null;
+        };
+        Update: {
+          partId?: string;
+          unitSalePrice?: number;
+          currencyId?: string;
+          fromDate?: string | null;
+          toDate?: string | null;
+        };
+      };
       search: {
         Row: {
           id: number;
           name: string;
-          entity: Database["public"]["Enums"]["search_entity"] | null;
+          entity: Database["public"]["Enums"]["searchEntity"] | null;
           uuid: string | null;
           link: string;
           description: string | null;
@@ -1161,7 +1187,7 @@ export interface Database {
         Insert: {
           id?: number;
           name: string;
-          entity?: Database["public"]["Enums"]["search_entity"] | null;
+          entity?: Database["public"]["Enums"]["searchEntity"] | null;
           uuid?: string | null;
           link: string;
           description?: string | null;
@@ -1170,7 +1196,7 @@ export interface Database {
         Update: {
           id?: number;
           name?: string;
-          entity?: Database["public"]["Enums"]["search_entity"] | null;
+          entity?: Database["public"]["Enums"]["searchEntity"] | null;
           uuid?: string | null;
           link?: string;
           description?: string | null;
@@ -1811,7 +1837,6 @@ export interface Database {
     };
     Enums: {
       consolidatedRate: "Average" | "Current" | "Historical";
-      costingMethod: "Standard" | "Average" | "LIFO" | "FIFO";
       factor:
         | "Hours/Piece"
         | "Hours/100 Pieces"
@@ -1845,10 +1870,14 @@ export interface Database {
         | "Other Expense";
       glAccountType: "Balance Sheet" | "Income Statement";
       glNormalBalance: "Debit" | "Credit";
-      manufacutringPolicy: "Make to Order" | "Make to Stock";
+      partCostingMethod: "Standard" | "Average" | "LIFO" | "FIFO";
+      partManufacutringPolicy: "Make to Order" | "Make to Stock";
+      partReplenishmentSystem:
+        | "Purchased"
+        | "Manufactured"
+        | "Purchased and Manufactured";
       partType: "Inventory" | "Non-Inventory" | "Service";
-      replenishmentSystem: "Purchased" | "Manufactured";
-      search_entity:
+      searchEntity:
         | "Resource"
         | "Person"
         | "Customer"

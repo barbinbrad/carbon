@@ -1,3 +1,3 @@
 import PartsTree from "./PartsTree";
 
-export default PartsTree;
+export { PartsTree };

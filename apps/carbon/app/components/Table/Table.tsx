@@ -72,12 +72,12 @@ const Table = <T extends object>({
   actions = [],
   count = 0,
   colorScheme = "blackAlpha",
-  editableComponents = {},
-  defaultColumnOrder = [],
+  editableComponents,
+  defaultColumnOrder,
   defaultColumnPinning = {
     left: ["Select"],
   },
-  defaultColumnVisibility = {},
+  defaultColumnVisibility,
   withFilters = false,
   withInlineEditing = false,
   withColumnOrdering = false,
@@ -104,12 +104,13 @@ const Table = <T extends object>({
 
   /* Column Visibility */
   const [columnVisibility, setColumnVisibility] = useState(
-    defaultColumnVisibility
+    defaultColumnVisibility ?? {}
   );
 
   /* Column Ordering */
-  const [columnOrder, setColumnOrder] =
-    useState<ColumnOrderState>(defaultColumnOrder);
+  const [columnOrder, setColumnOrder] = useState<ColumnOrderState>(
+    defaultColumnOrder ?? []
+  );
   const [columnPinning, setColumnPinning] = useState<ColumnPinningState>(
     withColumnOrdering ? defaultColumnPinning : {}
   );
@@ -237,7 +238,9 @@ const Table = <T extends object>({
       if (!column) return false;
 
       const accessorKey = getAccessorKey(column.columnDef);
-      return accessorKey && accessorKey in editableComponents;
+      return (
+        accessorKey && editableComponents && accessorKey in editableComponents
+      );
     },
     [table, editableComponents, withInlineEditing, withSelectableRows]
   );
@@ -444,7 +447,6 @@ const Table = <T extends object>({
                       const sortable =
                         withSimpleSorting &&
                         accessorKey &&
-                        accessorKey !== "id" &&
                         !accessorKey.endsWith(".id") &&
                         header.column.columnDef.enableSorting !== false;
 
@@ -571,7 +573,6 @@ const Table = <T extends object>({
                     const sortable =
                       withSimpleSorting &&
                       accessorKey &&
-                      accessorKey !== "id" &&
                       !accessorKey.endsWith(".id") &&
                       header.column.columnDef.enableSorting !== false;
                     const sorted = isSorted(accessorKey ?? "");

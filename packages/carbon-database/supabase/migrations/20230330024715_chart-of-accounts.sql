@@ -88,8 +88,8 @@ CREATE TYPE "consolidatedRate" AS ENUM (
 CREATE TABLE "account" (
   "number" TEXT NOT NULL,
   "name" TEXT NOT NULL,
-  "description" TEXT NOT NULL,
-  "accountCategoryId" TEXT NOT NULL,
+  "description" TEXT,
+  "accountCategoryId" TEXT,
   "controlAccount" BOOLEAN NOT NULL DEFAULT false,
   "cashAccount" BOOLEAN NOT NULL DEFAULT false,
   "consolidatedRate" "consolidatedRate",
@@ -104,6 +104,7 @@ CREATE TABLE "account" (
   CONSTRAINT "account_pkey" PRIMARY KEY ("number"),
   CONSTRAINT "account_name_key" UNIQUE ("name"),
   CONSTRAINT "account_accountCategoryId_fkey" FOREIGN KEY ("accountCategoryId") REFERENCES "accountCategory"("id"),
+  CONSTRAINT "account_currencyId_fkey" FOREIGN KEY ("currencyId") REFERENCES "currency"("id") ON DELETE SET NULL,
   CONSTRAINT "account_parentAccountNumber_fkey" FOREIGN KEY ("parentAccountNumber") REFERENCES "account"("number"),
   CONSTRAINT "account_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "account_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")

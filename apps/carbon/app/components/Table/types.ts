@@ -1,4 +1,4 @@
-export type EditableTableCellComponent<TData extends unknown> = (props: {
+export type EditableTableCellComponent<TData> = (props: {
   accessorKey: string;
   row: TData;
   value: unknown;
@@ -13,7 +13,7 @@ export type EditableTableCellComponentProps<T> = {
 };
 
 declare module "@tanstack/react-table" {
-  interface TableMeta<TData extends unknown> {
+  interface TableMeta<TData> {
     editableComponents?: Record<string, EditableTableCellComponent<TData>>;
     updateData?: (rowIndex: number, columnId: string, value: unknown) => void;
   }

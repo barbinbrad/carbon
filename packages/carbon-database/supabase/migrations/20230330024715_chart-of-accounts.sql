@@ -1,7 +1,7 @@
 CREATE TABLE "currency" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "name" TEXT NOT NULL,
-  "isoCode" TEXT NOT NULL,
+  "code" TEXT NOT NULL,
   "symbol" TEXT,
   "symbolPlacementBefore" BOOLEAN NOT NULL DEFAULT true,
   "exchangeRate" NUMERIC(10,4) NOT NULL DEFAULT 1.0000,
@@ -13,9 +13,12 @@ CREATE TABLE "currency" (
   "updatedAt" TIMESTAMP WITH TIME ZONE,
 
   CONSTRAINT "currency_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "currency_code_key" UNIQUE ("code"),
   CONSTRAINT "currency_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "currency_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
+
+CREATE INDEX "currency_code_index" ON "currency" ("code");
 
 CREATE TYPE "glAccountCategory" AS ENUM (
   'Bank',
@@ -93,7 +96,7 @@ CREATE TABLE "account" (
   "controlAccount" BOOLEAN NOT NULL DEFAULT false,
   "cashAccount" BOOLEAN NOT NULL DEFAULT false,
   "consolidatedRate" "consolidatedRate",
-  "currencyId" TEXT,
+  "currencyCode" TEXT,
   "parentAccountNumber" TEXT,
   "active" BOOLEAN NOT NULL DEFAULT true,
   "createdBy" TEXT NOT NULL,
@@ -104,7 +107,7 @@ CREATE TABLE "account" (
   CONSTRAINT "account_pkey" PRIMARY KEY ("number"),
   CONSTRAINT "account_name_key" UNIQUE ("name"),
   CONSTRAINT "account_accountCategoryId_fkey" FOREIGN KEY ("accountCategoryId") REFERENCES "accountCategory"("id"),
-  CONSTRAINT "account_currencyId_fkey" FOREIGN KEY ("currencyId") REFERENCES "currency"("id") ON DELETE SET NULL,
+  CONSTRAINT "account_currencyCode_fkey" FOREIGN KEY ("currencyCode") REFERENCES "currency"("code") ON DELETE SET NULL,
   CONSTRAINT "account_parentAccountNumber_fkey" FOREIGN KEY ("parentAccountNumber") REFERENCES "account"("number"),
   CONSTRAINT "account_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "account_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")

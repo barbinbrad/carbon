@@ -53,7 +53,7 @@ export interface Database {
           consolidatedRate:
             | Database["public"]["Enums"]["consolidatedRate"]
             | null;
-          currencyId: string | null;
+          currencyCode: string | null;
           parentAccountNumber: string | null;
           createdBy: string;
           updatedBy: string | null;
@@ -71,7 +71,7 @@ export interface Database {
           consolidatedRate?:
             | Database["public"]["Enums"]["consolidatedRate"]
             | null;
-          currencyId?: string | null;
+          currencyCode?: string | null;
           parentAccountNumber?: string | null;
           createdBy: string;
           updatedBy?: string | null;
@@ -89,7 +89,7 @@ export interface Database {
           consolidatedRate?:
             | Database["public"]["Enums"]["consolidatedRate"]
             | null;
-          currencyId?: string | null;
+          currencyCode?: string | null;
           parentAccountNumber?: string | null;
           createdBy?: string;
           updatedBy?: string | null;
@@ -390,7 +390,7 @@ export interface Database {
       currency: {
         Row: {
           name: string;
-          isoCode: string;
+          code: string;
           symbol: string | null;
           createdBy: string;
           updatedBy: string | null;
@@ -404,7 +404,7 @@ export interface Database {
         };
         Insert: {
           name: string;
-          isoCode: string;
+          code: string;
           symbol?: string | null;
           createdBy: string;
           updatedBy?: string | null;
@@ -418,7 +418,7 @@ export interface Database {
         };
         Update: {
           name?: string;
-          isoCode?: string;
+          code?: string;
           symbol?: string | null;
           createdBy?: string;
           updatedBy?: string | null;
@@ -997,15 +997,15 @@ export interface Database {
           description: string | null;
           partGroupId: string;
           partType: Database["public"]["Enums"]["partType"];
-          replenishmentSystem: Database["public"]["Enums"]["partReplenishmentSystem"];
-          costingMethod: Database["public"]["Enums"]["partCostingMethod"];
+          manufacturerPartNumber: string | null;
+          unitOfMeasureCode: string;
           approvedBy: string | null;
           fromDate: string | null;
           toDate: string | null;
           createdBy: string;
           updatedBy: string | null;
           updatedAt: string | null;
-          manufacutringPolicy: Database["public"]["Enums"]["partManufacutringPolicy"];
+          blocked: boolean;
           active: boolean;
           approved: boolean;
           createdAt: string;
@@ -1016,15 +1016,15 @@ export interface Database {
           description?: string | null;
           partGroupId: string;
           partType: Database["public"]["Enums"]["partType"];
-          replenishmentSystem: Database["public"]["Enums"]["partReplenishmentSystem"];
-          costingMethod: Database["public"]["Enums"]["partCostingMethod"];
+          manufacturerPartNumber?: string | null;
+          unitOfMeasureCode: string;
           approvedBy?: string | null;
           fromDate?: string | null;
           toDate?: string | null;
           createdBy: string;
           updatedBy?: string | null;
           updatedAt?: string | null;
-          manufacutringPolicy?: Database["public"]["Enums"]["partManufacutringPolicy"];
+          blocked?: boolean;
           active?: boolean;
           approved?: boolean;
           createdAt?: string;
@@ -1035,18 +1035,41 @@ export interface Database {
           description?: string | null;
           partGroupId?: string;
           partType?: Database["public"]["Enums"]["partType"];
-          replenishmentSystem?: Database["public"]["Enums"]["partReplenishmentSystem"];
-          costingMethod?: Database["public"]["Enums"]["partCostingMethod"];
+          manufacturerPartNumber?: string | null;
+          unitOfMeasureCode?: string;
           approvedBy?: string | null;
           fromDate?: string | null;
           toDate?: string | null;
           createdBy?: string;
           updatedBy?: string | null;
           updatedAt?: string | null;
-          manufacutringPolicy?: Database["public"]["Enums"]["partManufacutringPolicy"];
+          blocked?: boolean;
           active?: boolean;
           approved?: boolean;
           createdAt?: string;
+        };
+      };
+      partCost: {
+        Row: {
+          partId: string;
+          costingMethod: Database["public"]["Enums"]["partCostingMethod"];
+          standardCost: number;
+          unitCost: number;
+          costIsAdjusted: boolean;
+        };
+        Insert: {
+          partId: string;
+          costingMethod: Database["public"]["Enums"]["partCostingMethod"];
+          standardCost?: number;
+          unitCost?: number;
+          costIsAdjusted?: boolean;
+        };
+        Update: {
+          partId?: string;
+          costingMethod?: Database["public"]["Enums"]["partCostingMethod"];
+          standardCost?: number;
+          unitCost?: number;
+          costIsAdjusted?: boolean;
         };
       };
       partGroup: {
@@ -1151,27 +1174,62 @@ export interface Database {
           createdAt?: string;
         };
       };
-      partUnitSalePrice: {
+      partReplenishment: {
         Row: {
           partId: string;
-          unitSalePrice: number;
-          currencyId: string;
-          fromDate: string | null;
-          toDate: string | null;
+          replenishmentSystem: Database["public"]["Enums"]["partReplenishmentSystem"];
+          supplierId: string | null;
+          supplierPartNumber: string | null;
+          purchaseUnitOfMeasureCode: string;
+          costingMethod: Database["public"]["Enums"]["partCostingMethod"];
+          leadTime: number;
+          purchaseBlocked: boolean;
+          manufacutringPolicy: Database["public"]["Enums"]["partManufacturingPolicy"];
         };
         Insert: {
           partId: string;
-          unitSalePrice: number;
-          currencyId: string;
-          fromDate?: string | null;
-          toDate?: string | null;
+          replenishmentSystem: Database["public"]["Enums"]["partReplenishmentSystem"];
+          supplierId?: string | null;
+          supplierPartNumber?: string | null;
+          purchaseUnitOfMeasureCode: string;
+          costingMethod: Database["public"]["Enums"]["partCostingMethod"];
+          leadTime?: number;
+          purchaseBlocked?: boolean;
+          manufacutringPolicy?: Database["public"]["Enums"]["partManufacturingPolicy"];
         };
         Update: {
           partId?: string;
+          replenishmentSystem?: Database["public"]["Enums"]["partReplenishmentSystem"];
+          supplierId?: string | null;
+          supplierPartNumber?: string | null;
+          purchaseUnitOfMeasureCode?: string;
+          costingMethod?: Database["public"]["Enums"]["partCostingMethod"];
+          leadTime?: number;
+          purchaseBlocked?: boolean;
+          manufacutringPolicy?: Database["public"]["Enums"]["partManufacturingPolicy"];
+        };
+      };
+      partUnitSalePrice: {
+        Row: {
+          partId: string;
+          currencyCode: string;
+          salesUnitOfMeasureCode: string;
+          unitSalePrice: number;
+          salesBlocked: boolean;
+        };
+        Insert: {
+          partId: string;
+          currencyCode: string;
+          salesUnitOfMeasureCode: string;
           unitSalePrice?: number;
-          currencyId?: string;
-          fromDate?: string | null;
-          toDate?: string | null;
+          salesBlocked?: boolean;
+        };
+        Update: {
+          partId?: string;
+          currencyCode?: string;
+          salesUnitOfMeasureCode?: string;
+          unitSalePrice?: number;
+          salesBlocked?: boolean;
         };
       };
       search: {
@@ -1392,6 +1450,26 @@ export interface Database {
           color?: string | null;
           protected?: boolean;
           createdAt?: string;
+        };
+      };
+      unitOfMeasure: {
+        Row: {
+          code: string;
+          name: string;
+          id: string;
+          active: boolean;
+        };
+        Insert: {
+          code: string;
+          name: string;
+          id?: string;
+          active?: boolean;
+        };
+        Update: {
+          code?: string;
+          name?: string;
+          id?: string;
+          active?: boolean;
         };
       };
       user: {
@@ -1871,7 +1949,7 @@ export interface Database {
       glAccountType: "Balance Sheet" | "Income Statement";
       glNormalBalance: "Debit" | "Credit";
       partCostingMethod: "Standard" | "Average" | "LIFO" | "FIFO";
-      partManufacutringPolicy: "Make to Order" | "Make to Stock";
+      partManufacturingPolicy: "Make to Order" | "Make to Stock";
       partReplenishmentSystem:
         | "Purchased"
         | "Manufactured"

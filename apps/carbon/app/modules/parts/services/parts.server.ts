@@ -53,3 +53,15 @@ export async function getParts(
 export function getPartTypes(): Database["public"]["Enums"]["partType"][] {
   return ["Inventory", "Non-Inventory", "Service"];
 }
+
+export function getPartReplenishmentSystems(): Database["public"]["Enums"]["partReplenishmentSystem"][] {
+  return ["Purchased", "Manufactured", "Purchased and Manufactured"];
+}
+
+export function getPartManufacturingPolicy(): Database["public"]["Enums"]["partManufacturingPolicy"][] {
+  return ["Make to Order", "Make to Stock"];
+}
+
+export function getPartCostingMethod(): Database["public"]["Enums"]["partCostingMethod"][] {
+  return ["Standard", "Average", "FIFO", "LIFO"];
+}

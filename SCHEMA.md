@@ -2602,7 +2602,7 @@ CREATE VIEW "contractors_query" AS
 CREATE TABLE "currency" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "name" TEXT NOT NULL,
-  "isoCode" TEXT NOT NULL,
+  "code" TEXT NOT NULL,
   "symbol" TEXT,
   "symbolPlacementBefore" BOOLEAN NOT NULL DEFAULT true,
   "exchangeRate" NUMERIC(10,4) NOT NULL DEFAULT 1.0000,
@@ -2614,9 +2614,12 @@ CREATE TABLE "currency" (
   "updatedAt" TIMESTAMP WITH TIME ZONE,
 
   CONSTRAINT "currency_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "currency_code_key" UNIQUE ("code"),
   CONSTRAINT "currency_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "currency_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
+
+CREATE INDEX "currency_code_index" ON "currency" ("code");
 
 CREATE TYPE "glAccountCategory" AS ENUM (
   'Bank',
@@ -2694,7 +2697,7 @@ CREATE TABLE "account" (
   "controlAccount" BOOLEAN NOT NULL DEFAULT false,
   "cashAccount" BOOLEAN NOT NULL DEFAULT false,
   "consolidatedRate" "consolidatedRate",
-  "currencyId" TEXT,
+  "currencyCode" TEXT,
   "parentAccountNumber" TEXT,
   "active" BOOLEAN NOT NULL DEFAULT true,
   "createdBy" TEXT NOT NULL,
@@ -2705,7 +2708,7 @@ CREATE TABLE "account" (
   CONSTRAINT "account_pkey" PRIMARY KEY ("number"),
   CONSTRAINT "account_name_key" UNIQUE ("name"),
   CONSTRAINT "account_accountCategoryId_fkey" FOREIGN KEY ("accountCategoryId") REFERENCES "accountCategory"("id"),
-  CONSTRAINT "account_currencyId_fkey" FOREIGN KEY ("currencyId") REFERENCES "currency"("id") ON DELETE SET NULL,
+  CONSTRAINT "account_currencyCode_fkey" FOREIGN KEY ("currencyCode") REFERENCES "currency"("code") ON DELETE SET NULL,
   CONSTRAINT "account_parentAccountNumber_fkey" FOREIGN KEY ("parentAccountNumber") REFERENCES "account"("number"),
   CONSTRAINT "account_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "account_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
@@ -2760,7 +2763,7 @@ CREATE TYPE "partReplenishmentSystem" AS ENUM (
   'Purchased and Manufactured'
 );
 
-CREATE TYPE "partManufacutringPolicy" AS ENUM (
+CREATE TYPE "partManufacturingPolicy" AS ENUM (
   'Make to Order',
   'Make to Stock'
 );
@@ -2773,15 +2776,33 @@ CREATE TYPE "partCostingMethod" AS ENUM (
   'FIFO'
 );
 
+CREATE TABLE "unitOfMeasure" (
+  "id" TEXT NOT NULL DEFAULT xid(),
+  "code" TEXT NOT NULL,
+  "name" TEXT NOT NULL,
+  "active" BOOLEAN NOT NULL DEFAULT true,
+
+  CONSTRAINT "unitOfMeasure_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "unitOfMeasure_code_key" UNIQUE ("code"),
+  CONSTRAINT "unitOfMeasure_code_check" CHECK (char_length("code") <= 3)
+);
+
+CREATE INDEX "unitOfMeasure_code_index" ON "unitOfMeasure"("code");
+
+INSERT INTO "unitOfMeasure" ("code", "name")
+VALUES 
+( 'EA', 'Each'),
+( 'PCS', 'Pieces' );
+
 CREATE TABLE "part" (
   "id" TEXT NOT NULL,
   "name" TEXT NOT NULL,
   "description" TEXT,
+  "blocked" BOOLEAN NOT NULL DEFAULT false,
   "partGroupId" TEXT NOT NULL,
   "partType" "partType" NOT NULL,
-  "replenishmentSystem" "partReplenishmentSystem" NOT NULL,
-  "manufacutringPolicy" "partManufacutringPolicy" NOT NULL DEFAULT 'Make to Stock',
-  "costingMethod" "partCostingMethod" NOT NULL,
+  "manufacturerPartNumber" TEXT,
+  "unitOfMeasureCode" TEXT NOT NULL,
   "active" BOOLEAN NOT NULL DEFAULT true,
   "approved" BOOLEAN NOT NULL DEFAULT false,
   "approvedBy" TEXT,
@@ -2793,7 +2814,8 @@ CREATE TABLE "part" (
   "updatedAt" TIMESTAMP WITH TIME ZONE,
 
   CONSTRAINT "part_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "part_partGroupId_fkey" FOREIGN KEY ("partGroupId") REFERENCES "partGroup"("id") ON DELETE CASCADE,
+  CONSTRAINT "part_unitOfMeasureCode_fkey" FOREIGN KEY ("unitOfMeasureCode") REFERENCES "unitOfMeasure"("code") ON DELETE SET NULL,
+  CONSTRAINT "part_partGroupId_fkey" FOREIGN KEY ("partGroupId") REFERENCES "partGroup"("id") ON DELETE SET NULL,
   CONSTRAINT "part_approvedBy_fkey" FOREIGN KEY ("approvedBy") REFERENCES "user"("id"),
   CONSTRAINT "part_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "part_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
@@ -2829,17 +2851,49 @@ CREATE TRIGGER update_part_search_result
   FOR EACH ROW EXECUTE PROCEDURE public.update_part_search_result();
 
 
-CREATE TABLE "partUnitSalePrice" (
+CREATE TABLE "partCost" (
   "partId" TEXT NOT NULL,
-  "unitSalePrice" NUMERIC(15,5) NOT NULL,
-  "currencyId" TEXT NOT NULL,
-  "fromDate" DATE,
-  "toDate" DATE,
+  "costingMethod" "partCostingMethod" NOT NULL,
+  "standardCost" NUMERIC(15,5) NOT NULL DEFAULT 0,
+  "unitCost" NUMERIC(15,5) NOT NULL DEFAULT 0,
+  "costIsAdjusted" BOOLEAN NOT NULL DEFAULT false,
 
-  CONSTRAINT "partUnitSalePrice_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part"("id") ON DELETE CASCADE
+  CONSTRAINT "partCost_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part"("id") ON DELETE CASCADE
 );
 
-CREATE INDEX "partUnitSalePrice_partId_index" ON "partUnitSalePrice" ("partId");
+CREATE INDEX "partCost_partId_index" ON "partCost" ("partId");
+
+CREATE TABLE "partUnitSalePrice" (
+  "partId" TEXT NOT NULL,
+  "unitSalePrice" NUMERIC(15,5) NOT NULL DEFAULT 0,
+  "currencyCode" TEXT NOT NULL,
+  "salesUnitOfMeasureCode" TEXT NOT NULL,
+  "salesBlocked" BOOLEAN NOT NULL DEFAULT false,
+
+  CONSTRAINT "partUnitSalePrice_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part"("id") ON DELETE CASCADE,
+  CONSTRAINT "partUnitSalePrice_currencyCode_fkey" FOREIGN KEY ("currencyCode") REFERENCES "currency"("code") ON DELETE SET NULL,
+  CONSTRAINT "partUnitSalePrice_salesUnitOfMeasureId_fkey" FOREIGN KEY ("salesUnitOfMeasureCode") REFERENCES "unitOfMeasure"("code") ON DELETE SET NULL
+);
+
+CREATE INDEX "partUnitSalePrice_partId_index" ON "partUnitSalePrice"("partId");
+
+CREATE TABLE "partReplenishment" (
+  "partId" TEXT NOT NULL,
+  "replenishmentSystem" "partReplenishmentSystem" NOT NULL,
+  "leadTime" INTEGER NOT NULL DEFAULT 0,
+  "supplierId" TEXT,
+  "supplierPartNumber" TEXT,
+  "purchaseUnitOfMeasureCode" TEXT NOT NULL,
+  "purchaseBlocked" BOOLEAN NOT NULL DEFAULT false,
+  "manufacutringPolicy" "partManufacturingPolicy" NOT NULL DEFAULT 'Make to Stock',
+  "costingMethod" "partCostingMethod" NOT NULL,
+  
+  CONSTRAINT "partReplenishment_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part"("id") ON DELETE CASCADE,
+  CONSTRAINT "partReplenishment_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "supplier"("id") ON DELETE SET NULL,
+  CONSTRAINT "partReplenishment_purchaseUnitOfMeasureId_fkey" FOREIGN KEY ("purchaseUnitOfMeasureCode") REFERENCES "unitOfMeasure"("code") ON DELETE SET NULL
+);
+
+CREATE INDEX "partReplenishment_partId_index" ON "partReplenishment" ("partId");
 
 CREATE TABLE "bin" (
   "id" TEXT NOT NULL,

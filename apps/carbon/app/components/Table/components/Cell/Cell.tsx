@@ -45,6 +45,19 @@ const Cell = <T extends object>({
     editableComponents &&
     accessorKey in editableComponents;
 
+  const editableCell = hasEditableTableCellComponent
+    ? editableComponents[accessorKey]({
+        accessorKey,
+        value: cell.getValue(),
+        row: cell.row.original,
+        onUpdate:
+          onUpdate ||
+          (() => {
+            console.error("failed to pass an onUpdate function to the popover");
+          }),
+      })
+    : null;
+
   return (
     <Td
       ref={ref}
@@ -89,18 +102,7 @@ const Cell = <T extends object>({
 
             <PopoverContent>
               <PopoverBody>
-                <HStack spacing={2}>
-                  {editableComponents[accessorKey!]({
-                    accessorKey,
-                    value: cell.getValue(),
-                    row: cell.row.original,
-                    onUpdate: onUpdate
-                      ? onUpdate
-                      : () => {
-                          console.error("failed to pass an onUpdate function");
-                        },
-                  })}
-                </HStack>
+                <HStack spacing={2}>{editableCell}</HStack>
               </PopoverBody>
             </PopoverContent>
           </Popover>
@@ -115,9 +117,7 @@ const Cell = <T extends object>({
 export const MemoizedCell = memo(
   Cell,
   (prev, next) =>
-    next.cell === prev.cell &&
     next.isSelected === prev.isSelected &&
     next.isEditing === prev.isEditing &&
-    next.isEditMode === prev.isEditMode &&
-    next.cell.column.columnDef.id !== "select"
+    next.isEditMode === prev.isEditMode
 ) as typeof Cell;

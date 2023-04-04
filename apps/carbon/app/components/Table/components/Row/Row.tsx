@@ -1,9 +1,10 @@
 import type { Row as RowType } from "@tanstack/react-table";
+import type { MutableRefObject } from "react";
+import { memo } from "react";
 import { Tr, spring } from "../Animations";
 import Cell from "../Cell";
 import type { EditableTableCellComponent, Position } from "../../types";
 import { useColor } from "@carbon/react";
-import type { MutableRefObject } from "react";
 
 type RowProps<T> = {
   borderColor: string;
@@ -12,6 +13,7 @@ type RowProps<T> = {
   isEditing: boolean;
   isEditMode: boolean;
   isFrozenColumn?: boolean;
+  isRowSelected?: boolean;
   pinnedColumns?: number;
   selectedCell: Position;
   row: RowType<T>;
@@ -101,4 +103,15 @@ const Row = <T extends object>({
   );
 };
 
-export default Row;
+const MemoizedRow = memo(
+  Row,
+  (prev, next) =>
+    next.isRowSelected === prev.isRowSelected &&
+    next.selectedCell?.row === prev.row.index &&
+    next.row.index === prev.selectedCell?.row &&
+    next.selectedCell?.column === prev.selectedCell?.column &&
+    next.isEditing === prev.isEditing &&
+    next.isEditMode === prev.isEditMode
+) as typeof Row;
+
+export default MemoizedRow;

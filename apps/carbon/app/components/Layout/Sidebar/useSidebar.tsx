@@ -19,12 +19,6 @@ export function useSidebar() {
 
   const sidebarItems: Authenticated<NavItem>[] = [
     {
-      permission: "accounting",
-      name: "Accounting",
-      to: "/x/accounting",
-      icon: <TbPigMoney />,
-    },
-    {
       permission: "parts",
       name: "Parts",
       to: "/x/parts",
@@ -77,6 +71,12 @@ export function useSidebar() {
       name: "Messaging",
       to: "/x/messaging",
       icon: <BiMessage />,
+    },
+    {
+      permission: "accounting",
+      name: "Accounting",
+      to: "/x/accounting",
+      icon: <TbPigMoney />,
     },
     {
       permission: "resources",

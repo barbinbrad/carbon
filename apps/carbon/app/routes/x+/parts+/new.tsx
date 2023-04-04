@@ -39,7 +39,10 @@ export async function action({ request }: ActionArgs) {
 }
 
 export default function PartsNewRoute() {
-  const initialValues = {};
+  const initialValues = {
+    name: "",
+    description: "",
+  };
 
   return <PartForm initialValues={initialValues} />;
 }

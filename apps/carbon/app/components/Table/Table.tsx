@@ -232,9 +232,13 @@ const Table = <T extends object>({
     (selectedColumn: number) => {
       if (!withInlineEditing) return false;
 
-      const columns = table.getVisibleLeafColumns();
+      const tableColumns = [
+        ...table.getLeftVisibleLeafColumns(),
+        ...table.getCenterVisibleLeafColumns(),
+      ];
+
       const column =
-        columns[withSelectableRows ? selectedColumn + 1 : selectedColumn];
+        tableColumns[withSelectableRows ? selectedColumn + 1 : selectedColumn];
       if (!column) return false;
 
       const accessorKey = getAccessorKey(column.columnDef);
@@ -516,6 +520,10 @@ const Table = <T extends object>({
                             isEditing={isEditing}
                             isEditMode={editMode}
                             isFrozenColumn
+                            isRowSelected={
+                              row.index in rowSelection &&
+                              !!rowSelection[row.index]
+                            }
                             selectedCell={selectedCell}
                             // @ts-ignore
                             row={row}
@@ -540,6 +548,9 @@ const Table = <T extends object>({
                         isEditing={isEditing}
                         isEditMode={editMode}
                         isFrozenColumn
+                        isRowSelected={
+                          row.index in rowSelection && !!rowSelection[row.index]
+                        }
                         selectedCell={selectedCell}
                         // @ts-ignore
                         row={row}
@@ -648,6 +659,10 @@ const Table = <T extends object>({
                           editableComponents={editableComponents}
                           isEditing={isEditing}
                           isEditMode={editMode}
+                          isRowSelected={
+                            row.index in rowSelection &&
+                            !!rowSelection[row.index]
+                          }
                           pinnedColumns={
                             columnPinning?.left
                               ? columnPinning.left?.length -
@@ -679,6 +694,9 @@ const Table = <T extends object>({
                       editableComponents={editableComponents}
                       isEditing={isEditing}
                       isEditMode={editMode}
+                      isRowSelected={
+                        row.index in rowSelection && !!rowSelection[row.index]
+                      }
                       pinnedColumns={
                         columnPinning?.left
                           ? columnPinning.left?.length -

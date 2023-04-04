@@ -1,7 +1,9 @@
 import type { Database } from "@carbon/database";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import type { TypeOfValidator } from "~/types/validators";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
+import type { partValidator } from "./parts.form";
 
 export async function getPartGroups(
   client: SupabaseClient<Database>,
@@ -64,4 +66,11 @@ export function getPartManufacturingPolicy(): Database["public"]["Enums"]["partM
 
 export function getPartCostingMethod(): Database["public"]["Enums"]["partCostingMethod"][] {
   return ["Standard", "Average", "FIFO", "LIFO"];
+}
+
+export async function insertPart(
+  client: SupabaseClient<Database>,
+  part: TypeOfValidator<typeof partValidator> & { createdBy: string }
+) {
+  return client.from("part").insert(part).select("id");
 }

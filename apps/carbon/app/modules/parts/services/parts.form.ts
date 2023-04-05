@@ -8,13 +8,20 @@ export const partValidator = withZod(
     name: z.string().min(1, { message: "Name is required" }).max(255),
     description: zfd.text(z.string().optional()),
     blocked: zfd.checkbox(),
+    replenishmentSystem: z.enum(
+      ["Purchased", "Manufactured", "Purchased and Manufactured"],
+      {
+        errorMap: (issue, ctx) => ({
+          message: "Replenishment system is required",
+        }),
+      }
+    ),
     partGroupId: z.string().min(20, { message: "Part Group is required" }),
     partType: z.enum(["Inventory", "Non-Inventory", "Service"], {
       errorMap: (issue, ctx) => ({
         message: "Part type is required",
       }),
     }),
-    manufacturerPartNumber: zfd.text(z.string().optional()),
     unitOfMeasureCode: z
       .string()
       .min(1, { message: "Unit of Measure is required" }),
@@ -44,27 +51,26 @@ export const partUnitSalePriceValidator = withZod(
       .string()
       .min(1, { message: "Unit of Measure is required" }),
     salesBlocked: zfd.checkbox(),
+    allowInvoiceDiscount: zfd.checkbox(),
   })
 );
 
 export const partPurchasingValidator = withZod(
   z.object({
     partId: z.string().min(1, { message: "Part ID is required" }),
-    replenishmentSystem: z.enum(
-      ["Purchased", "Manufactured", "Purchased and Manufactured"],
-      {
-        errorMap: (issue, ctx) => ({
-          message: "Replenishment system is required",
-        }),
-      }
-    ),
-    leadTime: zfd.numeric(z.number().min(0)),
     supplierId: zfd.text(z.string().optional()),
     supplierPartNumber: zfd.text(z.string().optional()),
+    purchasingLeadTime: zfd.numeric(z.number().min(0)),
     purchasingUnitOfMeasureCode: z
       .string()
       .min(1, { message: "Unit of Measure is required" }),
     purchasingBlocked: zfd.checkbox(),
+  })
+);
+
+export const partManufacturingValidator = withZod(
+  z.object({
+    partId: z.string().min(1, { message: "Part ID is required" }),
     manufacturingPolicy: z.enum(["Make to Order", "Make to Stock"], {
       errorMap: (issue, ctx) => ({
         message: "Manufacturing policy is required",
@@ -72,5 +78,38 @@ export const partPurchasingValidator = withZod(
     }),
     scrapPercentage: zfd.numeric(z.number().min(0).max(100)),
     lotSize: zfd.numeric(z.number().min(0)),
+    manufacturingBlocked: zfd.checkbox(),
+  })
+);
+
+export const partPlanningValidator = withZod(
+  z.object({
+    partId: z.string().min(1, { message: "Part ID is required" }),
+    reorderingPolicy: z.enum(
+      [
+        "Manual Reorder",
+        "Demand-Based Reorder",
+        "Fixed Reorder Quantity",
+        "Maximum Quantity",
+      ],
+      {
+        errorMap: (issue, ctx) => ({
+          message: "Manufacturing policy is required",
+        }),
+      }
+    ),
+    critical: zfd.checkbox(),
+    safetyStockQuantity: zfd.numeric(z.number().min(0)),
+    safetyStockLeadTime: zfd.numeric(z.number().min(0)),
+    demandAccumulationPeriod: zfd.numeric(z.number().min(0)),
+    demandAccumulationIncludesInventory: zfd.checkbox(),
+    reorderPoint: zfd.numeric(z.number().min(0)),
+    reorderQuantity: zfd.numeric(z.number().min(0)),
+    reorderMaximumInventory: zfd.numeric(z.number().min(0)),
+    reorderOverflowLevel: zfd.numeric(z.number().min(0)),
+    reorderTimeBucket: zfd.numeric(z.number().min(0)),
+    minimumOrderQuantity: zfd.numeric(z.number().min(0)),
+    maximumOrderQuantity: zfd.numeric(z.number().min(0)),
+    orderMultiple: zfd.numeric(z.number().min(0)),
   })
 );

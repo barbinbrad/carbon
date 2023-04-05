@@ -53,6 +53,13 @@ CREATE TYPE "partCostingMethod" AS ENUM (
   'FIFO'
 );
 
+CREATE TYPE "partReorderingPolicy" AS ENUM (
+  'Manual Reorder',
+  'Demand-Based Reorder',
+  'Fixed Reorder Quantity',
+  'Maximum Quantity'
+);
+
 CREATE TABLE "unitOfMeasure" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "code" TEXT NOT NULL,
@@ -76,6 +83,7 @@ CREATE TABLE "part" (
   "name" TEXT NOT NULL,
   "description" TEXT,
   "blocked" BOOLEAN NOT NULL DEFAULT false,
+  "replenishmentSystem" "partReplenishmentSystem" NOT NULL,
   "partGroupId" TEXT NOT NULL,
   "partType" "partType" NOT NULL,
   "manufacturerPartNumber" TEXT,
@@ -133,9 +141,21 @@ CREATE TABLE "partCost" (
   "costingMethod" "partCostingMethod" NOT NULL,
   "standardCost" NUMERIC(15,5) NOT NULL DEFAULT 0,
   "unitCost" NUMERIC(15,5) NOT NULL DEFAULT 0,
+  "salesAccountId" TEXT,
+  "discountAccountId" TEXT,
+  "inventoryAccountId" TEXT,
   "costIsAdjusted" BOOLEAN NOT NULL DEFAULT false,
+  "createdBy" TEXT NOT NULL,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+  "updatedBy" TEXT,
+  "updatedAt" TIMESTAMP WITH TIME ZONE,
 
-  CONSTRAINT "partCost_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part"("id") ON DELETE CASCADE
+  CONSTRAINT "partCost_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part"("id") ON DELETE CASCADE,
+  CONSTRAINT "partGroup_salesAccountId_fkey" FOREIGN KEY ("salesAccountId") REFERENCES "account"("number") ON DELETE CASCADE,
+  CONSTRAINT "partGroup_discountAccountId_fkey" FOREIGN KEY ("discountAccountId") REFERENCES "account"("number") ON DELETE CASCADE,
+  CONSTRAINT "partGroup_inventoryAccountId_fkey" FOREIGN KEY ("inventoryAccountId") REFERENCES "account"("number") ON DELETE CASCADE,
+  CONSTRAINT "partGroup_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
+  CONSTRAINT "partGroup_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
 
 CREATE INDEX "partCost_partId_index" ON "partCost" ("partId");
@@ -146,28 +166,44 @@ CREATE TABLE "partUnitSalePrice" (
   "currencyCode" TEXT NOT NULL,
   "salesUnitOfMeasureCode" TEXT NOT NULL,
   "salesBlocked" BOOLEAN NOT NULL DEFAULT false,
+  "allowInvoiceDiscount" BOOLEAN NOT NULL DEFAULT true,
+  "createdBy" TEXT NOT NULL,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+  "updatedBy" TEXT,
+  "updatedAt" TIMESTAMP WITH TIME ZONE,
 
   CONSTRAINT "partUnitSalePrice_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part"("id") ON DELETE CASCADE,
   CONSTRAINT "partUnitSalePrice_currencyCode_fkey" FOREIGN KEY ("currencyCode") REFERENCES "currency"("code") ON DELETE SET NULL,
-  CONSTRAINT "partUnitSalePrice_salesUnitOfMeasureId_fkey" FOREIGN KEY ("salesUnitOfMeasureCode") REFERENCES "unitOfMeasure"("code") ON DELETE SET NULL
+  CONSTRAINT "partUnitSalePrice_salesUnitOfMeasureId_fkey" FOREIGN KEY ("salesUnitOfMeasureCode") REFERENCES "unitOfMeasure"("code") ON DELETE SET NULL,
+  CONSTRAINT "partUnitSalePrice_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
+  CONSTRAINT "partUnitSalePrice_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
 
 CREATE INDEX "partUnitSalePrice_partId_index" ON "partUnitSalePrice"("partId");
 
 CREATE TABLE "partReplenishment" (
   "partId" TEXT NOT NULL,
-  "replenishmentSystem" "partReplenishmentSystem" NOT NULL,
-  "leadTime" INTEGER NOT NULL DEFAULT 0,
   "supplierId" TEXT,
   "supplierPartNumber" TEXT,
+  "purchasingLeadTime" INTEGER NOT NULL DEFAULT 0,
   "purchaseUnitOfMeasureCode" TEXT NOT NULL,
-  "purchaseBlocked" BOOLEAN NOT NULL DEFAULT false,
-  "manufacutringPolicy" "partManufacturingPolicy" NOT NULL DEFAULT 'Make to Stock',
-  "costingMethod" "partCostingMethod" NOT NULL,
+  "purchasingBlocked" BOOLEAN NOT NULL DEFAULT false,
+  "manufacturingPolicy" "partManufacturingPolicy" NOT NULL DEFAULT 'Make to Stock',
+  "manufacturingLeadTime" INTEGER NOT NULL DEFAULT 0,
+  "manufacturingBlocked" BOOLEAN NOT NULL DEFAULT false,
+  "requiresConfiguration" BOOLEAN NOT NULL DEFAULT false,
+  "scrapPercentage" NUMERIC(15,5) NOT NULL DEFAULT 0,
+  "lotSize" INTEGER,
+  "createdBy" TEXT NOT NULL,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+  "updatedBy" TEXT,
+  "updatedAt" TIMESTAMP WITH TIME ZONE,
   
   CONSTRAINT "partReplenishment_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part"("id") ON DELETE CASCADE,
   CONSTRAINT "partReplenishment_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "supplier"("id") ON DELETE SET NULL,
-  CONSTRAINT "partReplenishment_purchaseUnitOfMeasureId_fkey" FOREIGN KEY ("purchaseUnitOfMeasureCode") REFERENCES "unitOfMeasure"("code") ON DELETE SET NULL
+  CONSTRAINT "partReplenishment_purchaseUnitOfMeasureId_fkey" FOREIGN KEY ("purchaseUnitOfMeasureCode") REFERENCES "unitOfMeasure"("code") ON DELETE SET NULL,
+  CONSTRAINT "partReplenishment_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
+  CONSTRAINT "partReplenishment_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
 
 CREATE INDEX "partReplenishment_partId_index" ON "partReplenishment" ("partId");
@@ -186,3 +222,34 @@ CREATE TABLE "bin" (
   CONSTRAINT "bin_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "bin_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
+
+CREATE INDEX "bin_locationId_index" ON "bin" ("locationId");
+
+CREATE TABLE "partPlanning" (
+  "partId" TEXT NOT NULL,
+  "reorderingPolicy" "partReorderingPolicy" NOT NULL DEFAULT 'Time ',
+  "critical" BOOLEAN NOT NULL DEFAULT false,
+  "safetyStockQuantity" INTEGER NOT NULL DEFAULT 0,
+  "safetyStockLeadTime" INTEGER NOT NULL DEFAULT 0,
+  "demandAccumulationPeriod" INTEGER NOT NULL DEFAULT 0,
+  "demandReschedulingPeriod" INTEGER NOT NULL DEFAULT 0,
+  "demandAccumulationIncludesInventory" BOOLEAN NOT NULL DEFAULT false,
+  "reorderPoint" INTEGER NOT NULL DEFAULT 0,
+  "reorderQuantity" INTEGER NOT NULL DEFAULT 0,
+  "reorderMaximumInventory" INTEGER NOT NULL DEFAULT 0,
+  "reorderOverflowLevel" INTEGER NOT NULL DEFAULT 0,
+  "reorderTimeBucket" INTEGER NOT NULL DEFAULT 5,
+  "minimumOrderQuantity" INTEGER NOT NULL DEFAULT 0,
+  "maximumOrderQuantity" INTEGER NOT NULL DEFAULT 0,
+  "orderMultiple" INTEGER NOT NULL DEFAULT 1,
+  "createdBy" TEXT NOT NULL,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+  "updatedBy" TEXT,
+  "updatedAt" TIMESTAMP WITH TIME ZONE,
+
+  CONSTRAINT "partPlanning_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part"("id") ON DELETE CASCADE,
+  CONSTRAINT "partPlanning_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
+  CONSTRAINT "partPlanning_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
+);
+
+CREATE INDEX "partPlanning_partId_index" ON "partPlanning" ("partId");

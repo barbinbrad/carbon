@@ -9,8 +9,8 @@ const partsRoutes: RouteGroup[] = [
         to: "/x/parts/search",
       },
       {
-        name: "Configurator",
-        to: "/x/parts/configurator",
+        name: "Routing",
+        to: "/x/parts/routing",
       },
     ],
   },
@@ -20,6 +20,10 @@ const partsRoutes: RouteGroup[] = [
       {
         name: "Part Groups",
         to: "/x/parts/groups",
+      },
+      {
+        name: "Units of Measure",
+        to: "/x/parts/uoms",
       },
     ],
   },

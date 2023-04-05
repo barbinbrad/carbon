@@ -995,6 +995,7 @@ export interface Database {
           id: string;
           name: string;
           description: string | null;
+          replenishmentSystem: Database["public"]["Enums"]["partReplenishmentSystem"];
           partGroupId: string;
           partType: Database["public"]["Enums"]["partType"];
           manufacturerPartNumber: string | null;
@@ -1014,6 +1015,7 @@ export interface Database {
           id: string;
           name: string;
           description?: string | null;
+          replenishmentSystem: Database["public"]["Enums"]["partReplenishmentSystem"];
           partGroupId: string;
           partType: Database["public"]["Enums"]["partType"];
           manufacturerPartNumber?: string | null;
@@ -1033,6 +1035,7 @@ export interface Database {
           id?: string;
           name?: string;
           description?: string | null;
+          replenishmentSystem?: Database["public"]["Enums"]["partReplenishmentSystem"];
           partGroupId?: string;
           partType?: Database["public"]["Enums"]["partType"];
           manufacturerPartNumber?: string | null;
@@ -1053,23 +1056,44 @@ export interface Database {
         Row: {
           partId: string;
           costingMethod: Database["public"]["Enums"]["partCostingMethod"];
+          salesAccountId: string | null;
+          discountAccountId: string | null;
+          inventoryAccountId: string | null;
+          createdBy: string;
+          updatedBy: string | null;
+          updatedAt: string | null;
           standardCost: number;
           unitCost: number;
           costIsAdjusted: boolean;
+          createdAt: string;
         };
         Insert: {
           partId: string;
           costingMethod: Database["public"]["Enums"]["partCostingMethod"];
+          salesAccountId?: string | null;
+          discountAccountId?: string | null;
+          inventoryAccountId?: string | null;
+          createdBy: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
           standardCost?: number;
           unitCost?: number;
           costIsAdjusted?: boolean;
+          createdAt?: string;
         };
         Update: {
           partId?: string;
           costingMethod?: Database["public"]["Enums"]["partCostingMethod"];
+          salesAccountId?: string | null;
+          discountAccountId?: string | null;
+          inventoryAccountId?: string | null;
+          createdBy?: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
           standardCost?: number;
           unitCost?: number;
           costIsAdjusted?: boolean;
+          createdAt?: string;
         };
       };
       partGroup: {
@@ -1174,39 +1198,125 @@ export interface Database {
           createdAt?: string;
         };
       };
-      partReplenishment: {
+      partPlanning: {
         Row: {
           partId: string;
-          replenishmentSystem: Database["public"]["Enums"]["partReplenishmentSystem"];
-          supplierId: string | null;
-          supplierPartNumber: string | null;
-          purchaseUnitOfMeasureCode: string;
-          costingMethod: Database["public"]["Enums"]["partCostingMethod"];
-          leadTime: number;
-          purchaseBlocked: boolean;
-          manufacutringPolicy: Database["public"]["Enums"]["partManufacturingPolicy"];
+          createdBy: string;
+          updatedBy: string | null;
+          updatedAt: string | null;
+          reorderingPolicy: Database["public"]["Enums"]["partReorderingPolicy"];
+          critical: boolean;
+          safetyStockQuantity: number;
+          safetyLeadTime: number;
+          lotAccumulationPeriod: number;
+          lotAccumulationIncludesInventory: boolean;
+          reorderPoint: number;
+          reorderQuantity: number;
+          reorderMaximumInventory: number;
+          reorderOverflowLevel: number;
+          reorderTimeBucket: number;
+          minimumOrderQuantity: number;
+          maximumOrderQuantity: number;
+          orderMultiple: number;
+          createdAt: string;
         };
         Insert: {
           partId: string;
-          replenishmentSystem: Database["public"]["Enums"]["partReplenishmentSystem"];
-          supplierId?: string | null;
-          supplierPartNumber?: string | null;
-          purchaseUnitOfMeasureCode: string;
-          costingMethod: Database["public"]["Enums"]["partCostingMethod"];
-          leadTime?: number;
-          purchaseBlocked?: boolean;
-          manufacutringPolicy?: Database["public"]["Enums"]["partManufacturingPolicy"];
+          createdBy: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          reorderingPolicy?: Database["public"]["Enums"]["partReorderingPolicy"];
+          critical?: boolean;
+          safetyStockQuantity?: number;
+          safetyLeadTime?: number;
+          lotAccumulationPeriod?: number;
+          lotAccumulationIncludesInventory?: boolean;
+          reorderPoint?: number;
+          reorderQuantity?: number;
+          reorderMaximumInventory?: number;
+          reorderOverflowLevel?: number;
+          reorderTimeBucket?: number;
+          minimumOrderQuantity?: number;
+          maximumOrderQuantity?: number;
+          orderMultiple?: number;
+          createdAt?: string;
         };
         Update: {
           partId?: string;
-          replenishmentSystem?: Database["public"]["Enums"]["partReplenishmentSystem"];
+          createdBy?: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          reorderingPolicy?: Database["public"]["Enums"]["partReorderingPolicy"];
+          critical?: boolean;
+          safetyStockQuantity?: number;
+          safetyLeadTime?: number;
+          lotAccumulationPeriod?: number;
+          lotAccumulationIncludesInventory?: boolean;
+          reorderPoint?: number;
+          reorderQuantity?: number;
+          reorderMaximumInventory?: number;
+          reorderOverflowLevel?: number;
+          reorderTimeBucket?: number;
+          minimumOrderQuantity?: number;
+          maximumOrderQuantity?: number;
+          orderMultiple?: number;
+          createdAt?: string;
+        };
+      };
+      partReplenishment: {
+        Row: {
+          partId: string;
+          supplierId: string | null;
+          supplierPartNumber: string | null;
+          purchaseUnitOfMeasureCode: string;
+          lotSize: number | null;
+          createdBy: string;
+          updatedBy: string | null;
+          updatedAt: string | null;
+          purchasingLeadTime: number;
+          purchasingBlocked: boolean;
+          manufacturingPolicy: Database["public"]["Enums"]["partManufacturingPolicy"];
+          manufacturingLeadTime: number;
+          manufacturingBlocked: boolean;
+          requiresConfiguration: boolean;
+          scrapPercentage: number;
+          createdAt: string;
+        };
+        Insert: {
+          partId: string;
+          supplierId?: string | null;
+          supplierPartNumber?: string | null;
+          purchaseUnitOfMeasureCode: string;
+          lotSize?: number | null;
+          createdBy: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          purchasingLeadTime?: number;
+          purchasingBlocked?: boolean;
+          manufacturingPolicy?: Database["public"]["Enums"]["partManufacturingPolicy"];
+          manufacturingLeadTime?: number;
+          manufacturingBlocked?: boolean;
+          requiresConfiguration?: boolean;
+          scrapPercentage?: number;
+          createdAt?: string;
+        };
+        Update: {
+          partId?: string;
           supplierId?: string | null;
           supplierPartNumber?: string | null;
           purchaseUnitOfMeasureCode?: string;
-          costingMethod?: Database["public"]["Enums"]["partCostingMethod"];
-          leadTime?: number;
-          purchaseBlocked?: boolean;
-          manufacutringPolicy?: Database["public"]["Enums"]["partManufacturingPolicy"];
+          lotSize?: number | null;
+          createdBy?: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          purchasingLeadTime?: number;
+          purchasingBlocked?: boolean;
+          manufacturingPolicy?: Database["public"]["Enums"]["partManufacturingPolicy"];
+          manufacturingLeadTime?: number;
+          manufacturingBlocked?: boolean;
+          requiresConfiguration?: boolean;
+          scrapPercentage?: number;
+          createdAt?: string;
         };
       };
       partUnitSalePrice: {
@@ -1214,22 +1324,37 @@ export interface Database {
           partId: string;
           currencyCode: string;
           salesUnitOfMeasureCode: string;
+          createdBy: string;
+          updatedBy: string | null;
+          updatedAt: string | null;
           unitSalePrice: number;
           salesBlocked: boolean;
+          allowInvoiceDiscount: boolean;
+          createdAt: string;
         };
         Insert: {
           partId: string;
           currencyCode: string;
           salesUnitOfMeasureCode: string;
+          createdBy: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
           unitSalePrice?: number;
           salesBlocked?: boolean;
+          allowInvoiceDiscount?: boolean;
+          createdAt?: string;
         };
         Update: {
           partId?: string;
           currencyCode?: string;
           salesUnitOfMeasureCode?: string;
+          createdBy?: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
           unitSalePrice?: number;
           salesBlocked?: boolean;
+          allowInvoiceDiscount?: boolean;
+          createdAt?: string;
         };
       };
       search: {
@@ -1950,6 +2075,11 @@ export interface Database {
       glNormalBalance: "Debit" | "Credit";
       partCostingMethod: "Standard" | "Average" | "LIFO" | "FIFO";
       partManufacturingPolicy: "Make to Order" | "Make to Stock";
+      partReorderingPolicy:
+        | "Manual Reorder"
+        | "Lot for Lot"
+        | "Fixed Reorder Quantity"
+        | "Maximum Quantity";
       partReplenishmentSystem:
         | "Purchased"
         | "Manufactured"

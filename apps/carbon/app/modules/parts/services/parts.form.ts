@@ -16,7 +16,7 @@ export const partValidator = withZod(
         }),
       }
     ),
-    partGroupId: z.string().min(20, { message: "Part Group is required" }),
+    partGroupId: z.string().min(1, { message: "Part Group is required" }),
     partType: z.enum(["Inventory", "Non-Inventory", "Service"], {
       errorMap: (issue, ctx) => ({
         message: "Part type is required",
@@ -52,6 +52,12 @@ export const partUnitSalePriceValidator = withZod(
       .min(1, { message: "Unit of Measure is required" }),
     salesBlocked: zfd.checkbox(),
     allowInvoiceDiscount: zfd.checkbox(),
+  })
+);
+
+export const partInventoryValidator = withZod(
+  z.object({
+    partId: z.string().min(1, { message: "Part ID is required" }),
   })
 );
 

@@ -2778,7 +2778,7 @@ CREATE TYPE "partCostingMethod" AS ENUM (
 
 CREATE TYPE "partReorderingPolicy" AS ENUM (
   'Manual Reorder',
-  'Lot for Lot',
+  'Demand-Based Reorder',
   'Fixed Reorder Quantity',
   'Maximum Quantity'
 );
@@ -2950,12 +2950,13 @@ CREATE INDEX "bin_locationId_index" ON "bin" ("locationId");
 
 CREATE TABLE "partPlanning" (
   "partId" TEXT NOT NULL,
-  "reorderingPolicy" "partReorderingPolicy" NOT NULL DEFAULT 'Lot for Lot',
+  "reorderingPolicy" "partReorderingPolicy" NOT NULL DEFAULT 'Demand-Based Reorder',
   "critical" BOOLEAN NOT NULL DEFAULT false,
   "safetyStockQuantity" INTEGER NOT NULL DEFAULT 0,
-  "safetyLeadTime" INTEGER NOT NULL DEFAULT 0,
-  "lotAccumulationPeriod" INTEGER NOT NULL DEFAULT 0,
-  "lotAccumulationIncludesInventory" BOOLEAN NOT NULL DEFAULT false,
+  "safetyStockLeadTime" INTEGER NOT NULL DEFAULT 0,
+  "demandAccumulationPeriod" INTEGER NOT NULL DEFAULT 0,
+  "demandReschedulingPeriod" INTEGER NOT NULL DEFAULT 0,
+  "demandAccumulationIncludesInventory" BOOLEAN NOT NULL DEFAULT false,
   "reorderPoint" INTEGER NOT NULL DEFAULT 0,
   "reorderQuantity" INTEGER NOT NULL DEFAULT 0,
   "reorderMaximumInventory" INTEGER NOT NULL DEFAULT 0,

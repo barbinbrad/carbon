@@ -1207,9 +1207,10 @@ export interface Database {
           reorderingPolicy: Database["public"]["Enums"]["partReorderingPolicy"];
           critical: boolean;
           safetyStockQuantity: number;
-          safetyLeadTime: number;
-          lotAccumulationPeriod: number;
-          lotAccumulationIncludesInventory: boolean;
+          safetyStockLeadTime: number;
+          demandAccumulationPeriod: number;
+          demandReschedulingPeriod: number;
+          demandAccumulationIncludesInventory: boolean;
           reorderPoint: number;
           reorderQuantity: number;
           reorderMaximumInventory: number;
@@ -1228,9 +1229,10 @@ export interface Database {
           reorderingPolicy?: Database["public"]["Enums"]["partReorderingPolicy"];
           critical?: boolean;
           safetyStockQuantity?: number;
-          safetyLeadTime?: number;
-          lotAccumulationPeriod?: number;
-          lotAccumulationIncludesInventory?: boolean;
+          safetyStockLeadTime?: number;
+          demandAccumulationPeriod?: number;
+          demandReschedulingPeriod?: number;
+          demandAccumulationIncludesInventory?: boolean;
           reorderPoint?: number;
           reorderQuantity?: number;
           reorderMaximumInventory?: number;
@@ -1249,9 +1251,10 @@ export interface Database {
           reorderingPolicy?: Database["public"]["Enums"]["partReorderingPolicy"];
           critical?: boolean;
           safetyStockQuantity?: number;
-          safetyLeadTime?: number;
-          lotAccumulationPeriod?: number;
-          lotAccumulationIncludesInventory?: boolean;
+          safetyStockLeadTime?: number;
+          demandAccumulationPeriod?: number;
+          demandReschedulingPeriod?: number;
+          demandAccumulationIncludesInventory?: boolean;
           reorderPoint?: number;
           reorderQuantity?: number;
           reorderMaximumInventory?: number;
@@ -2077,7 +2080,7 @@ export interface Database {
       partManufacturingPolicy: "Make to Order" | "Make to Stock";
       partReorderingPolicy:
         | "Manual Reorder"
-        | "Lot for Lot"
+        | "Demand-Based Reorder"
         | "Fixed Reorder Quantity"
         | "Maximum Quantity";
       partReplenishmentSystem:

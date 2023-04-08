@@ -1,3 +1,4 @@
+import { Grid } from "@chakra-ui/react";
 import type { ActionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
@@ -44,5 +45,15 @@ export default function PartsNewRoute() {
     description: "",
   };
 
-  return <PartForm initialValues={initialValues} />;
+  return (
+    <Grid
+      gridTemplateColumns={["1fr", "1fr", "2fr 4fr 2fr"]}
+      gridColumnGap={8}
+      w="full"
+    >
+      <div></div>
+      <PartForm initialValues={initialValues} />
+      <div></div>
+    </Grid>
+  );
 }

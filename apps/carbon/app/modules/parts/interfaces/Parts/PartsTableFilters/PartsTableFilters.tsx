@@ -87,7 +87,7 @@ const PartsTableFilters = ({
         {permissions.can("create", "parts") && (
           <Button
             as={Link}
-            to={`../new?${params.toString()}`}
+            to={`../../part/new?${params.toString()}`}
             colorScheme="brand"
             leftIcon={<IoMdAdd />}
           >

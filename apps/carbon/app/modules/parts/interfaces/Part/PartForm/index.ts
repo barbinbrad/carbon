@@ -1,3 +1,3 @@
 import PartForm from "./PartForm";
 
-export { PartForm };
+export default PartForm;

@@ -227,7 +227,7 @@ CREATE INDEX "bin_locationId_index" ON "bin" ("locationId");
 
 CREATE TABLE "partPlanning" (
   "partId" TEXT NOT NULL,
-  "reorderingPolicy" "partReorderingPolicy" NOT NULL DEFAULT 'Time ',
+  "reorderingPolicy" "partReorderingPolicy" NOT NULL DEFAULT 'Demand-Based Reorder',
   "critical" BOOLEAN NOT NULL DEFAULT false,
   "safetyStockQuantity" INTEGER NOT NULL DEFAULT 0,
   "safetyStockLeadTime" INTEGER NOT NULL DEFAULT 0,

@@ -1,5 +1,6 @@
 import usePartsSidebar from "./usePartsSidebar";
 
 export { usePartsSidebar };
-export * from "./PartForm";
-export * from "./Search";
+export * from "./Part";
+export * from "./Parts";
+export * from "./Routing";

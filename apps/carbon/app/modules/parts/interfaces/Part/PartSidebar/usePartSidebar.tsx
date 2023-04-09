@@ -4,7 +4,7 @@ export function usePartSidebar(replenishment: PartReplenishmentSystem) {
   return [
     {
       name: "Part Basics",
-      to: "basics",
+      to: "",
     },
     {
       name: "Purchasing",

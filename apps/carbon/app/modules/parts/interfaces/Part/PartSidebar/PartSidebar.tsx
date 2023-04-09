@@ -12,9 +12,12 @@ const PartSidebar = () => {
         <VStack spacing={2}>
           <VStack spacing={1} alignItems="start" w="full">
             {links.map((route) => {
-              const isActive = matches.some((match) =>
-                match.pathname.includes(route.to)
+              const isActive = matches.some(
+                (match) =>
+                  (match.pathname.includes(route.to) && route.to !== "") ||
+                  (match.id.includes(".index") && route.to === "")
               );
+
               return (
                 <Button
                   key={route.name}

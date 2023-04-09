@@ -2,6 +2,13 @@ import { Grid } from "@chakra-ui/react";
 import type { ActionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
+import { useRouteData } from "~/hooks";
+import type {
+  PartGroupListItem,
+  PartReplenishmentSystem,
+  PartType,
+  UnitOfMeasureListItem,
+} from "~/modules/parts";
 import { PartForm, insertPart, partValidator } from "~/modules/parts";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
@@ -40,6 +47,13 @@ export async function action({ request }: ActionArgs) {
 }
 
 export default function PartsNewRoute() {
+  const routeData = useRouteData<{
+    partGroups: PartGroupListItem[];
+    partTypes: PartType[];
+    partReplenishmentSystems: PartReplenishmentSystem[];
+    unitOfMeasures: UnitOfMeasureListItem[];
+  }>("/x/part");
+
   const initialValues = {
     name: "",
     description: "",
@@ -52,8 +66,13 @@ export default function PartsNewRoute() {
       w="full"
     >
       <div></div>
-      <PartForm initialValues={initialValues} />
-      <div></div>
+      <PartForm
+        initialValues={initialValues}
+        partGroups={routeData?.partGroups ?? []}
+        partTypes={routeData?.partTypes ?? []}
+        partReplenishmentSystems={routeData?.partReplenishmentSystems ?? []}
+        unitOfMeasures={routeData?.unitOfMeasures ?? []}
+      />
     </Grid>
   );
 }

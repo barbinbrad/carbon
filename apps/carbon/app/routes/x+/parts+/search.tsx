@@ -7,7 +7,7 @@ import {
   PartsTable,
   PartsTableFilters,
   getParts,
-  getPartGroups,
+  getPartGroupsList,
   getPartTypes,
 } from "~/modules/parts";
 import { requirePermissions } from "~/services/auth";
@@ -32,7 +32,7 @@ export async function loader({ request }: LoaderArgs) {
   const [parts, partTypes, partGroups] = await Promise.all([
     getParts(client, { id, type, group, limit, offset, sorts, filters }),
     getPartTypes(),
-    getPartGroups(client),
+    getPartGroupsList(client),
   ]);
 
   if (parts.error) {

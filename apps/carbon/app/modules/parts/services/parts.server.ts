@@ -5,7 +5,14 @@ import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
 import type { partValidator } from "./parts.form";
 
-export async function getPartGroups(
+export async function deleteUnitOfMeasure(
+  client: SupabaseClient<Database>,
+  id: string
+) {
+  return client.from("unitOfMeasure").delete().eq("id", id);
+}
+
+export async function getPartGroupsList(
   client: SupabaseClient<Database>,
   args?: GenericQueryFilters & { name: string | null }
 ) {
@@ -60,12 +67,43 @@ export function getPartReplenishmentSystems(): Database["public"]["Enums"]["part
   return ["Purchased", "Manufactured", "Purchased and Manufactured"];
 }
 
-export function getPartManufacturingPolicy(): Database["public"]["Enums"]["partManufacturingPolicy"][] {
+export function getPartManufacturingPolicies(): Database["public"]["Enums"]["partManufacturingPolicy"][] {
   return ["Make to Order", "Make to Stock"];
 }
 
-export function getPartCostingMethod(): Database["public"]["Enums"]["partCostingMethod"][] {
+export function getPartCostingMethods(): Database["public"]["Enums"]["partCostingMethod"][] {
   return ["Standard", "Average", "FIFO", "LIFO"];
+}
+
+export async function getUnitOfMeasure(
+  client: SupabaseClient<Database>,
+  id: string
+) {
+  return client
+    .from("unitOfMeasure")
+    .select("name, code")
+    .eq("id", id)
+    .single();
+}
+
+export async function getUnitOfMeasures(
+  client: SupabaseClient<Database>,
+  args: GenericQueryFilters & { name: string | null }
+) {
+  let query = client.from("unitOfMeasure").select("id, name, code", {
+    count: "exact",
+  });
+
+  if (args.name) {
+    query = query.ilike("name", `%${args.name}%`);
+  }
+
+  query = setGenericQueryFilters(query, args, "name");
+  return query;
+}
+
+export async function getUnitOfMeasuresList(client: SupabaseClient<Database>) {
+  return client.from("unitOfMeasure").select("name, code");
 }
 
 export async function insertPart(
@@ -73,4 +111,19 @@ export async function insertPart(
   part: TypeOfValidator<typeof partValidator> & { createdBy: string }
 ) {
   return client.from("part").insert(part).select("id");
+}
+
+export async function upsertUnitOfMeasure(
+  client: SupabaseClient<Database>,
+  unitOfMeasure: { id?: string; name: string; code: string }
+) {
+  if ("id" in unitOfMeasure) {
+    return client
+      .from("unitOfMeasure")
+      .update(unitOfMeasure)
+      .eq("id", unitOfMeasure.id)
+      .select("id");
+  }
+
+  return client.from("unitOfMeasure").insert([unitOfMeasure]).select("id");
 }

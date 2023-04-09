@@ -119,3 +119,11 @@ export const partPlanningValidator = withZod(
     orderMultiple: zfd.numeric(z.number().min(0)),
   })
 );
+
+export const unitOfMeasureValidator = withZod(
+  z.object({
+    id: zfd.text(z.string().optional()),
+    code: z.string().min(1, { message: "Code is required" }).max(5),
+    name: z.string().min(1, { message: "Name is required" }).max(50),
+  })
+);

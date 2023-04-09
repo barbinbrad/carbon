@@ -10,6 +10,12 @@ import {
 } from "@chakra-ui/react";
 import { ValidatedForm } from "remix-validated-form";
 import { Boolean, Input, Select, Submit, TextArea } from "~/components/Form";
+import type {
+  PartGroupListItem,
+  PartReplenishmentSystem,
+  PartType,
+  UnitOfMeasureListItem,
+} from "~/modules/parts";
 import { partValidator } from "~/modules/parts";
 
 type PartFormValues = {
@@ -20,10 +26,42 @@ type PartFormValues = {
 
 type PartFormProps = {
   initialValues: PartFormValues;
+  partGroups: PartGroupListItem[];
+  partTypes: PartType[];
+  partReplenishmentSystems: PartReplenishmentSystem[];
+  unitOfMeasures: UnitOfMeasureListItem[];
 };
 
-const PartForm = ({ initialValues }: PartFormProps) => {
+const PartForm = ({
+  initialValues,
+  partGroups,
+  partTypes,
+  partReplenishmentSystems,
+  unitOfMeasures,
+}: PartFormProps) => {
   const isEditing = initialValues.id !== undefined;
+
+  const partGroupOptions = partGroups.map((partGroup) => ({
+    label: partGroup.name,
+    value: partGroup.id,
+  }));
+
+  const partTypeOptions = partTypes.map((partType) => ({
+    label: partType,
+    value: partType,
+  }));
+
+  const partReplenishmentSystemOptions = partReplenishmentSystems.map(
+    (partReplenishmentSystem) => ({
+      label: partReplenishmentSystem,
+      value: partReplenishmentSystem,
+    })
+  );
+
+  const unitOfMeasureOptions = unitOfMeasures.map((uom) => ({
+    label: uom.name,
+    value: uom.code,
+  }));
 
   return (
     <ValidatedForm method="post" validator={partValidator}>
@@ -55,24 +93,24 @@ const PartForm = ({ initialValues }: PartFormProps) => {
               <Select
                 name="replenishmentSystem"
                 label="Replenishment System"
-                options={[{ label: "Purchased", value: "Purchased" }]}
+                options={partReplenishmentSystemOptions}
               />
               <Select
                 name="partType"
                 label="Part Type"
-                options={[{ label: "Inventory", value: "Inventory" }]}
+                options={partTypeOptions}
               />
               <Select
                 name="unitOfMeasureCode"
                 label="Unit of Measure"
-                options={[{ label: "Each", value: "EA" }]}
+                options={unitOfMeasureOptions}
               />
             </VStack>
             <VStack alignItems="start" spacing={2} w="full">
               <Select
                 name="partGroupId"
                 label="Part Group"
-                options={[{ label: "Fasteners", value: "1234567901234567900" }]}
+                options={partGroupOptions}
               />
               <Boolean name="blocked" label="Blocked" />
             </VStack>

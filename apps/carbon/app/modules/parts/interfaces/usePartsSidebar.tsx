@@ -23,7 +23,7 @@ const partsRoutes: RouteGroup[] = [
       },
       {
         name: "Units of Measure",
-        to: "/x/parts/uoms",
+        to: "/x/parts/uom",
       },
     ],
   },

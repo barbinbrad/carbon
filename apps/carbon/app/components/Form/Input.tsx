@@ -1,4 +1,5 @@
 import type { InputProps } from "@chakra-ui/react";
+import { FormHelperText } from "@chakra-ui/react";
 import {
   FormControl,
   FormErrorMessage,
@@ -12,10 +13,11 @@ type FormInputProps = InputProps & {
   name: string;
   label?: string;
   isRequired?: boolean;
+  helperText?: string;
 };
 
 const Input = forwardRef<HTMLInputElement, FormInputProps>(
-  ({ name, label, isRequired, ...rest }, ref) => {
+  ({ name, label, isRequired, helperText, ...rest }, ref) => {
     const { getInputProps, error } = useField(name);
 
     return (
@@ -28,6 +30,7 @@ const Input = forwardRef<HTMLInputElement, FormInputProps>(
             ...rest,
           })}
         />
+        {helperText && <FormHelperText>{helperText}</FormHelperText>}
         {error && <FormErrorMessage>{error}</FormErrorMessage>}
       </FormControl>
     );

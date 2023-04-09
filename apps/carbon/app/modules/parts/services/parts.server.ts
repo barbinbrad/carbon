@@ -81,7 +81,7 @@ export async function getUnitOfMeasure(
 ) {
   return client
     .from("unitOfMeasure")
-    .select("name, code")
+    .select("id, name, code")
     .eq("id", id)
     .single();
 }

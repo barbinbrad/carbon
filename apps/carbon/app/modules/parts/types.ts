@@ -1,10 +1,15 @@
 import type { Database } from "@carbon/database";
 import type {
+  getPartGroups,
   getPartGroupsList,
   getParts,
   getUnitOfMeasure,
   getUnitOfMeasuresList,
 } from "./services";
+
+export type PartGroup = NonNullable<
+  Awaited<ReturnType<typeof getPartGroups>>["data"]
+>[number];
 
 export type PartGroupListItem = NonNullable<
   Awaited<ReturnType<typeof getPartGroupsList>>["data"]

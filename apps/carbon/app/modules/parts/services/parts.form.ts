@@ -42,35 +42,28 @@ export const partCostValidator = withZod(
   })
 );
 
-export const partUnitSalePriceValidator = withZod(
+export const partGroupValidator = withZod(
   z.object({
-    partId: z.string().min(1, { message: "Part ID is required" }),
-    unitSalePrice: zfd.numeric(z.number().min(0)),
-    currencyCode: z.string().min(1, { message: "Currency is required" }),
-    salesUnitOfMeasureCode: z
-      .string()
-      .min(1, { message: "Unit of Measure is required" }),
-    salesBlocked: zfd.checkbox(),
-    allowInvoiceDiscount: zfd.checkbox(),
+    id: zfd.text(z.string().optional()),
+    name: z.string().min(1, { message: "Name is required" }).max(255),
+    description: zfd.text(z.string().optional()),
+    salesAccountId: z.string().min(1, { message: "Sales Account is required" }),
+    discountAccountId: z.string().min(1, {
+      message: "Discount Account is required",
+    }),
+    inventoryAccountId: z.string().min(1, {
+      message: "Inventory Account is required",
+    }),
+    // costOfGoodsSoldLaborAccountId: zfd.text(z.string().optional()),
+    // costOfGoodsSoldMaterialAccountId: zfd.text(z.string().optional()),
+    // costOfGoodsSoldOverheadAccountId: zfd.text(z.string().optional()),
+    // costOfGoodsSoldSubcontractAccountId: zfd.text(z.string().optional()),
   })
 );
 
 export const partInventoryValidator = withZod(
   z.object({
     partId: z.string().min(1, { message: "Part ID is required" }),
-  })
-);
-
-export const partPurchasingValidator = withZod(
-  z.object({
-    partId: z.string().min(1, { message: "Part ID is required" }),
-    supplierId: zfd.text(z.string().optional()),
-    supplierPartNumber: zfd.text(z.string().optional()),
-    purchasingLeadTime: zfd.numeric(z.number().min(0)),
-    purchasingUnitOfMeasureCode: z
-      .string()
-      .min(1, { message: "Unit of Measure is required" }),
-    purchasingBlocked: zfd.checkbox(),
   })
 );
 
@@ -117,6 +110,32 @@ export const partPlanningValidator = withZod(
     minimumOrderQuantity: zfd.numeric(z.number().min(0)),
     maximumOrderQuantity: zfd.numeric(z.number().min(0)),
     orderMultiple: zfd.numeric(z.number().min(0)),
+  })
+);
+
+export const partPurchasingValidator = withZod(
+  z.object({
+    partId: z.string().min(1, { message: "Part ID is required" }),
+    supplierId: zfd.text(z.string().optional()),
+    supplierPartNumber: zfd.text(z.string().optional()),
+    purchasingLeadTime: zfd.numeric(z.number().min(0)),
+    purchasingUnitOfMeasureCode: z
+      .string()
+      .min(1, { message: "Unit of Measure is required" }),
+    purchasingBlocked: zfd.checkbox(),
+  })
+);
+
+export const partUnitSalePriceValidator = withZod(
+  z.object({
+    partId: z.string().min(1, { message: "Part ID is required" }),
+    unitSalePrice: zfd.numeric(z.number().min(0)),
+    currencyCode: z.string().min(1, { message: "Currency is required" }),
+    salesUnitOfMeasureCode: z
+      .string()
+      .min(1, { message: "Unit of Measure is required" }),
+    salesBlocked: zfd.checkbox(),
+    allowInvoiceDiscount: zfd.checkbox(),
   })
 );
 

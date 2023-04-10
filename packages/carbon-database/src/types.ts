@@ -1099,7 +1099,7 @@ export interface Database {
       partGroup: {
         Row: {
           name: string;
-          description: string;
+          description: string | null;
           salesAccountId: string;
           discountAccountId: string;
           inventoryAccountId: string;
@@ -1116,7 +1116,7 @@ export interface Database {
         };
         Insert: {
           name: string;
-          description: string;
+          description?: string | null;
           salesAccountId: string;
           discountAccountId: string;
           inventoryAccountId: string;
@@ -1133,7 +1133,7 @@ export interface Database {
         };
         Update: {
           name?: string;
-          description?: string;
+          description?: string | null;
           salesAccountId?: string;
           discountAccountId?: string;
           inventoryAccountId?: string;

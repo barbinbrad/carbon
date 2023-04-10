@@ -1,7 +1,7 @@
 CREATE TABLE "partGroup" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "name" TEXT NOT NULL,
-  "description" TEXT NOT NULL,
+  "description" TEXT,
   "salesAccountId" TEXT NOT NULL,
   "discountAccountId" TEXT NOT NULL,
   "inventoryAccountId" TEXT NOT NULL,

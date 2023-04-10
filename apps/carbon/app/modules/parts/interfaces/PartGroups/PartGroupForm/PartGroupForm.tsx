@@ -12,48 +12,72 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import { ValidatedForm } from "remix-validated-form";
-import { Color, Hidden, Input, Submit } from "~/components/Form";
+import { Hidden, Input, Select, Submit, TextArea } from "~/components/Form";
 import { usePermissions } from "~/hooks";
-import { customerTypeValidator } from "~/modules/sales";
+import { partGroupValidator } from "~/modules/parts";
 import type { TypeOfValidator } from "~/types/validators";
+import { mapRowsToOptions } from "~/utils/form";
 
-type CustomerTypeFormProps = {
-  initialValues: TypeOfValidator<typeof customerTypeValidator>;
+type PartGroupFormProps = {
+  initialValues: TypeOfValidator<typeof partGroupValidator>;
+  accounts: {
+    number: string;
+    name: string;
+  }[];
 };
 
-const CustomerTypeForm = ({ initialValues }: CustomerTypeFormProps) => {
+const PartGroupForm = ({ accounts, initialValues }: PartGroupFormProps) => {
   const permissions = usePermissions();
   const navigate = useNavigate();
   const onClose = () => navigate(-1);
 
   const isEditing = initialValues.id !== undefined;
   const isDisabled = isEditing
-    ? !permissions.can("update", "sales")
-    : !permissions.can("create", "sales");
+    ? !permissions.can("update", "parts")
+    : !permissions.can("create", "parts");
+
+  const accountOptions = mapRowsToOptions({
+    data: accounts,
+    value: "number",
+    label: "name",
+  });
 
   return (
     <Drawer onClose={onClose} isOpen={true} size="sm">
       <ValidatedForm
-        validator={customerTypeValidator}
+        validator={partGroupValidator}
         method="post"
         action={
           isEditing
-            ? `/x/sales/customer-types/${initialValues.id}`
-            : "/x/sales/customer-types/new"
+            ? `/x/parts/groups/${initialValues.id}`
+            : "/x/parts/groups/new"
         }
         defaultValues={initialValues}
       >
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader>
-            {isEditing ? "Edit" : "New"} Customer Type
-          </DrawerHeader>
+          <DrawerHeader>{isEditing ? "Edit" : "New"} Part Group</DrawerHeader>
           <DrawerBody pb={8}>
             <Hidden name="id" />
             <VStack spacing={4} alignItems="start">
-              <Input name="name" label="Customer Type" />
-              <Color name="color" label="Color" />
+              <Input name="name" label="Part Group" />
+              <TextArea name="description" label="Description" />
+              <Select
+                name="salesAccountId"
+                label="Sales Account"
+                options={accountOptions}
+              />
+              <Select
+                name="discountAccountId"
+                label="Discount Account"
+                options={accountOptions}
+              />
+              <Select
+                name="inventoryAccountId"
+                label="Inventory Account"
+                options={accountOptions}
+              />
             </VStack>
           </DrawerBody>
           <DrawerFooter>
@@ -75,4 +99,4 @@ const CustomerTypeForm = ({ initialValues }: CustomerTypeFormProps) => {
   );
 };
 
-export default CustomerTypeForm;
+export default PartGroupForm;

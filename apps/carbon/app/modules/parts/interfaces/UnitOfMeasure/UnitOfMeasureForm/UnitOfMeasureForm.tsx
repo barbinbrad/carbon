@@ -28,8 +28,8 @@ const UnitOfMeasureForm = ({ initialValues }: UnitOfMeasureFormProps) => {
 
   const isEditing = initialValues.id !== undefined;
   const isDisabled = isEditing
-    ? !permissions.can("update", "purchasing")
-    : !permissions.can("create", "purchasing");
+    ? !permissions.can("update", "parts")
+    : !permissions.can("create", "parts");
 
   return (
     <Drawer onClose={onClose} isOpen={true} size="sm">

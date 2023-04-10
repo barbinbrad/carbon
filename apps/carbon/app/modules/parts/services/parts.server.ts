@@ -3,13 +3,57 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { TypeOfValidator } from "~/types/validators";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
-import type { partValidator } from "./parts.form";
+import type { partGroupValidator, partValidator } from "./parts.form";
+
+export async function deletePartGroup(
+  client: SupabaseClient<Database>,
+  id: string
+) {
+  return client.from("partGroup").update({ active: false }).eq("id", id);
+}
 
 export async function deleteUnitOfMeasure(
   client: SupabaseClient<Database>,
   id: string
 ) {
   return client.from("unitOfMeasure").delete().eq("id", id);
+}
+
+export async function getPartGroup(
+  client: SupabaseClient<Database>,
+  id: string
+) {
+  return client
+    .from("partGroup")
+    .select(
+      "id, name, description, salesAccountId, discountAccountId, inventoryAccountId"
+    )
+    .eq("id", id)
+    .single();
+}
+
+export async function getPartGroups(
+  client: SupabaseClient<Database>,
+  args?: GenericQueryFilters & { name: string | null }
+) {
+  let query = client
+    .from("partGroup")
+    .select(
+      "id, name, description, salesAccountId, discountAccountId, inventoryAccountId",
+      {
+        count: "exact",
+      }
+    );
+
+  if (args?.name) {
+    query = query.ilike("name", `%${args.name}%`);
+  }
+
+  if (args) {
+    query = setGenericQueryFilters(query, args, "name");
+  }
+
+  return query;
 }
 
 export async function getPartGroupsList(
@@ -111,6 +155,24 @@ export async function insertPart(
   part: TypeOfValidator<typeof partValidator> & { createdBy: string }
 ) {
   return client.from("part").insert(part).select("id");
+}
+
+export async function upsertPartGroup(
+  client: SupabaseClient<Database>,
+  partGroup:
+    | (Omit<TypeOfValidator<typeof partGroupValidator>, "id"> & {
+        createdBy: string;
+      })
+    | (TypeOfValidator<typeof partGroupValidator> & { updatedBy: string })
+) {
+  if ("createdBy" in partGroup) {
+    return client.from("partGroup").insert([partGroup]).select("id");
+  }
+  return client
+    .from("partGroup")
+    .update(partGroup)
+    .eq("id", partGroup.id)
+    .select("id");
 }
 
 export async function upsertUnitOfMeasure(

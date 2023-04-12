@@ -3,7 +3,11 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { TypeOfValidator } from "~/types/validators";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
-import type { partGroupValidator, partValidator } from "./parts.form";
+import type {
+  partCostValidator,
+  partGroupValidator,
+  partValidator,
+} from "./parts.form";
 
 export async function deletePartGroup(
   client: SupabaseClient<Database>,
@@ -17,6 +21,19 @@ export async function deleteUnitOfMeasure(
   id: string
 ) {
   return client.from("unitOfMeasure").delete().eq("id", id);
+}
+
+export async function getPartCost(
+  client: SupabaseClient<Database>,
+  id: string
+) {
+  return client
+    .from("partCost")
+    .select(
+      "partId, costingMethod, standardCost, unitCost, salesAccountId, discountAccountId, inventoryAccountId, costIsAdjusted"
+    )
+    .eq("partId", id)
+    .single();
 }
 
 export async function getPartGroup(
@@ -175,6 +192,13 @@ export async function upsertPart(
   }
   console.log("updating part");
   return client.from("part").update(part).eq("id", part.id);
+}
+
+export async function upsertPartCost(
+  client: SupabaseClient<Database>,
+  partCost: TypeOfValidator<typeof partCostValidator> & { updatedBy: string }
+) {
+  return client.from("partCost").update(partCost).eq("partId", partCost.partId);
 }
 
 export async function upsertPartGroup(

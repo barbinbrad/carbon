@@ -9,17 +9,35 @@ import {
 } from "@chakra-ui/react";
 import { ValidatedForm } from "remix-validated-form";
 import { Boolean, Hidden, Number, Select, Submit } from "~/components/Form";
+import type { PartCostingMethod } from "~/modules/parts";
 import { partCostValidator } from "~/modules/parts";
-
-type PartCostingFormValues = {
-  partId: string;
-};
+import type { TypeOfValidator } from "~/types/validators";
+import { mapRowsToOptions } from "~/utils/form";
 
 type PartCostingFormProps = {
-  initialValues: PartCostingFormValues;
+  initialValues: TypeOfValidator<typeof partCostValidator>;
+  accounts: { number: string; name: string }[];
+  partCostingMethods: PartCostingMethod[];
 };
 
-const PartCostingForm = ({ initialValues }: PartCostingFormProps) => {
+const PartCostingForm = ({
+  initialValues,
+  accounts,
+  partCostingMethods,
+}: PartCostingFormProps) => {
+  const accountOptions = mapRowsToOptions({
+    data: accounts,
+    value: "number",
+    label: "name",
+  });
+
+  const partCostingMethodOptions = partCostingMethods.map(
+    (partCostingMethod) => ({
+      label: partCostingMethod,
+      value: partCostingMethod,
+    })
+  );
+
   return (
     <ValidatedForm
       method="post"
@@ -42,31 +60,41 @@ const PartCostingForm = ({ initialValues }: PartCostingFormProps) => {
               <Select
                 name="costingMethod"
                 label="Part Costing Method"
-                options={[{ label: "Standard", value: "Standard" }]}
+                options={partCostingMethodOptions}
               />
-              <Number name="standardCost" label="Standard Cost" />
-              <Number name="unitCost" label="Unit Cost" />
+              <Number name="standardCost" label="Standard Cost" precision={2} />
+              <Number name="unitCost" label="Unit Cost" precision={2} />
             </VStack>
             <VStack alignItems="start" spacing={2} w="full">
               <Select
                 name="salesAccountId"
                 label="Sales Account"
-                options={[{ label: "", value: "" }]}
+                options={accountOptions}
               />
               <Select
                 name="inventoryAccountId"
                 label="Inventory Account"
-                options={[{ label: "", value: "" }]}
+                options={accountOptions}
               />
               <Select
                 name="discountAccountId"
                 label="Discount Account"
-                options={[{ label: "", value: "" }]}
+                options={accountOptions}
               />
             </VStack>
             <VStack alignItems="start" spacing={2} w="full">
-              <Number name="salesHistory" label="Sales History" />
-              <Number name="salesHistoryQty" label="Sales History Qty" />
+              <Number
+                name="salesHistory"
+                label="Sales History"
+                precision={2}
+                isReadOnly
+              />
+              <Number
+                name="salesHistoryQty"
+                label="Sales History Qty"
+                precision={2}
+                isReadOnly
+              />
               <Boolean name="costIsAdjusted" label="Cost Is Adjusted" />
             </VStack>
           </Grid>

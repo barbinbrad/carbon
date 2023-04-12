@@ -2842,7 +2842,7 @@ CREATE FUNCTION public.create_part_search_result()
 RETURNS TRIGGER AS $$
 BEGIN
   INSERT INTO public.search(name, description, entity, uuid, link)
-  VALUES (new.id, new.id || ' ' || new.name || ' ' || new.description, 'Part', new.id, '/x/parts/' || new.id);
+  VALUES (new.id, new.id || ' ' || new.name || ' ' || new.description, 'Part', new.id, '/x/part/' || new.id);
   RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -2850,6 +2850,19 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE TRIGGER create_part_search_result
   AFTER INSERT on public.part
   FOR EACH ROW EXECUTE PROCEDURE public.create_part_search_result();
+
+CREATE FUNCTION public.create_part_related_records()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public."partCost"("partId", "costingMethod", "createdBy")
+  VALUES (new.id, 'Standard', new."createdBy");
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER create_part_related_records
+  AFTER INSERT on public.part
+  FOR EACH ROW EXECUTE PROCEDURE public.create_part_related_records();
 
 CREATE FUNCTION public.update_part_search_result()
 RETURNS TRIGGER AS $$

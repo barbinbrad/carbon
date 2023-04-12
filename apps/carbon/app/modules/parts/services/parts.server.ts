@@ -103,6 +103,19 @@ export async function getParts(
   return query;
 }
 
+export async function getPartSummary(
+  client: SupabaseClient<Database>,
+  id: string
+) {
+  return client
+    .from("part")
+    .select(
+      "id, name, description, partType, replenishmentSystem, partType, unitOfMeasureCode, partGroupId, blocked, active"
+    )
+    .eq("id", id)
+    .single();
+}
+
 export function getPartTypes(): Database["public"]["Enums"]["partType"][] {
   return ["Inventory", "Non-Inventory", "Service"];
 }
@@ -150,11 +163,18 @@ export async function getUnitOfMeasuresList(client: SupabaseClient<Database>) {
   return client.from("unitOfMeasure").select("name, code");
 }
 
-export async function insertPart(
+export async function upsertPart(
   client: SupabaseClient<Database>,
-  part: TypeOfValidator<typeof partValidator> & { createdBy: string }
+  part:
+    | (TypeOfValidator<typeof partValidator> & { createdBy: string })
+    | (TypeOfValidator<typeof partValidator> & { updatedBy: string })
 ) {
-  return client.from("part").insert(part).select("id");
+  if ("createdBy" in part) {
+    console.log("inserting part");
+    return client.from("part").insert(part).select("id");
+  }
+  console.log("updating part");
+  return client.from("part").update(part).eq("id", part.id);
 }
 
 export async function upsertPartGroup(

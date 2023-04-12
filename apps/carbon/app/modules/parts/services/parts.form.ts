@@ -8,6 +8,7 @@ export const partValidator = withZod(
     name: z.string().min(1, { message: "Name is required" }).max(255),
     description: zfd.text(z.string().optional()),
     blocked: zfd.checkbox(),
+    active: zfd.checkbox(),
     replenishmentSystem: z.enum(
       ["Purchased", "Manufactured", "Purchased and Manufactured"],
       {

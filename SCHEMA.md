@@ -291,6 +291,9 @@ CREATE TABLE "user" (
     CONSTRAINT "user_pkey" PRIMARY KEY ("id")
 );
 
+INSERT INTO "user" ("id", "email", "firstName", "lastName")
+VALUES ('system', 'system@carbon.us.org', 'System', 'Operation');
+
 CREATE UNIQUE INDEX "index_user_email_key" ON "user"("email");
 CREATE INDEX "index_user_fullName" ON "user"("fullName");
 
@@ -2619,6 +2622,9 @@ CREATE TABLE "currency" (
   CONSTRAINT "currency_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
 
+INSERT INTO "currency" ("name", "code", "symbol", "symbolPlacementBefore", "exchangeRate", "currencyPrecision", "isBaseCurrency", "createdBy")
+VALUES ('US Dollar', 'USD', '$', true, 1.0000, 2, true, 'system');
+
 CREATE INDEX "currency_code_index" ON "currency" ("code");
 
 CREATE TYPE "glAccountCategory" AS ENUM (
@@ -2714,6 +2720,8 @@ CREATE TABLE "account" (
   CONSTRAINT "account_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
 
+INSERT INTO "account" ("number", "name", "consolidatedRate", "currencyCode", "createdBy")
+VALUES ('999999', 'Unassigned', 'Average', 'USD', 'system');
 ```
 
 
@@ -2834,7 +2842,7 @@ CREATE FUNCTION public.create_part_search_result()
 RETURNS TRIGGER AS $$
 BEGIN
   INSERT INTO public.search(name, description, entity, uuid, link)
-  VALUES (new.name, new.name || ' ' || new.description, 'Part', new.id, '/x/parts/' || new.id);
+  VALUES (new.id, new.id || ' ' || new.name || ' ' || new.description, 'Part', new.id, '/x/parts/' || new.id);
   RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -2847,7 +2855,7 @@ CREATE FUNCTION public.update_part_search_result()
 RETURNS TRIGGER AS $$
 BEGIN
   IF (old.name <> new.name OR old.description <> new.description) THEN
-    UPDATE public.search SET name = new.name, description = new.name || ' ' || new.description
+    UPDATE public.search SET name = new.name, description = new.id || ' ' || new.name || ' ' || new.description
     WHERE entity = 'Part' AND uuid = new.id;
   END IF;
   RETURN new;

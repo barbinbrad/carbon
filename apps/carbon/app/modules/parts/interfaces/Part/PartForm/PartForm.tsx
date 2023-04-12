@@ -21,7 +21,13 @@ import { partValidator } from "~/modules/parts";
 type PartFormValues = {
   id?: string;
   name: string;
-  description: string;
+  description?: string;
+  partType?: PartType;
+  partGroupId?: string;
+  replenishmentSystem?: PartReplenishmentSystem;
+  unitOfMeasureCode?: string;
+  blocked?: boolean;
+  active?: boolean;
 };
 
 type PartFormProps = {
@@ -64,7 +70,11 @@ const PartForm = ({
   }));
 
   return (
-    <ValidatedForm method="post" validator={partValidator}>
+    <ValidatedForm
+      method="post"
+      validator={partValidator}
+      defaultValues={initialValues}
+    >
       <Card w="full">
         <CardHeader>
           <Heading size="md">{isEditing ? "Part Basics" : "New Part"}</Heading>
@@ -85,7 +95,7 @@ const PartForm = ({
             w="full"
           >
             <VStack alignItems="start" spacing={2} w="full">
-              <Input name="id" label="Part ID" />
+              <Input name="id" label="Part ID" isReadOnly={isEditing} />
               <Input name="name" label="Name" />
               <TextArea name="description" label="Description" />
             </VStack>
@@ -113,6 +123,7 @@ const PartForm = ({
                 options={partGroupOptions}
               />
               <Boolean name="blocked" label="Blocked" />
+              {isEditing && <Boolean name="active" label="Active" />}
             </VStack>
           </Grid>
         </CardBody>

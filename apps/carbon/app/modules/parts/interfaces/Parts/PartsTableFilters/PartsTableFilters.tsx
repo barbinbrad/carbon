@@ -4,12 +4,12 @@ import { Link } from "@remix-run/react";
 import { IoMdAdd } from "react-icons/io";
 import { DebouncedInput } from "~/components/Search";
 import { usePermissions, useUrlParams } from "~/hooks";
-import type { PartGroup, PartType } from "~/modules/parts";
+import type { PartType } from "~/modules/parts";
 import { mapRowsToOptions } from "~/utils/form";
 
 type PartsTableFiltersProps = {
   partTypes: PartType[];
-  partGroups: PartGroup[];
+  partGroups: { id: string; name: string }[];
 };
 
 const PartsTableFilters = ({
@@ -25,7 +25,7 @@ const PartsTableFilters = ({
 
   const partGroupsOptions = mapRowsToOptions({
     data: partGroups,
-    value: (group) => group.id.toString(),
+    value: "id",
     label: "name",
   });
 

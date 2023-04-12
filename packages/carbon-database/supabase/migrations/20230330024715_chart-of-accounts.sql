@@ -18,6 +18,9 @@ CREATE TABLE "currency" (
   CONSTRAINT "currency_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
 
+INSERT INTO "currency" ("name", "code", "symbol", "symbolPlacementBefore", "exchangeRate", "currencyPrecision", "isBaseCurrency", "createdBy")
+VALUES ('US Dollar', 'USD', '$', true, 1.0000, 2, true, 'system');
+
 CREATE INDEX "currency_code_index" ON "currency" ("code");
 
 CREATE TYPE "glAccountCategory" AS ENUM (
@@ -112,3 +115,6 @@ CREATE TABLE "account" (
   CONSTRAINT "account_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "account_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
+
+INSERT INTO "account" ("number", "name", "consolidatedRate", "currencyCode", "createdBy")
+VALUES ('999999', 'Unassigned', 'Average', 'USD', 'system');

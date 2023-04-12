@@ -9,7 +9,7 @@ import type {
   PartType,
   UnitOfMeasureListItem,
 } from "~/modules/parts";
-import { PartForm, insertPart, partValidator } from "~/modules/parts";
+import { PartForm, partValidator, upsertPart } from "~/modules/parts";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
@@ -27,8 +27,9 @@ export async function action({ request }: ActionArgs) {
     return validationError(validation.error);
   }
 
-  const createPart = await insertPart(client, {
+  const createPart = await upsertPart(client, {
     ...validation.data,
+    active: true,
     createdBy: userId,
   });
   if (createPart.error) {
@@ -41,7 +42,7 @@ export async function action({ request }: ActionArgs) {
   const partId = createPart.data[0]?.id;
 
   return redirect(
-    `/x/parts/${partId}`,
+    `/x/part/${partId}`,
     await flash(request, success("Created part"))
   );
 }

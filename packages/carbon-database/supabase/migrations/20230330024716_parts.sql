@@ -111,7 +111,7 @@ CREATE FUNCTION public.create_part_search_result()
 RETURNS TRIGGER AS $$
 BEGIN
   INSERT INTO public.search(name, description, entity, uuid, link)
-  VALUES (new.name, new.name || ' ' || new.description, 'Part', new.id, '/x/parts/' || new.id);
+  VALUES (new.id, new.id || ' ' || new.name || ' ' || new.description, 'Part', new.id, '/x/part/' || new.id);
   RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -124,7 +124,7 @@ CREATE FUNCTION public.update_part_search_result()
 RETURNS TRIGGER AS $$
 BEGIN
   IF (old.name <> new.name OR old.description <> new.description) THEN
-    UPDATE public.search SET name = new.name, description = new.name || ' ' || new.description
+    UPDATE public.search SET name = new.name, description = new.id || ' ' || new.name || ' ' || new.description
     WHERE entity = 'Part' AND uuid = new.id;
   END IF;
   RETURN new;

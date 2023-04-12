@@ -75,7 +75,7 @@ export async function action({ request }: ActionArgs) {
   }
 
   return redirect(
-    "/x/parts/group",
+    "/x/parts/groups",
     await flash(request, success("Updated part group"))
   );
 }

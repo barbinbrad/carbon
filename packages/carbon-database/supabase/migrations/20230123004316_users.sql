@@ -14,6 +14,9 @@ CREATE TABLE "user" (
     CONSTRAINT "user_pkey" PRIMARY KEY ("id")
 );
 
+INSERT INTO "user" ("id", "email", "firstName", "lastName")
+VALUES ('system', 'system@carbon.us.org', 'System', 'Operation');
+
 CREATE UNIQUE INDEX "index_user_email_key" ON "user"("email");
 CREATE INDEX "index_user_fullName" ON "user"("fullName");
 

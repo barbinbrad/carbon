@@ -56,7 +56,7 @@ const PartsTable = memo(({ data, count }: PartsTableProps) => {
           return (
             <MenuItem
               icon={<BsPencilSquare />}
-              onClick={() => navigate(`/x/parts/${row.id}`)}
+              onClick={() => navigate(`/x/part/${row.id}`)}
             >
               Edit Part
             </MenuItem>

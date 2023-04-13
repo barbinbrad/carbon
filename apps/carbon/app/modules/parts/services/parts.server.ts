@@ -6,6 +6,8 @@ import { setGenericQueryFilters } from "~/utils/query";
 import type {
   partCostValidator,
   partGroupValidator,
+  partManufacturingValidator,
+  partPurchasingValidator,
   partValidator,
 } from "./parts.form";
 
@@ -88,6 +90,32 @@ export async function getPartGroupsList(
   }
 
   return query;
+}
+
+export async function getPartManufacturing(
+  client: SupabaseClient<Database>,
+  id: string
+) {
+  return client
+    .from("partReplenishment")
+    .select(
+      "partId, manufacturingPolicy, manufacturingLeadTime, manufacturingBlocked, requiresConfiguration, scrapPercentage, lotSize"
+    )
+    .eq("partId", id)
+    .single();
+}
+
+export async function getPartPurchasing(
+  client: SupabaseClient<Database>,
+  id: string
+) {
+  return client
+    .from("partReplenishment")
+    .select(
+      "partId, supplierId, supplierPartNumber, purchasingLeadTime, purchasingUnitOfMeasureCode, purchasingBlocked"
+    )
+    .eq("partId", id)
+    .single();
 }
 
 export async function getParts(
@@ -187,10 +215,8 @@ export async function upsertPart(
     | (TypeOfValidator<typeof partValidator> & { updatedBy: string })
 ) {
   if ("createdBy" in part) {
-    console.log("inserting part");
     return client.from("part").insert(part).select("id");
   }
-  console.log("updating part");
   return client.from("part").update(part).eq("id", part.id);
 }
 
@@ -199,6 +225,30 @@ export async function upsertPartCost(
   partCost: TypeOfValidator<typeof partCostValidator> & { updatedBy: string }
 ) {
   return client.from("partCost").update(partCost).eq("partId", partCost.partId);
+}
+
+export async function upsertPartManufacturing(
+  client: SupabaseClient<Database>,
+  partManufacturing: TypeOfValidator<typeof partManufacturingValidator> & {
+    updatedBy: string;
+  }
+) {
+  return client
+    .from("partReplenishment")
+    .update(partManufacturing)
+    .eq("partId", partManufacturing.partId);
+}
+
+export async function upsertPartPurchasing(
+  client: SupabaseClient<Database>,
+  partPurchasing: TypeOfValidator<typeof partPurchasingValidator> & {
+    updatedBy: string;
+  }
+) {
+  return client
+    .from("partReplenishment")
+    .update(partPurchasing)
+    .eq("partId", partPurchasing.partId);
 }
 
 export async function upsertPartGroup(

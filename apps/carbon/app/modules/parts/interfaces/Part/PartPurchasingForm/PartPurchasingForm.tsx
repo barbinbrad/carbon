@@ -18,13 +18,10 @@ import {
   Supplier,
 } from "~/components/Form";
 import { partPurchasingValidator } from "~/modules/parts";
-
-type PartPurchasingFormValues = {
-  partId: string;
-};
+import type { TypeOfValidator } from "~/types/validators";
 
 type PartPurchasingFormProps = {
-  initialValues: PartPurchasingFormValues;
+  initialValues: TypeOfValidator<typeof partPurchasingValidator>;
 };
 
 const PartPurchasingForm = ({ initialValues }: PartPurchasingFormProps) => {
@@ -51,7 +48,7 @@ const PartPurchasingForm = ({ initialValues }: PartPurchasingFormProps) => {
               <Input name="supplierPartNumber" label="Supplier Part Number" />
             </VStack>
             <VStack alignItems="start" spacing={2} w="full">
-              <Number name="leadTime" label="Lead Time" />
+              <Number name="purchasingLeadTime" label="Lead Time (Days)" />
               <Select
                 name="purchasingUnitOfMeasureCode"
                 label="Purchasing Unit of Measure"

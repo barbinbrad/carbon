@@ -9,19 +9,24 @@ import {
 } from "@chakra-ui/react";
 import { ValidatedForm } from "remix-validated-form";
 import { Boolean, Hidden, Number, Select, Submit } from "~/components/Form";
+import type { PartManufacturingPolicy } from "~/modules/parts";
 import { partManufacturingValidator } from "~/modules/parts";
-
-type PartManufacturingFormValues = {
-  partId: string;
-};
+import type { TypeOfValidator } from "~/types/validators";
 
 type PartManufacturingFormProps = {
-  initialValues: PartManufacturingFormValues;
+  initialValues: TypeOfValidator<typeof partManufacturingValidator>;
+  partManufacturingPolicies: PartManufacturingPolicy[];
 };
 
 const PartManufacturingForm = ({
   initialValues,
+  partManufacturingPolicies,
 }: PartManufacturingFormProps) => {
+  const partManufacturingPolicyOptions =
+    partManufacturingPolicies?.map((policy) => ({
+      label: policy,
+      value: policy,
+    })) ?? [];
   return (
     <ValidatedForm
       method="post"
@@ -44,12 +49,7 @@ const PartManufacturingForm = ({
               <Select
                 name="manufacturingPolicy"
                 label="Manufacturing Policy"
-                options={[
-                  {
-                    label: "Make to Stock",
-                    value: "Make to Stock",
-                  },
-                ]}
+                options={partManufacturingPolicyOptions}
               />
               <Select
                 name="routingId"
@@ -58,6 +58,7 @@ const PartManufacturingForm = ({
               />
             </VStack>
             <VStack alignItems="start" spacing={2} w="full">
+              <Number name="manufacturingLeadTime" label="Lead Time (Days)" />
               <Number name="scrapPercentage" label="Scrap Percentage" />
               <Number name="lotSize" label="Lot Size" />
             </VStack>

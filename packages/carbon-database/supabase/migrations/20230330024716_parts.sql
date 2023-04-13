@@ -125,6 +125,9 @@ RETURNS TRIGGER AS $$
 BEGIN
   INSERT INTO public."partCost"("partId", "costingMethod", "createdBy")
   VALUES (new.id, 'Standard', new."createdBy");
+
+  INSERT INTO public."partReplenishment"("partId", "createdBy")
+  VALUES (new.id, new."createdBy");
   RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -199,7 +202,7 @@ CREATE TABLE "partReplenishment" (
   "supplierId" TEXT,
   "supplierPartNumber" TEXT,
   "purchasingLeadTime" INTEGER NOT NULL DEFAULT 0,
-  "purchaseUnitOfMeasureCode" TEXT NOT NULL,
+  "purchasingUnitOfMeasureCode" TEXT,
   "purchasingBlocked" BOOLEAN NOT NULL DEFAULT false,
   "manufacturingPolicy" "partManufacturingPolicy" NOT NULL DEFAULT 'Make to Stock',
   "manufacturingLeadTime" INTEGER NOT NULL DEFAULT 0,
@@ -214,7 +217,7 @@ CREATE TABLE "partReplenishment" (
   
   CONSTRAINT "partReplenishment_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part"("id") ON DELETE CASCADE,
   CONSTRAINT "partReplenishment_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "supplier"("id") ON DELETE SET NULL,
-  CONSTRAINT "partReplenishment_purchaseUnitOfMeasureId_fkey" FOREIGN KEY ("purchaseUnitOfMeasureCode") REFERENCES "unitOfMeasure"("code") ON DELETE SET NULL,
+  CONSTRAINT "partReplenishment_purchaseUnitOfMeasureId_fkey" FOREIGN KEY ("purchasingUnitOfMeasureCode") REFERENCES "unitOfMeasure"("code") ON DELETE SET NULL,
   CONSTRAINT "partReplenishment_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "partReplenishment_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );

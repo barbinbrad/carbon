@@ -76,9 +76,11 @@ export const partManufacturingValidator = withZod(
         message: "Manufacturing policy is required",
       }),
     }),
+    manufacturingLeadTime: zfd.numeric(z.number().min(0)),
+    manufacturingBlocked: zfd.checkbox(),
+    requiresConfiguration: zfd.checkbox(),
     scrapPercentage: zfd.numeric(z.number().min(0).max(100)),
     lotSize: zfd.numeric(z.number().min(0)),
-    manufacturingBlocked: zfd.checkbox(),
   })
 );
 
@@ -120,9 +122,7 @@ export const partPurchasingValidator = withZod(
     supplierId: zfd.text(z.string().optional()),
     supplierPartNumber: zfd.text(z.string().optional()),
     purchasingLeadTime: zfd.numeric(z.number().min(0)),
-    purchasingUnitOfMeasureCode: z
-      .string()
-      .min(1, { message: "Unit of Measure is required" }),
+    purchasingUnitOfMeasureCode: zfd.text(z.string().optional()),
     purchasingBlocked: zfd.checkbox(),
   })
 );

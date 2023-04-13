@@ -1271,7 +1271,7 @@ export interface Database {
           partId: string;
           supplierId: string | null;
           supplierPartNumber: string | null;
-          purchaseUnitOfMeasureCode: string;
+          purchasingUnitOfMeasureCode: string | null;
           lotSize: number | null;
           createdBy: string;
           updatedBy: string | null;
@@ -1289,7 +1289,7 @@ export interface Database {
           partId: string;
           supplierId?: string | null;
           supplierPartNumber?: string | null;
-          purchaseUnitOfMeasureCode: string;
+          purchasingUnitOfMeasureCode?: string | null;
           lotSize?: number | null;
           createdBy: string;
           updatedBy?: string | null;
@@ -1307,7 +1307,7 @@ export interface Database {
           partId?: string;
           supplierId?: string | null;
           supplierPartNumber?: string | null;
-          purchaseUnitOfMeasureCode?: string;
+          purchasingUnitOfMeasureCode?: string | null;
           lotSize?: number | null;
           createdBy?: string;
           updatedBy?: string | null;

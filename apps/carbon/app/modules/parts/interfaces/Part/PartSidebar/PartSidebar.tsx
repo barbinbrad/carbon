@@ -1,9 +1,21 @@
 import { Button, Box, VStack } from "@chakra-ui/react";
-import { Link, useMatches } from "@remix-run/react";
+import { Link, useMatches, useParams } from "@remix-run/react";
+import { useRouteData } from "~/hooks";
+import type { PartSummary } from "~/modules/parts/types";
 import { usePartSidebar } from "./usePartSidebar";
 
 const PartSidebar = () => {
-  const links = usePartSidebar("Manufactured");
+  const { partId } = useParams();
+  if (!partId)
+    throw new Error(
+      "PartSidebar requires a partId and could not find partId in params"
+    );
+
+  const routeData = useRouteData<PartSummary>(`/x/part/${partId}`);
+  if (!routeData?.replenishmentSystem)
+    throw new Error("Could not find replenishmentSystem in routeData");
+
+  const links = usePartSidebar(routeData.replenishmentSystem);
   const matches = useMatches();
 
   return (

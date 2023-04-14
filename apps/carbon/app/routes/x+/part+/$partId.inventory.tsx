@@ -5,6 +5,7 @@ export default function PartInventoryRoute() {
     <PartInventoryForm
       initialValues={{
         partId: "FAS01234",
+        partBinId: "",
       }}
     />
   );

@@ -128,6 +128,10 @@ BEGIN
 
   INSERT INTO public."partReplenishment"("partId", "createdBy")
   VALUES (new.id, new."createdBy");
+
+  INSERT INTO public."partPlanning"("partId", "createdBy")
+  VALUES (new.id, new."createdBy");
+  
   RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;

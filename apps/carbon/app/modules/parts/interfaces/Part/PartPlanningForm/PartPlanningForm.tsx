@@ -9,17 +9,24 @@ import {
 } from "@chakra-ui/react";
 import { ValidatedForm } from "remix-validated-form";
 import { Boolean, Hidden, Number, Select, Submit } from "~/components/Form";
+import type { PartReorderingPolicy } from "~/modules/parts";
 import { partPlanningValidator } from "~/modules/parts";
-
-type PartPlanningFormValues = {
-  partId: string;
-};
+import type { TypeOfValidator } from "~/types/validators";
 
 type PartPlanningFormProps = {
-  initialValues: PartPlanningFormValues;
+  initialValues: TypeOfValidator<typeof partPlanningValidator>;
+  partReorderingPolicies: PartReorderingPolicy[];
 };
 
-const PartPlanningForm = ({ initialValues }: PartPlanningFormProps) => {
+const PartPlanningForm = ({
+  initialValues,
+  partReorderingPolicies,
+}: PartPlanningFormProps) => {
+  const partReorderingOptions = partReorderingPolicies.map((policy) => ({
+    label: policy,
+    value: policy,
+  }));
+
   return (
     <ValidatedForm
       method="post"
@@ -42,12 +49,7 @@ const PartPlanningForm = ({ initialValues }: PartPlanningFormProps) => {
               <Select
                 name="reorderingPolicy"
                 label="Reordering Policy"
-                options={[
-                  {
-                    label: "Demand-Based Reorder",
-                    value: "Demand-Based Reorder",
-                  },
-                ]}
+                options={partReorderingOptions}
               />
               <Boolean name="critical" label="Critical" />
               <Number

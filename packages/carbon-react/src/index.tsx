@@ -3,6 +3,7 @@ import Dot from "./Dot";
 import HTML from "./HTML";
 import type { OptionBase, OptionProps, GroupBase } from "./Inputs";
 import {
+  CreatableSelect,
   DatePicker,
   DateTimePicker,
   DateRangePicker,
@@ -33,6 +34,7 @@ export {
   Button,
   ClientOnly,
   ContextMenu,
+  CreatableSelect,
   DatePicker,
   DateTimePicker,
   DateRangePicker,

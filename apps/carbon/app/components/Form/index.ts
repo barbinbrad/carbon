@@ -3,6 +3,7 @@ import Ability from "./Ability";
 import Array from "./Array";
 import Boolean from "./Boolean";
 import Color from "./Color";
+import CreatableSelect from "./CreatableSelect";
 import Customer from "./Customer";
 import CustomerContact from "./CustomerContact";
 import DatePicker from "./DatePicker";
@@ -34,6 +35,7 @@ export {
   Array,
   Boolean,
   Color,
+  CreatableSelect,
   Customer,
   CustomerContact,
   DatePicker,

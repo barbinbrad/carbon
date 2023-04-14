@@ -96,7 +96,7 @@ export const partPlanningValidator = withZod(
       ],
       {
         errorMap: (issue, ctx) => ({
-          message: "Manufacturing policy is required",
+          message: "Reordering policy is required",
         }),
       }
     ),
@@ -104,6 +104,7 @@ export const partPlanningValidator = withZod(
     safetyStockQuantity: zfd.numeric(z.number().min(0)),
     safetyStockLeadTime: zfd.numeric(z.number().min(0)),
     demandAccumulationPeriod: zfd.numeric(z.number().min(0)),
+    demandReschedulingPeriod: zfd.numeric(z.number().min(0)),
     demandAccumulationIncludesInventory: zfd.checkbox(),
     reorderPoint: zfd.numeric(z.number().min(0)),
     reorderQuantity: zfd.numeric(z.number().min(0)),
@@ -112,7 +113,7 @@ export const partPlanningValidator = withZod(
     reorderTimeBucket: zfd.numeric(z.number().min(0)),
     minimumOrderQuantity: zfd.numeric(z.number().min(0)),
     maximumOrderQuantity: zfd.numeric(z.number().min(0)),
-    orderMultiple: zfd.numeric(z.number().min(0)),
+    orderMultiple: zfd.numeric(z.number().min(1)),
   })
 );
 

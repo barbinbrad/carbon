@@ -24,6 +24,9 @@ export type PartGroupListItem = NonNullable<
   Awaited<ReturnType<typeof getPartGroupsList>>["data"]
 >[number];
 
+export type PartReorderingPolicy =
+  Database["public"]["Enums"]["partReorderingPolicy"];
+
 export type PartReplenishmentSystem =
   Database["public"]["Enums"]["partReplenishmentSystem"];
 

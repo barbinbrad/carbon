@@ -7,6 +7,7 @@ import type {
   partCostValidator,
   partGroupValidator,
   partManufacturingValidator,
+  partPlanningValidator,
   partPurchasingValidator,
   partValidator,
 } from "./parts.form";
@@ -96,26 +97,21 @@ export async function getPartManufacturing(
   client: SupabaseClient<Database>,
   id: string
 ) {
-  return client
-    .from("partReplenishment")
-    .select(
-      "partId, manufacturingPolicy, manufacturingLeadTime, manufacturingBlocked, requiresConfiguration, scrapPercentage, lotSize"
-    )
-    .eq("partId", id)
-    .single();
+  return client.from("partReplenishment").select("*").eq("partId", id).single();
+}
+
+export async function getPartPlanning(
+  client: SupabaseClient<Database>,
+  id: string
+) {
+  return client.from("partPlanning").select("*").eq("partId", id).single();
 }
 
 export async function getPartPurchasing(
   client: SupabaseClient<Database>,
   id: string
 ) {
-  return client
-    .from("partReplenishment")
-    .select(
-      "partId, supplierId, supplierPartNumber, purchasingLeadTime, purchasingUnitOfMeasureCode, purchasingBlocked"
-    )
-    .eq("partId", id)
-    .single();
+  return client.from("partReplenishment").select("*").eq("partId", id).single();
 }
 
 export async function getParts(
@@ -163,6 +159,15 @@ export async function getPartSummary(
 
 export function getPartTypes(): Database["public"]["Enums"]["partType"][] {
   return ["Inventory", "Non-Inventory", "Service"];
+}
+
+export function getPartRorderdingPolicies(): Database["public"]["Enums"]["partReorderingPolicy"][] {
+  return [
+    "Manual Reorder",
+    "Demand-Based Reorder",
+    "Fixed Reorder Quantity",
+    "Maximum Quantity",
+  ];
 }
 
 export function getPartReplenishmentSystems(): Database["public"]["Enums"]["partReplenishmentSystem"][] {
@@ -237,6 +242,18 @@ export async function upsertPartManufacturing(
     .from("partReplenishment")
     .update(partManufacturing)
     .eq("partId", partManufacturing.partId);
+}
+
+export async function upsertPartPlanning(
+  client: SupabaseClient<Database>,
+  partPlanning: TypeOfValidator<typeof partPlanningValidator> & {
+    updatedBy: string;
+  }
+) {
+  return client
+    .from("partPlanning")
+    .update(partPlanning)
+    .eq("partId", partPlanning.partId);
 }
 
 export async function upsertPartPurchasing(

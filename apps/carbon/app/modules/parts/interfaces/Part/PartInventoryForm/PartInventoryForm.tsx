@@ -8,11 +8,12 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { ValidatedForm } from "remix-validated-form";
-import { Hidden, Submit } from "~/components/Form";
+import { CreatableSelect, Hidden, Submit } from "~/components/Form";
 import { partInventoryValidator } from "~/modules/parts";
 
 type PartInventoryFormValues = {
   partId: string;
+  partBinId: string;
 };
 
 type PartInventoryFormProps = {
@@ -38,7 +39,18 @@ const PartInventoryForm = ({ initialValues }: PartInventoryFormProps) => {
             gridRowGap={2}
             w="full"
           >
-            <VStack alignItems="start" spacing={2} w="full"></VStack>
+            <VStack alignItems="start" spacing={2} w="full">
+              <CreatableSelect
+                options={[]}
+                name="partBinId"
+                label="Part Bin"
+                onUsingCreatedChanged={(usingCreated) => {
+                  console.log(`usingCreated: ${usingCreated}`);
+                }}
+                // @ts-ignore
+                w="full"
+              />
+            </VStack>
             <VStack alignItems="start" spacing={2} w="full"></VStack>
             <VStack alignItems="start" spacing={2} w="full"></VStack>
           </Grid>

@@ -33,7 +33,7 @@ const Select = ({
 }: SelectProps) => {
   const { getInputProps, error, defaultValue } = useField(name);
   const initialValue = useMemo(
-    () => options.filter((option) => option.value === defaultValue),
+    () => options.find((option) => option.value === defaultValue),
     [defaultValue, options]
   );
 

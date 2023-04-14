@@ -5,6 +5,7 @@ import {
   getPartCostingMethods,
   getPartGroupsList,
   getPartManufacturingPolicies,
+  getPartRorderdingPolicies,
   getPartReplenishmentSystems,
   getPartTypes,
   getUnitOfMeasuresList,
@@ -26,11 +27,12 @@ export async function loader({ request }: LoaderArgs) {
   ]);
 
   return {
-    partGroups: partGroups?.data ?? [],
-    partTypes: getPartTypes(),
-    partReplenishmentSystems: getPartReplenishmentSystems(),
-    partManufacturingPolicies: getPartManufacturingPolicies(),
     partCostingMethods: getPartCostingMethods(),
+    partGroups: partGroups?.data ?? [],
+    partManufacturingPolicies: getPartManufacturingPolicies(),
+    partReorderingPolicies: getPartRorderdingPolicies(),
+    partReplenishmentSystems: getPartReplenishmentSystems(),
+    partTypes: getPartTypes(),
     unitOfMeasures: unitOfMeasures?.data ?? [],
   };
 }

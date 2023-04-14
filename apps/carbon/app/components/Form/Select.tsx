@@ -53,6 +53,8 @@ const Select = ({
         options={options}
         placeholder={placeholder}
         // @ts-ignore
+        w="full"
+        // @ts-ignore
         onChange={onChange ?? undefined}
       />
       {error ? (
@@ -64,7 +66,13 @@ const Select = ({
   ) : (
     <Box>
       {label && <FormLabel>{label}</FormLabel>}
-      <CarbonSelect isDisabled isLoading={isLoading} options={[]} />
+      <CarbonSelect
+        isDisabled
+        isLoading={isLoading}
+        options={[]}
+        // @ts-ignore
+        w="full"
+      />
     </Box>
   );
 };

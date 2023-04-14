@@ -7,6 +7,7 @@ import {
   Heading,
   VStack,
 } from "@chakra-ui/react";
+import { useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import { CreatableSelect, Hidden, Submit } from "~/components/Form";
 import { partInventoryValidator } from "~/modules/parts";
@@ -21,6 +22,8 @@ type PartInventoryFormProps = {
 };
 
 const PartInventoryForm = ({ initialValues }: PartInventoryFormProps) => {
+  const [hasNewPartBin, setHasNewPartBin] = useState(false);
+
   return (
     <ValidatedForm
       method="post"
@@ -33,6 +36,7 @@ const PartInventoryForm = ({ initialValues }: PartInventoryFormProps) => {
         </CardHeader>
         <CardBody>
           <Hidden name="partId" />
+          <Hidden name="hasNewPartBin" value={hasNewPartBin.toString()} />
           <Grid
             gridTemplateColumns={["1fr", "1fr", "1fr 1fr 1fr"]}
             gridColumnGap={8}
@@ -44,9 +48,7 @@ const PartInventoryForm = ({ initialValues }: PartInventoryFormProps) => {
                 options={[]}
                 name="partBinId"
                 label="Part Bin"
-                onUsingCreatedChanged={(usingCreated) => {
-                  console.log(`usingCreated: ${usingCreated}`);
-                }}
+                onUsingCreatedChanged={setHasNewPartBin}
                 // @ts-ignore
                 w="full"
               />

@@ -14,6 +14,8 @@ const IconSidebar = () => {
       borderRight={1}
       borderRightColor={useColor("gray.200")}
       borderRightStyle="solid"
+      background={useColor("white")}
+      zIndex={1}
     >
       <IconButton
         aria-label="Home"

@@ -3,7 +3,8 @@ import { Flex, Grid, GridItem, VStack } from "@chakra-ui/react";
 import { SkipNavContent } from "@chakra-ui/skip-nav";
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Outlet, useLoaderData } from "@remix-run/react";
+import { Outlet, useLoaderData, useTransition } from "@remix-run/react";
+import NProgress from "nprogress";
 import { useEffect } from "react";
 import { IconSidebar, Topbar } from "~/components/Layout";
 import { getSupabase, SupabaseProvider } from "~/lib/supabase";
@@ -56,7 +57,9 @@ export async function loader({ request }: LoaderArgs) {
 export default function AuthenticatedRoute() {
   const { session, result } = useLoaderData<typeof loader>();
   const notify = useNotification();
+  const transition = useTransition();
 
+  /* Toast Messages */
   useEffect(() => {
     if (result?.success === true) {
       notify.success(result.message);
@@ -64,6 +67,15 @@ export default function AuthenticatedRoute() {
       notify.error(result.message);
     }
   }, [result, notify]);
+
+  /* NProgress */
+  useEffect(() => {
+    if (transition.state === "loading") {
+      NProgress.start();
+    } else {
+      NProgress.done();
+    }
+  }, [transition.state]);
 
   return (
     <SupabaseProvider session={session}>

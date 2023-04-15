@@ -6,6 +6,7 @@ import { setGenericQueryFilters } from "~/utils/query";
 import type {
   partCostValidator,
   partGroupValidator,
+  partInventoryValidator,
   partManufacturingValidator,
   partPlanningValidator,
   partPurchasingValidator,
@@ -91,6 +92,13 @@ export async function getPartGroupsList(
   }
 
   return query;
+}
+
+export async function getPartInventory(
+  client: SupabaseClient<Database>,
+  id: string
+) {
+  return client.from("partInventory").select("*").eq("partId", id).single();
 }
 
 export async function getPartManufacturing(
@@ -182,6 +190,10 @@ export function getPartCostingMethods(): Database["public"]["Enums"]["partCostin
   return ["Standard", "Average", "FIFO", "LIFO"];
 }
 
+export async function getShelvesList(client: SupabaseClient<Database>) {
+  return client.from("shelf").select("id").eq("active", true);
+}
+
 export async function getUnitOfMeasure(
   client: SupabaseClient<Database>,
   id: string
@@ -213,6 +225,31 @@ export async function getUnitOfMeasuresList(client: SupabaseClient<Database>) {
   return client.from("unitOfMeasure").select("name, code");
 }
 
+export async function insertShelf(
+  client: SupabaseClient<Database>,
+  shelfId: string,
+  userId: string
+) {
+  const shelfLookup = await client.from("shelf").select("id").eq("id", shelfId);
+  if (shelfLookup.error) return shelfLookup;
+
+  // the shelf is inactive, so we can just reactivate it
+  if (shelfLookup.data?.length) {
+    return client.from("shelf").update({ active: true }).eq("id", shelfId);
+  }
+
+  // otherwise we'll create a new shelf
+  return client
+    .from("shelf")
+    .insert([
+      {
+        id: shelfId,
+        createdBy: userId,
+      },
+    ])
+    .select("id");
+}
+
 export async function upsertPart(
   client: SupabaseClient<Database>,
   part:
@@ -230,6 +267,24 @@ export async function upsertPartCost(
   partCost: TypeOfValidator<typeof partCostValidator> & { updatedBy: string }
 ) {
   return client.from("partCost").update(partCost).eq("partId", partCost.partId);
+}
+
+export async function upsertPartInventory(
+  client: SupabaseClient<Database>,
+  partInventory: Omit<
+    TypeOfValidator<typeof partInventoryValidator>,
+    "hasNewShelf"
+  > & {
+    updatedBy: string;
+  }
+) {
+  return client
+    .from("partInventory")
+    .update({
+      ...partInventory,
+      shelfId: partInventory.shelfId || null,
+    })
+    .eq("partId", partInventory.partId);
 }
 
 export async function upsertPartManufacturing(

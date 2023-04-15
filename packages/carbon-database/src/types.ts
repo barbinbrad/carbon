@@ -187,35 +187,6 @@ export interface Database {
           isUser?: boolean;
         };
       };
-      bin: {
-        Row: {
-          id: string;
-          locationId: string;
-          createdBy: string;
-          updatedBy: string | null;
-          updatedAt: string | null;
-          active: boolean;
-          createdAt: string;
-        };
-        Insert: {
-          id: string;
-          locationId: string;
-          createdBy: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          active?: boolean;
-          createdAt?: string;
-        };
-        Update: {
-          id?: string;
-          locationId?: string;
-          createdBy?: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          active?: boolean;
-          createdAt?: string;
-        };
-      };
       contact: {
         Row: {
           firstName: string;
@@ -1149,6 +1120,41 @@ export interface Database {
           createdAt?: string;
         };
       };
+      partInventory: {
+        Row: {
+          partId: string;
+          shelfId: string | null;
+          createdBy: string;
+          updatedBy: string | null;
+          updatedAt: string | null;
+          stockoutWarning: boolean;
+          unitVolume: number;
+          unitWeight: number;
+          createdAt: string;
+        };
+        Insert: {
+          partId: string;
+          shelfId?: string | null;
+          createdBy: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          stockoutWarning?: boolean;
+          unitVolume?: number;
+          unitWeight?: number;
+          createdAt?: string;
+        };
+        Update: {
+          partId?: string;
+          shelfId?: string | null;
+          createdBy?: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          stockoutWarning?: boolean;
+          unitVolume?: number;
+          unitWeight?: number;
+          createdAt?: string;
+        };
+      };
       partner: {
         Row: {
           id: string;
@@ -1387,6 +1393,35 @@ export interface Database {
           link?: string;
           description?: string | null;
           fts?: unknown | null;
+        };
+      };
+      shelf: {
+        Row: {
+          id: string;
+          locationId: string | null;
+          createdBy: string;
+          updatedBy: string | null;
+          updatedAt: string | null;
+          active: boolean;
+          createdAt: string;
+        };
+        Insert: {
+          id: string;
+          locationId?: string | null;
+          createdBy: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          active?: boolean;
+          createdAt?: string;
+        };
+        Update: {
+          id?: string;
+          locationId?: string | null;
+          createdBy?: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          active?: boolean;
+          createdAt?: string;
         };
       };
       shift: {

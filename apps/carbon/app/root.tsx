@@ -17,9 +17,13 @@ import React, { useContext, useEffect } from "react";
 import { getBrowserEnv } from "~/config/env";
 import { ServerStyleContext, ClientStyleContext } from "~/lib/emotion";
 import Background from "~/styles/background.css";
+import NProgress from "~/styles/nprogress.css";
 
 export function links() {
-  return [{ rel: "stylesheet", href: Background }];
+  return [
+    { rel: "stylesheet", href: Background },
+    { rel: "stylesheet", href: NProgress },
+  ];
 }
 
 export const meta: MetaFunction = () => ({

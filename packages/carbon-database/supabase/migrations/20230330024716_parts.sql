@@ -131,6 +131,9 @@ BEGIN
 
   INSERT INTO public."partPlanning"("partId", "createdBy")
   VALUES (new.id, new."createdBy");
+
+  INSERT INTO public."partInventory"("partId", "createdBy")
+  VALUES (new.id, new."createdBy");
   
   RETURN new;
 END;
@@ -228,22 +231,22 @@ CREATE TABLE "partReplenishment" (
 
 CREATE INDEX "partReplenishment_partId_index" ON "partReplenishment" ("partId");
 
-CREATE TABLE "bin" (
+CREATE TABLE "shelf" (
   "id" TEXT NOT NULL,
-  "locationId" TEXT NOT NULL,
+  "locationId" TEXT,
   "active" BOOLEAN NOT NULL DEFAULT true,
   "createdBy" TEXT NOT NULL,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   "updatedBy" TEXT,
   "updatedAt" TIMESTAMP WITH TIME ZONE,
 
-  CONSTRAINT "bin_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "bin_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "location"("id") ON DELETE CASCADE,
-  CONSTRAINT "bin_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
-  CONSTRAINT "bin_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
+  CONSTRAINT "shelf_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "shelf_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "location"("id") ON DELETE CASCADE,
+  CONSTRAINT "shelf_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
+  CONSTRAINT "shelf_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
 
-CREATE INDEX "bin_locationId_index" ON "bin" ("locationId");
+CREATE INDEX "shelf_locationId_index" ON "shelf" ("locationId");
 
 CREATE TABLE "partPlanning" (
   "partId" TEXT NOT NULL,
@@ -271,5 +274,26 @@ CREATE TABLE "partPlanning" (
   CONSTRAINT "partPlanning_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "partPlanning_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
+
+CREATE TABLE "partInventory" (
+  "partId" TEXT NOT NULL,
+  "shelfId" TEXT,
+  "stockoutWarning" BOOLEAN NOT NULL DEFAULT true,
+  "unitVolume" NUMERIC(15,5) NOT NULL DEFAULT 0,
+  "unitWeight" NUMERIC(15,5) NOT NULL DEFAULT 0,
+  "createdBy" TEXT NOT NULL,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+  "updatedBy" TEXT,
+  "updatedAt" TIMESTAMP WITH TIME ZONE,
+
+  CONSTRAINT "partInventory_partId_shelfId_key" UNIQUE ("partId", "shelfId"),
+  CONSTRAINT "partInventory_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part"("id") ON DELETE CASCADE,
+  CONSTRAINT "partInventory_shelfId_fkey" FOREIGN KEY ("shelfId") REFERENCES "shelf"("id") ON DELETE SET NULL,
+  CONSTRAINT "partInventory_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
+  CONSTRAINT "partInventory_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
+);
+
+CREATE INDEX "partInventory_partId_index" ON "partInventory" ("partId");
+CREATE INDEX "partInventory_shelfId_index" ON "partInventory" ("shelfId");
 
 CREATE INDEX "partPlanning_partId_index" ON "partPlanning" ("partId");

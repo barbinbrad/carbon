@@ -1332,36 +1332,39 @@ export interface Database {
         Row: {
           partId: string;
           currencyCode: string;
-          salesUnitOfMeasureCode: string;
+          salesUnitOfMeasureCode: string | null;
           createdBy: string;
           updatedBy: string | null;
           updatedAt: string | null;
           unitSalePrice: number;
           salesBlocked: boolean;
+          priceIncludesTax: boolean;
           allowInvoiceDiscount: boolean;
           createdAt: string;
         };
         Insert: {
           partId: string;
           currencyCode: string;
-          salesUnitOfMeasureCode: string;
+          salesUnitOfMeasureCode?: string | null;
           createdBy: string;
           updatedBy?: string | null;
           updatedAt?: string | null;
           unitSalePrice?: number;
           salesBlocked?: boolean;
+          priceIncludesTax?: boolean;
           allowInvoiceDiscount?: boolean;
           createdAt?: string;
         };
         Update: {
           partId?: string;
           currencyCode?: string;
-          salesUnitOfMeasureCode?: string;
+          salesUnitOfMeasureCode?: string | null;
           createdBy?: string;
           updatedBy?: string | null;
           updatedAt?: string | null;
           unitSalePrice?: number;
           salesBlocked?: boolean;
+          priceIncludesTax?: boolean;
           allowInvoiceDiscount?: boolean;
           createdAt?: string;
         };

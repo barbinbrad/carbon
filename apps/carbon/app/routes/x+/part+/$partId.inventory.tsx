@@ -69,7 +69,6 @@ export async function action({ request, params }: ActionArgs) {
   }
 
   const { hasNewShelf, ...update } = validation.data;
-  console.log({ hasNewShelf, update });
 
   if (hasNewShelf === "true" && update.shelfId) {
     const createShelf = await insertShelf(client, update.shelfId, userId);

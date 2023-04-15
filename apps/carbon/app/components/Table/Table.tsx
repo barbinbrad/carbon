@@ -281,17 +281,17 @@ const Table = <T extends object>({
     (event: React.KeyboardEvent<HTMLDivElement>) => {
       if (!selectedCell) return;
 
-      const { code } = event;
+      const { code, shiftKey } = event;
 
       const commandCodes: {
-        [key: string]: [0, 1] | [1, 0] | [0, -1] | [-1, 0];
+        [key: string]: [number, number];
       } = {
         Tab: [0, 1],
         Enter: [1, 0],
       };
 
       const navigationCodes: {
-        [key: string]: [0, 1] | [1, 0] | [0, -1] | [-1, 0];
+        [key: string]: [number, number];
       } = {
         ArrowRight: [0, 1],
         ArrowLeft: [0, -1],
@@ -303,7 +303,10 @@ const Table = <T extends object>({
       const lastColumn =
         table.getVisibleLeafColumns().length - 1 - (withSelectableRows ? 1 : 0);
 
-      const navigate = (delta: number[], tabWrap = false): number[] => {
+      const navigate = (
+        delta: [number, number],
+        tabWrap = false
+      ): [number, number] => {
         const x0 = selectedCell?.column || 0;
         const y0 = selectedCell?.row || 0;
 
@@ -311,15 +314,28 @@ const Table = <T extends object>({
         let y1 = y0 + delta[0];
 
         if (tabWrap) {
-          // wrap to the next row if we're on the last column
-          if (x1 > lastColumn) {
-            x1 = 0;
-            y1++;
-          }
-          // don't wrap to the next row if we're on the last row
-          if (y1 > lastRow) {
-            x1 = x0;
-            y1 = y0;
+          if (delta[1] > 0) {
+            // wrap to the next row if we're on the last column
+            if (x1 > lastColumn) {
+              x1 = 0;
+              y1 += 1;
+            }
+            // don't wrap to the next row if we're on the last row
+            if (y1 > lastRow) {
+              x1 = x0;
+              y1 = y0;
+            }
+          } else {
+            // reverse tab wrap
+            if (x1 < 0) {
+              x1 = lastColumn;
+              y1 -= 1;
+            }
+
+            if (y1 < 0) {
+              x1 = x0;
+              y1 = y0;
+            }
           }
         } else {
           x1 = clip(x1, 0, lastColumn);
@@ -331,16 +347,26 @@ const Table = <T extends object>({
       };
 
       if (code in commandCodes) {
-        // enter and tab work even if we're editing
         event.preventDefault();
-        const [x1, y1] = navigate(commandCodes[code], code === "Tab");
+
+        if (
+          !isEditing &&
+          code === "Enter" &&
+          !shiftKey &&
+          isColumnEditable(selectedCell.column)
+        ) {
+          setIsEditing(true);
+          return;
+        }
+
+        let direction = commandCodes[code];
+        if (shiftKey) direction = [-direction[0], -direction[1]];
+        const [x1, y1] = navigate(direction, code === "Tab");
         setSelectedCell({
           row: y1,
           column: x1,
         });
-
         if (isEditing) {
-          focusOnSelectedCell();
           setIsEditing(false);
         }
       } else if (code in navigationCodes) {
@@ -353,9 +379,10 @@ const Table = <T extends object>({
           row: y1,
           column: x1,
         });
-        // any other key activates editing
+        // any other key (besides shift) activates editing
         // if the column is editable and a cell is selected
       } else if (
+        !["ShiftLeft", "ShiftRight"].includes(code) &&
         !isEditing &&
         selectedCell &&
         isColumnEditable(selectedCell.column)
@@ -364,7 +391,6 @@ const Table = <T extends object>({
       }
     },
     [
-      focusOnSelectedCell,
       isColumnEditable,
       isEditing,
       selectedCell,

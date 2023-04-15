@@ -10,6 +10,7 @@ import type {
   partManufacturingValidator,
   partPlanningValidator,
   partPurchasingValidator,
+  partUnitSalePriceValidator,
   partValidator,
 } from "./parts.form";
 
@@ -163,6 +164,13 @@ export async function getPartSummary(
     )
     .eq("id", id)
     .single();
+}
+
+export async function getPartUnitSalePrice(
+  client: SupabaseClient<Database>,
+  id: string
+) {
+  return client.from("partUnitSalePrice").select("*").eq("partId", id).single();
 }
 
 export function getPartTypes(): Database["public"]["Enums"]["partType"][] {
@@ -339,6 +347,18 @@ export async function upsertPartGroup(
     .update(partGroup)
     .eq("id", partGroup.id)
     .select("id");
+}
+
+export async function upsertPartUnitSalePrice(
+  client: SupabaseClient<Database>,
+  partUnitSalePrice: TypeOfValidator<typeof partUnitSalePriceValidator> & {
+    updatedBy: string;
+  }
+) {
+  return client
+    .from("partUnitSalePrice")
+    .update(partUnitSalePrice)
+    .eq("partId", partUnitSalePrice.partId);
 }
 
 export async function upsertUnitOfMeasure(

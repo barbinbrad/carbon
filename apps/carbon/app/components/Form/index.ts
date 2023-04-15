@@ -6,6 +6,7 @@ import Color from "./Color";
 import CreatableSelect from "./CreatableSelect";
 import Customer from "./Customer";
 import CustomerContact from "./CustomerContact";
+import Currency from "./Currency";
 import DatePicker from "./DatePicker";
 import Department from "./Department";
 import Employee from "./Employee";
@@ -36,6 +37,7 @@ export {
   Boolean,
   Color,
   CreatableSelect,
+  Currency,
   Customer,
   CustomerContact,
   DatePicker,

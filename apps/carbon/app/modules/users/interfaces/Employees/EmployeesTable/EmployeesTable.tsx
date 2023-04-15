@@ -196,14 +196,6 @@ const EmployeesTable = memo(
       [deactivateEmployeeModal, navigate, params, resendInviteModal]
     );
 
-    // const editableComponents = useMemo(
-    //   () => ({
-    //     "user.firstName": EditableName,
-    //     "user.lastName": EditableName,
-    //   }),
-    //   []
-    // );
-
     return (
       <>
         <Table<typeof rows[number]>

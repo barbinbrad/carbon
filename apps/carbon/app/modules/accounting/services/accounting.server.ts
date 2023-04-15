@@ -8,3 +8,10 @@ export async function getAccountsList(client: SupabaseClient<Database>) {
     .eq("active", true)
     .order("name", { ascending: true });
 }
+
+export async function getCurrenciesList(client: SupabaseClient<Database>) {
+  return client
+    .from("currency")
+    .select("code, name")
+    .order("name", { ascending: true });
+}

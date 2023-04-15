@@ -2,6 +2,8 @@ import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
+import { useRouteData } from "~/hooks";
+import type { UnitOfMeasureListItem } from "~/modules/parts";
 import {
   getPartPurchasing,
   PartPurchasingForm,
@@ -78,6 +80,9 @@ export async function action({ request, params }: ActionArgs) {
 }
 
 export default function PartPurchasingRoute() {
+  const sharedPartData = useRouteData<{
+    unitOfMeasures: UnitOfMeasureListItem[];
+  }>("/x/part");
   const { partPurchasing } = useLoaderData<typeof loader>();
 
   const initialValues = {
@@ -88,5 +93,10 @@ export default function PartPurchasingRoute() {
       partPurchasing?.purchasingUnitOfMeasureCode ?? "",
   };
 
-  return <PartPurchasingForm initialValues={initialValues} />;
+  return (
+    <PartPurchasingForm
+      initialValues={initialValues}
+      unitOfMeasures={sharedPartData?.unitOfMeasures ?? []}
+    />
+  );
 }

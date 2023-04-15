@@ -134,6 +134,10 @@ BEGIN
 
   INSERT INTO public."partInventory"("partId", "createdBy")
   VALUES (new.id, new."createdBy");
+
+  INSERT INTO public."partUnitSalePrice"("partId", "currencyCode", "createdBy")
+  -- TODO: get default currency
+  VALUES (new.id, 'USD', new."createdBy");
   
   RETURN new;
 END;
@@ -187,8 +191,9 @@ CREATE TABLE "partUnitSalePrice" (
   "partId" TEXT NOT NULL,
   "unitSalePrice" NUMERIC(15,5) NOT NULL DEFAULT 0,
   "currencyCode" TEXT NOT NULL,
-  "salesUnitOfMeasureCode" TEXT NOT NULL,
+  "salesUnitOfMeasureCode" TEXT,
   "salesBlocked" BOOLEAN NOT NULL DEFAULT false,
+  "priceIncludesTax" BOOLEAN NOT NULL DEFAULT false,
   "allowInvoiceDiscount" BOOLEAN NOT NULL DEFAULT true,
   "createdBy" TEXT NOT NULL,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),

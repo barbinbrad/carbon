@@ -8,18 +8,32 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { ValidatedForm } from "remix-validated-form";
-import { Hidden, Submit } from "~/components/Form";
+import {
+  Boolean,
+  Currency,
+  Hidden,
+  Number,
+  Select,
+  Submit,
+} from "~/components/Form";
+import type { UnitOfMeasureListItem } from "~/modules/parts";
 import { partUnitSalePriceValidator } from "~/modules/parts";
-
-type PartSalePriceFormValues = {
-  partId: string;
-};
+import type { TypeOfValidator } from "~/types/validators";
 
 type PartSalePriceFormProps = {
-  initialValues: PartSalePriceFormValues;
+  initialValues: TypeOfValidator<typeof partUnitSalePriceValidator>;
+  unitOfMeasures: UnitOfMeasureListItem[];
 };
 
-const PartSalePriceForm = ({ initialValues }: PartSalePriceFormProps) => {
+const PartSalePriceForm = ({
+  initialValues,
+  unitOfMeasures,
+}: PartSalePriceFormProps) => {
+  const unitOfMeasureOptions = unitOfMeasures.map((unitOfMeasure) => ({
+    label: unitOfMeasure.name,
+    value: unitOfMeasure.code,
+  }));
+
   return (
     <ValidatedForm
       method="post"
@@ -38,9 +52,25 @@ const PartSalePriceForm = ({ initialValues }: PartSalePriceFormProps) => {
             gridRowGap={2}
             w="full"
           >
-            <VStack alignItems="start" spacing={2} w="full"></VStack>
-            <VStack alignItems="start" spacing={2} w="full"></VStack>
-            <VStack alignItems="start" spacing={2} w="full"></VStack>
+            <VStack alignItems="start" spacing={2} w="full">
+              <Number name="unitSalePrice" label="Unit Sale Price" />
+              <Currency name="currencyCode" label="Currency" />
+            </VStack>
+            <VStack alignItems="start" spacing={2} w="full">
+              <Select
+                name="salesUnitOfMeasureCode"
+                label="Sales Unit of Measure"
+                options={unitOfMeasureOptions}
+              />
+            </VStack>
+            <VStack alignItems="start" spacing={2} w="full">
+              <Boolean name="salesBlocked" label="Sales Blocked" />
+              <Boolean name="priceIncludesTax" label="Price Includes Tax" />
+              <Boolean
+                name="allowInvoiceDiscount"
+                label="Allow Invoice Discount"
+              />
+            </VStack>
           </Grid>
         </CardBody>
         <CardFooter>

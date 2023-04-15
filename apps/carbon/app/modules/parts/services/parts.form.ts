@@ -142,6 +142,7 @@ export const partUnitSalePriceValidator = withZod(
       .string()
       .min(1, { message: "Unit of Measure is required" }),
     salesBlocked: zfd.checkbox(),
+    priceIncludesTax: zfd.checkbox(),
     allowInvoiceDiscount: zfd.checkbox(),
   })
 );

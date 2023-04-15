@@ -17,14 +17,24 @@ import {
   Submit,
   Supplier,
 } from "~/components/Form";
+import type { UnitOfMeasureListItem } from "~/modules/parts";
 import { partPurchasingValidator } from "~/modules/parts";
 import type { TypeOfValidator } from "~/types/validators";
 
 type PartPurchasingFormProps = {
   initialValues: TypeOfValidator<typeof partPurchasingValidator>;
+  unitOfMeasures: UnitOfMeasureListItem[];
 };
 
-const PartPurchasingForm = ({ initialValues }: PartPurchasingFormProps) => {
+const PartPurchasingForm = ({
+  initialValues,
+  unitOfMeasures,
+}: PartPurchasingFormProps) => {
+  const unitOfMeasureOptions = unitOfMeasures.map((unitOfMeasure) => ({
+    label: unitOfMeasure.name,
+    value: unitOfMeasure.code,
+  }));
+
   return (
     <ValidatedForm
       method="post"
@@ -52,7 +62,7 @@ const PartPurchasingForm = ({ initialValues }: PartPurchasingFormProps) => {
               <Select
                 name="purchasingUnitOfMeasureCode"
                 label="Purchasing Unit of Measure"
-                options={[{ label: "Each", value: "EA" }]}
+                options={unitOfMeasureOptions}
               />
             </VStack>
             <VStack alignItems="start" spacing={2} w="full">

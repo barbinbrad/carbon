@@ -1071,9 +1071,9 @@ export interface Database {
         Row: {
           name: string;
           description: string | null;
-          salesAccountId: string;
-          discountAccountId: string;
-          inventoryAccountId: string;
+          salesAccountId: string | null;
+          discountAccountId: string | null;
+          inventoryAccountId: string | null;
           costOfGoodsSoldLaborAccountId: string | null;
           costOfGoodsSoldMaterialAccountId: string | null;
           costOfGoodsSoldOverheadAccountId: string | null;
@@ -1088,9 +1088,9 @@ export interface Database {
         Insert: {
           name: string;
           description?: string | null;
-          salesAccountId: string;
-          discountAccountId: string;
-          inventoryAccountId: string;
+          salesAccountId?: string | null;
+          discountAccountId?: string | null;
+          inventoryAccountId?: string | null;
           costOfGoodsSoldLaborAccountId?: string | null;
           costOfGoodsSoldMaterialAccountId?: string | null;
           costOfGoodsSoldOverheadAccountId?: string | null;
@@ -1105,9 +1105,9 @@ export interface Database {
         Update: {
           name?: string;
           description?: string | null;
-          salesAccountId?: string;
-          discountAccountId?: string;
-          inventoryAccountId?: string;
+          salesAccountId?: string | null;
+          discountAccountId?: string | null;
+          inventoryAccountId?: string | null;
           costOfGoodsSoldLaborAccountId?: string | null;
           costOfGoodsSoldMaterialAccountId?: string | null;
           costOfGoodsSoldOverheadAccountId?: string | null;

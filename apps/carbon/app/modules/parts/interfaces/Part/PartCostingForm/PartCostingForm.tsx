@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { ValidatedForm } from "remix-validated-form";
 import { Boolean, Hidden, Number, Select, Submit } from "~/components/Form";
+import { usePermissions } from "~/hooks";
 import type { PartCostingMethod } from "~/modules/parts";
 import { partCostValidator } from "~/modules/parts";
 import type { TypeOfValidator } from "~/types/validators";
@@ -25,6 +26,8 @@ const PartCostingForm = ({
   accounts,
   partCostingMethods,
 }: PartCostingFormProps) => {
+  const permissions = usePermissions();
+
   const accountOptions = mapRowsToOptions({
     data: accounts,
     value: "number",
@@ -65,23 +68,25 @@ const PartCostingForm = ({
               <Number name="standardCost" label="Standard Cost" precision={2} />
               <Number name="unitCost" label="Unit Cost" precision={2} />
             </VStack>
-            <VStack alignItems="start" spacing={2} w="full">
-              <Select
-                name="salesAccountId"
-                label="Sales Account"
-                options={accountOptions}
-              />
-              <Select
-                name="inventoryAccountId"
-                label="Inventory Account"
-                options={accountOptions}
-              />
-              <Select
-                name="discountAccountId"
-                label="Discount Account"
-                options={accountOptions}
-              />
-            </VStack>
+            {permissions.has("accounting") && (
+              <VStack alignItems="start" spacing={2} w="full">
+                <Select
+                  name="salesAccountId"
+                  label="Sales Account"
+                  options={accountOptions}
+                />
+                <Select
+                  name="inventoryAccountId"
+                  label="Inventory Account"
+                  options={accountOptions}
+                />
+                <Select
+                  name="discountAccountId"
+                  label="Discount Account"
+                  options={accountOptions}
+                />
+              </VStack>
+            )}
             <VStack alignItems="start" spacing={2} w="full">
               <Number
                 name="salesHistory"
@@ -100,7 +105,7 @@ const PartCostingForm = ({
           </Grid>
         </CardBody>
         <CardFooter>
-          <Submit>Save</Submit>
+          <Submit disabled={!permissions.can("update", "parts")}>Save</Submit>
         </CardFooter>
       </Card>
     </ValidatedForm>

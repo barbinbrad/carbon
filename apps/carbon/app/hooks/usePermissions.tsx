@@ -24,6 +24,13 @@ export function usePermissions() {
     [data?.permissions]
   );
 
+  const has = useCallback(
+    (feature: string) => {
+      return feature in (data?.permissions as Record<string, Permission>);
+    },
+    [data?.permissions]
+  );
+
   const is = useCallback(
     (role: Role) => {
       return data?.role === role;
@@ -33,6 +40,7 @@ export function usePermissions() {
 
   return {
     can,
+    has,
     is,
   };
 }

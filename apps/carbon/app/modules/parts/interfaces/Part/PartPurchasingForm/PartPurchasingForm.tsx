@@ -17,6 +17,7 @@ import {
   Submit,
   Supplier,
 } from "~/components/Form";
+import { usePermissions } from "~/hooks";
 import type { UnitOfMeasureListItem } from "~/modules/parts";
 import { partPurchasingValidator } from "~/modules/parts";
 import type { TypeOfValidator } from "~/types/validators";
@@ -30,6 +31,8 @@ const PartPurchasingForm = ({
   initialValues,
   unitOfMeasures,
 }: PartPurchasingFormProps) => {
+  const permissions = usePermissions();
+
   const unitOfMeasureOptions = unitOfMeasures.map((unitOfMeasure) => ({
     label: unitOfMeasure.name,
     value: unitOfMeasure.code,
@@ -71,7 +74,7 @@ const PartPurchasingForm = ({
           </Grid>
         </CardBody>
         <CardFooter>
-          <Submit>Save</Submit>
+          <Submit disabled={permissions.can("update", "parts")}>Save</Submit>
         </CardFooter>
       </Card>
     </ValidatedForm>

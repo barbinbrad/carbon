@@ -63,21 +63,25 @@ const PartGroupForm = ({ accounts, initialValues }: PartGroupFormProps) => {
             <VStack spacing={4} alignItems="start">
               <Input name="name" label="Part Group" />
               <TextArea name="description" label="Description" />
-              <Select
-                name="salesAccountId"
-                label="Sales Account"
-                options={accountOptions}
-              />
-              <Select
-                name="discountAccountId"
-                label="Discount Account"
-                options={accountOptions}
-              />
-              <Select
-                name="inventoryAccountId"
-                label="Inventory Account"
-                options={accountOptions}
-              />
+              {permissions.has("accounting") && (
+                <>
+                  <Select
+                    name="salesAccountId"
+                    label="Sales Account"
+                    options={accountOptions}
+                  />
+                  <Select
+                    name="discountAccountId"
+                    label="Discount Account"
+                    options={accountOptions}
+                  />
+                  <Select
+                    name="inventoryAccountId"
+                    label="Inventory Account"
+                    options={accountOptions}
+                  />
+                </>
+              )}
             </VStack>
           </DrawerBody>
           <DrawerFooter>

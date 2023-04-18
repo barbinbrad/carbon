@@ -47,14 +47,10 @@ export const partGroupValidator = withZod(
   z.object({
     id: zfd.text(z.string().optional()),
     name: z.string().min(1, { message: "Name is required" }).max(255),
-    description: zfd.text(z.string().optional()),
-    salesAccountId: z.string().min(1, { message: "Sales Account is required" }),
-    discountAccountId: z.string().min(1, {
-      message: "Discount Account is required",
-    }),
-    inventoryAccountId: z.string().min(1, {
-      message: "Inventory Account is required",
-    }),
+    description: z.string().optional(),
+    salesAccountId: zfd.text(z.string().optional()),
+    discountAccountId: zfd.text(z.string().optional()),
+    inventoryAccountId: zfd.text(z.string().optional()),
     // costOfGoodsSoldLaborAccountId: zfd.text(z.string().optional()),
     // costOfGoodsSoldMaterialAccountId: zfd.text(z.string().optional()),
     // costOfGoodsSoldOverheadAccountId: zfd.text(z.string().optional()),

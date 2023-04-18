@@ -5,7 +5,6 @@ import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
 import type {
   partCostValidator,
-  partGroupValidator,
   partInventoryValidator,
   partManufacturingValidator,
   partPlanningValidator,
@@ -334,19 +333,35 @@ export async function upsertPartPurchasing(
 export async function upsertPartGroup(
   client: SupabaseClient<Database>,
   partGroup:
-    | (Omit<TypeOfValidator<typeof partGroupValidator>, "id"> & {
+    | {
+        name: string;
+        description?: string;
+        salesAccountId?: string | null;
+        inventoryAccountId?: string | null;
+        discountAccountId?: string | null;
         createdBy: string;
-      })
-    | (TypeOfValidator<typeof partGroupValidator> & { updatedBy: string })
+      }
+    | {
+        id: string;
+        name: string;
+        description?: string;
+        salesAccountId?: string | null;
+        inventoryAccountId?: string | null;
+        discountAccountId?: string | null;
+        updatedBy: string;
+      }
 ) {
   if ("createdBy" in partGroup) {
     return client.from("partGroup").insert([partGroup]).select("id");
   }
-  return client
-    .from("partGroup")
-    .update(partGroup)
-    .eq("id", partGroup.id)
-    .select("id");
+  return (
+    client
+      .from("partGroup")
+      .update(partGroup)
+      // @ts-ignore
+      .eq("id", partGroup.id)
+      .select("id")
+  );
 }
 
 export async function upsertPartUnitSalePrice(

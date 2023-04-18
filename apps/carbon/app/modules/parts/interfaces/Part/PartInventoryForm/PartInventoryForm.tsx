@@ -16,6 +16,7 @@ import {
   Number,
   Submit,
 } from "~/components/Form";
+import { usePermissions } from "~/hooks";
 import { partInventoryValidator } from "~/modules/parts";
 import type { TypeOfValidator } from "~/types/validators";
 
@@ -31,6 +32,7 @@ const PartInventoryForm = ({
   initialValues,
   shelves,
 }: PartInventoryFormProps) => {
+  const permissions = usePermissions();
   const [hasNewShelf, setHasNewShelf] = useState(false);
   const shelfOptions = shelves.map((shelf) => ({ value: shelf, label: shelf }));
 
@@ -107,7 +109,7 @@ const PartInventoryForm = ({
           </Grid>
         </CardBody>
         <CardFooter>
-          <Submit>Save</Submit>
+          <Submit disabled={permissions.can("update", "parts")}>Save</Submit>
         </CardFooter>
       </Card>
     </ValidatedForm>

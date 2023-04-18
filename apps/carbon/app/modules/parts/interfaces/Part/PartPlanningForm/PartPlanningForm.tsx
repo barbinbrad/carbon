@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { ValidatedForm } from "remix-validated-form";
 import { Boolean, Hidden, Number, Select, Submit } from "~/components/Form";
+import { usePermissions } from "~/hooks";
 import type { PartReorderingPolicy } from "~/modules/parts";
 import { partPlanningValidator } from "~/modules/parts";
 import type { TypeOfValidator } from "~/types/validators";
@@ -22,6 +23,8 @@ const PartPlanningForm = ({
   initialValues,
   partReorderingPolicies,
 }: PartPlanningFormProps) => {
+  const permissions = usePermissions();
+
   const partReorderingOptions = partReorderingPolicies.map((policy) => ({
     label: policy,
     value: policy,
@@ -103,7 +106,7 @@ const PartPlanningForm = ({
           </Grid>
         </CardBody>
         <CardFooter>
-          <Submit>Save</Submit>
+          <Submit disabled={permissions.can("update", "parts")}>Save</Submit>
         </CardFooter>
       </Card>
     </ValidatedForm>

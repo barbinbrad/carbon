@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { ValidatedForm } from "remix-validated-form";
 import { Boolean, Input, Select, Submit, TextArea } from "~/components/Form";
+import { usePermissions } from "~/hooks";
 import type {
   PartGroupListItem,
   PartReplenishmentSystem,
@@ -45,6 +46,7 @@ const PartForm = ({
   partReplenishmentSystems,
   unitOfMeasures,
 }: PartFormProps) => {
+  const permissions = usePermissions();
   const isEditing = initialValues.id !== undefined;
 
   const partGroupOptions = partGroups.map((partGroup) => ({
@@ -128,7 +130,15 @@ const PartForm = ({
           </Grid>
         </CardBody>
         <CardFooter>
-          <Submit>Save</Submit>
+          <Submit
+            disabled={
+              isEditing
+                ? !permissions.can("update", "parts")
+                : !permissions.can("create", "parts")
+            }
+          >
+            Save
+          </Submit>
         </CardFooter>
       </Card>
     </ValidatedForm>

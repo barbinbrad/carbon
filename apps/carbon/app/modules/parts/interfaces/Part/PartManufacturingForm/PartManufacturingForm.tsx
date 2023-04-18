@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { ValidatedForm } from "remix-validated-form";
 import { Boolean, Hidden, Number, Select, Submit } from "~/components/Form";
+import { usePermissions } from "~/hooks";
 import type { PartManufacturingPolicy } from "~/modules/parts";
 import { partManufacturingValidator } from "~/modules/parts";
 import type { TypeOfValidator } from "~/types/validators";
@@ -22,11 +23,14 @@ const PartManufacturingForm = ({
   initialValues,
   partManufacturingPolicies,
 }: PartManufacturingFormProps) => {
+  const permissions = usePermissions();
+
   const partManufacturingPolicyOptions =
     partManufacturingPolicies?.map((policy) => ({
       label: policy,
       value: policy,
     })) ?? [];
+
   return (
     <ValidatedForm
       method="post"
@@ -75,7 +79,7 @@ const PartManufacturingForm = ({
           </Grid>
         </CardBody>
         <CardFooter>
-          <Submit>Save</Submit>
+          <Submit disabled={permissions.can("update", "parts")}>Save</Submit>
         </CardFooter>
       </Card>
     </ValidatedForm>

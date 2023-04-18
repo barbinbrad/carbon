@@ -31,11 +31,14 @@ export async function loader({ request, params }: LoaderArgs) {
   });
 }
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request, params }: ActionArgs) {
   assertIsPost(request);
   const { client, userId } = await requirePermissions(request, {
     update: "parts",
   });
+
+  const { groupId } = params;
+  if (!groupId) throw new Error("Could not find groupId");
 
   const validation = await partGroupValidator.validate(
     await request.formData()
@@ -46,7 +49,6 @@ export async function action({ request }: ActionArgs) {
   }
 
   const {
-    id,
     name,
     description,
     salesAccountId,
@@ -55,12 +57,12 @@ export async function action({ request }: ActionArgs) {
   } = validation.data;
 
   const updatePartGroup = await upsertPartGroup(client, {
-    id,
+    id: groupId,
     name,
     description,
-    salesAccountId,
-    discountAccountId,
-    inventoryAccountId,
+    salesAccountId: salesAccountId ?? null,
+    discountAccountId: discountAccountId ?? null,
+    inventoryAccountId: inventoryAccountId ?? null,
     updatedBy: userId,
   });
 

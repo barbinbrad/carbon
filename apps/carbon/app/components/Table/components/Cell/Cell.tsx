@@ -119,5 +119,7 @@ export const MemoizedCell = memo(
   (prev, next) =>
     next.isSelected === prev.isSelected &&
     next.isEditing === prev.isEditing &&
-    next.isEditMode === prev.isEditMode
+    next.isEditMode === prev.isEditMode &&
+    next.cell.id === prev.cell.id &&
+    next.cell.column.columnDef.id !== "Select"
 ) as typeof Cell;

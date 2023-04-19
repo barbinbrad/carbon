@@ -20,7 +20,7 @@ import { useState } from "react";
 import { BsPencilSquare } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { ConfirmDelete } from "~/components/Modals";
-import type { EquipmentTypeDetail as EquipmentTypeDetailType } from "~/modules/resources";
+import type { EquipmentTypeDetailType } from "~/modules/resources";
 import { useUrlParams } from "~/hooks";
 
 type Equipment = {
@@ -88,7 +88,8 @@ const EquipmentTypeDetail = ({
                       <VStack spacing={0} flexGrow={1} alignItems="start">
                         <Text fontWeight="bold">{equipment.name}</Text>
                         <Text fontSize="sm" color="gray.500">
-                          Work Center T00D00
+                          {/* @ts-ignore */}
+                          {equipment.location?.name}
                         </Text>
                       </VStack>
                       <ActionMenu>{renderContextMenu(equipment)}</ActionMenu>

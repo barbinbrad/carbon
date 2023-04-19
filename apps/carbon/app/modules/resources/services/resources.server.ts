@@ -394,7 +394,7 @@ export async function getEquipmentType(
   return client
     .from("equipmentType")
     .select(
-      "id, name, color, description, requiredAbility, equipment(id, name)"
+      "id, name, color, description, requiredAbility, equipment(id, name, location(id, name))"
     )
     .eq("active", true)
     .eq("id", equipmentTypeId)

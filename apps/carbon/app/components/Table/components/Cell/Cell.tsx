@@ -117,9 +117,10 @@ const Cell = <T extends object>({
 export const MemoizedCell = memo(
   Cell,
   (prev, next) =>
+    next.cell.column.columnDef.id !== "Select" &&
     next.isSelected === prev.isSelected &&
     next.isEditing === prev.isEditing &&
     next.isEditMode === prev.isEditMode &&
-    next.cell.id === prev.cell.id &&
-    next.cell.column.columnDef.id !== "Select"
+    next.cell.getValue() === prev.cell.getValue() &&
+    next.cell.getContext() === prev.cell.getContext()
 ) as typeof Cell;

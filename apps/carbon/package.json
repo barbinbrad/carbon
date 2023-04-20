@@ -5,7 +5,7 @@
   "sideEffects": false,
   "scripts": {
     "build": "remix build",
-    "dev": "PORT=3000 remix dev",
+    "dev": "PORT=5300 remix dev",
     "clean": "rm -rf .cache && rm -rf node_modules && rm -rf public/build",
     "lint": "TIMING=1 eslint \"app/**/*.ts*\"",
     "types": "tsc"

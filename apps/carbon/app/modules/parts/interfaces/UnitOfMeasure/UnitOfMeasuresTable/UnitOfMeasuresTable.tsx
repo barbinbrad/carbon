@@ -22,6 +22,10 @@ const UnitOfMeasuresTable = memo(
     const columns = useMemo<ColumnDef<typeof data[number]>[]>(() => {
       return [
         {
+          header: "Component",
+          cell: ({ row }) => <p>{row.original.name}</p>,
+        },
+        {
           accessorKey: "name",
           header: "Name",
           cell: (item) => item.getValue(),
@@ -68,6 +72,7 @@ const UnitOfMeasuresTable = memo(
         columns={columns}
         count={count}
         renderContextMenu={renderContextMenu}
+        withInlineEditing
       />
     );
   }

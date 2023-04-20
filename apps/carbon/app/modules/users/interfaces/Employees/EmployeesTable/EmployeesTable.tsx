@@ -209,6 +209,7 @@ const EmployeesTable = memo(
           }}
           renderContextMenu={renderContextMenu}
           withColumnOrdering
+          withInlineEditing
           withFilters
           withPagination
           withSelectableRows={isEditable}

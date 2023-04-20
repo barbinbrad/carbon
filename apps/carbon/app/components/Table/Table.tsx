@@ -426,7 +426,11 @@ const Table = <T extends object>({
 
   return (
     <VStack w="full" h="full" spacing={0}>
-      {(withColumnOrdering || withFilters || withSelectableRows) && (
+      {(withColumnOrdering ||
+        withFilters ||
+        withSelectableRows ||
+        withInlineEditing ||
+        withSimpleSorting) && (
         <TableHeader
           actions={actions}
           columnAccessors={columnAccessors}

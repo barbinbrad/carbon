@@ -109,7 +109,7 @@ const PartInventoryForm = ({
           </Grid>
         </CardBody>
         <CardFooter>
-          <Submit isDisabled={permissions.can("update", "parts")}>Save</Submit>
+          <Submit isDisabled={!permissions.can("update", "parts")}>Save</Submit>
         </CardFooter>
       </Card>
     </ValidatedForm>

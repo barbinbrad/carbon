@@ -34,7 +34,7 @@ export function usePartSidebar(replenishment: PartReplenishmentSystem) {
     {
       name: "Inventory",
       to: "inventory",
-      role: ["employee"],
+      role: ["employee", "supplier"],
     },
     {
       name: "Sale Price",

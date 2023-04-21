@@ -3304,25 +3304,25 @@ CREATE POLICY "Authenticated users can view units of measure" ON "unitOfMeasure"
   );
   
 
-CREATE POLICY "Authenticated users with parts_create can insert units of measure" ON "unitOfMeasure"
+CREATE POLICY "Employees with parts_create can insert units of measure" ON "unitOfMeasure"
   FOR INSERT
   WITH CHECK (   
     coalesce(get_my_claim('parts_create')::boolean,false) 
-    AND auth.role() = 'authenticated'
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
 );
 
-CREATE POLICY "Authenticated users with parts_update can update units of measure" ON "unitOfMeasure"
+CREATE POLICY "Employees with parts_update can update units of measure" ON "unitOfMeasure"
   FOR UPDATE
   USING (
     coalesce(get_my_claim('parts_update')::boolean, false) = true 
-    AND auth.role() = 'authenticated'
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
   );
 
-CREATE POLICY "Authenticated users with parts_delete can delete units of measure" ON "unitOfMeasure"
+CREATE POLICY "Employees with parts_delete can delete units of measure" ON "unitOfMeasure"
   FOR DELETE
   USING (
     coalesce(get_my_claim('parts_delete')::boolean, false) = true 
-    AND auth.role() = 'authenticated'
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
   );
 
 

@@ -13,6 +13,7 @@ export function usePartSidebar(replenishment: PartReplenishmentSystem) {
       name: "Purchasing",
       to: "purchasing",
       isDisabled: replenishment === "Manufactured",
+      role: ["employee", "supplier"],
     },
     {
       name: "Manufacturing",

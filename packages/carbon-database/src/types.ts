@@ -105,19 +105,31 @@ export interface Database {
           category: Database["public"]["Enums"]["glAccountCategory"];
           type: Database["public"]["Enums"]["glAccountType"];
           normalBalance: Database["public"]["Enums"]["glNormalBalance"];
+          createdBy: string;
+          updatedBy: string | null;
+          updatedAt: string | null;
           id: string;
+          createdAt: string;
         };
         Insert: {
           category: Database["public"]["Enums"]["glAccountCategory"];
           type: Database["public"]["Enums"]["glAccountType"];
           normalBalance: Database["public"]["Enums"]["glNormalBalance"];
+          createdBy: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
           id?: string;
+          createdAt?: string;
         };
         Update: {
           category?: Database["public"]["Enums"]["glAccountCategory"];
           type?: Database["public"]["Enums"]["glAccountType"];
           normalBalance?: Database["public"]["Enums"]["glNormalBalance"];
+          createdBy?: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
           id?: string;
+          createdAt?: string;
         };
       };
       address: {
@@ -1622,20 +1634,32 @@ export interface Database {
         Row: {
           code: string;
           name: string;
+          createdBy: string;
+          updatedBy: string | null;
+          updatedAt: string | null;
           id: string;
           active: boolean;
+          createdAt: string;
         };
         Insert: {
           code: string;
           name: string;
+          createdBy: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
           id?: string;
           active?: boolean;
+          createdAt?: string;
         };
         Update: {
           code?: string;
           name?: string;
+          createdBy?: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
           id?: string;
           active?: boolean;
+          createdAt?: string;
         };
       };
       user: {
@@ -1806,32 +1830,32 @@ export interface Database {
         Row: {
           userId: string;
           note: string;
-          createdBy: string;
           id: string;
+          createdBy: string;
+          updatedAt: string | null;
           noteRichText: Json;
           active: boolean;
           createdAt: string;
-          updatedAt: string | null;
         };
         Insert: {
           userId: string;
           note: string;
-          createdBy: string;
           id?: string;
+          createdBy: string;
+          updatedAt?: string | null;
           noteRichText?: Json;
           active?: boolean;
           createdAt?: string;
-          updatedAt?: string | null;
         };
         Update: {
           userId?: string;
           note?: string;
-          createdBy?: string;
           id?: string;
+          createdBy?: string;
+          updatedAt?: string | null;
           noteRichText?: Json;
           active?: boolean;
           createdAt?: string;
-          updatedAt?: string | null;
         };
       };
       workCell: {

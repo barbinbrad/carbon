@@ -248,10 +248,10 @@ export const employeeTypePermissionsDefinitions: Record<
       view: false,
     },
     Resources: {
-      create: true,
-      update: true,
-      delete: true,
-      view: true,
+      create: false,
+      update: false,
+      delete: false,
+      view: false,
     },
     Users: {
       create: false,

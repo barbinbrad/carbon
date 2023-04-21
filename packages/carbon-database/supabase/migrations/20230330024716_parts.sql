@@ -28,6 +28,37 @@ CREATE TABLE "partGroup" (
   CONSTRAINT "partGroup_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
 
+ALTER TABLE "partGroup" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Employees with parts_view can view part groups" ON "partGroup"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('parts_view')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+  
+
+CREATE POLICY "Employees with parts_create can insert part groups" ON "partGroup"
+  FOR INSERT
+  WITH CHECK (   
+    coalesce(get_my_claim('parts_create')::boolean,false) 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+);
+
+CREATE POLICY "Employees with parts_update can update part groups" ON "partGroup"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('parts_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Employees with parts_delete can delete part groups" ON "partGroup"
+  FOR DELETE
+  USING (
+    coalesce(get_my_claim('parts_delete')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
 CREATE TYPE "partType" AS ENUM (
   'Inventory',
   'Non-Inventory',
@@ -65,18 +96,55 @@ CREATE TABLE "unitOfMeasure" (
   "code" TEXT NOT NULL,
   "name" TEXT NOT NULL,
   "active" BOOLEAN NOT NULL DEFAULT true,
+  "createdBy" TEXT NOT NULL,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+  "updatedBy" TEXT,
+  "updatedAt" TIMESTAMP WITH TIME ZONE,
 
   CONSTRAINT "unitOfMeasure_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "unitOfMeasure_code_key" UNIQUE ("code"),
-  CONSTRAINT "unitOfMeasure_code_check" CHECK (char_length("code") <= 3)
+  CONSTRAINT "unitOfMeasure_code_check" CHECK (char_length("code") <= 3),
+  CONSTRAINT "unitOfMeasure_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
+  CONSTRAINT "unitOfMeasure_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
 
 CREATE INDEX "unitOfMeasure_code_index" ON "unitOfMeasure"("code");
 
-INSERT INTO "unitOfMeasure" ("code", "name")
+INSERT INTO "unitOfMeasure" ("code", "name", "createdBy")
 VALUES 
-( 'EA', 'Each'),
-( 'PCS', 'Pieces' );
+( 'EA', 'Each', 'system'),
+( 'PCS', 'Pieces', 'system');
+
+ALTER TABLE "unitOfMeasure" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Authenticated users can view units of measure" ON "unitOfMeasure"
+  FOR SELECT
+  USING (
+    auth.role() = 'authenticated'
+  );
+  
+
+CREATE POLICY "Authenticated users with parts_create can insert units of measure" ON "unitOfMeasure"
+  FOR INSERT
+  WITH CHECK (   
+    coalesce(get_my_claim('parts_create')::boolean,false) 
+    AND auth.role() = 'authenticated'
+);
+
+CREATE POLICY "Authenticated users with parts_update can update units of measure" ON "unitOfMeasure"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('parts_update')::boolean, false) = true 
+    AND auth.role() = 'authenticated'
+  );
+
+CREATE POLICY "Authenticated users with parts_delete can delete units of measure" ON "unitOfMeasure"
+  FOR DELETE
+  USING (
+    coalesce(get_my_claim('parts_delete')::boolean, false) = true 
+    AND auth.role() = 'authenticated'
+  );
+
 
 CREATE TABLE "part" (
   "id" TEXT NOT NULL,
@@ -106,12 +174,40 @@ CREATE TABLE "part" (
   CONSTRAINT "part_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
 
+ALTER TABLE "part" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Employees can view parts" ON "part"
+  FOR SELECT
+  USING (
+    (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Employees with parts_create can insert parts" ON "part"
+  FOR INSERT
+  WITH CHECK (   
+    coalesce(get_my_claim('parts_create')::boolean,false) 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Employees with parts_update can update parts" ON "part"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('parts_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Employees with parts_delete can delete parts" ON "part"
+  FOR DELETE
+  USING (
+    coalesce(get_my_claim('parts_delete')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
 
 CREATE FUNCTION public.create_part_search_result()
 RETURNS TRIGGER AS $$
 BEGIN
   INSERT INTO public.search(name, description, entity, uuid, link)
-  VALUES (new.id, new.id || ' ' || new.name || ' ' || new.description, 'Part', new.id, '/x/part/' || new.id);
+  VALUES (new.id, new.id || ' ' || new.name || ' ' || COALESCE(new.description, ''), 'Part', new.id, '/x/part/' || new.id);
   RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -151,7 +247,7 @@ CREATE FUNCTION public.update_part_search_result()
 RETURNS TRIGGER AS $$
 BEGIN
   IF (old.name <> new.name OR old.description <> new.description) THEN
-    UPDATE public.search SET name = new.name, description = new.id || ' ' || new.name || ' ' || new.description
+    UPDATE public.search SET name = new.name, description = new.id || ' ' || new.name || ' ' || COALESCE(new.description, '')
     WHERE entity = 'Part' AND uuid = new.id;
   END IF;
   RETURN new;
@@ -235,6 +331,65 @@ CREATE TABLE "partReplenishment" (
 );
 
 CREATE INDEX "partReplenishment_partId_index" ON "partReplenishment" ("partId");
+CREATE INDEX "partReplenishment_supplierId_index" ON "partReplenishment" ("supplierId");
+
+CREATE POLICY "Suppliers with parts_view can view parts they created or supply" ON "part"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('parts_view')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"supplier"'::jsonb 
+    AND (
+      "createdBy" = auth.uid()::text
+      OR (
+        id IN (
+          SELECT "partId" FROM "partReplenishment" WHERE "supplierId" IN (
+              SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
+          )
+        )              
+      ) 
+    )
+  );
+
+CREATE POLICY "Supliers with parts_create can insert parts" ON "part"
+  FOR INSERT
+  WITH CHECK (   
+    coalesce(get_my_claim('parts_create')::boolean,false) 
+    AND (get_my_claim('role'::text)) = '"supplier"'::jsonb
+  );
+
+CREATE POLICY "Suppliers with parts_update can update parts that they created or supply" ON "part"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('parts_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+    AND (
+      "createdBy" = auth.uid()::text
+      OR (
+        id IN (
+          SELECT "partId" FROM "partReplenishment" WHERE "supplierId" IN (
+              SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
+          )
+        )              
+      ) 
+    )
+  );
+
+CREATE POLICY "Suppliers with parts_delete can delete parts that they created or supply" ON "part"
+  FOR DELETE
+  USING (
+    coalesce(get_my_claim('parts_delete')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+    AND (
+      "createdBy" = auth.uid()::text
+      OR (
+        id IN (
+          SELECT "partId" FROM "partReplenishment" WHERE "supplierId" IN (
+              SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
+          )
+        )              
+      ) 
+    ) 
+  );
 
 CREATE TABLE "shelf" (
   "id" TEXT NOT NULL,

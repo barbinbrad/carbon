@@ -32,6 +32,7 @@ const Row = <T extends object>({
   isEditing,
   isEditMode,
   isFrozenColumn = false,
+  isRowSelected = false,
   pinnedColumns = 0,
   row,
   rowIsClickable = false,
@@ -77,6 +78,7 @@ const Row = <T extends object>({
             columnIndex={columnIndex}
             // @ts-ignore
             editableComponents={editableComponents}
+            isRowSelected={isRowSelected}
             isSelected={isSelected}
             isEditing={isEditing}
             isEditMode={isEditMode}

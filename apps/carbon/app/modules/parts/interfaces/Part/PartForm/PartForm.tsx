@@ -131,7 +131,7 @@ const PartForm = ({
         </CardBody>
         <CardFooter>
           <Submit
-            disabled={
+            isDisabled={
               isEditing
                 ? !permissions.can("update", "parts")
                 : !permissions.can("create", "parts")

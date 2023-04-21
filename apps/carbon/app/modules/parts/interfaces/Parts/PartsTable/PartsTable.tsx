@@ -4,7 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo } from "react";
 import { BsPencilSquare } from "react-icons/bs";
 import { Table } from "~/components";
-import { usePermissions, useUrlParams } from "~/hooks";
+import { useUrlParams } from "~/hooks";
 import type { PartsTableRow } from "~/modules/parts";
 
 type PartsTableProps = {
@@ -14,7 +14,6 @@ type PartsTableProps = {
 
 const PartsTable = memo(({ data, count }: PartsTableProps) => {
   const navigate = useNavigate();
-  const permissions = usePermissions();
   const [params] = useUrlParams();
 
   const columns = useMemo<ColumnDef<PartsTableRow>[]>(() => {
@@ -51,19 +50,16 @@ const PartsTable = memo(({ data, count }: PartsTableProps) => {
   }, [params]);
 
   const renderContextMenu = useMemo(() => {
-    return permissions.can("update", "parts")
-      ? (row: PartsTableRow) => {
-          return (
-            <MenuItem
-              icon={<BsPencilSquare />}
-              onClick={() => navigate(`/x/part/${row.id}`)}
-            >
-              Edit Part
-            </MenuItem>
-          );
-        }
-      : undefined;
-  }, [navigate, permissions]);
+    // eslint-disable-next-line react/display-name
+    return (row: PartsTableRow) => (
+      <MenuItem
+        icon={<BsPencilSquare />}
+        onClick={() => navigate(`/x/part/${row.id}`)}
+      >
+        View Part
+      </MenuItem>
+    );
+  }, [navigate]);
 
   return (
     <>

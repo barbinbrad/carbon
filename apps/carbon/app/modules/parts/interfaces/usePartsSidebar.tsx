@@ -1,6 +1,7 @@
-import type { RouteGroup } from "~/types";
+import { usePermissions } from "~/hooks";
+import type { AuthenticatedRouteGroup } from "~/types";
 
-const partsRoutes: RouteGroup[] = [
+const partsRoutes: AuthenticatedRouteGroup[] = [
   {
     name: "Manage",
     routes: [
@@ -11,6 +12,7 @@ const partsRoutes: RouteGroup[] = [
       {
         name: "Routing",
         to: "/x/parts/routing",
+        role: "employee",
       },
     ],
   },
@@ -20,15 +22,41 @@ const partsRoutes: RouteGroup[] = [
       {
         name: "Part Groups",
         to: "/x/parts/groups",
+        role: "employee",
       },
       {
         name: "Units of Measure",
         to: "/x/parts/uom",
+        role: "employee",
       },
     ],
   },
 ];
 
 export default function usePartsSidebar() {
-  return { groups: partsRoutes };
+  const permissions = usePermissions();
+  return {
+    groups: partsRoutes
+      .filter((group) => {
+        const filteredRoutes = group.routes.filter((route) => {
+          if (route.role) {
+            return permissions.is(route.role);
+          } else {
+            return true;
+          }
+        });
+
+        return filteredRoutes.length > 0;
+      })
+      .map((group) => ({
+        ...group,
+        routes: group.routes.filter((route) => {
+          if (route.role) {
+            return permissions.is(route.role);
+          } else {
+            return true;
+          }
+        }),
+      })),
+  };
 }

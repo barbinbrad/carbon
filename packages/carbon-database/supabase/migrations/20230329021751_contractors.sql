@@ -13,6 +13,37 @@ CREATE TABLE "contractor" (
   CONSTRAINT "contractor_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
 
+ALTER TABLE "contractor" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Employees with resources_view can view contractors" ON "contractor"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('resources_view')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Employees with resources_create can insert contractors" ON "contractor"
+  FOR INSERT
+  WITH CHECK (   
+    coalesce(get_my_claim('resources_create')::boolean,false) 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+);
+
+CREATE POLICY "Employees with resources_update can update contractors" ON "contractor"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('resources_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Employees with resources_delete can delete contractors" ON "contractor"
+  FOR DELETE
+  USING (
+    coalesce(get_my_claim('resources_delete')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+
 CREATE TABLE "contractorAbility" (
   "contractorId" TEXT NOT NULL,
   "abilityId" TEXT NOT NULL,
@@ -24,6 +55,37 @@ CREATE TABLE "contractorAbility" (
   CONSTRAINT "contractorAbility_abilityId_fkey" FOREIGN KEY ("abilityId") REFERENCES "ability"("id") ON DELETE CASCADE,
   CONSTRAINT "contractorAbility_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id")
 );
+
+ALTER TABLE "contractorAbility" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Employees with resources_view can view contractorAbilities" ON "contractorAbility"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('resources_view')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Employees with resources_create can insert contractorAbilities" ON "contractorAbility"
+  FOR INSERT
+  WITH CHECK (   
+    coalesce(get_my_claim('resources_create')::boolean,false) 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+);
+
+CREATE POLICY "Employees with resources_update can update contractorAbilities" ON "contractorAbility"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('resources_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Employees with resources_delete can delete contractorAbilities" ON "contractorAbility"
+  FOR DELETE
+  USING (
+    coalesce(get_my_claim('resources_delete')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
 
 CREATE VIEW "contractors_query" AS
   SELECT 

@@ -4,7 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo } from "react";
 import { BsPencilSquare, BsPlus } from "react-icons/bs";
 import { Table } from "~/components";
-import { usePermissions, useUrlParams } from "~/hooks";
+import { useUrlParams } from "~/hooks";
 import type { Customer } from "~/modules/sales";
 
 type CustomersTableProps = {
@@ -14,7 +14,6 @@ type CustomersTableProps = {
 
 const CustomersTable = memo(({ data, count }: CustomersTableProps) => {
   const navigate = useNavigate();
-  const permissions = usePermissions();
   const [params] = useUrlParams();
 
   const columns = useMemo<ColumnDef<Customer>[]>(() => {
@@ -77,22 +76,21 @@ const CustomersTable = memo(({ data, count }: CustomersTableProps) => {
     ];
   }, []);
 
-  const renderContextMenu = useMemo(() => {
-    return permissions.can("update", "sales")
-      ? (row: Customer) => {
-          return (
-            <MenuItem
-              icon={<BsPencilSquare />}
-              onClick={() =>
-                navigate(`/x/sales/customers/${row.id}?${params.toString()}`)
-              }
-            >
-              Edit Customer
-            </MenuItem>
-          );
-        }
-      : undefined;
-  }, [navigate, params, permissions]);
+  const renderContextMenu = useMemo(
+    // eslint-disable-next-line react/display-name
+    () => (row: Customer) =>
+      (
+        <MenuItem
+          icon={<BsPencilSquare />}
+          onClick={() =>
+            navigate(`/x/sales/customers/${row.id}?${params.toString()}`)
+          }
+        >
+          View Customer
+        </MenuItem>
+      ),
+    [navigate, params]
+  );
 
   return (
     <>

@@ -23,6 +23,35 @@ VALUES ('US Dollar', 'USD', '$', true, 1.0000, 2, true, 'system');
 
 CREATE INDEX "currency_code_index" ON "currency" ("code");
 
+ALTER TABLE "currency" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Authenticated users can view currencies" ON "currency"
+  FOR SELECT
+  USING (
+    auth.role() = 'authenticated' 
+  );
+
+CREATE POLICY "Employees with accounting_create can insert currencies" ON "currency"
+  FOR INSERT
+  WITH CHECK (   
+    coalesce(get_my_claim('accounting_create')::boolean,false) 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+);
+
+CREATE POLICY "Employees with accounting_update can update currencies" ON "currency"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('accounting_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Employees with accounting_delete can delete currencies" ON "currency"
+  FOR DELETE
+  USING (
+    coalesce(get_my_claim('accounting_delete')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
 CREATE TYPE "glAccountCategory" AS ENUM (
   'Bank',
   'Accounts Receivable',
@@ -59,31 +88,68 @@ CREATE TABLE "accountCategory" (
   "category" "glAccountCategory" NOT NULL,
   "type" "glAccountType" NOT NULL,
   "normalBalance" "glNormalBalance" NOT NULL,
+  "createdBy" TEXT NOT NULL,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+  "updatedBy" TEXT,
+  "updatedAt" TIMESTAMP WITH TIME ZONE,
 
   CONSTRAINT "accountCategory_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "accountCategory_category_type_key" UNIQUE ("category")
+  CONSTRAINT "accountCategory_category_type_key" UNIQUE ("category"),
+  CONSTRAINT "accountCategory_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
+  CONSTRAINT "accountCategory_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
 
-INSERT INTO "accountCategory" ("category", "type", "normalBalance")
+INSERT INTO "accountCategory" ("category", "type", "normalBalance", "createdBy")
 VALUES 
-  ('Bank', 'Balance Sheet', 'Credit'),
-  ('Accounts Receivable', 'Balance Sheet', 'Credit'),
-  ('Inventory', 'Balance Sheet', 'Debit'),
-  ('Other Current Asset', 'Balance Sheet', 'Debit'),
-  ('Fixed Asset', 'Balance Sheet', 'Debit'),
-  ('Accumulated Depreciation', 'Balance Sheet', 'Credit'),
-  ('Other Asset', 'Balance Sheet', 'Debit'),
-  ('Accounts Payable', 'Balance Sheet', 'Debit'),
-  ('Other Current Liability', 'Balance Sheet', 'Debit'),
-  ('Long Term Liability', 'Balance Sheet', 'Debit'),
-  ('Equity - No Close', 'Balance Sheet', 'Credit'),
-  ('Equity - Close', 'Balance Sheet', 'Credit'),
-  ('Retained Earnings', 'Balance Sheet', 'Credit'),
-  ('Income', 'Income Statement', 'Credit'),
-  ('Cost of Goods Sold', 'Income Statement', 'Debit'),
-  ('Expense', 'Income Statement', 'Debit'),
-  ('Other Income', 'Income Statement', 'Credit'),
-  ('Other Expense', 'Income Statement', 'Debit');
+  ('Bank', 'Balance Sheet', 'Credit', 'system'),
+  ('Accounts Receivable', 'Balance Sheet', 'Credit', 'system'),
+  ('Inventory', 'Balance Sheet', 'Debit', 'system'),
+  ('Other Current Asset', 'Balance Sheet', 'Debit', 'system'),
+  ('Fixed Asset', 'Balance Sheet', 'Debit', 'system'),
+  ('Accumulated Depreciation', 'Balance Sheet', 'Credit', 'system'),
+  ('Other Asset', 'Balance Sheet', 'Debit', 'system'),
+  ('Accounts Payable', 'Balance Sheet', 'Debit', 'system'),
+  ('Other Current Liability', 'Balance Sheet', 'Debit', 'system'),
+  ('Long Term Liability', 'Balance Sheet', 'Debit', 'system'),
+  ('Equity - No Close', 'Balance Sheet', 'Credit', 'system'),
+  ('Equity - Close', 'Balance Sheet', 'Credit', 'system'),
+  ('Retained Earnings', 'Balance Sheet', 'Credit', 'system'),
+  ('Income', 'Income Statement', 'Credit', 'system'),
+  ('Cost of Goods Sold', 'Income Statement', 'Debit', 'system'),
+  ('Expense', 'Income Statement', 'Debit', 'system'),
+  ('Other Income', 'Income Statement', 'Credit', 'system'),
+  ('Other Expense', 'Income Statement', 'Debit', 'system');
+
+ALTER TABLE "accountCategory" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Employees with accounting_view can view account categories" ON "accountCategory"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('accounting_view')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+  
+
+CREATE POLICY "Employees with accounting_create can insert account categories" ON "accountCategory"
+  FOR INSERT
+  WITH CHECK (   
+    coalesce(get_my_claim('accounting_create')::boolean,false) 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+);
+
+CREATE POLICY "Employees with accounting_update can update account categories" ON "accountCategory"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('accounting_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Employees with accounting_delete can delete account categories" ON "accountCategory"
+  FOR DELETE
+  USING (
+    coalesce(get_my_claim('accounting_delete')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
 
 CREATE TYPE "consolidatedRate" AS ENUM (
   'Average',
@@ -118,3 +184,40 @@ CREATE TABLE "account" (
 
 INSERT INTO "account" ("number", "name", "consolidatedRate", "currencyCode", "createdBy")
 VALUES ('999999', 'Unassigned', 'Average', 'USD', 'system');
+
+ALTER TABLE "account" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Certain employees can view accounts" ON "account"
+  FOR SELECT
+  USING (
+    (
+      coalesce(get_my_claim('accounting_view')::boolean, false) = true OR
+      coalesce(get_my_claim('parts_view')::boolean, false) = true OR
+      coalesce(get_my_claim('resources_view')::boolean, false) = true OR
+      coalesce(get_my_claim('sales_view')::boolean, false) = true OR
+      coalesce(get_my_claim('purchasing_view')::boolean, false) = true
+    )
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+  
+
+CREATE POLICY "Employees with accounting_create can insert accounts" ON "account"
+  FOR INSERT
+  WITH CHECK (   
+    coalesce(get_my_claim('accounting_create')::boolean,false) 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+);
+
+CREATE POLICY "Employees with accounting_update can update accounts" ON "account"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('accounting_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Employees with accounting_delete can delete accounts" ON "account"
+  FOR DELETE
+  USING (
+    coalesce(get_my_claim('accounting_delete')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );

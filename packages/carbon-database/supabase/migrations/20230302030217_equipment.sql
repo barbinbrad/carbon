@@ -354,9 +354,12 @@ CREATE POLICY "Employees with resources_delete can delete equipment" ON "equipme
 
 CREATE FUNCTION public.create_equipment_search_result()
 RETURNS TRIGGER AS $$
+DECLARE
+  equipment_type TEXT;
 BEGIN
+  equipment_type := (SELECT u."name" FROM public."equipmentType" et WHERE et.id = new."equipmentTypeId");
   INSERT INTO public.search(name, description, entity, uuid, link)
-  VALUES (new.name, new.description, 'Resource', new.id, '/x/resources/equipment/list/' || new."equipmentTypeId" || '/' || new.id);
+  VALUES (new.name, COALESCE(new.description, '') || ' ' || equipment_type, 'Resource', new.id, '/x/resources/equipment/list/' || new."equipmentTypeId" || '/' || new.id);
   RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -367,9 +370,12 @@ CREATE TRIGGER create_equipment_search_result
 
 CREATE FUNCTION public.update_equipment_search_result()
 RETURNS TRIGGER AS $$
+DECLARE
+  equipment_type TEXT;
 BEGIN
-  IF (old.name <> new.name OR old.description <> new.description) THEN
-    UPDATE public.search SET name = new.name, description = new.description
+  IF (old.name <> new.name OR old.description <> new.description OR old."equipmentTypeId" <> new."equipmentTypeId") THEN
+    equipment_type := (SELECT u."name" FROM public."equipmentType" et WHERE et.id = new."equipmentTypeId");
+    UPDATE public.search SET name = new.name, description = COALESCE(new.description, '') || ' ' || equipment_type
     WHERE entity = 'Resource' AND uuid = new.id;
   END IF;
   RETURN new;
@@ -381,5 +387,3 @@ CREATE TRIGGER update_equipment_search_result
   FOR EACH ROW EXECUTE PROCEDURE public.update_equipment_search_result();
 
 
-
--- TODO: insert/update search results with triggers

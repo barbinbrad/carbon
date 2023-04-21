@@ -664,6 +664,7 @@ function makeCustomerClaims() {
     documents_view: true,
     jobs_view: true,
     sales_view: true,
+    parts_view: true,
   };
 
   return claims;
@@ -765,6 +766,7 @@ function makeSupplierClaims() {
     documents_view: true,
     inventory_view: true,
     purchasing_view: true,
+    parts_view: true,
   };
 
   return claims;

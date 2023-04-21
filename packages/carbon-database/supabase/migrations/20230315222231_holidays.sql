@@ -15,3 +15,33 @@ CREATE TABLE "holiday" (
 );
 
 CREATE VIEW "holiday_years" AS SELECT DISTINCT "year" FROM "holiday";
+
+ALTER TABLE "holiday" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Employees can view holidays" ON "holiday"
+  FOR SELECT
+  USING (
+    auth.role() = 'authenticated' 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Employees with resources_create can insert holidays" ON "holiday"
+  FOR INSERT
+  WITH CHECK (   
+    coalesce(get_my_claim('resources_create')::boolean,false) 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+);
+
+CREATE POLICY "Employees with resources_update can update holidays" ON "holiday"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('resources_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Employees with resources_delete can delete holidays" ON "holiday"
+  FOR DELETE
+  USING (
+    coalesce(get_my_claim('resources_delete')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );

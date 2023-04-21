@@ -19,9 +19,10 @@ type CellProps<T> = {
   cell: CellType<T, unknown>;
   columnIndex: number;
   editableComponents?: Record<string, EditableTableCellComponent<T>>;
-  isSelected: boolean;
   isEditing: boolean;
   isEditMode: boolean;
+  isRowSelected: boolean;
+  isSelected: boolean;
   onClick?: () => void;
   onUpdate?: (value: unknown) => void;
 };
@@ -31,9 +32,9 @@ const Cell = <T extends object>({
   cell,
   columnIndex,
   editableComponents,
-  isSelected,
   isEditing,
   isEditMode,
+  isSelected,
   onClick,
   onUpdate,
 }: CellProps<T>) => {
@@ -117,7 +118,7 @@ const Cell = <T extends object>({
 export const MemoizedCell = memo(
   Cell,
   (prev, next) =>
-    next.cell.column.columnDef.id !== "Select" &&
+    next.isRowSelected === prev.isRowSelected &&
     next.isSelected === prev.isSelected &&
     next.isEditing === prev.isEditing &&
     next.isEditMode === prev.isEditMode &&

@@ -113,6 +113,8 @@ CREATE TABLE "supplierContact" (
   CONSTRAINT "supplierContact_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON UPDATE CASCADE ON DELETE SET NULL
 );
 
+CREATE INDEX "supplierContact_supplierId_index" ON "supplierContact"("supplierId");
+
 CREATE TABLE "supplierAccount" (
     "id" TEXT NOT NULL,
     "supplierId" TEXT NOT NULL,
@@ -121,6 +123,8 @@ CREATE TABLE "supplierAccount" (
     CONSTRAINT "supplierAccount_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "supplier"("id") ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT "supplierAccount_id_fkey" FOREIGN KEY ("id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+CREATE INDEX "supplierAccount_supplierId_index" ON "supplierAccount"("supplierId");
 
 CREATE TABLE "customerStatus" (
     "id" TEXT NOT NULL DEFAULT xid(),
@@ -192,6 +196,8 @@ CREATE TABLE "customerContact" (
   CONSTRAINT "customerContact_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON UPDATE CASCADE ON DELETE SET NULL
 );
 
+CREATE INDEX "customerContact_customerId_index" ON "customerContact"("customerId");
+
 CREATE TABLE "customerAccount" (
     "id" TEXT NOT NULL,
     "customerId" TEXT NOT NULL,
@@ -200,3 +206,5 @@ CREATE TABLE "customerAccount" (
     CONSTRAINT "customerAccount_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "customer"("id") ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT "customerAccount_id_fkey" FOREIGN KEY ("id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+CREATE INDEX "customerAccount_customerId_index" ON "customerAccount"("customerId");

@@ -32,7 +32,7 @@ export async function loader({ request, params }: LoaderArgs) {
 
 export async function action({ request }: ActionArgs) {
   assertIsPost(request);
-  const { client } = await requirePermissions(request, {
+  const { client, userId } = await requirePermissions(request, {
     update: "parts",
   });
 
@@ -45,11 +45,13 @@ export async function action({ request }: ActionArgs) {
   }
 
   const { id, name, code } = validation.data;
+  if (!id) throw new Error("id not found");
 
   const updateUnitOfMeasure = await upsertUnitOfMeasure(client, {
     id,
     name,
     code,
+    updatedBy: userId,
   });
 
   if (updateUnitOfMeasure.error) {

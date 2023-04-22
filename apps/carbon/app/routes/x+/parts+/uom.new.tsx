@@ -22,7 +22,7 @@ export async function loader({ request }: LoaderArgs) {
 
 export async function action({ request }: ActionArgs) {
   assertIsPost(request);
-  const { client } = await requirePermissions(request, {
+  const { client, userId } = await requirePermissions(request, {
     create: "parts",
   });
 
@@ -39,6 +39,7 @@ export async function action({ request }: ActionArgs) {
   const insertUnitOfMeasure = await upsertUnitOfMeasure(client, {
     name,
     code,
+    createdBy: userId,
   });
   if (insertUnitOfMeasure.error) {
     return json(

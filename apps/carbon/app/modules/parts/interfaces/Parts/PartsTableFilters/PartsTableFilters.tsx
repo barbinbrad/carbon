@@ -43,10 +43,10 @@ const PartsTableFilters = ({
     >
       <HStack spacing={2}>
         <DebouncedInput
-          param="id"
+          param="search"
           size="sm"
           minW={180}
-          placeholder="Filter by id"
+          placeholder="Search Parts"
         />
         {partGroupsOptions && (
           <Select

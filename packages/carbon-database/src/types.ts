@@ -2145,10 +2145,7 @@ export interface Database {
         | "Demand-Based Reorder"
         | "Fixed Reorder Quantity"
         | "Maximum Quantity";
-      partReplenishmentSystem:
-        | "Purchased"
-        | "Manufactured"
-        | "Purchased and Manufactured";
+      partReplenishmentSystem: "Buy" | "Make" | "Buy and Make";
       partType: "Inventory" | "Non-Inventory" | "Service";
       searchEntity:
         | "Resource"

@@ -55,7 +55,7 @@ export async function action({ request }: ActionArgs) {
       {},
       await flash(
         request,
-        error(insertPartGroup.error, "Failed to insert unit of measure")
+        error(insertPartGroup.error, "Failed to insert part group")
       )
     );
   }
@@ -66,14 +66,14 @@ export async function action({ request }: ActionArgs) {
       {},
       await flash(
         request,
-        error(insertPartGroup, "Failed to insert unit of measure")
+        error(insertPartGroup, "Failed to insert part group")
       )
     );
   }
 
   return redirect(
     "/x/parts/groups",
-    await flash(request, success("Unit of measure created"))
+    await flash(request, success("Part group created"))
   );
 }
 

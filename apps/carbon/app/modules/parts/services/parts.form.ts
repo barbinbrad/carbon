@@ -9,14 +9,11 @@ export const partValidator = withZod(
     description: zfd.text(z.string().optional()),
     blocked: zfd.checkbox(),
     active: zfd.checkbox(),
-    replenishmentSystem: z.enum(
-      ["Purchased", "Manufactured", "Purchased and Manufactured"],
-      {
-        errorMap: (issue, ctx) => ({
-          message: "Replenishment system is required",
-        }),
-      }
-    ),
+    replenishmentSystem: z.enum(["Buy", "Make", "Buy and Make"], {
+      errorMap: (issue, ctx) => ({
+        message: "Replenishment system is required",
+      }),
+    }),
     partGroupId: z.string().min(1, { message: "Part Group is required" }),
     partType: z.enum(["Inventory", "Non-Inventory", "Service"], {
       errorMap: (issue, ctx) => ({

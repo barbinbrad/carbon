@@ -125,19 +125,24 @@ export async function getPartPurchasing(
 export async function getParts(
   client: SupabaseClient<Database>,
   args: GenericQueryFilters & {
-    id: string | null;
+    search: string | null;
     type: string | null;
     group: string | null;
   }
 ) {
   let query = client
     .from("part")
-    .select("id, name, description, partType, partGroup(name)", {
-      count: "exact",
-    });
+    .select(
+      "id, name, description, partType, partGroup(name), replenishmentSystem",
+      {
+        count: "exact",
+      }
+    );
 
-  if (args.id) {
-    query = query.ilike("id", `%${args.id}%`);
+  if (args.search) {
+    query = query.or(
+      `id.ilike.%${args.search}%,name.ilike.%${args.search}%,description.ilike.%${args.search}%`
+    );
   }
 
   if (args.type) {
@@ -186,7 +191,7 @@ export function getPartRorderdingPolicies(): Database["public"]["Enums"]["partRe
 }
 
 export function getPartReplenishmentSystems(): Database["public"]["Enums"]["partReplenishmentSystem"][] {
-  return ["Purchased", "Manufactured", "Purchased and Manufactured"];
+  return ["Buy", "Make", "Buy and Make"];
 }
 
 export function getPartManufacturingPolicies(): Database["public"]["Enums"]["partManufacturingPolicy"][] {
@@ -378,7 +383,9 @@ export async function upsertPartUnitSalePrice(
 
 export async function upsertUnitOfMeasure(
   client: SupabaseClient<Database>,
-  unitOfMeasure: { id?: string; name: string; code: string }
+  unitOfMeasure:
+    | { name: string; code: string; createdBy: string }
+    | { id: string; name: string; code: string; updatedBy: string }
 ) {
   if ("id" in unitOfMeasure) {
     return client

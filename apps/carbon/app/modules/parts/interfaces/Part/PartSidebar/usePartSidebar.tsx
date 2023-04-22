@@ -12,13 +12,13 @@ export function usePartSidebar(replenishment: PartReplenishmentSystem) {
     {
       name: "Purchasing",
       to: "purchasing",
-      isDisabled: replenishment === "Manufactured",
+      isDisabled: replenishment === "Make",
       role: ["employee", "supplier"],
     },
     {
       name: "Manufacturing",
       to: "manufacturing",
-      isDisabled: replenishment === "Purchased",
+      isDisabled: replenishment === "Buy",
       role: ["employee"],
     },
     {

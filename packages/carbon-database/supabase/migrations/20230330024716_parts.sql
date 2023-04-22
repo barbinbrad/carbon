@@ -66,9 +66,9 @@ CREATE TYPE "partType" AS ENUM (
 );
 
 CREATE TYPE "partReplenishmentSystem" AS ENUM (
-  'Purchased',
-  'Manufactured',
-  'Purchased and Manufactured'
+  'Buy',
+  'Make',
+  'Buy and Make'
 );
 
 CREATE TYPE "partManufacturingPolicy" AS ENUM (
@@ -173,6 +173,12 @@ CREATE TABLE "part" (
   CONSTRAINT "part_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "part_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
+
+CREATE INDEX "part_name_index" ON "part"("name");
+CREATE INDEX "part_description_index" ON "part"("description");
+CREATE INDEX "part_partType_index" ON "part"("partType");
+CREATE INDEX "part_partGroupId_index" ON "part"("partGroupId");
+CREATE INDEX "part_replenishmentSystem_index" ON "part"("replenishmentSystem");
 
 ALTER TABLE "part" ENABLE ROW LEVEL SECURITY;
 

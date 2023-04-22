@@ -34,9 +34,13 @@ const PartsTable = memo(({ data, count }: PartsTableProps) => {
         cell: (item) => item.getValue(),
       },
       {
-        // @ts-ignore
         accessorKey: "partType",
         header: "Part Type",
+        cell: (item) => item.getValue(),
+      },
+      {
+        accessorKey: "replenishmentSystem",
+        header: "Replenishment",
         cell: (item) => item.getValue(),
       },
       {

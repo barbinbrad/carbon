@@ -3354,6 +3354,12 @@ CREATE TABLE "part" (
   CONSTRAINT "part_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
 
+CREATE INDEX "part_name_index" ON "part"("name");
+CREATE INDEX "part_description_index" ON "part"("description");
+CREATE INDEX "part_partType_index" ON "part"("partType");
+CREATE INDEX "part_partGroupId_index" ON "part"("partGroupId");
+CREATE INDEX "part_replenishmentSystem_index" ON "part"("replenishmentSystem");
+
 ALTER TABLE "part" ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Employees can view parts" ON "part"
@@ -3828,5 +3834,54 @@ CREATE POLICY "Suppliers with parts_update can update part inventory that they s
       )                 
     )
   );
+```
+
+
+
+## `documents`
+
+```sql
+CREATE TABLE "document" (
+  "id" TEXT NOT NULL DEFAULT uuid_generate_v4(),
+  "name" TEXT NOT NULL,
+  "description" TEXT,
+  "size" INTEGER NOT NULL,
+  "url" TEXT,
+  "visibility" TEXT[],
+  "createdBy" TEXT NOT NULL,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+  "updatedBy" TEXT,
+  "updatedAt" TIMESTAMP WITH TIME ZONE,
+
+  CONSTRAINT "document_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "document_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id") ON DELETE CASCADE,
+  CONSTRAINT "document_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id") ON DELETE CASCADE
+);
+
+CREATE INDEX "document_visibility_idx" ON "document" USING GIN ("visibility");
+
+CREATE TYPE "documentTransactionType" AS ENUM (
+  'Archive',
+  'Categorize'
+  'Comment',
+  'Download',
+  'Edit',
+  'Label',
+  'Preview',
+  'Rename',
+  'Replace',
+  'Upload'
+);
+
+CREATE TABLE "documentTransactions" (
+  "id" TEXT NOT NULL DEFAULT xid(),
+  "documentId" TEXT NOT NULL,
+  "type" "documentTransactionType" NOT NULL,
+  "userId" TEXT NOT NULL,
+
+  CONSTRAINT "documentActivity_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "documentActivity_documentId_fkey" FOREIGN KEY ("documentId") REFERENCES "document"("id") ON DELETE CASCADE,
+  CONSTRAINT "documentActivity_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE
+);
 ```
 

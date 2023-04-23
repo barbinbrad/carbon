@@ -590,6 +590,64 @@ export interface Database {
           createdAt?: string;
         };
       };
+      document: {
+        Row: {
+          name: string;
+          description: string | null;
+          size: number;
+          url: string | null;
+          visibility: string[] | null;
+          createdBy: string;
+          updatedBy: string | null;
+          updatedAt: string | null;
+          id: string;
+          createdAt: string;
+        };
+        Insert: {
+          name: string;
+          description?: string | null;
+          size: number;
+          url?: string | null;
+          visibility?: string[] | null;
+          createdBy: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          id?: string;
+          createdAt?: string;
+        };
+        Update: {
+          name?: string;
+          description?: string | null;
+          size?: number;
+          url?: string | null;
+          visibility?: string[] | null;
+          createdBy?: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          id?: string;
+          createdAt?: string;
+        };
+      };
+      documentTransactions: {
+        Row: {
+          documentId: string;
+          type: Database["public"]["Enums"]["documentTransactionType"];
+          userId: string;
+          id: string;
+        };
+        Insert: {
+          documentId: string;
+          type: Database["public"]["Enums"]["documentTransactionType"];
+          userId: string;
+          id?: string;
+        };
+        Update: {
+          documentId?: string;
+          type?: Database["public"]["Enums"]["documentTransactionType"];
+          userId?: string;
+          id?: string;
+        };
+      };
       employee: {
         Row: {
           id: string;
@@ -2105,6 +2163,16 @@ export interface Database {
     };
     Enums: {
       consolidatedRate: "Average" | "Current" | "Historical";
+      documentTransactionType:
+        | "Archive"
+        | "CategorizeComment"
+        | "Download"
+        | "Edit"
+        | "Label"
+        | "Preview"
+        | "Rename"
+        | "Replace"
+        | "Upload";
       factor:
         | "Hours/Piece"
         | "Hours/100 Pieces"

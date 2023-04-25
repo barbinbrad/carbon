@@ -596,11 +596,13 @@ export interface Database {
           description: string | null;
           size: number;
           url: string | null;
-          visibility: string[] | null;
+          readGroups: string[] | null;
+          writeGroups: string[] | null;
           createdBy: string;
           updatedBy: string | null;
           updatedAt: string | null;
           id: string;
+          active: boolean;
           createdAt: string;
         };
         Insert: {
@@ -608,11 +610,13 @@ export interface Database {
           description?: string | null;
           size: number;
           url?: string | null;
-          visibility?: string[] | null;
+          readGroups?: string[] | null;
+          writeGroups?: string[] | null;
           createdBy: string;
           updatedBy?: string | null;
           updatedAt?: string | null;
           id?: string;
+          active?: boolean;
           createdAt?: string;
         };
         Update: {
@@ -620,11 +624,13 @@ export interface Database {
           description?: string | null;
           size?: number;
           url?: string | null;
-          visibility?: string[] | null;
+          readGroups?: string[] | null;
+          writeGroups?: string[] | null;
           createdBy?: string;
           updatedBy?: string | null;
           updatedAt?: string | null;
           id?: string;
+          active?: boolean;
           createdAt?: string;
         };
       };
@@ -634,18 +640,21 @@ export interface Database {
           type: Database["public"]["Enums"]["documentTransactionType"];
           userId: string;
           id: string;
+          createdAt: string;
         };
         Insert: {
           documentId: string;
           type: Database["public"]["Enums"]["documentTransactionType"];
           userId: string;
           id?: string;
+          createdAt?: string;
         };
         Update: {
           documentId?: string;
           type?: Database["public"]["Enums"]["documentTransactionType"];
           userId?: string;
           id?: string;
+          createdAt?: string;
         };
       };
       employee: {
@@ -2167,7 +2176,9 @@ export interface Database {
         | "Archive"
         | "CategorizeComment"
         | "Download"
-        | "Edit"
+        | "EditFile"
+        | "EditMeta"
+        | "EditPermissions"
         | "Label"
         | "Preview"
         | "Rename"

@@ -31,6 +31,7 @@ const ContentSidebar = ({ links }: { links: Route[] }) => {
                     key={route.name}
                     as={Link}
                     to={route.to}
+                    leftIcon={route.icon}
                     variant={isActive ? "solid" : "ghost"}
                     border="none"
                     fontWeight={isActive ? "bold" : "normal"}

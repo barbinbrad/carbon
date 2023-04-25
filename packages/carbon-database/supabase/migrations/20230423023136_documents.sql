@@ -4,25 +4,30 @@ CREATE TABLE "document" (
   "description" TEXT,
   "size" INTEGER NOT NULL,
   "url" TEXT,
-  "visibility" TEXT[],
+  "readGroups" TEXT[],
+  "writeGroups" TEXT[],
+  "active" BOOLEAN NOT NULL DEFAULT TRUE,
   "createdBy" TEXT NOT NULL,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   "updatedBy" TEXT,
   "updatedAt" TIMESTAMP WITH TIME ZONE,
 
   CONSTRAINT "document_pkey" PRIMARY KEY ("id"),
+  
   CONSTRAINT "document_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id") ON DELETE CASCADE,
   CONSTRAINT "document_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id") ON DELETE CASCADE
 );
 
-CREATE INDEX "document_visibility_idx" ON "document" USING GIN ("visibility");
+CREATE INDEX "document_visibility_idx" ON "document" USING GIN ("readGroups", "writeGroups");
 
 CREATE TYPE "documentTransactionType" AS ENUM (
   'Archive',
   'Categorize'
   'Comment',
   'Download',
-  'Edit',
+  'EditFile',
+  'EditMeta',
+  'EditPermissions',
   'Label',
   'Preview',
   'Rename',
@@ -35,6 +40,7 @@ CREATE TABLE "documentTransactions" (
   "documentId" TEXT NOT NULL,
   "type" "documentTransactionType" NOT NULL,
   "userId" TEXT NOT NULL,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
 
   CONSTRAINT "documentActivity_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "documentActivity_documentId_fkey" FOREIGN KEY ("documentId") REFERENCES "document"("id") ON DELETE CASCADE,

@@ -8,7 +8,7 @@ export const meta: MetaFunction = () => ({
   title: "Carbon | Documents",
 });
 
-export default function AccountRoute() {
+export default function DocumentsRoute() {
   const { links } = useDocumentsSidebar();
 
   return (

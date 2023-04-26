@@ -1,10 +1,13 @@
-import { HStack, Link, MenuItem } from "@chakra-ui/react";
+import { convertKbToString } from "@carbon/utils";
+import { HStack, Link, MenuItem, Text } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo } from "react";
 import { BsEyeFill } from "react-icons/bs";
-import { Table } from "~/components";
-import { useUrlParams } from "~/hooks";
+import { IoMdTrash } from "react-icons/io";
+import { VscCloudDownload, VscOpenPreview } from "react-icons/vsc";
+import { Avatar, Table } from "~/components";
+import { usePermissions, useUrlParams } from "~/hooks";
 import type { Document } from "~/modules/documents";
 import DocumentIcon from "../DocumentIcon/DocumentIcon";
 
@@ -14,6 +17,7 @@ type DocumentsTableProps = {
 };
 
 const DocumentsTable = memo(({ data, count }: DocumentsTableProps) => {
+  const permissions = usePermissions();
   const navigate = useNavigate();
   const [params] = useUrlParams();
 
@@ -33,34 +37,122 @@ const DocumentsTable = memo(({ data, count }: DocumentsTableProps) => {
       {
         accessorKey: "size",
         header: "Size",
-        cell: (item) => item.getValue(),
+        cell: ({ row }) => convertKbToString(row.original.size),
       },
       {
         accessorKey: "createdBy",
         header: "Created By",
+        cell: ({ row }) => {
+          if (Array.isArray(row.original.createdBy)) {
+            throw new Error("Expected createdBy to be an object");
+          }
+          return (
+            <HStack>
+              <Avatar
+                size="sm"
+                // @ts-ignore
+                path={row.original.createdBy?.avatarUrl ?? undefined}
+              />
+              {/* @ts-ignore */}
+              <Text>{row.original.createdBy?.fullName}</Text>
+            </HStack>
+          );
+        },
+      },
+      {
+        accessorKey: "createdAt",
+        header: "Created At",
+        cell: (item) => item.getValue(),
+      },
+      {
+        accessorKey: "updatedAt",
+        header: "Updated At",
         cell: (item) => item.getValue(),
       },
     ];
   }, []);
 
+  const actions = useMemo(() => {
+    return [
+      {
+        label: "Move to Trash",
+        icon: <IoMdTrash />,
+        disabled: !permissions.can("delete", "documents"),
+        onClick: (selected: Document[]) => {
+          console.log("move to trash", selected);
+        },
+      },
+      {
+        label: "Update Visibility",
+        icon: <BsEyeFill />,
+        disabled: !permissions.can("update", "documents"),
+        onClick: (selected: Document[]) => {
+          console.log("update visibility", selected);
+        },
+      },
+      {
+        label: "Export Files (zip)",
+        icon: <VscCloudDownload />,
+        onClick: (selected: Document[]) => {
+          console.log("export files", selected);
+        },
+      },
+    ];
+  }, [permissions]);
+
+  const defaultColumnVisibility = {
+    createdAt: false,
+    updatedAt: false,
+    description: false,
+  };
+
   const renderContextMenu = useMemo(() => {
     // eslint-disable-next-line react/display-name
     return (row: Document) => (
-      <MenuItem
-        icon={<BsEyeFill />}
-        onClick={() => navigate(`/x/documents/search/${row.id}?${params}`)}
-      >
-        Preview
-      </MenuItem>
+      <>
+        <MenuItem
+          icon={<VscOpenPreview />}
+          isDisabled={true}
+          onClick={() =>
+            navigate(`/x/documents/search/${row.id}/preview?${params}`)
+          }
+        >
+          Preview
+        </MenuItem>
+        <MenuItem
+          icon={<VscOpenPreview />}
+          isDisabled={true}
+          onClick={() =>
+            navigate(`/x/documents/search/${row.id}/edit?${params}`)
+          }
+        >
+          Edit
+        </MenuItem>
+        <MenuItem
+          icon={<VscOpenPreview />}
+          onClick={() => console.log(`download ${row.id}`)}
+        >
+          Download
+        </MenuItem>
+        <MenuItem
+          icon={<IoMdTrash />}
+          isDisabled={!permissions.can("delete", "documents")}
+          onClick={() => console.log(`delete ${row.id}`)}
+        >
+          Move to Trash
+        </MenuItem>
+      </>
     );
-  }, [navigate, params]);
+  }, [navigate, params, permissions]);
 
   return (
     <>
       <Table<Document>
+        actions={actions}
         count={count}
         columns={columns}
         data={data}
+        defaultColumnVisibility={defaultColumnVisibility}
         withColumnOrdering
         withFilters
         withPagination

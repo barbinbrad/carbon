@@ -8,6 +8,7 @@ import {
   BsFileTextFill,
   BsFileWordFill,
   BsFileZipFill,
+  BsFileEarmarkPlayFill,
 } from "react-icons/bs";
 
 type DocumentIconProps = {
@@ -43,7 +44,15 @@ const DocumentIcon = ({ fileName }: DocumentIconProps) => {
     case "jpg":
     case "jpeg":
     case "gif":
+    case "svg":
       return <Icon color="yellow.400" {...size} as={BsFileImageFill} />;
+    case "mp4":
+    case "avi":
+    case "mov":
+    case "wmv":
+    case "flv":
+    case "mkv":
+      return <Icon color="purple.500" {...size} as={BsFileEarmarkPlayFill} />;
     default:
       return <Icon {...size} as={BsFileEarmarkFill} />;
   }

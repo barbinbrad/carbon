@@ -21,12 +21,14 @@ export async function loader({ request }: LoaderArgs) {
   const url = new URL(request.url);
   const searchParams = new URLSearchParams(url.search);
   const search = searchParams.get("search");
+  const type = searchParams.get("type");
 
   const { limit, offset, sorts, filters } =
     getGenericQueryFilters(searchParams);
 
   const documents = await getDocuments(client, {
     search,
+    type,
     limit,
     offset,
     sorts,

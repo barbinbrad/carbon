@@ -3846,7 +3846,7 @@ CREATE TABLE "document" (
   "name" TEXT NOT NULL,
   "description" TEXT,
   "size" INTEGER NOT NULL,
-  "url" TEXT,
+  "type" TEXT GENERATED ALWAYS AS (split_part("name", '.', -1)) STORED,
   "readGroups" TEXT[],
   "writeGroups" TEXT[],
   "active" BOOLEAN NOT NULL DEFAULT TRUE,

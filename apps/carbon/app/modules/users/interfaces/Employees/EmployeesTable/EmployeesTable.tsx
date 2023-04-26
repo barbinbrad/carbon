@@ -239,39 +239,6 @@ const EmployeesTable = memo(
   }
 );
 
-// const EditableName = ({
-//   value,
-//   row,
-//   accessorKey,
-//   onUpdate,
-// }: EditableTableCellComponentProps<Employee>) => {
-//   const { supabase } = useSupabase();
-//   // @ts-ignore
-//   const userId = row?.user?.id as string;
-//   if (userId === undefined) {
-//     throw new Error("Expected user id to be defined");
-//   }
-
-//   const updateName = async (name: string) => {
-//     const [table, column] = accessorKey.split(".");
-//     onUpdate(name);
-//     await supabase
-//       ?.from(table)
-//       .update({ [column]: name })
-//       .eq("id", userId);
-//   };
-
-//   const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-//     if (event.key === "Enter") {
-//       updateName(event.currentTarget.value);
-//     }
-//   };
-
-//   return (
-//     <Input autoFocus defaultValue={value as string} onKeyDown={onKeyDown} />
-//   );
-// };
-
 EmployeesTable.displayName = "EmployeeTable";
 
 export default EmployeesTable;

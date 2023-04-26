@@ -1,4 +1,4 @@
-import { useColor } from "@carbon/react";
+import { Select, useColor } from "@carbon/react";
 import { Button, HStack } from "@chakra-ui/react";
 import { Link } from "@remix-run/react";
 import { IoMdAdd } from "react-icons/io";
@@ -6,10 +6,32 @@ import { DebouncedInput } from "~/components/Search";
 import { usePermissions, useUrlParams } from "~/hooks";
 
 const DocumentsTableFilters = () => {
-  const [params] = useUrlParams();
+  const [params, setParams] = useUrlParams();
   const permissions = usePermissions();
 
   const borderColor = useColor("gray.200");
+  const documentTypeOptions = [
+    {
+      label: "All",
+      value: "all",
+    },
+    {
+      label: "Document",
+      value: "document",
+    },
+    {
+      label: "Spreadsheet",
+      value: "spreadsheet",
+    },
+    {
+      label: "Image",
+      value: "image",
+    },
+    {
+      label: "Video",
+      value: "video",
+    },
+  ];
 
   return (
     <HStack
@@ -27,6 +49,21 @@ const DocumentsTableFilters = () => {
           size="sm"
           minW={280}
           placeholder="Search document name or description"
+        />
+        <Select
+          // @ts-ignore
+          size="sm"
+          value={documentTypeOptions.filter(
+            (type) => type.value === params.get("type")
+          )}
+          isClearable
+          options={documentTypeOptions}
+          onChange={(selected) => {
+            setParams({ type: selected?.value });
+          }}
+          aria-label="Document Type"
+          minW={180}
+          placeholder="Document Type"
         />
       </HStack>
       <HStack spacing={2}>

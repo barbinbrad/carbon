@@ -47,8 +47,8 @@ const DocumentsTableFilters = () => {
         <DebouncedInput
           param="search"
           size="sm"
-          minW={280}
-          placeholder="Search document name or description"
+          minW={180}
+          placeholder="Search"
         />
         <Select
           // @ts-ignore

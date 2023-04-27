@@ -2126,6 +2126,24 @@ export interface Database {
         Args: { uid: string; claim: string };
         Returns: string;
       };
+      documents_query: {
+        Args: { _uid: string };
+        Returns: {
+          id: string;
+          name: string;
+          description: string;
+          size: number;
+          type: string;
+          createdByAvatar: string;
+          createdByFullName: string;
+          createdAt: string;
+          updatedByAvatar: string;
+          updatedByFullName: string;
+          updatedAt: string;
+          labels: string[];
+          favorite: boolean;
+        }[];
+      };
       get_claim: {
         Args: { uid: string; claim: string };
         Returns: Json;

@@ -3916,5 +3916,48 @@ CREATE TABLE "documentLabel" (
 
 CREATE INDEX "documentLabels_userId_idx" ON "documentLabel" ("userId");
 CREATE INDEX "documentLabels_documentId_idx" ON "documentLabel" ("documentId");
+
+CREATE OR REPLACE FUNCTION documents_query(
+  _uid TEXT DEFAULT NULL
+) 
+RETURNS TABLE (
+  "id" TEXT,
+  "name" TEXT,
+  "description" TEXT,
+  "size" INTEGER,
+  "type" TEXT,
+  "createdByAvatar" TEXT,
+  "createdByFullName" TEXT,
+  "createdAt" TIMESTAMP WITH TIME ZONE,
+  "updatedByAvatar" TEXT,
+  "updatedByFullName" TEXT,
+  "updatedAt" TIMESTAMP WITH TIME ZONE,
+  "labels" TEXT[],
+  "favorite" BOOLEAN
+) LANGUAGE "plpgsql" SECURITY INVOKER SET search_path = public
+AS $$
+  BEGIN
+    RETURN QUERY
+SELECT
+    d.id,
+    d.name,
+    d.description,
+    d.size,
+    d.type,
+    u.avatar AS "createdByAvatar",
+    u."fullName" AS "createdByFullName",
+    d."createdAt",
+    u2.avatar AS "updatedByAvatar",
+    u2."fullName" AS "updatedByFullName",
+    d."updatedAt",
+    ARRAY(SELECT dl.label FROM "documentLabel" dl WHERE dl."documentId" = d.id AND dl."userId" = _uid) AS labels,
+    EXISTS(SELECT 1 FROM "documentFavorite" df WHERE df."documentId" = d.id AND df."userId" = _uid) AS favorite
+  FROM "document" d
+  INNER JOIN "user" u ON u.id = d."createdBy"
+  LEFT JOIN "user" u2 ON u2.id = d."updatedBy"
+  WHERE d.active = TRUE;
+END;
+$$;
+
 ```
 

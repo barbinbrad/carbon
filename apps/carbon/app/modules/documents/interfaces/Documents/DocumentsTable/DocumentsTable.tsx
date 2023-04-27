@@ -3,7 +3,7 @@ import { HStack, Link, MenuItem, Text } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo } from "react";
-import { BsEyeFill } from "react-icons/bs";
+import { BsEyeFill, BsStar } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { VscCloudDownload, VscOpenPreview } from "react-icons/vsc";
 import { Avatar, Table } from "~/components";
@@ -75,6 +75,20 @@ const DocumentsTable = memo(({ data, count }: DocumentsTableProps) => {
   const actions = useMemo(() => {
     return [
       {
+        label: "Add to Favorites",
+        icon: <BsStar />,
+        onClick: (selected: Document[]) => {
+          console.log("move to favorites", selected);
+        },
+      },
+      {
+        label: "Export Files (zip)",
+        icon: <VscCloudDownload />,
+        onClick: (selected: Document[]) => {
+          console.log("export files", selected);
+        },
+      },
+      {
         label: "Move to Trash",
         icon: <IoMdTrash />,
         disabled: !permissions.can("delete", "documents"),
@@ -88,13 +102,6 @@ const DocumentsTable = memo(({ data, count }: DocumentsTableProps) => {
         disabled: !permissions.can("update", "documents"),
         onClick: (selected: Document[]) => {
           console.log("update visibility", selected);
-        },
-      },
-      {
-        label: "Export Files (zip)",
-        icon: <VscCloudDownload />,
-        onClick: (selected: Document[]) => {
-          console.log("export files", selected);
         },
       },
     ];
@@ -133,6 +140,12 @@ const DocumentsTable = memo(({ data, count }: DocumentsTableProps) => {
           onClick={() => console.log(`download ${row.id}`)}
         >
           Download
+        </MenuItem>
+        <MenuItem
+          icon={<BsStar />}
+          onClick={() => console.log(`favorite ${row.id}`)}
+        >
+          Favorite
         </MenuItem>
         <MenuItem
           icon={<IoMdTrash />}

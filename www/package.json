@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "clean": "rm -rf .turbo rm -rf .next && rm -rf node_modules",
+    "clean": "rimraf .turbo node_modules .next",
     "dev": "next dev -p 4111",
     "lint": "TIMING=1 next lint",
     "start": "next start "

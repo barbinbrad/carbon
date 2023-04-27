@@ -12,9 +12,37 @@ export async function deleteDocument(
   return client.from("document").update({ active: false }).eq("id", id);
 }
 
+export async function deleteDocumentFavorite(
+  client: SupabaseClient<Database>,
+  id: string,
+  userId: string
+) {
+  return client
+    .from("documentFavorite")
+    .delete()
+    .eq("documentId", id)
+    .eq("userId", userId);
+}
+
+export async function deleteDocumentLabel(
+  client: SupabaseClient<Database>,
+  id: string,
+  label: string
+) {
+  return client
+    .from("documentLabel")
+    .delete()
+    .eq("documentId", id)
+    .eq("label", label);
+}
+
 export async function getDocuments(
   client: SupabaseClient<Database>,
-  args: GenericQueryFilters & { search: string | null; type: string | null }
+  args: GenericQueryFilters & {
+    search: string | null;
+    type: string | null;
+    label: string | string[] | null;
+  }
 ) {
   let query = client
     .from("document")
@@ -49,10 +77,31 @@ export async function getDocuments(
         "type.eq.mp4,type.eq.mov,type.eq.avi,type.eq.wmv,type.eq.flv,type.eq.mkv"
       );
     }
+
+    if (args.label) {
+      console.log(args.label);
+    }
   }
 
   query = setGenericQueryFilters(query, args);
   return query;
+}
+
+export async function insertDocumentFavorite(
+  client: SupabaseClient<Database>,
+  id: string,
+  userId: string
+) {
+  return client.from("documentFavorite").insert({ documentId: id, userId });
+}
+
+export async function insertDocumentLabel(
+  client: SupabaseClient<Database>,
+  id: string,
+  label: string,
+  userId: string
+) {
+  return client.from("documentLabel").insert({ documentId: id, label, userId });
 }
 
 export async function upsertDocument(

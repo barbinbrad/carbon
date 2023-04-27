@@ -634,6 +634,37 @@ export interface Database {
           createdAt?: string;
         };
       };
+      documentFavorite: {
+        Row: {
+          documentId: string;
+          userId: string;
+        };
+        Insert: {
+          documentId: string;
+          userId: string;
+        };
+        Update: {
+          documentId?: string;
+          userId?: string;
+        };
+      };
+      documentLabel: {
+        Row: {
+          documentId: string;
+          userId: string;
+          label: string;
+        };
+        Insert: {
+          documentId: string;
+          userId: string;
+          label: string;
+        };
+        Update: {
+          documentId?: string;
+          userId?: string;
+          label?: string;
+        };
+      };
       documentTransactions: {
         Row: {
           documentId: string;
@@ -2173,17 +2204,17 @@ export interface Database {
     Enums: {
       consolidatedRate: "Average" | "Current" | "Historical";
       documentTransactionType:
-        | "Archive"
-        | "CategorizeComment"
+        | "Categorize"
+        | "Comment"
+        | "Delete"
         | "Download"
-        | "EditFile"
-        | "EditMeta"
         | "EditPermissions"
+        | "Favorite"
         | "Label"
         | "Preview"
         | "Rename"
         | "Replace"
-        | "Upload";
+        | "UnfavoriteUpload";
       factor:
         | "Hours/Piece"
         | "Hours/100 Pieces"

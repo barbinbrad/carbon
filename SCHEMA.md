@@ -3864,17 +3864,17 @@ CREATE TABLE "document" (
 CREATE INDEX "document_visibility_idx" ON "document" USING GIN ("readGroups", "writeGroups");
 
 CREATE TYPE "documentTransactionType" AS ENUM (
-  'Archive',
-  'Categorize'
+  'Categorize',
   'Comment',
+  'Delete',
   'Download',
-  'EditFile',
-  'EditMeta',
   'EditPermissions',
+  'Favorite',
   'Label',
   'Preview',
   'Rename',
   'Replace',
+  'Unfavorite'
   'Upload'
 );
 
@@ -3889,5 +3889,32 @@ CREATE TABLE "documentTransactions" (
   CONSTRAINT "documentActivity_documentId_fkey" FOREIGN KEY ("documentId") REFERENCES "document"("id") ON DELETE CASCADE,
   CONSTRAINT "documentActivity_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE
 );
+
+CREATE INDEX "documentActivity_documentId_idx" ON "documentTransactions" ("documentId");
+
+CREATE TABLE "documentFavorite" (
+  "documentId" TEXT NOT NULL,
+  "userId" TEXT NOT NULL,
+
+  CONSTRAINT "documentFavorites_pkey" PRIMARY KEY ("documentId", "userId"),
+  CONSTRAINT "documentFavorites_documentId_fkey" FOREIGN KEY ("documentId") REFERENCES "document"("id") ON DELETE CASCADE,
+  CONSTRAINT "documentFavorites_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE
+);
+
+CREATE INDEX "documentFavorites_userId_idx" ON "documentFavorite" ("userId");
+CREATE INDEX "documentFavorites_documentId_idx" ON "documentFavorite" ("documentId");
+
+CREATE TABLE "documentLabel" (
+  "documentId" TEXT NOT NULL,
+  "userId" TEXT NOT NULL,
+  "label" TEXT NOT NULL,
+
+  CONSTRAINT "documentLabels_pkey" PRIMARY KEY ("documentId", "userId", "label"),
+  CONSTRAINT "documentLabels_documentId_fkey" FOREIGN KEY ("documentId") REFERENCES "document"("id") ON DELETE CASCADE,
+  CONSTRAINT "documentLabels_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE
+);
+
+CREATE INDEX "documentLabels_userId_idx" ON "documentLabel" ("userId");
+CREATE INDEX "documentLabels_documentId_idx" ON "documentLabel" ("documentId");
 ```
 

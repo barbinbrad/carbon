@@ -6,7 +6,7 @@
   "scripts": {
     "build": "remix build",
     "dev": "PORT=3000 remix dev",
-    "clean": "rm -rf .cache && rm -rf node_modules && rm -rf public/build",
+    "clean": "rimraf .cache .turbo node_modules dist public/build",
     "lint": "TIMING=1 eslint \"app/**/*.ts*\"",
     "types": "tsc"
   },

@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts --external react",
-    "clean": "rm -rf dist",
+    "clean": "rimraf .turbo node_modules dist",
     "dev": "tsup src/index.ts --format esm,cjs --watch --dts --external react",
     "lint": "TIMING=1 eslint \"src/**/*.ts*\"",
     "test": "jest"

@@ -1,8 +1,7 @@
-import { useNotification } from "@carbon/react";
-import { Button, Input, InputGroup, VStack } from "@chakra-ui/react";
+import { File, useNotification } from "@carbon/react";
+import { Button, VStack } from "@chakra-ui/react";
 import { useSubmit } from "@remix-run/react";
 import type { ChangeEvent } from "react";
-import { useRef } from "react";
 import { Avatar } from "~/components";
 import { useSupabase } from "~/lib/supabase";
 import type { Account } from "~/modules/account";
@@ -13,7 +12,6 @@ type ProfilePhotoFormProps = {
 
 const ProfilePhotoForm = ({ user }: ProfilePhotoFormProps) => {
   const { supabase } = useSupabase();
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const notification = useNotification();
   const submit = useSubmit();
 
@@ -68,25 +66,10 @@ const ProfilePhotoForm = ({ user }: ProfilePhotoFormProps) => {
   return (
     <VStack w="full" spacing={2} px={8}>
       <Avatar size="2xl" path={user?.avatarUrl} title={user?.fullName ?? ""} />
-      <InputGroup w="auto">
-        <Input
-          ref={fileInputRef}
-          id="avatar-upload"
-          type="file"
-          hidden
-          accept="image/*"
-          onChange={uploadImage}
-        />
-        <Button
-          variant="solid"
-          colorScheme="brand"
-          onClick={() => {
-            if (fileInputRef.current) fileInputRef.current.click();
-          }}
-        >
-          {user.avatarUrl ? "Change" : "Upload"}
-        </Button>
-      </InputGroup>
+      <File accept="image/*" onChange={uploadImage}>
+        {user.avatarUrl ? "Change" : "Upload"}
+      </File>
+
       {user.avatarUrl && (
         <Button variant="outline" onClick={deleteImage}>
           Remove

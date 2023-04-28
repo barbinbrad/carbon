@@ -3,7 +3,7 @@ import { HStack, Link, MenuItem, Text } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo } from "react";
-import { BsEyeFill, BsStar } from "react-icons/bs";
+import { BsEyeFill, BsStar, BsTag } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { VscCloudDownload, VscOpenPreview } from "react-icons/vsc";
 import { Avatar, Table } from "~/components";
@@ -77,6 +77,13 @@ const DocumentsTable = memo(({ data, count }: DocumentsTableProps) => {
       {
         label: "Add to Favorites",
         icon: <BsStar />,
+        onClick: (selected: Document[]) => {
+          console.log("move to favorites", selected);
+        },
+      },
+      {
+        label: "Add Labels",
+        icon: <BsTag />,
         onClick: (selected: Document[]) => {
           console.log("move to favorites", selected);
         },

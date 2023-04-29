@@ -592,8 +592,8 @@ export interface Database {
       };
       document: {
         Row: {
+          path: string;
           name: string;
-          description: string | null;
           size: number;
           readGroups: string[] | null;
           writeGroups: string[] | null;
@@ -601,13 +601,14 @@ export interface Database {
           updatedBy: string | null;
           updatedAt: string | null;
           id: string;
+          description: string | null;
           type: string | null;
           active: boolean;
           createdAt: string;
         };
         Insert: {
+          path: string;
           name: string;
-          description?: string | null;
           size: number;
           readGroups?: string[] | null;
           writeGroups?: string[] | null;
@@ -615,13 +616,14 @@ export interface Database {
           updatedBy?: string | null;
           updatedAt?: string | null;
           id?: string;
+          description?: string | null;
           type?: string | null;
           active?: boolean;
           createdAt?: string;
         };
         Update: {
+          path?: string;
           name?: string;
-          description?: string | null;
           size?: number;
           readGroups?: string[] | null;
           writeGroups?: string[] | null;
@@ -629,6 +631,7 @@ export interface Database {
           updatedBy?: string | null;
           updatedAt?: string | null;
           id?: string;
+          description?: string | null;
           type?: string | null;
           active?: boolean;
           createdAt?: string;

@@ -22,18 +22,6 @@ body {
   margin-top: 0;
 }
 
-#__next article :not(pre) > code {
-  color: var(--shiki-token-string-expression);
-  background-color: transparent;
-  border: 0;
-  font-size: 90%;
-}
-
-#__next article :not(pre) > code::before,
-#__next article :not(pre) > code::after {
-  content: "\`";
-}
-
 .dark body article pre {
   background-color: transparent;
   border: 1px solid rgba(224, 243, 255, 0.1);

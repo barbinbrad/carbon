@@ -83,7 +83,7 @@ export async function action({ request }: ActionArgs) {
 
   if (formData.get("intent") === "photo") {
     const path = formData.get("path");
-    if (path === null || typeof path === "string") {
+    if (typeof path === "string") {
       const avatarUpdate = await updateAvatar(client, userId, path);
       if (avatarUpdate.error) {
         return redirect(

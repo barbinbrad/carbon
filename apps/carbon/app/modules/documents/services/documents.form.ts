@@ -5,6 +5,7 @@ import { zfd } from "zod-form-data";
 export const documentValidator = withZod(
   z.object({
     id: zfd.text(z.string().optional()),
+    path: z.string(),
     name: z.string().min(3).max(50),
     description: z.string().optional(),
     size: z.number().positive(),

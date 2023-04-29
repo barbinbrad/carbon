@@ -1,4 +1,4 @@
-import { BsClock, BsFolder, BsStar } from "react-icons/bs";
+import { BsClock, BsFolder, BsFolderPlus, BsStar } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import type { Route } from "~/types";
 
@@ -7,6 +7,11 @@ const documentsRoutes: Route[] = [
     name: "All Documents",
     to: "/x/documents/search",
     icon: <BsFolder />,
+  },
+  {
+    name: "My Documents",
+    to: "/x/documents/my",
+    icon: <BsFolderPlus />,
   },
   {
     name: "Recent",

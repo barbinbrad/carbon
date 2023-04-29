@@ -1,7 +1,8 @@
 CREATE TABLE "document" (
   "id" TEXT NOT NULL DEFAULT uuid_generate_v4(),
+  "path" TEXT NOT NULL,
   "name" TEXT NOT NULL,
-  "description" TEXT,
+  "description" TEXT DEFAULT '',
   "size" INTEGER NOT NULL,
   "type" TEXT GENERATED ALWAYS AS (split_part("name", '.', -1)) STORED,
   "readGroups" TEXT[],

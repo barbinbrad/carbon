@@ -47,7 +47,7 @@ export async function getDocuments(
   let query = client
     .from("document")
     .select(
-      "id, name, description, size, createdBy!inner(fullName, avatarUrl), createdAt, updatedAt"
+      "id, name, description, size, readGroups, writeGroups, createdBy!inner(fullName, avatarUrl), createdAt, updatedAt"
     )
     .eq("active", true);
 

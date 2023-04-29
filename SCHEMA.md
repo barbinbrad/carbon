@@ -1178,10 +1178,10 @@ AS $$
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION groups_for_user(uid text) RETURNS "jsonb" -- TODO: return setof string
+CREATE OR REPLACE FUNCTION groups_for_user(uid text) RETURNS TEXT[]
   LANGUAGE "plpgsql" SECURITY DEFINER SET search_path = public
   AS $$
-  DECLARE retval jsonb;
+  DECLARE retval TEXT[];
   BEGIN    
     WITH RECURSIVE "groupsForUser" AS (
     SELECT "groupId", "memberGroupId", "memberUserId" FROM "membership"
@@ -1189,7 +1189,7 @@ CREATE OR REPLACE FUNCTION groups_for_user(uid text) RETURNS "jsonb" -- TODO: re
     UNION
       SELECT g1."groupId", g1."memberGroupId", g1."memberUserId" FROM "membership" g1
       INNER JOIN "groupsForUser" g2 ON g2."groupId" = g1."memberGroupId"
-    ) SELECT coalesce(jsonb_agg("groupId"), '[]') INTO retval AS groups FROM "groupsForUser";
+    ) SELECT array_agg("groupId") INTO retval AS groups FROM "groupsForUser";
     RETURN retval;
   END;
 $$;
@@ -3895,6 +3895,32 @@ CREATE TABLE "document" (
 );
 
 CREATE INDEX "document_visibility_idx" ON "document" USING GIN ("readGroups", "writeGroups");
+
+ALTER TABLE "document" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "users with documents_view can view documents where they are in the readGroups" ON "document" 
+  FOR SELECT USING (
+    coalesce(get_my_claim('documents_view')::boolean, false) = true 
+    AND (groups_for_user(auth.uid()::text) && "readGroups") = true
+  );
+
+CREATE POLICY "users with documents_create can create documents where they are in the writeGroups" ON "document" 
+  FOR INSERT WITH CHECK (
+    coalesce(get_my_claim('documents_create')::boolean, false) = true 
+    AND (groups_for_user(auth.uid()::text) && "writeGroups") = true
+  );
+
+CREATE POLICY "users with documents_update can update documents where they are in the writeGroups" ON "document"
+  FOR UPDATE USING (
+    coalesce(get_my_claim('documents_update')::boolean, false) = true 
+    AND (groups_for_user(auth.uid()::text) && "writeGroups") = true
+  );
+
+CREATE POLICY "users with documents_delete can delete documents where they are in the writeGroups" ON "document"
+  FOR DELETE USING (
+    coalesce(get_my_claim('documents_delete')::boolean, false) = true 
+    AND (groups_for_user(auth.uid()::text) && "writeGroups") = true
+  );
 
 CREATE TYPE "documentTransactionType" AS ENUM (
   'Categorize',

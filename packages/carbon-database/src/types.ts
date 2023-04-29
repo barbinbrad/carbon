@@ -2165,7 +2165,7 @@ export interface Database {
       };
       groups_for_user: {
         Args: { uid: string };
-        Returns: Json;
+        Returns: string[];
       };
       groups_query: {
         Args: { _name: string; _uid: string };

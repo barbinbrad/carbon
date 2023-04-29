@@ -8,7 +8,7 @@ import NProgress from "nprogress";
 import { useEffect } from "react";
 import { IconSidebar, Topbar } from "~/components/Layout";
 import { getSupabase, SupabaseProvider } from "~/lib/supabase";
-import { getUserClaims, getCurrentUser } from "~/modules/users";
+import { getUserClaims, getUser, getUserGroups } from "~/modules/users";
 import {
   destroyAuthSession,
   getSessionFlash,
@@ -16,22 +16,21 @@ import {
 } from "~/services/session";
 
 export async function loader({ request }: LoaderArgs) {
-  const { accessToken, expiresAt, expiresIn } = await requireAuthSession(
-    request,
-    { verify: true }
-  );
+  const { accessToken, expiresAt, expiresIn, userId } =
+    await requireAuthSession(request, { verify: true });
 
   // share a client between requests
   const client = getSupabase(accessToken);
 
   // parallelize the requests
-  const [sessionFlash, claims, user] = await Promise.all([
+  const [sessionFlash, user, claims, groups] = await Promise.all([
     getSessionFlash(request),
+    getUser(client, userId),
     getUserClaims(request, client),
-    getCurrentUser(request, client),
+    getUserGroups(client, userId),
   ]);
 
-  if (!claims || !user) {
+  if (!claims || user.error || !user.data || !groups.data) {
     await destroyAuthSession(request);
   }
 
@@ -43,7 +42,8 @@ export async function loader({ request }: LoaderArgs) {
         expiresAt,
       },
 
-      user,
+      user: user.data,
+      groups: groups.data,
       permissions: claims?.permissions,
       role: claims?.role,
       result: sessionFlash?.result,

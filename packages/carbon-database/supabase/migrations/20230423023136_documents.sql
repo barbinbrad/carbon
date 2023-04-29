@@ -21,6 +21,32 @@ CREATE TABLE "document" (
 
 CREATE INDEX "document_visibility_idx" ON "document" USING GIN ("readGroups", "writeGroups");
 
+ALTER TABLE "document" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "users with documents_view can view documents where they are in the readGroups" ON "document" 
+  FOR SELECT USING (
+    coalesce(get_my_claim('documents_view')::boolean, false) = true 
+    AND (groups_for_user(auth.uid()::text) && "readGroups") = true
+  );
+
+CREATE POLICY "users with documents_create can create documents where they are in the writeGroups" ON "document" 
+  FOR INSERT WITH CHECK (
+    coalesce(get_my_claim('documents_create')::boolean, false) = true 
+    AND (groups_for_user(auth.uid()::text) && "writeGroups") = true
+  );
+
+CREATE POLICY "users with documents_update can update documents where they are in the writeGroups" ON "document"
+  FOR UPDATE USING (
+    coalesce(get_my_claim('documents_update')::boolean, false) = true 
+    AND (groups_for_user(auth.uid()::text) && "writeGroups") = true
+  );
+
+CREATE POLICY "users with documents_delete can delete documents where they are in the writeGroups" ON "document"
+  FOR DELETE USING (
+    coalesce(get_my_claim('documents_delete')::boolean, false) = true 
+    AND (groups_for_user(auth.uid()::text) && "writeGroups") = true
+  );
+
 CREATE TYPE "documentTransactionType" AS ENUM (
   'Categorize',
   'Comment',

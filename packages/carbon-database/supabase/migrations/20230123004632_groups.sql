@@ -254,10 +254,10 @@ AS $$
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION groups_for_user(uid text) RETURNS "jsonb" -- TODO: return setof string
+CREATE OR REPLACE FUNCTION groups_for_user(uid text) RETURNS TEXT[]
   LANGUAGE "plpgsql" SECURITY DEFINER SET search_path = public
   AS $$
-  DECLARE retval jsonb;
+  DECLARE retval TEXT[];
   BEGIN    
     WITH RECURSIVE "groupsForUser" AS (
     SELECT "groupId", "memberGroupId", "memberUserId" FROM "membership"
@@ -265,7 +265,7 @@ CREATE OR REPLACE FUNCTION groups_for_user(uid text) RETURNS "jsonb" -- TODO: re
     UNION
       SELECT g1."groupId", g1."memberGroupId", g1."memberUserId" FROM "membership" g1
       INNER JOIN "groupsForUser" g2 ON g2."groupId" = g1."memberGroupId"
-    ) SELECT coalesce(jsonb_agg("groupId"), '[]') INTO retval AS groups FROM "groupsForUser";
+    ) SELECT array_agg("groupId") INTO retval AS groups FROM "groupsForUser";
     RETURN retval;
   END;
 $$;

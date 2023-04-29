@@ -554,6 +554,13 @@ export async function getUserClaims(
   }
 }
 
+export async function getUserGroups(
+  client: SupabaseClient<Database>,
+  userId: string
+) {
+  return client.rpc("groups_for_user", { uid: userId });
+}
+
 export async function getUsers(client: SupabaseClient<Database>) {
   return client
     .from("user")

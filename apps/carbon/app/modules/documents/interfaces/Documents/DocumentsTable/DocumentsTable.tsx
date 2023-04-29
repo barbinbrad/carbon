@@ -3,11 +3,11 @@ import { HStack, Link, MenuItem, Text } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo } from "react";
-import { BsEyeFill, BsStar, BsTag } from "react-icons/bs";
+import { BsEyeFill, BsPencilSquare, BsStar, BsTag } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { VscCloudDownload, VscOpenPreview } from "react-icons/vsc";
 import { Avatar, Table } from "~/components";
-import { usePermissions, useUrlParams } from "~/hooks";
+import { usePermissions, useUrlParams, useUser } from "~/hooks";
 import type { Document } from "~/modules/documents";
 import DocumentIcon from "../DocumentIcon/DocumentIcon";
 
@@ -20,6 +20,7 @@ const DocumentsTable = memo(({ data, count }: DocumentsTableProps) => {
   const permissions = usePermissions();
   const navigate = useNavigate();
   const [params] = useUrlParams();
+  const user = useUser();
 
   const columns = useMemo<ColumnDef<Document>[]>(() => {
     return [
@@ -126,7 +127,6 @@ const DocumentsTable = memo(({ data, count }: DocumentsTableProps) => {
       <>
         <MenuItem
           icon={<VscOpenPreview />}
-          isDisabled={true}
           onClick={() =>
             navigate(`/x/documents/search/${row.id}/preview?${params}`)
           }
@@ -134,8 +134,11 @@ const DocumentsTable = memo(({ data, count }: DocumentsTableProps) => {
           Preview
         </MenuItem>
         <MenuItem
-          icon={<VscOpenPreview />}
-          isDisabled={true}
+          icon={<BsPencilSquare />}
+          isDisabled={
+            !permissions.can("update", "documents") ||
+            !row.writeGroups?.some((group) => user?.groups.includes(group))
+          }
           onClick={() =>
             navigate(`/x/documents/search/${row.id}/edit?${params}`)
           }
@@ -156,14 +159,17 @@ const DocumentsTable = memo(({ data, count }: DocumentsTableProps) => {
         </MenuItem>
         <MenuItem
           icon={<IoMdTrash />}
-          isDisabled={!permissions.can("delete", "documents")}
+          isDisabled={
+            !permissions.can("delete", "documents") ||
+            !row.writeGroups?.some((group) => user?.groups.includes(group))
+          }
           onClick={() => console.log(`delete ${row.id}`)}
         >
           Move to Trash
         </MenuItem>
       </>
     );
-  }, [navigate, params, permissions]);
+  }, [navigate, params, permissions, user?.groups]);
 
   return (
     <>

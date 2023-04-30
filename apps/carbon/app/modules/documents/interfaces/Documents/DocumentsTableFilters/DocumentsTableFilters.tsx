@@ -2,9 +2,15 @@ import { Select, useColor } from "@carbon/react";
 import { HStack } from "@chakra-ui/react";
 import { DebouncedInput } from "~/components/Search";
 import { usePermissions, useUrlParams } from "~/hooks";
+import type { DocumentLabel } from "~/modules/documents/types";
+import { mapRowsToOptions } from "~/utils/form";
 import DocumentCreateForm from "../DocumentCreateForm";
 
-const DocumentsTableFilters = () => {
+type DocumentTableFiltersProps = {
+  labels: DocumentLabel[];
+};
+
+const DocumentsTableFilters = ({ labels }: DocumentTableFiltersProps) => {
   const [params, setParams] = useUrlParams();
   const permissions = usePermissions();
 
@@ -19,6 +25,10 @@ const DocumentsTableFilters = () => {
       value: "document",
     },
     {
+      label: "Presentation",
+      value: "presentation",
+    },
+    {
       label: "Spreadsheet",
       value: "spreadsheet",
     },
@@ -30,7 +40,17 @@ const DocumentsTableFilters = () => {
       label: "Video",
       value: "video",
     },
+    {
+      label: "Audio",
+      value: "audio",
+    },
   ];
+
+  const labelOptions = mapRowsToOptions({
+    data: labels,
+    value: "label",
+    label: "label",
+  });
 
   return (
     <HStack
@@ -64,6 +84,25 @@ const DocumentsTableFilters = () => {
           minW={180}
           placeholder="Document Type"
         />
+        {labels.length > 0 && (
+          <Select
+            // @ts-ignore
+            size="sm"
+            value={labelOptions.filter(
+              (label) =>
+                params.getAll("labels").includes(label.value as string) ||
+                label.value === params.get("label")
+            )}
+            isClearable
+            options={labelOptions}
+            onChange={(selected) => {
+              setParams({ label: selected?.label });
+            }}
+            aria-label="Label"
+            minW={180}
+            placeholder="Label"
+          />
+        )}
       </HStack>
       <HStack spacing={2}>
         {permissions.can("create", "documents") && <DocumentCreateForm />}

@@ -1,10 +1,10 @@
+import { useColor } from "@carbon/react";
+import { Tr } from "@chakra-ui/react";
 import type { Row as RowType } from "@tanstack/react-table";
 import type { MutableRefObject } from "react";
 import { memo } from "react";
-import { Tr, spring } from "../Animations";
 import Cell from "../Cell";
 import type { EditableTableCellComponent, Position } from "../../types";
-import { useColor } from "@carbon/react";
 
 type RowProps<T> = {
   borderColor: string;
@@ -48,9 +48,6 @@ const Row = <T extends object>({
     <Tr
       key={row.id}
       bg={isFrozenColumn ? frozenBackgroundColor : undefined}
-      exit={{ opacity: 0 }}
-      layout
-      transition={spring}
       onClick={onRowClick}
       ref={rowRef}
       _hover={{

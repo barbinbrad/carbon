@@ -41,14 +41,14 @@ export async function getDocuments(
   args: GenericQueryFilters & {
     search: string | null;
     type: string | null;
-    label: string | string[] | null;
+    label: string | null;
   }
 ) {
   let query = client
-    .from("document")
-    .select(
-      "id, name, description, size, readGroups, writeGroups, createdBy!inner(fullName, avatarUrl), createdAt, updatedAt"
-    )
+    .from("documents_view")
+    .select("*", {
+      count: "exact",
+    })
     .eq("active", true);
 
   if (args?.search) {
@@ -64,8 +64,12 @@ export async function getDocuments(
 
     if (args.type === "document") {
       query = query.or(
-        "type.eq.pdf,type.eq.doc,type.eq.docx,type.eq.txt,type.eq.rtf,type.eq.ppt,type.eq.pptx"
+        "type.eq.pdf,type.eq.doc,type.eq.docx,type.eq.txt,type.eq.rtf"
       );
+    }
+
+    if (args.type === "presentation") {
+      query = query.or("type.eq.ppt,type.eq.pptx");
     }
 
     if (args.type === "spreadsheet") {
@@ -78,13 +82,26 @@ export async function getDocuments(
       );
     }
 
-    if (args.label) {
-      console.log(args.label);
+    if (args.type === "audio") {
+      query = query.or(
+        "type.eq.mp3,type.eq.wav,type.eq.wma,type.eq.aac,type.eq.ogg,type.eq.flac"
+      );
     }
+  }
+
+  if (args.label) {
+    query = query.contains("labels", [args.label]);
   }
 
   query = setGenericQueryFilters(query, args);
   return query;
+}
+
+export async function getDocumentLabels(
+  client: SupabaseClient<Database>,
+  userId: string
+) {
+  return client.from("documentLabel").select("label").eq("userId", userId);
 }
 
 export async function insertDocumentFavorite(

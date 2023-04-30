@@ -5,12 +5,12 @@ import {
   PopoverAnchor,
   PopoverBody,
   PopoverContent,
+  Td,
 } from "@chakra-ui/react";
 import type { Cell as CellType } from "@tanstack/react-table";
 import { flexRender } from "@tanstack/react-table";
 import { useMovingCellRef } from "../../hooks/useMovingCellRef";
 import { memo } from "react";
-import { Td, spring } from "../Animations";
 import type { EditableTableCellComponent } from "../../types";
 import { getAccessorKey } from "../../utils";
 
@@ -64,8 +64,6 @@ const Cell = <T extends object>({
       ref={ref}
       data-row={cell.row.index}
       data-column={columnIndex}
-      layout
-      transition={spring}
       tabIndex={tabIndex}
       bgColor={
         isEditMode && !hasEditableTableCellComponent ? "gray.50" : undefined

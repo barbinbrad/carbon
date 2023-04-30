@@ -1,15 +1,14 @@
 import { convertKbToString } from "@carbon/utils";
 import { HStack, Link, MenuItem, Text } from "@chakra-ui/react";
-import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo } from "react";
 import { BsEyeFill, BsPencilSquare, BsStar, BsTag } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { VscCloudDownload, VscOpenPreview } from "react-icons/vsc";
+import { VscOpenPreview } from "react-icons/vsc";
 import { Avatar, Table } from "~/components";
-import { usePermissions, useUrlParams, useUser } from "~/hooks";
 import type { Document } from "~/modules/documents";
 import DocumentIcon from "../DocumentIcon/DocumentIcon";
+import { useDocument } from "../useDocument";
 
 type DocumentsTableProps = {
   data: Document[];
@@ -17,10 +16,7 @@ type DocumentsTableProps = {
 };
 
 const DocumentsTable = memo(({ data, count }: DocumentsTableProps) => {
-  const permissions = usePermissions();
-  const navigate = useNavigate();
-  const [params] = useUrlParams();
-  const user = useUser();
+  const { canUpdate, canDelete, download, edit, preview } = useDocument();
 
   const columns = useMemo<ColumnDef<Document>[]>(() => {
     return [
@@ -34,28 +30,22 @@ const DocumentsTable = memo(({ data, count }: DocumentsTableProps) => {
           </HStack>
         ),
       },
-
       {
         accessorKey: "size",
         header: "Size",
         cell: ({ row }) => convertKbToString(row.original.size),
       },
       {
-        accessorKey: "createdBy",
+        accessorKey: "createdByFullName",
         header: "Created By",
         cell: ({ row }) => {
-          if (Array.isArray(row.original.createdBy)) {
-            throw new Error("Expected createdBy to be an object");
-          }
           return (
             <HStack>
               <Avatar
                 size="sm"
-                // @ts-ignore
-                path={row.original.createdBy?.avatarUrl ?? undefined}
+                path={row.original.createdByAvatar ?? undefined}
               />
-              {/* @ts-ignore */}
-              <Text>{row.original.createdBy?.fullName}</Text>
+              <Text>{row.original.createdByFullName}</Text>
             </HStack>
           );
         },
@@ -64,6 +54,22 @@ const DocumentsTable = memo(({ data, count }: DocumentsTableProps) => {
         accessorKey: "createdAt",
         header: "Created At",
         cell: (item) => item.getValue(),
+      },
+      {
+        accessorKey: "updatedByFullName",
+        header: "Updated By",
+        cell: ({ row }) => {
+          return row.original.updatedByFullName ? (
+            <HStack>
+              <Avatar
+                size="sm"
+                path={row.original.updatedByAvatar ?? undefined}
+              />
+              {/* @ts-ignore */}
+              <Text>{row.original.udpatedByFullName}</Text>
+            </HStack>
+          ) : null;
+        },
       },
       {
         accessorKey: "updatedAt",
@@ -85,21 +91,17 @@ const DocumentsTable = memo(({ data, count }: DocumentsTableProps) => {
       {
         label: "Add Labels",
         icon: <BsTag />,
+        // TODO - disabled can be a function of selected
+        disabled: true,
         onClick: (selected: Document[]) => {
           console.log("move to favorites", selected);
         },
       },
       {
-        label: "Export Files (zip)",
-        icon: <VscCloudDownload />,
-        onClick: (selected: Document[]) => {
-          console.log("export files", selected);
-        },
-      },
-      {
         label: "Move to Trash",
         icon: <IoMdTrash />,
-        disabled: !permissions.can("delete", "documents"),
+        // TODO - disabled can be a function of selected
+        disabled: true,
         onClick: (selected: Document[]) => {
           console.log("move to trash", selected);
         },
@@ -107,13 +109,14 @@ const DocumentsTable = memo(({ data, count }: DocumentsTableProps) => {
       {
         label: "Update Visibility",
         icon: <BsEyeFill />,
-        disabled: !permissions.can("update", "documents"),
+        // TODO - disabled can be a function of selected
+        disabled: true,
         onClick: (selected: Document[]) => {
           console.log("update visibility", selected);
         },
       },
     ];
-  }, [permissions]);
+  }, []);
 
   const defaultColumnVisibility = {
     createdAt: false,
@@ -125,30 +128,17 @@ const DocumentsTable = memo(({ data, count }: DocumentsTableProps) => {
     // eslint-disable-next-line react/display-name
     return (row: Document) => (
       <>
-        <MenuItem
-          icon={<VscOpenPreview />}
-          onClick={() =>
-            navigate(`/x/documents/search/${row.id}/preview?${params}`)
-          }
-        >
+        <MenuItem icon={<VscOpenPreview />} onClick={() => preview(row)}>
           Preview
         </MenuItem>
         <MenuItem
           icon={<BsPencilSquare />}
-          isDisabled={
-            !permissions.can("update", "documents") ||
-            !row.writeGroups?.some((group) => user?.groups.includes(group))
-          }
-          onClick={() =>
-            navigate(`/x/documents/search/${row.id}/edit?${params}`)
-          }
+          isDisabled={canUpdate(row)}
+          onClick={() => edit(row)}
         >
           Edit
         </MenuItem>
-        <MenuItem
-          icon={<VscOpenPreview />}
-          onClick={() => console.log(`download ${row.id}`)}
-        >
+        <MenuItem icon={<VscOpenPreview />} onClick={() => download(row)}>
           Download
         </MenuItem>
         <MenuItem
@@ -159,17 +149,14 @@ const DocumentsTable = memo(({ data, count }: DocumentsTableProps) => {
         </MenuItem>
         <MenuItem
           icon={<IoMdTrash />}
-          isDisabled={
-            !permissions.can("delete", "documents") ||
-            !row.writeGroups?.some((group) => user?.groups.includes(group))
-          }
+          isDisabled={canDelete(row)}
           onClick={() => console.log(`delete ${row.id}`)}
         >
           Move to Trash
         </MenuItem>
       </>
     );
-  }, [navigate, params, permissions, user?.groups]);
+  }, [canDelete, canUpdate, download, edit, preview]);
 
   return (
     <>

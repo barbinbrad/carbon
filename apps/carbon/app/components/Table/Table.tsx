@@ -1,16 +1,18 @@
 import { ActionMenu, ContextMenu, useColor, useEscape } from "@carbon/react";
 import { clip } from "@carbon/utils";
 import type { ThemeTypings } from "@chakra-ui/react";
-import { MenuList } from "@chakra-ui/react";
-import { VisuallyHidden } from "@chakra-ui/react";
-import { VStack } from "@chakra-ui/react";
 import {
   Box,
   Flex,
   Grid,
+  MenuList,
   Table as ChakraTable,
   Tbody,
   Thead,
+  Th,
+  Tr,
+  VisuallyHidden,
+  VStack,
   chakra,
 } from "@chakra-ui/react";
 import type {
@@ -24,16 +26,12 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { AnimatePresence } from "framer-motion";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
 import {
   TableHeader,
   IndeterminateCheckbox,
   Pagination,
-  Th,
-  Tr,
-  spring,
   usePagination,
   useSort,
   Row,
@@ -496,7 +494,6 @@ const Table = <T extends object>({
                               : undefined
                           }
                           cursor={sortable ? "pointer" : undefined}
-                          transition={spring}
                           colSpan={header.colSpan}
                           px={4}
                           py={2}
@@ -533,69 +530,67 @@ const Table = <T extends object>({
                 ))}
               </Thead>
               <Tbody>
-                <AnimatePresence>
-                  {rows.map((row) => {
-                    return renderContextMenu ? (
-                      <ContextMenu<HTMLTableRowElement>
-                        key={row.id}
-                        renderMenu={() => (
-                          <MenuList>{renderContextMenu(row.original)}</MenuList>
-                        )}
-                      >
-                        {(ref) => (
-                          <Row
-                            borderColor={borderColor}
-                            backgroundColor={rowBackground}
-                            editableComponents={editableComponents}
-                            isEditing={isEditing}
-                            isEditMode={editMode}
-                            isFrozenColumn
-                            isRowSelected={
-                              row.index in rowSelection &&
-                              !!rowSelection[row.index]
-                            }
-                            selectedCell={selectedCell}
-                            // @ts-ignore
-                            row={row}
-                            rowRef={ref}
-                            withColumnOrdering={withColumnOrdering}
-                            onCellClick={onCellClick}
-                            onCellUpdate={onCellEditUpdate}
-                            onRowClick={
-                              rowsAreClickable
-                                ? () => onRowClick(row.original)
-                                : undefined
-                            }
-                          />
-                        )}
-                      </ContextMenu>
-                    ) : (
-                      <Row
-                        key={row.id}
-                        borderColor={borderColor}
-                        backgroundColor={rowBackground}
-                        editableComponents={editableComponents}
-                        isEditing={isEditing}
-                        isEditMode={editMode}
-                        isFrozenColumn
-                        isRowSelected={
-                          row.index in rowSelection && !!rowSelection[row.index]
-                        }
-                        selectedCell={selectedCell}
-                        // @ts-ignore
-                        row={row}
-                        withColumnOrdering={withColumnOrdering}
-                        onCellClick={onCellClick}
-                        onCellUpdate={onCellEditUpdate}
-                        onRowClick={
-                          rowsAreClickable
-                            ? () => onRowClick(row.original)
-                            : undefined
-                        }
-                      />
-                    );
-                  })}
-                </AnimatePresence>
+                {rows.map((row) => {
+                  return renderContextMenu ? (
+                    <ContextMenu<HTMLTableRowElement>
+                      key={row.id}
+                      renderMenu={() => (
+                        <MenuList>{renderContextMenu(row.original)}</MenuList>
+                      )}
+                    >
+                      {(ref) => (
+                        <Row
+                          borderColor={borderColor}
+                          backgroundColor={rowBackground}
+                          editableComponents={editableComponents}
+                          isEditing={isEditing}
+                          isEditMode={editMode}
+                          isFrozenColumn
+                          isRowSelected={
+                            row.index in rowSelection &&
+                            !!rowSelection[row.index]
+                          }
+                          selectedCell={selectedCell}
+                          // @ts-ignore
+                          row={row}
+                          rowRef={ref}
+                          withColumnOrdering={withColumnOrdering}
+                          onCellClick={onCellClick}
+                          onCellUpdate={onCellEditUpdate}
+                          onRowClick={
+                            rowsAreClickable
+                              ? () => onRowClick(row.original)
+                              : undefined
+                          }
+                        />
+                      )}
+                    </ContextMenu>
+                  ) : (
+                    <Row
+                      key={row.id}
+                      borderColor={borderColor}
+                      backgroundColor={rowBackground}
+                      editableComponents={editableComponents}
+                      isEditing={isEditing}
+                      isEditMode={editMode}
+                      isFrozenColumn
+                      isRowSelected={
+                        row.index in rowSelection && !!rowSelection[row.index]
+                      }
+                      selectedCell={selectedCell}
+                      // @ts-ignore
+                      row={row}
+                      withColumnOrdering={withColumnOrdering}
+                      onCellClick={onCellClick}
+                      onCellUpdate={onCellEditUpdate}
+                      onRowClick={
+                        rowsAreClickable
+                          ? () => onRowClick(row.original)
+                          : undefined
+                      }
+                    />
+                  );
+                })}
               </Tbody>
             </ChakraTable>
           ) : null}
@@ -631,8 +626,6 @@ const Table = <T extends object>({
                         borderRightStyle="solid"
                         borderRightWidth={editMode ? 1 : undefined}
                         cursor={sortable ? "pointer" : undefined}
-                        layout
-                        transition={spring}
                         px={4}
                         py={3}
                         w={header.getSize()}
@@ -672,83 +665,80 @@ const Table = <T extends object>({
               ))}
             </Thead>
             <Tbody>
-              <AnimatePresence>
-                {rows.map((row) => {
-                  return renderContextMenu ? (
-                    <ContextMenu<HTMLTableRowElement>
-                      key={row.id}
-                      renderMenu={() => (
-                        <MenuList>{renderContextMenu(row.original)}</MenuList>
-                      )}
-                    >
-                      {(ref) => (
-                        <Row
-                          borderColor={borderColor}
-                          backgroundColor={rowBackground}
-                          // @ts-ignore
-                          editableComponents={editableComponents}
-                          isEditing={isEditing}
-                          isEditMode={editMode}
-                          isRowSelected={
-                            row.index in rowSelection &&
-                            !!rowSelection[row.index]
-                          }
-                          pinnedColumns={
-                            columnPinning?.left
-                              ? columnPinning.left?.length -
-                                (withSelectableRows ? 1 : 0)
-                              : 0
-                          }
-                          selectedCell={selectedCell}
-                          // @ts-ignore
-                          row={row}
-                          rowIsClickable={rowsAreClickable}
-                          rowRef={ref}
-                          withColumnOrdering={withColumnOrdering}
-                          onCellClick={onCellClick}
-                          onCellUpdate={onCellEditUpdate}
-                          onRowClick={
-                            rowsAreClickable
-                              ? () => onRowClick(row.original)
-                              : undefined
-                          }
-                        />
-                      )}
-                    </ContextMenu>
-                  ) : (
-                    <Row
-                      key={row.id}
-                      borderColor={borderColor}
-                      backgroundColor={rowBackground}
-                      // @ts-ignore
-                      editableComponents={editableComponents}
-                      isEditing={isEditing}
-                      isEditMode={editMode}
-                      isRowSelected={
-                        row.index in rowSelection && !!rowSelection[row.index]
-                      }
-                      pinnedColumns={
-                        columnPinning?.left
-                          ? columnPinning.left?.length -
-                            (withSelectableRows ? 1 : 0)
-                          : 0
-                      }
-                      selectedCell={selectedCell}
-                      // @ts-ignore
-                      row={row}
-                      rowIsClickable={rowsAreClickable}
-                      withColumnOrdering={withColumnOrdering}
-                      onCellClick={onCellClick}
-                      onCellUpdate={onCellEditUpdate}
-                      onRowClick={
-                        rowsAreClickable
-                          ? () => onRowClick(row.original)
-                          : undefined
-                      }
-                    />
-                  );
-                })}
-              </AnimatePresence>
+              {rows.map((row) => {
+                return renderContextMenu ? (
+                  <ContextMenu<HTMLTableRowElement>
+                    key={row.id}
+                    renderMenu={() => (
+                      <MenuList>{renderContextMenu(row.original)}</MenuList>
+                    )}
+                  >
+                    {(ref) => (
+                      <Row
+                        borderColor={borderColor}
+                        backgroundColor={rowBackground}
+                        // @ts-ignore
+                        editableComponents={editableComponents}
+                        isEditing={isEditing}
+                        isEditMode={editMode}
+                        isRowSelected={
+                          row.index in rowSelection && !!rowSelection[row.index]
+                        }
+                        pinnedColumns={
+                          columnPinning?.left
+                            ? columnPinning.left?.length -
+                              (withSelectableRows ? 1 : 0)
+                            : 0
+                        }
+                        selectedCell={selectedCell}
+                        // @ts-ignore
+                        row={row}
+                        rowIsClickable={rowsAreClickable}
+                        rowRef={ref}
+                        withColumnOrdering={withColumnOrdering}
+                        onCellClick={onCellClick}
+                        onCellUpdate={onCellEditUpdate}
+                        onRowClick={
+                          rowsAreClickable
+                            ? () => onRowClick(row.original)
+                            : undefined
+                        }
+                      />
+                    )}
+                  </ContextMenu>
+                ) : (
+                  <Row
+                    key={row.id}
+                    borderColor={borderColor}
+                    backgroundColor={rowBackground}
+                    // @ts-ignore
+                    editableComponents={editableComponents}
+                    isEditing={isEditing}
+                    isEditMode={editMode}
+                    isRowSelected={
+                      row.index in rowSelection && !!rowSelection[row.index]
+                    }
+                    pinnedColumns={
+                      columnPinning?.left
+                        ? columnPinning.left?.length -
+                          (withSelectableRows ? 1 : 0)
+                        : 0
+                    }
+                    selectedCell={selectedCell}
+                    // @ts-ignore
+                    row={row}
+                    rowIsClickable={rowsAreClickable}
+                    withColumnOrdering={withColumnOrdering}
+                    onCellClick={onCellClick}
+                    onCellUpdate={onCellEditUpdate}
+                    onRowClick={
+                      rowsAreClickable
+                        ? () => onRowClick(row.original)
+                        : undefined
+                    }
+                  />
+                );
+              })}
             </Tbody>
           </ChakraTable>
         </Grid>

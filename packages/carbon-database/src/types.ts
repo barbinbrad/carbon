@@ -2059,6 +2059,27 @@ export interface Database {
           abilityIds: string[] | null;
         };
       };
+      documents_view: {
+        Row: {
+          id: string | null;
+          path: string | null;
+          name: string | null;
+          description: string | null;
+          size: number | null;
+          type: string | null;
+          active: boolean | null;
+          readGroups: string[] | null;
+          writeGroups: string[] | null;
+          createdByAvatar: string | null;
+          createdByFullName: string | null;
+          createdAt: string | null;
+          updatedByAvatar: string | null;
+          updatedByFullName: string | null;
+          updatedAt: string | null;
+          labels: string[] | null;
+          favorite: boolean | null;
+        };
+      };
       group_member: {
         Row: {
           id: number | null;
@@ -2128,24 +2149,6 @@ export interface Database {
       delete_claim: {
         Args: { uid: string; claim: string };
         Returns: string;
-      };
-      documents_query: {
-        Args: { _uid: string };
-        Returns: {
-          id: string;
-          name: string;
-          description: string;
-          size: number;
-          type: string;
-          createdByAvatar: string;
-          createdByFullName: string;
-          createdAt: string;
-          updatedByAvatar: string;
-          updatedByFullName: string;
-          updatedAt: string;
-          labels: string[];
-          favorite: boolean;
-        }[];
       };
       get_claim: {
         Args: { uid: string; claim: string };

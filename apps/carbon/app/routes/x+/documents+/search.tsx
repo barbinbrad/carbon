@@ -6,6 +6,7 @@ import { Outlet, useLoaderData } from "@remix-run/react";
 import {
   DocumentsTable,
   DocumentsTableFilters,
+  getDocumentLabels,
   getDocuments,
 } from "~/modules/documents";
 import { requirePermissions } from "~/services/auth";
@@ -14,7 +15,7 @@ import { getGenericQueryFilters } from "~/utils/query";
 import { error } from "~/utils/result";
 
 export async function loader({ request }: LoaderArgs) {
-  const { client } = await requirePermissions(request, {
+  const { client, userId } = await requirePermissions(request, {
     view: "documents",
   });
 
@@ -22,18 +23,23 @@ export async function loader({ request }: LoaderArgs) {
   const searchParams = new URLSearchParams(url.search);
   const search = searchParams.get("search");
   const type = searchParams.get("type");
+  const label = searchParams.get("label");
 
   const { limit, offset, sorts, filters } =
     getGenericQueryFilters(searchParams);
 
-  const documents = await getDocuments(client, {
-    search,
-    type,
-    limit,
-    offset,
-    sorts,
-    filters,
-  });
+  const [documents, labels] = await Promise.all([
+    getDocuments(client, {
+      search,
+      type,
+      label,
+      limit,
+      offset,
+      sorts,
+      filters,
+    }),
+    getDocumentLabels(client, userId),
+  ]);
 
   if (documents.error) {
     redirect(
@@ -45,15 +51,16 @@ export async function loader({ request }: LoaderArgs) {
   return json({
     count: documents.count ?? 0,
     documents: documents.data ?? [],
+    labels: labels.data ?? [],
   });
 }
 
 export default function DocumentsSearchRoute() {
-  const { count, documents } = useLoaderData<typeof loader>();
-
+  const { count, documents, labels } = useLoaderData<typeof loader>();
+  console.log(documents);
   return (
     <VStack w="full" h="full" spacing={0}>
-      <DocumentsTableFilters />
+      <DocumentsTableFilters labels={labels} />
       <DocumentsTable data={documents} count={count} />
       <Outlet />
     </VStack>

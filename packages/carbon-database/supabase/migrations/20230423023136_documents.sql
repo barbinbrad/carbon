@@ -23,29 +23,81 @@ CREATE INDEX "document_visibility_idx" ON "document" USING GIN ("readGroups", "w
 
 ALTER TABLE "document" ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "users with documents_view can view documents where they are in the readGroups" ON "document" 
+CREATE POLICY "Users with documents_view can view documents where they are in the readGroups" ON "document" 
   FOR SELECT USING (
     coalesce(get_my_claim('documents_view')::boolean, false) = true 
     AND (groups_for_user(auth.uid()::text) && "readGroups") = true
   );
 
-CREATE POLICY "users with documents_create can create documents where they are in the writeGroups" ON "document" 
+CREATE POLICY "Users with documents_create can create documents where they are in the writeGroups" ON "document" 
   FOR INSERT WITH CHECK (
     coalesce(get_my_claim('documents_create')::boolean, false) = true 
     AND (groups_for_user(auth.uid()::text) && "writeGroups") = true
   );
 
-CREATE POLICY "users with documents_update can update documents where they are in the writeGroups" ON "document"
+CREATE POLICY "Users with documents_update can update documents where they are in the writeGroups" ON "document"
   FOR UPDATE USING (
     coalesce(get_my_claim('documents_update')::boolean, false) = true 
     AND (groups_for_user(auth.uid()::text) && "writeGroups") = true
   );
 
-CREATE POLICY "users with documents_delete can delete documents where they are in the writeGroups" ON "document"
+CREATE POLICY "Users with documents_delete can delete documents where they are in the writeGroups" ON "document"
   FOR DELETE USING (
     coalesce(get_my_claim('documents_delete')::boolean, false) = true 
     AND (groups_for_user(auth.uid()::text) && "writeGroups") = true
   );
+
+CREATE POLICY "Private buckets view requires ownership or document.readGroups" ON storage.objects 
+FOR SELECT USING (
+    bucket_id = 'private'
+    AND (auth.role() = 'authenticated')
+    AND coalesce(get_my_claim('documents_view')::boolean, false) = true
+    AND (
+        (storage.foldername(name))[1] = auth.uid()::text
+        OR storage.filename(name) IN (
+            SELECT "path" FROM public.document WHERE "readGroups" && groups_for_user(auth.uid()::text)
+        )
+    )
+);
+
+CREATE POLICY "Private buckets insert requires ownership or document.writeGroups" ON storage.objects 
+FOR INSERT WITH CHECK (
+    bucket_id = 'private'
+    AND (auth.role() = 'authenticated')
+    AND coalesce(get_my_claim('documents_create')::boolean, false) = true
+    AND (
+        (storage.foldername(name))[1] = auth.uid()::text
+        OR storage.filename(name) IN (
+            SELECT "path" FROM public.document WHERE "writeGroups" && groups_for_user(auth.uid()::text)
+        )
+    )
+);
+
+CREATE POLICY "Private buckets update requires ownership or document.writeGroups" ON storage.objects 
+FOR UPDATE USING (
+    bucket_id = 'private'
+    AND (auth.role() = 'authenticated')
+    AND coalesce(get_my_claim('documents_update')::boolean, false) = true
+    AND (
+        (storage.foldername(name))[1] = auth.uid()::text
+        OR storage.filename(name) IN (
+            SELECT "path" FROM public.document WHERE "readGroups" && groups_for_user(auth.uid()::text)
+        )
+    )
+);
+
+CREATE POLICY "Private buckets delete requires ownership or document.writeGroups" ON storage.objects 
+FOR DELETE USING (
+    bucket_id = 'private'
+    AND (auth.role() = 'authenticated')
+    AND coalesce(get_my_claim('documents_delete')::boolean, false) = true
+    AND (
+        (storage.foldername(name))[1] = auth.uid()::text
+        OR storage.filename(name) IN (
+            SELECT "path" FROM public.document WHERE "readGroups" && groups_for_user(auth.uid()::text)
+        )
+    )
+);
 
 CREATE TYPE "documentTransactionType" AS ENUM (
   'Categorize',
@@ -101,44 +153,25 @@ CREATE TABLE "documentLabel" (
 CREATE INDEX "documentLabels_userId_idx" ON "documentLabel" ("userId");
 CREATE INDEX "documentLabels_documentId_idx" ON "documentLabel" ("documentId");
 
-CREATE OR REPLACE FUNCTION documents_query(
-  _uid TEXT DEFAULT NULL
-) 
-RETURNS TABLE (
-  "id" TEXT,
-  "name" TEXT,
-  "description" TEXT,
-  "size" INTEGER,
-  "type" TEXT,
-  "createdByAvatar" TEXT,
-  "createdByFullName" TEXT,
-  "createdAt" TIMESTAMP WITH TIME ZONE,
-  "updatedByAvatar" TEXT,
-  "updatedByFullName" TEXT,
-  "updatedAt" TIMESTAMP WITH TIME ZONE,
-  "labels" TEXT[],
-  "favorite" BOOLEAN
-) LANGUAGE "plpgsql" SECURITY INVOKER SET search_path = public
-AS $$
-  BEGIN
-    RETURN QUERY
-SELECT
+CREATE VIEW "documents_view" AS 
+  SELECT
     d.id,
+    d.path,
     d.name,
     d.description,
     d.size,
     d.type,
-    u.avatar AS "createdByAvatar",
+    d.active,
+    d."readGroups",
+    d."writeGroups",
+    u."avatarUrl" AS "createdByAvatar",
     u."fullName" AS "createdByFullName",
     d."createdAt",
-    u2.avatar AS "updatedByAvatar",
+    u2."avatarUrl" AS "updatedByAvatar",
     u2."fullName" AS "updatedByFullName",
     d."updatedAt",
-    ARRAY(SELECT dl.label FROM "documentLabel" dl WHERE dl."documentId" = d.id AND dl."userId" = _uid) AS labels,
-    EXISTS(SELECT 1 FROM "documentFavorite" df WHERE df."documentId" = d.id AND df."userId" = _uid) AS favorite
+    ARRAY(SELECT dl.label FROM "documentLabel" dl WHERE dl."documentId" = d.id AND dl."userId" = auth.uid()::text) AS labels,
+    EXISTS(SELECT 1 FROM "documentFavorite" df WHERE df."documentId" = d.id AND df."userId" = auth.uid()::text) AS favorite
   FROM "document" d
-  INNER JOIN "user" u ON u.id = d."createdBy"
-  LEFT JOIN "user" u2 ON u2.id = d."updatedBy"
-  WHERE d.active = TRUE;
-END;
-$$;
+  LEFT JOIN "user" u ON u.id = d."createdBy"
+  LEFT JOIN "user" u2 ON u2.id = d."updatedBy";

@@ -9,6 +9,7 @@ import {
   getDocumentLabels,
   getDocuments,
 } from "~/modules/documents";
+import type { Document } from "~/modules/documents";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { getGenericQueryFilters } from "~/utils/query";
@@ -24,6 +25,11 @@ export async function loader({ request }: LoaderArgs) {
   const search = searchParams.get("search");
   const type = searchParams.get("type");
   const label = searchParams.get("label");
+  const filter = searchParams.get("filter");
+
+  const createdBy = filter === "my" ? userId : undefined;
+  const favorite = filter === "starred" ? true : undefined;
+  const active = filter === "trash" ? false : true;
 
   const { limit, offset, sorts, filters } =
     getGenericQueryFilters(searchParams);
@@ -33,6 +39,9 @@ export async function loader({ request }: LoaderArgs) {
       search,
       type,
       label,
+      favorite,
+      createdBy,
+      active,
       limit,
       offset,
       sorts,
@@ -50,14 +59,14 @@ export async function loader({ request }: LoaderArgs) {
 
   return json({
     count: documents.count ?? 0,
-    documents: documents.data ?? [],
+    documents: (documents.data ?? []) as Document[],
     labels: labels.data ?? [],
   });
 }
 
-export default function DocumentsSearchRoute() {
+export default function DocumentsAllRoute() {
   const { count, documents, labels } = useLoaderData<typeof loader>();
-  console.log(documents);
+
   return (
     <VStack w="full" h="full" spacing={0}>
       <DocumentsTableFilters labels={labels} />

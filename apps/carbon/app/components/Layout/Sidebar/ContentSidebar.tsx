@@ -1,11 +1,14 @@
 import { useColor } from "@carbon/react";
 import { Box, Button, VStack } from "@chakra-ui/react";
 import { Link, useMatches } from "@remix-run/react";
+import { useUrlParams } from "~/hooks";
 import type { Route } from "~/types";
 import { CollapsibleSidebar } from "./CollapsibleSidebar";
 
 const ContentSidebar = ({ links }: { links: Route[] }) => {
   const matches = useMatches();
+  const [params] = useUrlParams();
+  const filter = params.get("filter") ?? undefined;
   const borderColor = useColor("gray.200");
 
   return (
@@ -23,14 +26,17 @@ const ContentSidebar = ({ links }: { links: Route[] }) => {
               w="full"
             >
               {links.map((route) => {
-                const isActive = matches.some((match) =>
-                  match.pathname.includes(route.to)
+                const isActive = matches.some(
+                  (match) =>
+                    match.pathname.includes(route.to) && route.filter === filter
                 );
                 return (
                   <Button
                     key={route.name}
                     as={Link}
-                    to={route.to}
+                    to={
+                      route.to + (route.filter ? `?filter=${route.filter}` : "")
+                    }
                     leftIcon={route.icon}
                     variant={isActive ? "solid" : "ghost"}
                     border="none"

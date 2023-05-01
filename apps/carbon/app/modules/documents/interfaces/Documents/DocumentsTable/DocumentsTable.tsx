@@ -61,12 +61,8 @@ const DocumentsTable = memo(({ data, count }: DocumentsTableProps) => {
         cell: ({ row }) => {
           return row.original.updatedByFullName ? (
             <HStack>
-              <Avatar
-                size="sm"
-                path={row.original.updatedByAvatar ?? undefined}
-              />
-              {/* @ts-ignore */}
-              <Text>{row.original.udpatedByFullName}</Text>
+              <Avatar size="sm" path={row.original.updatedByAvatar ?? null} />
+              <Text>{row.original.updatedByFullName}</Text>
             </HStack>
           ) : null;
         },

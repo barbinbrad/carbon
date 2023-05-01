@@ -2070,9 +2070,11 @@ export interface Database {
           active: boolean | null;
           readGroups: string[] | null;
           writeGroups: string[] | null;
+          createdBy: string | null;
           createdByAvatar: string | null;
           createdByFullName: string | null;
           createdAt: string | null;
+          updatedBy: string | null;
           updatedByAvatar: string | null;
           updatedByFullName: string | null;
           updatedAt: string | null;

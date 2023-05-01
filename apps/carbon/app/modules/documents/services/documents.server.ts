@@ -42,6 +42,9 @@ export async function getDocuments(
     search: string | null;
     type: string | null;
     label: string | null;
+    favorite?: boolean;
+    createdBy?: string;
+    active: boolean;
   }
 ) {
   let query = client
@@ -49,7 +52,11 @@ export async function getDocuments(
     .select("*", {
       count: "exact",
     })
-    .eq("active", true);
+    .eq("active", args.active);
+
+  if (args?.favorite) {
+    query = query.eq("favorite", true);
+  }
 
   if (args?.search) {
     query = query.or(
@@ -91,6 +98,10 @@ export async function getDocuments(
 
   if (args.label) {
     query = query.contains("labels", [args.label]);
+  }
+
+  if (args.createdBy) {
+    query = query.eq("createdBy", args.createdBy);
   }
 
   query = setGenericQueryFilters(query, args);

@@ -54,10 +54,6 @@ export async function getDocuments(
     })
     .eq("active", args.active);
 
-  if (args?.favorite) {
-    query = query.eq("favorite", true);
-  }
-
   if (args?.search) {
     query = query.or(
       `name.ilike.%${args.search}%,description.ilike.%${args.search}%`
@@ -100,11 +96,16 @@ export async function getDocuments(
     query = query.contains("labels", [args.label]);
   }
 
+  if (args?.favorite) {
+    query = query.eq("favorite", true);
+  }
+
   if (args.createdBy) {
     query = query.eq("createdBy", args.createdBy);
   }
 
   query = setGenericQueryFilters(query, args);
+
   return query;
 }
 

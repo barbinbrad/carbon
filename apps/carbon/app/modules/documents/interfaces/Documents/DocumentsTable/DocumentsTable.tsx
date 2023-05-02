@@ -1,11 +1,27 @@
 import { convertKbToString } from "@carbon/utils";
-import { HStack, Link, MenuItem, Text } from "@chakra-ui/react";
+import {
+  Box,
+  HStack,
+  Icon,
+  Link,
+  MenuItem,
+  Tag,
+  TagLabel,
+  Text,
+} from "@chakra-ui/react";
 import type { ColumnDef } from "@tanstack/react-table";
-import { memo, useMemo } from "react";
-import { BsEyeFill, BsPencilSquare, BsStar, BsTag } from "react-icons/bs";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import {
+  BsEyeFill,
+  BsPencilSquare,
+  BsStar,
+  BsStarFill,
+  BsTag,
+} from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { VscOpenPreview } from "react-icons/vsc";
 import { Avatar, Table } from "~/components";
+import { useUrlParams } from "~/hooks";
 import type { Document } from "~/modules/documents";
 import DocumentIcon from "../DocumentIcon/DocumentIcon";
 import { useDocument } from "../useDocument";
@@ -16,7 +32,38 @@ type DocumentsTableProps = {
 };
 
 const DocumentsTable = memo(({ data, count }: DocumentsTableProps) => {
-  const { canUpdate, canDelete, download, edit, preview } = useDocument();
+  const [params] = useUrlParams();
+  const filter = params.get("filter");
+  // put rows in state for use with optimistic ui updates
+  const [rows, setRows] = useState<Document[]>(data);
+  // we have to do this useEffect silliness since we're putitng rows
+  // in state for optimistic ui updates
+  useEffect(() => {
+    setRows(data);
+  }, [data]);
+
+  const { canUpdate, canDelete, download, edit, favorite, preview, setLabel } =
+    useDocument();
+
+  const onFavorite = useCallback(
+    async (row: Document) => {
+      // optimistically update the UI and then make the mutation
+      setRows((prev) => {
+        const index = prev.findIndex((item) => item.id === row.id);
+        const updated = [...prev];
+        updated[index] = {
+          ...updated[index],
+          favorite: !updated[index].favorite,
+        };
+        return filter === "starred"
+          ? updated.filter((item) => item.favorite === true)
+          : updated;
+      });
+      // mutate the database
+      await favorite(row);
+    },
+    [favorite, filter]
+  );
 
   const columns = useMemo<ColumnDef<Document>[]>(() => {
     return [
@@ -25,8 +72,38 @@ const DocumentsTable = memo(({ data, count }: DocumentsTableProps) => {
         header: "Name",
         cell: ({ row }) => (
           <HStack>
+            <Box
+              color={row.original.favorite ? "yellow.400" : "gray.300"}
+              cursor="pointer"
+            >
+              <Icon
+                h={4}
+                w={4}
+                as={row.original.favorite ? BsStarFill : BsStar}
+                onClick={() => onFavorite(row.original)}
+              />
+            </Box>
             <DocumentIcon fileName={row.original.name} />
             <Link>{row.original.name}</Link>
+          </HStack>
+        ),
+      },
+      {
+        id: "labels",
+        header: "Labels",
+        cell: ({ row }) => (
+          <HStack>
+            {row.original.labels.map((label) => (
+              <Tag
+                key={label}
+                variant="solid"
+                colorScheme="blackAlpha"
+                cursor="pointer"
+                onClick={() => setLabel(label)}
+              >
+                <TagLabel>{label}</TagLabel>
+              </Tag>
+            ))}
           </HStack>
         ),
       },
@@ -73,7 +150,7 @@ const DocumentsTable = memo(({ data, count }: DocumentsTableProps) => {
         cell: (item) => item.getValue(),
       },
     ];
-  }, []);
+  }, [onFavorite, setLabel]);
 
   const actions = useMemo(() => {
     return [
@@ -139,7 +216,9 @@ const DocumentsTable = memo(({ data, count }: DocumentsTableProps) => {
         </MenuItem>
         <MenuItem
           icon={<BsStar />}
-          onClick={() => console.log(`favorite ${row.id}`)}
+          onClick={() => {
+            onFavorite(row);
+          }}
         >
           Favorite
         </MenuItem>
@@ -152,7 +231,7 @@ const DocumentsTable = memo(({ data, count }: DocumentsTableProps) => {
         </MenuItem>
       </>
     );
-  }, [canDelete, canUpdate, download, edit, preview]);
+  }, [canDelete, canUpdate, download, edit, onFavorite, preview]);
 
   return (
     <>
@@ -160,7 +239,7 @@ const DocumentsTable = memo(({ data, count }: DocumentsTableProps) => {
         actions={actions}
         count={count}
         columns={columns}
-        data={data}
+        data={rows}
         defaultColumnVisibility={defaultColumnVisibility}
         withColumnOrdering
         withFilters

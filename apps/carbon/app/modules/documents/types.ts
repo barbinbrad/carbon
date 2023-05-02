@@ -5,6 +5,8 @@ export type Document = Omit<
   Database["public"]["Tables"]["document"]["Row"],
   "createdBy" | "updatedBy"
 > & {
+  favorite: boolean;
+  labels: string[];
   createdByAvatar: string;
   createdByFullName: string;
   updatedByAvatar?: string | null;

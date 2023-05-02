@@ -10,7 +10,7 @@ export const useDocument = () => {
   const notification = useNotification();
   const permissions = usePermissions();
   const { supabase } = useSupabase();
-  const [params] = useUrlParams();
+  const [params, setParams] = useUrlParams();
   const user = useUser();
 
   const canDelete = useCallback(
@@ -63,10 +63,46 @@ export const useDocument = () => {
     [navigate, params]
   );
 
+  const favorite = useCallback(
+    (document: Document) => {
+      if (document.favorite) {
+        return supabase
+          ?.from("documentFavorite")
+          .delete()
+          .eq("documentId", document.id)
+          .eq("userId", user?.id);
+      } else {
+        return supabase
+          ?.from("documentFavorite")
+          .insert({ documentId: document.id, userId: user?.id });
+      }
+    },
+    [supabase, user?.id]
+  );
+
   const preview = useCallback(
     (document: Document) =>
       navigate(`/x/documents/search/${document.id}/preview?${params}`),
     [navigate, params]
+  );
+
+  const removeLabel = useCallback(
+    (document: Document, label: string) => {
+      return supabase
+        ?.from("documentLabel")
+        .delete()
+        .eq("documentId", document.id)
+        .eq("userId", user?.id)
+        .eq("label", label);
+    },
+    [supabase, user?.id]
+  );
+
+  const setLabel = useCallback(
+    (label: string) => {
+      setParams({ label });
+    },
+    [setParams]
   );
 
   return {
@@ -74,6 +110,9 @@ export const useDocument = () => {
     canUpdate,
     download,
     edit,
+    favorite,
     preview,
+    removeLabel,
+    setLabel,
   };
 };

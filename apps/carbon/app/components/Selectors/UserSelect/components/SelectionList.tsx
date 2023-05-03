@@ -17,7 +17,13 @@ import { isGroup } from "../useUserSelect";
 
 const SelectionList = () => {
   const {
-    innerProps: { checkedSelections, readOnly, selectionsMaxHeight, width },
+    innerProps: {
+      alwaysSelected,
+      checkedSelections,
+      readOnly,
+      selectionsMaxHeight,
+      width,
+    },
     instanceId,
     selectionItemsById,
     onDeselect,
@@ -102,7 +108,7 @@ const SelectionList = () => {
                 </Tooltip>
               )}
 
-              {!readOnly && (
+              {!readOnly && !alwaysSelected.includes(item.id) && (
                 <Tooltip label="Remove">
                   <IconButton
                     aria-label={`Remove ${item.label}`}

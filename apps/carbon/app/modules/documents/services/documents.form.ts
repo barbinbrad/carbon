@@ -5,11 +5,10 @@ import { zfd } from "zod-form-data";
 export const documentValidator = withZod(
   z.object({
     id: zfd.text(z.string().optional()),
-    path: z.string(),
     name: z.string().min(3).max(50),
+    type: z.string().optional(),
     description: z.string().optional(),
-    size: z.number().positive(),
-    url: zfd.text(z.string().url().optional()),
+    labels: z.array(z.string().min(1).max(50)).optional(),
     readGroups: z
       .array(z.string().min(36, { message: "Invalid selection" }))
       .min(1, { message: "Read permissions are required" }),

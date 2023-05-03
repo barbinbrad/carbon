@@ -152,6 +152,7 @@ CREATE TABLE "documentLabel" (
 
 CREATE INDEX "documentLabels_userId_idx" ON "documentLabel" ("userId");
 CREATE INDEX "documentLabels_documentId_idx" ON "documentLabel" ("documentId");
+CREATE INDEX "documentLabels_label_idx" ON "documentLabel" ("label");
 
 CREATE VIEW "documents_view" AS 
   SELECT

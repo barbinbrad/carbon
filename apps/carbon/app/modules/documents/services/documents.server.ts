@@ -36,6 +36,17 @@ export async function deleteDocumentLabel(
     .eq("label", label);
 }
 
+export async function getDocument(
+  client: SupabaseClient<Database>,
+  documentId: string
+) {
+  return client
+    .from("documents_view")
+    .select("*")
+    .eq("id", documentId)
+    .single();
+}
+
 export async function getDocuments(
   client: SupabaseClient<Database>,
   args: GenericQueryFilters & {
@@ -137,6 +148,8 @@ export async function upsertDocument(
   client: SupabaseClient<Database>,
   document:
     | (Omit<TypeOfValidator<typeof documentValidator>, "id"> & {
+        path: string;
+        size: number;
         createdBy: string;
       })
     | (TypeOfValidator<typeof documentValidator> & {

@@ -1,10 +1,12 @@
 import type { InputProps } from "@chakra-ui/react";
-import { FormHelperText } from "@chakra-ui/react";
 import {
   FormControl,
   FormErrorMessage,
+  FormHelperText,
   FormLabel,
   Input as ChakraInput,
+  InputGroup,
+  InputRightAddon,
 } from "@chakra-ui/react";
 import { forwardRef } from "react";
 import { useField } from "remix-validated-form";
@@ -14,22 +16,26 @@ type FormInputProps = InputProps & {
   label?: string;
   isRequired?: boolean;
   helperText?: string;
+  suffix?: string;
 };
 
 const Input = forwardRef<HTMLInputElement, FormInputProps>(
-  ({ name, label, isRequired, helperText, ...rest }, ref) => {
+  ({ name, label, isRequired, helperText, suffix, ...rest }, ref) => {
     const { getInputProps, error } = useField(name);
 
     return (
       <FormControl isInvalid={!!error} isRequired={isRequired}>
         {label && <FormLabel htmlFor={name}>{label}</FormLabel>}
-        <ChakraInput
-          ref={ref}
-          {...getInputProps({
-            id: name,
-            ...rest,
-          })}
-        />
+        <InputGroup>
+          <ChakraInput
+            ref={ref}
+            {...getInputProps({
+              id: name,
+              ...rest,
+            })}
+          />
+          {suffix && <InputRightAddon children={suffix} />}
+        </InputGroup>
         {helperText && <FormHelperText>{helperText}</FormHelperText>}
         {error && <FormErrorMessage>{error}</FormErrorMessage>}
       </FormControl>

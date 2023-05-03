@@ -17,6 +17,7 @@ import type {
 } from "./types";
 
 const defaultProps = {
+  alwaysSelected: [],
   accessibilityLabel: "User selector",
   checkedSelections: false,
   disabled: false,

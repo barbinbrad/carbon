@@ -20,6 +20,7 @@ export type ComboBoxRefs = {
 };
 
 export interface UserSelectProps {
+  alwaysSelected?: string[];
   accessibilityLabel?: string;
   checkedSelections?: boolean;
   disabled?: boolean;

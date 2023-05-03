@@ -51,6 +51,7 @@ const MoreIcon = ({ isExpanded }: { isExpanded: boolean }) => (
 
 const Group = ({ group }: { group: OptionGroup }) => {
   const {
+    innerProps: { alwaysSelected },
     onGroupCollapse,
     onGroupExpand,
     focusedId,
@@ -98,7 +99,11 @@ const Group = ({ group }: { group: OptionGroup }) => {
                 isDisabled={isDisabled}
                 isFocused={isFocused}
                 isSelected={isSelected}
-                onClick={() => (isSelected ? onDeselect(item) : onSelect(item))}
+                onClick={
+                  !alwaysSelected.includes(item.id)
+                    ? () => (isSelected ? onDeselect(item) : onSelect(item))
+                    : undefined
+                }
               />
             );
           })}
@@ -125,7 +130,7 @@ const Option = ({
   isDisabled: boolean;
   isFocused: boolean;
   isSelected: boolean;
-  onClick: () => void;
+  onClick?: () => void;
 }) => {
   const sx = useOptionStyles(isFocused, isSelected, isDisabled);
   const name = item.label;

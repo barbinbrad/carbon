@@ -7,6 +7,7 @@ import {
   DocumentForm,
   documentValidator,
   getDocument,
+  upsertDocument,
 } from "~/modules/documents";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
@@ -37,9 +38,9 @@ export async function loader({ request, params }: LoaderArgs) {
 
 export async function action({ request }: ActionArgs) {
   assertIsPost(request);
-  // const { client } = await requirePermissions(request, {
-  //   update: "documents",
-  // });
+  const { client, userId } = await requirePermissions(request, {
+    update: "documents",
+  });
 
   const validation = await documentValidator.validate(await request.formData());
 
@@ -47,7 +48,23 @@ export async function action({ request }: ActionArgs) {
     return validationError(validation.error);
   }
 
-  console.log(validation.data);
+  const { type, ...document } = validation.data;
+
+  const updateDocument = await upsertDocument(client, {
+    ...document,
+    name: `${document.name}.${type}`,
+    updatedBy: userId,
+  });
+
+  if (updateDocument.error) {
+    return redirect(
+      "/x/documents/search",
+      await flash(
+        request,
+        error(updateDocument.error, "Failed to update document")
+      )
+    );
+  }
 
   return redirect(
     "/x/documents/search",

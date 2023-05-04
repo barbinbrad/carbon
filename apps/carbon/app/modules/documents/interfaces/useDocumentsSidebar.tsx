@@ -11,25 +11,25 @@ const documentsRoutes: Route[] = [
   {
     name: "My Documents",
     to: "/x/documents/search",
-    filter: "my",
+    q: "my",
     icon: <BsFolderPlus />,
   },
   {
     name: "Recent",
     to: "/x/documents/search",
-    filter: "recent",
+    q: "recent",
     icon: <BsClock />,
   },
   {
     name: "Starred",
     to: "/x/documents/search",
-    filter: "starred",
+    q: "starred",
     icon: <BsStar />,
   },
   {
     name: "Trash",
     to: "/x/documents/search",
-    filter: "trash",
+    q: "trash",
     icon: <IoMdTrash />,
   },
 ];

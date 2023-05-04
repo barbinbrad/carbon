@@ -25,7 +25,7 @@ export async function loader({ request }: LoaderArgs) {
   const search = searchParams.get("search");
   const type = searchParams.get("type");
   const label = searchParams.get("label");
-  const filter = searchParams.get("filter");
+  const filter = searchParams.get("q");
 
   const createdBy = filter === "my" ? userId : undefined;
   const favorite = filter === "starred" ? true : undefined;

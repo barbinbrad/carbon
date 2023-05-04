@@ -159,5 +159,11 @@ export async function upsertDocument(
   if ("createdBy" in document) {
     return client.from("document").insert(document).select("id");
   }
-  return client.from("document").update(document).eq("id", document.id);
+  return client
+    .from("document")
+    .update({
+      ...document,
+      updatedAt: new Date().toISOString(),
+    })
+    .eq("id", document.id);
 }

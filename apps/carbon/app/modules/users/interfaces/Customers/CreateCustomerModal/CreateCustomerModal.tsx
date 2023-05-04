@@ -76,32 +76,36 @@ const CreateCustomerModal = () => {
                   setContact(newValue?.contact);
                 }}
               />
-              <FormControl>
-                <FormLabel>Email</FormLabel>
-                <Input
-                  isReadOnly
-                  value={contact?.email ?? ""}
-                  variant="filled"
-                />
-              </FormControl>
-              <Grid templateColumns="1fr 1fr" gap={4}>
-                <FormControl>
-                  <FormLabel>First Name</FormLabel>
-                  <Input
-                    isReadOnly
-                    value={contact?.firstName ?? ""}
-                    variant="filled"
-                  />
-                </FormControl>
-                <FormControl>
-                  <FormLabel>Last Name</FormLabel>
-                  <Input
-                    isReadOnly
-                    value={contact?.lastName ?? ""}
-                    variant="filled"
-                  />
-                </FormControl>
-              </Grid>
+              {contact && (
+                <>
+                  <FormControl>
+                    <FormLabel>Email</FormLabel>
+                    <Input
+                      isReadOnly
+                      value={contact?.email ?? ""}
+                      variant="filled"
+                    />
+                  </FormControl>
+                  <Grid templateColumns="1fr 1fr" gap={4}>
+                    <FormControl>
+                      <FormLabel>First Name</FormLabel>
+                      <Input
+                        isReadOnly
+                        value={contact?.firstName ?? ""}
+                        variant="filled"
+                      />
+                    </FormControl>
+                    <FormControl>
+                      <FormLabel>Last Name</FormLabel>
+                      <Input
+                        isReadOnly
+                        value={contact?.lastName ?? ""}
+                        variant="filled"
+                      />
+                    </FormControl>
+                  </Grid>
+                </>
+              )}
 
               <HStack spacing={4}>
                 <Submit>Create User</Submit>

@@ -8,7 +8,7 @@ import { CollapsibleSidebar } from "./CollapsibleSidebar";
 const ContentSidebar = ({ links }: { links: Route[] }) => {
   const matches = useMatches();
   const [params] = useUrlParams();
-  const filter = params.get("filter") ?? undefined;
+  const filter = params.get("q") ?? undefined;
   const borderColor = useColor("gray.200");
 
   return (
@@ -28,15 +28,13 @@ const ContentSidebar = ({ links }: { links: Route[] }) => {
               {links.map((route) => {
                 const isActive = matches.some(
                   (match) =>
-                    match.pathname.includes(route.to) && route.filter === filter
+                    match.pathname.includes(route.to) && route.q === filter
                 );
                 return (
                   <Button
                     key={route.name}
                     as={Link}
-                    to={
-                      route.to + (route.filter ? `?filter=${route.filter}` : "")
-                    }
+                    to={route.to + (route.q ? `?q=${route.q}` : "")}
                     leftIcon={route.icon}
                     variant={isActive ? "solid" : "ghost"}
                     border="none"

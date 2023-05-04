@@ -40,7 +40,7 @@ export type Route = {
   name: string;
   to: string;
   icon?: any;
-  filter?: string;
+  q?: string;
 };
 
 export type RouteGroup = {

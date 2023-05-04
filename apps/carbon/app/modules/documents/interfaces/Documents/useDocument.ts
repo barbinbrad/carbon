@@ -80,10 +80,22 @@ export const useDocument = () => {
     [supabase, user?.id]
   );
 
-  const preview = useCallback(
-    (document: Document) =>
-      navigate(`/x/documents/search/${document.id}/preview?${params}`),
-    [navigate, params]
+  const isImage = useCallback((fileType: string) => {
+    return ["png", "jpg", "jpeg", "gif", "svg"].includes(fileType);
+  }, []);
+
+  const makePreview = useCallback(
+    async (doc: Document) => {
+      const result = await supabase?.storage.from("private").download(doc.path);
+
+      if (!result || result.error) {
+        notification.error(result?.error?.message || "Error previewing file");
+        return null;
+      }
+
+      return window.URL.createObjectURL(result.data);
+    },
+    [notification, supabase]
   );
 
   const removeLabel = useCallback(
@@ -111,7 +123,8 @@ export const useDocument = () => {
     download,
     edit,
     favorite,
-    preview,
+    isImage,
+    makePreview,
     removeLabel,
     setLabel,
   };

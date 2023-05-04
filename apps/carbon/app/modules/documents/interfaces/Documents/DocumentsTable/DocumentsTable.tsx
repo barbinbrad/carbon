@@ -3,8 +3,15 @@ import {
   Box,
   HStack,
   Icon,
+  Image,
   Link,
   MenuItem,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
   Tag,
   TagLabel,
   Text,
@@ -42,8 +49,18 @@ const DocumentsTable = memo(({ data, count }: DocumentsTableProps) => {
     setRows(data);
   }, [data]);
 
-  const { canUpdate, canDelete, download, edit, favorite, preview, setLabel } =
-    useDocument();
+  const {
+    canUpdate,
+    canDelete,
+    download,
+    edit,
+    favorite,
+    isImage,
+    makePreview,
+    setLabel,
+  } = useDocument();
+
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   const onFavorite = useCallback(
     async (row: Document) => {
@@ -84,7 +101,9 @@ const DocumentsTable = memo(({ data, count }: DocumentsTableProps) => {
               />
             </Box>
             <DocumentIcon fileName={row.original.name} />
-            <Link>{row.original.name}</Link>
+            <Link onClick={() => download(row.original)}>
+              {row.original.name}
+            </Link>
           </HStack>
         ),
       },
@@ -150,7 +169,7 @@ const DocumentsTable = memo(({ data, count }: DocumentsTableProps) => {
         cell: (item) => item.getValue(),
       },
     ];
-  }, [onFavorite, setLabel]);
+  }, [download, onFavorite, setLabel]);
 
   const actions = useMemo(() => {
     return [
@@ -201,9 +220,14 @@ const DocumentsTable = memo(({ data, count }: DocumentsTableProps) => {
     // eslint-disable-next-line react/display-name
     return (row: Document) => (
       <>
-        <MenuItem icon={<VscOpenPreview />} onClick={() => preview(row)}>
+        <MenuItem
+          icon={<VscOpenPreview />}
+          isDisabled={!row.type || !isImage(row.type)}
+          onClick={async () => setPreviewImage(await makePreview(row))}
+        >
           Preview
         </MenuItem>
+
         <MenuItem
           icon={<BsPencilSquare />}
           isDisabled={canUpdate(row)}
@@ -231,7 +255,7 @@ const DocumentsTable = memo(({ data, count }: DocumentsTableProps) => {
         </MenuItem>
       </>
     );
-  }, [canDelete, canUpdate, download, edit, onFavorite, preview]);
+  }, [canDelete, canUpdate, download, edit, isImage, makePreview, onFavorite]);
 
   return (
     <>
@@ -248,6 +272,19 @@ const DocumentsTable = memo(({ data, count }: DocumentsTableProps) => {
         withSelectableRows
         renderContextMenu={renderContextMenu}
       />
+
+      {previewImage && (
+        <Modal isOpen onClose={() => setPreviewImage(null)} size="full">
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader />
+            <ModalCloseButton />
+            <ModalBody>
+              <Image src={previewImage ?? ""} />
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+      )}
     </>
   );
 });

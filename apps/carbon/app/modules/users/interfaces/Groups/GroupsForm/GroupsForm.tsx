@@ -26,7 +26,8 @@ const GroupForm = ({ initialValues }: GroupFormProps) => {
   const navigate = useNavigate();
   const onClose = () => navigate(-1);
 
-  const isEditing = initialValues.id !== undefined;
+  const isEditing = !!initialValues.id;
+
   const isDisabled = isEditing
     ? !permissions.can("update", "users")
     : !permissions.can("create", "users");
@@ -55,6 +56,7 @@ const GroupForm = ({ initialValues }: GroupFormProps) => {
                 name="selections"
                 selectionsMaxHeight={"calc(100vh - 330px)"}
                 label="Group Members"
+                verbose
               />
             </VStack>
           </DrawerBody>

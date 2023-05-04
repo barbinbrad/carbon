@@ -16,17 +16,27 @@ export type UsersProps = {
   name: string;
   label?: string;
   helperText?: string;
+  verbose?: boolean; // prepends "user_" or "group_" to the value
 } & UserSelectProps;
 
-const Users = ({ name, label, type, helperText, ...props }: UsersProps) => {
+const Users = ({
+  name,
+  label,
+  type,
+  helperText,
+  verbose = false,
+  ...props
+}: UsersProps) => {
   const { error, defaultValue, validate } = useField(name);
   const [selections, setSelections] = useState<string[]>(defaultValue);
 
   const handleChange = (items: IndividualOrGroup[]) => {
     setSelections(
-      items.map((item) =>
-        "users" in item ? `group_${item.id}` : `user_${item.id}`
-      )
+      verbose
+        ? items.map((item) =>
+            "users" in item ? `group_${item.id}` : `user_${item.id}`
+          )
+        : items.map((item) => item.id)
     );
     validate();
   };

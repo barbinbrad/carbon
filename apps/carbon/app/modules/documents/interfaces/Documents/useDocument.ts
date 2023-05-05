@@ -59,7 +59,7 @@ export const useDocument = () => {
 
   const edit = useCallback(
     (document: Document) =>
-      navigate(`/x/documents/search/${document.id}/edit?${params}`),
+      navigate(`/x/documents/search/${document.id}?${params}`),
     [navigate, params]
   );
 

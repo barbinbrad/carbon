@@ -2059,6 +2059,12 @@ export interface Database {
           abilityIds: string[] | null;
         };
       };
+      documents_labels_view: {
+        Row: {
+          label: string | null;
+          userId: string | null;
+        };
+      };
       documents_view: {
         Row: {
           id: string | null;

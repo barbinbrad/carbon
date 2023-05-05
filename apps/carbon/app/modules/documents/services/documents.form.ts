@@ -17,3 +17,10 @@ export const documentValidator = withZod(
       .min(1, { message: "Write permissions are required" }),
   })
 );
+
+export const documentLabelsValidator = withZod(
+  z.object({
+    documentId: z.string().min(20),
+    labels: z.array(z.string().min(1).max(50)).optional(),
+  })
+);

@@ -34,7 +34,7 @@ const DocumentForm = ({ initialValues, ownerId }: DocumentFormProps) => {
       <ValidatedForm
         validator={documentValidator}
         method="post"
-        action={`/x/documents/search/${initialValues.id}/edit`}
+        action={`/x/documents/search/${initialValues.id}`}
         defaultValues={initialValues}
       >
         <DrawerOverlay />

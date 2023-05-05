@@ -50,6 +50,8 @@ export async function loader({ request }: LoaderArgs) {
     getDocumentLabels(client, userId),
   ]);
 
+  console.log(labels);
+
   if (documents.error) {
     redirect(
       "/x",
@@ -70,7 +72,7 @@ export default function DocumentsAllRoute() {
   return (
     <VStack w="full" h="full" spacing={0}>
       <DocumentsTableFilters labels={labels} />
-      <DocumentsTable data={documents} count={count} />
+      <DocumentsTable data={documents} count={count} labels={labels} />
       <Outlet />
     </VStack>
   );

@@ -17,7 +17,7 @@ export type SelectProps = {
   isLoading?: boolean;
   placeholder?: string;
   onChange?: (
-    newValue: { value: string | number; label: string } | null
+    newValue: { value: string | number; label: string }[] | null
   ) => void;
   onUsingCreatedChanged?: (usingCreated: boolean) => void;
 };
@@ -34,49 +34,66 @@ const Select = ({
   onUsingCreatedChanged,
   ...props
 }: SelectProps) => {
-  const { getInputProps, error } = useField(name);
-  const [value, setValue] = useControlField<string>(name);
+  const { error } = useField(name);
+  const [value, setValue] = useControlField<string[]>(name);
 
   const handleChange = (
-    newValue: { value: string | number; label: string } | null
+    newValue: { value: string | number; label: string }[] | null
   ) => {
-    setValue(newValue?.value.toString() ?? "");
+    console.log(newValue);
+    setValue(newValue?.map((option) => option.value.toString()) ?? []);
     onChange?.(newValue);
     onUsingCreatedChanged?.(false);
   };
 
   const handleCreate = (inputValue: string) => {
-    setValue(inputValue);
-    onChange?.({ value: inputValue, label: inputValue });
+    setValue([...value, inputValue]);
+    onChange?.(
+      value.map((value) => ({
+        value,
+        label: value,
+      }))
+    );
     onUsingCreatedChanged?.(true);
   };
 
-  const optionsWithCreation = options.find((option) => option.value === value)
-    ? options
-    : options.concat({ value, label: value });
+  const optionsWithCreation = options
+    .concat(
+      value.map((value) => ({
+        value,
+        label: value,
+      }))
+    )
+    .filter((v, i, a) => a.findIndex((v2) => v2.label === v.label) === i);
 
-  const selectedValue = optionsWithCreation.find(
-    (option) => option.value === value
-  );
+  const selectedValues =
+    optionsWithCreation.filter((option) =>
+      value.some((v) => option.value === v)
+    ) ?? [];
 
   // TODO: hack for default value
   return (
     <FormControl isInvalid={!!error}>
       {label && <FormLabel htmlFor={name}>{label}</FormLabel>}
+      {value.map((v, index) => (
+        <input
+          key={`${name}[${index}]`}
+          type="hidden"
+          name={`${name}[${index}]`}
+          value={v}
+        />
+      ))}
       <CreatableSelect
-        {...getInputProps({
-          // @ts-ignore
-          id: name,
-        })}
         {...props}
-        value={selectedValue}
+        value={selectedValues}
         isClearable
         isLoading={isLoading}
+        isMulti
         options={options}
         placeholder={placeholder}
-        // @ts-ignore
         w="full"
         onCreateOption={handleCreate}
+        // @ts-ignore
         onChange={handleChange}
       />
       {error ? (

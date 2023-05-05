@@ -15,6 +15,7 @@ import {
   Tag,
   TagLabel,
   Text,
+  VStack,
 } from "@chakra-ui/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
@@ -25,20 +26,24 @@ import {
   BsStarFill,
   BsTag,
 } from "react-icons/bs";
-import { IoMdTrash } from "react-icons/io";
+import { IoMdAdd, IoMdTrash } from "react-icons/io";
 import { VscOpenPreview } from "react-icons/vsc";
+import { ValidatedForm } from "remix-validated-form";
 import { Avatar, Table } from "~/components";
+import { CreatableMultiSelect, Hidden, Submit } from "~/components/Form";
 import { useUrlParams } from "~/hooks";
-import type { Document } from "~/modules/documents";
+import type { Document, DocumentLabel } from "~/modules/documents";
+import { documentLabelsValidator } from "~/modules/documents";
 import DocumentIcon from "../DocumentIcon/DocumentIcon";
 import { useDocument } from "../useDocument";
 
 type DocumentsTableProps = {
   data: Document[];
   count: number;
+  labels: DocumentLabel[];
 };
 
-const DocumentsTable = memo(({ data, count }: DocumentsTableProps) => {
+const DocumentsTable = memo(({ data, count, labels }: DocumentsTableProps) => {
   const [params] = useUrlParams();
   const filter = params.get("filter");
   // put rows in state for use with optimistic ui updates
@@ -61,6 +66,15 @@ const DocumentsTable = memo(({ data, count }: DocumentsTableProps) => {
   } = useDocument();
 
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [selectedDocument, setSelectedDocument] = useState<Document | null>(
+    null
+  );
+
+  const labelOptions =
+    labels.map(({ label }) => ({
+      value: label as string,
+      label: label as string,
+    })) ?? [];
 
   const onFavorite = useCallback(
     async (row: Document) => {
@@ -111,18 +125,22 @@ const DocumentsTable = memo(({ data, count }: DocumentsTableProps) => {
         id: "labels",
         header: "Labels",
         cell: ({ row }) => (
-          <HStack>
+          <HStack spacing={1}>
             {row.original.labels.map((label) => (
-              <Tag
-                key={label}
-                variant="solid"
-                colorScheme="blackAlpha"
-                cursor="pointer"
-                onClick={() => setLabel(label)}
-              >
+              <Tag key={label} cursor="pointer" onClick={() => setLabel(label)}>
                 <TagLabel>{label}</TagLabel>
               </Tag>
             ))}
+
+            <Tag
+              size="sm"
+              cursor="pointer"
+              onClick={() => setSelectedDocument(row.original)}
+            >
+              <TagLabel>
+                <IoMdAdd />
+              </TagLabel>
+            </Tag>
           </HStack>
         ),
       },
@@ -281,6 +299,37 @@ const DocumentsTable = memo(({ data, count }: DocumentsTableProps) => {
             <ModalCloseButton />
             <ModalBody>
               <Image src={previewImage ?? ""} />
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+      )}
+
+      {selectedDocument && (
+        <Modal isOpen onClose={() => setSelectedDocument(null)}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>{selectedDocument.name}</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody pb={6}>
+              <ValidatedForm
+                action={`/x/documents/${selectedDocument.id}/labels`}
+                validator={documentLabelsValidator}
+                method="post"
+                defaultValues={{
+                  documentId: selectedDocument.id,
+                  labels: selectedDocument.labels,
+                }}
+              >
+                <Hidden name="documentId" value={selectedDocument.id} />
+                <VStack spacing={4} alignItems="start" w="full">
+                  <CreatableMultiSelect
+                    name="labels"
+                    label="Labels"
+                    options={labelOptions}
+                  />
+                  <Submit>Save</Submit>
+                </VStack>
+              </ValidatedForm>
             </ModalBody>
           </ModalContent>
         </Modal>

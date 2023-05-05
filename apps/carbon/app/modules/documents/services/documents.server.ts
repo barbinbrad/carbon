@@ -3,7 +3,10 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { TypeOfValidator } from "~/types/validators";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
-import type { documentValidator } from "./documents.form";
+import type {
+  documentLabelsValidator,
+  documentValidator,
+} from "./documents.form";
 
 export async function deleteDocument(
   client: SupabaseClient<Database>,
@@ -124,7 +127,7 @@ export async function getDocumentLabels(
   client: SupabaseClient<Database>,
   userId: string
 ) {
-  return client.from("documentLabel").select("label").eq("userId", userId);
+  return client.from("documents_labels_view").select("*").eq("userId", userId);
 }
 
 export async function insertDocumentFavorite(
@@ -166,4 +169,26 @@ export async function upsertDocument(
       updatedAt: new Date().toISOString(),
     })
     .eq("id", document.id);
+}
+
+export async function updateDocumentLabels(
+  client: SupabaseClient<Database>,
+  document: TypeOfValidator<typeof documentLabelsValidator> & {
+    userId: string;
+  }
+) {
+  return client
+    .from("documentLabel")
+    .delete()
+    .eq("documentId", document.documentId)
+    .eq("userId", document.userId)
+    .then(() => {
+      return client.from("documentLabel").insert(
+        document.labels.map((label) => ({
+          documentId: document.documentId,
+          label,
+          userId: document.userId,
+        }))
+      );
+    });
 }

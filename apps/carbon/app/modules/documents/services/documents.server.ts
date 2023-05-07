@@ -147,6 +147,13 @@ export async function insertDocumentLabel(
   return client.from("documentLabel").insert({ documentId: id, label, userId });
 }
 
+export async function restoreDocument(
+  client: SupabaseClient<Database>,
+  id: string
+) {
+  return client.from("document").update({ active: true }).eq("id", id);
+}
+
 export async function upsertDocument(
   client: SupabaseClient<Database>,
   document:
@@ -177,6 +184,10 @@ export async function updateDocumentLabels(
     userId: string;
   }
 ) {
+  if (!document.labels) {
+    throw new Error("No labels provided");
+  }
+
   return client
     .from("documentLabel")
     .delete()
@@ -184,6 +195,7 @@ export async function updateDocumentLabels(
     .eq("userId", document.userId)
     .then(() => {
       return client.from("documentLabel").insert(
+        // @ts-ignore
         document.labels.map((label) => ({
           documentId: document.documentId,
           label,

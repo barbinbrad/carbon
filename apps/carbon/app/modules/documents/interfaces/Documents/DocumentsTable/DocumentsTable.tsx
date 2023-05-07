@@ -16,6 +16,7 @@ import {
   TagCloseButton,
   TagLabel,
   Text,
+  useDisclosure,
   VStack,
 } from "@chakra-ui/react";
 import type { ColumnDef } from "@tanstack/react-table";
@@ -32,6 +33,7 @@ import { VscOpenPreview } from "react-icons/vsc";
 import { ValidatedForm } from "remix-validated-form";
 import { Avatar, Table } from "~/components";
 import { CreatableMultiSelect, Hidden, Submit } from "~/components/Form";
+import { Confirm, ConfirmDelete } from "~/components/Modals";
 import { useUrlParams } from "~/hooks";
 import type { Document, DocumentLabel } from "~/modules/documents";
 import { documentLabelsValidator } from "~/modules/documents";
@@ -46,7 +48,7 @@ type DocumentsTableProps = {
 
 const DocumentsTable = memo(({ data, count, labels }: DocumentsTableProps) => {
   const [params] = useUrlParams();
-  const filter = params.get("filter");
+  const filter = params.get("q");
   // put rows in state for use with optimistic ui updates
   const [rows, setRows] = useState<Document[]>(data);
   // we have to do this useEffect silliness since we're putitng rows
@@ -66,6 +68,9 @@ const DocumentsTable = memo(({ data, count, labels }: DocumentsTableProps) => {
     makePreview,
     setLabel,
   } = useDocument();
+
+  const documentLabelModal = useDisclosure();
+  const deleteDocumentModal = useDisclosure();
 
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [selectedDocument, setSelectedDocument] = useState<Document | null>(
@@ -161,9 +166,11 @@ const DocumentsTable = memo(({ data, count, labels }: DocumentsTableProps) => {
             ))}
 
             <Tag
-              size="sm"
               cursor="pointer"
-              onClick={() => setSelectedDocument(row.original)}
+              onClick={() => {
+                setSelectedDocument(row.original);
+                documentLabelModal.onOpen();
+              }}
             >
               <TagLabel>
                 <IoMdAdd />
@@ -215,7 +222,7 @@ const DocumentsTable = memo(({ data, count, labels }: DocumentsTableProps) => {
         cell: (item) => item.getValue(),
       },
     ];
-  }, [download, onDeleteLabel, onFavorite, setLabel]);
+  }, [documentLabelModal, download, onDeleteLabel, onFavorite, setLabel]);
 
   const actions = useMemo(() => {
     return [
@@ -295,13 +302,26 @@ const DocumentsTable = memo(({ data, count, labels }: DocumentsTableProps) => {
         <MenuItem
           icon={<IoMdTrash />}
           isDisabled={canDelete(row)}
-          onClick={() => console.log(`delete ${row.id}`)}
+          onClick={() => {
+            setSelectedDocument(row);
+            deleteDocumentModal.onOpen();
+          }}
         >
-          Move to Trash
+          {filter !== "trash" ? "Move to Trash" : "Restore from Trash"}
         </MenuItem>
       </>
     );
-  }, [canDelete, canUpdate, download, edit, isImage, makePreview, onFavorite]);
+  }, [
+    canDelete,
+    canUpdate,
+    deleteDocumentModal,
+    download,
+    edit,
+    filter,
+    isImage,
+    makePreview,
+    onFavorite,
+  ]);
 
   return (
     <>
@@ -333,7 +353,13 @@ const DocumentsTable = memo(({ data, count, labels }: DocumentsTableProps) => {
       )}
 
       {selectedDocument && (
-        <Modal isOpen onClose={() => setSelectedDocument(null)}>
+        <Modal
+          isOpen={documentLabelModal.isOpen}
+          onClose={() => {
+            setSelectedDocument(null);
+            documentLabelModal.onClose();
+          }}
+        >
           <ModalOverlay />
           <ModalContent>
             <ModalHeader>{selectedDocument.name}</ModalHeader>
@@ -343,7 +369,10 @@ const DocumentsTable = memo(({ data, count, labels }: DocumentsTableProps) => {
                 action={`/x/documents/${selectedDocument.id}/labels`}
                 validator={documentLabelsValidator}
                 method="post"
-                onSubmit={() => setSelectedDocument(null)}
+                onSubmit={() => {
+                  setSelectedDocument(null);
+                  documentLabelModal.onClose();
+                }}
                 defaultValues={{
                   documentId: selectedDocument.id,
                   labels: selectedDocument.labels,
@@ -363,6 +392,39 @@ const DocumentsTable = memo(({ data, count, labels }: DocumentsTableProps) => {
           </ModalContent>
         </Modal>
       )}
+
+      {selectedDocument &&
+        (filter !== "trash" ? (
+          <ConfirmDelete
+            action={`/x/documents/${selectedDocument?.id}/delete`}
+            isOpen={deleteDocumentModal.isOpen}
+            name={selectedDocument.name}
+            text={`Are you sure you want to move ${selectedDocument.name} to the trash?`}
+            onCancel={() => {
+              deleteDocumentModal.onClose();
+              setSelectedDocument(null);
+            }}
+            onSubmit={() => {
+              deleteDocumentModal.onClose();
+              setSelectedDocument(null);
+            }}
+          />
+        ) : (
+          <Confirm
+            action={`/x/documents/${selectedDocument?.id}/restore`}
+            isOpen={deleteDocumentModal.isOpen}
+            name={`Restore ${selectedDocument.name}`}
+            text={`Are you sure you want to restore ${selectedDocument.name} from the trash?`}
+            onCancel={() => {
+              deleteDocumentModal.onClose();
+              setSelectedDocument(null);
+            }}
+            onSubmit={() => {
+              deleteDocumentModal.onClose();
+              setSelectedDocument(null);
+            }}
+          />
+        ))}
     </>
   );
 });

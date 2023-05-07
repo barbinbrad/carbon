@@ -1,3 +1,4 @@
+import Confirm from "./Confirm";
 import ConfirmDelete from "./ConfirmDelete";
 
-export { ConfirmDelete };
+export { Confirm, ConfirmDelete };

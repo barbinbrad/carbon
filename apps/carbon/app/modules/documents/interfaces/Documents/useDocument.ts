@@ -33,6 +33,18 @@ export const useDocument = () => {
     [permissions, user]
   );
 
+  const deleteLabel = useCallback(
+    async (document: Document, label: string) => {
+      return supabase
+        ?.from("documentLabel")
+        .delete()
+        .eq("documentId", document.id)
+        .eq("userId", user?.id)
+        .eq("label", label);
+    },
+    [supabase, user?.id]
+  );
+
   const download = useCallback(
     async (doc: Document) => {
       const result = await supabase?.storage.from("private").download(doc.path);
@@ -121,6 +133,7 @@ export const useDocument = () => {
     canDelete,
     canUpdate,
     download,
+    deleteLabel,
     edit,
     favorite,
     isImage,

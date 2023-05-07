@@ -28,8 +28,6 @@ export async function action({ request }: ActionArgs) {
 
   const { name, selections } = validation.data;
 
-  console.log({ selections });
-
   const createGroup = await insertGroup(client, { name });
   if (createGroup.error) {
     return json(

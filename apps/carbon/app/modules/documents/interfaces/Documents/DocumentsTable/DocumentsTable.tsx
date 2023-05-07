@@ -13,6 +13,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Tag,
+  TagCloseButton,
   TagLabel,
   Text,
   VStack,
@@ -57,6 +58,7 @@ const DocumentsTable = memo(({ data, count, labels }: DocumentsTableProps) => {
   const {
     canUpdate,
     canDelete,
+    deleteLabel,
     download,
     edit,
     favorite,
@@ -75,6 +77,29 @@ const DocumentsTable = memo(({ data, count, labels }: DocumentsTableProps) => {
       value: label as string,
       label: label as string,
     })) ?? [];
+
+  const onDeleteLabel = useCallback(
+    async (
+      e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+      row: Document,
+      label: string
+    ) => {
+      e.stopPropagation();
+      // optimistically update the UI and then make the mutation
+      setRows((prev) => {
+        const index = prev.findIndex((item) => item.id === row.id);
+        const updated = [...prev];
+        const labelIndex = updated[index].labels.findIndex(
+          (item) => item === label
+        );
+        updated[index].labels.splice(labelIndex, 1);
+        return updated;
+      });
+      // mutate the database
+      await deleteLabel(row, label);
+    },
+    [deleteLabel]
+  );
 
   const onFavorite = useCallback(
     async (row: Document) => {
@@ -129,6 +154,9 @@ const DocumentsTable = memo(({ data, count, labels }: DocumentsTableProps) => {
             {row.original.labels.map((label) => (
               <Tag key={label} cursor="pointer" onClick={() => setLabel(label)}>
                 <TagLabel>{label}</TagLabel>
+                <TagCloseButton
+                  onClick={(e) => onDeleteLabel(e, row.original, label)}
+                />
               </Tag>
             ))}
 
@@ -187,7 +215,7 @@ const DocumentsTable = memo(({ data, count, labels }: DocumentsTableProps) => {
         cell: (item) => item.getValue(),
       },
     ];
-  }, [download, onFavorite, setLabel]);
+  }, [download, onDeleteLabel, onFavorite, setLabel]);
 
   const actions = useMemo(() => {
     return [
@@ -315,6 +343,7 @@ const DocumentsTable = memo(({ data, count, labels }: DocumentsTableProps) => {
                 action={`/x/documents/${selectedDocument.id}/labels`}
                 validator={documentLabelsValidator}
                 method="post"
+                onSubmit={() => setSelectedDocument(null)}
                 defaultValues={{
                   documentId: selectedDocument.id,
                   labels: selectedDocument.labels,

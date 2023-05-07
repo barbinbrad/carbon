@@ -50,8 +50,6 @@ export async function loader({ request }: LoaderArgs) {
     getDocumentLabels(client, userId),
   ]);
 
-  console.log(labels);
-
   if (documents.error) {
     redirect(
       "/x",

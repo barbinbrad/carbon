@@ -49,8 +49,6 @@ export async function action({ params, request }: ActionArgs) {
   if (!abilityId) throw new Error("abilityId is not found");
   if (!id) throw new Error("id is not found");
 
-  console.log(params);
-
   const { client } = await requirePermissions(request, {
     create: "resources",
   });

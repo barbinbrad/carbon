@@ -38,7 +38,7 @@ export async function action({ request, params }: ActionArgs) {
     contactId,
     contact,
   });
-  console.log(update);
+
   if (update.error) {
     return redirect(
       `/x/purchasing/suppliers/${supplierId}`,

@@ -40,7 +40,6 @@ const Select = ({
   const handleChange = (
     newValue: { value: string | number; label: string }[] | null
   ) => {
-    console.log(newValue);
     setValue(newValue?.map((option) => option.value.toString()) ?? []);
     onChange?.(newValue);
     onUsingCreatedChanged?.(false);

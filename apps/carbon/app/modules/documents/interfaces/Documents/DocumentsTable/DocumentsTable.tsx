@@ -1,3 +1,4 @@
+import { CreatableSelect } from "@carbon/react";
 import { convertKbToString } from "@carbon/utils";
 import {
   Box,
@@ -17,7 +18,6 @@ import {
   TagLabel,
   Text,
   useDisclosure,
-  VStack,
 } from "@chakra-ui/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
@@ -30,13 +30,10 @@ import {
 } from "react-icons/bs";
 import { IoMdAdd, IoMdTrash } from "react-icons/io";
 import { VscOpenPreview } from "react-icons/vsc";
-import { ValidatedForm } from "remix-validated-form";
 import { Avatar, Table } from "~/components";
-import { CreatableMultiSelect, Hidden, Submit } from "~/components/Form";
 import { Confirm, ConfirmDelete } from "~/components/Modals";
 import { useUrlParams } from "~/hooks";
 import type { Document, DocumentLabel } from "~/modules/documents";
-import { documentLabelsValidator } from "~/modules/documents";
 import DocumentIcon from "../DocumentIcon/DocumentIcon";
 import { useDocument } from "../useDocument";
 
@@ -65,6 +62,7 @@ const DocumentsTable = memo(({ data, count, labels }: DocumentsTableProps) => {
     edit,
     favorite,
     isImage,
+    label,
     makePreview,
     setLabel,
   } = useDocument();
@@ -104,6 +102,24 @@ const DocumentsTable = memo(({ data, count, labels }: DocumentsTableProps) => {
       await deleteLabel(row, label);
     },
     [deleteLabel]
+  );
+
+  const onLabel = useCallback(
+    async (row: Document, labels: string[]) => {
+      // optimistically update the UI and then make the mutation
+      setRows((prev) => {
+        const index = prev.findIndex((item) => item.id === row.id);
+        const updated = [...prev];
+        updated[index] = {
+          ...updated[index],
+          labels: labels.sort(),
+        };
+        return updated;
+      });
+      // mutate the database
+      await label(row, labels);
+    },
+    [label]
   );
 
   const onFavorite = useCallback(
@@ -365,29 +381,23 @@ const DocumentsTable = memo(({ data, count, labels }: DocumentsTableProps) => {
             <ModalHeader>{selectedDocument.name}</ModalHeader>
             <ModalCloseButton />
             <ModalBody pb={6}>
-              <ValidatedForm
-                action={`/x/documents/${selectedDocument.id}/labels`}
-                validator={documentLabelsValidator}
-                method="post"
-                onSubmit={() => {
-                  setSelectedDocument(null);
-                  documentLabelModal.onClose();
-                }}
-                defaultValues={{
-                  documentId: selectedDocument.id,
-                  labels: selectedDocument.labels,
-                }}
-              >
-                <Hidden name="documentId" value={selectedDocument.id} />
-                <VStack spacing={4} alignItems="start" w="full">
-                  <CreatableMultiSelect
-                    name="labels"
-                    label="Labels"
-                    options={labelOptions}
-                  />
-                  <Submit>Save</Submit>
-                </VStack>
-              </ValidatedForm>
+              <CreatableSelect
+                defaultValue={
+                  selectedDocument.labels.map((label) => ({
+                    value: label,
+                    label: label,
+                  })) ?? []
+                }
+                isClearable
+                isMulti
+                options={labelOptions}
+                onChange={(newValues) =>
+                  onLabel(
+                    selectedDocument,
+                    newValues.map((v) => v.value)
+                  )
+                }
+              />
             </ModalBody>
           </ModalContent>
         </Modal>

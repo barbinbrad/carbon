@@ -96,6 +96,28 @@ export const useDocument = () => {
     return ["png", "jpg", "jpeg", "gif", "svg"].includes(fileType);
   }, []);
 
+  const label = useCallback(
+    (document: Document, labels: string[]) => {
+      if (user?.id === undefined) throw new Error("User is undefined");
+      return supabase
+        ?.from("documentLabel")
+        .delete()
+        .eq("documentId", document.id)
+        .eq("userId", user.id)
+        .then(() => {
+          return supabase?.from("documentLabel").insert(
+            // @ts-ignore
+            labels.map((label) => ({
+              documentId: document.id,
+              label,
+              userId: user.id,
+            }))
+          );
+        });
+    },
+    [supabase, user.id]
+  );
+
   const makePreview = useCallback(
     async (doc: Document) => {
       const result = await supabase?.storage.from("private").download(doc.path);
@@ -137,6 +159,7 @@ export const useDocument = () => {
     edit,
     favorite,
     isImage,
+    label,
     makePreview,
     removeLabel,
     setLabel,

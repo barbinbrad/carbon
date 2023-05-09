@@ -10,9 +10,27 @@ import type {
 
 export async function deleteDocument(
   client: SupabaseClient<Database>,
-  id: string
+  id: string,
+  userId: string
 ) {
-  return client.from("document").update({ active: false }).eq("id", id);
+  const deleteDocumentFavorites = await client
+    .from("documentFavorite")
+    .delete()
+    .eq("documentId", id)
+    .eq("userId", userId);
+
+  if (deleteDocumentFavorites.error) {
+    return deleteDocumentFavorites;
+  }
+
+  return client
+    .from("document")
+    .update({
+      active: false,
+      updatedBy: userId,
+      updatedAt: new Date().toISOString(),
+    })
+    .eq("id", id);
 }
 
 export async function deleteDocumentFavorite(
@@ -127,7 +145,11 @@ export async function getDocumentLabels(
   client: SupabaseClient<Database>,
   userId: string
 ) {
-  return client.from("documents_labels_view").select("*").eq("userId", userId);
+  return client
+    .from("documents_labels_view")
+    .select("*")
+    .eq("userId", userId)
+    .eq("active", true);
 }
 
 export async function insertDocumentFavorite(
@@ -149,9 +171,17 @@ export async function insertDocumentLabel(
 
 export async function restoreDocument(
   client: SupabaseClient<Database>,
-  id: string
+  id: string,
+  userId: string
 ) {
-  return client.from("document").update({ active: true }).eq("id", id);
+  return client
+    .from("document")
+    .update({
+      active: true,
+      updatedBy: userId,
+      updatedAt: new Date().toISOString(),
+    })
+    .eq("id", id);
 }
 
 export async function upsertDocument(

@@ -75,6 +75,7 @@ export async function getDocuments(
     type: string | null;
     label: string | null;
     favorite?: boolean;
+    recent?: boolean;
     createdBy?: string;
     active: boolean;
   }
@@ -134,6 +135,10 @@ export async function getDocuments(
 
   if (args.createdBy) {
     query = query.eq("createdBy", args.createdBy);
+  }
+
+  if (args.recent) {
+    query = query.order("lastActivityAt", { ascending: false });
   }
 
   query = setGenericQueryFilters(query, args);

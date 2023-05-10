@@ -29,6 +29,7 @@ export async function loader({ request }: LoaderArgs) {
 
   const createdBy = filter === "my" ? userId : undefined;
   const favorite = filter === "starred" ? true : undefined;
+  const recent = filter === "recent" ? true : undefined;
   const active = filter === "trash" ? false : true;
 
   const { limit, offset, sorts, filters } =
@@ -40,6 +41,7 @@ export async function loader({ request }: LoaderArgs) {
       type,
       label,
       favorite,
+      recent,
       createdBy,
       active,
       limit,

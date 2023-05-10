@@ -2086,6 +2086,7 @@ export interface Database {
           updatedAt: string | null;
           labels: string[] | null;
           favorite: boolean | null;
+          lastActivityAt: string | null;
         };
       };
       group_member: {
@@ -2236,7 +2237,6 @@ export interface Database {
     Enums: {
       consolidatedRate: "Average" | "Current" | "Historical";
       documentTransactionType:
-        | "Delete"
         | "Download"
         | "Edit"
         | "Favorite"

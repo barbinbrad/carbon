@@ -90,20 +90,22 @@ export const useDocument = () => {
   );
 
   const favorite = useCallback(
-    (document: Document) => {
+    async (document: Document) => {
       if (document.favorite) {
-        return supabase
+        await supabase
           ?.from("documentFavorite")
           .delete()
           .eq("documentId", document.id)
           .eq("userId", user?.id);
+        return insertTransaction(document, "Unfavorite");
       } else {
-        return supabase
+        await supabase
           ?.from("documentFavorite")
           .insert({ documentId: document.id, userId: user?.id });
+        return insertTransaction(document, "Favorite");
       }
     },
-    [supabase, user?.id]
+    [insertTransaction, supabase, user?.id]
   );
 
   const isImage = useCallback((fileType: string) => {
@@ -111,16 +113,15 @@ export const useDocument = () => {
   }, []);
 
   const label = useCallback(
-    (document: Document, labels: string[]) => {
+    async (document: Document, labels: string[]) => {
       if (user?.id === undefined) throw new Error("User is undefined");
-      return supabase
+      await supabase
         ?.from("documentLabel")
         .delete()
         .eq("documentId", document.id)
         .eq("userId", user.id)
         .then(() => {
           return supabase?.from("documentLabel").insert(
-            // @ts-ignore
             labels.map((label) => ({
               documentId: document.id,
               label,
@@ -128,8 +129,10 @@ export const useDocument = () => {
             }))
           );
         });
+
+      return insertTransaction(document, "Label");
     },
-    [supabase, user.id]
+    [insertTransaction, supabase, user.id]
   );
 
   const makePreview = useCallback(

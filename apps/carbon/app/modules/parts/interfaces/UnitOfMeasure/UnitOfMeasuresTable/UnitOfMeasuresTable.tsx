@@ -72,7 +72,6 @@ const UnitOfMeasuresTable = memo(
         columns={columns}
         count={count}
         renderContextMenu={renderContextMenu}
-        withInlineEditing
       />
     );
   }

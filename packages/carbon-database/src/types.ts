@@ -668,7 +668,7 @@ export interface Database {
           label?: string;
         };
       };
-      documentTransactions: {
+      documentTransaction: {
         Row: {
           documentId: string;
           type: Database["public"]["Enums"]["documentTransactionType"];
@@ -2236,17 +2236,13 @@ export interface Database {
     Enums: {
       consolidatedRate: "Average" | "Current" | "Historical";
       documentTransactionType:
-        | "Categorize"
-        | "Comment"
         | "Delete"
         | "Download"
-        | "EditPermissions"
+        | "Edit"
         | "Favorite"
         | "Label"
-        | "Preview"
-        | "Rename"
-        | "Replace"
-        | "UnfavoriteUpload";
+        | "Unfavorite"
+        | "Upload";
       factor:
         | "Hours/Piece"
         | "Hours/100 Pieces"

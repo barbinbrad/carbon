@@ -16,3 +16,6 @@ export type Document = Omit<
 export type DocumentLabel = NonNullable<
   Awaited<ReturnType<typeof getDocumentLabels>>["data"]
 >[number];
+
+export type DocumentTransactionType =
+  Database["public"]["Enums"]["documentTransactionType"];

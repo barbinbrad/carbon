@@ -3942,21 +3942,16 @@ FOR DELETE USING (
 );
 
 CREATE TYPE "documentTransactionType" AS ENUM (
-  'Categorize',
-  'Comment',
   'Delete',
   'Download',
-  'EditPermissions',
+  'Edit',
   'Favorite',
   'Label',
-  'Preview',
-  'Rename',
-  'Replace',
-  'Unfavorite'
+  'Unfavorite',
   'Upload'
 );
 
-CREATE TABLE "documentTransactions" (
+CREATE TABLE "documentTransaction" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "documentId" TEXT NOT NULL,
   "type" "documentTransactionType" NOT NULL,
@@ -3968,7 +3963,8 @@ CREATE TABLE "documentTransactions" (
   CONSTRAINT "documentActivity_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE
 );
 
-CREATE INDEX "documentActivity_documentId_idx" ON "documentTransactions" ("documentId");
+CREATE INDEX "documentActivity_documentId_idx" ON "documentTransaction" ("documentId");
+CREATE INDEX "documentActivity_userId_idx" ON "documentTransaction" ("userId");
 
 CREATE TABLE "documentFavorite" (
   "documentId" TEXT NOT NULL,
@@ -3995,6 +3991,34 @@ CREATE TABLE "documentLabel" (
 CREATE INDEX "documentLabels_userId_idx" ON "documentLabel" ("userId");
 CREATE INDEX "documentLabels_documentId_idx" ON "documentLabel" ("documentId");
 CREATE INDEX "documentLabels_label_idx" ON "documentLabel" ("label");
+
+CREATE FUNCTION public.upload_document_transaction()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public."documentTransaction" ("documentId", "type", "userId")
+  VALUES (new.id, 'Upload', new."createdBy");
+
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER upload_document_transaction
+  AFTER INSERT on public."document"
+  FOR EACH ROW EXECUTE PROCEDURE public.upload_document_transaction();
+
+CREATE FUNCTION public.edit_document_transaction()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public."documentTransaction" ("documentId", "type", "userId")
+  VALUES (new.id, 'Edit', new."createdBy");
+
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER edit_document_transaction
+  AFTER UPDATE on public."document"
+  FOR EACH ROW EXECUTE PROCEDURE public.edit_document_transaction();
 
 CREATE VIEW "documents_labels_view" AS
   SELECT DISTINCT

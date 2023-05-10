@@ -3,7 +3,7 @@ import { useNavigate } from "@remix-run/react";
 import { useCallback } from "react";
 import { usePermissions, useUrlParams, useUser } from "~/hooks";
 import { useSupabase } from "~/lib/supabase";
-import type { Document } from "~/modules/documents";
+import type { Document, DocumentTransactionType } from "~/modules/documents";
 
 export const useDocument = () => {
   const navigate = useNavigate();
@@ -31,6 +31,18 @@ export const useDocument = () => {
       );
     },
     [permissions, user]
+  );
+
+  const insertTransaction = useCallback(
+    (document: Document, type: DocumentTransactionType) => {
+      if (user?.id === undefined) throw new Error("User is undefined");
+      return supabase?.from("documentTransaction").insert({
+        documentId: document.id,
+        type,
+        userId: user.id,
+      });
+    },
+    [supabase, user?.id]
   );
 
   const deleteLabel = useCallback(
@@ -65,8 +77,10 @@ export const useDocument = () => {
         window.URL.revokeObjectURL(url);
         document.body.removeChild(a);
       }, 0);
+
+      await insertTransaction(doc, "Download");
     },
-    [supabase, notification]
+    [supabase, notification, insertTransaction]
   );
 
   const edit = useCallback(

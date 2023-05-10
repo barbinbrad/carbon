@@ -135,6 +135,23 @@ CREATE TABLE "documentFavorite" (
 CREATE INDEX "documentFavorites_userId_idx" ON "documentFavorite" ("userId");
 CREATE INDEX "documentFavorites_documentId_idx" ON "documentFavorite" ("documentId");
 
+ALTER TABLE "documentFavorite" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view their own favorites" ON "documentFavorite" 
+  FOR SELECT USING (
+    auth.uid()::text = "userId"
+  );
+
+CREATE POLICY "Users can create their own favorites" ON "documentFavorite" 
+  FOR INSERT WITH CHECK (
+    auth.uid()::text = "userId"
+  );
+
+CREATE POLICY "Users can delete their own favorites" ON "documentFavorite"
+  FOR DELETE USING (
+    auth.uid()::text = "userId"
+  ); 
+
 CREATE TABLE "documentLabel" (
   "documentId" TEXT NOT NULL,
   "userId" TEXT NOT NULL,
@@ -148,6 +165,23 @@ CREATE TABLE "documentLabel" (
 CREATE INDEX "documentLabels_userId_idx" ON "documentLabel" ("userId");
 CREATE INDEX "documentLabels_documentId_idx" ON "documentLabel" ("documentId");
 CREATE INDEX "documentLabels_label_idx" ON "documentLabel" ("label");
+
+ALTER TABLE "documentLabel" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view their own labels" ON "documentLabel" 
+  FOR SELECT USING (
+    auth.uid()::text = "userId"
+  );
+
+CREATE POLICY "Users can create their own labels" ON "documentLabel" 
+  FOR INSERT WITH CHECK (
+    auth.uid()::text = "userId"
+  );
+
+CREATE POLICY "Users can delete their own labels" ON "documentLabel"
+  FOR DELETE USING (
+    auth.uid()::text = "userId"
+  ); 
 
 CREATE FUNCTION public.upload_document_transaction()
 RETURNS TRIGGER AS $$

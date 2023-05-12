@@ -85,7 +85,7 @@ const SearchModal = ({
       const result = await supabase
         ?.from("search")
         .select()
-        .textSearch("fts", search)
+        .textSearch("fts", `${search}:*`)
         .limit(20);
       if (result?.data) {
         setSearchResults(result.data);

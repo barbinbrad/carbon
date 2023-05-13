@@ -427,8 +427,7 @@ const Table = <T extends object>({
       {(withColumnOrdering ||
         withFilters ||
         withSelectableRows ||
-        withInlineEditing ||
-        withSimpleSorting) && (
+        withInlineEditing) && (
         <TableHeader
           actions={actions}
           columnAccessors={columnAccessors}

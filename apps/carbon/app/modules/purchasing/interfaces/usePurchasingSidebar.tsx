@@ -15,6 +15,15 @@ const purchasingRoutes: AuthenticatedRouteGroup[] = [
     name: "Configure",
     routes: [
       {
+        name: "Payment Terms",
+        to: "/x/purchasing/payment-terms",
+        role: "employee",
+      },
+      {
+        name: "Shipping Methods",
+        to: "/x/purchasing/shipping-methods",
+      },
+      {
         name: "Supplier Types",
         to: "/x/purchasing/supplier-types",
         role: "employee",

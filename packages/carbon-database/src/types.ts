@@ -1495,6 +1495,7 @@ export interface Database {
           discountPercentage: number;
           gracePeriod: number;
           calculationMethod: Database["public"]["Enums"]["paymentTermCalculationMethod"];
+          active: boolean;
           createdAt: string;
         };
         Insert: {
@@ -1509,6 +1510,7 @@ export interface Database {
           discountPercentage?: number;
           gracePeriod?: number;
           calculationMethod?: Database["public"]["Enums"]["paymentTermCalculationMethod"];
+          active?: boolean;
           createdAt?: string;
         };
         Update: {
@@ -1523,6 +1525,7 @@ export interface Database {
           discountPercentage?: number;
           gracePeriod?: number;
           calculationMethod?: Database["public"]["Enums"]["paymentTermCalculationMethod"];
+          active?: boolean;
           createdAt?: string;
         };
       };

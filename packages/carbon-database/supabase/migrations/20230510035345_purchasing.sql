@@ -13,13 +13,14 @@ CREATE TABLE "paymentTerm" (
   "discountPercentage" NUMERIC(10,5) NOT NULL DEFAULT 0,
   "gracePeriod" INTEGER NOT NULL DEFAULT 0,
   "calculationMethod" "paymentTermCalculationMethod" NOT NULL DEFAULT 'Transaction Date',
+  "active" BOOLEAN NOT NULL DEFAULT TRUE,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   "createdBy" TEXT NOT NULL,
   "updatedAt" TIMESTAMP WITH TIME ZONE,
   "updatedBy" TEXT,
 
   CONSTRAINT "paymentTerm_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "paymentTerm_name_key" UNIQUE ("name"),
+  CONSTRAINT "paymentTerm_name_key" UNIQUE ("name", "active"),
   CONSTRAINT "paymentTerm_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE CASCADE,
   CONSTRAINT "paymentTerm_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE CASCADE
 );

@@ -51,6 +51,7 @@ export async function action({ request }: ActionArgs) {
   const updatePaymentTerm = await upsertPaymentTerm(client, {
     id,
     ...data,
+    description: data.description ?? "",
     updatedBy: userId,
   });
 
@@ -76,6 +77,7 @@ export default function EditPaymentTermsRoute() {
   const initialValues = {
     id: paymentTerm?.id ?? undefined,
     name: paymentTerm?.name ?? "",
+    description: paymentTerm?.description ?? "",
     daysDue: paymentTerm?.daysDue ?? 0,
     daysDiscount: paymentTerm?.daysDiscount ?? 0,
     discountPercentage: paymentTerm?.discountPercentage ?? 0,

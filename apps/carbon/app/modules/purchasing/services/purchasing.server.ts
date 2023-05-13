@@ -393,12 +393,8 @@ export async function upsertPaymentTerm(
     | (Omit<TypeOfValidator<typeof paymentTermValidator>, "id"> & {
         createdBy: string;
       })
-    | (Omit<
-        TypeOfValidator<typeof paymentTermValidator>,
-        "id" | "description"
-      > & {
+    | (Omit<TypeOfValidator<typeof paymentTermValidator>, "id"> & {
         id: string;
-        description: string | null;
         updatedBy: string;
       })
 ) {

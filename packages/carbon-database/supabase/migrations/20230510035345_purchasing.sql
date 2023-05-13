@@ -25,6 +25,8 @@ CREATE TABLE "paymentTerm" (
   CONSTRAINT "paymentTerm_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE CASCADE
 );
 
+INSERT INTO "paymentTerm" ("name", "daysDue", "calculationMethod", "createdBy") VALUES ('Net 30', 30, 'Transaction Date', 'system');
+
 CREATE TYPE "shippingCarrier" AS ENUM (
   'UPS',
   'FedEx',

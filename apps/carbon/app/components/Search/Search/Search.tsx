@@ -63,9 +63,10 @@ const SearchModal = ({
   const [query, setQuery] = useState("");
   const [debouncedQuery] = useDebounce(query, 500);
 
+  const defaultResults = useSidebar();
+  const [moduleResults, setModuleResults] = useState<NavItem[]>(defaultResults);
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
-  const defaultResults = useSidebar();
 
   const listboxRef = useRef<HTMLUListElement>(null);
 
@@ -87,21 +88,28 @@ const SearchModal = ({
         .select()
         .textSearch("fts", `${search}:*`)
         .limit(20);
+
       if (result?.data) {
         setSearchResults(result.data);
-        return result.data;
       } else {
         setSearchResults([]);
-        return [];
       }
     },
     [supabase]
   );
 
+  const getModuleResults = useCallback((q: string) => {
+    setModuleResults(
+      defaultResults.filter((item) => {
+        return item.name.toLowerCase().includes(q.toLowerCase());
+      })
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const onKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
-      const results =
-        debouncedQuery.length === 0 ? defaultResults : searchResults;
+      const results = [...moduleResults, ...searchResults];
 
       const scrollToListItem = (index: number) => {
         const listbox = listboxRef.current;
@@ -138,7 +146,7 @@ const SearchModal = ({
             } else {
               navigate(selectedResult.to);
             }
-            onClose();
+            onResultClick();
           }
           break;
         default:
@@ -152,11 +160,15 @@ const SearchModal = ({
   useEffect(() => {
     setSelectedIndex(0);
     if (debouncedQuery) {
-      getSearchResults(debouncedQuery);
+      getSearchResults(debouncedQuery).then(() => {
+        getModuleResults(debouncedQuery);
+      });
     } else {
       setSearchResults([]);
+      setModuleResults(defaultResults);
     }
-  }, [debouncedQuery, getSearchResults]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedQuery, getModuleResults, getSearchResults]);
 
   return (
     <Modal
@@ -187,40 +199,39 @@ const SearchModal = ({
               }}
             />
           </InputGroup>
-          {(searchResults.length > 0 || debouncedQuery.length === 0) && (
-            <Box
-              bg="white"
-              borderBottomRadius="lg"
-              boxShadow="lg"
-              maxH="66vh"
-              overflowY="scroll"
-              px={4}
-              pt={0}
-              pb={4}
-            >
-              <List role="listbox" ref={listboxRef}>
-                {searchResults.length > 0
-                  ? searchResults.map((result, resultIndex) => (
-                      <Result
-                        key={result.uuid}
-                        result={result}
-                        selected={selectedIndex === resultIndex}
-                        onClick={onResultClick}
-                        onHover={() => setSelectedIndex(resultIndex)}
-                      />
-                    ))
-                  : defaultResults.map((item, itemIndex) => (
-                      <Module
-                        key={item.to}
-                        item={item}
-                        selected={selectedIndex === itemIndex}
-                        onClick={onResultClick}
-                        onHover={() => setSelectedIndex(itemIndex)}
-                      />
-                    ))}
-              </List>
-            </Box>
-          )}
+
+          <Box
+            bg="white"
+            borderBottomRadius="lg"
+            boxShadow="lg"
+            maxH="66vh"
+            overflowY="scroll"
+            px={4}
+            pt={0}
+            pb={4}
+          >
+            <List role="listbox" ref={listboxRef}>
+              {moduleResults.map((item, itemIndex) => (
+                <Module
+                  key={item.to}
+                  item={item}
+                  selected={selectedIndex === itemIndex}
+                  onClick={onResultClick}
+                  onHover={() => setSelectedIndex(itemIndex)}
+                />
+              ))}
+
+              {searchResults.map((result, resultIndex) => (
+                <Result
+                  key={result.uuid}
+                  result={result}
+                  selected={selectedIndex === resultIndex}
+                  onClick={onResultClick}
+                  onHover={() => setSelectedIndex(resultIndex)}
+                />
+              ))}
+            </List>
+          </Box>
         </ModalBody>
       </ModalContent>
     </Modal>
@@ -234,7 +245,7 @@ const resultIconProps = {
   color: "gray.500",
 };
 
-function ResultIcon({ entity }: { entity: SearchResult["entity"] }) {
+function ResultIcon({ entity }: { entity: SearchResult["entity"] | "Module" }) {
   switch (entity) {
     case "Customer":
       return <Icon as={SiHandshake} {...resultIconProps} />;

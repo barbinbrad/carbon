@@ -2,12 +2,12 @@ import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
-import type { PaymentTermCalculationMethod } from "~/modules/purchasing";
+import type { PaymentTermCalculationMethod } from "~/modules/accounting";
 import {
   PaymentTermForm,
   paymentTermValidator,
   upsertPaymentTerm,
-} from "~/modules/purchasing";
+} from "~/modules/accounting";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
@@ -15,7 +15,7 @@ import { error, success } from "~/utils/result";
 
 export async function loader({ request }: LoaderArgs) {
   await requirePermissions(request, {
-    create: "purchasing",
+    create: "accounting",
   });
 
   return null;
@@ -24,7 +24,7 @@ export async function loader({ request }: LoaderArgs) {
 export async function action({ request }: ActionArgs) {
   assertIsPost(request);
   const { client, userId } = await requirePermissions(request, {
-    create: "purchasing",
+    create: "accounting",
   });
 
   const validation = await paymentTermValidator.validate(
@@ -35,23 +35,14 @@ export async function action({ request }: ActionArgs) {
     return validationError(validation.error);
   }
 
-  const {
-    name,
-    description,
-    daysDue,
-    daysDiscount,
-    discountPercentage,
-    gracePeriod,
-    calculationMethod,
-  } = validation.data;
+  const { name, daysDue, daysDiscount, discountPercentage, calculationMethod } =
+    validation.data;
 
   const insertPaymentTerm = await upsertPaymentTerm(client, {
     name,
-    description,
     daysDue,
     daysDiscount,
     discountPercentage,
-    gracePeriod,
     calculationMethod,
     createdBy: userId,
   });
@@ -77,7 +68,7 @@ export async function action({ request }: ActionArgs) {
   }
 
   return redirect(
-    "/x/purchasing/payment-terms",
+    "/x/accounting/payment-terms",
     await flash(request, success("Payment term created"))
   );
 }
@@ -88,8 +79,7 @@ export default function NewPaymentTermsRoute() {
     daysDue: 0,
     daysDiscount: 0,
     discountPercentage: 0,
-    gracePeriod: 0,
-    calculationMethod: "Transaction Date" as PaymentTermCalculationMethod,
+    calculationMethod: "Net" as PaymentTermCalculationMethod,
   };
 
   return <PaymentTermForm initialValues={initialValues} />;

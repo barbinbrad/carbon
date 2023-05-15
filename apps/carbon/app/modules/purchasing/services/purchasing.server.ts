@@ -4,16 +4,16 @@ import { getSupabaseServiceRole } from "~/lib/supabase";
 import type { TypeOfValidator } from "~/types/validators";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
-import type { paymentTermValidator } from "./purchasing.form";
+import type { shippingMethodValidator } from "./purchasing.form";
 
-export async function deletePaymentTerm(
+export async function deleteShippingMethod(
   client: SupabaseClient<Database>,
-  paymentTermId: string
+  shippingMethodId: string
 ) {
   return client
-    .from("paymentTerm")
+    .from("shippingMethod")
     .update({ active: false })
-    .eq("id", paymentTermId);
+    .eq("id", shippingMethodId);
 }
 
 export async function deleteSupplierContact(
@@ -47,25 +47,25 @@ export async function deleteSupplierType(
   return client.from("supplierType").delete().eq("id", supplierTypeId);
 }
 
-export async function getPaymentTerm(
+export async function getShippingMethod(
   client: SupabaseClient<Database>,
-  paymentTermId: string
+  shippingTermId: string
 ) {
   return client
-    .from("paymentTerm")
+    .from("shippingTerm")
     .select("*")
-    .eq("id", paymentTermId)
+    .eq("id", shippingTermId)
     .single();
 }
 
-export async function getPaymentTerms(
+export async function getShippingMethods(
   client: SupabaseClient<Database>,
   args: GenericQueryFilters & {
     name: string | null;
   }
 ) {
   let query = client
-    .from("paymentTerm")
+    .from("shippingMethod")
     .select("*", {
       count: "exact",
     })
@@ -387,24 +387,24 @@ export async function updateSupplierLocation(
     .select("id");
 }
 
-export async function upsertPaymentTerm(
+export async function upsertShippingMethod(
   client: SupabaseClient<Database>,
-  paymentTerm:
-    | (Omit<TypeOfValidator<typeof paymentTermValidator>, "id"> & {
+  shippingMethod:
+    | (Omit<TypeOfValidator<typeof shippingMethodValidator>, "id"> & {
         createdBy: string;
       })
-    | (Omit<TypeOfValidator<typeof paymentTermValidator>, "id"> & {
+    | (Omit<TypeOfValidator<typeof shippingMethodValidator>, "id"> & {
         id: string;
         updatedBy: string;
       })
 ) {
-  if ("createdBy" in paymentTerm) {
-    return client.from("paymentTerm").insert([paymentTerm]).select("id");
+  if ("createdBy" in shippingMethod) {
+    return client.from("shippingMethod").insert([shippingMethod]).select("id");
   }
   return client
-    .from("paymentTerm")
-    .update(paymentTerm)
-    .eq("id", paymentTerm.id)
+    .from("shippingMethod")
+    .update(shippingMethod)
+    .eq("id", shippingMethod.id)
     .select("id");
 }
 

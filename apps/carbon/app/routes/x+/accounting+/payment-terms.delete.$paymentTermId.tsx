@@ -2,7 +2,7 @@ import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData, useNavigate, useParams } from "@remix-run/react";
 import { ConfirmDelete } from "~/components/Modals";
-import { deletePaymentTerm, getPaymentTerm } from "~/modules/purchasing";
+import { deletePaymentTerm, getPaymentTerm } from "~/modules/accounting";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { error, success } from "~/utils/result";
@@ -10,7 +10,7 @@ import { notFound } from "~/utils/http";
 
 export async function loader({ request, params }: LoaderArgs) {
   const { client } = await requirePermissions(request, {
-    view: "purchasing",
+    view: "accounting",
   });
   const { paymentTermId } = params;
   if (!paymentTermId) throw notFound("paymentTermId not found");
@@ -18,7 +18,7 @@ export async function loader({ request, params }: LoaderArgs) {
   const paymentTerm = await getPaymentTerm(client, paymentTermId);
   if (paymentTerm.error) {
     return redirect(
-      "/x/purchasing/payment-terms",
+      "/x/accounting/payment-terms",
       await flash(
         request,
         error(paymentTerm.error, "Failed to get payment term")
@@ -31,13 +31,13 @@ export async function loader({ request, params }: LoaderArgs) {
 
 export async function action({ request, params }: ActionArgs) {
   const { client } = await requirePermissions(request, {
-    delete: "purchasing",
+    delete: "accounting",
   });
 
   const { paymentTermId } = params;
   if (!paymentTermId) {
     return redirect(
-      "/x/purchasing/payment-terms",
+      "/x/accounting/payment-terms",
       await flash(request, error(params, "Failed to get an payment term id"))
     );
   }
@@ -48,7 +48,7 @@ export async function action({ request, params }: ActionArgs) {
   );
   if (deleteTypeError) {
     return redirect(
-      "/x/purchasing/payment-terms",
+      "/x/accounting/payment-terms",
       await flash(
         request,
         error(deleteTypeError, "Failed to delete payment term")
@@ -57,7 +57,7 @@ export async function action({ request, params }: ActionArgs) {
   }
 
   return redirect(
-    "/x/purchasing/payment-terms",
+    "/x/accounting/payment-terms",
     await flash(request, success("Successfully deleted payment term"))
   );
 }
@@ -69,11 +69,11 @@ export default function DeletePaymentTermRoute() {
 
   if (!paymentTermId || !paymentTerm) return null; // TODO - handle this better (404?)
 
-  const onCancel = () => navigate("/x/purchasing/payment-terms");
+  const onCancel = () => navigate("/x/accounting/payment-terms");
 
   return (
     <ConfirmDelete
-      action={`/x/purchasing/payment-terms/delete/${paymentTermId}`}
+      action={`/x/accounting/payment-terms/delete/${paymentTermId}`}
       name={paymentTerm.name}
       text={`Are you sure you want to delete the payment term: ${paymentTerm.name}? This cannot be undone.`}
       onCancel={onCancel}

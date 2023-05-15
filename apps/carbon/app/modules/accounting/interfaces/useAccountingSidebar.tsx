@@ -1,32 +1,23 @@
 import { usePermissions } from "~/hooks";
 import type { AuthenticatedRouteGroup } from "~/types";
 
-const purchasingRoutes: AuthenticatedRouteGroup[] = [
-  {
-    name: "Manage",
-    routes: [
-      {
-        name: "Suppliers",
-        to: "/x/purchasing/suppliers",
-      },
-    ],
-  },
+const accountingRoutes: AuthenticatedRouteGroup[] = [
   {
     name: "Configure",
     routes: [
       {
-        name: "Supplier Types",
-        to: "/x/purchasing/supplier-types",
+        name: "Payment Terms",
+        to: "/x/accounting/payment-terms",
         role: "employee",
       },
     ],
   },
 ];
 
-export default function usePurchasingSidebar() {
+export default function useAccountingSidebar() {
   const permissions = usePermissions();
   return {
-    groups: purchasingRoutes
+    groups: accountingRoutes
       .filter((group) => {
         const filteredRoutes = group.routes.filter((route) => {
           if (route.role) {

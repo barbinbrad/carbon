@@ -1485,7 +1485,6 @@ export interface Database {
       paymentTerm: {
         Row: {
           name: string;
-          description: string | null;
           createdBy: string;
           updatedAt: string | null;
           updatedBy: string | null;
@@ -1493,14 +1492,12 @@ export interface Database {
           daysDue: number;
           daysDiscount: number;
           discountPercentage: number;
-          gracePeriod: number;
           calculationMethod: Database["public"]["Enums"]["paymentTermCalculationMethod"];
           active: boolean;
           createdAt: string;
         };
         Insert: {
           name: string;
-          description?: string | null;
           createdBy: string;
           updatedAt?: string | null;
           updatedBy?: string | null;
@@ -1508,14 +1505,12 @@ export interface Database {
           daysDue?: number;
           daysDiscount?: number;
           discountPercentage?: number;
-          gracePeriod?: number;
           calculationMethod?: Database["public"]["Enums"]["paymentTermCalculationMethod"];
           active?: boolean;
           createdAt?: string;
         };
         Update: {
           name?: string;
-          description?: string | null;
           createdBy?: string;
           updatedAt?: string | null;
           updatedBy?: string | null;
@@ -1523,7 +1518,6 @@ export interface Database {
           daysDue?: number;
           daysDiscount?: number;
           discountPercentage?: number;
-          gracePeriod?: number;
           calculationMethod?: Database["public"]["Enums"]["paymentTermCalculationMethod"];
           active?: boolean;
           createdAt?: string;
@@ -2471,10 +2465,7 @@ export interface Database {
         | "Maximum Quantity";
       partReplenishmentSystem: "Buy" | "Make" | "Buy and Make";
       partType: "Inventory" | "Non-Inventory" | "Service";
-      paymentTermCalculationMethod:
-        | "Transaction Date"
-        | "End of Month"
-        | "Day of Month";
+      paymentTermCalculationMethod: "Net" | "End of Month" | "Day of Month";
       purchaseOrderApprovalStatus:
         | "Draft"
         | "In Review"

@@ -3,44 +3,17 @@ import { z } from "zod";
 import { zfd } from "zod-form-data";
 import { address, contact } from "~/types/validators";
 
-export const paymentTermValidator = withZod(
+export const shippingMethodValidator = withZod(
   z.object({
     id: zfd.text(z.string().optional()),
     name: z.string().min(1, { message: "Name is required" }),
-    description: zfd.text(z.string().optional()),
-    daysDue: zfd.numeric(
-      z
-        .number()
-        .min(0, { message: "Days due must be greater than or equal to 0" })
-    ),
-    daysDiscount: zfd.numeric(
-      z
-        .number()
-        .min(0, { message: "Days discount must be greater than or equal to 0" })
-    ),
-    discountPercentage: zfd.numeric(
-      z
-        .number()
-        .min(0, {
-          message: "Discount percent must be greater than or equal to 0",
-        })
-        .max(100, {
-          message: "Discount percent must be less than or equal to 100",
-        })
-    ),
-    gracePeriod: zfd.numeric(
-      z
-        .number()
-        .min(0, { message: "Grace period must be greater than or equal to 0" })
-    ),
-    calculationMethod: z.enum(
-      ["Transaction Date", "End of Month", "Day of Month"],
-      {
-        errorMap: (issue, ctx) => ({
-          message: "Calculation method is required",
-        }),
-      }
-    ),
+    carrier: z.enum(["UPS", "FedEx", "USPS", "DHL", "Other"], {
+      errorMap: (issue, ctx) => ({
+        message: "Carrier is required",
+      }),
+    }),
+    carrierAccountId: zfd.text(z.string().optional()),
+    trackingUrl: zfd.text(z.string().optional()),
   })
 );
 

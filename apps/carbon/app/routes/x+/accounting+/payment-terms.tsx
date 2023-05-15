@@ -6,13 +6,13 @@ import {
   PaymentTermsTable,
   PaymentTermsTableFilters,
   getPaymentTerms,
-} from "~/modules/purchasing";
+} from "~/modules/accounting";
 import { requirePermissions } from "~/services/auth";
 import { getGenericQueryFilters } from "~/utils/query";
 
 export async function loader({ request }: LoaderArgs) {
   const { client } = await requirePermissions(request, {
-    view: "purchasing",
+    view: "accounting",
     role: "employee",
   });
 

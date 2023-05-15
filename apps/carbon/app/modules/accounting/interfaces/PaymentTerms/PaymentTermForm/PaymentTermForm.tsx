@@ -13,17 +13,10 @@ import {
 import { useNavigate } from "@remix-run/react";
 import { useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
-import {
-  Hidden,
-  Input,
-  Number,
-  Select,
-  Submit,
-  TextArea,
-} from "~/components/Form";
+import { Hidden, Input, Number, Select, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
-import type { PaymentTermCalculationMethod } from "~/modules/purchasing";
-import { paymentTermValidator } from "~/modules/purchasing";
+import type { PaymentTermCalculationMethod } from "~/modules/accounting";
+import { paymentTermValidator } from "~/modules/accounting";
 import type { TypeOfValidator } from "~/types/validators";
 
 type PaymentTermFormProps = {
@@ -37,21 +30,19 @@ const PaymentTermForm = ({ initialValues }: PaymentTermFormProps) => {
 
   const isEditing = initialValues.id !== undefined;
   const isDisabled = isEditing
-    ? !permissions.can("update", "purchasing")
-    : !permissions.can("create", "purchasing");
+    ? !permissions.can("update", "accounting")
+    : !permissions.can("create", "accounting");
 
   const [selectedCalculationMethod, setSelectedCalculationMethod] = useState(
     initialValues.calculationMethod
   );
 
-  const calculationMethodOptions = [
-    "Transaction Date",
-    "End of Month",
-    "Day of Month",
-  ].map((v) => ({
-    label: v,
-    value: v,
-  }));
+  const calculationMethodOptions = ["Net", "End of Month", "Day of Month"].map(
+    (v) => ({
+      label: v,
+      value: v,
+    })
+  );
 
   return (
     <Drawer onClose={onClose} isOpen={true} size="sm">
@@ -60,8 +51,8 @@ const PaymentTermForm = ({ initialValues }: PaymentTermFormProps) => {
         method="post"
         action={
           isEditing
-            ? `/x/purchasing/payment-terms/${initialValues.id}`
-            : "/x/purchasing/payment-terms/new"
+            ? `/x/accounting/payment-terms/${initialValues.id}`
+            : "/x/accounting/payment-terms/new"
         }
         defaultValues={initialValues}
       >
@@ -73,10 +64,9 @@ const PaymentTermForm = ({ initialValues }: PaymentTermFormProps) => {
             <Hidden name="id" />
             <VStack spacing={4} alignItems="start">
               <Input name="name" label="Name" />
-              <TextArea name="description" label="Description" />
               <Select
                 name="calculationMethod"
-                label="Calculation Method"
+                label="After"
                 options={calculationMethodOptions}
                 onChange={({ value }) => {
                   setSelectedCalculationMethod(
@@ -103,7 +93,6 @@ const PaymentTermForm = ({ initialValues }: PaymentTermFormProps) => {
                 max={100}
                 helperText="The percentage of the cash discount. Use 0 for no discount."
               />
-              <Number name="gracePeriod" label="Grace Period (Days)" min={0} />
             </VStack>
           </DrawerBody>
           <DrawerFooter>

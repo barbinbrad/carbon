@@ -3,13 +3,13 @@ import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
-import type { PaymentTermCalculationMethod } from "~/modules/purchasing";
-import { PaymentTermForm } from "~/modules/purchasing";
+import type { PaymentTermCalculationMethod } from "~/modules/accounting";
 import {
+  PaymentTermForm,
   paymentTermValidator,
   getPaymentTerm,
   upsertPaymentTerm,
-} from "~/modules/purchasing";
+} from "~/modules/accounting";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
@@ -17,7 +17,7 @@ import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderArgs) {
   const { client } = await requirePermissions(request, {
-    view: "purchasing",
+    view: "accounting",
     role: "employee",
   });
 
@@ -34,7 +34,7 @@ export async function loader({ request, params }: LoaderArgs) {
 export async function action({ request }: ActionArgs) {
   assertIsPost(request);
   const { client, userId } = await requirePermissions(request, {
-    update: "purchasing",
+    update: "accounting",
   });
 
   const validation = await paymentTermValidator.validate(
@@ -51,7 +51,6 @@ export async function action({ request }: ActionArgs) {
   const updatePaymentTerm = await upsertPaymentTerm(client, {
     id,
     ...data,
-    description: data.description ?? "",
     updatedBy: userId,
   });
 
@@ -66,7 +65,7 @@ export async function action({ request }: ActionArgs) {
   }
 
   return redirect(
-    "/x/purchasing/payment-terms",
+    "/x/accounting/payment-terms",
     await flash(request, success("Updated payment term"))
   );
 }
@@ -77,14 +76,11 @@ export default function EditPaymentTermsRoute() {
   const initialValues = {
     id: paymentTerm?.id ?? undefined,
     name: paymentTerm?.name ?? "",
-    description: paymentTerm?.description ?? "",
     daysDue: paymentTerm?.daysDue ?? 0,
     daysDiscount: paymentTerm?.daysDiscount ?? 0,
     discountPercentage: paymentTerm?.discountPercentage ?? 0,
-    gracePeriod: paymentTerm?.gracePeriod ?? 0,
     calculationMethod:
-      paymentTerm?.calculationMethod ??
-      ("Transaction Date" as PaymentTermCalculationMethod),
+      paymentTerm?.calculationMethod ?? ("Net" as PaymentTermCalculationMethod),
   };
 
   return <PaymentTermForm initialValues={initialValues} />;

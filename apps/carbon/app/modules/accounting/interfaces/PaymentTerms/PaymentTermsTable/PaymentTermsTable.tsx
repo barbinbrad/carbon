@@ -6,7 +6,7 @@ import { BsPencilSquare } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
-import type { PaymentTerm } from "~/modules/purchasing";
+import type { PaymentTerm } from "~/modules/accounting";
 
 type PaymentTermsTableProps = {
   data: PaymentTerm[];
@@ -18,22 +18,11 @@ const PaymentTermsTable = memo(({ data, count }: PaymentTermsTableProps) => {
   const navigate = useNavigate();
   const permissions = usePermissions();
 
-  const defaultColumnVisibility = {
-    description: false,
-    gracePeriod: false,
-    calculationMethod: false,
-  };
-
   const columns = useMemo<ColumnDef<typeof data[number]>[]>(() => {
     return [
       {
         accessorKey: "name",
         header: "Name",
-        cell: (item) => item.getValue(),
-      },
-      {
-        accessorKey: "description",
-        header: "Description",
         cell: (item) => item.getValue(),
       },
       {
@@ -52,11 +41,6 @@ const PaymentTermsTable = memo(({ data, count }: PaymentTermsTableProps) => {
         cell: (item) => item.getValue(),
       },
       {
-        accessorKey: "gracePeriod",
-        header: "Grace Period",
-        cell: (item) => item.getValue(),
-      },
-      {
         accessorKey: "calculationMethod",
         header: "Calculation Method",
         cell: (item) => item.getValue(),
@@ -69,22 +53,22 @@ const PaymentTermsTable = memo(({ data, count }: PaymentTermsTableProps) => {
       return (
         <>
           <MenuItem
-            isDisabled={!permissions.can("update", "purchasing")}
+            isDisabled={!permissions.can("update", "accounting")}
             icon={<BsPencilSquare />}
             onClick={() => {
               navigate(
-                `/x/purchasing/payment-terms/${row.id}?${params.toString()}`
+                `/x/accounting/payment-terms/${row.id}?${params.toString()}`
               );
             }}
           >
             Edit Payment Term
           </MenuItem>
           <MenuItem
-            isDisabled={!permissions.can("delete", "purchasing")}
+            isDisabled={!permissions.can("delete", "accounting")}
             icon={<IoMdTrash />}
             onClick={() => {
               navigate(
-                `/x/purchasing/payment-terms/delete/${
+                `/x/accounting/payment-terms/delete/${
                   row.id
                 }?${params.toString()}`
               );
@@ -103,7 +87,6 @@ const PaymentTermsTable = memo(({ data, count }: PaymentTermsTableProps) => {
       data={data}
       columns={columns}
       count={count}
-      defaultColumnVisibility={defaultColumnVisibility}
       renderContextMenu={renderContextMenu}
     />
   );

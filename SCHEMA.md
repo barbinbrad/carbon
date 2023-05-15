@@ -4093,7 +4093,7 @@ CREATE VIEW "documents_view" AS
 
 ```sql
 CREATE TYPE "paymentTermCalculationMethod" AS ENUM (
-  'Transaction Date',
+  'Net',
   'End of Month',
   'Day of Month'
 );
@@ -4101,12 +4101,10 @@ CREATE TYPE "paymentTermCalculationMethod" AS ENUM (
 CREATE TABLE "paymentTerm" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "name" TEXT NOT NULL,
-  "description" TEXT,
   "daysDue" INTEGER NOT NULL DEFAULT 0,
   "daysDiscount" INTEGER NOT NULL DEFAULT 0,
   "discountPercentage" NUMERIC(10,5) NOT NULL DEFAULT 0,
-  "gracePeriod" INTEGER NOT NULL DEFAULT 0,
-  "calculationMethod" "paymentTermCalculationMethod" NOT NULL DEFAULT 'Transaction Date',
+  "calculationMethod" "paymentTermCalculationMethod" NOT NULL DEFAULT 'Net',
   "active" BOOLEAN NOT NULL DEFAULT TRUE,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   "createdBy" TEXT NOT NULL,
@@ -4118,6 +4116,19 @@ CREATE TABLE "paymentTerm" (
   CONSTRAINT "paymentTerm_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE CASCADE,
   CONSTRAINT "paymentTerm_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE CASCADE
 );
+
+INSERT INTO "paymentTerm" ("name", "daysDue", "calculationMethod", "daysDiscount", "discountPercentage", "createdBy") 
+VALUES 
+  ('Net 15', 15, 'Net', 0, 0, 'system'),
+  ('Net 30', 30, 'Net', 0, 0, 'system'),
+  ('Net 50', 50, 'Net', 0, 0, 'system'),
+  ('Net 60', 60, 'Net', 0, 0, 'system'),
+  ('Net 90', 90, 'Net', 0, 0, 'system'),
+  ('1% 10 Net 30', 30, 'Net', 10, 1, 'system'),
+  ('2% 10 Net 30', 30, 'Net', 10, 2, 'system'),
+  ('Due on Receipt', 0, 'Net', 0, 0, 'system'),
+  ('Net EOM 10', 10, 'End of Month', 0, 0, 'system');
+  
 
 CREATE TYPE "shippingCarrier" AS ENUM (
   'UPS',

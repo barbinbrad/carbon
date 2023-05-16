@@ -1,4 +1,5 @@
 import type { InputProps } from "@chakra-ui/react";
+import { InputLeftAddon } from "@chakra-ui/react";
 import {
   FormControl,
   FormErrorMessage,
@@ -16,17 +17,19 @@ type FormInputProps = InputProps & {
   label?: string;
   isRequired?: boolean;
   helperText?: string;
+  prefix?: string;
   suffix?: string;
 };
 
 const Input = forwardRef<HTMLInputElement, FormInputProps>(
-  ({ name, label, isRequired, helperText, suffix, ...rest }, ref) => {
+  ({ name, label, isRequired, helperText, prefix, suffix, ...rest }, ref) => {
     const { getInputProps, error } = useField(name);
 
     return (
       <FormControl isInvalid={!!error} isRequired={isRequired}>
         {label && <FormLabel htmlFor={name}>{label}</FormLabel>}
         <InputGroup>
+          {prefix && <InputLeftAddon children={prefix} />}
           <ChakraInput
             ref={ref}
             {...getInputProps({

@@ -5,7 +5,7 @@ import { IoMdAdd } from "react-icons/io";
 import { DebouncedInput } from "~/components/Search";
 import { usePermissions, useUrlParams } from "~/hooks";
 
-const PaymentTermsTableFilters = () => {
+const ShippingMethodsTableFilters = () => {
   const [params] = useUrlParams();
   const permissions = usePermissions();
   const borderColor = useColor("gray.200");
@@ -28,14 +28,14 @@ const PaymentTermsTableFilters = () => {
         />
       </HStack>
       <HStack spacing={2}>
-        {permissions.can("create", "accounting") && (
+        {permissions.can("create", "inventory") && (
           <Button
             as={Link}
             to={`new?${params.toString()}`}
             colorScheme="brand"
             leftIcon={<IoMdAdd />}
           >
-            New Payment Term
+            New Shipping Method
           </Button>
         )}
       </HStack>
@@ -43,4 +43,4 @@ const PaymentTermsTableFilters = () => {
   );
 };
 
-export default PaymentTermsTableFilters;
+export default ShippingMethodsTableFilters;

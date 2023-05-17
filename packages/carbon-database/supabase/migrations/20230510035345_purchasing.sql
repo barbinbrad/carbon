@@ -87,6 +87,7 @@ CREATE TABLE "purchaseOrder" (
   "status" "purchaseOrderApprovalStatus" NOT NULL,
   "orderDate" DATE NOT NULL DEFAULT CURRENT_DATE,
   "orderDueDate" DATE,
+  "receivedDate" DATE,
   "orderSubTotal" NUMERIC(10,5) NOT NULL DEFAULT 0,
   "orderTax" NUMERIC(10,5) NOT NULL DEFAULT 0,
   "orderDiscount" NUMERIC(10,5) NOT NULL DEFAULT 0,
@@ -94,20 +95,21 @@ CREATE TABLE "purchaseOrder" (
   "orderTotal" NUMERIC(10,5) NOT NULL DEFAULT 0,
   "notes" TEXT,
   "supplierId" TEXT NOT NULL,
-  "supplierContactId" TEXT NOT NULL,
+  "supplierContactId" TEXT,
+  "supplierReference" TEXT,
   "invoiceSupplierId" TEXT,
   "invoiceSupplierLocationId" TEXT,
   "invoiceSupplierContactId" TEXT,
   "paymentTermId" TEXT,
   "shippingMethodId" TEXT,
-  "currencyId" TEXT NOT NULL,
-  "approvalRequestDate" DATE,
-  "approvalDecisionDate" DATE,
-  "approvalDecisionUserId" TEXT,
-  "approvalDecisionNotes" TEXT,
+  "currencyCode" TEXT NOT NULL,
+  -- "approvalRequestDate" DATE,
+  -- "approvalDecisionDate" DATE,
+  -- "approvalDecisionUserId" TEXT,
+  -- "approvalDecisionNotes" TEXT,
   "closed" BOOLEAN NOT NULL DEFAULT FALSE,
-  "closedDate" DATE,
-  "closedUserId" TEXT,
+  "closedAt" DATE,
+  "closedBy" TEXT,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   "createdBy" TEXT NOT NULL,
   "updatedAt" TIMESTAMP WITH TIME ZONE,
@@ -122,9 +124,9 @@ CREATE TABLE "purchaseOrder" (
   CONSTRAINT "purchaseOrder_invoiceSupplierContactId_fkey" FOREIGN KEY ("invoiceSupplierContactId") REFERENCES "supplierContact" ("id") ON DELETE CASCADE,
   CONSTRAINT "purchaseOrder_paymentTermId_fkey" FOREIGN KEY ("paymentTermId") REFERENCES "paymentTerm" ("id") ON DELETE CASCADE,
   CONSTRAINT "purchaseOrder_shippingMethodId_fkey" FOREIGN KEY ("shippingMethodId") REFERENCES "shippingMethod" ("id") ON DELETE CASCADE,
-  CONSTRAINT "purchaseOrder_currencyId_fkey" FOREIGN KEY ("currencyId") REFERENCES "currency" ("id") ON DELETE CASCADE,
-  CONSTRAINT "purchaseOrder_approvalDecisionUserId_fkey" FOREIGN KEY ("approvalDecisionUserId") REFERENCES "user" ("id") ON DELETE CASCADE,
-  CONSTRAINT "purchaseOrder_closedUserId_fkey" FOREIGN KEY ("closedUserId") REFERENCES "user" ("id") ON DELETE CASCADE,
+  CONSTRAINT "purchaseOrder_currencyCode_fkey" FOREIGN KEY ("currencyCode") REFERENCES "currency" ("code") ON DELETE CASCADE,
+  -- CONSTRAINT "purchaseOrder_approvalDecisionUserId_fkey" FOREIGN KEY ("approvalDecisionUserId") REFERENCES "user" ("id") ON DELETE CASCADE,
+  CONSTRAINT "purchaseOrder_closedBy_fkey" FOREIGN KEY ("closedBy") REFERENCES "user" ("id") ON DELETE CASCADE,
   CONSTRAINT "purchaseOrder_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE CASCADE,
   CONSTRAINT "purchaseOrder_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE CASCADE
 );
@@ -135,4 +137,33 @@ CREATE INDEX "purchaseOrder_supplierContactId_idx" ON "purchaseOrder" ("supplier
 CREATE INDEX "purchaseOrder_invoiceSupplierId_idx" ON "purchaseOrder" ("invoiceSupplierId");
 CREATE INDEX "purchaseOrder_invoiceSupplierLocationId_idx" ON "purchaseOrder" ("invoiceSupplierLocationId");
 CREATE INDEX "purchaseOrder_invoiceSupplierContactId_idx" ON "purchaseOrder" ("invoiceSupplierContactId");
-CREATE INDEX "purchaseOrder_approvalDecisionUserId_idx" ON "purchaseOrder" ("approvalDecisionUserId");
+-- CREATE INDEX "purchaseOrder_approvalDecisionUserId_idx" ON "purchaseOrder" ("approvalDecisionUserId");
+
+CREATE TABLE "purchaseOrderFavorite" (
+  "purchaseOrderId" TEXT NOT NULL,
+  "userId" TEXT NOT NULL,
+
+  CONSTRAINT "purchaseOrderFavorites_pkey" PRIMARY KEY ("purchaseOrderId", "userId"),
+  CONSTRAINT "purchaseOrderFavorites_purchaseOrderId_fkey" FOREIGN KEY ("purchaseOrderId") REFERENCES "purchaseOrder"("id") ON DELETE CASCADE,
+  CONSTRAINT "purchaseOrderFavorites_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE
+);
+
+CREATE INDEX "purchaseOrderFavorites_userId_idx" ON "purchaseOrderFavorite" ("userId");
+CREATE INDEX "purchaseOrderFavorites_purchaseOrderId_idx" ON "purchaseOrderFavorite" ("purchaseOrderId");
+
+ALTER TABLE "purchaseOrderFavorite" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view their own purchase order favorites" ON "purchaseOrderFavorite" 
+  FOR SELECT USING (
+    auth.uid()::text = "userId"
+  );
+
+CREATE POLICY "Users can create their own purchase order favorites" ON "purchaseOrderFavorite" 
+  FOR INSERT WITH CHECK (
+    auth.uid()::text = "userId"
+  );
+
+CREATE POLICY "Users can delete their own purchase order favorites" ON "purchaseOrderFavorite"
+  FOR DELETE USING (
+    auth.uid()::text = "userId"
+  ); 

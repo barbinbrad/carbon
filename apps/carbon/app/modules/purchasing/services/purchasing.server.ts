@@ -1,8 +1,26 @@
 import type { Database } from "@carbon/database";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { getSupabaseServiceRole } from "~/lib/supabase";
+import type { TypeOfValidator } from "~/types/validators";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
+import type { purchaseOrderValidator } from "./purchasing.form";
+
+export async function closePurchaseOrder(
+  client: SupabaseClient<Database>,
+  purchaseOrderId: string,
+  userId: string
+) {
+  return client
+    .from("purchaseOrder")
+    .update({
+      closed: true,
+      closedAt: new Date().toISOString(),
+      closedBy: userId,
+    })
+    .eq("id", purchaseOrderId)
+    .select("id");
+}
 
 export async function deleteSupplierContact(
   client: SupabaseClient<Database>,
@@ -45,6 +63,53 @@ export async function getSupplier(
     )
     .eq("id", supplierId)
     .single();
+}
+
+export async function getPurchaseOrder(
+  client: SupabaseClient<Database>,
+  purchaseOrderId: string
+) {
+  return client
+    .from("purchaseOrder")
+    .select("*")
+    .eq("id", purchaseOrderId)
+    .single();
+}
+
+export async function getPurchaseOrders(
+  client: SupabaseClient<Database>,
+  args: GenericQueryFilters & {
+    number: string | null;
+    status: string | null;
+    supplierId: string | null;
+    closed?: boolean;
+  }
+) {
+  let query = client
+    .from("purchaseOrder")
+    .select(
+      "id, number, status, supplierId, supplier(id, name), closed, createdAt, createdBy, updatedAt, updatedBy",
+      { count: "exact" }
+    );
+
+  if (args.number) {
+    query = query.ilike("purchaseOrderId", `%${args.number}%`);
+  }
+
+  if (args.status) {
+    query = query.eq("status", args.status);
+  }
+
+  if (args.supplierId) {
+    query = query.eq("supplierId", args.supplierId);
+  }
+
+  if (args.closed !== null) {
+    query = query.eq("closed", args.closed);
+  }
+
+  query = setGenericQueryFilters(query, args, "purchaseOrderId");
+  return query;
 }
 
 export async function getSupplierLocations(
@@ -340,6 +405,27 @@ export async function updateSupplierLocation(
     .update(supplierLocation.address)
     .eq("id", supplierLocation.addressId)
     .select("id");
+}
+
+export async function upsertPurchaseOrder(
+  client: SupabaseClient<Database>,
+  purchaseOrder:
+    | (Omit<TypeOfValidator<typeof purchaseOrderValidator>, "id"> & {
+        createdBy: string;
+      })
+    | (Omit<TypeOfValidator<typeof purchaseOrderValidator>, "id"> & {
+        id: string;
+        updatedBy: string;
+      })
+) {
+  if ("id" in purchaseOrder) {
+    return client
+      .from("purchaseOrder")
+      .update(purchaseOrder)
+      .eq("id", purchaseOrder.id)
+      .select("id");
+  }
+  return client.from("purchaseOrder").insert([purchaseOrder]).select("id");
 }
 
 export async function upsertSupplierType(

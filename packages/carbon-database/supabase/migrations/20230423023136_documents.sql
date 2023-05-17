@@ -137,17 +137,17 @@ CREATE INDEX "documentFavorites_documentId_idx" ON "documentFavorite" ("document
 
 ALTER TABLE "documentFavorite" ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Users can view their own favorites" ON "documentFavorite" 
+CREATE POLICY "Users can view their own document favorites" ON "documentFavorite" 
   FOR SELECT USING (
     auth.uid()::text = "userId"
   );
 
-CREATE POLICY "Users can create their own favorites" ON "documentFavorite" 
+CREATE POLICY "Users can create their own document favorites" ON "documentFavorite" 
   FOR INSERT WITH CHECK (
     auth.uid()::text = "userId"
   );
 
-CREATE POLICY "Users can delete their own favorites" ON "documentFavorite"
+CREATE POLICY "Users can delete their own document favorites" ON "documentFavorite"
   FOR DELETE USING (
     auth.uid()::text = "userId"
   ); 

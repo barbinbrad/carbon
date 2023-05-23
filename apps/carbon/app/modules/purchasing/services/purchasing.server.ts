@@ -86,11 +86,8 @@ export async function getPurchaseOrders(
   }
 ) {
   let query = client
-    .from("purchaseOrder")
-    .select(
-      "id, number, status, supplierId, supplier(id, name), closed, createdAt, createdBy, updatedAt, updatedBy",
-      { count: "exact" }
-    );
+    .from("purchase_order_view")
+    .select("*", { count: "exact" });
 
   if (args.number) {
     query = query.ilike("purchaseOrderId", `%${args.number}%`);

@@ -5,46 +5,30 @@ import { usePermissions, useUrlParams } from "~/hooks";
 import type { DocumentLabel } from "~/modules/documents/types";
 import { mapRowsToOptions } from "~/utils/form";
 import DocumentCreateForm from "../DocumentCreateForm";
+import { capitalize } from "~/utils/string";
 
 type DocumentTableFiltersProps = {
   labels: DocumentLabel[];
 };
+
+const documentTypeOptions = [
+  "all",
+  "document",
+  "presentation",
+  "spreadsheet",
+  "image",
+  "video",
+  "audio",
+].map((type) => ({
+  label: capitalize(type),
+  value: type,
+}));
 
 const DocumentsTableFilters = ({ labels }: DocumentTableFiltersProps) => {
   const [params, setParams] = useUrlParams();
   const permissions = usePermissions();
 
   const borderColor = useColor("gray.200");
-  const documentTypeOptions = [
-    {
-      label: "All",
-      value: "all",
-    },
-    {
-      label: "Document",
-      value: "document",
-    },
-    {
-      label: "Presentation",
-      value: "presentation",
-    },
-    {
-      label: "Spreadsheet",
-      value: "spreadsheet",
-    },
-    {
-      label: "Image",
-      value: "image",
-    },
-    {
-      label: "Video",
-      value: "video",
-    },
-    {
-      label: "Audio",
-      value: "audio",
-    },
-  ];
 
   const labelOptions = mapRowsToOptions({
     data: labels,

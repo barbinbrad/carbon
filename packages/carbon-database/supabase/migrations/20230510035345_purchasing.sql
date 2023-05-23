@@ -139,6 +139,30 @@ CREATE INDEX "purchaseOrder_invoiceSupplierLocationId_idx" ON "purchaseOrder" ("
 CREATE INDEX "purchaseOrder_invoiceSupplierContactId_idx" ON "purchaseOrder" ("invoiceSupplierContactId");
 -- CREATE INDEX "purchaseOrder_approvalDecisionUserId_idx" ON "purchaseOrder" ("approvalDecisionUserId");
 
+CREATE TYPE "purchaseOrderTransactionType" AS ENUM (
+  'Edit',
+  'Favorite',
+  'Unfavorite',
+  'Approved',
+  'Reject',
+  'Request Approval'
+);
+
+CREATE TABLE "purchaseOrderTransaction" (
+  "id" TEXT NOT NULL DEFAULT xid(),
+  "purchaseOrderId" TEXT NOT NULL,
+  "type" "purchaseOrderTransactionType" NOT NULL,
+  "userId" TEXT NOT NULL,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+
+  CONSTRAINT "purchaseOrderTransaction_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "purchaseOrderTransaction_purchaseOrderId_fkey" FOREIGN KEY ("purchaseOrderId") REFERENCES "purchaseOrder"("id") ON DELETE CASCADE,
+  CONSTRAINT "purchaseOrderTransaction_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE
+);
+
+CREATE INDEX "purchaseOrderTransaction_purchaseOrderId_idx" ON "purchaseOrderTransaction" ("purchaseOrderId");
+CREATE INDEX "purchaseOrderTransaction_userId_idx" ON "purchaseOrderTransaction" ("userId");
+
 CREATE TABLE "purchaseOrderFavorite" (
   "purchaseOrderId" TEXT NOT NULL,
   "userId" TEXT NOT NULL,
@@ -167,3 +191,28 @@ CREATE POLICY "Users can delete their own purchase order favorites" ON "purchase
   FOR DELETE USING (
     auth.uid()::text = "userId"
   ); 
+
+CREATE VIEW "purchase_order_view" AS
+  SELECT
+    p."id",
+    p."purchaseOrderId",
+    p."createdBy",
+    s."name" AS "supplierName",
+    u."avatarUrl" AS "createdByAvatar",
+    u."fullName" AS "createdByFullName",
+    p."createdAt",
+    p."updatedBy",
+    u2."avatarUrl" AS "updatedByAvatar",
+    u2."fullName" AS "updatedByFullName",
+    p."updatedAt",
+    p."closed",
+    p."closedAt",
+    u3."avatarUrl" AS "closedByAvatar",
+    u3."fullName" AS "closedByFullName",
+    EXISTS(SELECT 1 FROM "purchaseOrderFavorite" pf WHERE pf."purchaseOrderId" = p.id AND pf."userId" = auth.uid()::text) AS favorite
+  FROM "purchaseOrder" p
+  LEFT JOIN "supplier" s ON s."id" = p."supplierId"
+  LEFT JOIN "user" u ON u."id" = p."createdBy"
+  LEFT JOIN "user" u2 ON u2."id" = p."updatedBy"
+  LEFT JOIN "user" u3 ON u3."id" = p."closedBy";
+

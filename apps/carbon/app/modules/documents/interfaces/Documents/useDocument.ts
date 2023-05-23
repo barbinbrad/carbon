@@ -109,7 +109,7 @@ export const useDocument = () => {
   );
 
   const isImage = useCallback((fileType: string) => {
-    return ["png", "jpg", "jpeg", "gif", "svg"].includes(fileType);
+    return ["png", "jpg", "jpeg", "gif", "svg", "avif"].includes(fileType);
   }, []);
 
   const label = useCallback(

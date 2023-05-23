@@ -115,13 +115,13 @@ CREATE TABLE "documentTransaction" (
   "userId" TEXT NOT NULL,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
 
-  CONSTRAINT "documentActivity_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "documentActivity_documentId_fkey" FOREIGN KEY ("documentId") REFERENCES "document"("id") ON DELETE CASCADE,
-  CONSTRAINT "documentActivity_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE
+  CONSTRAINT "documentTransaction_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "documentTransaction_documentId_fkey" FOREIGN KEY ("documentId") REFERENCES "document"("id") ON DELETE CASCADE,
+  CONSTRAINT "documentTransaction_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE
 );
 
-CREATE INDEX "documentActivity_documentId_idx" ON "documentTransaction" ("documentId");
-CREATE INDEX "documentActivity_userId_idx" ON "documentTransaction" ("userId");
+CREATE INDEX "documentTransaction_documentId_idx" ON "documentTransaction" ("documentId");
+CREATE INDEX "documentTransaction_userId_idx" ON "documentTransaction" ("userId");
 
 CREATE TABLE "documentFavorite" (
   "documentId" TEXT NOT NULL,

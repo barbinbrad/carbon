@@ -6,6 +6,10 @@ const purchasingRoutes: AuthenticatedRouteGroup[] = [
     name: "Manage",
     routes: [
       {
+        name: "Purchase Orders",
+        to: "/x/purchasing/orders",
+      },
+      {
         name: "Suppliers",
         to: "/x/purchasing/suppliers",
       },

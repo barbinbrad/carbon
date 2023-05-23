@@ -45,6 +45,7 @@ const DocumentIcon = ({ fileName }: DocumentIconProps) => {
     case "jpeg":
     case "gif":
     case "svg":
+    case "avif":
       return <Icon color="yellow.400" {...iconSize} as={BsFileImageFill} />;
     case "mp4":
     case "avi":

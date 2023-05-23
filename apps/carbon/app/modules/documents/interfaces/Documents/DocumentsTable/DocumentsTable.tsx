@@ -1,7 +1,6 @@
 import { CreatableSelect } from "@carbon/react";
 import { convertKbToString } from "@carbon/utils";
 import {
-  Box,
   HStack,
   Icon,
   Image,
@@ -34,7 +33,7 @@ import { Avatar, Table } from "~/components";
 import { Confirm, ConfirmDelete } from "~/components/Modals";
 import { useUrlParams } from "~/hooks";
 import type { Document, DocumentLabel } from "~/modules/documents";
-import DocumentIcon from "../DocumentIcon/DocumentIcon";
+import DocumentIcon from "../DocumentIcon";
 import { useDocument } from "../useDocument";
 
 type DocumentsTableProps = {
@@ -149,17 +148,14 @@ const DocumentsTable = memo(({ data, count, labels }: DocumentsTableProps) => {
         header: "Name",
         cell: ({ row }) => (
           <HStack>
-            <Box
+            <Icon
               color={row.original.favorite ? "yellow.400" : "gray.300"}
               cursor="pointer"
-            >
-              <Icon
-                h={4}
-                w={4}
-                as={row.original.favorite ? BsStarFill : BsStar}
-                onClick={() => onFavorite(row.original)}
-              />
-            </Box>
+              h={4}
+              w={4}
+              as={row.original.favorite ? BsStarFill : BsStar}
+              onClick={() => onFavorite(row.original)}
+            />
             <DocumentIcon fileName={row.original.name} />
             <Link onClick={() => download(row.original)}>
               {row.original.name}

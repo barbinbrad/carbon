@@ -1632,6 +1632,29 @@ export interface Database {
           userId?: string;
         };
       };
+      purchaseOrderTransaction: {
+        Row: {
+          purchaseOrderId: string;
+          type: Database["public"]["Enums"]["purchaseOrderTransactionType"];
+          userId: string;
+          id: string;
+          createdAt: string;
+        };
+        Insert: {
+          purchaseOrderId: string;
+          type: Database["public"]["Enums"]["purchaseOrderTransactionType"];
+          userId: string;
+          id?: string;
+          createdAt?: string;
+        };
+        Update: {
+          purchaseOrderId?: string;
+          type?: Database["public"]["Enums"]["purchaseOrderTransactionType"];
+          userId?: string;
+          id?: string;
+          createdAt?: string;
+        };
+      };
       search: {
         Row: {
           id: number;
@@ -2337,6 +2360,26 @@ export interface Database {
           abilityIds: string[] | null;
         };
       };
+      purchase_order_view: {
+        Row: {
+          id: string | null;
+          purchaseOrderId: string | null;
+          createdBy: string | null;
+          supplierName: string | null;
+          createdByAvatar: string | null;
+          createdByFullName: string | null;
+          createdAt: string | null;
+          updatedBy: string | null;
+          updatedByAvatar: string | null;
+          updatedByFullName: string | null;
+          updatedAt: string | null;
+          closed: boolean | null;
+          closedAt: string | null;
+          closedByAvatar: string | null;
+          closedByFullName: string | null;
+          favorite: boolean | null;
+        };
+      };
     };
     Functions: {
       _xid_machine_id: {
@@ -2481,6 +2524,13 @@ export interface Database {
         | "Approved"
         | "Rejected"
         | "Confirmed";
+      purchaseOrderTransactionType:
+        | "Edit"
+        | "Favorite"
+        | "Unfavorite"
+        | "Approved"
+        | "Reject"
+        | "Request Approval";
       purchaseOrderType: "Draft" | "Purchase" | "Return";
       searchEntity:
         | "Resource"

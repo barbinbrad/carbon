@@ -1684,6 +1684,41 @@ export interface Database {
           fts?: unknown | null;
         };
       };
+      sequence: {
+        Row: {
+          table: string;
+          name: string;
+          prefix: string | null;
+          suffix: string | null;
+          updatedAt: string | null;
+          updatedBy: string | null;
+          next: number;
+          size: number;
+          step: number;
+        };
+        Insert: {
+          table: string;
+          name: string;
+          prefix?: string | null;
+          suffix?: string | null;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
+          next?: number;
+          size?: number;
+          step?: number;
+        };
+        Update: {
+          table?: string;
+          name?: string;
+          prefix?: string | null;
+          suffix?: string | null;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
+          next?: number;
+          size?: number;
+          step?: number;
+        };
+      };
       shelf: {
         Row: {
           id: string;
@@ -2364,6 +2399,10 @@ export interface Database {
         Row: {
           id: string | null;
           purchaseOrderId: string | null;
+          status:
+            | Database["public"]["Enums"]["purchaseOrderApprovalStatus"]
+            | null;
+          type: Database["public"]["Enums"]["purchaseOrderType"] | null;
           createdBy: string | null;
           supplierName: string | null;
           createdByAvatar: string | null;

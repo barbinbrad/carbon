@@ -196,6 +196,8 @@ CREATE VIEW "purchase_order_view" AS
   SELECT
     p."id",
     p."purchaseOrderId",
+    p."status",
+    p."type",
     p."createdBy",
     s."name" AS "supplierName",
     u."avatarUrl" AS "createdByAvatar",

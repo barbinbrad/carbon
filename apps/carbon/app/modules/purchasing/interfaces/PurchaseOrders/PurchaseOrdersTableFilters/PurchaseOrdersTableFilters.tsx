@@ -50,13 +50,13 @@ const PurchaseOrdersTableFilters = () => {
           onChange={(selected) => {
             setParams({ status: selected?.value });
           }}
-          aria-label="PurchaseOrder Type"
+          aria-label="Status"
           minW={180}
-          placeholder="PurchaseOrder Type"
+          placeholder="Status"
         />
       </HStack>
       <HStack spacing={2}>
-        {permissions.can("create", "purchaseing") && (
+        {permissions.can("create", "purchasing") && (
           <Button
             as={Link}
             to={`new?${params.toString()}`}

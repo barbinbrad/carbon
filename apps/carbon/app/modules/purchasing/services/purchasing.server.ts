@@ -79,30 +79,29 @@ export async function getPurchaseOrder(
 export async function getPurchaseOrders(
   client: SupabaseClient<Database>,
   args: GenericQueryFilters & {
-    number: string | null;
+    search: string | null;
     status: string | null;
     supplierId: string | null;
-    closed?: boolean;
   }
 ) {
   let query = client
     .from("purchase_order_view")
     .select("*", { count: "exact" });
 
-  if (args.number) {
-    query = query.ilike("purchaseOrderId", `%${args.number}%`);
+  if (args.search) {
+    query = query.ilike("purchaseOrderId", `%${args.search}%`);
   }
 
   if (args.status) {
-    query = query.eq("status", args.status);
+    if (args.status === "closed") {
+      query = query.eq("closed", true);
+    } else {
+      query = query.eq("status", args.status);
+    }
   }
 
   if (args.supplierId) {
     query = query.eq("supplierId", args.supplierId);
-  }
-
-  if (args.closed !== null) {
-    query = query.eq("closed", args.closed);
   }
 
   query = setGenericQueryFilters(query, args, "purchaseOrderId");

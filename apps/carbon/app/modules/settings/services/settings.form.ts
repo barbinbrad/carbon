@@ -5,7 +5,6 @@ import { zfd } from "zod-form-data";
 export const sequenceValidator = withZod(
   z.object({
     table: z.string().min(1, { message: "Table is required" }),
-    name: z.string().min(1, { message: "Name is required" }),
     prefix: zfd.text(z.string().optional()),
     suffix: zfd.text(z.string().optional()),
     next: zfd.numeric(z.number().min(1)),

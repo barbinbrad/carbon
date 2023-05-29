@@ -10,9 +10,6 @@ CREATE TABLE "sequence" (
   "updatedBy" TEXT,
 
   CONSTRAINT "sequence_pkey" PRIMARY KEY ("table"),
-  CONSTRAINT "sequence_table_check" CHECK ("table" ~ '^[a-zA-Z0-9_]+$'),
-  CONSTRAINT "sequence_prefix_check" CHECK ("prefix" ~ '^[a-zA-Z0-9_]+$'),
-  CONSTRAINT "sequence_suffix_check" CHECK ("suffix" ~ '^[a-zA-Z0-9_]+$'),
   CONSTRAINT "sequence_next_check" CHECK ("next" >= 1),
   CONSTRAINT "sequence_size_check" CHECK ("size" >= 1),
   CONSTRAINT "sequence_step_check" CHECK ("step" >= 1),

@@ -15,6 +15,13 @@ export default function useNewMenu(): Route[] {
       });
     }
 
+    if (permissions.can("create", "purchasing")) {
+      links.push({
+        name: "New Purchase Order",
+        to: "/x/purchase-order/new",
+      });
+    }
+
     if (permissions.can("create", "users")) {
       links.push({
         name: "New Employee",
@@ -22,19 +29,12 @@ export default function useNewMenu(): Route[] {
       });
     }
 
-    if (permissions.can("create", "sales")) {
-      links.push({
-        name: "New Customer",
-        to: "/x/sales/customers/new",
-      });
-    }
-
-    if (permissions.can("create", "purchasing")) {
-      links.push({
-        name: "New Supplier",
-        to: "/x/purchasing/suppliers/new",
-      });
-    }
+    // if (permissions.can("create", "sales")) {
+    //   links.push({
+    //     name: "New Customer",
+    //     to: "/x/sales/customers/new",
+    //   });
+    // }
 
     return links;
   }, [permissions]);

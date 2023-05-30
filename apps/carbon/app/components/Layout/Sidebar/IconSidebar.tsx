@@ -24,6 +24,8 @@ const IconSidebar = () => {
         variant="ghost"
         size="lg"
         icon={<BsFillHexagonFill />}
+        position="sticky"
+        top={0}
         mb={4}
       />
 

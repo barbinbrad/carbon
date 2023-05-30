@@ -108,6 +108,21 @@ export async function getPurchaseOrders(
   return query;
 }
 
+export function getPurchaseOrderApprovalStatuses(): Database["public"]["Enums"]["purchaseOrderApprovalStatus"][] {
+  return [
+    "Draft",
+    "In Review",
+    "In External Review",
+    "Approved",
+    "Rejected",
+    "Confirmed",
+  ];
+}
+
+export function getPurchaseOrderTypes(): Database["public"]["Enums"]["purchaseOrderType"][] {
+  return ["Draft", "Purchase", "Return"];
+}
+
 export async function getSupplierLocations(
   client: SupabaseClient<Database>,
   supplierId: string
@@ -419,9 +434,12 @@ export async function upsertPurchaseOrder(
       .from("purchaseOrder")
       .update(purchaseOrder)
       .eq("id", purchaseOrder.id)
-      .select("id");
+      .select("id, purchaseOrderId");
   }
-  return client.from("purchaseOrder").insert([purchaseOrder]).select("id");
+  return client
+    .from("purchaseOrder")
+    .insert([purchaseOrder])
+    .select("id, purchaseOrderId");
 }
 
 export async function upsertSupplierType(

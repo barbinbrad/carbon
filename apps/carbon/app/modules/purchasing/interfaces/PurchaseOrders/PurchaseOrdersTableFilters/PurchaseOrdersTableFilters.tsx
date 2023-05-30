@@ -1,5 +1,6 @@
 import { Select, useColor } from "@carbon/react";
-import { Button, HStack, Link } from "@chakra-ui/react";
+import { Button, HStack } from "@chakra-ui/react";
+import { Link } from "@remix-run/react";
 import { IoMdAdd } from "react-icons/io";
 import { DebouncedInput } from "~/components/Search";
 import { usePermissions, useUrlParams } from "~/hooks";

@@ -64,10 +64,9 @@ const Select = ({
       )}
     </FormControl>
   ) : (
-    <Box>
+    <Box w="full">
       {label && <FormLabel>{label}</FormLabel>}
       <CarbonSelect
-        isDisabled
         isLoading={isLoading}
         options={[]}
         // @ts-ignore

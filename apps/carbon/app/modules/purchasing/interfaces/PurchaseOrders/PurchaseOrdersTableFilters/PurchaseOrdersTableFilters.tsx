@@ -60,7 +60,7 @@ const PurchaseOrdersTableFilters = () => {
         {permissions.can("create", "purchasing") && (
           <Button
             as={Link}
-            to={`new?${params.toString()}`}
+            to="/x/purchase-order/new"
             colorScheme="brand"
             leftIcon={<IoMdAdd />}
           >

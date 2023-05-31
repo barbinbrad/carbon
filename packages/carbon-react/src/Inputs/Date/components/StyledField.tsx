@@ -26,6 +26,7 @@ export const StyledField = forwardRef<HTMLDivElement, StyledFieldProps>(
         alignItems="center"
         px="1"
         py=".4rem"
+        w="full"
         _hover={{
           borderColor: "gray.400",
         }}

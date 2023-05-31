@@ -22,8 +22,19 @@ const DatePicker = (props: DatePickerProps<CalendarDate>) => {
     useDatePicker(props, state, ref);
 
   return (
-    <Box position="relative" display="inline-flex" flexDirection="column">
-      <InputGroup {...groupProps} ref={ref} width="auto" display="inline-flex">
+    <Box
+      position="relative"
+      display="inline-flex"
+      flexDirection="column"
+      w="full"
+    >
+      <InputGroup
+        {...groupProps}
+        ref={ref}
+        width="auto"
+        display="inline-flex"
+        w="full"
+      >
         <StyledField pr="4.5rem">
           <DateField {...fieldProps} />
           {state.validationState === "invalid" && (

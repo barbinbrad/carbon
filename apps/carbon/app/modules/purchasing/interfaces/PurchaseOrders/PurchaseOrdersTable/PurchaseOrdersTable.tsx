@@ -53,7 +53,7 @@ const PurchaseOrdersTable = memo(
     const columns = useMemo<ColumnDef<PurchaseOrder>[]>(() => {
       return [
         {
-          accessorKey: "number",
+          accessorKey: "purchaseOrderId",
           header: "PO Number",
           cell: ({ row }) => (
             <HStack>
@@ -68,6 +68,21 @@ const PurchaseOrdersTable = memo(
               <span>{row.original.purchaseOrderId}</span>
             </HStack>
           ),
+        },
+        {
+          accessorKey: "supplierName",
+          header: "Supplier",
+          cell: (item) => item.getValue(),
+        },
+        {
+          accessorKey: "orderDate",
+          header: "Order Date",
+          cell: (item) => item.getValue(),
+        },
+        {
+          accessorKey: "orderDueDate",
+          header: "Due Date",
+          cell: (item) => item.getValue(),
         },
         {
           accessorKey: "createdByFullName",

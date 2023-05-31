@@ -70,7 +70,7 @@ export async function getPurchaseOrder(
   purchaseOrderId: string
 ) {
   return client
-    .from("purchaseOrder")
+    .from("purchase_order_view")
     .select("*")
     .eq("id", purchaseOrderId)
     .single();

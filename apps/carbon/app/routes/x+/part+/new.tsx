@@ -61,7 +61,7 @@ export default function PartsNewRoute() {
   };
 
   return (
-    <Box maxW={720}>
+    <Box w="50%" maxW={720} minW={420}>
       <PartForm
         initialValues={initialValues}
         partGroups={routeData?.partGroups ?? []}

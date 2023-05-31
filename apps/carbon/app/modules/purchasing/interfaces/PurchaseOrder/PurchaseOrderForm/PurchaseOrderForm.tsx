@@ -9,7 +9,15 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { ValidatedForm } from "remix-validated-form";
-import { Boolean, Input, Select, Submit, Supplier } from "~/components/Form";
+import {
+  Boolean,
+  Currency,
+  DatePicker,
+  Input,
+  Select,
+  Submit,
+  Supplier,
+} from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import type {
   PurchaseOrderApprovalStatus,
@@ -22,6 +30,7 @@ type PurchaseOrderFormValues = {
   purchaseOrderId?: string;
   status: PurchaseOrderApprovalStatus;
   type: PurchaseOrderType;
+  currencyCode: string;
 };
 
 type PurchaseOrderFormProps = {
@@ -61,8 +70,8 @@ const PurchaseOrderForm = ({
           </Heading>
           {!isEditing && (
             <Text color="gray.500">
-              A part contains the information about a specific item that can be
-              purchased or manufactured.
+              A purchase order contains information about the agreement between
+              the company and a specific supplier for parts and services.
             </Text>
           )}
         </CardHeader>
@@ -84,6 +93,7 @@ const PurchaseOrderForm = ({
                 />
               )}
               <Supplier name="supplierId" label="Supplier" />
+              <DatePicker name="orderDate" label="Order Date" />
             </VStack>
             <VStack alignItems="start" spacing={2} w="full">
               <Select name="type" label="Type" options={typeOptions} />
@@ -94,6 +104,7 @@ const PurchaseOrderForm = ({
               />
             </VStack>
             <VStack alignItems="start" spacing={2} w="full">
+              <Currency name="currencyCode" label="Currency" />
               <Boolean name="blocked" label="Blocked" />
               {isEditing && <Boolean name="active" label="Active" />}
             </VStack>

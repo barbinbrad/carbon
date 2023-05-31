@@ -6,7 +6,8 @@ import { address, contact } from "~/types/validators";
 export const purchaseOrderValidator = withZod(
   z.object({
     id: zfd.text(z.string().optional()),
-    purchaseOrderId: z.string().min(1, { message: "PO Number is required" }),
+    purchaseOrderId: zfd.text(z.string().optional()),
+    orderDate: z.string().min(1, { message: "Order Date is required" }),
     type: z.enum(["Draft", "Purchase", "Return"], {
       errorMap: (issue, ctx) => ({
         message: "Type is required",
@@ -38,7 +39,7 @@ export const purchaseOrderValidator = withZod(
     invoiceSupplierContactId: zfd.text(z.string().optional()),
     paymentTermId: zfd.text(z.string().optional()),
     shippingMethodId: zfd.text(z.string().optional()),
-    currencyCode: z.string().min(1, { message: "Currency is required" }),
+    currencyCode: zfd.text(z.string().optional()),
   })
 );
 

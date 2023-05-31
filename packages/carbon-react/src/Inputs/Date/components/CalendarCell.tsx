@@ -30,7 +30,7 @@ export const CalendarCell = ({
         ref={ref}
         hidden={isOutsideMonth}
         size="sm"
-        colorScheme={isInvalid ? "red" : "blackAlpha"}
+        colorScheme={isInvalid ? "red" : "brand"}
         variant={isSelected ? "solid" : "ghost"}
         width="100%"
       >

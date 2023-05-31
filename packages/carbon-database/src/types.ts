@@ -2403,6 +2403,8 @@ export interface Database {
             | Database["public"]["Enums"]["purchaseOrderApprovalStatus"]
             | null;
           type: Database["public"]["Enums"]["purchaseOrderType"] | null;
+          orderDate: string | null;
+          orderDueDate: string | null;
           createdBy: string | null;
           supplierName: string | null;
           createdByAvatar: string | null;

@@ -1,3 +1,4 @@
 import PurchaseOrderForm from "./PurchaseOrderForm";
+import PurchaseOrderHeader from "./PurchaseOrderHeader";
 
-export { PurchaseOrderForm };
+export { PurchaseOrderForm, PurchaseOrderHeader };

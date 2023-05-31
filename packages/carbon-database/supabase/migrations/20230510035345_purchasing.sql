@@ -198,6 +198,8 @@ CREATE VIEW "purchase_order_view" AS
     p."purchaseOrderId",
     p."status",
     p."type",
+    p."orderDate",
+    p."orderDueDate",
     p."createdBy",
     s."name" AS "supplierName",
     u."avatarUrl" AS "createdByAvatar",

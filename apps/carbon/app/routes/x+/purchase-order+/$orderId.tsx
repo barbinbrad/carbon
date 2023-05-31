@@ -2,7 +2,11 @@ import { Grid } from "@chakra-ui/react";
 import type { LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
-import { getPartSummary, PartPreview, PartSidebar } from "~/modules/parts";
+import {
+  getPurchaseOrder,
+  PurchaseOrderHeader,
+  // PurchaseOrderSidebar,
+} from "~/modules/purchasing";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { error } from "~/utils/result";
@@ -12,33 +16,33 @@ export async function loader({ request, params }: LoaderArgs) {
     view: "parts",
   });
 
-  const { partId } = params;
-  if (!partId) throw new Error("Could not find partId");
+  const { orderId } = params;
+  if (!orderId) throw new Error("Could not find orderId");
 
-  const partSummary = await getPartSummary(client, partId);
-  if (partSummary.error) {
+  const purchaseOrder = await getPurchaseOrder(client, orderId);
+  if (purchaseOrder.error) {
     return redirect(
-      "/x/parts",
+      "/x/purchasing/orders",
       await flash(
         request,
-        error(partSummary.error, "Failed to load part summary")
+        error(purchaseOrder.error, "Failed to load purchase order summary")
       )
     );
   }
 
-  return json(partSummary.data);
+  return json(purchaseOrder.data);
 }
 
-export default function PartRoute() {
+export default function PurchaseOrderRoute() {
   return (
     <>
-      <PartPreview />
+      <PurchaseOrderHeader />
       <Grid
         gridTemplateColumns={["1fr", "1fr", "2fr 8fr"]}
         gridColumnGap={8}
         w="full"
       >
-        <PartSidebar />
+        {/* <PurchaseOrderSidebar /> */}
         <Outlet />
       </Grid>
     </>

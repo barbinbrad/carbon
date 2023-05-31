@@ -1,4 +1,5 @@
 import { Box } from "@chakra-ui/react";
+import { getLocalTimeZone, today } from "@internationalized/date";
 import type { ActionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
@@ -12,6 +13,7 @@ import {
   purchaseOrderValidator,
   upsertPurchaseOrder,
 } from "~/modules/purchasing";
+import { getNextSequence } from "~/modules/settings";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
@@ -31,8 +33,20 @@ export async function action({ request }: ActionArgs) {
     return validationError(validation.error);
   }
 
+  const nextSequence = await getNextSequence(client, "purchaseOrder", userId);
+  if (nextSequence.error) {
+    return redirect(
+      "/x/purchase-order/new",
+      await flash(
+        request,
+        error(nextSequence.error, "Failed to get next sequence")
+      )
+    );
+  }
+
   const createPurchaseOrder = await upsertPurchaseOrder(client, {
     ...validation.data,
+    purchaseOrderId: nextSequence.data,
     createdBy: userId,
   });
   if (createPurchaseOrder.error) {
@@ -62,12 +76,14 @@ export default function PurchaseOrderNewRoute() {
   const initialValues = {
     id: undefined,
     purchaseOrderId: undefined,
+    orderDate: today(getLocalTimeZone()).toString(),
     status: "Draft" as PurchaseOrderApprovalStatus,
     type: "Purchase" as PurchaseOrderType,
+    currencyCode: "USD",
   };
 
   return (
-    <Box maxW={720}>
+    <Box w="50%" maxW={720} minW={420}>
       <PurchaseOrderForm
         initialValues={initialValues}
         purchaseOrderApprovalStatuses={

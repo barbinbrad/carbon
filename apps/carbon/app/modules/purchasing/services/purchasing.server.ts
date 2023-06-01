@@ -421,11 +421,19 @@ export async function updateSupplierLocation(
 export async function upsertPurchaseOrder(
   client: SupabaseClient<Database>,
   purchaseOrder:
-    | (Omit<TypeOfValidator<typeof purchaseOrderValidator>, "id"> & {
+    | (Omit<
+        TypeOfValidator<typeof purchaseOrderValidator>,
+        "id" | "purchaseOrderId"
+      > & {
+        purchaseOrderId: string;
         createdBy: string;
       })
-    | (Omit<TypeOfValidator<typeof purchaseOrderValidator>, "id"> & {
+    | (Omit<
+        TypeOfValidator<typeof purchaseOrderValidator>,
+        "id" | "purchaseOrderId"
+      > & {
         id: string;
+        purchaseOrderId: string;
         updatedBy: string;
       })
 ) {
@@ -438,7 +446,9 @@ export async function upsertPurchaseOrder(
   }
   return client
     .from("purchaseOrder")
-    .insert([purchaseOrder])
+    .insert([
+      { ...purchaseOrder, currencyCode: purchaseOrder.currencyCode || "USD" },
+    ])
     .select("id, purchaseOrderId");
 }
 

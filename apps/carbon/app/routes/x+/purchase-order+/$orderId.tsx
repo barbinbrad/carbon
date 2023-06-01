@@ -5,7 +5,7 @@ import { Outlet } from "@remix-run/react";
 import {
   getPurchaseOrder,
   PurchaseOrderHeader,
-  // PurchaseOrderSidebar,
+  PurchaseOrderSidebar,
 } from "~/modules/purchasing";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
@@ -42,7 +42,7 @@ export default function PurchaseOrderRoute() {
         gridColumnGap={8}
         w="full"
       >
-        {/* <PurchaseOrderSidebar /> */}
+        <PurchaseOrderSidebar />
         <Outlet />
       </Grid>
     </>

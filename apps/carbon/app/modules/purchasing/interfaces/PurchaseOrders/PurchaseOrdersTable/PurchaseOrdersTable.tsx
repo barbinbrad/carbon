@@ -144,7 +144,7 @@ const PurchaseOrdersTable = memo(
         <>
           <MenuItem
             icon={<BsPencilSquare />}
-            isDisabled={permissions.can("update", "purchasing")}
+            isDisabled={!permissions.can("update", "purchasing")}
             onClick={() => edit(row)}
           >
             Edit
@@ -159,7 +159,7 @@ const PurchaseOrdersTable = memo(
           </MenuItem>
           <MenuItem
             icon={<IoMdTrash />}
-            isDisabled={permissions.can("delete", "purchasing")}
+            isDisabled={!permissions.can("delete", "purchasing")}
             onClick={() => {
               setSelectedPurchaseOrder(row);
               closePurchaseOrderModal.onOpen();

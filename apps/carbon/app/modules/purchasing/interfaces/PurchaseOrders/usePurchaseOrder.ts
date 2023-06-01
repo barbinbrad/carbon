@@ -27,7 +27,7 @@ export const usePurchaseOrder = () => {
 
   const edit = useCallback(
     (purchaseOrder: PurchaseOrder) =>
-      navigate(`/x/purchasing/order/${purchaseOrder.id}`),
+      navigate(`/x/purchase-order/${purchaseOrder.id}`),
     [navigate]
   );
 

@@ -17,12 +17,12 @@ const PartPreview = () => {
   const { orderId } = useParams();
   if (!orderId) throw new Error("Could not find orderId");
   const routeData = useRouteData<PurchaseOrder>(`/x/purchase-order/${orderId}`);
-  console.log(routeData);
+
   return (
     <Card w="full">
       <CardHeader>
         <HStack justifyContent="space-between" alignItems="start">
-          <Stack direction={["column", "column", "row"]} spacing={2}>
+          <Stack direction="column" spacing={2}>
             <Heading size="md">{routeData?.purchaseOrderId}</Heading>
             <Text color="gray.500">{routeData?.supplierName}</Text>
           </Stack>

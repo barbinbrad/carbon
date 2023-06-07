@@ -1528,18 +1528,13 @@ export interface Database {
           purchaseOrderId: string;
           type: Database["public"]["Enums"]["purchaseOrderType"];
           status: Database["public"]["Enums"]["purchaseOrderApprovalStatus"];
-          orderDueDate: string | null;
-          receivedDate: string | null;
+          receiptRequestedDate: string | null;
+          receiptPromisedDate: string | null;
           notes: string | null;
           supplierId: string;
           supplierContactId: string | null;
           supplierReference: string | null;
-          invoiceSupplierId: string | null;
-          invoiceSupplierLocationId: string | null;
-          invoiceSupplierContactId: string | null;
-          paymentTermId: string | null;
           shippingMethodId: string | null;
-          currencyCode: string;
           closedAt: string | null;
           closedBy: string | null;
           createdBy: string;
@@ -1547,11 +1542,7 @@ export interface Database {
           updatedBy: string | null;
           id: string;
           orderDate: string;
-          orderSubTotal: number;
-          orderTax: number;
-          orderDiscount: number;
-          orderShipping: number;
-          orderTotal: number;
+          currencyCode: string;
           closed: boolean;
           createdAt: string;
         };
@@ -1559,18 +1550,13 @@ export interface Database {
           purchaseOrderId: string;
           type: Database["public"]["Enums"]["purchaseOrderType"];
           status: Database["public"]["Enums"]["purchaseOrderApprovalStatus"];
-          orderDueDate?: string | null;
-          receivedDate?: string | null;
+          receiptRequestedDate?: string | null;
+          receiptPromisedDate?: string | null;
           notes?: string | null;
           supplierId: string;
           supplierContactId?: string | null;
           supplierReference?: string | null;
-          invoiceSupplierId?: string | null;
-          invoiceSupplierLocationId?: string | null;
-          invoiceSupplierContactId?: string | null;
-          paymentTermId?: string | null;
           shippingMethodId?: string | null;
-          currencyCode: string;
           closedAt?: string | null;
           closedBy?: string | null;
           createdBy: string;
@@ -1578,11 +1564,7 @@ export interface Database {
           updatedBy?: string | null;
           id?: string;
           orderDate?: string;
-          orderSubTotal?: number;
-          orderTax?: number;
-          orderDiscount?: number;
-          orderShipping?: number;
-          orderTotal?: number;
+          currencyCode?: string;
           closed?: boolean;
           createdAt?: string;
         };
@@ -1590,18 +1572,13 @@ export interface Database {
           purchaseOrderId?: string;
           type?: Database["public"]["Enums"]["purchaseOrderType"];
           status?: Database["public"]["Enums"]["purchaseOrderApprovalStatus"];
-          orderDueDate?: string | null;
-          receivedDate?: string | null;
+          receiptRequestedDate?: string | null;
+          receiptPromisedDate?: string | null;
           notes?: string | null;
           supplierId?: string;
           supplierContactId?: string | null;
           supplierReference?: string | null;
-          invoiceSupplierId?: string | null;
-          invoiceSupplierLocationId?: string | null;
-          invoiceSupplierContactId?: string | null;
-          paymentTermId?: string | null;
           shippingMethodId?: string | null;
-          currencyCode?: string;
           closedAt?: string | null;
           closedBy?: string | null;
           createdBy?: string;
@@ -1609,13 +1586,29 @@ export interface Database {
           updatedBy?: string | null;
           id?: string;
           orderDate?: string;
-          orderSubTotal?: number;
-          orderTax?: number;
-          orderDiscount?: number;
-          orderShipping?: number;
-          orderTotal?: number;
+          currencyCode?: string;
           closed?: boolean;
           createdAt?: string;
+        };
+      };
+      purchaseOrderDelivery: {
+        Row: {
+          id: string;
+          shippingMethodId: string | null;
+          deliveryDate: string | null;
+          deliveryNotes: string | null;
+        };
+        Insert: {
+          id: string;
+          shippingMethodId?: string | null;
+          deliveryDate?: string | null;
+          deliveryNotes?: string | null;
+        };
+        Update: {
+          id?: string;
+          shippingMethodId?: string | null;
+          deliveryDate?: string | null;
+          deliveryNotes?: string | null;
         };
       };
       purchaseOrderFavorite: {
@@ -1630,6 +1623,32 @@ export interface Database {
         Update: {
           purchaseOrderId?: string;
           userId?: string;
+        };
+      };
+      purchaseOrderPayment: {
+        Row: {
+          id: string;
+          invoiceSupplierId: string | null;
+          invoiceSupplierLocationId: string | null;
+          invoiceSupplierContactId: string | null;
+          paymentTermId: string | null;
+          currencyCode: string;
+        };
+        Insert: {
+          id: string;
+          invoiceSupplierId?: string | null;
+          invoiceSupplierLocationId?: string | null;
+          invoiceSupplierContactId?: string | null;
+          paymentTermId?: string | null;
+          currencyCode?: string;
+        };
+        Update: {
+          id?: string;
+          invoiceSupplierId?: string | null;
+          invoiceSupplierLocationId?: string | null;
+          invoiceSupplierContactId?: string | null;
+          paymentTermId?: string | null;
+          currencyCode?: string;
         };
       };
       purchaseOrderTransaction: {
@@ -2404,7 +2423,12 @@ export interface Database {
             | null;
           type: Database["public"]["Enums"]["purchaseOrderType"] | null;
           orderDate: string | null;
-          orderDueDate: string | null;
+          receiptRequestedDate: string | null;
+          receiptPromisedDate: string | null;
+          notes: string | null;
+          supplierId: string | null;
+          supplierContactId: string | null;
+          supplierReference: string | null;
           createdBy: string | null;
           supplierName: string | null;
           createdByAvatar: string | null;

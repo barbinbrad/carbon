@@ -4180,23 +4180,15 @@ CREATE TABLE "purchaseOrder" (
   "type" "purchaseOrderType" NOT NULL,
   "status" "purchaseOrderApprovalStatus" NOT NULL,
   "orderDate" DATE NOT NULL DEFAULT CURRENT_DATE,
-  "orderDueDate" DATE,
-  "receivedDate" DATE,
-  "orderSubTotal" NUMERIC(10,5) NOT NULL DEFAULT 0,
-  "orderTax" NUMERIC(10,5) NOT NULL DEFAULT 0,
-  "orderDiscount" NUMERIC(10,5) NOT NULL DEFAULT 0,
-  "orderShipping" NUMERIC(10,5) NOT NULL DEFAULT 0,
-  "orderTotal" NUMERIC(10,5) NOT NULL DEFAULT 0,
+  "receiptRequestedDate" DATE,
+  "receiptPromisedDate" DATE,
   "notes" TEXT,
   "supplierId" TEXT NOT NULL,
   "supplierContactId" TEXT,
   "supplierReference" TEXT,
-  "invoiceSupplierId" TEXT,
-  "invoiceSupplierLocationId" TEXT,
-  "invoiceSupplierContactId" TEXT,
-  "paymentTermId" TEXT,
+  
   "shippingMethodId" TEXT,
-  "currencyCode" TEXT NOT NULL,
+  "currencyCode" TEXT NOT NULL DEFAULT 'USD',
   -- "approvalRequestDate" DATE,
   -- "approvalDecisionDate" DATE,
   -- "approvalDecisionUserId" TEXT,
@@ -4213,13 +4205,6 @@ CREATE TABLE "purchaseOrder" (
   CONSTRAINT "purchaseOrder_purchaseOrderId_key" UNIQUE ("purchaseOrderId"),
   CONSTRAINT "purchaseOrder_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "supplier" ("id") ON DELETE CASCADE,
   CONSTRAINT "purchaseOrder_supplierContactId_fkey" FOREIGN KEY ("supplierContactId") REFERENCES "supplierContact" ("id") ON DELETE CASCADE,
-  CONSTRAINT "purchaseOrder_invoiceSupplierId_fkey" FOREIGN KEY ("invoiceSupplierId") REFERENCES "supplier" ("id") ON DELETE CASCADE,
-  CONSTRAINT "purchaseOrder_invoiceSupplierLocationId_fkey" FOREIGN KEY ("invoiceSupplierLocationId") REFERENCES "supplierLocation" ("id") ON DELETE CASCADE,
-  CONSTRAINT "purchaseOrder_invoiceSupplierContactId_fkey" FOREIGN KEY ("invoiceSupplierContactId") REFERENCES "supplierContact" ("id") ON DELETE CASCADE,
-  CONSTRAINT "purchaseOrder_paymentTermId_fkey" FOREIGN KEY ("paymentTermId") REFERENCES "paymentTerm" ("id") ON DELETE CASCADE,
-  CONSTRAINT "purchaseOrder_shippingMethodId_fkey" FOREIGN KEY ("shippingMethodId") REFERENCES "shippingMethod" ("id") ON DELETE CASCADE,
-  CONSTRAINT "purchaseOrder_currencyCode_fkey" FOREIGN KEY ("currencyCode") REFERENCES "currency" ("code") ON DELETE CASCADE,
-  -- CONSTRAINT "purchaseOrder_approvalDecisionUserId_fkey" FOREIGN KEY ("approvalDecisionUserId") REFERENCES "user" ("id") ON DELETE CASCADE,
   CONSTRAINT "purchaseOrder_closedBy_fkey" FOREIGN KEY ("closedBy") REFERENCES "user" ("id") ON DELETE CASCADE,
   CONSTRAINT "purchaseOrder_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE CASCADE,
   CONSTRAINT "purchaseOrder_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE CASCADE
@@ -4228,10 +4213,38 @@ CREATE TABLE "purchaseOrder" (
 CREATE INDEX "purchaseOrder_purchaseOrderId_idx" ON "purchaseOrder" ("purchaseOrderId");
 CREATE INDEX "purchaseOrder_supplierId_idx" ON "purchaseOrder" ("supplierId");
 CREATE INDEX "purchaseOrder_supplierContactId_idx" ON "purchaseOrder" ("supplierContactId");
-CREATE INDEX "purchaseOrder_invoiceSupplierId_idx" ON "purchaseOrder" ("invoiceSupplierId");
-CREATE INDEX "purchaseOrder_invoiceSupplierLocationId_idx" ON "purchaseOrder" ("invoiceSupplierLocationId");
-CREATE INDEX "purchaseOrder_invoiceSupplierContactId_idx" ON "purchaseOrder" ("invoiceSupplierContactId");
--- CREATE INDEX "purchaseOrder_approvalDecisionUserId_idx" ON "purchaseOrder" ("approvalDecisionUserId");
+
+CREATE TABLE "purchaseOrderPayment" (
+  "id" TEXT NOT NULL,
+  "invoiceSupplierId" TEXT,
+  "invoiceSupplierLocationId" TEXT,
+  "invoiceSupplierContactId" TEXT,
+  "paymentTermId" TEXT,
+  "currencyCode" TEXT NOT NULL DEFAULT 'USD',
+
+  CONSTRAINT "purchaseOrderPayment_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "purchaseOrderPayment_id_fkey" FOREIGN KEY ("id") REFERENCES "purchaseOrder" ("id") ON DELETE CASCADE,
+  CONSTRAINT "purchaseOrderPayment_invoiceSupplierId_fkey" FOREIGN KEY ("invoiceSupplierId") REFERENCES "supplier" ("id") ON DELETE CASCADE,
+  CONSTRAINT "purchaseOrderPayment_invoiceSupplierLocationId_fkey" FOREIGN KEY ("invoiceSupplierLocationId") REFERENCES "supplierLocation" ("id") ON DELETE CASCADE,
+  CONSTRAINT "purchaseOrderPayment_invoiceSupplierContactId_fkey" FOREIGN KEY ("invoiceSupplierContactId") REFERENCES "supplierContact" ("id") ON DELETE CASCADE,
+  CONSTRAINT "purchaseOrderPayment_paymentTermId_fkey" FOREIGN KEY ("paymentTermId") REFERENCES "paymentTerm" ("id") ON DELETE CASCADE,
+  CONSTRAINT "purchaseOrderPayment_currencyCode_fkey" FOREIGN KEY ("currencyCode") REFERENCES "currency" ("code") ON DELETE CASCADE
+);
+
+CREATE INDEX "purchaseOrderPayment_invoiceSupplierId_idx" ON "purchaseOrderPayment" ("invoiceSupplierId");
+CREATE INDEX "purchaseOrderPayment_invoiceSupplierLocationId_idx" ON "purchaseOrderPayment" ("invoiceSupplierLocationId");
+CREATE INDEX "purchaseOrderPayment_invoiceSupplierContactId_idx" ON "purchaseOrderPayment" ("invoiceSupplierContactId");
+
+CREATE TABLE "purchaseOrderDelivery" (
+  "id" TEXT NOT NULL,
+  "shippingMethodId" TEXT,
+  "deliveryDate" DATE,
+  "deliveryNotes" TEXT,
+
+  CONSTRAINT "purchaseOrderDelivery_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "purchaseOrderDelivery_id_fkey" FOREIGN KEY ("id") REFERENCES "purchaseOrder" ("id") ON DELETE CASCADE,
+  CONSTRAINT "purchaseOrderDelivery_shippingMethodId_fkey" FOREIGN KEY ("shippingMethodId") REFERENCES "shippingMethod" ("id") ON DELETE CASCADE
+);
 
 CREATE TYPE "purchaseOrderTransactionType" AS ENUM (
   'Edit',
@@ -4293,7 +4306,12 @@ CREATE VIEW "purchase_order_view" AS
     p."status",
     p."type",
     p."orderDate",
-    p."orderDueDate",
+    p."receiptRequestedDate",
+    p."receiptPromisedDate",
+    p."notes",
+    p."supplierId",
+    p."supplierContactId",
+    p."supplierReference",
     p."createdBy",
     s."name" AS "supplierName",
     u."avatarUrl" AS "createdByAvatar",
@@ -4334,14 +4352,14 @@ CREATE TABLE "sequence" (
   "updatedBy" TEXT,
 
   CONSTRAINT "sequence_pkey" PRIMARY KEY ("table"),
-  CONSTRAINT "sequence_next_check" CHECK ("next" >= 1),
+  CONSTRAINT "sequence_next_check" CHECK ("next" >= 0),
   CONSTRAINT "sequence_size_check" CHECK ("size" >= 1),
   CONSTRAINT "sequence_step_check" CHECK ("step" >= 1),
   CONSTRAINT "sequence_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 INSERT INTO "sequence" ("table", "name", "prefix", "suffix", "next", "size", "step")
-VALUES ('purchaseOrder', 'Purchase Order', 'PO', NULL, 1, 5, 1);
+VALUES ('purchaseOrder', 'Purchase Order', 'PO', NULL, 0, 5, 1);
 
 
 ```

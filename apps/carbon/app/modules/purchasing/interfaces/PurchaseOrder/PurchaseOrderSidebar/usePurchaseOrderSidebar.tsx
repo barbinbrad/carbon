@@ -19,7 +19,7 @@ export function usePurchaseOrderSidebar() {
       role: ["employee", "supplier"],
     },
     {
-      name: "Taxes",
+      name: "Payment",
       to: "taxes",
       role: ["employee"],
     },

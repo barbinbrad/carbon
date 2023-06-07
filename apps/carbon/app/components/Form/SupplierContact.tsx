@@ -1,112 +1,111 @@
 import { Select } from "@carbon/react";
 import {
-  Box,
   FormControl,
+  FormLabel,
   FormErrorMessage,
   FormHelperText,
-  FormLabel,
 } from "@chakra-ui/react";
 import { useFetcher } from "@remix-run/react";
-import { useEffect, useMemo, useRef } from "react";
-import { useControlField, useField } from "remix-validated-form";
-import type {
-  SupplierContact as SupplierContactType,
-  getSupplierContacts,
-} from "~/modules/purchasing";
-import type { SelectProps } from "./Select";
-
-type SupplierContactSelectProps = Omit<SelectProps, "options" | "onChange"> & {
-  supplier?: string;
-  onChange?: (supplierContact: SupplierContactType | undefined) => void;
-};
+import { useEffect, useMemo } from "react";
+import { useField, useControlField } from "remix-validated-form";
+import type { getSupplierContacts } from "~/modules/purchasing";
+import { mapRowsToOptions } from "~/utils/form";
 
 const SupplierContact = ({
   name,
-  label = "SupplierContact",
+  label = "Supplier Contact",
   supplier,
   helperText,
-  isLoading,
-  isReadOnly,
-  placeholder = "Select Supplier Contact",
+  isReadOnly = false,
   onChange,
-  ...props
-}: SupplierContactSelectProps) => {
-  const initialLoad = useRef(true);
-  const { error, defaultValue } = useField(name);
-  const [value, setValue] = useControlField<string | undefined>(name);
+}: {
+  name: string;
+  label?: string;
+  supplier?: string;
+  helperText?: string;
+  isReadOnly?: boolean;
+  onChange?: (value?: {
+    firstName: string;
+    lastName: string;
+    email: string;
+  }) => void;
+}) => {
+  const { error, getInputProps, defaultValue } = useField(name);
 
-  const supplierContactFetcher =
+  const [supplierContact, setSupplierContact] = useControlField<{
+    value: string | number;
+    label: string;
+  } | null>(name);
+
+  const supplierContactsFetcher =
     useFetcher<Awaited<ReturnType<typeof getSupplierContacts>>>();
 
   useEffect(() => {
-    supplierContactFetcher.load(
-      `/api/purchasing/supplier-contacts?supplierId=${supplier}`
-    );
-    if (initialLoad.current) {
-      initialLoad.current = false;
-    } else {
-      setValue(undefined);
-      if (onChange) {
-        onChange(undefined);
-      }
-    }
+    if (supplier)
+      supplierContactsFetcher.load(
+        `/api/purchasing/supplier-contacts?supplierId=${supplier}`
+      );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [supplier]);
 
-  const options = useMemo(
+  const supplierContacts = useMemo(
     () =>
-      supplierContactFetcher.data?.data
-        ? supplierContactFetcher.data?.data.map((c) => ({
-            value: c.id,
-            // @ts-ignore
-            label: `${c.contact?.firstName} ${c.contact?.lastName}`,
-          }))
-        : [],
-    [supplierContactFetcher.data]
+      mapRowsToOptions({
+        data: supplierContactsFetcher.data?.data ?? [],
+        value: "id",
+        // @ts-ignore
+        label: (row) => `${row.contact.firstName} ${row.contact.lastName}`,
+      }),
+    [supplierContactsFetcher.data]
   );
 
-  const handleChange = (selection: {
-    value: string | number;
-    label: string;
-  }) => {
-    const newValue = (selection.value as string) || undefined;
-    setValue(newValue);
-    if (onChange && typeof onChange === "function") {
-      if (newValue === undefined) onChange(newValue);
-      const contact = supplierContactFetcher.data?.data?.find(
-        (c) => c.id === newValue
+  useEffect(() => {
+    // if the initial value is in the options, set it, otherwise set to null
+    if (supplierContacts) {
+      setSupplierContact(
+        supplierContacts.find((s) => s.value === defaultValue) ?? null
       );
+
+      if (onChange) {
+        const contact =
+          supplierContactsFetcher.data?.data?.find((c) => c.id === defaultValue)
+            ?.contact ?? undefined;
+
+        if (Array.isArray(contact)) throw new Error("Contact is an array");
+        if (contact) onChange(contact);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [supplierContacts, defaultValue]);
+
+  const onContactChange = (newValue?: { label: string; value: string }) => {
+    setSupplierContact(newValue ?? null);
+    if (onChange) {
+      const contact =
+        supplierContactsFetcher.data?.data?.find(
+          (c) => c.id === newValue?.value
+        )?.contact ?? undefined;
+
+      if (Array.isArray(contact)) throw new Error("Contact is an array");
+
       onChange(contact);
     }
   };
 
-  const controlledValue = useMemo(
-    // @ts-ignore
-    () => options.find((option) => option.value === value),
-    [value, options]
-  );
-
-  // so that we can call onChange on load
-  useEffect(() => {
-    if (controlledValue && controlledValue.value === defaultValue) {
-      handleChange(controlledValue);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [controlledValue?.value]);
-
-  // TODO: hack for default value
-  return supplierContactFetcher.state !== "loading" ? (
+  return (
     <FormControl isInvalid={!!error}>
-      {label && <FormLabel htmlFor={name}>{label}</FormLabel>}
-      <input type="hidden" name={name} id={name} value={value} />
+      <FormLabel htmlFor={name}>{label}</FormLabel>
       <Select
-        {...props}
-        value={controlledValue}
-        isLoading={isLoading}
-        options={options}
-        placeholder={placeholder}
+        {...getInputProps({
+          // @ts-ignore
+          id: name,
+        })}
+        options={supplierContacts}
+        value={supplierContact}
+        onChange={onContactChange}
         // @ts-ignore
-        onChange={handleChange}
+        isReadOnly={isReadOnly}
+        w="full"
       />
       {error ? (
         <FormErrorMessage>{error}</FormErrorMessage>
@@ -114,19 +113,7 @@ const SupplierContact = ({
         helperText && <FormHelperText>{helperText}</FormHelperText>
       )}
     </FormControl>
-  ) : (
-    <Box>
-      {label && <FormLabel>{label}</FormLabel>}
-      <Select
-        isDisabled
-        isLoading={isLoading}
-        options={[]}
-        //@ts-ignore
-      />
-    </Box>
   );
 };
-
-SupplierContact.displayName = "SupplierContact";
 
 export default SupplierContact;

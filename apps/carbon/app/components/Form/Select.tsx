@@ -1,6 +1,5 @@
 import { Select as CarbonSelect } from "@carbon/react";
 import {
-  Box,
   FormControl,
   FormErrorMessage,
   FormHelperText,
@@ -38,41 +37,41 @@ const Select = ({
   );
 
   // TODO: hack for default value
-  return options.length > 0 ? (
+  return (
     <FormControl isInvalid={!!error}>
       {label && <FormLabel htmlFor={name}>{label}</FormLabel>}
-      <CarbonSelect
-        {...getInputProps({
+      {options.length > 0 ? (
+        <CarbonSelect
+          {...getInputProps({
+            // @ts-ignore
+            id: name,
+          })}
+          {...props}
+          defaultValue={initialValue}
+          isReadOnly={isReadOnly}
+          isLoading={isLoading}
+          options={options}
+          placeholder={placeholder}
           // @ts-ignore
-          id: name,
-        })}
-        {...props}
-        defaultValue={initialValue}
-        isReadOnly={isReadOnly}
-        isLoading={isLoading}
-        options={options}
-        placeholder={placeholder}
-        // @ts-ignore
-        w="full"
-        // @ts-ignore
-        onChange={onChange ?? undefined}
-      />
+          w="full"
+          // @ts-ignore
+          onChange={onChange ?? undefined}
+        />
+      ) : (
+        <CarbonSelect
+          isLoading={isLoading}
+          options={[]}
+          // @ts-ignore
+          w="full"
+        />
+      )}
+
       {error ? (
         <FormErrorMessage>{error}</FormErrorMessage>
       ) : (
         helperText && <FormHelperText>{helperText}</FormHelperText>
       )}
     </FormControl>
-  ) : (
-    <Box w="full">
-      {label && <FormLabel>{label}</FormLabel>}
-      <CarbonSelect
-        isLoading={isLoading}
-        options={[]}
-        // @ts-ignore
-        w="full"
-      />
-    </Box>
   );
 };
 

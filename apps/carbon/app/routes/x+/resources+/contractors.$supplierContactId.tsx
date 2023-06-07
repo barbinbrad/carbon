@@ -56,7 +56,7 @@ export async function action({ request }: ActionArgs) {
   const updateContractor = await upsertContractor(client, {
     id,
     hoursPerWeek,
-    abilities,
+    abilities: abilities ?? [],
     updatedBy: userId,
   });
 

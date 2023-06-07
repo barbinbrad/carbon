@@ -86,7 +86,7 @@ const CustomersTable = memo(({ data, count }: CustomersTableProps) => {
             navigate(`/x/sales/customers/${row.id}?${params.toString()}`)
           }
         >
-          View Customer
+          Edit Customer
         </MenuItem>
       ),
     [navigate, params]

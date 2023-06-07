@@ -80,8 +80,8 @@ const PurchaseOrdersTable = memo(
           cell: (item) => item.getValue(),
         },
         {
-          accessorKey: "orderDueDate",
-          header: "Due Date",
+          accessorKey: "receiptPromisedDate",
+          header: "Promised Date",
           cell: (item) => item.getValue(),
         },
         {

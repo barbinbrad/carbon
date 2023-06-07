@@ -71,10 +71,7 @@ const CreateSupplierModal = () => {
                 name="id"
                 label="Supplier Contact"
                 supplier={supplier}
-                onChange={(newValue) => {
-                  // @ts-ignore
-                  setContact(newValue?.contact);
-                }}
+                onChange={setContact}
               />
               {contact && (
                 <>

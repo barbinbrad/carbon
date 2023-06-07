@@ -1,4 +1,6 @@
 import { useMemo } from "react";
+import { AiOutlinePartition } from "react-icons/ai";
+import { BsCartDash, BsShieldLock } from "react-icons/bs";
 import { usePermissions } from "~/hooks";
 
 import type { Route } from "~/types";
@@ -12,6 +14,7 @@ export default function useNewMenu(): Route[] {
       links.push({
         name: "New Part",
         to: "/x/part/new",
+        icon: <AiOutlinePartition />,
       });
     }
 
@@ -19,6 +22,7 @@ export default function useNewMenu(): Route[] {
       links.push({
         name: "New Purchase Order",
         to: "/x/purchase-order/new",
+        icon: <BsCartDash />,
       });
     }
 
@@ -26,6 +30,7 @@ export default function useNewMenu(): Route[] {
       links.push({
         name: "New Employee",
         to: "/x/users/employees/new",
+        icon: <BsShieldLock />,
       });
     }
 

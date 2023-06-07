@@ -46,8 +46,8 @@ const PartPreview = () => {
             alignItems="start"
             justifyContent="space-between"
           >
-            <Text color="gray.500">Due Date</Text>
-            <Text fontWeight="bold">{routeData?.orderDueDate}</Text>
+            <Text color="gray.500">Promised Date</Text>
+            <Text fontWeight="bold">{routeData?.receiptPromisedDate}</Text>
           </Stack>
           <Stack
             direction={["row", "row", "column"]}

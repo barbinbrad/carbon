@@ -83,7 +83,7 @@ export const contractorValidator = withZod(
     ),
     abilities: z
       .array(z.string().min(20, { message: "Invalid ability" }))
-      .min(1, { message: "An ability is required" }),
+      .optional(),
   })
 );
 

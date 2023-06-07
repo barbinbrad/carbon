@@ -31,7 +31,7 @@ export async function action({ request }: ActionArgs) {
   const createContractor = await upsertContractor(client, {
     id,
     hoursPerWeek,
-    abilities,
+    abilities: abilities ?? [],
     createdBy: userId,
   });
 

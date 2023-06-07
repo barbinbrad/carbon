@@ -1,4 +1,3 @@
-import { Select } from "@carbon/react";
 import {
   Button,
   Drawer,
@@ -8,21 +7,22 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
   HStack,
   VStack,
 } from "@chakra-ui/react";
-import { useFetcher, useNavigate } from "@remix-run/react";
-import { useEffect, useMemo } from "react";
-import { useControlField, useField, ValidatedForm } from "remix-validated-form";
-import { Abilities, Number, Submit, Supplier } from "~/components/Form";
+import { useLocation, useNavigate } from "@remix-run/react";
+import { useState } from "react";
+import { ValidatedForm } from "remix-validated-form";
+import {
+  Abilities,
+  Number,
+  Submit,
+  Supplier,
+  SupplierContact,
+} from "~/components/Form";
 import { usePermissions } from "~/hooks";
-import type { getSupplierContacts } from "~/modules/purchasing";
 import { contractorValidator } from "~/modules/resources";
 import type { TypeOfValidator } from "~/types/validators";
-import { mapRowsToOptions } from "~/utils/form";
 
 type ContractorFormProps = {
   initialValues: TypeOfValidator<typeof contractorValidator>;
@@ -31,41 +31,17 @@ type ContractorFormProps = {
 const ContractorForm = ({ initialValues }: ContractorFormProps) => {
   const permissions = usePermissions();
   const navigate = useNavigate();
+  const location = useLocation();
   const onClose = () => navigate(-1);
 
-  const isEditing = initialValues.id !== "";
+  const [supplier, setSupplier] = useState<string | null>(
+    initialValues?.supplierId ?? null
+  );
+
+  const isEditing = !location.pathname.includes("new");
   const isDisabled = isEditing
     ? !permissions.can("update", "resources")
     : !permissions.can("create", "resources");
-
-  const supplierContactsFetcher =
-    useFetcher<Awaited<ReturnType<typeof getSupplierContacts>>>();
-
-  const onSupplierChange = ({ value }: { value: string | number }) => {
-    if (value)
-      supplierContactsFetcher.load(
-        `/api/purchasing/supplier-contacts?supplierId=${value}`
-      );
-  };
-
-  useEffect(() => {
-    if (initialValues.supplierId)
-      supplierContactsFetcher.load(
-        `/api/purchasing/supplier-locations?supplierId=${initialValues.supplierId}`
-      );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const supplierContacts = useMemo(
-    () =>
-      mapRowsToOptions({
-        data: supplierContactsFetcher.data?.data ?? [],
-        value: "id",
-        // @ts-ignore
-        label: (row) => `${row.contact.firstName} ${row.contact.lastName}`,
-      }),
-    [supplierContactsFetcher.data]
-  );
 
   return (
     <Drawer onClose={onClose} isOpen={true} size="sm">
@@ -89,11 +65,11 @@ const ContractorForm = ({ initialValues }: ContractorFormProps) => {
                 name="supplierId"
                 label="Supplier"
                 isReadOnly={isEditing}
-                onChange={onSupplierChange}
+                onChange={({ value }) => setSupplier(value as string)}
               />
-              <SupplierContactsBySupplier
-                supplierContacts={supplierContacts}
-                initialContact={initialValues.id}
+              <SupplierContact
+                name="id"
+                supplier={supplier ?? undefined}
                 isReadOnly={isEditing}
               />
               <Abilities name="abilities" label="Abilities" />
@@ -122,53 +98,6 @@ const ContractorForm = ({ initialValues }: ContractorFormProps) => {
         </DrawerContent>
       </ValidatedForm>
     </Drawer>
-  );
-};
-const SUPPLIER_CONTACT_FIELD = "id";
-
-const SupplierContactsBySupplier = ({
-  supplierContacts,
-  initialContact,
-  isReadOnly,
-}: {
-  supplierContacts: { value: string | number; label: string }[];
-  initialContact?: string;
-  isReadOnly: boolean;
-}) => {
-  const { error, getInputProps } = useField(SUPPLIER_CONTACT_FIELD);
-
-  const [supplierContact, setSupplierContact] = useControlField<{
-    value: string | number;
-    label: string;
-  } | null>(SUPPLIER_CONTACT_FIELD);
-
-  useEffect(() => {
-    // if the initial value is in the options, set it, otherwise set to null
-    if (supplierContacts) {
-      setSupplierContact(
-        supplierContacts.find((s) => s.value === initialContact) ?? null
-      );
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [supplierContacts, initialContact]);
-
-  return (
-    <FormControl isInvalid={!!error}>
-      <FormLabel htmlFor={SUPPLIER_CONTACT_FIELD}>Supplier Contact</FormLabel>
-      <Select
-        {...getInputProps({
-          // @ts-ignore
-          id: SUPPLIER_CONTACT_FIELD,
-        })}
-        options={supplierContacts}
-        value={supplierContact}
-        onChange={setSupplierContact}
-        // @ts-ignore
-        isReadOnly={isReadOnly}
-        w="full"
-      />
-      {error && <FormErrorMessage>{error}</FormErrorMessage>}
-    </FormControl>
   );
 };
 

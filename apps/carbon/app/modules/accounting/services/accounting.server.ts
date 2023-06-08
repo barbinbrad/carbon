@@ -62,6 +62,14 @@ export async function getPaymentTerms(
   return query;
 }
 
+export async function getPaymentTermsList(client: SupabaseClient<Database>) {
+  return client
+    .from("paymentTerm")
+    .select("id, name")
+    .eq("active", true)
+    .order("name", { ascending: true });
+}
+
 export async function upsertPaymentTerm(
   client: SupabaseClient<Database>,
   paymentTerm:

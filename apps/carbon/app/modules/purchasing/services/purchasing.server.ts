@@ -4,7 +4,10 @@ import { getSupabaseServiceRole } from "~/lib/supabase";
 import type { TypeOfValidator } from "~/types/validators";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
-import type { purchaseOrderValidator } from "./purchasing.form";
+import type {
+  purchaseOrderDeliveryValidator,
+  purchaseOrderValidator,
+} from "./purchasing.form";
 
 export async function closePurchaseOrder(
   client: SupabaseClient<Database>,
@@ -106,6 +109,17 @@ export async function getPurchaseOrders(
 
   query = setGenericQueryFilters(query, args, "purchaseOrderId");
   return query;
+}
+
+export async function getPurchaseOrderDelivery(
+  client: SupabaseClient<Database>,
+  purchaseOrderId: string
+) {
+  return client
+    .from("purchaseOrderDelivery")
+    .select("*")
+    .eq("id", purchaseOrderId)
+    .single();
 }
 
 export function getPurchaseOrderApprovalStatuses(): Database["public"]["Enums"]["purchaseOrderApprovalStatus"][] {
@@ -446,10 +460,32 @@ export async function upsertPurchaseOrder(
   }
   return client
     .from("purchaseOrder")
-    .insert([
-      { ...purchaseOrder, currencyCode: purchaseOrder.currencyCode || "USD" },
-    ])
+    .insert([{ ...purchaseOrder }])
     .select("id, purchaseOrderId");
+}
+
+export async function upsertPurchaseOrderDelivery(
+  client: SupabaseClient<Database>,
+  purchaseOrderDelivery:
+    | (TypeOfValidator<typeof purchaseOrderDeliveryValidator> & {
+        createdBy: string;
+      })
+    | (TypeOfValidator<typeof purchaseOrderDeliveryValidator> & {
+        id: string;
+        updatedBy: string;
+      })
+) {
+  if ("id" in purchaseOrderDelivery) {
+    return client
+      .from("purchaseOrderDelivery")
+      .update(purchaseOrderDelivery)
+      .eq("id", purchaseOrderDelivery.id)
+      .select("id");
+  }
+  return client
+    .from("purchaseOrderDelivery")
+    .insert([purchaseOrderDelivery])
+    .select("id");
 }
 
 export async function upsertSupplierType(

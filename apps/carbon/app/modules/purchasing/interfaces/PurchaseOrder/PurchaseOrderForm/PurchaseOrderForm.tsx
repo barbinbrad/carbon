@@ -13,6 +13,7 @@ import { ValidatedForm } from "remix-validated-form";
 import {
   Boolean,
   DatePicker,
+  Hidden,
   Input,
   Select,
   Submit,
@@ -66,7 +67,7 @@ const PurchaseOrderForm = ({
       <Card w="full">
         <CardHeader>
           <Heading size="md">
-            {isEditing ? "Purchase Order Header" : "New Purchase Order"}
+            {isEditing ? "Header" : "New Purchase Order"}
           </Heading>
           {!isEditing && (
             <Text color="gray.500">
@@ -76,6 +77,7 @@ const PurchaseOrderForm = ({
           )}
         </CardHeader>
         <CardBody>
+          <Hidden name="purchaseOrderId" />
           <Grid
             gridTemplateColumns={
               isEditing ? ["1fr", "1fr", "1fr 1fr 1fr"] : "1fr"
@@ -85,13 +87,6 @@ const PurchaseOrderForm = ({
             w="full"
           >
             <VStack alignItems="start" spacing={2} w="full">
-              {isEditing && (
-                <Input
-                  name="purchaseOrderId"
-                  label="Purchase Order ID"
-                  isReadOnly
-                />
-              )}
               <Supplier
                 name="supplierId"
                 label="Supplier"
@@ -110,18 +105,6 @@ const PurchaseOrderForm = ({
             </VStack>
             <VStack alignItems="start" spacing={2} w="full">
               <DatePicker name="orderDate" label="Order Date" />
-              {isEditing && (
-                <>
-                  <DatePicker
-                    name="receiptRequestedDate"
-                    label="Requested Date"
-                  />
-                  <DatePicker
-                    name="receiptPromisedDate"
-                    label="Promised Date"
-                  />
-                </>
-              )}
               <Select name="type" label="Type" options={typeOptions} />
               <Select
                 name="status"

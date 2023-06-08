@@ -24,6 +24,11 @@ export type FormActionData = Promise<
   TypedResponse<ValidationErrorResponseData> | TypedResponse<Result>
 >;
 
+export type ListItem = {
+  id: string;
+  name: string;
+};
+
 export type NavItem = Omit<Route, "icon"> & {
   icon: ReactElement;
   color?: string;

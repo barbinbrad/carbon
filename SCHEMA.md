@@ -4159,6 +4159,22 @@ CREATE TABLE "shippingMethod" (
 
 CREATE INDEX "shippingMethod_name_idx" ON "shippingMethod" ("name");
 
+CREATE TABLE "shippingTerm" (
+  "id" TEXT NOT NULL DEFAULT xid(),
+  "name" TEXT NOT NULL,
+  "active" BOOLEAN NOT NULL DEFAULT TRUE,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+  "createdBy" TEXT NOT NULL,
+  "updatedAt" TIMESTAMP WITH TIME ZONE,
+  "updatedBy" TEXT,
+
+  CONSTRAINT "shippingTerm_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "shippingTerm_name_key" UNIQUE ("name"),
+  CONSTRAINT "shippingTerm_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE CASCADE,
+  CONSTRAINT "shippingTerm_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE CASCADE
+);
+
+
 CREATE TYPE "purchaseOrderType" AS ENUM (
   'Draft',
   'Purchase', 
@@ -4180,19 +4196,10 @@ CREATE TABLE "purchaseOrder" (
   "type" "purchaseOrderType" NOT NULL,
   "status" "purchaseOrderApprovalStatus" NOT NULL,
   "orderDate" DATE NOT NULL DEFAULT CURRENT_DATE,
-  "receiptRequestedDate" DATE,
-  "receiptPromisedDate" DATE,
   "notes" TEXT,
   "supplierId" TEXT NOT NULL,
   "supplierContactId" TEXT,
   "supplierReference" TEXT,
-  
-  "shippingMethodId" TEXT,
-  "currencyCode" TEXT NOT NULL DEFAULT 'USD',
-  -- "approvalRequestDate" DATE,
-  -- "approvalDecisionDate" DATE,
-  -- "approvalDecisionUserId" TEXT,
-  -- "approvalDecisionNotes" TEXT,
   "closed" BOOLEAN NOT NULL DEFAULT FALSE,
   "closedAt" DATE,
   "closedBy" TEXT,
@@ -4238,12 +4245,21 @@ CREATE INDEX "purchaseOrderPayment_invoiceSupplierContactId_idx" ON "purchaseOrd
 CREATE TABLE "purchaseOrderDelivery" (
   "id" TEXT NOT NULL,
   "shippingMethodId" TEXT,
+  "shippingTermId" TEXT,
+  "trackingNumber" TEXT,
+  "receiptRequestedDate" DATE,
+  "receiptPromisedDate" DATE,
   "deliveryDate" DATE,
-  "deliveryNotes" TEXT,
+  "notes" TEXT,
+  "createdBy" TEXT NOT NULL,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+  "updatedBy" TEXT,
+  "updatedAt" TIMESTAMP WITH TIME ZONE,
 
   CONSTRAINT "purchaseOrderDelivery_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "purchaseOrderDelivery_id_fkey" FOREIGN KEY ("id") REFERENCES "purchaseOrder" ("id") ON DELETE CASCADE,
-  CONSTRAINT "purchaseOrderDelivery_shippingMethodId_fkey" FOREIGN KEY ("shippingMethodId") REFERENCES "shippingMethod" ("id") ON DELETE CASCADE
+  CONSTRAINT "purchaseOrderDelivery_shippingMethodId_fkey" FOREIGN KEY ("shippingMethodId") REFERENCES "shippingMethod" ("id") ON DELETE CASCADE,
+  CONSTRAINT "purchaseOrderDelivery_shippingTermId_fkey" FOREIGN KEY ("shippingTermId") REFERENCES "shippingTerm" ("id") ON DELETE CASCADE
 );
 
 CREATE TYPE "purchaseOrderTransactionType" AS ENUM (
@@ -4306,13 +4322,13 @@ CREATE VIEW "purchase_order_view" AS
     p."status",
     p."type",
     p."orderDate",
-    p."receiptRequestedDate",
-    p."receiptPromisedDate",
     p."notes",
     p."supplierId",
     p."supplierContactId",
     p."supplierReference",
     p."createdBy",
+    pd."receiptRequestedDate",
+    pd."receiptPromisedDate",
     s."name" AS "supplierName",
     u."avatarUrl" AS "createdByAvatar",
     u."fullName" AS "createdByFullName",
@@ -4327,6 +4343,7 @@ CREATE VIEW "purchase_order_view" AS
     u3."fullName" AS "closedByFullName",
     EXISTS(SELECT 1 FROM "purchaseOrderFavorite" pf WHERE pf."purchaseOrderId" = p.id AND pf."userId" = auth.uid()::text) AS favorite
   FROM "purchaseOrder" p
+  LEFT JOIN "purchaseOrderDelivery" pd ON pd."id" = p."id"
   LEFT JOIN "supplier" s ON s."id" = p."supplierId"
   LEFT JOIN "user" u ON u."id" = p."createdBy"
   LEFT JOIN "user" u2 ON u2."id" = p."updatedBy"

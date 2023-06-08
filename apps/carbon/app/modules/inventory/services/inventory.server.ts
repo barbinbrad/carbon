@@ -47,6 +47,22 @@ export async function getShippingMethods(
   return query;
 }
 
+export async function getShippingMethodsList(client: SupabaseClient<Database>) {
+  return client
+    .from("shippingMethod")
+    .select("id, name")
+    .eq("active", true)
+    .order("name", { ascending: true });
+}
+
+export async function getShippingTermsList(client: SupabaseClient<Database>) {
+  return client
+    .from("shippingTerm")
+    .select("id, name")
+    .eq("active", true)
+    .order("name", { ascending: true });
+}
+
 export async function upsertShippingMethod(
   client: SupabaseClient<Database>,
   shippingMethod:

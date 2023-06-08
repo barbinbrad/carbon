@@ -27,7 +27,7 @@ const PartPreview = () => {
             <Text color="gray.500">{routeData?.supplierName}</Text>
           </Stack>
           <Button onClick={() => alert("TODO")} leftIcon={<FaHistory />}>
-            View History
+            Supplier Details
           </Button>
         </HStack>
       </CardHeader>

@@ -98,7 +98,7 @@ const Supplier = ({
       )}
     </FormControl>
   ) : (
-    <Box>
+    <Box w="full">
       {label && <FormLabel>{label}</FormLabel>}
       <Select
         isDisabled

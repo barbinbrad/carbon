@@ -28,8 +28,6 @@ export const purchaseOrderValidator = withZod(
         }),
       }
     ),
-    receiptDueDate: zfd.text(z.string().optional()),
-    receiptPromisedDate: zfd.text(z.string().optional()),
     notes: zfd.text(z.string().optional()),
     supplierId: z.string().min(36, { message: "Supplier is required" }),
     supplierContactId: zfd.text(z.string().optional()),
@@ -38,15 +36,20 @@ export const purchaseOrderValidator = withZod(
   })
 );
 
-export const purchaseDeliveryValidator = withZod(
+export const purchaseOrderDeliveryValidator = withZod(
   z.object({
     id: z.string(),
     shippingMethodId: zfd.text(z.string().optional()),
+    shippingTermId: zfd.text(z.string().optional()),
+    trackingNumber: z.string(),
     deliveryDate: zfd.text(z.string().optional()),
+    receiptRequestedDate: zfd.text(z.string().optional()),
+    receiptPromisedDate: zfd.text(z.string().optional()),
+    notes: zfd.text(z.string().optional()),
   })
 );
 
-export const purchasePaymentValidator = withZod(
+export const purchaseOrderPaymentValidator = withZod(
   z.object({
     id: z.string(),
     invoiceSupplierId: zfd.text(z.string().optional()),

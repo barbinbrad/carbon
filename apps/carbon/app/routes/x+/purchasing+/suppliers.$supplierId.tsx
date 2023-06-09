@@ -71,15 +71,7 @@ export async function action({ request }: ActionArgs) {
     return validationError(validation.error);
   }
 
-  const {
-    id,
-    name,
-    supplierTypeId,
-    supplierStatusId,
-    accountManagerId,
-    taxId,
-    description,
-  } = validation.data;
+  const { id, ...data } = validation.data;
 
   if (!id) {
     return redirect(
@@ -90,12 +82,7 @@ export async function action({ request }: ActionArgs) {
 
   const update = await updateSupplier(client, {
     id,
-    name,
-    supplierTypeId,
-    supplierStatusId,
-    accountManagerId,
-    taxId,
-    description,
+    ...data,
     updatedBy: userId,
   });
   if (update.error) {
@@ -108,7 +95,7 @@ export async function action({ request }: ActionArgs) {
   return json(null, await flash(request, success("Updated supplier")));
 }
 
-export default function SuppliersNewRoute() {
+export default function SupplierEditRoute() {
   const { supplier, contacts, locations } = useLoaderData<typeof loader>();
 
   const initialValues = {
@@ -118,7 +105,10 @@ export default function SuppliersNewRoute() {
     supplierStatusId: supplier.supplierStatusId ?? undefined,
     accountManagerId: supplier.accountManagerId ?? undefined,
     taxId: supplier.taxId ?? "",
-    description: supplier.description ?? "",
+    defaultCurrencyCode: supplier.defaultCurrencyCode ?? "",
+    defaultPaymentTermId: supplier.defaultPaymentTermId ?? undefined,
+    defaultShippingMethodId: supplier.defaultShippingMethodId ?? undefined,
+    defaultShippingTermId: supplier.defaultShippingTermId ?? undefined,
   };
 
   return (

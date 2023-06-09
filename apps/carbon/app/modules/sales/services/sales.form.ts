@@ -7,7 +7,6 @@ export const customerValidator = withZod(
   z.object({
     id: zfd.text(z.string().optional()),
     name: z.string().min(1, { message: "Name is required" }),
-    description: zfd.text(z.string().optional()),
     customerTypeId: zfd.text(z.string().optional()),
     customerStatusId: zfd.text(z.string().optional()),
     taxId: zfd.text(z.string().optional()),

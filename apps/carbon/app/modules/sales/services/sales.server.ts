@@ -1,8 +1,10 @@
 import type { Database } from "@carbon/database";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { getSupabaseServiceRole } from "~/lib/supabase";
+import type { TypeOfValidator } from "~/types/validators";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
+import type { customerValidator } from "./sales.form";
 
 export async function deleteCustomerContact(
   client: SupabaseClient<Database>,
@@ -42,7 +44,7 @@ export async function getCustomer(
   return client
     .from("customer")
     .select(
-      "id, name, description, customerTypeId, customerStatusId, taxId, accountManagerId"
+      "id, name, customerTypeId, customerStatusId, taxId, accountManagerId"
     )
     .eq("id", customerId)
     .single();
@@ -95,7 +97,7 @@ export async function getCustomers(
 ) {
   let query = client
     .from("customer")
-    .select("id, name, description, customerType(name), customerStatus(name)", {
+    .select("id, name, customerType(name), customerStatus(name)", {
       count: "exact",
     });
 
@@ -170,13 +172,7 @@ export async function getCustomerTypes(
 
 export async function insertCustomer(
   client: SupabaseClient<Database>,
-  customer: {
-    name: string;
-    customerTypeId?: string;
-    customerStatusId?: string;
-    taxId?: string;
-    accountManagerId?: string;
-    description?: string;
+  customer: TypeOfValidator<typeof customerValidator> & {
     createdBy: string;
   }
 ) {
@@ -273,14 +269,8 @@ export async function insertCustomerLocation(
 
 export async function updateCustomer(
   client: SupabaseClient<Database>,
-  customer: {
+  customer: Omit<TypeOfValidator<typeof customerValidator>, "id"> & {
     id: string;
-    name: string;
-    customerTypeId?: string;
-    customerStatusId?: string;
-    taxId?: string;
-    accountManagerId?: string;
-    description?: string;
     updatedBy: string;
   }
 ) {

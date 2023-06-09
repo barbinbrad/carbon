@@ -65,11 +65,14 @@ export const supplierValidator = withZod(
   z.object({
     id: zfd.text(z.string().optional()),
     name: z.string().min(1, { message: "Name is required" }),
-    description: zfd.text(z.string().optional()),
     supplierTypeId: zfd.text(z.string().optional()),
     supplierStatusId: zfd.text(z.string().optional()),
     taxId: zfd.text(z.string().optional()),
     accountManagerId: zfd.text(z.string().optional()),
+    defaultCurrencyCode: zfd.text(z.string().optional()),
+    defaultPaymentTermId: zfd.text(z.string().optional()),
+    defaultShippingTermId: zfd.text(z.string().optional()),
+    defaultShippingMethodId: zfd.text(z.string().optional()),
   })
 );
 

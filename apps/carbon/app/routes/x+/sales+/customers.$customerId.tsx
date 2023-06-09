@@ -71,15 +71,7 @@ export async function action({ request }: ActionArgs) {
     return validationError(validation.error);
   }
 
-  const {
-    id,
-    name,
-    customerTypeId,
-    customerStatusId,
-    accountManagerId,
-    taxId,
-    description,
-  } = validation.data;
+  const { id, ...data } = validation.data;
 
   if (!id) {
     return redirect(
@@ -90,12 +82,7 @@ export async function action({ request }: ActionArgs) {
 
   const update = await updateCustomer(client, {
     id,
-    name,
-    customerTypeId,
-    customerStatusId,
-    accountManagerId,
-    taxId,
-    description,
+    ...data,
     updatedBy: userId,
   });
   if (update.error) {
@@ -118,7 +105,6 @@ export default function CustomersNewRoute() {
     customerStatusId: customer.customerStatusId ?? undefined,
     accountManagerId: customer.accountManagerId ?? undefined,
     taxId: customer.taxId ?? "",
-    description: customer.description ?? "",
   };
 
   return (

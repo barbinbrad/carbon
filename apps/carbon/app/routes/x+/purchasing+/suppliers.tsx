@@ -3,6 +3,11 @@ import type { LoaderArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
+import { getPaymentTermsList } from "~/modules/accounting";
+import {
+  getShippingMethodsList,
+  getShippingTermsList,
+} from "~/modules/inventory";
 import {
   SuppliersTable,
   SuppliersTableFilters,
@@ -29,10 +34,20 @@ export async function loader({ request }: LoaderArgs) {
   const { limit, offset, sorts, filters } =
     getGenericQueryFilters(searchParams);
 
-  const [suppliers, supplierTypes, supplierStatuses] = await Promise.all([
+  const [
+    suppliers,
+    supplierTypes,
+    supplierStatuses,
+    paymentTerms,
+    shippingMethods,
+    shippingTerms,
+  ] = await Promise.all([
     getSuppliers(client, { name, type, status, limit, offset, sorts, filters }),
     getSupplierTypes(client),
     getSupplierStatuses(client),
+    getPaymentTermsList(client),
+    getShippingMethodsList(client),
+    getShippingTermsList(client),
   ]);
 
   if (suppliers.error) {
@@ -47,6 +62,9 @@ export async function loader({ request }: LoaderArgs) {
     suppliers: suppliers.data ?? [],
     supplierStatuses: supplierStatuses.data ?? [],
     supplierTypes: supplierTypes.data ?? [],
+    paymentTerms: paymentTerms.data ?? [],
+    shippingMethods: shippingMethods.data ?? [],
+    shippingTerms: shippingTerms.data ?? [],
   });
 }
 

@@ -23,22 +23,10 @@ export async function action({ request }: ActionArgs) {
     return validationError(validation.error);
   }
 
-  const {
-    name,
-    supplierTypeId,
-    supplierStatusId,
-    accountManagerId,
-    taxId,
-    description,
-  } = validation.data;
+  const { id, ...data } = validation.data;
 
   const createSupplier = await insertSupplier(client, {
-    name,
-    supplierTypeId,
-    supplierStatusId,
-    accountManagerId,
-    taxId,
-    description,
+    ...data,
     createdBy: userId,
   });
   if (createSupplier.error) {

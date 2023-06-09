@@ -7,6 +7,7 @@ import { setGenericQueryFilters } from "~/utils/query";
 import type {
   purchaseOrderDeliveryValidator,
   purchaseOrderValidator,
+  supplierValidator,
 } from "./purchasing.form";
 
 export async function closePurchaseOrder(
@@ -59,13 +60,7 @@ export async function getSupplier(
   client: SupabaseClient<Database>,
   supplierId: string
 ) {
-  return client
-    .from("supplier")
-    .select(
-      "id, name, description, supplierTypeId, supplierStatusId, taxId, accountManagerId"
-    )
-    .eq("id", supplierId)
-    .single();
+  return client.from("supplier").select("*").eq("id", supplierId).single();
 }
 
 export async function getPurchaseOrder(
@@ -184,7 +179,7 @@ export async function getSuppliers(
 ) {
   let query = client
     .from("supplier")
-    .select("id, name, description, supplierType(name), supplierStatus(name)", {
+    .select("id, name, supplierType(name), supplierStatus(name)", {
       count: "exact",
     });
 
@@ -259,13 +254,7 @@ export async function getSupplierTypes(
 
 export async function insertSupplier(
   client: SupabaseClient<Database>,
-  supplier: {
-    name: string;
-    supplierTypeId?: string;
-    supplierStatusId?: string;
-    taxId?: string;
-    accountManagerId?: string;
-    description?: string;
+  supplier: TypeOfValidator<typeof supplierValidator> & {
     createdBy: string;
   }
 ) {
@@ -289,7 +278,6 @@ export async function insertSupplierContact(
       addressLine2?: string;
       city?: string;
       state?: string;
-      // countryId: string;
       postalCode?: string;
       birthday?: string;
       notes?: string;
@@ -362,14 +350,8 @@ export async function insertSupplierLocation(
 
 export async function updateSupplier(
   client: SupabaseClient<Database>,
-  supplier: {
+  supplier: Omit<TypeOfValidator<typeof supplierValidator>, "id"> & {
     id: string;
-    name: string;
-    supplierTypeId?: string;
-    supplierStatusId?: string;
-    taxId?: string;
-    accountManagerId?: string;
-    description?: string;
     updatedBy: string;
   }
 ) {
@@ -458,10 +440,48 @@ export async function upsertPurchaseOrder(
       .eq("id", purchaseOrder.id)
       .select("id, purchaseOrderId");
   }
-  return client
+
+  const supplier = await getSupplier(client, purchaseOrder.supplierId);
+  if (supplier.error) return supplier;
+
+  const {
+    defaultCurrencyCode,
+    defaultPaymentTermId,
+    defaultShippingMethodId,
+    defaultShippingTermId,
+  } = supplier.data;
+
+  const order = await client
     .from("purchaseOrder")
     .insert([{ ...purchaseOrder }])
     .select("id, purchaseOrderId");
+
+  if (order.error) return purchaseOrder;
+
+  const purchaseOrderId = order.data[0].id;
+
+  const [delivery, payment] = await Promise.all([
+    client.from("purchaseOrderDelivery").insert([
+      {
+        id: purchaseOrderId,
+        shippingMethodId: defaultShippingMethodId,
+        shippingTermId: defaultShippingTermId,
+      },
+    ]),
+    client.from("purchaseOrderPayment").insert([
+      {
+        id: purchaseOrderId,
+        currencyCode: defaultCurrencyCode ?? undefined,
+        invoiceSupplierId: purchaseOrder.supplierId,
+        paymentTermId: defaultPaymentTermId,
+      },
+    ]),
+  ]);
+
+  if (delivery.error) return delivery;
+  if (payment.error) return payment;
+
+  return order;
 }
 
 export async function upsertPurchaseOrderDelivery(

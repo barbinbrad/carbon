@@ -157,8 +157,6 @@ CREATE TABLE "purchaseOrderDelivery" (
   "receiptPromisedDate" DATE,
   "deliveryDate" DATE,
   "notes" TEXT,
-  "createdBy" TEXT NOT NULL,
-  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   "updatedBy" TEXT,
   "updatedAt" TIMESTAMP WITH TIME ZONE,
 
@@ -254,4 +252,15 @@ CREATE VIEW "purchase_order_view" AS
   LEFT JOIN "user" u ON u."id" = p."createdBy"
   LEFT JOIN "user" u2 ON u2."id" = p."updatedBy"
   LEFT JOIN "user" u3 ON u3."id" = p."closedBy";
+
+ALTER TABLE "supplier" 
+  ADD COLUMN "defaultCurrencyCode" TEXT,
+  ADD COLUMN "defaultPaymentTermId" TEXT,
+  ADD COLUMN "defaultShippingMethodId" TEXT,
+  ADD COLUMN "defaultShippingTermId" TEXT;
+
+ALTER TABLE "supplier"
+  ADD CONSTRAINT "supplier_defaultPaymentTermId_fkey" FOREIGN KEY ("defaultPaymentTermId") REFERENCES "paymentTerm" ("id") ON DELETE SET NULL,
+  ADD CONSTRAINT "supplier_defaultShippingMethodId_fkey" FOREIGN KEY ("defaultShippingMethodId") REFERENCES "shippingMethod" ("id") ON DELETE SET NULL,
+  ADD CONSTRAINT "supplier_defaultShippingTermId_fkey" FOREIGN KEY ("defaultShippingTermId") REFERENCES "shippingTerm" ("id") ON DELETE SET NULL;
 

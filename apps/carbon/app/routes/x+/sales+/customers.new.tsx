@@ -23,22 +23,10 @@ export async function action({ request }: ActionArgs) {
     return validationError(validation.error);
   }
 
-  const {
-    name,
-    customerTypeId,
-    customerStatusId,
-    accountManagerId,
-    taxId,
-    description,
-  } = validation.data;
+  const { id, ...data } = validation.data;
 
   const createCustomer = await insertCustomer(client, {
-    name,
-    customerTypeId,
-    customerStatusId,
-    accountManagerId,
-    taxId,
-    description,
+    ...data,
     createdBy: userId,
   });
   if (createCustomer.error) {

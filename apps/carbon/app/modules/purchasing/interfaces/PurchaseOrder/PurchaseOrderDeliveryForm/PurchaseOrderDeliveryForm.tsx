@@ -81,7 +81,7 @@ const PurchaseOrderDeliveryForm = ({
               <DatePicker name="deliveryDate" label="Delivery Date" />
             </VStack>
             <VStack alignItems="start" spacing={2} w="full">
-              <TextArea name="notes" label="Notes" />
+              <TextArea name="notes" label="Shipping Notes" />
             </VStack>
           </Grid>
         </CardBody>

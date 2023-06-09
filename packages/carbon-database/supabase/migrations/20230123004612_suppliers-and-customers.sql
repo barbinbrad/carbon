@@ -69,7 +69,6 @@ CREATE TABLE "supplierType" (
 CREATE TABLE "supplier" (
     "id" TEXT NOT NULL DEFAULT uuid_generate_v4(),
     "name" TEXT NOT NULL,
-    "description" TEXT,
     "supplierTypeId" TEXT,
     "supplierStatusId" TEXT,
     "taxId" TEXT,
@@ -152,7 +151,6 @@ CREATE TABLE "customerType" (
 CREATE TABLE "customer" (
     "id" TEXT NOT NULL DEFAULT uuid_generate_v4(),
     "name" TEXT NOT NULL,
-    "description" TEXT,
     "customerTypeId" TEXT,
     "customerStatusId" TEXT,
     "taxId" TEXT,

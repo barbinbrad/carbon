@@ -417,7 +417,6 @@ export interface Database {
       customer: {
         Row: {
           name: string;
-          description: string | null;
           customerTypeId: string | null;
           customerStatusId: string | null;
           taxId: string | null;
@@ -431,7 +430,6 @@ export interface Database {
         };
         Insert: {
           name: string;
-          description?: string | null;
           customerTypeId?: string | null;
           customerStatusId?: string | null;
           taxId?: string | null;
@@ -445,7 +443,6 @@ export interface Database {
         };
         Update: {
           name?: string;
-          description?: string | null;
           customerTypeId?: string | null;
           customerStatusId?: string | null;
           taxId?: string | null;
@@ -1589,10 +1586,8 @@ export interface Database {
           receiptPromisedDate: string | null;
           deliveryDate: string | null;
           notes: string | null;
-          createdBy: string;
           updatedBy: string | null;
           updatedAt: string | null;
-          createdAt: string;
         };
         Insert: {
           id: string;
@@ -1603,10 +1598,8 @@ export interface Database {
           receiptPromisedDate?: string | null;
           deliveryDate?: string | null;
           notes?: string | null;
-          createdBy: string;
           updatedBy?: string | null;
           updatedAt?: string | null;
-          createdAt?: string;
         };
         Update: {
           id?: string;
@@ -1617,10 +1610,8 @@ export interface Database {
           receiptPromisedDate?: string | null;
           deliveryDate?: string | null;
           notes?: string | null;
-          createdBy?: string;
           updatedBy?: string | null;
           updatedAt?: string | null;
-          createdAt?: string;
         };
       };
       purchaseOrderFavorite: {
@@ -1896,7 +1887,6 @@ export interface Database {
       supplier: {
         Row: {
           name: string;
-          description: string | null;
           supplierTypeId: string | null;
           supplierStatusId: string | null;
           taxId: string | null;
@@ -1907,10 +1897,13 @@ export interface Database {
           updatedBy: string | null;
           id: string;
           createdAt: string;
+          defaultCurrencyCode: string | null;
+          defaultPaymentTermId: string | null;
+          defaultShippingMethodId: string | null;
+          defaultShippingTermId: string | null;
         };
         Insert: {
           name: string;
-          description?: string | null;
           supplierTypeId?: string | null;
           supplierStatusId?: string | null;
           taxId?: string | null;
@@ -1921,10 +1914,13 @@ export interface Database {
           updatedBy?: string | null;
           id?: string;
           createdAt?: string;
+          defaultCurrencyCode?: string | null;
+          defaultPaymentTermId?: string | null;
+          defaultShippingMethodId?: string | null;
+          defaultShippingTermId?: string | null;
         };
         Update: {
           name?: string;
-          description?: string | null;
           supplierTypeId?: string | null;
           supplierStatusId?: string | null;
           taxId?: string | null;
@@ -1935,6 +1931,10 @@ export interface Database {
           updatedBy?: string | null;
           id?: string;
           createdAt?: string;
+          defaultCurrencyCode?: string | null;
+          defaultPaymentTermId?: string | null;
+          defaultShippingMethodId?: string | null;
+          defaultShippingTermId?: string | null;
         };
       };
       supplierAccount: {
@@ -2238,30 +2238,30 @@ export interface Database {
           userId: string;
           note: string;
           id: string;
-          createdBy: string;
-          updatedAt: string | null;
           noteRichText: Json;
           active: boolean;
+          createdBy: string;
+          updatedAt: string | null;
           createdAt: string;
         };
         Insert: {
           userId: string;
           note: string;
           id?: string;
-          createdBy: string;
-          updatedAt?: string | null;
           noteRichText?: Json;
           active?: boolean;
+          createdBy: string;
+          updatedAt?: string | null;
           createdAt?: string;
         };
         Update: {
           userId?: string;
           note?: string;
           id?: string;
-          createdBy?: string;
-          updatedAt?: string | null;
           noteRichText?: Json;
           active?: boolean;
+          createdBy?: string;
+          updatedAt?: string | null;
           createdAt?: string;
         };
       };

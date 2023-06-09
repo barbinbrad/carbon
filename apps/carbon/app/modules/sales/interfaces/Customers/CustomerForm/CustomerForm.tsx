@@ -14,14 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import { ValidatedForm } from "remix-validated-form";
-import {
-  Employee,
-  Input,
-  Select,
-  Submit,
-  TextArea,
-  Hidden,
-} from "~/components/Form";
+import { Employee, Input, Select, Submit, Hidden } from "~/components/Form";
 import { customerValidator } from "~/modules/sales";
 import type {
   CustomerContact,
@@ -124,13 +117,6 @@ const CustomerForm = ({
                       placeholder="Select Customer Status"
                     />
                   </Grid>
-
-                  <TextArea
-                    name="description"
-                    label="Description"
-                    characterLimit={500}
-                    my={2}
-                  />
                 </VStack>
               </Box>
               <VStack spacing={8} w="full" alignItems="start" py={[8, 8, 0]}>

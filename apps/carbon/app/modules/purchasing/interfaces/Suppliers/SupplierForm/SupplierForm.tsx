@@ -19,8 +19,8 @@ import {
   Input,
   Select,
   Submit,
-  TextArea,
   Hidden,
+  Currency,
 } from "~/components/Form";
 import { usePermissions, useRouteData } from "~/hooks";
 import { supplierValidator } from "~/modules/purchasing";
@@ -33,6 +33,7 @@ import type {
 import { mapRowsToOptions } from "~/utils/form";
 import type { TypeOfValidator } from "~/types/validators";
 import { SupplierContacts, SupplierLocations } from "./components";
+import type { ListItem } from "~/types";
 
 type SupplierFormProps = {
   initialValues: TypeOfValidator<typeof supplierValidator>;
@@ -52,6 +53,9 @@ const SupplierForm = ({
   const routeData = useRouteData<{
     supplierTypes: SupplierType[];
     supplierStatuses: SupplierStatus[];
+    paymentTerms: ListItem[];
+    shippingMethods: ListItem[];
+    shippingTerms: ListItem[];
   }>("/x/purchasing/suppliers");
 
   const supplierTypeOptions = routeData?.supplierTypes
@@ -65,6 +69,30 @@ const SupplierForm = ({
   const supplierStatusOptions = routeData?.supplierStatuses
     ? mapRowsToOptions({
         data: routeData.supplierStatuses,
+        value: "id",
+        label: "name",
+      })
+    : [];
+
+  const paymentTermOptions = routeData?.paymentTerms
+    ? mapRowsToOptions({
+        data: routeData.paymentTerms,
+        value: "id",
+        label: "name",
+      })
+    : [];
+
+  const shippingMethodOptions = routeData?.shippingMethods
+    ? mapRowsToOptions({
+        data: routeData.shippingMethods,
+        value: "id",
+        label: "name",
+      })
+    : [];
+
+  const shippingTermOptions = routeData?.shippingTerms
+    ? mapRowsToOptions({
+        data: routeData.shippingTerms,
         value: "id",
         label: "name",
       })
@@ -123,14 +151,30 @@ const SupplierForm = ({
                       options={supplierStatusOptions}
                       placeholder="Select Supplier Status"
                     />
+                    <Currency
+                      name="defaultCurrencyCode"
+                      label="Currency"
+                      placeholder="Default Currency"
+                    />
+                    <Select
+                      name="defaultPaymentTermId"
+                      label="Payment Term"
+                      options={paymentTermOptions}
+                      placeholder="Default Payment Term"
+                    />
+                    <Select
+                      name="defaultShippingMethodId"
+                      label="Shipping Method"
+                      options={shippingMethodOptions}
+                      placeholder="Default Shipping Method"
+                    />
+                    <Select
+                      name="defaultShippingTermId"
+                      label="Shipping Term"
+                      options={shippingTermOptions}
+                      placeholder="Default Shipping Term"
+                    />
                   </Grid>
-
-                  <TextArea
-                    name="description"
-                    label="Description"
-                    characterLimit={500}
-                    my={2}
-                  />
                 </VStack>
               </Box>
               <VStack spacing={8} w="full" alignItems="start" py={[8, 8, 0]}>

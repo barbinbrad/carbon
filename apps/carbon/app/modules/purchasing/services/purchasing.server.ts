@@ -26,6 +26,17 @@ export async function closePurchaseOrder(
     .select("id");
 }
 
+export async function deletePurchaseOrder(
+  client: SupabaseClient<Database>,
+  purchaseOrderId: string
+) {
+  return Promise.all([
+    client.from("purchaseOrder").delete().eq("id", purchaseOrderId),
+    client.from("purchaseOrderDelivery").delete().eq("id", purchaseOrderId),
+    client.from("purchaseOrderPayment").delete().eq("id", purchaseOrderId),
+  ]);
+}
+
 export async function deleteSupplierContact(
   client: SupabaseClient<Database>,
   supplierId: string,
@@ -456,7 +467,7 @@ export async function upsertPurchaseOrder(
     .insert([{ ...purchaseOrder }])
     .select("id, purchaseOrderId");
 
-  if (order.error) return purchaseOrder;
+  if (order.error) return order;
 
   const purchaseOrderId = order.data[0].id;
 
@@ -471,15 +482,21 @@ export async function upsertPurchaseOrder(
     client.from("purchaseOrderPayment").insert([
       {
         id: purchaseOrderId,
-        currencyCode: defaultCurrencyCode ?? undefined,
+        currencyCode: defaultCurrencyCode ?? "USD",
         invoiceSupplierId: purchaseOrder.supplierId,
         paymentTermId: defaultPaymentTermId,
       },
     ]),
   ]);
 
-  if (delivery.error) return delivery;
-  if (payment.error) return payment;
+  if (delivery.error) {
+    await deletePurchaseOrder(client, purchaseOrderId);
+    return payment;
+  }
+  if (payment.error) {
+    await deletePurchaseOrder(client, purchaseOrderId);
+    return payment;
+  }
 
   return order;
 }

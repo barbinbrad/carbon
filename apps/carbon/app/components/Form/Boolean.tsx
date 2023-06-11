@@ -14,14 +14,15 @@ import {
 import { forwardRef, useMemo } from "react";
 import { useControlField, useField } from "remix-validated-form";
 
-type FormBooleanProps = SwitchProps & {
+type FormBooleanProps = Omit<SwitchProps, "onChange"> & {
   name: string;
   label?: string;
   description?: string;
+  onChange?: (value: boolean) => void;
 };
 
 const Boolean = forwardRef<HTMLInputElement, FormBooleanProps>(
-  ({ name, label, description, ...props }, ref) => {
+  ({ name, label, description, onChange, ...props }, ref) => {
     const { getInputProps, error } = useField(name);
     const [value, setValue] = useControlField<boolean>(name);
 
@@ -76,7 +77,10 @@ const Boolean = forwardRef<HTMLInputElement, FormBooleanProps>(
                   type: "checkbox",
                   id: name,
                 })}
-                onChange={(e) => setValue(e.target.checked)}
+                onChange={(e) => {
+                  setValue(e.target.checked);
+                  onChange?.(e.target.checked);
+                }}
               />
             </VisuallyHidden>
             <HStack>

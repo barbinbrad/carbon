@@ -7,8 +7,12 @@ import {
   Heading,
   VStack,
 } from "@chakra-ui/react";
+import { useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import {
+  Boolean,
+  Customer,
+  CustomerLocation,
   DatePicker,
   Hidden,
   Input,
@@ -33,6 +37,12 @@ const PurchaseOrderDeliveryForm = ({
   shippingTerms,
 }: PurchaseOrderDeliveryFormProps) => {
   const permissions = usePermissions();
+  const [dropShip, setDropShip] = useState<boolean>(
+    initialValues.dropShipment ?? false
+  );
+  const [customer, setCustomer] = useState<string | undefined>(
+    initialValues.customerId
+  );
 
   const shippingMethodOptions = shippingMethods.map((method) => ({
     label: method.name,
@@ -81,6 +91,25 @@ const PurchaseOrderDeliveryForm = ({
               <DatePicker name="deliveryDate" label="Delivery Date" />
             </VStack>
             <VStack alignItems="start" spacing={2} w="full">
+              <Boolean
+                name="dropShipment"
+                label="Drop Shipment"
+                onChange={setDropShip}
+              />
+              {dropShip && (
+                <>
+                  <Customer
+                    name="customerId"
+                    label="Customer"
+                    onChange={({ value }) => setCustomer(value as string)}
+                  />
+                  <CustomerLocation
+                    name="customerLocationId"
+                    label="Location"
+                    customer={customer}
+                  />
+                </>
+              )}
               <TextArea name="notes" label="Shipping Notes" />
             </VStack>
           </Grid>

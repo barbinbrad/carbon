@@ -51,6 +51,12 @@ const LocationForm = ({ initialValues }: LocationFormProps) => {
             <Hidden name="id" />
             <VStack spacing={4} alignItems="start">
               <Input name="name" label="Location Name" />
+              <Input name="addressLine1" label="Address Line 1" />
+              <Input name="addressLine2" label="Address Line 2" />
+              <Input name="city" label="City" />
+              <Input name="state" label="State" />
+              <Input name="postalCode" label="Postal Code" />
+              {/* <Country name="country" label="Country" /> */}
               <Timezone name="timezone" label="Timezone" />
               <Number name="latitude" label="Latitude" min={-90} max={90} />
               <Number name="longitude" label="Longitude" min={-180} max={180} />

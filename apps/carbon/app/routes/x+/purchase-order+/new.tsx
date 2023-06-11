@@ -49,6 +49,7 @@ export async function action({ request }: ActionArgs) {
     purchaseOrderId: nextSequence.data,
     createdBy: userId,
   });
+
   if (createPurchaseOrder.error) {
     return redirect(
       "/x/purchasing/orders",
@@ -59,11 +60,14 @@ export async function action({ request }: ActionArgs) {
     );
   }
 
-  const { id, purchaseOrderId } = createPurchaseOrder.data[0];
+  const order = createPurchaseOrder.data?.[0];
 
   return redirect(
-    `/x/purchase-order/${id}`,
-    await flash(request, success(`Created purchase order ${purchaseOrderId}`))
+    `/x/purchase-order/${order?.id}`,
+    await flash(
+      request,
+      success(`Created purchase order ${order?.purchaseOrderId}`)
+    )
   );
 }
 
@@ -79,12 +83,12 @@ export default function PurchaseOrderNewRoute() {
     orderDate: today(getLocalTimeZone()).toString(),
     status: "Draft" as PurchaseOrderApprovalStatus,
     type: "Purchase" as PurchaseOrderType,
-    currencyCode: "USD",
   };
 
   return (
     <Box w="50%" maxW={720} minW={420}>
       <PurchaseOrderForm
+        // @ts-expect-error
         initialValues={initialValues}
         purchaseOrderApprovalStatuses={
           routeData?.purchaseOrderApprovalStatuses ?? []

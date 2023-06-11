@@ -130,6 +130,9 @@ export default function PurchaseOrderDeliveryRoute() {
     receiptPromisedDate: purchaseOrderDelivery.receiptPromisedDate ?? "",
     deliveryDate: purchaseOrderDelivery.deliveryDate ?? "",
     notes: purchaseOrderDelivery.notes ?? "",
+    dropShipment: purchaseOrderDelivery.dropShipment ?? false,
+    customerId: purchaseOrderDelivery.customerId ?? "",
+    customerLocationId: purchaseOrderDelivery.customerLocationId ?? "",
   };
 
   return (

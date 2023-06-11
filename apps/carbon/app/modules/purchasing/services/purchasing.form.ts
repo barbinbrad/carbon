@@ -37,15 +37,50 @@ export const purchaseOrderValidator = withZod(
 );
 
 export const purchaseOrderDeliveryValidator = withZod(
+  z
+    .object({
+      id: z.string(),
+      locationId: zfd.text(z.string().optional()),
+      shippingMethodId: zfd.text(z.string().optional()),
+      shippingTermId: zfd.text(z.string().optional()),
+      trackingNumber: z.string(),
+      deliveryDate: zfd.text(z.string().optional()),
+      receiptRequestedDate: zfd.text(z.string().optional()),
+      receiptPromisedDate: zfd.text(z.string().optional()),
+      dropShipment: zfd.checkbox(),
+      customerId: zfd.text(z.string().optional()),
+      customerLocationId: zfd.text(z.string().optional()),
+      notes: zfd.text(z.string().optional()),
+    })
+    .refine(
+      (data) => {
+        if (data.dropShipment) {
+          return data.customerId && data.customerLocationId;
+        }
+        return true;
+      },
+      {
+        message: "Drop shipment requires customer and location",
+        path: ["dropShipment"], // path of error
+      }
+    )
+    .refine(
+      (data) => {
+        if (data.locationId) {
+          return !data.dropShipment;
+        }
+        return true;
+      },
+      {
+        message: "Location is not required for drop shipment",
+        path: ["locationId"], // path of error
+      }
+    )
+);
+
+export const purchaseOrderLinesValidator = withZod(
   z.object({
     id: z.string(),
-    shippingMethodId: zfd.text(z.string().optional()),
-    shippingTermId: zfd.text(z.string().optional()),
-    trackingNumber: z.string(),
-    deliveryDate: zfd.text(z.string().optional()),
-    receiptRequestedDate: zfd.text(z.string().optional()),
-    receiptPromisedDate: zfd.text(z.string().optional()),
-    notes: zfd.text(z.string().optional()),
   })
 );
 

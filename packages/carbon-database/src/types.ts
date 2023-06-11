@@ -1019,6 +1019,12 @@ export interface Database {
       location: {
         Row: {
           name: string;
+          addressLine1: string;
+          addressLine2: string | null;
+          city: string;
+          state: string;
+          postalCode: string;
+          country: string | null;
           timezone: string;
           latitude: number | null;
           longitude: number | null;
@@ -1030,6 +1036,12 @@ export interface Database {
         };
         Insert: {
           name: string;
+          addressLine1: string;
+          addressLine2?: string | null;
+          city: string;
+          state: string;
+          postalCode: string;
+          country?: string | null;
           timezone: string;
           latitude?: number | null;
           longitude?: number | null;
@@ -1041,6 +1053,12 @@ export interface Database {
         };
         Update: {
           name?: string;
+          addressLine1?: string;
+          addressLine2?: string | null;
+          city?: string;
+          state?: string;
+          postalCode?: string;
+          country?: string | null;
           timezone?: string;
           latitude?: number | null;
           longitude?: number | null;
@@ -1579,39 +1597,51 @@ export interface Database {
       purchaseOrderDelivery: {
         Row: {
           id: string;
+          locationId: string | null;
           shippingMethodId: string | null;
           shippingTermId: string | null;
-          trackingNumber: string | null;
           receiptRequestedDate: string | null;
           receiptPromisedDate: string | null;
           deliveryDate: string | null;
           notes: string | null;
+          trackingNumber: string | null;
+          customerId: string | null;
+          customerLocationId: string | null;
           updatedBy: string | null;
           updatedAt: string | null;
+          dropShipment: boolean;
         };
         Insert: {
           id: string;
+          locationId?: string | null;
           shippingMethodId?: string | null;
           shippingTermId?: string | null;
-          trackingNumber?: string | null;
           receiptRequestedDate?: string | null;
           receiptPromisedDate?: string | null;
           deliveryDate?: string | null;
           notes?: string | null;
+          trackingNumber?: string | null;
+          customerId?: string | null;
+          customerLocationId?: string | null;
           updatedBy?: string | null;
           updatedAt?: string | null;
+          dropShipment?: boolean;
         };
         Update: {
           id?: string;
+          locationId?: string | null;
           shippingMethodId?: string | null;
           shippingTermId?: string | null;
-          trackingNumber?: string | null;
           receiptRequestedDate?: string | null;
           receiptPromisedDate?: string | null;
           deliveryDate?: string | null;
           notes?: string | null;
+          trackingNumber?: string | null;
+          customerId?: string | null;
+          customerLocationId?: string | null;
           updatedBy?: string | null;
           updatedAt?: string | null;
+          dropShipment?: boolean;
         };
       };
       purchaseOrderFavorite: {
@@ -1626,6 +1656,50 @@ export interface Database {
         Update: {
           purchaseOrderId?: string;
           userId?: string;
+        };
+      };
+      purchaseOrderLine: {
+        Row: {
+          id: string;
+          partId: string;
+          purchaseQuantity: number;
+          unitPrice: number;
+          setupPrice: number;
+          createdBy: string;
+          updatedAt: string | null;
+          updatedBy: string | null;
+          receivedComplete: boolean;
+          invoiceComplete: boolean;
+          requiresInspection: boolean;
+          createdAt: string;
+        };
+        Insert: {
+          id: string;
+          partId: string;
+          purchaseQuantity: number;
+          unitPrice: number;
+          setupPrice: number;
+          createdBy: string;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
+          receivedComplete?: boolean;
+          invoiceComplete?: boolean;
+          requiresInspection?: boolean;
+          createdAt?: string;
+        };
+        Update: {
+          id?: string;
+          partId?: string;
+          purchaseQuantity?: number;
+          unitPrice?: number;
+          setupPrice?: number;
+          createdBy?: string;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
+          receivedComplete?: boolean;
+          invoiceComplete?: boolean;
+          requiresInspection?: boolean;
+          createdAt?: string;
         };
       };
       purchaseOrderPayment: {

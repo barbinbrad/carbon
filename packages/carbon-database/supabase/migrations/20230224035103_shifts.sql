@@ -1,6 +1,12 @@
 CREATE TABLE "location" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "name" TEXT NOT NULL,
+  "addressLine1" TEXT NOT NULL,
+  "addressLine2" TEXT,
+  "city" TEXT NOT NULL,
+  "state" TEXT NOT NULL,
+  "postalCode" TEXT NOT NULL,
+  "country" TEXT,
   "timezone" TEXT NOT NULL,
   "latitude" NUMERIC,
   "longitude" NUMERIC,

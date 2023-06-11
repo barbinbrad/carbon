@@ -7,6 +7,7 @@ import CreatableMultiSelect from "./CreatableMultiSelect";
 import CreatableSelect from "./CreatableSelect";
 import Customer from "./Customer";
 import CustomerContact from "./CustomerContact";
+import CustomerLocation from "./CustomerLocation";
 import Currency from "./Currency";
 import DatePicker from "./DatePicker";
 import Department from "./Department";
@@ -42,6 +43,7 @@ export {
   Currency,
   Customer,
   CustomerContact,
+  CustomerLocation,
   DatePicker,
   Department,
   Employee,

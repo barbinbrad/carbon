@@ -67,7 +67,7 @@ const PurchaseOrderForm = ({
       <Card w="full">
         <CardHeader>
           <Heading size="md">
-            {isEditing ? "Header" : "New Purchase Order"}
+            {isEditing ? "Purchase Order" : "New Purchase Order"}
           </Heading>
           {!isEditing && (
             <Text color="gray.500">

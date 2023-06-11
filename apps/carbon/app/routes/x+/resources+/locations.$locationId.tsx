@@ -49,15 +49,12 @@ export async function action({ request }: ActionArgs) {
     return validationError(validation.error);
   }
 
-  const { id, name, timezone, latitude, longitude } = validation.data;
+  const { id, ...data } = validation.data;
   if (!id) throw notFound("Location ID was not found");
 
   const createLocation = await upsertLocation(client, {
     id,
-    name,
-    timezone,
-    latitude: latitude ?? null,
-    longitude: longitude ?? null,
+    ...data,
     updatedBy: userId,
   });
 
@@ -83,6 +80,11 @@ export default function LocationRoute() {
   const initialValues = {
     id: location.id,
     name: location.name,
+    addressLine1: location.addressLine1 ?? undefined,
+    addressLine2: location.addressLine2 ?? undefined,
+    city: location.city ?? undefined,
+    state: location.state ?? undefined,
+    postalCode: location.postalCode ?? undefined,
     timezone: location.timezone ?? getLocalTimeZone(),
     latitude: location.latitude ?? undefined,
     longitude: location.longitude ?? undefined,

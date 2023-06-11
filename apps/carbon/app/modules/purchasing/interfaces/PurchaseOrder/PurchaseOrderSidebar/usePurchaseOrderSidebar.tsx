@@ -5,12 +5,12 @@ export function usePurchaseOrderSidebar() {
   const permissions = usePermissions();
   return [
     {
-      name: "Header",
+      name: "Summary",
       to: "",
     },
     {
-      name: "Line Items",
-      to: "items",
+      name: "Lines",
+      to: "lines",
       role: ["employee", "supplier"],
     },
     {

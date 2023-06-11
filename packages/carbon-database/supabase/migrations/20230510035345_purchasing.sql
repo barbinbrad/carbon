@@ -127,6 +127,27 @@ CREATE INDEX "purchaseOrder_purchaseOrderId_idx" ON "purchaseOrder" ("purchaseOr
 CREATE INDEX "purchaseOrder_supplierId_idx" ON "purchaseOrder" ("supplierId");
 CREATE INDEX "purchaseOrder_supplierContactId_idx" ON "purchaseOrder" ("supplierContactId");
 
+CREATE TABLE "purchaseOrderLine" (
+  "id" TEXT NOT NULL,
+  "partId" TEXT NOT NULL,
+  "purchaseQuantity" INTEGER NOT NULL,
+  "unitPrice" NUMERIC(9,2) NOT NULL,
+  "setupPrice" NUMERIC(9,2) NOT NULL,
+  "receivedComplete" BOOLEAN NOT NULL DEFAULT FALSE,
+  "invoiceComplete" BOOLEAN NOT NULL DEFAULT FALSE,
+  "requiresInspection" BOOLEAN NOT NULL DEFAULT FALSE,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+  "createdBy" TEXT NOT NULL,
+  "updatedAt" TIMESTAMP WITH TIME ZONE,
+  "updatedBy" TEXT,
+
+  CONSTRAINT "purchaseOrderLine_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "purchaseOrderLine_id_fkey" FOREIGN KEY ("id") REFERENCES "purchaseOrder" ("id") ON DELETE CASCADE,
+  CONSTRAINT "purchaseOrderLine_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part" ("id") ON DELETE CASCADE,
+  CONSTRAINT "purchaseOrderLine_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE CASCADE,
+  CONSTRAINT "purchaseOrderLine_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE CASCADE
+);
+
 CREATE TABLE "purchaseOrderPayment" (
   "id" TEXT NOT NULL,
   "invoiceSupplierId" TEXT,
@@ -150,20 +171,28 @@ CREATE INDEX "purchaseOrderPayment_invoiceSupplierContactId_idx" ON "purchaseOrd
 
 CREATE TABLE "purchaseOrderDelivery" (
   "id" TEXT NOT NULL,
+  "locationId" TEXT,
   "shippingMethodId" TEXT,
   "shippingTermId" TEXT,
-  "trackingNumber" TEXT,
   "receiptRequestedDate" DATE,
   "receiptPromisedDate" DATE,
   "deliveryDate" DATE,
   "notes" TEXT,
+  "trackingNumber" TEXT,
+  "dropShipment" BOOLEAN NOT NULL DEFAULT FALSE,
+  "customerId" TEXT,
+  "customerLocationId" TEXT,
   "updatedBy" TEXT,
   "updatedAt" TIMESTAMP WITH TIME ZONE,
 
   CONSTRAINT "purchaseOrderDelivery_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "purchaseOrderDelivery_id_fkey" FOREIGN KEY ("id") REFERENCES "purchaseOrder" ("id") ON DELETE CASCADE,
+  CONSTRAINT "purchaseOrderDelivery_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "location" ("id") ON DELETE CASCADE,
   CONSTRAINT "purchaseOrderDelivery_shippingMethodId_fkey" FOREIGN KEY ("shippingMethodId") REFERENCES "shippingMethod" ("id") ON DELETE CASCADE,
-  CONSTRAINT "purchaseOrderDelivery_shippingTermId_fkey" FOREIGN KEY ("shippingTermId") REFERENCES "shippingTerm" ("id") ON DELETE CASCADE
+  CONSTRAINT "purchaseOrderDelivery_shippingTermId_fkey" FOREIGN KEY ("shippingTermId") REFERENCES "shippingTerm" ("id") ON DELETE CASCADE,
+  CONSTRAINT "purchaseOrderDelivery_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "customer" ("id") ON DELETE CASCADE,
+  CONSTRAINT "purchaseOrderDelivery_customerLocationId_fkey" FOREIGN KEY ("customerLocationId") REFERENCES "customerLocation" ("id") ON DELETE CASCADE,
+  CONSTRAINT "purchaseOrderDelivery_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE CASCADE
 );
 
 CREATE TYPE "purchaseOrderTransactionType" AS ENUM (

@@ -2,8 +2,10 @@ import type { Database } from "@carbon/database";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { DataType, Employee } from "~/modules/users";
 import { getEmployees } from "~/modules/users";
+import type { TypeOfValidator } from "~/types/validators";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
+import type { locationValidator } from "./resources.form";
 
 export async function deleteAbility(
   client: SupabaseClient<Database>,
@@ -469,20 +471,14 @@ export async function getLocation(
   client: SupabaseClient<Database>,
   locationId: string
 ) {
-  return client
-    .from("location")
-    .select(`id, name, latitude, longitude, timezone`)
-    .eq("id", locationId)
-    .single();
+  return client.from("location").select("*").eq("id", locationId).single();
 }
 
 export async function getLocations(
   client: SupabaseClient<Database>,
   args?: GenericQueryFilters & { name: string | null }
 ) {
-  let query = client
-    .from("location")
-    .select(`id, name, latitude, longitude, timezone`, { count: "exact" });
+  let query = client.from("location").select("*", { count: "exact" });
 
   if (args?.name) {
     query = query.ilike("name", `%${args.name}%`);
@@ -1142,21 +1138,13 @@ export async function upsertHoliday(
 export async function upsertLocation(
   client: SupabaseClient<Database>,
   location:
-    | {
-        name: string;
-        timezone: string;
-        latitude: number | null;
-        longitude: number | null;
+    | (Omit<TypeOfValidator<typeof locationValidator>, "id"> & {
         createdBy: string;
-      }
-    | {
+      })
+    | (Omit<TypeOfValidator<typeof locationValidator>, "id"> & {
         id: string;
-        name: string;
-        timezone: string;
-        latitude: number | null;
-        longitude: number | null;
         updatedBy: string;
-      }
+      })
 ) {
   if ("id" in location) {
     return client.from("location").update(location).eq("id", location.id);

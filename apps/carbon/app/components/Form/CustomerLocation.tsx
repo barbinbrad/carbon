@@ -8,36 +8,36 @@ import {
 import { useFetcher } from "@remix-run/react";
 import { useEffect, useMemo, useRef } from "react";
 import { useControlField, useField } from "remix-validated-form";
-import type { CustomerContact as CustomerContactType } from "~/modules/sales";
-import type { getCustomerContacts } from "~/modules/sales";
+import type { CustomerLocation as CustomerLocationType } from "~/modules/sales";
+import type { getCustomerLocations } from "~/modules/sales";
 import type { SelectProps } from "./Select";
 
-type CustomerContactSelectProps = Omit<SelectProps, "options" | "onChange"> & {
+type CustomerLocationSelectProps = Omit<SelectProps, "options" | "onChange"> & {
   customer?: string;
-  onChange?: (customerContact: CustomerContactType | undefined) => void;
+  onChange?: (customerLocation: CustomerLocationType | undefined) => void;
 };
 
-const CustomerContact = ({
+const CustomerLocation = ({
   name,
-  label = "Customer Contact",
+  label = "Customer Location",
   customer,
   helperText,
   isLoading,
   isReadOnly,
-  placeholder = "Select Customer Contact",
+  placeholder = "Select Customer Location",
   onChange,
   ...props
-}: CustomerContactSelectProps) => {
+}: CustomerLocationSelectProps) => {
   const initialLoad = useRef(true);
   const { error, defaultValue } = useField(name);
   const [value, setValue] = useControlField<string | undefined>(name);
 
-  const customerContactFetcher =
-    useFetcher<Awaited<ReturnType<typeof getCustomerContacts>>>();
+  const customerLocationFetcher =
+    useFetcher<Awaited<ReturnType<typeof getCustomerLocations>>>();
 
   useEffect(() => {
-    customerContactFetcher.load(
-      `/api/sales/customer-contacts?customerId=${customer}`
+    customerLocationFetcher.load(
+      `/api/sales/customer-locations?customerId=${customer}`
     );
     if (initialLoad.current) {
       initialLoad.current = false;
@@ -52,14 +52,14 @@ const CustomerContact = ({
 
   const options = useMemo(
     () =>
-      customerContactFetcher.data?.data
-        ? customerContactFetcher.data?.data.map((c) => ({
+      customerLocationFetcher.data?.data
+        ? customerLocationFetcher.data?.data.map((c) => ({
             value: c.id,
             // @ts-ignore
-            label: `${c.contact?.firstName} ${c.contact?.lastName}`,
+            label: `${c.address?.addressLine1} ${c.address?.city}, ${c.address?.state}`,
           }))
         : [],
-    [customerContactFetcher.data]
+    [customerLocationFetcher.data]
   );
 
   const handleChange = (selection: {
@@ -70,7 +70,7 @@ const CustomerContact = ({
     setValue(newValue);
     if (onChange && typeof onChange === "function") {
       if (newValue === undefined) onChange(newValue);
-      const contact = customerContactFetcher.data?.data?.find(
+      const contact = customerLocationFetcher.data?.data?.find(
         (c) => c.id === newValue
       );
 
@@ -115,6 +115,6 @@ const CustomerContact = ({
   );
 };
 
-CustomerContact.displayName = "CustomerContact";
+CustomerLocation.displayName = "CustomerLocation";
 
-export default CustomerContact;
+export default CustomerLocation;

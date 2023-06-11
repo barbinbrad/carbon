@@ -24,13 +24,10 @@ export async function action({ request }: ActionArgs) {
     return validationError(validation.error);
   }
 
-  const { name, timezone, latitude, longitude } = validation.data;
+  const { id, ...data } = validation.data;
 
   const createLocation = await upsertLocation(client, {
-    name,
-    timezone,
-    latitude: latitude ?? null,
-    longitude: longitude ?? null,
+    ...data,
     createdBy: userId,
   });
 
@@ -54,6 +51,11 @@ export default function NewLocationRoute() {
   const initialValues = {
     name: "",
     timezone: getLocalTimeZone(),
+    addressLine1: "",
+    addressLine2: "",
+    city: "",
+    state: "",
+    postalCode: "",
   };
 
   return <LocationForm initialValues={initialValues} />;

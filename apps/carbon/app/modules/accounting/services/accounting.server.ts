@@ -3,6 +3,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { TypeOfValidator } from "~/types/validators";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
+import { sanitize } from "~/utils/supabase";
 import type { paymentTermValidator } from "./accounting.form";
 
 export async function deletePaymentTerm(
@@ -86,7 +87,7 @@ export async function upsertPaymentTerm(
   }
   return client
     .from("paymentTerm")
-    .update(paymentTerm)
+    .update(sanitize(paymentTerm))
     .eq("id", paymentTerm.id)
     .select("id");
 }

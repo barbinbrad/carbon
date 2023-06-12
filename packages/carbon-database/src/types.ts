@@ -2545,6 +2545,8 @@ export interface Database {
           createdBy: string | null;
           receiptRequestedDate: string | null;
           receiptPromisedDate: string | null;
+          dropShipment: boolean | null;
+          locationName: string | null;
           supplierName: string | null;
           createdByAvatar: string | null;
           createdByFullName: string | null;

@@ -107,7 +107,7 @@ export const employeeAbilityValidator = withZod(
 
 export const employeeJobValidator = withZod(
   z.object({
-    title: z.string().min(1, { message: "Title is required" }),
+    title: zfd.text(z.string().optional()),
     startDate: zfd.text(z.string().optional()),
     locationId: zfd.text(z.string().optional()),
     shiftId: zfd.text(z.string().optional()),

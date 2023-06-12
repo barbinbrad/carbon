@@ -3,6 +3,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { TypeOfValidator } from "~/types/validators";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
+import { sanitize } from "~/utils/supabase";
 import type { shippingMethodValidator } from "./inventory.form";
 
 export async function deleteShippingMethod(
@@ -79,7 +80,7 @@ export async function upsertShippingMethod(
   }
   return client
     .from("shippingMethod")
-    .update(shippingMethod)
+    .update(sanitize(shippingMethod))
     .eq("id", shippingMethod.id)
     .select("id");
 }

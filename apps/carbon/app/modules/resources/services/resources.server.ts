@@ -5,6 +5,7 @@ import { getEmployees } from "~/modules/users";
 import type { TypeOfValidator } from "~/types/validators";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
+import { sanitize } from "~/utils/supabase";
 import type { locationValidator } from "./resources.form";
 
 export async function deleteAbility(
@@ -868,7 +869,7 @@ export async function updateAbility(
     shadowWeeks: number;
   }>
 ) {
-  return client.from("ability").update(ability).eq("id", id);
+  return client.from("ability").update(sanitize(ability)).eq("id", id);
 }
 
 export async function updateAttribute(
@@ -884,12 +885,14 @@ export async function updateAttribute(
   if (!attribute.id) throw new Error("id is required");
   return client
     .from("userAttribute")
-    .update({
-      name: attribute.name,
-      listOptions: attribute.listOptions,
-      canSelfManage: attribute.canSelfManage,
-      updatedBy: attribute.updatedBy,
-    })
+    .update(
+      sanitize({
+        name: attribute.name,
+        listOptions: attribute.listOptions,
+        canSelfManage: attribute.canSelfManage,
+        updatedBy: attribute.updatedBy,
+      })
+    )
     .eq("id", attribute.id);
 }
 
@@ -903,7 +906,10 @@ export async function updateAttributeCategory(
   }
 ) {
   const { id, ...update } = attributeCategory;
-  return client.from("userAttributeCategory").update(update).eq("id", id);
+  return client
+    .from("userAttributeCategory")
+    .update(sanitize(update))
+    .eq("id", id);
 }
 
 export async function updateAttributeSortOrder(
@@ -940,7 +946,7 @@ export async function upsertContractor(
   if ("updatedBy" in contractor) {
     const updateContractor = await client
       .from("contractor")
-      .update(contractor)
+      .update(sanitize(contractor))
       .eq("id", contractor.id);
     if (updateContractor.error) {
       return updateContractor;
@@ -991,7 +997,10 @@ export async function upsertDepartment(
       }
 ) {
   if ("id" in department) {
-    return client.from("department").update(department).eq("id", department.id);
+    return client
+      .from("department")
+      .update(sanitize(department))
+      .eq("id", department.id);
   }
   return client.from("department").insert(department).select("id");
 }
@@ -1008,10 +1017,7 @@ export async function upsertEmployeeAbility(
 ) {
   const { id, ...update } = employeeAbility;
   if (id) {
-    return client
-      .from("employeeAbility")
-      .update({ ...update })
-      .eq("id", id);
+    return client.from("employeeAbility").update(sanitize(update)).eq("id", id);
   }
 
   const deactivatedId = await client
@@ -1025,7 +1031,7 @@ export async function upsertEmployeeAbility(
   if (deactivatedId.data?.id) {
     return client
       .from("employeeAbility")
-      .update({ ...update, active: true })
+      .update(sanitize({ ...update, active: true }))
       .eq("id", deactivatedId.data.id);
   }
 
@@ -1077,10 +1083,7 @@ export async function upsertEquipment(
 ) {
   if ("id" in equipment) {
     const { id, ...update } = equipment;
-    return client
-      .from("equipment")
-      .update({ ...update })
-      .eq("id", id);
+    return client.from("equipment").update(sanitize(update)).eq("id", id);
   }
   return client.from("equipment").insert([equipment]).select("id");
 }
@@ -1106,10 +1109,7 @@ export async function upsertEquipmentType(
 ) {
   if ("id" in equipmentType) {
     const { id, ...update } = equipmentType;
-    return client
-      .from("equipmentType")
-      .update({ ...update })
-      .eq("id", id);
+    return client.from("equipmentType").update(sanitize(update)).eq("id", id);
   }
   return client.from("equipmentType").insert([equipmentType]).select("id");
 }
@@ -1130,7 +1130,10 @@ export async function upsertHoliday(
       }
 ) {
   if ("id" in holiday) {
-    return client.from("holiday").update(holiday).eq("id", holiday.id);
+    return client
+      .from("holiday")
+      .update(sanitize(holiday))
+      .eq("id", holiday.id);
   }
   return client.from("holiday").insert(holiday).select("id");
 }
@@ -1147,7 +1150,10 @@ export async function upsertLocation(
       })
 ) {
   if ("id" in location) {
-    return client.from("location").update(location).eq("id", location.id);
+    return client
+      .from("location")
+      .update(sanitize(location))
+      .eq("id", location.id);
   }
   return client.from("location").insert([location]).select("id");
 }
@@ -1172,7 +1178,7 @@ export async function upsertPartner(
   if ("updatedBy" in partner) {
     const updatePartner = await client
       .from("partner")
-      .update(partner)
+      .update(sanitize(partner))
       .eq("id", partner.id);
     if (updatePartner.error) {
       return updatePartner;
@@ -1221,10 +1227,7 @@ export async function upsertShift(
 ) {
   const { id, ...update } = shift;
   if (id) {
-    return client
-      .from("shift")
-      .update({ ...update })
-      .eq("id", id);
+    return client.from("shift").update(sanitize(update)).eq("id", id);
   }
 
   return client.from("shift").insert([update]).select("id");
@@ -1255,10 +1258,7 @@ export async function upsertWorkCell(
 ) {
   if ("id" in workCell) {
     const { id, ...update } = workCell;
-    return client
-      .from("workCell")
-      .update({ ...update })
-      .eq("id", id);
+    return client.from("workCell").update(sanitize(update)).eq("id", id);
   }
   return client.from("workCell").insert([workCell]).select("id");
 }
@@ -1284,10 +1284,7 @@ export async function upsertWorkCellType(
 ) {
   if ("id" in workCellType) {
     const { id, ...update } = workCellType;
-    return client
-      .from("workCellType")
-      .update({ ...update })
-      .eq("id", id);
+    return client.from("workCellType").update(sanitize(update)).eq("id", id);
   }
   return client.from("workCellType").insert([workCellType]).select("id");
 }

@@ -4360,6 +4360,8 @@ CREATE VIEW "purchase_order_view" AS
     p."createdBy",
     pd."receiptRequestedDate",
     pd."receiptPromisedDate",
+    pd."dropShipment",
+    l."name" AS "locationName",
     s."name" AS "supplierName",
     u."avatarUrl" AS "createdByAvatar",
     u."fullName" AS "createdByFullName",
@@ -4375,6 +4377,7 @@ CREATE VIEW "purchase_order_view" AS
     EXISTS(SELECT 1 FROM "purchaseOrderFavorite" pf WHERE pf."purchaseOrderId" = p.id AND pf."userId" = auth.uid()::text) AS favorite
   FROM "purchaseOrder" p
   LEFT JOIN "purchaseOrderDelivery" pd ON pd."id" = p."id"
+  LEFT JOIN "location" l ON l."id" = pd."locationId"
   LEFT JOIN "supplier" s ON s."id" = p."supplierId"
   LEFT JOIN "user" u ON u."id" = p."createdBy"
   LEFT JOIN "user" u2 ON u2."id" = p."updatedBy"

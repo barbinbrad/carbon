@@ -123,6 +123,7 @@ export default function PurchaseOrderDeliveryRoute() {
 
   const initialValues = {
     id: purchaseOrderDelivery.id,
+    locationId: purchaseOrderDelivery.locationId ?? "",
     shippingMethodId: purchaseOrderDelivery.shippingMethodId ?? "",
     shippingTermId: purchaseOrderDelivery.shippingTermId ?? "",
     trackingNumber: purchaseOrderDelivery.trackingNumber ?? "",

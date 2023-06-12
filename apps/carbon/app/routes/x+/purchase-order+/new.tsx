@@ -13,7 +13,7 @@ import {
   purchaseOrderValidator,
   upsertPurchaseOrder,
 } from "~/modules/purchasing";
-import { getNextSequence } from "~/modules/settings";
+import { getNextSequence, rollbackNextSequence } from "~/modules/settings";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
@@ -51,6 +51,8 @@ export async function action({ request }: ActionArgs) {
   });
 
   if (createPurchaseOrder.error) {
+    // TODO: this should be done as a transaction
+    await rollbackNextSequence(client, "purchaseOrder", userId);
     return redirect(
       "/x/purchasing/orders",
       await flash(

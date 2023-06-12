@@ -46,6 +46,16 @@ const PartPreview = () => {
             alignItems="start"
             justifyContent="space-between"
           >
+            <Text color="gray.500">Delivery Location</Text>
+            <Text fontWeight="bold">
+              {routeData?.dropShipment ? "Drop Ship" : routeData?.locationName}
+            </Text>
+          </Stack>
+          <Stack
+            direction={["row", "row", "column"]}
+            alignItems="start"
+            justifyContent="space-between"
+          >
             <Text color="gray.500">Promised Date</Text>
             <Text fontWeight="bold">{routeData?.receiptPromisedDate}</Text>
           </Stack>

@@ -1,5 +1,6 @@
 import type { Database } from "@carbon/database";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { sanitize } from "~/utils/supabase";
 
 export async function deleteUserAttributeValue(
   client: SupabaseClient<Database>,
@@ -65,9 +66,11 @@ export async function updateAvatar(
 ) {
   return client
     .from("user")
-    .update({
-      avatarUrl,
-    })
+    .update(
+      sanitize({
+        avatarUrl,
+      })
+    )
     .eq("id", userId);
 }
 
@@ -83,11 +86,13 @@ export async function updatePublicAccount(
   const { id, firstName, lastName, about } = args;
   return client
     .from("user")
-    .update({
-      firstName,
-      lastName,
-      about,
-    })
+    .update(
+      sanitize({
+        firstName,
+        lastName,
+        about,
+      })
+    )
     .eq("id", id);
 }
 

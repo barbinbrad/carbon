@@ -1,7 +1,9 @@
 import type { Database } from "@carbon/database";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { getSupabaseServiceRole } from "~/lib/supabase";
+import { getEmployeeJob } from "~/modules/resources";
 import type { TypeOfValidator } from "~/types/validators";
+import { sanitize } from "~/utils/supabase";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
 import type {
@@ -368,7 +370,7 @@ export async function updateSupplier(
 ) {
   return client
     .from("supplier")
-    .update(supplier)
+    .update(sanitize(supplier))
     .eq("id", supplier.id)
     .select("id");
 }
@@ -399,7 +401,7 @@ export async function updateSupplierContact(
 ) {
   return client
     .from("contact")
-    .update(supplierContact.contact)
+    .update(sanitize(supplierContact.contact))
     .eq("id", supplierContact.contactId)
     .select("id");
 }
@@ -420,7 +422,7 @@ export async function updateSupplierLocation(
 ) {
   return client
     .from("address")
-    .update(supplierLocation.address)
+    .update(sanitize(supplierLocation.address))
     .eq("id", supplierLocation.addressId)
     .select("id");
 }
@@ -447,12 +449,16 @@ export async function upsertPurchaseOrder(
   if ("id" in purchaseOrder) {
     return client
       .from("purchaseOrder")
-      .update(purchaseOrder)
+      .update(sanitize(purchaseOrder))
       .eq("id", purchaseOrder.id)
       .select("id, purchaseOrderId");
   }
 
-  const supplier = await getSupplier(client, purchaseOrder.supplierId);
+  const [supplier, purchaser] = await Promise.all([
+    getSupplier(client, purchaseOrder.supplierId),
+    getEmployeeJob(client, purchaseOrder.createdBy),
+  ]);
+
   if (supplier.error) return supplier;
 
   const {
@@ -461,6 +467,8 @@ export async function upsertPurchaseOrder(
     defaultShippingMethodId,
     defaultShippingTermId,
   } = supplier.data;
+
+  const locationId = purchaser?.data?.locationId ?? null;
 
   const order = await client
     .from("purchaseOrder")
@@ -475,6 +483,7 @@ export async function upsertPurchaseOrder(
     client.from("purchaseOrderDelivery").insert([
       {
         id: purchaseOrderId,
+        locationId: locationId,
         shippingMethodId: defaultShippingMethodId,
         shippingTermId: defaultShippingTermId,
       },
@@ -515,7 +524,7 @@ export async function upsertPurchaseOrderDelivery(
   if ("id" in purchaseOrderDelivery) {
     return client
       .from("purchaseOrderDelivery")
-      .update(purchaseOrderDelivery)
+      .update(sanitize(purchaseOrderDelivery))
       .eq("id", purchaseOrderDelivery.id)
       .select("id");
   }

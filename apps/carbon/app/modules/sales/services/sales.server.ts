@@ -4,6 +4,7 @@ import { getSupabaseServiceRole } from "~/lib/supabase";
 import type { TypeOfValidator } from "~/types/validators";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
+import { sanitize } from "~/utils/supabase";
 import type { customerValidator } from "./sales.form";
 
 export async function deleteCustomerContact(
@@ -276,7 +277,7 @@ export async function updateCustomer(
 ) {
   return client
     .from("customer")
-    .update(customer)
+    .update(sanitize(customer))
     .eq("id", customer.id)
     .select("id");
 }
@@ -307,7 +308,7 @@ export async function updateCustomerContact(
 ) {
   return client
     .from("contact")
-    .update(customerContact.contact)
+    .update(sanitize(customerContact.contact))
     .eq("id", customerContact.contactId)
     .select("id");
 }
@@ -328,7 +329,7 @@ export async function updateCustomerLocation(
 ) {
   return client
     .from("address")
-    .update(customerLocation.address)
+    .update(sanitize(customerLocation.address))
     .eq("id", customerLocation.addressId)
     .select("id");
 }

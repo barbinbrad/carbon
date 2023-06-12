@@ -16,9 +16,9 @@ import {
   DatePicker,
   Hidden,
   Input,
+  Location,
   Select,
   Submit,
-  TextArea,
 } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { purchaseOrderDeliveryValidator } from "~/modules/purchasing";
@@ -73,6 +73,11 @@ const PurchaseOrderDeliveryForm = ({
             w="full"
           >
             <VStack alignItems="start" spacing={2} w="full">
+              <Location
+                name="locationId"
+                label="Delivery Location"
+                isClearable
+              />
               <Select
                 name="shippingMethodId"
                 label="Shipping Method"
@@ -83,7 +88,6 @@ const PurchaseOrderDeliveryForm = ({
                 label="Shipping Terms"
                 options={shippingTermOptions}
               />
-              <Input name="trackingNumber" label="Tracking Number" />
             </VStack>
             <VStack alignItems="start" spacing={2} w="full">
               <DatePicker name="receiptRequestedDate" label="Requested Date" />
@@ -91,6 +95,8 @@ const PurchaseOrderDeliveryForm = ({
               <DatePicker name="deliveryDate" label="Delivery Date" />
             </VStack>
             <VStack alignItems="start" spacing={2} w="full">
+              <Input name="trackingNumber" label="Tracking Number" />
+              {/* <TextArea name="notes" label="Shipping Notes" /> */}
               <Boolean
                 name="dropShipment"
                 label="Drop Shipment"
@@ -110,7 +116,6 @@ const PurchaseOrderDeliveryForm = ({
                   />
                 </>
               )}
-              <TextArea name="notes" label="Shipping Notes" />
             </VStack>
           </Grid>
         </CardBody>

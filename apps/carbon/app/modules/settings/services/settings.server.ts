@@ -4,6 +4,7 @@ import type { TypeOfValidator } from "~/types/validators";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
 import { interpolateDate } from "~/utils/string";
+import { sanitize } from "~/utils/supabase";
 import type { sequenceValidator } from "./settings.form";
 
 export async function getNextSequence(
@@ -62,6 +63,27 @@ export async function getSequences(
   return query;
 }
 
+export async function rollbackNextSequence(
+  client: SupabaseClient<Database>,
+  table: string,
+  userId: string
+) {
+  // TODO: add transaction through stored procedure: https://www.postgresql.org/docs/current/plpgsql-transactions.html
+  const sequence = await getSequence(client, table);
+  if (sequence.error) {
+    return sequence;
+  }
+
+  const { next } = sequence.data;
+
+  const nextValue = next - 1;
+
+  return await updateSequence(client, table, {
+    next: nextValue,
+    updatedBy: userId,
+  });
+}
+
 export async function updateSequence(
   client: SupabaseClient<Database>,
   table: string,
@@ -69,5 +91,5 @@ export async function updateSequence(
     updatedBy: string;
   }
 ) {
-  return client.from("sequence").update(sequence).eq("table", table);
+  return client.from("sequence").update(sanitize(sequence)).eq("table", table);
 }

@@ -1,6 +1,5 @@
 import { Select } from "@carbon/react";
 import {
-  Box,
   FormControl,
   FormErrorMessage,
   FormHelperText,
@@ -12,8 +11,15 @@ import { useControlField, useField } from "remix-validated-form";
 import type { getLocations } from "~/modules/resources";
 import type { SelectProps } from "./Select";
 
-type LocationSelectProps = Omit<SelectProps, "options"> & {
+type LocationSelectProps = Omit<SelectProps, "options" | "onChange"> & {
+  isClearable?: boolean;
   location?: string;
+  onChange?: (
+    selected: {
+      value: string | number;
+      label: string;
+    } | null
+  ) => void;
 };
 
 const Location = ({
@@ -22,13 +28,13 @@ const Location = ({
   location,
   helperText,
   isLoading,
-  isReadOnly,
+  isClearable,
   placeholder = "Select Location",
   onChange,
   ...props
 }: LocationSelectProps) => {
   const { error, defaultValue } = useField(name);
-  const [value, setValue] = useControlField<string | undefined>(name);
+  const [value, setValue] = useControlField<string | null>(name);
 
   const locationFetcher =
     useFetcher<Awaited<ReturnType<typeof getLocations>>>();
@@ -49,15 +55,16 @@ const Location = ({
     [locationFetcher.data]
   );
 
-  const handleChange = (selection: {
-    value: string | number;
-    label: string;
-  }) => {
-    const newValue = (selection.value as string) || undefined;
+  const handleChange = (
+    selection: {
+      value: string | number;
+      label: string;
+    } | null
+  ) => {
+    console.log({ selection });
+    const newValue = (selection?.value as string) ?? null;
     setValue(newValue);
-    if (onChange && typeof onChange === "function") {
-      onChange(selection);
-    }
+    onChange?.(selection);
   };
 
   const controlledValue = useMemo(
@@ -74,14 +81,14 @@ const Location = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [controlledValue?.value]);
 
-  // TODO: hack for default value
-  return locationFetcher.state !== "loading" ? (
+  return (
     <FormControl isInvalid={!!error}>
       {label && <FormLabel htmlFor={name}>{label}</FormLabel>}
-      <input type="hidden" name={name} id={name} value={value} />
+      <input type="hidden" name={name} id={name} value={value ?? ""} />
       <Select
         {...props}
         value={controlledValue}
+        isClearable={isClearable}
         isLoading={isLoading}
         options={options}
         placeholder={placeholder}
@@ -94,16 +101,6 @@ const Location = ({
         helperText && <FormHelperText>{helperText}</FormHelperText>
       )}
     </FormControl>
-  ) : (
-    <Box>
-      {label && <FormLabel>{label}</FormLabel>}
-      <Select
-        isDisabled
-        isLoading={isLoading}
-        options={[]}
-        //@ts-ignore
-      />
-    </Box>
   );
 };
 

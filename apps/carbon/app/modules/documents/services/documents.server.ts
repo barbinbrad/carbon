@@ -3,6 +3,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { TypeOfValidator } from "~/types/validators";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
+import { sanitize } from "~/utils/supabase";
 import type {
   documentLabelsValidator,
   documentValidator,
@@ -206,10 +207,12 @@ export async function upsertDocument(
   }
   return client
     .from("document")
-    .update({
-      ...document,
-      updatedAt: new Date().toISOString(),
-    })
+    .update(
+      sanitize({
+        ...document,
+        updatedAt: new Date().toISOString(),
+      })
+    )
     .eq("id", document.id);
 }
 

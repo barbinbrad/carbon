@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { scrollIntoView } from "../utils";
+import { scrollIntoView } from "~/utils/dom";
 
 // https://www.w3.org/TR/wai-aria-practices-1.1/#kbd_roving_tabindex
 export function useMovingCellRef(isSelected: boolean) {

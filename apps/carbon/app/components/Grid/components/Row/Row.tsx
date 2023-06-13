@@ -1,4 +1,3 @@
-import { useColor } from "@carbon/react";
 import { Tr } from "@chakra-ui/react";
 import type { Row as RowType } from "@tanstack/react-table";
 import type { MutableRefObject } from "react";
@@ -12,18 +11,13 @@ type RowProps<T> = {
   editableComponents?: Record<string, EditableTableCellComponent<T> | object>;
   editedCells?: string[];
   isEditing: boolean;
-  isEditMode: boolean;
-  isFrozenColumn?: boolean;
-  isRowSelected?: boolean;
-  pinnedColumns?: number;
   selectedCell: Position;
   row: RowType<T>;
   rowIsClickable?: boolean;
   rowRef?: MutableRefObject<HTMLTableRowElement | null>;
-  withColumnOrdering: boolean;
   onCellClick: (row: number, column: number) => void;
   onCellUpdate: (row: number, columnId: string) => (value: unknown) => void;
-  onRowClick?: () => void;
+  onEditRow?: (row: T) => void;
 };
 
 const Row = <T extends object>({
@@ -32,42 +26,26 @@ const Row = <T extends object>({
   editableComponents,
   editedCells,
   isEditing,
-  isEditMode,
-  isFrozenColumn = false,
-  isRowSelected = false,
-  pinnedColumns = 0,
   row,
   rowIsClickable = false,
   rowRef,
   selectedCell,
-  withColumnOrdering,
   onCellClick,
   onCellUpdate,
-  onRowClick,
 }: RowProps<T>) => {
-  const frozenBackgroundColor = useColor("white");
   return (
     <Tr
       key={row.id}
-      bg={isFrozenColumn ? frozenBackgroundColor : undefined}
-      onClick={onRowClick}
       ref={rowRef}
       _hover={{
         cursor: rowIsClickable ? "pointer" : undefined,
         backgroundColor,
       }}
     >
-      {(isFrozenColumn
-        ? row.getLeftVisibleCells()
-        : withColumnOrdering
-        ? row.getCenterVisibleCells()
-        : row.getVisibleCells()
-      ).map((cell, columnIndex) => {
-        const isSelected = isFrozenColumn
-          ? selectedCell?.row === cell.row.index &&
-            selectedCell?.column === columnIndex - 1
-          : selectedCell?.row === cell.row.index &&
-            selectedCell?.column === columnIndex + pinnedColumns;
+      {row.getVisibleCells().map((cell, columnIndex) => {
+        const isSelected =
+          selectedCell?.row === cell.row.index &&
+          selectedCell?.column === columnIndex;
 
         return (
           <Cell<T>
@@ -78,26 +56,10 @@ const Row = <T extends object>({
             // @ts-ignore
             editableComponents={editableComponents}
             editedCells={editedCells}
-            isRowSelected={isRowSelected}
             isSelected={isSelected}
             isEditing={isEditing}
-            isEditMode={isEditMode}
-            onClick={
-              isEditMode
-                ? () =>
-                    onCellClick(
-                      cell.row.index,
-                      isFrozenColumn
-                        ? columnIndex - 1
-                        : columnIndex + pinnedColumns
-                    )
-                : undefined
-            }
-            onUpdate={
-              isEditMode
-                ? onCellUpdate(cell.row.index, cell.column.id)
-                : undefined
-            }
+            onClick={() => onCellClick(cell.row.index, columnIndex)}
+            onUpdate={() => onCellUpdate(cell.row.index, cell.column.id)}
           />
         );
       })}
@@ -108,12 +70,10 @@ const Row = <T extends object>({
 const MemoizedRow = memo(
   Row,
   (prev, next) =>
-    next.isRowSelected === prev.isRowSelected &&
     next.selectedCell?.row === prev.row.index &&
     next.row.index === prev.selectedCell?.row &&
     next.selectedCell?.column === prev.selectedCell?.column &&
-    next.isEditing === prev.isEditing &&
-    next.isEditMode === prev.isEditMode
+    next.isEditing === prev.isEditing
 ) as typeof Row;
 
 export default MemoizedRow;

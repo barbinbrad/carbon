@@ -21,8 +21,6 @@ type CellProps<T> = {
   editableComponents?: Record<string, EditableTableCellComponent<T>>;
   editedCells?: string[];
   isEditing: boolean;
-  isEditMode: boolean;
-  isRowSelected: boolean;
   isSelected: boolean;
   onClick?: () => void;
   onUpdate?: (value: unknown) => void;
@@ -35,7 +33,6 @@ const Cell = <T extends object>({
   editableComponents,
   editedCells,
   isEditing,
-  isEditMode,
   isSelected,
   onClick,
   onUpdate,
@@ -55,14 +52,21 @@ const Cell = <T extends object>({
   const editableCell = hasEditableTableCellComponent
     ? editableComponents[accessorKey]({
         accessorKey,
-        value: cell.getValue(),
+        value: cell.renderValue(),
         row: cell.row.original,
-        onUpdate:
-          onUpdate ||
-          (() => {
-            console.error("failed to pass an onUpdate function to the popover");
-          }),
-        onError: () => setHasError(true),
+        onUpdate: onUpdate
+          ? (value, isValid = true) => {
+              setHasError(!isValid);
+              onUpdate(value);
+            }
+          : () => {
+              console.error(
+                "failed to pass an onUpdate function to the popover"
+              );
+            },
+        onError: () => {
+          setHasError(true);
+        },
       })
     : null;
 
@@ -75,13 +79,13 @@ const Cell = <T extends object>({
       bgColor={
         wasEdited
           ? "yellow.100"
-          : isEditMode && !hasEditableTableCellComponent
-          ? "gray.50"
-          : undefined
+          : hasEditableTableCellComponent
+          ? undefined
+          : "gray.50"
       }
       borderRightColor={borderColor}
       borderRightStyle="solid"
-      borderRightWidth={isEditMode ? 1 : undefined}
+      borderRightWidth={1}
       boxShadow={
         hasError
           ? "inset 0 0 0 3px var(--chakra-colors-red-500)"
@@ -129,10 +133,8 @@ const Cell = <T extends object>({
 export const MemoizedCell = memo(
   Cell,
   (prev, next) =>
-    next.isRowSelected === prev.isRowSelected &&
     next.isSelected === prev.isSelected &&
     next.isEditing === prev.isEditing &&
-    next.isEditMode === prev.isEditMode &&
     next.cell.getValue() === prev.cell.getValue() &&
     next.cell.getContext() === prev.cell.getContext()
 ) as typeof Cell;

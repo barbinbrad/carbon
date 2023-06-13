@@ -16,6 +16,7 @@ const Count = ({ count, ...props }: CountProps) => {
       py={1}
       px={2}
       color="white"
+      {...props}
     >{`${c}`}</Box>
   );
 };

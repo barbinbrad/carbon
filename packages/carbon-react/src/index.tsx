@@ -1,4 +1,5 @@
 import Button from "./Button";
+import Count from "./Count";
 import Dot from "./Dot";
 import HTML from "./HTML";
 import type { OptionBase, OptionProps, GroupBase } from "./Inputs";
@@ -35,6 +36,7 @@ export {
   Button,
   ClientOnly,
   ContextMenu,
+  Count,
   CreatableSelect,
   DatePicker,
   DateTimePicker,

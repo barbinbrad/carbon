@@ -1,3 +1,4 @@
+import { Count } from "@carbon/react";
 import { Button, Box, VStack } from "@chakra-ui/react";
 import { Link, useMatches, useParams } from "@remix-run/react";
 import { usePurchaseOrderSidebar } from "./usePurchaseOrderSidebar";
@@ -9,7 +10,7 @@ const PurchaseOrderSidebar = () => {
       "PurchaseOrderSidebar requires an orderId and could not find orderId in params"
     );
 
-  const links = usePurchaseOrderSidebar();
+  const links = usePurchaseOrderSidebar({ lines: 240 });
   const matches = useMatches();
 
   return (
@@ -32,11 +33,14 @@ const PurchaseOrderSidebar = () => {
                   variant={isActive ? "solid" : "ghost"}
                   border="none"
                   fontWeight={isActive ? "bold" : "normal"}
-                  justifyContent="start"
+                  justifyContent={
+                    route.count === undefined ? "start" : "space-between"
+                  }
                   size="md"
                   w="full"
                 >
-                  {route.name}
+                  <span>{route.name}</span>
+                  {route.count !== undefined && <Count count={route.count} />}
                 </Button>
               );
             })}

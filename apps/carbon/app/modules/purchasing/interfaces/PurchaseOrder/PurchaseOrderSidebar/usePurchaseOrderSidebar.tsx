@@ -1,7 +1,11 @@
 import { usePermissions } from "~/hooks";
 import type { Role } from "~/types";
 
-export function usePurchaseOrderSidebar() {
+type Props = {
+  lines?: number;
+};
+
+export function usePurchaseOrderSidebar({ lines = 0 }: Props) {
   const permissions = usePermissions();
   return [
     {
@@ -12,6 +16,7 @@ export function usePurchaseOrderSidebar() {
       name: "Lines",
       to: "lines",
       role: ["employee", "supplier"],
+      count: lines,
     },
     {
       name: "Delivery",

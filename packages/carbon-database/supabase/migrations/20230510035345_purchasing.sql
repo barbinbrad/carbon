@@ -132,6 +132,7 @@ CREATE TABLE "purchaseOrderLine" (
   "partId" TEXT NOT NULL,
   "purchaseQuantity" INTEGER NOT NULL,
   "unitPrice" NUMERIC(9,2) NOT NULL,
+  "unitOfMeasureCode" TEXT NOT NULL,
   "setupPrice" NUMERIC(9,2) NOT NULL,
   "receivedComplete" BOOLEAN NOT NULL DEFAULT FALSE,
   "invoiceComplete" BOOLEAN NOT NULL DEFAULT FALSE,
@@ -144,6 +145,7 @@ CREATE TABLE "purchaseOrderLine" (
   CONSTRAINT "purchaseOrderLine_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "purchaseOrderLine_id_fkey" FOREIGN KEY ("id") REFERENCES "purchaseOrder" ("id") ON DELETE CASCADE,
   CONSTRAINT "purchaseOrderLine_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part" ("id") ON DELETE CASCADE,
+  CONSTRAINT "purchaseOrderLine_unitOfMeasureCode_fkey" FOREIGN KEY ("unitOfMeasureCode") REFERENCES "unitOfMeasure" ("code") ON DELETE CASCADE,
   CONSTRAINT "purchaseOrderLine_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE CASCADE,
   CONSTRAINT "purchaseOrderLine_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE CASCADE
 );

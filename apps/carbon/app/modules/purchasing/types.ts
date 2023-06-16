@@ -1,5 +1,6 @@
 import type { Database } from "@carbon/database";
 import type {
+  getPurchaseOrderLines,
   getPurchaseOrders,
   getSupplierContacts,
   getSupplierLocations,
@@ -10,6 +11,10 @@ import type {
 
 export type PurchaseOrder = NonNullable<
   Awaited<ReturnType<typeof getPurchaseOrders>>["data"]
+>[number];
+
+export type PurchaseOrderLine = NonNullable<
+  Awaited<ReturnType<typeof getPurchaseOrderLines>>["data"]
 >[number];
 
 export type PurchaseOrderApprovalStatus =

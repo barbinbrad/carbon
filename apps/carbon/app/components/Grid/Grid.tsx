@@ -4,14 +4,18 @@ import type { ThemeTypings } from "@chakra-ui/react";
 import {
   Box,
   Flex,
+  HStack,
+  Icon,
   Table,
   Tbody,
+  Text,
   Thead,
+  Td,
   Th,
   Tr,
   VStack,
-  // chakra,
 } from "@chakra-ui/react";
+import { useNavigate } from "@remix-run/react";
 import type { ColumnDef, ColumnOrderState } from "@tanstack/react-table";
 import {
   flexRender,
@@ -19,6 +23,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { BsPlus } from "react-icons/bs";
 // import { FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
 // import { GridHeader, useSort, Row } from "./components";
 import { Row } from "./components";
@@ -91,6 +96,7 @@ const Grid = <T extends object>({
   //   [columns]
   // );
 
+  const navigate = useNavigate();
   const table = useReactTable({
     data: internalData,
     columns: columns,
@@ -433,6 +439,21 @@ const Grid = <T extends object>({
                 />
               );
             })}
+            <Tr
+              onClick={() => navigate("new")}
+              cursor="pointer"
+              h={10}
+              _hover={{
+                backgroundColor: "gray.100",
+              }}
+            >
+              <Td colSpan={24}>
+                <HStack spacing={2}>
+                  <Icon color="gray.500" as={BsPlus} w={6} h={6} />
+                  <Text color="gray.500">New</Text>
+                </HStack>
+              </Td>
+            </Tr>
           </Tbody>
         </Table>
       </Box>

@@ -141,6 +141,13 @@ export function getPurchaseOrderApprovalStatuses(): Database["public"]["Enums"][
   ];
 }
 
+export async function getPurchaseOrderLines(
+  client: SupabaseClient<Database>,
+  id: string
+) {
+  return client.from("purchaseOrderLine").select("*").eq("id", id);
+}
+
 export function getPurchaseOrderTypes(): Database["public"]["Enums"]["purchaseOrderType"][] {
   return ["Draft", "Purchase", "Return"];
 }

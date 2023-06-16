@@ -78,9 +78,14 @@ export const purchaseOrderDeliveryValidator = withZod(
     )
 );
 
-export const purchaseOrderLinesValidator = withZod(
+export const purchaseOrderLineValidator = withZod(
   z.object({
-    id: z.string(),
+    id: zfd.text(z.string().optional()),
+    partId: z.string().min(1, { message: "Part is required" }),
+    purchaseQuantity: z.number().min(1, { message: "Quantity is required" }),
+    unitPrice: z.number().min(0, { message: "Unit price is required" }),
+    unitOfMeasureCode: zfd.text(z.string().optional()),
+    shelf: zfd.text(z.string().optional()),
   })
 );
 

@@ -1,6 +1,9 @@
 import type { ActionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
+import { useParams } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
+import { useRouteData } from "~/hooks";
+import type { PurchaseOrderLineType } from "~/modules/purchasing";
 import {
   PurchaseOrderLineForm,
   purchaseOrderLineValidator,
@@ -48,7 +51,16 @@ export async function action({ request, params }: ActionArgs) {
 }
 
 export default function NewPurchaseOrderLineRoute() {
+  const { orderId } = useParams();
+  const sharedPurchaseOrdersData = useRouteData<{
+    purchaseOrderLineTypes: PurchaseOrderLineType[];
+  }>("/x/purchase-order");
+
+  if (!orderId) throw new Error("Could not find purchase order id");
+
   const initialValues = {
+    purchaseOrderId: orderId,
+    purchaseOrderLineType: "Part" as PurchaseOrderLineType,
     partId: "",
     purchaseQuantity: 1,
     unitPrice: 0,
@@ -56,5 +68,12 @@ export default function NewPurchaseOrderLineRoute() {
     shelf: "",
   };
 
-  return <PurchaseOrderLineForm initialValues={initialValues} />;
+  return (
+    <PurchaseOrderLineForm
+      initialValues={initialValues}
+      purchaseOrderLineTypes={
+        sharedPurchaseOrdersData?.purchaseOrderLineTypes ?? []
+      }
+    />
+  );
 }

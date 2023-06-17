@@ -1,6 +1,5 @@
 import { Select } from "@carbon/react";
 import {
-  Box,
   FormControl,
   FormErrorMessage,
   FormHelperText,
@@ -74,8 +73,7 @@ const Abilities = ({
     [value, options]
   );
 
-  // TODO: hack for default value
-  return abilityFetcher.state !== "loading" ? (
+  return (
     <FormControl isInvalid={!!error}>
       {label && <FormLabel htmlFor={name}>{label}</FormLabel>}
       {value.map((selection, index) => (
@@ -102,16 +100,6 @@ const Abilities = ({
         helperText && <FormHelperText>{helperText}</FormHelperText>
       )}
     </FormControl>
-  ) : (
-    <Box>
-      {label && <FormLabel>{label}</FormLabel>}
-      <Select
-        isDisabled
-        isLoading={isLoading}
-        options={[]}
-        //@ts-ignore
-      />
-    </Box>
   );
 };
 

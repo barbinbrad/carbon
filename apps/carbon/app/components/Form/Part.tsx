@@ -8,42 +8,49 @@ import {
 import { useFetcher } from "@remix-run/react";
 import { useEffect, useMemo } from "react";
 import { useControlField, useField } from "remix-validated-form";
-import type { getSuppliersList } from "~/modules/purchasing";
+import type { getPartsList, PartReplenishmentSystem } from "~/modules/parts";
 import { mapRowsToOptions } from "~/utils/form";
 import type { SelectProps } from "./Select";
 
-type SupplierSelectProps = Omit<SelectProps, "options">;
+type PartSelectProps = Omit<SelectProps, "options"> & {
+  partReplenishmentSystem?: PartReplenishmentSystem;
+};
 
-const Supplier = ({
+const Part = ({
   name,
-  label = "Supplier",
+  label = "Part",
+  partReplenishmentSystem,
   helperText,
   isLoading,
   isReadOnly,
-  placeholder = "Select Supplier",
+  placeholder = "Select Part",
   onChange,
   ...props
-}: SupplierSelectProps) => {
+}: PartSelectProps) => {
   const { getInputProps, error, defaultValue } = useField(name);
   const [value, setValue] = useControlField<string | undefined>(name);
 
-  const supplierFetcher =
-    useFetcher<Awaited<ReturnType<typeof getSuppliersList>>>();
+  const partFetcher = useFetcher<Awaited<ReturnType<typeof getPartsList>>>();
 
   useEffect(() => {
-    if (supplierFetcher.type === "init") {
-      supplierFetcher.load("/api/purchasing/suppliers");
+    if (partFetcher.type === "init") {
+      let url = "/api/parts/list?";
+      if (partReplenishmentSystem) {
+        url += `replenishmentSystem=${partReplenishmentSystem}`;
+      }
+
+      partFetcher.load(url);
     }
-  }, [supplierFetcher]);
+  }, [partFetcher, partReplenishmentSystem]);
 
   const options = useMemo(
     () =>
       mapRowsToOptions({
-        data: supplierFetcher.data?.data,
+        data: partFetcher.data?.data,
         value: "id",
-        label: "name",
+        label: (part) => `${part.id} - ${part.name}`,
       }),
-    [supplierFetcher.data]
+    [partFetcher.data]
   );
 
   const handleChange = (selection: {
@@ -98,6 +105,6 @@ const Supplier = ({
   );
 };
 
-Supplier.displayName = "Supplier";
+Part.displayName = "Part";
 
-export default Supplier;
+export default Part;

@@ -8,42 +8,44 @@ import {
 import { useFetcher } from "@remix-run/react";
 import { useEffect, useMemo } from "react";
 import { useControlField, useField } from "remix-validated-form";
-import type { getSuppliersList } from "~/modules/purchasing";
-import { mapRowsToOptions } from "~/utils/form";
+import type { getAccountsList } from "~/modules/accounting";
 import type { SelectProps } from "./Select";
 
-type SupplierSelectProps = Omit<SelectProps, "options">;
+type AccountSelectProps = Omit<SelectProps, "options"> & {
+  account?: string;
+};
 
-const Supplier = ({
+const Account = ({
   name,
-  label = "Supplier",
+  label = "Account",
+  account,
   helperText,
   isLoading,
   isReadOnly,
-  placeholder = "Select Supplier",
+  placeholder = "Select Account",
   onChange,
   ...props
-}: SupplierSelectProps) => {
-  const { getInputProps, error, defaultValue } = useField(name);
+}: AccountSelectProps) => {
+  const { error, defaultValue } = useField(name);
   const [value, setValue] = useControlField<string | undefined>(name);
 
-  const supplierFetcher =
-    useFetcher<Awaited<ReturnType<typeof getSuppliersList>>>();
+  const accountFetcher =
+    useFetcher<Awaited<ReturnType<typeof getAccountsList>>>();
 
   useEffect(() => {
-    if (supplierFetcher.type === "init") {
-      supplierFetcher.load("/api/purchasing/suppliers");
-    }
-  }, [supplierFetcher]);
+    accountFetcher.load(`/api/accounting/accounts`);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const options = useMemo(
     () =>
-      mapRowsToOptions({
-        data: supplierFetcher.data?.data,
-        value: "id",
-        label: "name",
-      }),
-    [supplierFetcher.data]
+      accountFetcher.data?.data
+        ? accountFetcher.data?.data.map((c) => ({
+            value: c.number,
+            label: c.name,
+          }))
+        : [],
+    [accountFetcher.data]
   );
 
   const handleChange = (selection: {
@@ -74,19 +76,14 @@ const Supplier = ({
   return (
     <FormControl isInvalid={!!error}>
       {label && <FormLabel htmlFor={name}>{label}</FormLabel>}
+      <input type="hidden" name={name} id={name} value={value} />
       <Select
-        {...getInputProps({
-          // @ts-ignore
-          id: name,
-        })}
         {...props}
         value={controlledValue}
         isLoading={isLoading}
         options={options}
         placeholder={placeholder}
         // @ts-ignore
-        w="full"
-        isReadOnly={isReadOnly}
         onChange={handleChange}
       />
       {error ? (
@@ -98,6 +95,6 @@ const Supplier = ({
   );
 };
 
-Supplier.displayName = "Supplier";
+Account.displayName = "Account";
 
-export default Supplier;
+export default Account;

@@ -38,7 +38,6 @@ const Timezone = ({
     [defaultValue]
   );
 
-  // TODO: hack for default value
   return (
     <FormControl isInvalid={!!error}>
       {label && <FormLabel htmlFor={name}>{label}</FormLabel>}

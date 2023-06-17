@@ -1,5 +1,5 @@
 import { Card, CardHeader, Heading, CardBody } from "@chakra-ui/react";
-import { Outlet } from "@remix-run/react";
+import { Outlet, useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useMemo } from "react";
 import Grid from "~/components/Grid";
@@ -12,11 +12,36 @@ type PurchaseOrderLinesProps = {
 const PurchaseOrderLines = ({
   purchaseOrderLines,
 }: PurchaseOrderLinesProps) => {
+  const navigate = useNavigate();
+
   const columns = useMemo<ColumnDef<PurchaseOrderLine>[]>(() => {
     return [
       {
-        accessorKey: "partId",
-        header: "Part",
+        accessorKey: "purchaseOrderLineType",
+        header: "Type",
+        cell: (item) => item.getValue(),
+      },
+      {
+        id: "number",
+        header: "Number",
+        cell: ({ row }) => {
+          switch (row.original.purchaseOrderLineType) {
+            case "Part":
+              return <span>{row.original.partId}</span>;
+            case "G/L Account":
+              return <span>{row.original.accountNumber}</span>;
+            case "Comment":
+              return null;
+            case "Fixed Asset":
+              return <span>{row.original.assetId}</span>;
+            default:
+              return null;
+          }
+        },
+      },
+      {
+        accessorKey: "description",
+        header: "Description",
         cell: (item) => item.getValue(),
       },
       {
@@ -38,7 +63,11 @@ const PurchaseOrderLines = ({
         id: "totalPrice",
         header: "Total Price",
         cell: ({ row }) => {
-          return row.original.unitPrice * row.original.purchaseQuantity ?? 0;
+          if (!row.original.unitPrice || !row.original.purchaseQuantity)
+            return 0;
+          return (
+            row.original.unitPrice * row.original.purchaseQuantity
+          ).toFixed(2);
         },
       },
     ];
@@ -54,6 +83,7 @@ const PurchaseOrderLines = ({
           <Grid<PurchaseOrderLine>
             data={purchaseOrderLines}
             columns={columns}
+            onNewRow={() => navigate("new")}
           />
         </CardBody>
       </Card>

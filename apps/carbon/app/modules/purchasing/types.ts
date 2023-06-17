@@ -17,6 +17,9 @@ export type PurchaseOrderLine = NonNullable<
   Awaited<ReturnType<typeof getPurchaseOrderLines>>["data"]
 >[number];
 
+export type PurchaseOrderLineType =
+  Database["public"]["Enums"]["purchaseOrderLineType"];
+
 export type PurchaseOrderApprovalStatus =
   Database["public"]["Enums"]["purchaseOrderApprovalStatus"];
 

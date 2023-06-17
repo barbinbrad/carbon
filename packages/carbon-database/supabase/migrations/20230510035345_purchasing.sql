@@ -127,13 +127,25 @@ CREATE INDEX "purchaseOrder_purchaseOrderId_idx" ON "purchaseOrder" ("purchaseOr
 CREATE INDEX "purchaseOrder_supplierId_idx" ON "purchaseOrder" ("supplierId");
 CREATE INDEX "purchaseOrder_supplierContactId_idx" ON "purchaseOrder" ("supplierContactId");
 
+CREATE TYPE "purchaseOrderLineType" AS ENUM (
+  'Comment',
+  'G/L Account',
+  'Part',
+  'Fixed Asset'
+);
+
 CREATE TABLE "purchaseOrderLine" (
-  "id" TEXT NOT NULL,
-  "partId" TEXT NOT NULL,
-  "purchaseQuantity" INTEGER NOT NULL,
-  "unitPrice" NUMERIC(9,2) NOT NULL,
-  "unitOfMeasureCode" TEXT NOT NULL,
-  "setupPrice" NUMERIC(9,2) NOT NULL,
+  "id" TEXT NOT NULL DEFAULT xid(),
+  "purchaseOrderId" TEXT NOT NULL,
+  "purchaseOrderLineType" "purchaseOrderLineType" NOT NULL,
+  "partId" TEXT,
+  "accountNumber" TEXT,
+  "assetId" TEXT,
+  "description" TEXT,
+  "purchaseQuantity" INTEGER,
+  "unitPrice" NUMERIC(9,2),
+  "unitOfMeasureCode" TEXT,
+  "setupPrice" NUMERIC(9,2),
   "receivedComplete" BOOLEAN NOT NULL DEFAULT FALSE,
   "invoiceComplete" BOOLEAN NOT NULL DEFAULT FALSE,
   "requiresInspection" BOOLEAN NOT NULL DEFAULT FALSE,
@@ -142,9 +154,40 @@ CREATE TABLE "purchaseOrderLine" (
   "updatedAt" TIMESTAMP WITH TIME ZONE,
   "updatedBy" TEXT,
 
+  CONSTRAINT "purchaseOrderLineType_number"
+    CHECK (
+      (
+        "purchaseOrderLineType" = 'Comment' AND
+        "partId" IS NULL AND
+        "accountNumber" IS NULL AND
+        "assetId" IS NULL AND
+        "description" IS NOT NULL
+      ) 
+      OR (
+        "purchaseOrderLineType" = 'G/L Account' AND
+        "partId" IS NULL AND
+        "accountNumber" IS NOT NULL AND
+        "assetId" IS NULL 
+      ) 
+      OR (
+        "purchaseOrderLineType" = 'Part' AND
+        "partId" IS NOT NULL AND
+        "accountNumber" IS NULL AND
+        "assetId" IS NULL 
+      ) 
+      OR (
+        "purchaseOrderLineType" = 'Fixed Asset' AND
+        "partId" IS NULL AND
+        "accountNumber" IS NULL AND
+        "assetId" IS NOT NULL 
+      ) 
+    ),
+
   CONSTRAINT "purchaseOrderLine_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "purchaseOrderLine_id_fkey" FOREIGN KEY ("id") REFERENCES "purchaseOrder" ("id") ON DELETE CASCADE,
+  CONSTRAINT "purchaseOrderLine_purchaseOrderId_fkey" FOREIGN KEY ("purchaseOrderId") REFERENCES "purchaseOrder" ("id") ON DELETE CASCADE,
   CONSTRAINT "purchaseOrderLine_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part" ("id") ON DELETE CASCADE,
+  CONSTRAINT "purchaseOrderLine_accountNumber_fkey" FOREIGN KEY ("accountNumber") REFERENCES "account" ("number") ON DELETE CASCADE,
+  -- TODO: Add assetId foreign key
   CONSTRAINT "purchaseOrderLine_unitOfMeasureCode_fkey" FOREIGN KEY ("unitOfMeasureCode") REFERENCES "unitOfMeasure" ("code") ON DELETE CASCADE,
   CONSTRAINT "purchaseOrderLine_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE CASCADE,
   CONSTRAINT "purchaseOrderLine_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE CASCADE
@@ -265,6 +308,7 @@ CREATE VIEW "purchase_order_view" AS
     pd."receiptRequestedDate",
     pd."receiptPromisedDate",
     pd."dropShipment",
+    pol."lineCount",
     l."name" AS "locationName",
     s."name" AS "supplierName",
     u."avatarUrl" AS "createdByAvatar",
@@ -281,6 +325,11 @@ CREATE VIEW "purchase_order_view" AS
     EXISTS(SELECT 1 FROM "purchaseOrderFavorite" pf WHERE pf."purchaseOrderId" = p.id AND pf."userId" = auth.uid()::text) AS favorite
   FROM "purchaseOrder" p
   LEFT JOIN "purchaseOrderDelivery" pd ON pd."id" = p."id"
+  LEFT JOIN (
+    SELECT "purchaseOrderId", COUNT(*) AS "lineCount"
+    FROM "purchaseOrderLine"
+    GROUP BY "purchaseOrderId"
+  ) pol ON pol."purchaseOrderId" = p."id"
   LEFT JOIN "location" l ON l."id" = pd."locationId"
   LEFT JOIN "supplier" s ON s."id" = p."supplierId"
   LEFT JOIN "user" u ON u."id" = p."createdBy"

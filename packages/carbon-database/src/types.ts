@@ -1660,42 +1660,60 @@ export interface Database {
       };
       purchaseOrderLine: {
         Row: {
-          id: string;
-          partId: string;
-          purchaseQuantity: number;
-          unitPrice: number;
-          setupPrice: number;
+          purchaseOrderId: string;
+          purchaseOrderLineType: Database["public"]["Enums"]["purchaseOrderLineType"];
+          partId: string | null;
+          accountNumber: string | null;
+          assetId: string | null;
+          description: string | null;
+          purchaseQuantity: number | null;
+          unitPrice: number | null;
+          unitOfMeasureCode: string | null;
+          setupPrice: number | null;
           createdBy: string;
           updatedAt: string | null;
           updatedBy: string | null;
+          id: string;
           receivedComplete: boolean;
           invoiceComplete: boolean;
           requiresInspection: boolean;
           createdAt: string;
         };
         Insert: {
-          id: string;
-          partId: string;
-          purchaseQuantity: number;
-          unitPrice: number;
-          setupPrice: number;
+          purchaseOrderId: string;
+          purchaseOrderLineType: Database["public"]["Enums"]["purchaseOrderLineType"];
+          partId?: string | null;
+          accountNumber?: string | null;
+          assetId?: string | null;
+          description?: string | null;
+          purchaseQuantity?: number | null;
+          unitPrice?: number | null;
+          unitOfMeasureCode?: string | null;
+          setupPrice?: number | null;
           createdBy: string;
           updatedAt?: string | null;
           updatedBy?: string | null;
+          id?: string;
           receivedComplete?: boolean;
           invoiceComplete?: boolean;
           requiresInspection?: boolean;
           createdAt?: string;
         };
         Update: {
-          id?: string;
-          partId?: string;
-          purchaseQuantity?: number;
-          unitPrice?: number;
-          setupPrice?: number;
+          purchaseOrderId?: string;
+          purchaseOrderLineType?: Database["public"]["Enums"]["purchaseOrderLineType"];
+          partId?: string | null;
+          accountNumber?: string | null;
+          assetId?: string | null;
+          description?: string | null;
+          purchaseQuantity?: number | null;
+          unitPrice?: number | null;
+          unitOfMeasureCode?: string | null;
+          setupPrice?: number | null;
           createdBy?: string;
           updatedAt?: string | null;
           updatedBy?: string | null;
+          id?: string;
           receivedComplete?: boolean;
           invoiceComplete?: boolean;
           requiresInspection?: boolean;
@@ -2546,6 +2564,7 @@ export interface Database {
           receiptRequestedDate: string | null;
           receiptPromisedDate: string | null;
           dropShipment: boolean | null;
+          lineCount: number | null;
           locationName: string | null;
           supplierName: string | null;
           createdByAvatar: string | null;
@@ -2706,6 +2725,7 @@ export interface Database {
         | "Approved"
         | "Rejected"
         | "Confirmed";
+      purchaseOrderLineType: "Comment" | "G/L Account" | "Part" | "Fixed Asset";
       purchaseOrderTransactionType:
         | "Edit"
         | "Favorite"

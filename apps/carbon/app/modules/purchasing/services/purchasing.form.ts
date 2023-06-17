@@ -79,14 +79,61 @@ export const purchaseOrderDeliveryValidator = withZod(
 );
 
 export const purchaseOrderLineValidator = withZod(
-  z.object({
-    id: zfd.text(z.string().optional()),
-    partId: z.string().min(1, { message: "Part is required" }),
-    purchaseQuantity: z.number().min(1, { message: "Quantity is required" }),
-    unitPrice: z.number().min(0, { message: "Unit price is required" }),
-    unitOfMeasureCode: zfd.text(z.string().optional()),
-    shelf: zfd.text(z.string().optional()),
-  })
+  z
+    .object({
+      id: zfd.text(z.string().optional()),
+      purchaseOrderId: z.string().min(20, { message: "Order is required" }),
+      purchaseOrderLineType: z.enum(
+        ["Comment", "Part", "G/L Account", "Fixed Asset"],
+        {
+          errorMap: (issue, ctx) => ({
+            message: "Type is required",
+          }),
+        }
+      ),
+      partId: zfd.text(z.string().optional()),
+      accountNumber: zfd.text(z.string().optional()),
+      assetId: zfd.text(z.string().optional()),
+      description: zfd.text(z.string().optional()),
+      purchaseQuantity: zfd.numeric(z.number().optional()),
+      unitOfMeasureCode: zfd.text(z.string().optional()),
+      unitPrice: zfd.numeric(z.number().optional()),
+      setupPrice: zfd.numeric(z.number().optional()),
+      shelf: zfd.text(z.string().optional()),
+    })
+    .refine(
+      (data) => (data.purchaseOrderLineType === "Part" ? data.partId : true),
+      {
+        message: "Part is required",
+        path: ["partId"], // path of error
+      }
+    )
+    .refine(
+      (data) =>
+        data.purchaseOrderLineType === "G/L Account"
+          ? data.accountNumber
+          : true,
+      {
+        message: "Account is required",
+        path: ["accountNumber"], // path of error
+      }
+    )
+    .refine(
+      (data) =>
+        data.purchaseOrderLineType === "Fixed Asset" ? data.assetId : true,
+      {
+        message: "Asset is required",
+        path: ["assetId"], // path of error
+      }
+    )
+    .refine(
+      (data) =>
+        data.purchaseOrderLineType === "Comment" ? data.description : true,
+      {
+        message: "Comment is required",
+        path: ["description"], // path of error
+      }
+    )
 );
 
 export const purchaseOrderPaymentValidator = withZod(

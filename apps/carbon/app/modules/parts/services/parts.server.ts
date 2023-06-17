@@ -4,6 +4,7 @@ import type { TypeOfValidator } from "~/types/validators";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
 import { sanitize } from "~/utils/supabase";
+import type { PartReplenishmentSystem } from "../types";
 import type {
   partCostValidator,
   partInventoryValidator,
@@ -155,6 +156,19 @@ export async function getParts(
   }
 
   query = setGenericQueryFilters(query, args, "id");
+  return query;
+}
+
+export async function getPartsList(
+  client: SupabaseClient<Database>,
+  replenishmentSystem: PartReplenishmentSystem | null
+) {
+  let query = client.from("part").select("id, name");
+  if (replenishmentSystem) {
+    query = query.or(
+      `replenishmentSystem.eq.${replenishmentSystem},replenishmentSystem.eq.Buy and Make`
+    );
+  }
   return query;
 }
 

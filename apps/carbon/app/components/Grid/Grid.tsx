@@ -15,7 +15,6 @@ import {
   Tr,
   VStack,
 } from "@chakra-ui/react";
-import { useNavigate } from "@remix-run/react";
 import type { ColumnDef, ColumnOrderState } from "@tanstack/react-table";
 import {
   flexRender,
@@ -96,7 +95,6 @@ const Grid = <T extends object>({
   //   [columns]
   // );
 
-  const navigate = useNavigate();
   const table = useReactTable({
     data: internalData,
     columns: columns,
@@ -440,7 +438,7 @@ const Grid = <T extends object>({
               );
             })}
             <Tr
-              onClick={() => navigate("new")}
+              onClick={onNewRow}
               cursor="pointer"
               h={10}
               _hover={{

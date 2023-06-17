@@ -1,5 +1,6 @@
 import Abilities from "./Abilities";
 import Ability from "./Ability";
+import Account from "./Account";
 import Array from "./Array";
 import Boolean from "./Boolean";
 import Color from "./Color";
@@ -17,6 +18,7 @@ import Hidden from "./Hidden";
 import Input from "./Input";
 import Location from "./Location";
 import Number from "./Number";
+import Part from "./Part";
 import Password from "./Password";
 import Phone from "./Phone";
 import Radios from "./Radios";
@@ -35,6 +37,7 @@ import Users from "./Users";
 export {
   Abilities,
   Ability,
+  Account,
   Array,
   Boolean,
   Color,
@@ -52,6 +55,7 @@ export {
   Input,
   Location,
   Number,
+  Part,
   Password,
   Phone,
   Radios,

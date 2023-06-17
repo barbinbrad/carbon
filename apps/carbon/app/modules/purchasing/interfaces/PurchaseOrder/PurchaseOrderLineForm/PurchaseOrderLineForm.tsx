@@ -7,30 +7,46 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
+  FormControl,
+  FormLabel,
   HStack,
+  Input as ChakraInput,
   VStack,
 } from "@chakra-ui/react";
-import { useNavigate } from "@remix-run/react";
+import { useNavigate, useParams } from "@remix-run/react";
+import { useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
-import { Hidden, Submit } from "~/components/Form";
+import { Account, Hidden, Part, Select, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
+import type { PurchaseOrderLineType } from "~/modules/purchasing";
 import { purchaseOrderLineValidator } from "~/modules/purchasing";
 import type { TypeOfValidator } from "~/types/validators";
 
 type PurchaseOrderLineFormProps = {
   initialValues: TypeOfValidator<typeof purchaseOrderLineValidator>;
+  purchaseOrderLineTypes: PurchaseOrderLineType[];
 };
 
 const PurchaseOrderLineForm = ({
   initialValues,
+  purchaseOrderLineTypes,
 }: PurchaseOrderLineFormProps) => {
   const permissions = usePermissions();
   const navigate = useNavigate();
+  const { orderId } = useParams();
+
+  const [type, setType] = useState(initialValues.purchaseOrderLineType);
+  const [description, setDescription] = useState(initialValues.description);
 
   const isEditing = initialValues.id !== undefined;
   const isDisabled = isEditing
     ? !permissions.can("update", "purchasing")
     : !permissions.can("create", "purchasing");
+
+  const purchaseOrderLineTypeOptions = purchaseOrderLineTypes.map((type) => ({
+    label: type,
+    value: type,
+  }));
 
   const onClose = () => navigate(-1);
 
@@ -39,6 +55,12 @@ const PurchaseOrderLineForm = ({
       <ValidatedForm
         defaultValues={initialValues}
         validator={purchaseOrderLineValidator}
+        method="post"
+        action={
+          isEditing
+            ? `/x/purchase-order/${orderId}/lines/${initialValues.id}`
+            : `/x/purchase-order/${orderId}/lines/new`
+        }
       >
         <DrawerOverlay />
         <DrawerContent>
@@ -48,7 +70,52 @@ const PurchaseOrderLineForm = ({
           </DrawerHeader>
           <DrawerBody pb={8}>
             <Hidden name="id" />
-            <VStack spacing={4} alignItems="start"></VStack>
+            <Hidden name="purchaseOrderId" />
+            <Hidden name="description" value={description} />
+            <VStack spacing={4} alignItems="start">
+              <Select
+                name="purchaseOrderLineType"
+                label="Type"
+                options={purchaseOrderLineTypeOptions}
+                onChange={({ value }) => {
+                  setType(value as PurchaseOrderLineType);
+                  setDescription("");
+                }}
+              />
+              {type === "Part" && (
+                <Part
+                  name="partId"
+                  label="Part"
+                  partReplenishmentSystem="Buy"
+                  onChange={({ label }) => {
+                    // TODO: don't let part number contain " - "
+                    const [, ...description] = label.split(" - ");
+                    setDescription(description.join(" - "));
+                  }}
+                />
+              )}
+
+              {type === "G/L Account" && (
+                <Account
+                  name="accountNumber"
+                  label="Account"
+                  onChange={({ label }) => {
+                    setDescription(label);
+                  }}
+                />
+              )}
+              {type === "Fixed Asset" && (
+                // TODO: implement Fixed Asset
+                <Select name="assetId" label="Asset" options={[]} />
+              )}
+              <FormControl>
+                <FormLabel>Description</FormLabel>
+                <ChakraInput
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                />
+              </FormControl>
+            </VStack>
           </DrawerBody>
           <DrawerFooter>
             <HStack>

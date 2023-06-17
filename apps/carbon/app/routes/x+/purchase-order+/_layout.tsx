@@ -4,6 +4,7 @@ import { Outlet } from "@remix-run/react";
 
 import {
   getPurchaseOrderApprovalStatuses,
+  getPurchaseOrderLineTypes,
   getPurchaseOrderTypes,
 } from "~/modules/purchasing";
 import { requirePermissions } from "~/services/auth";
@@ -33,6 +34,7 @@ export async function loader({ request }: LoaderArgs) {
 
   return {
     purchaseOrderApprovalStatuses: getPurchaseOrderApprovalStatuses(),
+    purchaseOrderLineTypes: getPurchaseOrderLineTypes(),
     purchaseOrderTypes: getPurchaseOrderTypes(),
   };
 }

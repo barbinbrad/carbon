@@ -143,9 +143,16 @@ export function getPurchaseOrderApprovalStatuses(): Database["public"]["Enums"][
 
 export async function getPurchaseOrderLines(
   client: SupabaseClient<Database>,
-  id: string
+  purchaseOrderId: string
 ) {
-  return client.from("purchaseOrderLine").select("*").eq("id", id);
+  return client
+    .from("purchaseOrderLine")
+    .select("*")
+    .eq("purchaseOrderId", purchaseOrderId);
+}
+
+export function getPurchaseOrderLineTypes(): Database["public"]["Enums"]["purchaseOrderLineType"][] {
+  return ["Part", "G/L Account", "Fixed Asset", "Comment"];
 }
 
 export function getPurchaseOrderTypes(): Database["public"]["Enums"]["purchaseOrderType"][] {

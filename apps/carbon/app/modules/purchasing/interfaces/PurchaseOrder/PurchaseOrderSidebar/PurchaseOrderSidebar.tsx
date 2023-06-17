@@ -1,6 +1,8 @@
 import { Count } from "@carbon/react";
 import { Button, Box, VStack } from "@chakra-ui/react";
 import { Link, useMatches, useParams } from "@remix-run/react";
+import { useRouteData } from "~/hooks";
+import type { PurchaseOrder } from "~/modules/purchasing";
 import { usePurchaseOrderSidebar } from "./usePurchaseOrderSidebar";
 
 const PurchaseOrderSidebar = () => {
@@ -10,7 +12,8 @@ const PurchaseOrderSidebar = () => {
       "PurchaseOrderSidebar requires an orderId and could not find orderId in params"
     );
 
-  const links = usePurchaseOrderSidebar({ lines: 240 });
+  const routeData = useRouteData<PurchaseOrder>(`/x/purchase-order/${orderId}`);
+  const links = usePurchaseOrderSidebar({ lines: routeData?.lineCount ?? 0 });
   const matches = useMatches();
 
   return (

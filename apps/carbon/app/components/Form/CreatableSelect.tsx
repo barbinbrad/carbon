@@ -59,7 +59,6 @@ const Select = ({
     (option) => option.value === value
   );
 
-  // TODO: hack for default value
   return (
     <FormControl isInvalid={!!error}>
       {label && <FormLabel htmlFor={name}>{label}</FormLabel>}

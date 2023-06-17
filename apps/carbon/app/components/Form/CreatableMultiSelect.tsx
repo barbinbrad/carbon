@@ -70,7 +70,6 @@ const Select = ({
       value.some((v) => option.value === v)
     ) ?? [];
 
-  // TODO: hack for default value
   return (
     <FormControl isInvalid={!!error}>
       {label && <FormLabel htmlFor={name}>{label}</FormLabel>}

@@ -8,6 +8,7 @@ import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
 import type {
   purchaseOrderDeliveryValidator,
+  purchaseOrderLineValidator,
   purchaseOrderValidator,
   supplierValidator,
 } from "./purchasing.form";
@@ -545,6 +546,30 @@ export async function upsertPurchaseOrderDelivery(
   return client
     .from("purchaseOrderDelivery")
     .insert([purchaseOrderDelivery])
+    .select("id");
+}
+
+export async function upsertPurchaseOrderLine(
+  client: SupabaseClient<Database>,
+  purchaseOrderLine:
+    | (Omit<TypeOfValidator<typeof purchaseOrderLineValidator>, "id"> & {
+        createdBy: string;
+      })
+    | (Omit<TypeOfValidator<typeof purchaseOrderLineValidator>, "id"> & {
+        id: string;
+        updatedBy: string;
+      })
+) {
+  if ("id" in purchaseOrderLine) {
+    return client
+      .from("purchaseOrderLine")
+      .update(sanitize(purchaseOrderLine))
+      .eq("id", purchaseOrderLine.id)
+      .select("id");
+  }
+  return client
+    .from("purchaseOrderLine")
+    .insert([purchaseOrderLine])
     .select("id");
 }
 

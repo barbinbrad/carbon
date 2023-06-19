@@ -437,21 +437,23 @@ const Grid = <T extends object>({
                 />
               );
             })}
-            <Tr
-              onClick={onNewRow}
-              cursor="pointer"
-              h={10}
-              _hover={{
-                backgroundColor: "gray.100",
-              }}
-            >
-              <Td colSpan={24}>
-                <HStack spacing={2}>
-                  <Icon color="gray.500" as={BsPlus} w={6} h={6} />
-                  <Text color="gray.500">New</Text>
-                </HStack>
-              </Td>
-            </Tr>
+            {onNewRow && (
+              <Tr
+                onClick={onNewRow}
+                cursor="pointer"
+                h={10}
+                _hover={{
+                  backgroundColor: "gray.100",
+                }}
+              >
+                <Td colSpan={24}>
+                  <HStack spacing={2}>
+                    <Icon color="gray.500" as={BsPlus} w={6} h={6} />
+                    <Text color="gray.500">New</Text>
+                  </HStack>
+                </Td>
+              </Tr>
+            )}
           </Tbody>
         </Table>
       </Box>

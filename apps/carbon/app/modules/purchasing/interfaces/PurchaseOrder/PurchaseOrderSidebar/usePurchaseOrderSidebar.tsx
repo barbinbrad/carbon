@@ -25,7 +25,7 @@ export function usePurchaseOrderSidebar({ lines = 0 }: Props) {
     },
     {
       name: "Payment",
-      to: "taxes",
+      to: "payment",
       role: ["employee"],
     },
     {

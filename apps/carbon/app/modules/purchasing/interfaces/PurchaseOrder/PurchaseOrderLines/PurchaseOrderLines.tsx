@@ -1,5 +1,5 @@
-import { Card, CardHeader, Heading, CardBody } from "@chakra-ui/react";
-import { Outlet, useNavigate } from "@remix-run/react";
+import { Card, CardHeader, Heading, CardBody, Button } from "@chakra-ui/react";
+import { Link, Outlet, useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useMemo } from "react";
 import Grid from "~/components/Grid";
@@ -76,8 +76,13 @@ const PurchaseOrderLines = ({
   return (
     <>
       <Card w="full">
-        <CardHeader>
-          <Heading size="md">Purchase Order Lines</Heading>
+        <CardHeader display="flex" justifyContent="space-between">
+          <Heading size="md" display="inline-flex">
+            Purchase Order Lines
+          </Heading>
+          <Button colorScheme="brand" as={Link} to="new">
+            New
+          </Button>
         </CardHeader>
         <CardBody>
           <Grid<PurchaseOrderLine>

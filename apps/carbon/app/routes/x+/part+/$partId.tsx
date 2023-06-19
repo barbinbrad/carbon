@@ -35,7 +35,7 @@ export default function PartRoute() {
       <PartPreview />
       <Grid
         gridTemplateColumns={["1fr", "1fr", "2fr 8fr"]}
-        gridColumnGap={8}
+        gridColumnGap={4}
         w="full"
       >
         <PartSidebar />

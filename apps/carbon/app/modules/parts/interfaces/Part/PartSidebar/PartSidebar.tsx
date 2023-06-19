@@ -1,3 +1,4 @@
+import { useColor } from "@carbon/react";
 import { Button, Box, VStack } from "@chakra-ui/react";
 import { Link, useMatches, useParams } from "@remix-run/react";
 import { useRouteData } from "~/hooks";
@@ -6,6 +7,7 @@ import { usePartSidebar } from "./usePartSidebar";
 
 const PartSidebar = () => {
   const { partId } = useParams();
+  const borderColor = useColor("gray.200");
   if (!partId)
     throw new Error(
       "PartSidebar requires a partId and could not find partId in params"
@@ -36,7 +38,8 @@ const PartSidebar = () => {
                   as={Link}
                   to={route.to}
                   variant={isActive ? "solid" : "ghost"}
-                  border="none"
+                  border={isActive ? "1px solid" : "none"}
+                  borderColor={borderColor}
                   fontWeight={isActive ? "bold" : "normal"}
                   justifyContent="start"
                   size="md"

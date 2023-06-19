@@ -7,14 +7,16 @@ import type { PurchaseOrderLineType } from "~/modules/purchasing";
 import {
   PurchaseOrderLineForm,
   purchaseOrderLineValidator,
-  // upsertPurchaseOrderLine,
+  upsertPurchaseOrderLine,
 } from "~/modules/purchasing";
 import { requirePermissions } from "~/services/auth";
+import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { error } from "~/utils/result";
 
 export async function action({ request, params }: ActionArgs) {
   assertIsPost(request);
-  await requirePermissions(request, {
+  const { client, userId } = await requirePermissions(request, {
     create: "purchasing",
   });
 
@@ -30,22 +32,24 @@ export async function action({ request, params }: ActionArgs) {
   }
 
   const { id, ...data } = validation.data;
-  console.log(data);
 
-  // const createPurchaseOrderLine = await upsertPurchaseOrderLine(client, {
-  //   ...data,
-  //   createdBy: userId,
-  // });
+  const createPurchaseOrderLine = await upsertPurchaseOrderLine(client, {
+    ...data,
+    createdBy: userId,
+  });
 
-  // if (createPurchaseOrderLine.error) {
-  //   return redirect(
-  //     "/x/purchase-order/${orderId}/lines",
-  //     await flash(
-  //       request,
-  //       error(createPurchaseOrderLine.error, "Failed to create purchaseOrderLine.")
-  //     )
-  //   );
-  // }
+  if (createPurchaseOrderLine.error) {
+    return redirect(
+      `/x/purchase-order/${orderId}/lines`,
+      await flash(
+        request,
+        error(
+          createPurchaseOrderLine.error,
+          "Failed to create purchaseOrderLine."
+        )
+      )
+    );
+  }
 
   return redirect(`/x/purchase-order/${orderId}/lines`);
 }
@@ -64,6 +68,7 @@ export default function NewPurchaseOrderLineRoute() {
     partId: "",
     purchaseQuantity: 1,
     unitPrice: 0,
+    setupPrice: 0,
     unitOfMeasureCode: "",
     shelf: "",
   };

@@ -1,4 +1,4 @@
-import { Count } from "@carbon/react";
+import { Count, useColor } from "@carbon/react";
 import { Button, Box, VStack } from "@chakra-ui/react";
 import { Link, useMatches, useParams } from "@remix-run/react";
 import { useRouteData } from "~/hooks";
@@ -7,6 +7,7 @@ import { usePurchaseOrderSidebar } from "./usePurchaseOrderSidebar";
 
 const PurchaseOrderSidebar = () => {
   const { orderId } = useParams();
+  const borderColor = useColor("gray.200");
   if (!orderId)
     throw new Error(
       "PurchaseOrderSidebar requires an orderId and could not find orderId in params"
@@ -34,7 +35,8 @@ const PurchaseOrderSidebar = () => {
                   as={Link}
                   to={route.to}
                   variant={isActive ? "solid" : "ghost"}
-                  border="none"
+                  border={isActive ? "1px solid" : "none"}
+                  borderColor={borderColor}
                   fontWeight={isActive ? "bold" : "normal"}
                   justifyContent={
                     route.count === undefined ? "start" : "space-between"

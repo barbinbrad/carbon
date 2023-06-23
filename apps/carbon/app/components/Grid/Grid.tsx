@@ -196,11 +196,10 @@ const Grid = <T extends object>({
   );
 
   const onCellEditUpdate = useCallback(
-    (rowIndex: number, columnId: string) => (value: unknown) => {
-      return table.options.meta?.updateData
+    (rowIndex: number, columnId: string) => (value: unknown) =>
+      table.options.meta?.updateData
         ? table.options.meta?.updateData(rowIndex, columnId, value)
-        : undefined;
-    },
+        : undefined,
     [table]
   );
 
@@ -286,6 +285,7 @@ const Grid = <T extends object>({
         }
 
         let direction = commandCodes[code];
+
         if (shiftKey) direction = [-direction[0], -direction[1]];
         const [x1, y1] = navigate(direction, code === "Tab");
         setSelectedCell({

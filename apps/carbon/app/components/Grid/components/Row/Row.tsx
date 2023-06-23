@@ -59,7 +59,7 @@ const Row = <T extends object>({
             isSelected={isSelected}
             isEditing={isEditing}
             onClick={() => onCellClick(cell.row.index, columnIndex)}
-            onUpdate={() => onCellUpdate(cell.row.index, cell.column.id)}
+            onUpdate={onCellUpdate(cell.row.index, cell.column.id)}
           />
         );
       })}

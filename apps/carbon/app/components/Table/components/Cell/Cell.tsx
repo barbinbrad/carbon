@@ -1,12 +1,4 @@
-import {
-  Box,
-  HStack,
-  Popover,
-  PopoverAnchor,
-  PopoverBody,
-  PopoverContent,
-  Td,
-} from "@chakra-ui/react";
+import { Box, Td } from "@chakra-ui/react";
 import type { Cell as CellType } from "@tanstack/react-table";
 import { flexRender } from "@tanstack/react-table";
 import { memo, useState } from "react";
@@ -72,6 +64,7 @@ const Cell = <T extends object>({
       data-row={cell.row.index}
       data-column={columnIndex}
       tabIndex={tabIndex}
+      position="relative"
       bgColor={
         wasEdited
           ? "yellow.100"
@@ -97,31 +90,15 @@ const Cell = <T extends object>({
       onClick={onClick}
       onFocus={onFocus}
     >
-      <Box ref={ref}>
-        {isSelected && isEditing && hasEditableTableCellComponent ? (
-          <Popover
-            isOpen
-            onOpen={() => console.log("opened")}
-            onClose={() => console.log("closed")}
-            closeOnBlur
-            isLazy
-          >
-            <PopoverAnchor>
-              <Box>
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </Box>
-            </PopoverAnchor>
-
-            <PopoverContent>
-              <PopoverBody>
-                <HStack spacing={2}>{editableCell}</HStack>
-              </PopoverBody>
-            </PopoverContent>
-          </Popover>
-        ) : (
-          flexRender(cell.column.columnDef.cell, cell.getContext())
-        )}
-      </Box>
+      {isSelected && isEditing && hasEditableTableCellComponent ? (
+        <Box position="absolute" w="full" left={0} top="2px">
+          {editableCell}
+        </Box>
+      ) : (
+        <div ref={ref}>
+          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+        </div>
+      )}
     </Td>
   );
 };

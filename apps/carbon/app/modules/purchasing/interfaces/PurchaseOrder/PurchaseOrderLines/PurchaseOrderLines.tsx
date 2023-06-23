@@ -3,7 +3,13 @@ import { Link, Outlet, useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useMemo } from "react";
 import Grid from "~/components/Grid";
+import {
+  EditablePurchaseOrderLineNumber,
+  EditableNumber,
+  EditableText,
+} from "~/components/Editable";
 import type { PurchaseOrderLine } from "~/modules/purchasing";
+import usePurchaseOrderLines from "./usePurchaseOrderLines";
 
 type PurchaseOrderLinesProps = {
   purchaseOrderLines: PurchaseOrderLine[];
@@ -13,6 +19,8 @@ const PurchaseOrderLines = ({
   purchaseOrderLines,
 }: PurchaseOrderLinesProps) => {
   const navigate = useNavigate();
+  const { partOptions, accountOptions, handleCellEdit } =
+    usePurchaseOrderLines();
 
   const columns = useMemo<ColumnDef<PurchaseOrderLine>[]>(() => {
     return [
@@ -22,7 +30,7 @@ const PurchaseOrderLines = ({
         cell: (item) => item.getValue(),
       },
       {
-        id: "number",
+        accessorKey: "partId",
         header: "Number",
         cell: ({ row }) => {
           switch (row.original.purchaseOrderLineType) {
@@ -42,7 +50,13 @@ const PurchaseOrderLines = ({
       {
         accessorKey: "description",
         header: "Description",
-        cell: (item) => item.getValue(),
+        cell: ({ row }) => {
+          let description = row.original.description ?? "";
+          if (description.length > 50) {
+            description = description.substring(0, 50) + "...";
+          }
+          return <span>{description}</span>;
+        },
       },
       {
         accessorKey: "purchaseQuantity",
@@ -73,6 +87,20 @@ const PurchaseOrderLines = ({
     ];
   }, []);
 
+  const editableComponents = useMemo(
+    () => ({
+      // TODO: this shouldn't be imported from /Table/editable/Editable*
+      description: EditableText(handleCellEdit),
+      purchaseQuantity: EditableNumber(handleCellEdit),
+      unitPrice: EditableNumber(handleCellEdit),
+      partId: EditablePurchaseOrderLineNumber(handleCellEdit, {
+        parts: partOptions,
+        accounts: accountOptions,
+      }),
+    }),
+    [accountOptions, partOptions, handleCellEdit]
+  );
+
   return (
     <>
       <Card w="full">
@@ -88,6 +116,7 @@ const PurchaseOrderLines = ({
           <Grid<PurchaseOrderLine>
             data={purchaseOrderLines}
             columns={columns}
+            editableComponents={editableComponents}
             onNewRow={() => navigate("new")}
           />
         </CardBody>

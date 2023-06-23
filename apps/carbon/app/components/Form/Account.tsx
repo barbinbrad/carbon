@@ -33,7 +33,7 @@ const Account = ({
     useFetcher<Awaited<ReturnType<typeof getAccountsList>>>();
 
   useEffect(() => {
-    accountFetcher.load(`/api/accounting/accounts`);
+    accountFetcher.load("/api/accounting/accounts");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

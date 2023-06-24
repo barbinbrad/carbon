@@ -28,6 +28,10 @@ import {
 } from "@tanstack/react-table";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
+import type {
+  EditableTableCellComponent,
+  Position,
+} from "~/components/Editable";
 import {
   TableHeader,
   IndeterminateCheckbox,
@@ -36,11 +40,7 @@ import {
   useSort,
   Row,
 } from "./components";
-import type {
-  EditableTableCellComponent,
-  Position,
-  TableAction,
-} from "./types";
+import type { TableAction } from "./types";
 import { getAccessorKey, updateNestedProperty } from "./utils";
 
 interface TableProps<T extends object> {
@@ -266,8 +266,8 @@ const Table = <T extends object>({
     [selectedCell, isColumnEditable, onSelectedCellChange]
   );
 
-  const onCellEditUpdate = useCallback(
-    (rowIndex: number, columnId: string) => (value: unknown) => {
+  const onCellUpdate = useCallback(
+    (rowIndex: number) => (columnId: string, value: unknown) => {
       return table.options.meta?.updateData
         ? table.options.meta?.updateData(rowIndex, columnId, value)
         : undefined;
@@ -555,7 +555,7 @@ const Table = <T extends object>({
                           rowRef={ref}
                           withColumnOrdering={withColumnOrdering}
                           onCellClick={onCellClick}
-                          onCellUpdate={onCellEditUpdate}
+                          onCellUpdate={onCellUpdate}
                           onRowClick={
                             rowsAreClickable
                               ? () => onRowClick(row.original)
@@ -581,7 +581,7 @@ const Table = <T extends object>({
                       row={row}
                       withColumnOrdering={withColumnOrdering}
                       onCellClick={onCellClick}
-                      onCellUpdate={onCellEditUpdate}
+                      onCellUpdate={onCellUpdate}
                       onRowClick={
                         rowsAreClickable
                           ? () => onRowClick(row.original)
@@ -696,7 +696,7 @@ const Table = <T extends object>({
                         rowRef={ref}
                         withColumnOrdering={withColumnOrdering}
                         onCellClick={onCellClick}
-                        onCellUpdate={onCellEditUpdate}
+                        onCellUpdate={onCellUpdate}
                         onRowClick={
                           rowsAreClickable
                             ? () => onRowClick(row.original)
@@ -729,7 +729,7 @@ const Table = <T extends object>({
                     rowIsClickable={rowsAreClickable}
                     withColumnOrdering={withColumnOrdering}
                     onCellClick={onCellClick}
-                    onCellUpdate={onCellEditUpdate}
+                    onCellUpdate={onCellUpdate}
                     onRowClick={
                       rowsAreClickable
                         ? () => onRowClick(row.original)

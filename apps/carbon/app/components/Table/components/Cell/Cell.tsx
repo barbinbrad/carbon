@@ -3,7 +3,7 @@ import type { Cell as CellType } from "@tanstack/react-table";
 import { flexRender } from "@tanstack/react-table";
 import { memo, useState } from "react";
 import { useMovingCellRef } from "~/hooks";
-import type { EditableTableCellComponent } from "../../types";
+import type { EditableTableCellComponent } from "~/components/Editable";
 import { getAccessorKey } from "../../utils";
 
 type CellProps<T> = {
@@ -17,7 +17,7 @@ type CellProps<T> = {
   isRowSelected: boolean;
   isSelected: boolean;
   onClick?: () => void;
-  onUpdate?: (value: unknown) => void;
+  onUpdate?: (columnId: string, value: unknown) => void;
 };
 
 const Cell = <T extends object>({
@@ -49,11 +49,16 @@ const Cell = <T extends object>({
         accessorKey,
         value: cell.getValue(),
         row: cell.row.original,
-        onUpdate:
-          onUpdate ||
-          (() => {
-            console.error("failed to pass an onUpdate function to the popover");
-          }),
+        onUpdate: onUpdate
+          ? (columnId, value, isValid = true) => {
+              onUpdate(columnId, value);
+              setHasError(!isValid);
+            }
+          : () => {
+              console.error(
+                "failed to pass an onUpdate function to the popover"
+              );
+            },
         onError: () => setHasError(true),
       })
     : null;

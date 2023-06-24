@@ -2,8 +2,8 @@ import { Box, Td } from "@chakra-ui/react";
 import type { Cell as CellType } from "@tanstack/react-table";
 import { flexRender } from "@tanstack/react-table";
 import { memo, useState } from "react";
+import type { EditableTableCellComponent } from "~/components/Editable";
 import { useMovingCellRef } from "~/hooks";
-import type { EditableTableCellComponent } from "../../types";
 import { getAccessorKey } from "../../utils";
 
 type CellProps<T> = {
@@ -15,7 +15,7 @@ type CellProps<T> = {
   isEditing: boolean;
   isSelected: boolean;
   onClick?: () => void;
-  onUpdate?: (value: unknown) => void;
+  onUpdate?: (columnId: string, value: unknown) => void;
 };
 
 const Cell = <T extends object>({
@@ -47,8 +47,8 @@ const Cell = <T extends object>({
         value: cell.renderValue(),
         row: cell.row.original,
         onUpdate: onUpdate
-          ? (value, isValid = true) => {
-              onUpdate(value);
+          ? (columnId, value, isValid = true) => {
+              onUpdate(columnId, value);
               setHasError(!isValid);
             }
           : () => {

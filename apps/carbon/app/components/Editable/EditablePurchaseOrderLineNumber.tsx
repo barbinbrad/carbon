@@ -2,7 +2,7 @@
 import { Select } from "@carbon/react";
 import type { PostgrestResponse } from "@supabase/supabase-js";
 import type { PurchaseOrderLine } from "~/modules/purchasing";
-import type { EditableTableCellComponentProps } from "../Table/types";
+import type { EditableTableCellComponentProps } from "~/components/Editable";
 
 const EditablePurchaseOrderLineNumber =
   (
@@ -42,19 +42,19 @@ const EditablePurchaseOrderLineNumber =
       const { value } = newValue;
 
       // this is the optimistic update on the FE
-      onUpdate(value);
+      onUpdate(value, accessorKey);
 
       // the is the actual update on the BE
       mutation(columnId, value, row)
         .then(({ error }) => {
           if (error) {
             onError();
-            onUpdate(value, false);
+            onUpdate(value, accessorKey, false);
           }
         })
         .catch(() => {
           onError();
-          onUpdate(value, false);
+          onUpdate(value, accessorKey, false);
         });
     };
 

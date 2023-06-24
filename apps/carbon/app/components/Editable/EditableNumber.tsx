@@ -2,7 +2,7 @@
 import { NumberInput, NumberInputField } from "@chakra-ui/react";
 import type { PostgrestResponse } from "@supabase/supabase-js";
 import type { FocusEvent, KeyboardEvent } from "react";
-import type { EditableTableCellComponentProps } from "../Table/types";
+import type { EditableTableCellComponentProps } from "~/components/Editable";
 
 const EditableNumber =
   <T extends object>(
@@ -20,20 +20,22 @@ const EditableNumber =
     onUpdate,
   }: EditableTableCellComponentProps<T>) => {
     const updateNumber = async (newValue: string) => {
+      const numberValue = Number(newValue);
       // this is the optimistic update on the FE
-      onUpdate(newValue);
+      onUpdate(accessorKey, numberValue);
 
       // the is the actual update on the BE
-      mutation(accessorKey, newValue, row)
+      // @ts-ignore
+      mutation(accessorKey, numberValue, row)
         .then(({ error }) => {
           if (error) {
             onError();
-            onUpdate(value, false);
+            onUpdate(accessorKey, numberValue, false);
           }
         })
         .catch(() => {
           onError();
-          onUpdate(value, false);
+          onUpdate(accessorKey, numberValue, false);
         });
     };
 

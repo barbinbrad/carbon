@@ -4,7 +4,10 @@ import type { Row as RowType } from "@tanstack/react-table";
 import type { MutableRefObject } from "react";
 import { memo } from "react";
 import Cell from "../Cell";
-import type { EditableTableCellComponent, Position } from "../../types";
+import type {
+  EditableTableCellComponent,
+  Position,
+} from "~/components/Editable";
 
 type RowProps<T> = {
   borderColor: string;
@@ -22,7 +25,7 @@ type RowProps<T> = {
   rowRef?: MutableRefObject<HTMLTableRowElement | null>;
   withColumnOrdering: boolean;
   onCellClick: (row: number, column: number) => void;
-  onCellUpdate: (row: number, columnId: string) => (value: unknown) => void;
+  onCellUpdate: (row: number) => (columnId: string, value: unknown) => void;
   onRowClick?: () => void;
 };
 
@@ -93,11 +96,7 @@ const Row = <T extends object>({
                     )
                 : undefined
             }
-            onUpdate={
-              isEditMode
-                ? onCellUpdate(cell.row.index, cell.column.id)
-                : undefined
-            }
+            onUpdate={isEditMode ? onCellUpdate(cell.row.index) : undefined}
           />
         );
       })}

@@ -2,7 +2,7 @@
 import { Input } from "@chakra-ui/react";
 import type { PostgrestResponse } from "@supabase/supabase-js";
 import type { FocusEvent, KeyboardEvent } from "react";
-import type { EditableTableCellComponentProps } from "../Table/types";
+import type { EditableTableCellComponentProps } from "~/components/Editable";
 
 const EditableText =
   <T extends object>(
@@ -21,19 +21,19 @@ const EditableText =
   }: EditableTableCellComponentProps<T>) => {
     const updateText = async (newValue: string) => {
       // this is the optimistic update on the FE
-      onUpdate(newValue);
+      onUpdate(accessorKey, newValue);
 
       // the is the actual update on the BE
       mutation(accessorKey, newValue, row)
         .then(({ error }) => {
           if (error) {
             onError();
-            onUpdate(value, false);
+            onUpdate(accessorKey, value, false);
           }
         })
         .catch(() => {
           onError();
-          onUpdate(value, false);
+          onUpdate(accessorKey, value, false);
         });
     };
 

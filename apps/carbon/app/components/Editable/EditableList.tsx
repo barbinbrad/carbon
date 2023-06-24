@@ -1,7 +1,7 @@
 /* eslint-disable react/display-name */
 import { Select } from "@carbon/react";
 import type { PostgrestResponse } from "@supabase/supabase-js";
-import type { EditableTableCellComponentProps } from "../Table/types";
+import type { EditableTableCellComponentProps } from "~/components/Editable";
 
 const EditableList =
   <T extends object>(
@@ -21,19 +21,19 @@ const EditableList =
   }: EditableTableCellComponentProps<T>) => {
     const onChange = async ({ value }: { value: string; label: string }) => {
       // this is the optimistic update on the FE
-      onUpdate(value);
+      onUpdate(value, accessorKey);
 
       // the is the actual update on the BE
       mutation(accessorKey, value, row)
         .then(({ error }) => {
           if (error) {
             onError();
-            onUpdate(value, false);
+            onUpdate(value, accessorKey, false);
           }
         })
         .catch(() => {
           onError();
-          onUpdate(value, false);
+          onUpdate(value, accessorKey, false);
         });
     };
 

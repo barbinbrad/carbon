@@ -1,6 +1,5 @@
 import { useColor, useEscape } from "@carbon/react";
 import { clip } from "@carbon/utils";
-import type { ThemeTypings } from "@chakra-ui/react";
 import {
   Box,
   Flex,
@@ -23,16 +22,16 @@ import {
 } from "@tanstack/react-table";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { BsPlus } from "react-icons/bs";
-// import { FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
-// import { GridHeader, useSort, Row } from "./components";
 import { Row } from "./components";
-import type { EditableTableCellComponent, Position } from "./types";
+import type {
+  EditableTableCellComponent,
+  Position,
+} from "~/components/Editable";
 import { getAccessorKey, updateNestedProperty } from "./utils";
 
 interface GridProps<T extends object> {
   columns: ColumnDef<T>[];
   data: T[];
-  colorScheme?: ThemeTypings["colorSchemes"];
   defaultColumnOrder?: string[];
   defaultColumnVisibility?: Record<string, boolean>;
   editableComponents?: Record<string, EditableTableCellComponent<T>>;
@@ -46,7 +45,6 @@ interface GridProps<T extends object> {
 const Grid = <T extends object>({
   data,
   columns,
-  colorScheme = "blackAlpha",
   editableComponents,
   defaultColumnOrder,
   defaultColumnVisibility,
@@ -195,8 +193,8 @@ const Grid = <T extends object>({
     [selectedCell, isColumnEditable, onSelectedCellChange]
   );
 
-  const onCellEditUpdate = useCallback(
-    (rowIndex: number, columnId: string) => (value: unknown) =>
+  const onCellUpdate = useCallback(
+    (rowIndex: number) => (columnId: string, value: unknown) =>
       table.options.meta?.updateData
         ? table.options.meta?.updateData(rowIndex, columnId, value)
         : undefined,
@@ -432,7 +430,7 @@ const Grid = <T extends object>({
                   selectedCell={selectedCell}
                   row={row}
                   onCellClick={onCellClick}
-                  onCellUpdate={onCellEditUpdate}
+                  onCellUpdate={onCellUpdate}
                   onEditRow={onEditRow}
                 />
               );

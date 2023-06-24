@@ -2,8 +2,11 @@ import { Tr } from "@chakra-ui/react";
 import type { Row as RowType } from "@tanstack/react-table";
 import type { MutableRefObject } from "react";
 import { memo } from "react";
+import type {
+  EditableTableCellComponent,
+  Position,
+} from "~/components/Editable";
 import Cell from "../Cell";
-import type { EditableTableCellComponent, Position } from "../../types";
 
 type RowProps<T> = {
   borderColor: string;
@@ -16,7 +19,7 @@ type RowProps<T> = {
   rowIsClickable?: boolean;
   rowRef?: MutableRefObject<HTMLTableRowElement | null>;
   onCellClick: (row: number, column: number) => void;
-  onCellUpdate: (row: number, columnId: string) => (value: unknown) => void;
+  onCellUpdate: (row: number) => (columnId: string, value: unknown) => void;
   onEditRow?: (row: T) => void;
 };
 
@@ -59,7 +62,7 @@ const Row = <T extends object>({
             isSelected={isSelected}
             isEditing={isEditing}
             onClick={() => onCellClick(cell.row.index, columnIndex)}
-            onUpdate={onCellUpdate(cell.row.index, cell.column.id)}
+            onUpdate={onCellUpdate(cell.row.index)}
           />
         );
       })}

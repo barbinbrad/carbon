@@ -19,7 +19,7 @@ const PurchaseOrderLines = ({
   purchaseOrderLines,
 }: PurchaseOrderLinesProps) => {
   const navigate = useNavigate();
-  const { partOptions, accountOptions, handleCellEdit } =
+  const { supabase, partOptions, accountOptions, handleCellEdit } =
     usePurchaseOrderLines();
 
   const columns = useMemo<ColumnDef<PurchaseOrderLine>[]>(() => {
@@ -89,16 +89,16 @@ const PurchaseOrderLines = ({
 
   const editableComponents = useMemo(
     () => ({
-      // TODO: this shouldn't be imported from /Table/editable/Editable*
       description: EditableText(handleCellEdit),
       purchaseQuantity: EditableNumber(handleCellEdit),
       unitPrice: EditableNumber(handleCellEdit),
       partId: EditablePurchaseOrderLineNumber(handleCellEdit, {
+        client: supabase,
         parts: partOptions,
         accounts: accountOptions,
       }),
     }),
-    [accountOptions, partOptions, handleCellEdit]
+    [handleCellEdit, supabase, partOptions, accountOptions]
   );
 
   return (

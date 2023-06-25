@@ -45,22 +45,7 @@ const Cell = <T extends object>({
     accessorKey in editableComponents;
 
   const editableCell = hasEditableTableCellComponent
-    ? editableComponents[accessorKey]({
-        accessorKey,
-        value: cell.getValue(),
-        row: cell.row.original,
-        onUpdate: onUpdate
-          ? (columnId, value, isValid = true) => {
-              onUpdate(columnId, value);
-              setHasError(!isValid);
-            }
-          : () => {
-              console.error(
-                "failed to pass an onUpdate function to the popover"
-              );
-            },
-        onError: () => setHasError(true),
-      })
+    ? editableComponents[accessorKey]
     : null;
 
   return (
@@ -97,7 +82,26 @@ const Cell = <T extends object>({
     >
       {isSelected && isEditing && hasEditableTableCellComponent ? (
         <Box position="absolute" w="full" left={0} top="2px">
-          {editableCell}
+          {hasEditableTableCellComponent
+            ? flexRender(editableCell, {
+                accessorKey,
+                value: cell.renderValue(),
+                row: cell.row.original,
+                onUpdate: onUpdate
+                  ? (columnId, value, isValid = true) => {
+                      onUpdate(columnId, value);
+                      setHasError(!isValid);
+                    }
+                  : () => {
+                      console.error(
+                        "failed to pass an onUpdate function to the popover"
+                      );
+                    },
+                onError: () => {
+                  setHasError(true);
+                },
+              })
+            : null}
         </Box>
       ) : (
         <div ref={ref}>

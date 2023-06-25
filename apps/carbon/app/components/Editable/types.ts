@@ -1,10 +1,6 @@
-export type EditableTableCellComponent<TData> = (props: {
-  accessorKey: string;
-  row: TData;
-  value: unknown;
-  onUpdate: (columnId: string, value: unknown) => void;
-  onError: () => void;
-}) => JSX.Element;
+export type EditableTableCellComponent<TData> = (
+  props: EditableTableCellComponentProps<TData>
+) => JSX.Element;
 
 export type EditableTableCellComponentProps<T> = {
   value: unknown;

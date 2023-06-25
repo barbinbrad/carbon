@@ -1,6 +1,7 @@
 /* eslint-disable react/display-name */
+import type { Database } from "@carbon/database";
 import { Select } from "@carbon/react";
-import type { PostgrestResponse } from "@supabase/supabase-js";
+import type { PostgrestResponse, SupabaseClient } from "@supabase/supabase-js";
 import type { PurchaseOrderLine } from "~/modules/purchasing";
 import type { EditableTableCellComponentProps } from "~/components/Editable";
 
@@ -12,6 +13,7 @@ const EditablePurchaseOrderLineNumber =
       row: PurchaseOrderLine
     ) => Promise<PostgrestResponse<unknown>>,
     options: {
+      client: SupabaseClient<Database>;
       parts: { label: string; value: string }[];
       accounts: { label: string; value: string }[];
     }

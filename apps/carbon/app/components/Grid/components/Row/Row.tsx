@@ -17,6 +17,7 @@ type RowProps<T> = {
   selectedCell: Position;
   row: RowType<T>;
   rowIsClickable?: boolean;
+  rowIsSelected: boolean;
   rowRef?: MutableRefObject<HTMLTableRowElement | null>;
   onCellClick: (row: number, column: number) => void;
   onCellUpdate: (row: number) => (columnId: string, value: unknown) => void;
@@ -31,6 +32,7 @@ const Row = <T extends object>({
   isEditing,
   row,
   rowIsClickable = false,
+  rowIsSelected,
   rowRef,
   selectedCell,
   onCellClick,
@@ -73,10 +75,15 @@ const Row = <T extends object>({
 const MemoizedRow = memo(
   Row,
   (prev, next) =>
+    next.rowIsSelected === false &&
+    prev.rowIsSelected === false &&
     next.selectedCell?.row === prev.row.index &&
     next.row.index === prev.selectedCell?.row &&
     next.selectedCell?.column === prev.selectedCell?.column &&
     next.isEditing === prev.isEditing
 ) as typeof Row;
+
+// props are equal if:
+// - the row is not the selected row
 
 export default MemoizedRow;

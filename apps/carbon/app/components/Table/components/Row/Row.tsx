@@ -22,6 +22,7 @@ type RowProps<T> = {
   selectedCell: Position;
   row: RowType<T>;
   rowIsClickable?: boolean;
+  rowIsSelected: boolean;
   rowRef?: MutableRefObject<HTMLTableRowElement | null>;
   withColumnOrdering: boolean;
   onCellClick: (row: number, column: number) => void;
@@ -41,6 +42,7 @@ const Row = <T extends object>({
   pinnedColumns = 0,
   row,
   rowIsClickable = false,
+  rowIsSelected,
   rowRef,
   selectedCell,
   withColumnOrdering,
@@ -107,6 +109,8 @@ const Row = <T extends object>({
 const MemoizedRow = memo(
   Row,
   (prev, next) =>
+    next.rowIsSelected === false &&
+    prev.rowIsSelected === false &&
     next.isRowSelected === prev.isRowSelected &&
     next.selectedCell?.row === prev.row.index &&
     next.row.index === prev.selectedCell?.row &&

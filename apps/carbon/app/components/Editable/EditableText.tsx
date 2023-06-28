@@ -28,12 +28,12 @@ const EditableText =
         .then(({ error }) => {
           if (error) {
             onError();
-            onUpdate(accessorKey, value, false);
+            onUpdate(accessorKey, value);
           }
         })
         .catch(() => {
           onError();
-          onUpdate(accessorKey, value, false);
+          onUpdate(accessorKey, value);
         });
     };
 

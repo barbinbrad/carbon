@@ -7,7 +7,6 @@ import type { PurchaseOrderLine } from "~/modules/purchasing";
 
 export default function usePurchaseOrderLines() {
   const { supabase } = useSupabase();
-  if (!supabase) throw new Error("No supabase client found");
 
   const partsFetcher = useFetcher<Awaited<ReturnType<typeof getPartsList>>>();
   const accountsFetcher =
@@ -49,6 +48,7 @@ export default function usePurchaseOrderLines() {
 
   const handleCellEdit = useCallback(
     async (id: string, value: unknown, row: PurchaseOrderLine) => {
+      if (!supabase) throw new Error("Supabase client not found");
       return await supabase
         .from("purchaseOrderLine")
         .update({

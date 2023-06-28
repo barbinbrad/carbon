@@ -553,6 +553,7 @@ const Table = <T extends object>({
                           // @ts-ignore
                           row={row}
                           rowRef={ref}
+                          rowIsSelected={selectedCell?.row === row.index}
                           withColumnOrdering={withColumnOrdering}
                           onCellClick={onCellClick}
                           onCellUpdate={onCellUpdate}
@@ -579,6 +580,7 @@ const Table = <T extends object>({
                       selectedCell={selectedCell}
                       // @ts-ignore
                       row={row}
+                      rowIsSelected={selectedCell?.row === row.index}
                       withColumnOrdering={withColumnOrdering}
                       onCellClick={onCellClick}
                       onCellUpdate={onCellUpdate}
@@ -693,6 +695,7 @@ const Table = <T extends object>({
                         // @ts-ignore
                         row={row}
                         rowIsClickable={rowsAreClickable}
+                        rowIsSelected={selectedCell?.row === row.index}
                         rowRef={ref}
                         withColumnOrdering={withColumnOrdering}
                         onCellClick={onCellClick}
@@ -727,6 +730,7 @@ const Table = <T extends object>({
                     // @ts-ignore
                     row={row}
                     rowIsClickable={rowsAreClickable}
+                    rowIsSelected={selectedCell?.row === row.index}
                     withColumnOrdering={withColumnOrdering}
                     onCellClick={onCellClick}
                     onCellUpdate={onCellUpdate}

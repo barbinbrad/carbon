@@ -6,7 +6,7 @@ export type EditableTableCellComponentProps<T> = {
   value: unknown;
   row: T;
   accessorKey: string;
-  onUpdate: (columnId: string, value: unknown, isValid?: boolean) => void;
+  onUpdate: (columnId: string, value: unknown) => void;
   onError: () => void;
 };
 

@@ -54,12 +54,12 @@ const PurchaseOrderLineForm = ({
     description: string;
     unitPrice: string;
     uom: string;
-    shelf: string;
+    shelfId: string;
   }>({
     description: initialValues.description ?? "",
     unitPrice: initialValues.unitPrice?.toString() ?? "0",
     uom: initialValues.unitOfMeasureCode ?? "",
-    shelf: initialValues.shelf ?? "",
+    shelfId: initialValues.shelfId ?? "",
   });
 
   const isEditing = initialValues.id !== undefined;
@@ -80,7 +80,7 @@ const PurchaseOrderLineForm = ({
       description: "",
       unitPrice: "0",
       uom: "EA",
-      shelf: "",
+      shelfId: "",
     });
   };
 
@@ -108,9 +108,11 @@ const PurchaseOrderLineForm = ({
       description: part.data?.name ?? "",
       unitPrice: cost.data?.unitCost?.toString() ?? "0",
       uom: part.data?.unitOfMeasureCode ?? "EA",
-      shelf: shelf.data?.shelfId ?? "",
+      shelfId: shelf.data?.shelfId ?? "",
     });
   };
+
+  console.log(isEditing);
 
   return (
     <Drawer onClose={onClose} isOpen={true} size="sm">
@@ -163,7 +165,7 @@ const PurchaseOrderLineForm = ({
                       description: label,
                       unitPrice: "0",
                       uom: "EA",
-                      shelf: "",
+                      shelfId: "",
                     });
                   }}
                 />
@@ -206,7 +208,7 @@ const PurchaseOrderLineForm = ({
               </FormControl>
               {/* 
               // TODO: 
-              <Shelf name="shelf" label="Shelf" value={shelf}/> */}
+              <Shelf name="shelfId" label="Shelf" value={shelf}/> */}
             </VStack>
           </DrawerBody>
           <DrawerFooter>

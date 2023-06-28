@@ -152,6 +152,17 @@ export async function getPurchaseOrderLines(
     .eq("purchaseOrderId", purchaseOrderId);
 }
 
+export async function getPurchaseOrderLine(
+  client: SupabaseClient<Database>,
+  purchaseOrderLineId: string
+) {
+  return client
+    .from("purchaseOrderLine")
+    .select("*")
+    .eq("id", purchaseOrderLineId)
+    .single();
+}
+
 export function getPurchaseOrderLineTypes(): Database["public"]["Enums"]["purchaseOrderLineType"][] {
   return ["Part", "G/L Account", "Fixed Asset", "Comment"];
 }

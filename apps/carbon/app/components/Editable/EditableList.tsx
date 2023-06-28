@@ -28,12 +28,12 @@ const EditableList =
         .then(({ error }) => {
           if (error) {
             onError();
-            onUpdate(value, accessorKey, false);
+            onUpdate(value, accessorKey);
           }
         })
         .catch(() => {
           onError();
-          onUpdate(value, accessorKey, false);
+          onUpdate(value, accessorKey);
         });
     };
 

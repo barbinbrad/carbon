@@ -88,15 +88,8 @@ const Cell = <T extends object>({
                 value: cell.renderValue(),
                 row: cell.row.original,
                 onUpdate: onUpdate
-                  ? (columnId, value, isValid = true) => {
-                      onUpdate(columnId, value);
-                      setHasError(!isValid);
-                    }
-                  : () => {
-                      console.error(
-                        "failed to pass an onUpdate function to the popover"
-                      );
-                    },
+                  ? onUpdate
+                  : () => console.error("No update function provided"),
                 onError: () => {
                   setHasError(true);
                 },

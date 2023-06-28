@@ -1,4 +1,13 @@
-import { Card, CardHeader, Heading, CardBody, Button } from "@chakra-ui/react";
+import {
+  Button,
+  Box,
+  Card,
+  CardBody,
+  CardHeader,
+  Heading,
+  HStack,
+  IconButton,
+} from "@chakra-ui/react";
 import { Link, Outlet, useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useMemo } from "react";
@@ -10,6 +19,7 @@ import {
 } from "~/components/Editable";
 import type { PurchaseOrderLine } from "~/modules/purchasing";
 import usePurchaseOrderLines from "./usePurchaseOrderLines";
+import { MdMoreHoriz } from "react-icons/md";
 
 type PurchaseOrderLinesProps = {
   purchaseOrderLines: PurchaseOrderLine[];
@@ -27,7 +37,25 @@ const PurchaseOrderLines = ({
       {
         accessorKey: "purchaseOrderLineType",
         header: "Type",
-        cell: (item) => item.getValue(),
+        cell: ({ row }) => (
+          <HStack justify="space-between">
+            <span>{row.original.purchaseOrderLineType}</span>
+            <Box position="relative" w={6} h={6}>
+              <IconButton
+                aria-label="Edit purchase order line type"
+                as={Link}
+                icon={<MdMoreHoriz />}
+                size="sm"
+                position="absolute"
+                right={-1}
+                top={-1}
+                to={`${row.original.id}`}
+                onClick={(e) => e.stopPropagation()}
+                variant="ghost"
+              />
+            </Box>
+          </HStack>
+        ),
       },
       {
         accessorKey: "partId",
@@ -61,27 +89,53 @@ const PurchaseOrderLines = ({
       {
         accessorKey: "purchaseQuantity",
         header: "Quantity",
-        cell: (item) => item.getValue(),
+        cell: ({ row }) => {
+          switch (row.original.purchaseOrderLineType) {
+            case "Comment":
+              return null;
+            default:
+              return <span>{row.original.purchaseQuantity}</span>;
+          }
+        },
       },
       {
         accessorKey: "unitPrice",
         header: "Unit Price",
-        cell: (item) => item.getValue(),
+        cell: ({ row }) => {
+          switch (row.original.purchaseOrderLineType) {
+            case "Comment":
+              return null;
+            default:
+              return <span>{row.original.unitPrice}</span>;
+          }
+        },
       },
       {
-        accessorKey: "shelf",
+        accessorKey: "shelfId",
         header: "Shelf",
-        cell: (item) => item.getValue(),
+        cell: ({ row }) => {
+          switch (row.original.purchaseOrderLineType) {
+            case "Comment":
+              return null;
+            default:
+              return <span>{row.original.shelfId}</span>;
+          }
+        },
       },
       {
         id: "totalPrice",
         header: "Total Price",
         cell: ({ row }) => {
-          if (!row.original.unitPrice || !row.original.purchaseQuantity)
-            return 0;
-          return (
-            row.original.unitPrice * row.original.purchaseQuantity
-          ).toFixed(2);
+          switch (row.original.purchaseOrderLineType) {
+            case "Comment":
+              return null;
+            default:
+              if (!row.original.unitPrice || !row.original.purchaseQuantity)
+                return 0;
+              return (
+                row.original.unitPrice * row.original.purchaseQuantity
+              ).toFixed(2);
+          }
         },
       },
     ];

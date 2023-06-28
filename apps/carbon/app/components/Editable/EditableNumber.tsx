@@ -30,12 +30,12 @@ const EditableNumber =
         .then(({ error }) => {
           if (error) {
             onError();
-            onUpdate(accessorKey, numberValue, false);
+            onUpdate(accessorKey, numberValue);
           }
         })
         .catch(() => {
           onError();
-          onUpdate(accessorKey, numberValue, false);
+          onUpdate(accessorKey, numberValue);
         });
     };
 

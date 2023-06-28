@@ -99,7 +99,7 @@ export const purchaseOrderLineValidator = withZod(
       unitOfMeasureCode: zfd.text(z.string().optional()),
       unitPrice: zfd.numeric(z.number().optional()),
       setupPrice: zfd.numeric(z.number().optional()),
-      shelf: zfd.text(z.string().optional()),
+      shelfId: zfd.text(z.string().optional()),
     })
     .refine(
       (data) => (data.purchaseOrderLineType === "Part" ? data.partId : true),

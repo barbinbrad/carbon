@@ -70,7 +70,7 @@ export default function NewPurchaseOrderLineRoute() {
     unitPrice: 0,
     setupPrice: 0,
     unitOfMeasureCode: "",
-    shelf: "",
+    shelfId: "",
   };
 
   return (

@@ -429,6 +429,7 @@ const Grid = <T extends object>({
                   isEditing={isEditing}
                   selectedCell={selectedCell}
                   row={row}
+                  rowIsSelected={selectedCell?.row === row.index}
                   onCellClick={onCellClick}
                   onCellUpdate={onCellUpdate}
                   onEditRow={onEditRow}

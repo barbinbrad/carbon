@@ -3,9 +3,15 @@ import type { Role } from "~/types";
 
 type Props = {
   lines?: number;
+  externalDocuments?: number;
+  internalDocuments?: number;
 };
 
-export function usePurchaseOrderSidebar({ lines = 0 }: Props) {
+export function usePurchaseOrderSidebar({
+  lines = 0,
+  internalDocuments = 0,
+  externalDocuments = 0,
+}: Props) {
   const permissions = usePermissions();
   return [
     {
@@ -35,13 +41,15 @@ export function usePurchaseOrderSidebar({ lines = 0 }: Props) {
     },
     {
       name: "Internal Attachments",
-      to: "internal-attachments",
+      to: "internal",
       role: ["employee"],
+      count: internalDocuments,
     },
     {
       name: "External Attachments",
-      to: "external-attachments",
+      to: "external",
       role: ["employee", "supplier"],
+      count: externalDocuments,
     },
   ].filter(
     (item) =>

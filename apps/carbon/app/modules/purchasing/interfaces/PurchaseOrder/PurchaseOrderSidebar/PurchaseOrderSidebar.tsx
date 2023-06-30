@@ -2,7 +2,10 @@ import { Count, useColor } from "@carbon/react";
 import { Button, Box, VStack } from "@chakra-ui/react";
 import { Link, useMatches, useParams } from "@remix-run/react";
 import { useRouteData } from "~/hooks";
-import type { PurchaseOrder } from "~/modules/purchasing";
+import type {
+  PurchaseOrder,
+  PurchaseOrderAttachment,
+} from "~/modules/purchasing";
 import { usePurchaseOrderSidebar } from "./usePurchaseOrderSidebar";
 
 const PurchaseOrderSidebar = () => {
@@ -13,8 +16,16 @@ const PurchaseOrderSidebar = () => {
       "PurchaseOrderSidebar requires an orderId and could not find orderId in params"
     );
 
-  const routeData = useRouteData<PurchaseOrder>(`/x/purchase-order/${orderId}`);
-  const links = usePurchaseOrderSidebar({ lines: routeData?.lineCount ?? 0 });
+  const routeData = useRouteData<{
+    purchaseOrder: PurchaseOrder;
+    internalDocuments: PurchaseOrderAttachment[];
+    externalDocuments: PurchaseOrderAttachment[];
+  }>(`/x/purchase-order/${orderId}`);
+  const links = usePurchaseOrderSidebar({
+    lines: routeData?.purchaseOrder?.lineCount ?? 0,
+    internalDocuments: routeData?.internalDocuments.length ?? 0,
+    externalDocuments: routeData?.externalDocuments.length ?? 0,
+  });
   const matches = useMatches();
 
   return (

@@ -3,6 +3,8 @@ import type { LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 import {
+  getExternalDocuments,
+  getInternalDocuments,
   getPurchaseOrder,
   PurchaseOrderHeader,
   PurchaseOrderSidebar,
@@ -19,7 +21,13 @@ export async function loader({ request, params }: LoaderArgs) {
   const { orderId } = params;
   if (!orderId) throw new Error("Could not find orderId");
 
-  const purchaseOrder = await getPurchaseOrder(client, orderId);
+  const [purchaseOrder, externalDocuments, internalDocuments] =
+    await Promise.all([
+      getPurchaseOrder(client, orderId),
+      getExternalDocuments(client, orderId),
+      getInternalDocuments(client, orderId),
+    ]);
+
   if (purchaseOrder.error) {
     return redirect(
       "/x/purchasing/orders",
@@ -30,7 +38,11 @@ export async function loader({ request, params }: LoaderArgs) {
     );
   }
 
-  return json(purchaseOrder.data);
+  return json({
+    purchaseOrder: purchaseOrder.data,
+    externalDocuments: externalDocuments.data ?? [],
+    internalDocuments: internalDocuments.data ?? [],
+  });
 }
 
 export default function PurchaseOrderRoute() {

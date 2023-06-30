@@ -68,22 +68,24 @@ export default function PurchaseOrderBasicRoute() {
   }>("/x/purchase-order");
 
   const { orderId } = useParams();
-  const orderData = useRouteData<PurchaseOrder>(`/x/purchase-order/${orderId}`);
+  const orderData = useRouteData<{ purchaseOrder: PurchaseOrder }>(
+    `/x/purchase-order/${orderId}`
+  );
   if (!orderData) throw new Error("Could not find part data");
 
   const initialValues = {
-    id: orderData.id ?? "",
-    purchaseOrderId: orderData.purchaseOrderId ?? "",
-    supplierId: orderData.supplierId ?? "",
-    supplierContactId: orderData.supplierContactId ?? "",
-    supplierReference: orderData.supplierReference ?? "",
-    orderDate: orderData.orderDate ?? "",
-    type: orderData.type ?? "Draft",
-    status: orderData.status ?? "Draft",
-    receiptRequestedDate: orderData.receiptRequestedDate ?? "",
-    receiptPromisedDate: orderData.receiptPromisedDate ?? "",
-    notes: orderData.notes ?? "",
-    closed: orderData.closed ?? false,
+    id: orderData?.purchaseOrder?.id ?? "",
+    purchaseOrderId: orderData?.purchaseOrder?.purchaseOrderId ?? "",
+    supplierId: orderData?.purchaseOrder?.supplierId ?? "",
+    supplierContactId: orderData?.purchaseOrder?.supplierContactId ?? "",
+    supplierReference: orderData?.purchaseOrder?.supplierReference ?? "",
+    orderDate: orderData?.purchaseOrder?.orderDate ?? "",
+    type: orderData?.purchaseOrder?.type ?? "Draft",
+    status: orderData?.purchaseOrder?.status ?? "Draft",
+    receiptRequestedDate: orderData?.purchaseOrder?.receiptRequestedDate ?? "",
+    receiptPromisedDate: orderData?.purchaseOrder?.receiptPromisedDate ?? "",
+    notes: orderData?.purchaseOrder?.notes ?? "",
+    closed: orderData?.purchaseOrder?.closed ?? false,
   };
 
   return (

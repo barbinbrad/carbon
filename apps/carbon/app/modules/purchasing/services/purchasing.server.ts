@@ -70,11 +70,19 @@ export async function deleteSupplierType(
 ) {
   return client.from("supplierType").delete().eq("id", supplierTypeId);
 }
-export async function getSupplier(
+
+export async function getExternalDocuments(
   client: SupabaseClient<Database>,
-  supplierId: string
+  purchaseOrderId: string
 ) {
-  return client.from("supplier").select("*").eq("id", supplierId).single();
+  return client.storage.from("purchasing-external").list(purchaseOrderId);
+}
+
+export async function getInternalDocuments(
+  client: SupabaseClient<Database>,
+  purchaseOrderId: string
+) {
+  return client.storage.from("purchasing-internal").list(purchaseOrderId);
 }
 
 export async function getPurchaseOrder(
@@ -169,6 +177,13 @@ export function getPurchaseOrderLineTypes(): Database["public"]["Enums"]["purcha
 
 export function getPurchaseOrderTypes(): Database["public"]["Enums"]["purchaseOrderType"][] {
   return ["Draft", "Purchase", "Return"];
+}
+
+export async function getSupplier(
+  client: SupabaseClient<Database>,
+  supplierId: string
+) {
+  return client.from("supplier").select("*").eq("id", supplierId).single();
 }
 
 export async function getSupplierLocations(

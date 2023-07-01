@@ -70,6 +70,8 @@ export async function action({ request, params }: ActionArgs) {
     await request.formData()
   );
 
+  console.log(validation.data);
+
   if (validation.error) {
     return validationError(validation.error);
   }
@@ -109,7 +111,7 @@ export default function PurchaseOrderPaymentRoute() {
     invoiceSupplierContactId:
       purchaseOrderPayment.invoiceSupplierContactId ?? undefined,
     paymentTermId: purchaseOrderPayment.paymentTermId ?? undefined,
-    paymentDate: purchaseOrderPayment.paymentDate ?? undefined,
+    paymentComplete: purchaseOrderPayment.paymentComplete ?? undefined,
     currencyCode: purchaseOrderPayment.currencyCode ?? "USD",
   };
 

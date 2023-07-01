@@ -10,14 +10,14 @@ import {
 import { useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import {
+  Currency,
+  Boolean,
   Hidden,
   Supplier,
   SupplierContact,
   SupplierLocation,
   Select,
   Submit,
-  DatePicker,
-  Currency,
 } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { purchaseOrderPaymentValidator } from "~/modules/purchasing";
@@ -89,7 +89,7 @@ const PurchaseOrderPaymentForm = ({
               <Currency name="currencyCode" label="Currency" />
             </VStack>
             <VStack alignItems="start" spacing={2} w="full">
-              <DatePicker name="paymentDate" label="Payment Date" />
+              <Boolean name="paymentComplete" label="Payment Complete" />
             </VStack>
           </Grid>
         </CardBody>

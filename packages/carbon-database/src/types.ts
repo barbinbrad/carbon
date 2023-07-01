@@ -1730,9 +1730,9 @@ export interface Database {
           invoiceSupplierLocationId: string | null;
           invoiceSupplierContactId: string | null;
           paymentTermId: string | null;
-          paymentDate: string | null;
           updatedAt: string | null;
           updatedBy: string | null;
+          paymentComplete: boolean;
           currencyCode: string;
         };
         Insert: {
@@ -1741,9 +1741,9 @@ export interface Database {
           invoiceSupplierLocationId?: string | null;
           invoiceSupplierContactId?: string | null;
           paymentTermId?: string | null;
-          paymentDate?: string | null;
           updatedAt?: string | null;
           updatedBy?: string | null;
+          paymentComplete?: boolean;
           currencyCode?: string;
         };
         Update: {
@@ -1752,9 +1752,9 @@ export interface Database {
           invoiceSupplierLocationId?: string | null;
           invoiceSupplierContactId?: string | null;
           paymentTermId?: string | null;
-          paymentDate?: string | null;
           updatedAt?: string | null;
           updatedBy?: string | null;
+          paymentComplete?: boolean;
           currencyCode?: string;
         };
       };

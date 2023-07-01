@@ -143,7 +143,7 @@ export const purchaseOrderPaymentValidator = withZod(
     invoiceSupplierLocationId: zfd.text(z.string().optional()),
     invoiceSupplierContactId: zfd.text(z.string().optional()),
     paymentTermId: zfd.text(z.string().optional()),
-    paymentDate: zfd.text(z.string().optional()),
+    paymentComplete: zfd.checkbox(),
     currencyCode: zfd.text(z.string().optional()),
   })
 );

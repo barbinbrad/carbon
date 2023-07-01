@@ -201,7 +201,7 @@ CREATE TABLE "purchaseOrderPayment" (
   "invoiceSupplierLocationId" TEXT,
   "invoiceSupplierContactId" TEXT,
   "paymentTermId" TEXT,
-  "paymentDate" DATE,
+  "paymentComplete" BOOLEAN NOT NULL DEFAULT FALSE,
   "currencyCode" TEXT NOT NULL DEFAULT 'USD',
   "updatedAt" TIMESTAMP WITH TIME ZONE,
   "updatedBy" TEXT,
@@ -212,8 +212,7 @@ CREATE TABLE "purchaseOrderPayment" (
   CONSTRAINT "purchaseOrderPayment_invoiceSupplierLocationId_fkey" FOREIGN KEY ("invoiceSupplierLocationId") REFERENCES "supplierLocation" ("id") ON DELETE CASCADE,
   CONSTRAINT "purchaseOrderPayment_invoiceSupplierContactId_fkey" FOREIGN KEY ("invoiceSupplierContactId") REFERENCES "supplierContact" ("id") ON DELETE CASCADE,
   CONSTRAINT "purchaseOrderPayment_paymentTermId_fkey" FOREIGN KEY ("paymentTermId") REFERENCES "paymentTerm" ("id") ON DELETE CASCADE,
-  CONSTRAINT "purchaseOrderPayment_currencyCode_fkey" FOREIGN KEY ("currencyCode") REFERENCES "currency" ("code") ON DELETE CASCADE,
-  CONSTRAINT "purchaseOrderPayment_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE CASCADE
+  CONSTRAINT "purchaseOrderPayment_currencyCode_fkey" FOREIGN KEY ("currencyCode") REFERENCES "currency" ("code") ON DELETE CASCADE
 );
 
 CREATE INDEX "purchaseOrderPayment_invoiceSupplierId_idx" ON "purchaseOrderPayment" ("invoiceSupplierId");

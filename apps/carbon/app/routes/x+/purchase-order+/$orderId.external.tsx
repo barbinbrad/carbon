@@ -18,7 +18,7 @@ export default function PurchaseOrderExternalDocumentsRoute() {
 
   return (
     <PurchaseOrderDocuments
-      documents={routeData?.externalDocuments ?? []}
+      attachments={routeData?.externalDocuments ?? []}
       isExternal
       orderId={orderId}
     />

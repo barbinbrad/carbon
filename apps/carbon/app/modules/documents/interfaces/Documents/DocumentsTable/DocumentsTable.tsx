@@ -32,8 +32,8 @@ import { VscOpenPreview } from "react-icons/vsc";
 import { Avatar, Table } from "~/components";
 import { Confirm, ConfirmDelete } from "~/components/Modals";
 import { useUrlParams } from "~/hooks";
+import { DocumentIcon } from "~/modules/documents";
 import type { Document, DocumentLabel } from "~/modules/documents";
-import DocumentIcon from "../DocumentIcon";
 import { useDocument } from "../useDocument";
 
 type DocumentsTableProps = {

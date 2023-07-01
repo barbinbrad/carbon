@@ -26,8 +26,9 @@ const PurchaseOrderDocumentForm = ({
         .from(`purchasing-${isExternal ? "external" : "internal"}`)
         .upload(fileName, file, {
           cacheControl: `${12 * 60 * 60}`,
-          upsert: true,
         });
+
+      console.log(fileUpload);
 
       if (fileUpload.error) {
         notification.copyableError(fileUpload.error, "Failed to upload file");

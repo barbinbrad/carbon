@@ -18,7 +18,7 @@ export default function PurchaseOrderInternalDocumentsRoute() {
 
   return (
     <PurchaseOrderDocuments
-      documents={routeData?.internalDocuments ?? []}
+      attachments={routeData?.internalDocuments ?? []}
       isExternal={false}
       orderId={orderId}
     />

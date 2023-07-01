@@ -28,6 +28,7 @@ import Slider from "./Slider";
 import Submit from "./Submit";
 import Supplier from "./Supplier";
 import SupplierContact from "./SupplierContact";
+import SupplierLocation from "./SupplierLocation";
 import TextArea from "./Textarea";
 import TimePicker from "./TimePicker";
 import Timezone from "./Timezone";
@@ -65,6 +66,7 @@ export {
   Submit,
   Supplier,
   SupplierContact,
+  SupplierLocation,
   TextArea,
   TimePicker,
   Timezone,

@@ -5,6 +5,7 @@ import PurchaseOrderForm from "./PurchaseOrderForm";
 import PurchaseOrderHeader from "./PurchaseOrderHeader";
 import PurchaseOrderLineForm from "./PurchaseOrderLineForm";
 import PurchaseOrderLines from "./PurchaseOrderLines";
+import PurchaseOrderPaymentForm from "./PurchaseOrderPaymentForm";
 import PurchaseOrderSidebar from "./PurchaseOrderSidebar";
 
 export {
@@ -15,5 +16,6 @@ export {
   PurchaseOrderHeader,
   PurchaseOrderLineForm,
   PurchaseOrderLines,
+  PurchaseOrderPaymentForm,
   PurchaseOrderSidebar,
 };

@@ -9,6 +9,7 @@ import { setGenericQueryFilters } from "~/utils/query";
 import type {
   purchaseOrderDeliveryValidator,
   purchaseOrderLineValidator,
+  purchaseOrderPaymentValidator,
   purchaseOrderValidator,
   supplierValidator,
 } from "./purchasing.form";
@@ -134,6 +135,17 @@ export async function getPurchaseOrderDelivery(
 ) {
   return client
     .from("purchaseOrderDelivery")
+    .select("*")
+    .eq("id", purchaseOrderId)
+    .single();
+}
+
+export async function getPurchaseOrderPayment(
+  client: SupabaseClient<Database>,
+  purchaseOrderId: string
+) {
+  return client
+    .from("purchaseOrderPayment")
     .select("*")
     .eq("id", purchaseOrderId)
     .single();
@@ -596,6 +608,30 @@ export async function upsertPurchaseOrderLine(
   return client
     .from("purchaseOrderLine")
     .insert([purchaseOrderLine])
+    .select("id");
+}
+
+export async function upsertPurchaseOrderPayment(
+  client: SupabaseClient<Database>,
+  purchaseOrderPayment:
+    | (TypeOfValidator<typeof purchaseOrderPaymentValidator> & {
+        createdBy: string;
+      })
+    | (TypeOfValidator<typeof purchaseOrderPaymentValidator> & {
+        id: string;
+        updatedBy: string;
+      })
+) {
+  if ("id" in purchaseOrderPayment) {
+    return client
+      .from("purchaseOrderPayment")
+      .update(sanitize(purchaseOrderPayment))
+      .eq("id", purchaseOrderPayment.id)
+      .select("id");
+  }
+  return client
+    .from("purchaseOrderPayment")
+    .insert([purchaseOrderPayment])
     .select("id");
 }
 

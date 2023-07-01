@@ -35,11 +35,6 @@ export function usePurchaseOrderSidebar({
       role: ["employee"],
     },
     {
-      name: "Approvals",
-      to: "approvals",
-      role: ["employee"],
-    },
-    {
       name: "Internal Attachments",
       to: "internal",
       role: ["employee"],

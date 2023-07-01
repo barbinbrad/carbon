@@ -100,7 +100,7 @@ export async function action({ request, params }: ActionArgs) {
   );
   if (updatePurchaseOrderDelivery.error) {
     return redirect(
-      `/x/purchase-order/${orderId}`,
+      `/x/purchase-order/${orderId}/delivery`,
       await flash(
         request,
         error(

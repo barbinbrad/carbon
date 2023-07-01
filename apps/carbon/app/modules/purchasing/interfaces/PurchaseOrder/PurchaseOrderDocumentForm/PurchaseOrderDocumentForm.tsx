@@ -28,14 +28,13 @@ const PurchaseOrderDocumentForm = ({
           cacheControl: `${12 * 60 * 60}`,
         });
 
-      console.log(fileUpload);
-
       if (fileUpload.error) {
         notification.copyableError(fileUpload.error, "Failed to upload file");
       }
 
       if (fileUpload.data?.path) {
         notification.success("File uploaded");
+        // refetch the loaders
         fetcher.submit(null, { method: "post" });
       }
     }

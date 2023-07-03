@@ -29,7 +29,7 @@ const PurchaseOrderLines = ({
   purchaseOrderLines,
 }: PurchaseOrderLinesProps) => {
   const navigate = useNavigate();
-  const { supabase, partOptions, accountOptions, handleCellEdit } =
+  const { canEdit, supabase, partOptions, accountOptions, handleCellEdit } =
     usePurchaseOrderLines();
 
   const columns = useMemo<ColumnDef<PurchaseOrderLine>[]>(() => {
@@ -162,16 +162,18 @@ const PurchaseOrderLines = ({
           <Heading size="md" display="inline-flex">
             Purchase Order Lines
           </Heading>
-          <Button colorScheme="brand" as={Link} to="new">
-            New
-          </Button>
+          {canEdit && (
+            <Button colorScheme="brand" as={Link} to="new">
+              New
+            </Button>
+          )}
         </CardHeader>
         <CardBody>
           <Grid<PurchaseOrderLine>
             data={purchaseOrderLines}
             columns={columns}
             editableComponents={editableComponents}
-            onNewRow={() => navigate("new")}
+            onNewRow={canEdit ? () => navigate("new") : undefined}
           />
         </CardBody>
       </Card>

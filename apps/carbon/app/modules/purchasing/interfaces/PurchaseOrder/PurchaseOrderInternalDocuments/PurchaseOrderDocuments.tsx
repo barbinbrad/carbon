@@ -38,6 +38,7 @@ const PurchaseOrderDocuments = ({
   orderId,
 }: PurchaseOrderDocumentsProps) => {
   const { canDelete, download, deleteAttachment } = usePurchaseOrderDocuments({
+    attachments,
     isExternal,
     orderId,
   });
@@ -60,6 +61,7 @@ const PurchaseOrderDocuments = ({
               <Tr>
                 <Th>Name</Th>
                 <Th>Size</Th>
+                {/* <Th>Uploaded By</Th> */}
                 <Th></Th>
               </Tr>
             </Thead>
@@ -80,6 +82,15 @@ const PurchaseOrderDocuments = ({
                         Math.floor((attachment.metadata?.size ?? 0) / 1024)
                       )}
                     </Td>
+                    {/* <Td>
+                      <HStack>
+                        <Avatar
+                          size="sm"
+                          path={getAvatarPath(attachment.owner) ?? null}
+                        />
+                        <Text>{getFullName(attachment.owner)}</Text>
+                      </HStack>
+                    </Td> */}
                     <Td>
                       <Flex w="full" justifyContent="flex-end">
                         <Menu>

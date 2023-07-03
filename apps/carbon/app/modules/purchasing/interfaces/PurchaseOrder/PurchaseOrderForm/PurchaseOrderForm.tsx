@@ -47,6 +47,7 @@ const PurchaseOrderForm = ({
     initialValues.supplierId
   );
   const isEditing = initialValues.id !== undefined;
+  const isSupplier = permissions.is("supplier");
 
   const approvalOptions = purchaseOrderApprovalStatuses.map((approval) => ({
     label: approval,
@@ -104,19 +105,33 @@ const PurchaseOrderForm = ({
               <Input name="supplierReference" label="Supplier Invoice Number" />
             </VStack>
             <VStack alignItems="start" spacing={2} w="full">
-              <DatePicker name="orderDate" label="Order Date" />
+              <DatePicker
+                name="orderDate"
+                label="Order Date"
+                isDisabled={isSupplier}
+              />
               <Select name="type" label="Type" options={typeOptions} />
               <Select
                 name="status"
                 label="Approval Status"
+                isReadOnly={isSupplier}
                 options={approvalOptions}
               />
             </VStack>
             <VStack alignItems="start" spacing={2} w="full">
               {isEditing && (
                 <>
-                  <Boolean name="closed" label="Closed" />
-                  <TextArea name="notes" label="Notes" />
+                  <Boolean
+                    name="closed"
+                    label="Closed"
+                    isReadOnly={isSupplier}
+                    isDisabled={isSupplier}
+                  />
+                  <TextArea
+                    name="notes"
+                    label="Notes"
+                    isReadOnly={isSupplier}
+                  />
                 </>
               )}
             </VStack>

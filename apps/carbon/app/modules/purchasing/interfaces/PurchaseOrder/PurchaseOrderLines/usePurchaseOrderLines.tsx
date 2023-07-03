@@ -1,5 +1,6 @@
 import { useFetcher } from "@remix-run/react";
 import { useCallback, useEffect, useMemo } from "react";
+import { usePermissions } from "~/hooks";
 import { useSupabase } from "~/lib/supabase";
 import type { getAccountsList } from "~/modules/accounting";
 import type { getPartsList } from "~/modules/parts";
@@ -7,6 +8,10 @@ import type { PurchaseOrderLine } from "~/modules/purchasing";
 
 export default function usePurchaseOrderLines() {
   const { supabase } = useSupabase();
+  const permissions = usePermissions();
+
+  const canEdit = permissions.can("update", "purchasing");
+  const canDelete = permissions.can("delete", "purchasing");
 
   const partsFetcher = useFetcher<Awaited<ReturnType<typeof getPartsList>>>();
   const accountsFetcher =
@@ -61,6 +66,8 @@ export default function usePurchaseOrderLines() {
 
   return {
     accountOptions,
+    canDelete,
+    canEdit,
     partOptions,
     supabase,
     handleCellEdit,

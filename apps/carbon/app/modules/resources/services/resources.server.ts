@@ -273,7 +273,7 @@ export async function getContractor(
   contractorId: string
 ) {
   return client
-    .from("contractors_query")
+    .from("contractors_view")
     .select("*")
     .eq("supplierContactId", contractorId)
     .single();
@@ -283,7 +283,7 @@ export async function getContractors(
   client: SupabaseClient<Database>,
   args?: GenericQueryFilters & { name: string | null; ability: string | null }
 ) {
-  let query = client.from("contractors_query").select("*").eq("active", true);
+  let query = client.from("contractors_view").select("*").eq("active", true);
 
   if (args?.name) {
     query = query.ilike("supplierName", `%${args.name}%`);
@@ -517,7 +517,7 @@ export async function getPartner(
   partnerId: string
 ) {
   return client
-    .from("partners_query")
+    .from("partners_view")
     .select("*")
     .eq("supplierLocationId", partnerId)
     .single();
@@ -527,7 +527,7 @@ export async function getPartners(
   client: SupabaseClient<Database>,
   args?: GenericQueryFilters & { name: string | null; ability: string | null }
 ) {
-  let query = client.from("partners_query").select("*").eq("active", true);
+  let query = client.from("partners_view").select("*").eq("active", true);
 
   if (args?.name) {
     query = query.ilike("supplierName", `%${args.name}%`);

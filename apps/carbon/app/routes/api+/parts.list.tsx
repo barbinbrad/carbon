@@ -7,9 +7,7 @@ import { flash } from "~/services/session";
 import { error } from "~/utils/result";
 
 export async function loader({ request }: LoaderArgs) {
-  const authorized = await requirePermissions(request, {
-    view: "parts",
-  });
+  const authorized = await requirePermissions(request, {});
 
   const url = new URL(request.url);
   const searchParams = new URLSearchParams(url.search);

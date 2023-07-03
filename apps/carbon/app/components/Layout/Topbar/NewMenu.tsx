@@ -12,6 +12,8 @@ import useNewMenu from "./useNewMenu";
 const NewMenu = () => {
   const newMenuLinks = useNewMenu();
 
+  if (!newMenuLinks.length) return null;
+
   return (
     <Menu>
       <MenuButton

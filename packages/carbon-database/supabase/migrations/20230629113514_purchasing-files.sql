@@ -52,11 +52,11 @@ FOR SELECT USING (
     )
 );
 
-CREATE POLICY "External purchasing documents insert requires purchasing_create" ON storage.objects 
+CREATE POLICY "External purchasing documents insert requires purchasing_view" ON storage.objects 
 FOR INSERT WITH CHECK (
     bucket_id = 'purchasing-external'
     AND (auth.role() = 'authenticated')
-    AND coalesce(get_my_claim('purchasing_create')::boolean, false) = true
+    AND coalesce(get_my_claim('purchasing_view')::boolean, false) = true
     AND (
       (get_my_claim('role'::text)) = '"employee"'::jsonb OR
       (

@@ -73,6 +73,7 @@ const Boolean = forwardRef<HTMLInputElement, FormBooleanProps>(
               <input
                 ref={ref}
                 type="checkbox"
+                disabled={props.isDisabled}
                 {...getInputProps({
                   type: "checkbox",
                   id: name,

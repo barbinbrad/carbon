@@ -5,6 +5,7 @@ import type {
   getPartGroupsList,
   getParts,
   getPartSummary,
+  getPartSuppliers,
   getUnitOfMeasure,
   getUnitOfMeasuresList,
 } from "./services";
@@ -33,6 +34,10 @@ export type PartReplenishmentSystem =
 export type PartSummary = NonNullable<
   Awaited<ReturnType<typeof getPartSummary>>
 >["data"];
+
+export type PartSupplier = NonNullable<
+  Awaited<ReturnType<typeof getPartSuppliers>>["data"]
+>[number];
 
 export type PartManufacturingPolicy =
   Database["public"]["Enums"]["partManufacturingPolicy"];

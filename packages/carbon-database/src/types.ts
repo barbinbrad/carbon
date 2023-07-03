@@ -1403,14 +1403,14 @@ export interface Database {
       partReplenishment: {
         Row: {
           partId: string;
-          supplierId: string | null;
-          supplierPartNumber: string | null;
+          preferredSupplierId: string | null;
           purchasingUnitOfMeasureCode: string | null;
           lotSize: number | null;
           createdBy: string;
           updatedBy: string | null;
           updatedAt: string | null;
           purchasingLeadTime: number;
+          conversionFactor: number;
           purchasingBlocked: boolean;
           manufacturingPolicy: Database["public"]["Enums"]["partManufacturingPolicy"];
           manufacturingLeadTime: number;
@@ -1421,14 +1421,14 @@ export interface Database {
         };
         Insert: {
           partId: string;
-          supplierId?: string | null;
-          supplierPartNumber?: string | null;
+          preferredSupplierId?: string | null;
           purchasingUnitOfMeasureCode?: string | null;
           lotSize?: number | null;
           createdBy: string;
           updatedBy?: string | null;
           updatedAt?: string | null;
           purchasingLeadTime?: number;
+          conversionFactor?: number;
           purchasingBlocked?: boolean;
           manufacturingPolicy?: Database["public"]["Enums"]["partManufacturingPolicy"];
           manufacturingLeadTime?: number;
@@ -1439,20 +1439,64 @@ export interface Database {
         };
         Update: {
           partId?: string;
-          supplierId?: string | null;
-          supplierPartNumber?: string | null;
+          preferredSupplierId?: string | null;
           purchasingUnitOfMeasureCode?: string | null;
           lotSize?: number | null;
           createdBy?: string;
           updatedBy?: string | null;
           updatedAt?: string | null;
           purchasingLeadTime?: number;
+          conversionFactor?: number;
           purchasingBlocked?: boolean;
           manufacturingPolicy?: Database["public"]["Enums"]["partManufacturingPolicy"];
           manufacturingLeadTime?: number;
           manufacturingBlocked?: boolean;
           requiresConfiguration?: boolean;
           scrapPercentage?: number;
+          createdAt?: string;
+        };
+      };
+      partSupplier: {
+        Row: {
+          partId: string;
+          supplierId: string;
+          supplierPartId: string | null;
+          supplierUnitOfMeasureCode: string | null;
+          createdBy: string;
+          updatedBy: string | null;
+          updatedAt: string | null;
+          id: string;
+          minimumOrderQuantity: number | null;
+          conversionFactor: number;
+          active: boolean;
+          createdAt: string;
+        };
+        Insert: {
+          partId: string;
+          supplierId: string;
+          supplierPartId?: string | null;
+          supplierUnitOfMeasureCode?: string | null;
+          createdBy: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          id?: string;
+          minimumOrderQuantity?: number | null;
+          conversionFactor?: number;
+          active?: boolean;
+          createdAt?: string;
+        };
+        Update: {
+          partId?: string;
+          supplierId?: string;
+          supplierPartId?: string | null;
+          supplierUnitOfMeasureCode?: string | null;
+          createdBy?: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          id?: string;
+          minimumOrderQuantity?: number | null;
+          conversionFactor?: number;
+          active?: boolean;
           createdAt?: string;
         };
       };
@@ -2456,7 +2500,7 @@ export interface Database {
       };
     };
     Views: {
-      contractors_query: {
+      contractors_view: {
         Row: {
           supplierContactId: string | null;
           active: boolean | null;
@@ -2547,7 +2591,7 @@ export interface Database {
           year: number | null;
         };
       };
-      partners_query: {
+      partners_view: {
         Row: {
           supplierLocationId: string | null;
           active: boolean | null;

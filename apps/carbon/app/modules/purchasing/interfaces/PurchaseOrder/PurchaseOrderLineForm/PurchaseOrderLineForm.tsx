@@ -112,8 +112,6 @@ const PurchaseOrderLineForm = ({
     });
   };
 
-  console.log(isEditing);
-
   return (
     <Drawer onClose={onClose} isOpen={true} size="sm">
       <ValidatedForm

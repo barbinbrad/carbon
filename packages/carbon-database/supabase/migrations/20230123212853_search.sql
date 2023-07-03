@@ -124,29 +124,18 @@ CREATE POLICY "Employees with sales_view can search for customers and sales orde
 --     AND entity = 'Sales Order' 
 --     AND (get_my_claim('role'::text)) = '"customer"'::jsonb
 --     AND uuid IN (
---         SELECT "customerId" FROM "salesOrder" WHERE "customerId" IN (
---           SELECT "customerId" FROM "customerAccount" WHERE id::uuid = auth.uid()
---         )
---       )
+--        SELECT id FROM "salesOrder" WHERE "customerId" IN (
+--          SELECT "customerId" FROM "salesOrder" WHERE "customerId" IN (
+--            SELECT "customerId" FROM "customerAccount" WHERE id::uuid = auth.uid()
+--          )
+--        )
+--      )
 --   )
 
 CREATE POLICY "Employees with purchasing_view can search for suppliers and purchase orders" ON "search"
   FOR SELECT
   USING (coalesce(get_my_claim('purchasing_view')::boolean, false) = true AND entity IN ('Supplier', 'Purchase Order') AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
 
--- TODO: suppliers should be able to search for their purchase orders
--- CREATE POLICY "Suppliers with purchasing_view can search for their own purchase orders" ON "search"
---   FOR SELECT
---   USING (
---     coalesce(get_my_claim('purchasing_view')::boolean, false) = true 
---     AND entity = 'Purchase Order' 
---     AND (get_my_claim('role'::text)) = '"supplier"'::jsonb
---     AND uuid IN (
---         SELECT "supplierId" FROM "purchaseOrder" WHERE "supplierId" IN (
---           SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
---         )
---       )
---   )
 
 CREATE POLICY "Employees with resources_view can search for resources" ON "search"
   FOR SELECT

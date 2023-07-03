@@ -1,0 +1,6 @@
+-- TODO: after Postgres 15, we can use security_invoker = on
+-- ALTER VIEW "contractors_view" SET (security_invoker = on);
+-- ALTER VIEW "partners_view" SET (security_invoker = on);
+-- ALTER VIEW "documents_labels_view" SET (security_invoker = on);
+-- ALTER VIEW "documents_view" SET (security_invoker = on);
+-- ALTER VIEW "purchase_order_view" SET (security_invoker = on);

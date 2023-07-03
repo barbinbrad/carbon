@@ -5,9 +5,9 @@ import { FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/react";
 import { useState } from "react";
 import { useField } from "remix-validated-form";
 
-type DatePickerProps = { name: string; label?: string };
+type DatePickerProps = { name: string; label?: string; isDisabled?: boolean };
 
-const DatePicker = ({ name, label }: DatePickerProps) => {
+const DatePicker = ({ name, label, isDisabled = false }: DatePickerProps) => {
   const { error, defaultValue, validate } = useField(name);
   const [date, setDate] = useState<CalendarDate | undefined>(
     defaultValue ? parseDate(defaultValue) : undefined
@@ -26,6 +26,7 @@ const DatePicker = ({ name, label }: DatePickerProps) => {
         value={date}
         //@ts-ignore
         onChange={onChange}
+        isDisabled={isDisabled}
       />
       {error && <FormErrorMessage>{error}</FormErrorMessage>}
     </FormControl>

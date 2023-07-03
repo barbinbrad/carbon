@@ -102,12 +102,13 @@ export async function requirePermissions(
         if (action === "role") {
           return myClaims.role === permission;
         }
-        return myClaims.permissions![permission][
+        if (!(permission in myClaims.permissions)) return false;
+        return myClaims.permissions[permission][
           action as "view" | "create" | "update" | "delete"
         ];
       } else if (Array.isArray(permission)) {
         return permission.every((p) => {
-          return myClaims.permissions![p][
+          return myClaims.permissions[p][
             action as "view" | "create" | "update" | "delete"
           ];
         });
@@ -122,7 +123,7 @@ export async function requirePermissions(
       "/x",
       await flash(
         request,
-        error({ myClaims, requirePermissions }, "Access Denied")
+        error({ myClaims, requiredPermissions }, "Access Denied")
       )
     );
   }

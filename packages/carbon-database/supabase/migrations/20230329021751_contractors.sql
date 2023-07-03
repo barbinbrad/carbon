@@ -87,7 +87,7 @@ CREATE POLICY "Employees with resources_delete can delete contractorAbilities" O
   );
 
 
-CREATE VIEW "contractors_query" AS
+CREATE VIEW "contractors_view" AS
   SELECT 
     p.id AS "supplierContactId", 
     p."active", 

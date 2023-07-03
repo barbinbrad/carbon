@@ -54,6 +54,8 @@ const PurchaseOrderDeliveryForm = ({
     value: term.id,
   }));
 
+  const isSupplier = permissions.is("supplier");
+
   return (
     <ValidatedForm
       method="post"
@@ -76,6 +78,7 @@ const PurchaseOrderDeliveryForm = ({
               <Location
                 name="locationId"
                 label="Delivery Location"
+                isReadOnly={isSupplier}
                 isClearable
               />
               <Select
@@ -86,6 +89,7 @@ const PurchaseOrderDeliveryForm = ({
               <Select
                 name="shippingTermId"
                 label="Shipping Terms"
+                isReadOnly={isSupplier}
                 options={shippingTermOptions}
               />
             </VStack>

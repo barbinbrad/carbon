@@ -118,11 +118,23 @@ export const partPlanningValidator = withZod(
 export const partPurchasingValidator = withZod(
   z.object({
     partId: z.string().min(1, { message: "Part ID is required" }),
-    supplierId: zfd.text(z.string().optional()),
-    supplierPartNumber: zfd.text(z.string().optional()),
+    preferredSupplierId: zfd.text(z.string().optional()),
+    conversionFactor: zfd.numeric(z.number().min(0)),
     purchasingLeadTime: zfd.numeric(z.number().min(0)),
     purchasingUnitOfMeasureCode: zfd.text(z.string().optional()),
     purchasingBlocked: zfd.checkbox(),
+  })
+);
+
+export const partSupplierValidator = withZod(
+  z.object({
+    id: zfd.text(z.string().optional()),
+    partId: z.string().min(1, { message: "Part ID is required" }),
+    supplierId: z.string().min(36, { message: "Supplier ID is required" }),
+    supplierPartId: z.string().optional(),
+    supplierUnitOfMeasureCode: zfd.text(z.string().optional()),
+    minimumOrderQuantity: zfd.numeric(z.number().min(0)),
+    conversionFactor: zfd.numeric(z.number().min(0)),
   })
 );
 

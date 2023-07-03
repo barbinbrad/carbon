@@ -11,6 +11,7 @@ import type {
   partManufacturingValidator,
   partPlanningValidator,
   partPurchasingValidator,
+  partSupplierValidator,
   partUnitSalePriceValidator,
   partValidator,
 } from "./parts.form";
@@ -183,6 +184,23 @@ export async function getPartSummary(
     )
     .eq("id", id)
     .single();
+}
+
+export async function getPartSuppliers(
+  client: SupabaseClient<Database>,
+  id: string
+) {
+  return client
+    .from("partSupplier")
+    .select(
+      `
+      id, supplier(id, name),
+      supplierPartId, supplierUnitOfMeasureCode,
+      minimumOrderQuantity, conversionFactor
+    `
+    )
+    .eq("active", true)
+    .eq("partId", id);
 }
 
 export async function getPartUnitSalePrice(
@@ -382,6 +400,27 @@ export async function upsertPartGroup(
       .eq("id", partGroup.id)
       .select("id")
   );
+}
+
+export async function upsertPartSupplier(
+  client: SupabaseClient<Database>,
+  partSupplier:
+    | (Omit<TypeOfValidator<typeof partSupplierValidator>, "id"> & {
+        createdBy: string;
+      })
+    | (Omit<TypeOfValidator<typeof partSupplierValidator>, "id"> & {
+        id: string;
+        updatedBy: string;
+      })
+) {
+  if ("createdBy" in partSupplier) {
+    return client.from("partSupplier").insert([partSupplier]).select("id");
+  }
+  return client
+    .from("partSupplier")
+    .update(sanitize(partSupplier))
+    .eq("id", partSupplier.id)
+    .select("id");
 }
 
 export async function upsertPartUnitSalePrice(

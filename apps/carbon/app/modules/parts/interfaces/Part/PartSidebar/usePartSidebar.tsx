@@ -16,6 +16,12 @@ export function usePartSidebar(replenishment: PartReplenishmentSystem) {
       role: ["employee", "supplier"],
     },
     {
+      name: "Suppliers",
+      to: "suppliers",
+      isDisabled: replenishment === "Make",
+      role: ["employee", "supplier"],
+    },
+    {
       name: "Manufacturing",
       to: "manufacturing",
       isDisabled: replenishment === "Buy",

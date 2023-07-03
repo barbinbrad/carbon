@@ -11,7 +11,6 @@ import { ValidatedForm } from "remix-validated-form";
 import {
   Boolean,
   Hidden,
-  Input,
   Number,
   Select,
   Submit,
@@ -57,15 +56,19 @@ const PartPurchasingForm = ({
             w="full"
           >
             <VStack alignItems="start" spacing={2} w="full">
-              <Supplier name="supplierId" label="Supplier" />
-              <Input name="supplierPartNumber" label="Supplier Part Number" />
+              <Supplier name="preferredSupplierId" label="Preferred Supplier" />
+              <Number name="purchasingLeadTime" label="Lead Time (Days)" />
             </VStack>
             <VStack alignItems="start" spacing={2} w="full">
-              <Number name="purchasingLeadTime" label="Lead Time (Days)" />
               <Select
                 name="purchasingUnitOfMeasureCode"
                 label="Purchasing Unit of Measure"
                 options={unitOfMeasureOptions}
+              />
+              <Number
+                name="conversionFactor"
+                label="Conversion Factor"
+                min={0}
               />
             </VStack>
             <VStack alignItems="start" spacing={2} w="full">

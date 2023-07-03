@@ -45,7 +45,7 @@ export async function action({ request, params }: ActionArgs) {
         request,
         error(
           createPurchaseOrderLine.error,
-          "Failed to create purchaseOrderLine."
+          "Failed to create purchase order line."
         )
       )
     );

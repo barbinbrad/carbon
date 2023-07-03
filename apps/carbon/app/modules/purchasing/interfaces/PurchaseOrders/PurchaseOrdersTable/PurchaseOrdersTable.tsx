@@ -144,10 +144,10 @@ const PurchaseOrdersTable = memo(
         <>
           <MenuItem
             icon={<BsPencilSquare />}
-            isDisabled={!permissions.can("update", "purchasing")}
+            isDisabled={!permissions.can("view", "purchasing")}
             onClick={() => edit(row)}
           >
-            Edit
+            View
           </MenuItem>
           <MenuItem
             icon={<BsStar />}

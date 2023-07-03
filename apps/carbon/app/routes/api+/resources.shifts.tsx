@@ -4,9 +4,7 @@ import { getShiftsList } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 
 export async function loader({ request }: LoaderArgs) {
-  const authorized = await requirePermissions(request, {
-    view: "resources",
-  });
+  const authorized = await requirePermissions(request, {});
 
   const url = new URL(request.url);
   const location = url.searchParams.get("location");

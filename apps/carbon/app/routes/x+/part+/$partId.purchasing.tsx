@@ -87,10 +87,12 @@ export default function PartPurchasingRoute() {
 
   const initialValues = {
     ...partPurchasing,
-    supplierId: partPurchasing?.supplierId ?? undefined,
-    supplierPartNumber: partPurchasing?.supplierPartNumber ?? undefined,
+    preferredSupplierId: partPurchasing?.preferredSupplierId ?? undefined,
+    purchasingLeadTime: partPurchasing?.purchasingLeadTime ?? "",
+    purchasingBlocked: partPurchasing?.purchasingBlocked ?? false,
     purchasingUnitOfMeasureCode:
       partPurchasing?.purchasingUnitOfMeasureCode ?? "",
+    conversionFactor: partPurchasing?.conversionFactor ?? 1,
   };
 
   return (

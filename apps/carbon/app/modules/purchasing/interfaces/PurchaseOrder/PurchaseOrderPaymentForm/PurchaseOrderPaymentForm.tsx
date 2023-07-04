@@ -33,7 +33,6 @@ const PurchaseOrderPaymentForm = ({
   initialValues,
   paymentTerms,
 }: PurchaseOrderPaymentFormProps) => {
-  console.log(initialValues);
   const permissions = usePermissions();
 
   const [supplier, setSupplier] = useState<string | undefined>(

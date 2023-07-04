@@ -77,8 +77,6 @@ export default function EditShippingMethodsRoute() {
     accounts: { name: string; number: string }[];
   }>("/x/inventory/shipping-methods");
 
-  console.log(shippingMethod);
-
   const initialValues = {
     id: shippingMethod?.id ?? undefined,
     name: shippingMethod?.name ?? "",

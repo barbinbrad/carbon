@@ -61,7 +61,6 @@ const Location = ({
       label: string;
     } | null
   ) => {
-    console.log({ selection });
     const newValue = (selection?.value as string) ?? null;
     setValue(newValue);
     onChange?.(selection);

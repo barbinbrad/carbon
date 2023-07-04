@@ -365,6 +365,68 @@ CREATE TABLE "partSupplier" (
   CONSTRAINT "partSupplier_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
 
+CREATE INDEX "partSupplier_partId_index" ON "partSupplier"("partId");
+
+ALTER TABLE "partSupplier" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Employees with part_view can view part suppliers" ON "partSupplier"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('parts_view')::boolean,false) 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Employees with parts_update can update part suppliers" ON "partSupplier"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('parts_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Employees with parts_create can create part suppliers" ON "partSupplier"
+  FOR INSERT
+  WITH CHECK (
+    coalesce(get_my_claim('parts_create')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Employees with parts_delete can delete part suppliers" ON "partSupplier"
+  FOR DELETE
+  USING (
+    coalesce(get_my_claim('parts_delete')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Suppliers with parts_view can view their own part suppliers" ON "partSupplier"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('parts_view')::boolean,false) 
+    AND (get_my_claim('role'::text)) = '"supplier"'::jsonb
+    AND  "supplierId" IN (
+      SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
+    )
+  );
+
+CREATE POLICY "Suppliers with parts_update can update their own part suppliers" ON "partSupplier"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('parts_update')::boolean,false) 
+    AND (get_my_claim('role'::text)) = '"supplier"'::jsonb
+    AND  "supplierId" IN (
+      SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
+    )
+  );
+
+CREATE POLICY "Suppliers with parts_create can create part suppliers" ON "partSupplier"
+  FOR INSERT
+  WITH CHECK (
+    coalesce(get_my_claim('parts_create')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"supplier"'::jsonb
+    AND  "supplierId" IN (
+      SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
+    )
+  );
+
 CREATE TABLE "partReplenishment" (
   "partId" TEXT NOT NULL,
   "preferredSupplierId" TEXT,
@@ -409,23 +471,23 @@ CREATE POLICY "Employees with parts_update can update part costs" ON "partReplen
     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
   );
 
--- TODO: uncomment this code after adding partSupplier table
--- CREATE POLICY "Suppliers with parts_view can view parts they created or supply" ON "part"
---   FOR SELECT
---   USING (
---     coalesce(get_my_claim('parts_view')::boolean, false) = true 
---     AND (get_my_claim('role'::text)) = '"supplier"'::jsonb 
---     AND (
---       "createdBy" = auth.uid()::text
---       OR (
---         id IN (
---           SELECT "partId" FROM "partReplenishment" WHERE "supplierId" IN (
---               SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
---           )
---         )              
---       ) 
---     )
---   );
+
+CREATE POLICY "Suppliers with parts_view can view parts they created or supply" ON "part"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('parts_view')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"supplier"'::jsonb 
+    AND (
+      "createdBy" = auth.uid()::text
+      OR (
+        id IN (
+          SELECT "partId" FROM "partSupplier" WHERE "supplierId" IN (
+              SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
+          )
+        )              
+      ) 
+    )
+  );
 
 CREATE POLICY "Supliers with parts_create can insert parts" ON "part"
   FOR INSERT
@@ -434,91 +496,95 @@ CREATE POLICY "Supliers with parts_create can insert parts" ON "part"
     AND (get_my_claim('role'::text)) = '"supplier"'::jsonb
   );
 
--- CREATE POLICY "Suppliers with parts_update can update parts that they created or supply" ON "part"
---   FOR UPDATE
---   USING (
---     coalesce(get_my_claim('parts_update')::boolean, false) = true 
---     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
---     AND (
---       "createdBy" = auth.uid()::text
---       OR (
---         id IN (
---           SELECT "partId" FROM "partReplenishment" WHERE "supplierId" IN (
---               SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
---           )
---         )              
---       ) 
---     )
---   );
+CREATE POLICY "Suppliers with parts_update can update parts that they created or supply" ON "part"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('parts_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+    AND (
+      "createdBy" = auth.uid()::text
+      OR (
+        id IN (
+          SELECT "partId" FROM "partSupplier" WHERE "supplierId" IN (
+              SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
+          )
+        )              
+      ) 
+    )
+  );
 
--- CREATE POLICY "Suppliers with parts_delete can delete parts that they created or supply" ON "part"
---   FOR DELETE
---   USING (
---     coalesce(get_my_claim('parts_delete')::boolean, false) = true 
---     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
---     AND (
---       "createdBy" = auth.uid()::text
---       OR (
---         id IN (
---           SELECT "partId" FROM "partReplenishment" WHERE "supplierId" IN (
---               SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
---           )
---         )              
---       ) 
---     ) 
---   );
+CREATE POLICY "Suppliers with parts_delete can delete parts that they created or supply" ON "part"
+  FOR DELETE
+  USING (
+    coalesce(get_my_claim('parts_delete')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+    AND (
+      "createdBy" = auth.uid()::text
+      OR (
+        id IN (
+          SELECT "partId" FROM "partSupplier" WHERE "supplierId" IN (
+              SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
+          )
+        )              
+      ) 
+    ) 
+  );
 
--- CREATE POLICY "Suppliers with parts_view can view part costs they supply" ON "partCost"
---   FOR SELECT
---   USING (
---     coalesce(get_my_claim('parts_view')::boolean, false) = true 
---     AND (get_my_claim('role'::text)) = '"supplier"'::jsonb 
---     AND (
---       "partId" IN (
---         SELECT "partId" FROM "partReplenishment" WHERE "supplierId" IN (
---             SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
---         )
---       )                 
---     )
---   );
+CREATE POLICY "Suppliers with parts_view can view part costs they supply" ON "partCost"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('parts_view')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"supplier"'::jsonb 
+    AND (
+      "partId" IN (
+        SELECT "partId" FROM "partSupplier" WHERE "supplierId" IN (
+            SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
+        )
+      )                 
+    )
+  );
 
--- CREATE POLICY "Suppliers with parts_update can update parts costs that they supply" ON "partCost"
---   FOR UPDATE
---   USING (
---     coalesce(get_my_claim('parts_update')::boolean, false) = true 
---     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
---     AND (
---       "partId" IN (
---         SELECT "partId" FROM "partReplenishment" WHERE "supplierId" IN (
---             SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
---         )
---       )                 
---     )
---   );
+CREATE POLICY "Suppliers with parts_update can update parts costs that they supply" ON "partCost"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('parts_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+    AND (
+      "partId" IN (
+        SELECT "partId" FROM "partSupplier" WHERE "supplierId" IN (
+            SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
+        )
+      )                 
+    )
+  );
 
--- CREATE POLICY "Suppliers with parts_view can view part replenishments they supply" ON "partReplenishment"
---   FOR SELECT
---   USING (
---     coalesce(get_my_claim('parts_view')::boolean, false) = true 
---     AND (get_my_claim('role'::text)) = '"supplier"'::jsonb 
---     AND (
---       "supplierId" IN (
---           SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
---       )               
---     )
---   );
+CREATE POLICY "Suppliers with parts_view can view part replenishments they supply" ON "partReplenishment"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('parts_view')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"supplier"'::jsonb 
+    AND (
+      "partId" IN (
+        SELECT "partId" FROM "partSupplier" WHERE "supplierId" IN (
+            SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
+        )
+      )               
+    )
+  );
 
--- CREATE POLICY "Suppliers with parts_update can update parts replenishments that they supply" ON "partReplenishment"
---   FOR UPDATE
---   USING (
---     coalesce(get_my_claim('parts_update')::boolean, false) = true 
---     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
---     AND (
---       "supplierId" IN (
---           SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
---       )               
---     )
---   );
+CREATE POLICY "Suppliers with parts_update can update parts replenishments that they supply" ON "partReplenishment"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('parts_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+    AND (
+      "partId" IN (
+        SELECT "partId" FROM "partSupplier" WHERE "supplierId" IN (
+            SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
+        )
+      )                
+    )
+  );
 
 CREATE TABLE "shelf" (
   "id" TEXT NOT NULL,

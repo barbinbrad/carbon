@@ -21,19 +21,19 @@ const EditableList =
   }: EditableTableCellComponentProps<T>) => {
     const onChange = async ({ value }: { value: string; label: string }) => {
       // this is the optimistic update on the FE
-      onUpdate(value, accessorKey);
+      onUpdate(accessorKey, value);
 
       // the is the actual update on the BE
       mutation(accessorKey, value, row)
         .then(({ error }) => {
           if (error) {
             onError();
-            onUpdate(value, accessorKey);
+            onUpdate(accessorKey, value);
           }
         })
         .catch(() => {
           onError();
-          onUpdate(value, accessorKey);
+          onUpdate(accessorKey, value);
         });
     };
 

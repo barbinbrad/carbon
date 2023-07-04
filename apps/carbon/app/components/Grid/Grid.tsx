@@ -30,6 +30,7 @@ import type {
 import { getAccessorKey, updateNestedProperty } from "./utils";
 
 interface GridProps<T extends object> {
+  canEdit?: boolean;
   columns: ColumnDef<T>[];
   data: T[];
   defaultColumnOrder?: string[];
@@ -43,8 +44,9 @@ interface GridProps<T extends object> {
 }
 
 const Grid = <T extends object>({
-  data,
+  canEdit = true,
   columns,
+  data,
   editableComponents,
   defaultColumnOrder,
   defaultColumnVisibility,
@@ -273,6 +275,7 @@ const Grid = <T extends object>({
         event.preventDefault();
 
         if (
+          canEdit &&
           !isEditing &&
           code === "Enter" &&
           !shiftKey &&
@@ -314,7 +317,7 @@ const Grid = <T extends object>({
         setIsEditing(true);
       }
     },
-    [isColumnEditable, isEditing, selectedCell, setSelectedCell, table]
+    [canEdit, isColumnEditable, isEditing, selectedCell, table]
   );
 
   // reset the selected cell when the table data changes
@@ -425,7 +428,7 @@ const Grid = <T extends object>({
                   key={row.id}
                   borderColor={borderColor}
                   backgroundColor={rowBackground}
-                  editableComponents={editableComponents}
+                  editableComponents={canEdit ? editableComponents : {}}
                   isEditing={isEditing}
                   selectedCell={selectedCell}
                   row={row}

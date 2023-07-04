@@ -1,4 +1,13 @@
-import { Button, Card, CardBody, CardHeader, Heading } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Heading,
+  HStack,
+  IconButton,
+} from "@chakra-ui/react";
 import { Link, Outlet, useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useMemo } from "react";
@@ -8,8 +17,10 @@ import {
   EditableNumber,
   EditableText,
 } from "~/components/Editable";
-import type { PartSupplier } from "~/modules/parts";
+import type { PartSupplier, UnitOfMeasureListItem } from "~/modules/parts";
 import usePartSuppliers from "./usePartSuppliers";
+import { useRouteData } from "~/hooks";
+import { MdMoreHoriz } from "react-icons/md";
 
 type PartSuppliersProps = {
   partSuppliers: PartSupplier[];
@@ -17,16 +28,47 @@ type PartSuppliersProps = {
 
 const PartSuppliers = ({ partSuppliers }: PartSuppliersProps) => {
   const navigate = useNavigate();
-  const { canEdit, supplierOptions, unitOfMeasureOptions, handleCellEdit } =
-    usePartSuppliers();
+  const { canEdit, handleCellEdit } = usePartSuppliers();
+  const sharedPartData = useRouteData<{
+    unitOfMeasures: UnitOfMeasureListItem[];
+  }>("/x/part");
+
+  const unitOfMeasureOptions = useMemo(() => {
+    return (
+      sharedPartData?.unitOfMeasures.map((unitOfMeasure) => ({
+        label: unitOfMeasure.code,
+        value: unitOfMeasure.code,
+      })) ?? []
+    );
+  }, [sharedPartData?.unitOfMeasures]);
 
   const columns = useMemo<ColumnDef<PartSupplier>[]>(() => {
     return [
       {
         accessorKey: "supplier.id",
         header: "Supplier",
-        // @ts-ignore
-        cell: ({ row }) => row.original.supplier?.name,
+        cell: ({ row }) => (
+          <HStack justify="space-between">
+            {/* @ts-ignore */}
+            <span>{row.original.supplier.name}</span>
+            {canEdit && (
+              <Box position="relative" w={6} h={5}>
+                <IconButton
+                  aria-label="Edit part supplier"
+                  as={Link}
+                  icon={<MdMoreHoriz />}
+                  size="sm"
+                  position="absolute"
+                  right={-1}
+                  top={-1}
+                  to={`${row.original.id}`}
+                  onClick={(e) => e.stopPropagation()}
+                  variant="ghost"
+                />
+              </Box>
+            )}
+          </HStack>
+        ),
       },
       {
         accessorKey: "supplierPartId",
@@ -49,11 +91,10 @@ const PartSuppliers = ({ partSuppliers }: PartSuppliersProps) => {
         cell: (item) => item.getValue(),
       },
     ];
-  }, []);
+  }, [canEdit]);
 
   const editableComponents = useMemo(
     () => ({
-      "supplier.id": EditableList(handleCellEdit, supplierOptions),
       supplierPartId: EditableText(handleCellEdit),
       supplierUnitOfMeasureCode: EditableList(
         handleCellEdit,
@@ -62,7 +103,7 @@ const PartSuppliers = ({ partSuppliers }: PartSuppliersProps) => {
       minimumOrderQuantity: EditableNumber(handleCellEdit),
       conversionFactor: EditableNumber(handleCellEdit),
     }),
-    [handleCellEdit, supplierOptions, unitOfMeasureOptions]
+    [handleCellEdit, unitOfMeasureOptions]
   );
 
   return (
@@ -82,6 +123,7 @@ const PartSuppliers = ({ partSuppliers }: PartSuppliersProps) => {
           <Grid<PartSupplier>
             data={partSuppliers}
             columns={columns}
+            canEdit={canEdit}
             editableComponents={editableComponents}
             onNewRow={canEdit ? () => navigate("new") : undefined}
           />

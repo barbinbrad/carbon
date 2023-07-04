@@ -40,7 +40,7 @@ const PurchaseOrderLines = ({
         cell: ({ row }) => (
           <HStack justify="space-between">
             <span>{row.original.purchaseOrderLineType}</span>
-            <Box position="relative" w={6} h={6}>
+            <Box position="relative" w={6} h={5}>
               <IconButton
                 aria-label="Edit purchase order line type"
                 as={Link}
@@ -172,6 +172,7 @@ const PurchaseOrderLines = ({
           <Grid<PurchaseOrderLine>
             data={purchaseOrderLines}
             columns={columns}
+            canEdit={canEdit}
             editableComponents={editableComponents}
             onNewRow={canEdit ? () => navigate("new") : undefined}
           />

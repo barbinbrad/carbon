@@ -2603,6 +2603,27 @@ export interface Database {
           abilityIds: string[] | null;
         };
       };
+      parts_view: {
+        Row: {
+          id: string | null;
+          name: string | null;
+          description: string | null;
+          partType: Database["public"]["Enums"]["partType"] | null;
+          partGroupId: string | null;
+          partGroup: string | null;
+          replenishmentSystem:
+            | Database["public"]["Enums"]["partReplenishmentSystem"]
+            | null;
+          active: boolean | null;
+          supplierIds: string[] | null;
+        };
+      };
+      purchase_order_suppliers_view: {
+        Row: {
+          id: string | null;
+          name: string | null;
+        };
+      };
       purchase_order_view: {
         Row: {
           id: string | null;
@@ -2635,6 +2656,18 @@ export interface Database {
           closedByAvatar: string | null;
           closedByFullName: string | null;
           favorite: boolean | null;
+        };
+      };
+      suppliers_view: {
+        Row: {
+          id: string | null;
+          name: string | null;
+          supplierTypeId: string | null;
+          type: string | null;
+          supplierStatusId: string | null;
+          status: string | null;
+          orderCount: number | null;
+          partCount: number | null;
         };
       };
     };

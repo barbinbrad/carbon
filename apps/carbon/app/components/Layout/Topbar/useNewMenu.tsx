@@ -1,6 +1,8 @@
 import { useMemo } from "react";
 import { AiOutlinePartition } from "react-icons/ai";
 import { BsCartDash, BsShieldLock } from "react-icons/bs";
+import { IoMdPeople } from "react-icons/io";
+import { SiHandshake } from "react-icons/si";
 import { usePermissions } from "~/hooks";
 
 import type { Route } from "~/types";
@@ -26,6 +28,22 @@ export default function useNewMenu(): Route[] {
       });
     }
 
+    if (permissions.can("create", "purchasing")) {
+      links.push({
+        name: "New Supplier",
+        to: "/x/purchasing/suppliers/new",
+        icon: <SiHandshake />,
+      });
+    }
+
+    if (permissions.can("create", "sales")) {
+      links.push({
+        name: "New Customer",
+        to: "/x/sales/customers/new",
+        icon: <IoMdPeople />,
+      });
+    }
+
     if (permissions.can("create", "users")) {
       links.push({
         name: "New Employee",
@@ -33,13 +51,6 @@ export default function useNewMenu(): Route[] {
         icon: <BsShieldLock />,
       });
     }
-
-    // if (permissions.can("create", "sales")) {
-    //   links.push({
-    //     name: "New Customer",
-    //     to: "/x/sales/customers/new",
-    //   });
-    // }
 
     return links;
   }, [permissions]);

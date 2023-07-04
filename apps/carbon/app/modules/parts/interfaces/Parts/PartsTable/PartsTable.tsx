@@ -45,7 +45,7 @@ const PartsTable = memo(({ data, count }: PartsTableProps) => {
       },
       {
         // @ts-ignore
-        accessorFn: (item) => item.partGroup?.name ?? "",
+        accessorKey: "partGroup",
         header: "Part Group",
         cell: (item) => item.getValue(),
       },

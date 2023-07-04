@@ -131,16 +131,12 @@ export async function getParts(
     search: string | null;
     type: string | null;
     group: string | null;
+    supplierId: string | null;
   }
 ) {
-  let query = client
-    .from("part")
-    .select(
-      "id, name, description, partType, partGroup(name), replenishmentSystem",
-      {
-        count: "exact",
-      }
-    );
+  let query = client.from("parts_view").select("*", {
+    count: "exact",
+  });
 
   if (args.search) {
     query = query.or(
@@ -154,6 +150,10 @@ export async function getParts(
 
   if (args.group) {
     query = query.eq("partGroupId", args.group);
+  }
+
+  if (args.supplierId) {
+    query = query.contains("supplierIds", [args.supplierId]);
   }
 
   query = setGenericQueryFilters(query, args, "id");

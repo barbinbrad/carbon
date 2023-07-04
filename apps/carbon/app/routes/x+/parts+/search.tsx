@@ -25,12 +25,22 @@ export async function loader({ request }: LoaderArgs) {
   const search = searchParams.get("search");
   const type = searchParams.get("type");
   const group = searchParams.get("group");
+  const supplierId = searchParams.get("supplierId");
 
   const { limit, offset, sorts, filters } =
     getGenericQueryFilters(searchParams);
 
   const [parts, partTypes, partGroups] = await Promise.all([
-    getParts(client, { search, type, group, limit, offset, sorts, filters }),
+    getParts(client, {
+      search,
+      type,
+      group,
+      supplierId,
+      limit,
+      offset,
+      sorts,
+      filters,
+    }),
     getPartTypes(),
     getPartGroupsList(client),
   ]);

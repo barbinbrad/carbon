@@ -17,11 +17,24 @@ const purchaseOrderStatusOptions = [
   value: type,
 }));
 
-const PurchaseOrdersTableFilters = () => {
+type PurchaseOrdersTableFiltersProps = {
+  suppliers: { id: string | null; name: string | null }[];
+};
+
+const PurchaseOrdersTableFilters = ({
+  suppliers,
+}: PurchaseOrdersTableFiltersProps) => {
   const [params, setParams] = useUrlParams();
   const permissions = usePermissions();
 
   const borderColor = useColor("gray.200");
+
+  const supplierOptions = suppliers
+    .filter((supplier) => supplier.id && supplier.name)
+    .map((supplier) => ({
+      label: supplier.name,
+      value: supplier.id,
+    }));
 
   return (
     <HStack
@@ -54,6 +67,21 @@ const PurchaseOrdersTableFilters = () => {
           aria-label="Status"
           minW={180}
           placeholder="Status"
+        />
+        <Select
+          // @ts-ignore
+          size="sm"
+          value={supplierOptions.filter(
+            (supplier) => supplier.value === params.get("supplierId")
+          )}
+          isClearable
+          options={supplierOptions}
+          onChange={(selected) => {
+            setParams({ supplierId: selected?.value });
+          }}
+          aria-label="Supplier"
+          minW={180}
+          placeholder="Supplier"
         />
       </HStack>
       <HStack spacing={2}>

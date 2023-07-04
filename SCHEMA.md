@@ -4528,6 +4528,13 @@ ALTER TABLE "supplier"
   ADD CONSTRAINT "supplier_defaultShippingMethodId_fkey" FOREIGN KEY ("defaultShippingMethodId") REFERENCES "shippingMethod" ("id") ON DELETE SET NULL,
   ADD CONSTRAINT "supplier_defaultShippingTermId_fkey" FOREIGN KEY ("defaultShippingTermId") REFERENCES "shippingTerm" ("id") ON DELETE SET NULL;
 
+CREATE VIEW "purchase_order_suppliers_view" AS
+  SELECT DISTINCT
+    s."id",
+    s."name"
+  FROM "supplier" s
+  INNER JOIN "purchaseOrder" p ON p."supplierId" = s."id";
+  
 
 ```
 
@@ -4661,19 +4668,6 @@ FOR DELETE USING (
 
 
 
-## `view-rls`
-
-```sql
--- TODO: after Postgres 15, we can use security_invoker = on
--- ALTER VIEW "contractors_view" SET (security_invoker = on);
--- ALTER VIEW "partners_view" SET (security_invoker = on);
--- ALTER VIEW "documents_labels_view" SET (security_invoker = on);
--- ALTER VIEW "documents_view" SET (security_invoker = on);
--- ALTER VIEW "purchase_order_view" SET (security_invoker = on);
-```
-
-
-
 ## `purchasing-rls`
 
 ```sql
@@ -4683,7 +4677,7 @@ CREATE POLICY "Employees with purchasing_view can view purchase orders" ON "purc
   FOR SELECT
   USING (coalesce(get_my_claim('purchasing_view')::boolean, false) = true AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
 
-CREATE POLICY "Suppliers with purchasing_view can their own organization" ON "purchaseOrder"
+CREATE POLICY "Suppliers with purchasing_view can their own purchase orders" ON "purchaseOrder"
   FOR SELECT
   USING (
     coalesce(get_my_claim('purchasing_view')::boolean, false) = true 
@@ -4761,5 +4755,233 @@ CREATE POLICY "Suppliers with purchasing_view can search for their own purchase 
         )
       )
   );
+
+-- Purchase Order Lines
+
+ALTER TABLE "purchaseOrderLine" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Employees with purchasing_view can view purchase order lines" ON "purchaseOrderLine"
+  FOR SELECT
+  USING (coalesce(get_my_claim('purchasing_view')::boolean, false) = true AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+CREATE POLICY "Suppliers with purchasing_view can their own purchase order lines" ON "purchaseOrderLine"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('purchasing_view')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"supplier"'::jsonb 
+    AND "purchaseOrderId" IN (
+      SELECT id FROM "purchaseOrder" WHERE "supplierId" IN (
+        SELECT "supplierId" FROM "purchaseOrder" WHERE "supplierId" IN (
+          SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
+        )
+      )
+    )
+  );
+
+CREATE POLICY "Employees with purchasing_create can create purchase order lines" ON "purchaseOrderLine"
+  FOR INSERT
+  WITH CHECK (coalesce(get_my_claim('purchasing_create')::boolean,false) AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+CREATE POLICY "Suppliers with purchasing_create can create lines on their own purchase order" ON "purchaseOrderLine"
+  FOR INSERT
+  WITH CHECK (
+    coalesce(get_my_claim('purchasing_create')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"supplier"'::jsonb 
+    AND "purchaseOrderId" IN (
+      SELECT id FROM "purchaseOrder" WHERE "supplierId" IN (
+        SELECT "supplierId" FROM "purchaseOrder" WHERE "supplierId" IN (
+          SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
+        )
+      )
+    )
+  );
+
+CREATE POLICY "Employees with purchasing_update can update purchase order lines" ON "purchaseOrderLine"
+  FOR UPDATE
+  USING (coalesce(get_my_claim('purchasing_update')::boolean,false) AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+CREATE POLICY "Suppliers with purchasing_update can their own purchase order lines" ON "purchaseOrderLine"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('purchasing_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"supplier"'::jsonb 
+    AND "purchaseOrderId" IN (
+      SELECT id FROM "purchaseOrder" WHERE "supplierId" IN (
+        SELECT "supplierId" FROM "purchaseOrder" WHERE "supplierId" IN (
+          SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
+        )
+      )
+    )
+  );
+
+CREATE POLICY "Employees with purchasing_delete can delete purchase order lines" ON "purchaseOrderLine"
+  FOR DELETE
+  USING (coalesce(get_my_claim('purchasing_delete')::boolean, false) = true AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+CREATE POLICY "Suppliers with purchasing_delete can delete lines on their own purchase order" ON "purchaseOrderLine"
+  FOR DELETE
+  USING (
+    coalesce(get_my_claim('purchasing_delete')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"supplier"'::jsonb 
+    AND "purchaseOrderId" IN (
+      SELECT id FROM "purchaseOrder" WHERE "supplierId" IN (
+        SELECT "supplierId" FROM "purchaseOrder" WHERE "supplierId" IN (
+          SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
+        )
+      )
+    )
+  );
+
+
+-- Purchase Order Deliveries
+
+ALTER TABLE "purchaseOrderDelivery" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Employees with purchasing_view can view purchase order deliveries" ON "purchaseOrderDelivery"
+  FOR SELECT
+  USING (coalesce(get_my_claim('purchasing_view')::boolean, false) = true AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+CREATE POLICY "Suppliers with purchasing_view can their own purchase order deliveries" ON "purchaseOrderDelivery"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('purchasing_view')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"supplier"'::jsonb 
+    AND id IN (
+      SELECT id FROM "purchaseOrder" WHERE "supplierId" IN (
+        SELECT "supplierId" FROM "purchaseOrder" WHERE "supplierId" IN (
+          SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
+        )
+      )
+    )
+  );
+
+CREATE POLICY "Employees with purchasing_create can create purchase order deliveries" ON "purchaseOrderDelivery"
+  FOR INSERT
+  WITH CHECK (coalesce(get_my_claim('purchasing_create')::boolean,false) AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+CREATE POLICY "Employees with purchasing_update can update purchase order deliveries" ON "purchaseOrderDelivery"
+  FOR UPDATE
+  USING (coalesce(get_my_claim('purchasing_update')::boolean,false) AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+CREATE POLICY "Suppliers with purchasing_update can their own purchase order deliveries" ON "purchaseOrderDelivery"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('purchasing_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"supplier"'::jsonb 
+    AND id IN (
+      SELECT id FROM "purchaseOrder" WHERE "supplierId" IN (
+        SELECT "supplierId" FROM "purchaseOrder" WHERE "supplierId" IN (
+          SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
+        )
+      )
+    )
+  );
+
+CREATE POLICY "Employees with purchasing_delete can delete purchase order deliveries" ON "purchaseOrderDelivery"
+  FOR DELETE
+  USING (coalesce(get_my_claim('purchasing_delete')::boolean, false) = true AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+
+-- Purchase Order Payments
+
+ALTER TABLE "purchaseOrderPayment" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Employees with purchasing_view can view purchase order payments" ON "purchaseOrderPayment"
+  FOR SELECT
+  USING (coalesce(get_my_claim('purchasing_view')::boolean, false) = true AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+CREATE POLICY "Employees with purchasing_create can create purchase order payments" ON "purchaseOrderPayment"
+  FOR INSERT
+  WITH CHECK (coalesce(get_my_claim('purchasing_create')::boolean,false) AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+CREATE POLICY "Employees with purchasing_update can update purchase order payments" ON "purchaseOrderPayment"
+  FOR UPDATE
+  USING (coalesce(get_my_claim('purchasing_update')::boolean,false) AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+CREATE POLICY "Employees with purchasing_delete can delete purchase order payments" ON "purchaseOrderPayment"
+  FOR DELETE
+  USING (coalesce(get_my_claim('purchasing_delete')::boolean, false) = true AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+
+```
+
+
+
+## `supplier-view`
+
+```sql
+CREATE VIEW "suppliers_view" AS 
+  SELECT 
+    s.id,
+    s.name,
+    s."supplierTypeId",
+    st.name AS "type",
+    s."supplierStatusId",
+    ss.name AS "status",
+    po.count AS "orderCount",
+    p.count AS "partCount"
+  FROM "supplier" s
+  LEFT JOIN "supplierType" st ON st.id = s."supplierTypeId"
+  LEFT JOIN "supplierStatus" ss ON ss.id = s."supplierStatusId"
+  LEFT JOIN (
+    SELECT 
+      "supplierId",
+      COUNT(*) AS "count"
+    FROM "purchaseOrder"
+    GROUP BY "supplierId"
+  ) po ON po."supplierId" = s.id
+  LEFT JOIN (
+    SELECT 
+      "supplierId",
+      COUNT(*) AS "count"
+    FROM "partSupplier"
+    GROUP BY "supplierId"
+  ) p ON p."supplierId" = s.id;
+```
+
+
+
+## `parts-view`
+
+```sql
+CREATE VIEW "parts_view" AS 
+  SELECT
+    p.id,
+    p.name,
+    p.description,
+    p."partType",
+    p."partGroupId",
+    pg.name AS "partGroup",
+    p."replenishmentSystem",
+    p.active,
+    array_agg(ps."supplierId") AS "supplierIds"
+  FROM "part" p
+  LEFT JOIN "partGroup" pg ON pg.id = p."partGroupId"
+  LEFT JOIN "partSupplier" ps ON ps."partId" = p.id
+  GROUP BY p.id,
+    p.name,
+    p.description,
+    p."partType",
+    p."partGroupId",
+    pg.name,
+    p."replenishmentSystem",
+    p.active;
+  
+
+```
+
+
+
+## `view-rls`
+
+```sql
+-- TODO: after Postgres 15, we can use security_invoker = on
+-- ALTER VIEW "contractors_view" SET (security_invoker = on);
+-- ALTER VIEW "partners_view" SET (security_invoker = on);
+-- ALTER VIEW "documents_labels_view" SET (security_invoker = on);
+-- ALTER VIEW "documents_view" SET (security_invoker = on);
+-- ALTER VIEW "purchase_order_view" SET (security_invoker = on);
+-- ALTER VIEW "purchase_order_suppliers_view" SET (security_invoker = on);
+-- ALTER VIEW "suppliers_view" SET (security_invoker = on);
+-- ALTER VIEW "parts_view" SET (security_invoker = on);
 ```
 

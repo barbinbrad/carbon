@@ -7,6 +7,7 @@ import {
   PurchaseOrdersTable,
   PurchaseOrdersTableFilters,
   getPurchaseOrders,
+  getPurchaseOrderSuppliers,
 } from "~/modules/purchasing";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
@@ -27,7 +28,7 @@ export async function loader({ request }: LoaderArgs) {
   const { limit, offset, sorts, filters } =
     getGenericQueryFilters(searchParams);
 
-  const [purchasOrders] = await Promise.all([
+  const [purchasOrders, suppliers] = await Promise.all([
     getPurchaseOrders(client, {
       search,
       status,
@@ -37,6 +38,7 @@ export async function loader({ request }: LoaderArgs) {
       sorts,
       filters,
     }),
+    getPurchaseOrderSuppliers(client),
   ]);
 
   if (purchasOrders.error) {
@@ -52,15 +54,16 @@ export async function loader({ request }: LoaderArgs) {
   return json({
     count: purchasOrders.count ?? 0,
     purchasOrders: purchasOrders.data ?? [],
+    suppliers: suppliers.data ?? [],
   });
 }
 
 export default function PurchaseOrdersSearchRoute() {
-  const { count, purchasOrders } = useLoaderData<typeof loader>();
+  const { count, purchasOrders, suppliers } = useLoaderData<typeof loader>();
 
   return (
     <VStack w="full" h="full" spacing={0}>
-      <PurchaseOrdersTableFilters />
+      <PurchaseOrdersTableFilters suppliers={suppliers} />
       <PurchaseOrdersTable data={purchasOrders} count={count} />
       <Outlet />
     </VStack>

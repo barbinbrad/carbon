@@ -24,11 +24,22 @@ export async function action({ request }: ActionArgs) {
     return validationError(validation.error);
   }
 
+  const url = new URL(request.url);
+  const searchParams = new URLSearchParams(url.search);
+  const supplierRedirect = searchParams.get("supplier");
+
   const { id, supplier } = validation.data;
   const result = await createSupplierAccount(client, {
     id,
     supplierId: supplier,
   });
+
+  if (supplierRedirect) {
+    return redirect(
+      `/x/purchasing/suppliers/${supplierRedirect}`,
+      await flash(request, result)
+    );
+  }
 
   return redirect("/x/users/suppliers", await flash(request, result));
 }

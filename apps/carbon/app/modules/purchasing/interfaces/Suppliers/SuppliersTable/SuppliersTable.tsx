@@ -24,32 +24,33 @@ const SuppliersTable = memo(({ data, count }: SuppliersTableProps) => {
         cell: (item) => item.getValue(),
       },
       {
-        // @ts-ignore
-        accessorFn: (item) => item.supplierType?.name ?? "",
+        accessorKey: "type",
         header: "Supplier Type",
         cell: (item) => item.getValue(),
       },
       {
-        // @ts-ignore
-        accessorFn: (item) => item.supplierStatus?.name ?? "",
+        accessorKey: "status",
         header: "Supplier Status",
         cell: (item) => item.getValue(),
       },
       {
         id: "orders",
         header: "Orders",
-        cell: () => (
-          <ButtonGroup
-            size="sm"
-            isAttached
-            variant="outline"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Button onClick={() => console.log("orders")}>0 Orders</Button>
+        cell: ({ row }) => (
+          <ButtonGroup size="sm" isAttached variant="outline">
+            <Button
+              onClick={() =>
+                navigate(`/x/purchasing/orders?supplierId=${row.original.id}`)
+              }
+            >
+              {row.original.orderCount ?? 0} Orders
+            </Button>
             <IconButton
               aria-label="New Order"
               icon={<BsPlus />}
-              onClick={() => console.log("new order")}
+              onClick={() =>
+                navigate(`/x/purchase-order/new?supplierId=${row.original.id}`)
+              }
             />
           </ButtonGroup>
         ),
@@ -57,18 +58,21 @@ const SuppliersTable = memo(({ data, count }: SuppliersTableProps) => {
       {
         id: "parts",
         header: "Parts",
-        cell: () => (
-          <ButtonGroup
-            size="sm"
-            isAttached
-            variant="outline"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Button onClick={() => console.log("orders")}>0 Parts</Button>
+        cell: ({ row }) => (
+          <ButtonGroup size="sm" isAttached variant="outline">
+            <Button
+              onClick={() =>
+                navigate(`/x/parts/search?supplierId=${row.original.id}`)
+              }
+            >
+              {row.original.partCount ?? 0} Parts
+            </Button>
             <IconButton
               aria-label="New Part"
               icon={<BsPlus />}
-              onClick={() => console.log("new part")}
+              onClick={() =>
+                navigate(`/x/part/new?supplierId=${row.original.id}`)
+              }
             />
           </ButtonGroup>
         ),
@@ -87,7 +91,7 @@ const SuppliersTable = memo(({ data, count }: SuppliersTableProps) => {
             navigate(`/x/purchasing/suppliers/${row.id}?${params.toString()}`)
           }
         >
-          Edit Supplier
+          View Supplier
         </MenuItem>
       ),
     [navigate, params]

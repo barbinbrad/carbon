@@ -352,3 +352,10 @@ ALTER TABLE "supplier"
   ADD CONSTRAINT "supplier_defaultShippingMethodId_fkey" FOREIGN KEY ("defaultShippingMethodId") REFERENCES "shippingMethod" ("id") ON DELETE SET NULL,
   ADD CONSTRAINT "supplier_defaultShippingTermId_fkey" FOREIGN KEY ("defaultShippingTermId") REFERENCES "shippingTerm" ("id") ON DELETE SET NULL;
 
+CREATE VIEW "purchase_order_suppliers_view" AS
+  SELECT DISTINCT
+    s."id",
+    s."name"
+  FROM "supplier" s
+  INNER JOIN "purchaseOrder" p ON p."supplierId" = s."id";
+  

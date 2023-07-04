@@ -35,6 +35,10 @@ const PurchaseOrderLines = ({
   const columns = useMemo<ColumnDef<PurchaseOrderLine>[]>(() => {
     return [
       {
+        header: "Line",
+        cell: ({ row }) => row.index + 1,
+      },
+      {
         accessorKey: "purchaseOrderLineType",
         header: "Type",
         cell: ({ row }) => (
@@ -157,7 +161,7 @@ const PurchaseOrderLines = ({
 
   return (
     <>
-      <Card w="full">
+      <Card w="full" minH={320}>
         <CardHeader display="flex" justifyContent="space-between">
           <Heading size="md" display="inline-flex">
             Purchase Order Lines

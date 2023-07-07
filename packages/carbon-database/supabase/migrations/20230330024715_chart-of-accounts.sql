@@ -73,20 +73,29 @@ CREATE TYPE "glAccountCategory" AS ENUM (
   'Other Expense'
 );
 
-CREATE TYPE "glAccountType" AS ENUM (
+CREATE TYPE "glIncomeBalance" AS ENUM (
   'Balance Sheet',
   'Income Statement'
 );
 
 CREATE TYPE "glNormalBalance" AS ENUM (
   'Debit',
-  'Credit'
+  'Credit',
+  'Both'
+);
+
+CREATE TYPE "glAccountType" AS ENUM (
+  'Posting',
+  'Heading',
+  'Total',
+  'Begin Total',
+  'End Total'
 );
 
 CREATE TABLE "accountCategory" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "category" "glAccountCategory" NOT NULL,
-  "type" "glAccountType" NOT NULL,
+  "incomeBalance" "glIncomeBalance" NOT NULL,
   "normalBalance" "glNormalBalance" NOT NULL,
   "createdBy" TEXT NOT NULL,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
@@ -94,12 +103,12 @@ CREATE TABLE "accountCategory" (
   "updatedAt" TIMESTAMP WITH TIME ZONE,
 
   CONSTRAINT "accountCategory_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "accountCategory_category_type_key" UNIQUE ("category"),
+  CONSTRAINT "accountCategory_unique_category" UNIQUE ("category"),
   CONSTRAINT "accountCategory_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "accountCategory_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
 
-INSERT INTO "accountCategory" ("category", "type", "normalBalance", "createdBy")
+INSERT INTO "accountCategory" ("category", "incomeBalance", "normalBalance", "createdBy")
 VALUES 
   ('Bank', 'Balance Sheet', 'Credit', 'system'),
   ('Accounts Receivable', 'Balance Sheet', 'Credit', 'system'),
@@ -157,16 +166,37 @@ CREATE TYPE "consolidatedRate" AS ENUM (
   'Historical'
 );
 
+CREATE TABLE "accountSubcategory" (
+  "id" TEXT NOT NULL DEFAULT xid(),
+  "name" TEXT NOT NULL,
+  "accountCategoryId" TEXT NOT NULL,
+  "active" BOOLEAN NOT NULL DEFAULT true,
+  "createdBy" TEXT NOT NULL,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+  "updatedBy" TEXT,
+  "updatedAt" TIMESTAMP WITH TIME ZONE,
+
+  CONSTRAINT "accountSubcategory_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "accountSubcategory_name_key" UNIQUE ("name"),
+  CONSTRAINT "accountSubcategory_accountCategoryId_fkey" FOREIGN KEY ("accountCategoryId") REFERENCES "accountCategory"("id"),
+  CONSTRAINT "accountSubcategory_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
+  CONSTRAINT "accountSubcategory_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
+);
+
+CREATE INDEX "accountSubcategory_accountCategoryId_idx" ON "accountSubcategory" ("accountCategoryId");
+
+
 CREATE TABLE "account" (
   "number" TEXT NOT NULL,
   "name" TEXT NOT NULL,
   "description" TEXT,
-  "accountCategoryId" TEXT,
-  "controlAccount" BOOLEAN NOT NULL DEFAULT false,
-  "cashAccount" BOOLEAN NOT NULL DEFAULT false,
+  "type" "glAccountType" NOT NULL,
+  "accountCategoryId" TEXT NOT NULL,
+  "accountSubcategoryId" TEXT,
+  "incomeBalance" "glIncomeBalance" NOT NULL,
+  "normalBalance" "glNormalBalance" NOT NULL,
   "consolidatedRate" "consolidatedRate",
   "currencyCode" TEXT,
-  "parentAccountNumber" TEXT,
   "active" BOOLEAN NOT NULL DEFAULT true,
   "createdBy" TEXT NOT NULL,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
@@ -177,13 +207,10 @@ CREATE TABLE "account" (
   CONSTRAINT "account_name_key" UNIQUE ("name"),
   CONSTRAINT "account_accountCategoryId_fkey" FOREIGN KEY ("accountCategoryId") REFERENCES "accountCategory"("id"),
   CONSTRAINT "account_currencyCode_fkey" FOREIGN KEY ("currencyCode") REFERENCES "currency"("code") ON DELETE SET NULL,
-  CONSTRAINT "account_parentAccountNumber_fkey" FOREIGN KEY ("parentAccountNumber") REFERENCES "account"("number"),
   CONSTRAINT "account_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "account_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
 
-INSERT INTO "account" ("number", "name", "consolidatedRate", "currencyCode", "createdBy")
-VALUES ('999999', 'Unassigned', 'Average', 'USD', 'system');
 
 ALTER TABLE "account" ENABLE ROW LEVEL SECURITY;
 

@@ -52,6 +52,16 @@ export default function useBreadcrumbs(): Route[] {
           name: "Documents",
           to: match.pathname,
         });
+      case "routes/x+/inventory+/_layout":
+        return acc.concat({
+          name: "Inventory",
+          to: match.pathname,
+        });
+      case "routes/x+/inventory+/shipping-methods":
+        return acc.concat({
+          name: "Shipping Methods",
+          to: match.pathname,
+        });
       case "routes/x+/parts+/index":
         return acc.concat({
           name: "Parts",

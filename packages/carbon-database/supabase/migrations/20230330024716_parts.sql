@@ -152,7 +152,7 @@ CREATE TABLE "part" (
   "description" TEXT,
   "blocked" BOOLEAN NOT NULL DEFAULT false,
   "replenishmentSystem" "partReplenishmentSystem" NOT NULL,
-  "partGroupId" TEXT NOT NULL,
+  "partGroupId" TEXT,
   "partType" "partType" NOT NULL,
   "manufacturerPartNumber" TEXT,
   "unitOfMeasureCode" TEXT NOT NULL,
@@ -586,9 +586,31 @@ CREATE POLICY "Suppliers with parts_update can update parts replenishments that 
     )
   );
 
+CREATE TABLE "warehouse" (
+  "id" TEXT NOT NULL DEFAULT xid(),
+  "name" TEXT NOT NULL,
+  "locationId" TEXT NOT NULL,
+  "requiresPick" BOOLEAN NOT NULL DEFAULT false,
+  "requiresPutAway" BOOLEAN NOT NULL DEFAULT false,
+  "requiresBin" BOOLEAN NOT NULL DEFAULT false,
+  "requiresReceive" BOOLEAN NOT NULL DEFAULT false,
+  "requiresShipment" BOOLEAN NOT NULL DEFAULT false,
+  "active" BOOLEAN NOT NULL DEFAULT true,
+  "createdBy" TEXT NOT NULL,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+  "updatedBy" TEXT,
+  "updatedAt" TIMESTAMP WITH TIME ZONE,
+
+  CONSTRAINT "warehouse_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "warehouse_name_key" UNIQUE ("name"),
+  CONSTRAINT "warehouse_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "location"("id"),
+  CONSTRAINT "warehouse_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
+  CONSTRAINT "warehouse_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
+);
+
 CREATE TABLE "shelf" (
   "id" TEXT NOT NULL,
-  "locationId" TEXT,
+  "warehouseId" TEXT,
   "active" BOOLEAN NOT NULL DEFAULT true,
   "createdBy" TEXT NOT NULL,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
@@ -596,12 +618,12 @@ CREATE TABLE "shelf" (
   "updatedAt" TIMESTAMP WITH TIME ZONE,
 
   CONSTRAINT "shelf_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "shelf_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "location"("id") ON DELETE CASCADE,
+  CONSTRAINT "shelf_warehouseId_fkey" FOREIGN KEY ("warehouseId") REFERENCES "warehouse"("id") ON DELETE CASCADE,
   CONSTRAINT "shelf_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "shelf_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
 
-CREATE INDEX "shelf_locationId_index" ON "shelf" ("locationId");
+CREATE INDEX "shelf_warehouseId_index" ON "shelf" ("warehouseId");
 
 ALTER TABLE "shelf" ENABLE ROW LEVEL SECURITY;
 

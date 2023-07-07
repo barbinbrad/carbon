@@ -3015,20 +3015,29 @@ CREATE TYPE "glAccountCategory" AS ENUM (
   'Other Expense'
 );
 
-CREATE TYPE "glAccountType" AS ENUM (
+CREATE TYPE "glIncomeBalance" AS ENUM (
   'Balance Sheet',
   'Income Statement'
 );
 
 CREATE TYPE "glNormalBalance" AS ENUM (
   'Debit',
-  'Credit'
+  'Credit',
+  'Both'
+);
+
+CREATE TYPE "glAccountType" AS ENUM (
+  'Posting',
+  'Heading',
+  'Total',
+  'Begin Total',
+  'End Total'
 );
 
 CREATE TABLE "accountCategory" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "category" "glAccountCategory" NOT NULL,
-  "type" "glAccountType" NOT NULL,
+  "incomeBalance" "glIncomeBalance" NOT NULL,
   "normalBalance" "glNormalBalance" NOT NULL,
   "createdBy" TEXT NOT NULL,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
@@ -3036,12 +3045,12 @@ CREATE TABLE "accountCategory" (
   "updatedAt" TIMESTAMP WITH TIME ZONE,
 
   CONSTRAINT "accountCategory_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "accountCategory_category_type_key" UNIQUE ("category"),
+  CONSTRAINT "accountCategory_unique_category" UNIQUE ("category"),
   CONSTRAINT "accountCategory_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "accountCategory_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
 
-INSERT INTO "accountCategory" ("category", "type", "normalBalance", "createdBy")
+INSERT INTO "accountCategory" ("category", "incomeBalance", "normalBalance", "createdBy")
 VALUES 
   ('Bank', 'Balance Sheet', 'Credit', 'system'),
   ('Accounts Receivable', 'Balance Sheet', 'Credit', 'system'),
@@ -3099,16 +3108,37 @@ CREATE TYPE "consolidatedRate" AS ENUM (
   'Historical'
 );
 
+CREATE TABLE "accountSubcategory" (
+  "id" TEXT NOT NULL DEFAULT xid(),
+  "name" TEXT NOT NULL,
+  "accountCategoryId" TEXT NOT NULL,
+  "active" BOOLEAN NOT NULL DEFAULT true,
+  "createdBy" TEXT NOT NULL,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+  "updatedBy" TEXT,
+  "updatedAt" TIMESTAMP WITH TIME ZONE,
+
+  CONSTRAINT "accountSubcategory_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "accountSubcategory_name_key" UNIQUE ("name"),
+  CONSTRAINT "accountSubcategory_accountCategoryId_fkey" FOREIGN KEY ("accountCategoryId") REFERENCES "accountCategory"("id"),
+  CONSTRAINT "accountSubcategory_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
+  CONSTRAINT "accountSubcategory_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
+);
+
+CREATE INDEX "accountSubcategory_accountCategoryId_idx" ON "accountSubcategory" ("accountCategoryId");
+
+
 CREATE TABLE "account" (
   "number" TEXT NOT NULL,
   "name" TEXT NOT NULL,
   "description" TEXT,
-  "accountCategoryId" TEXT,
-  "controlAccount" BOOLEAN NOT NULL DEFAULT false,
-  "cashAccount" BOOLEAN NOT NULL DEFAULT false,
+  "type" "glAccountType" NOT NULL,
+  "accountCategoryId" TEXT NOT NULL,
+  "accountSubcategoryId" TEXT,
+  "incomeBalance" "glIncomeBalance" NOT NULL,
+  "normalBalance" "glNormalBalance" NOT NULL,
   "consolidatedRate" "consolidatedRate",
   "currencyCode" TEXT,
-  "parentAccountNumber" TEXT,
   "active" BOOLEAN NOT NULL DEFAULT true,
   "createdBy" TEXT NOT NULL,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
@@ -3119,13 +3149,10 @@ CREATE TABLE "account" (
   CONSTRAINT "account_name_key" UNIQUE ("name"),
   CONSTRAINT "account_accountCategoryId_fkey" FOREIGN KEY ("accountCategoryId") REFERENCES "accountCategory"("id"),
   CONSTRAINT "account_currencyCode_fkey" FOREIGN KEY ("currencyCode") REFERENCES "currency"("code") ON DELETE SET NULL,
-  CONSTRAINT "account_parentAccountNumber_fkey" FOREIGN KEY ("parentAccountNumber") REFERENCES "account"("number"),
   CONSTRAINT "account_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "account_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
 
-INSERT INTO "account" ("number", "name", "consolidatedRate", "currencyCode", "createdBy")
-VALUES ('999999', 'Unassigned', 'Average', 'USD', 'system');
 
 ALTER TABLE "account" ENABLE ROW LEVEL SECURITY;
 
@@ -3324,7 +3351,7 @@ CREATE TABLE "part" (
   "description" TEXT,
   "blocked" BOOLEAN NOT NULL DEFAULT false,
   "replenishmentSystem" "partReplenishmentSystem" NOT NULL,
-  "partGroupId" TEXT NOT NULL,
+  "partGroupId" TEXT,
   "partType" "partType" NOT NULL,
   "manufacturerPartNumber" TEXT,
   "unitOfMeasureCode" TEXT NOT NULL,
@@ -3758,9 +3785,31 @@ CREATE POLICY "Suppliers with parts_update can update parts replenishments that 
     )
   );
 
+CREATE TABLE "warehouse" (
+  "id" TEXT NOT NULL DEFAULT xid(),
+  "name" TEXT NOT NULL,
+  "locationId" TEXT NOT NULL,
+  "requiresPick" BOOLEAN NOT NULL DEFAULT false,
+  "requiresPutAway" BOOLEAN NOT NULL DEFAULT false,
+  "requiresBin" BOOLEAN NOT NULL DEFAULT false,
+  "requiresReceive" BOOLEAN NOT NULL DEFAULT false,
+  "requiresShipment" BOOLEAN NOT NULL DEFAULT false,
+  "active" BOOLEAN NOT NULL DEFAULT true,
+  "createdBy" TEXT NOT NULL,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+  "updatedBy" TEXT,
+  "updatedAt" TIMESTAMP WITH TIME ZONE,
+
+  CONSTRAINT "warehouse_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "warehouse_name_key" UNIQUE ("name"),
+  CONSTRAINT "warehouse_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "location"("id"),
+  CONSTRAINT "warehouse_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
+  CONSTRAINT "warehouse_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
+);
+
 CREATE TABLE "shelf" (
   "id" TEXT NOT NULL,
-  "locationId" TEXT,
+  "warehouseId" TEXT,
   "active" BOOLEAN NOT NULL DEFAULT true,
   "createdBy" TEXT NOT NULL,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
@@ -3768,12 +3817,12 @@ CREATE TABLE "shelf" (
   "updatedAt" TIMESTAMP WITH TIME ZONE,
 
   CONSTRAINT "shelf_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "shelf_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "location"("id") ON DELETE CASCADE,
+  CONSTRAINT "shelf_warehouseId_fkey" FOREIGN KEY ("warehouseId") REFERENCES "warehouse"("id") ON DELETE CASCADE,
   CONSTRAINT "shelf_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "shelf_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
 
-CREATE INDEX "shelf_locationId_index" ON "shelf" ("locationId");
+CREATE INDEX "shelf_warehouseId_index" ON "shelf" ("warehouseId");
 
 ALTER TABLE "shelf" ENABLE ROW LEVEL SECURITY;
 
@@ -4983,5 +5032,209 @@ CREATE VIEW "parts_view" AS
 -- ALTER VIEW "purchase_order_suppliers_view" SET (security_invoker = on);
 -- ALTER VIEW "suppliers_view" SET (security_invoker = on);
 -- ALTER VIEW "parts_view" SET (security_invoker = on);
+```
+
+
+
+## `warehouses`
+
+```sql
+
+
+
+-- inbound warehouse request
+-- is created automatically when a source document is released
+-- is automatically deleted when the inventory put away gets everything handled
+-- has a type
+-- has a source document number
+
+
+-- warehouse item journal
+
+
+-- purchase receipt
+-- return receipt
+-- transfer receipt
+
+-- part ledger entry pur
+-- records the quantity change
+
+-- value entry
+-- records the value change
+-- has a posting date
+-- has an item ledger entry type (e.g. purchase, return, transfer, etc)
+-- has an entry type (e.g. direct cost, indirect cost, etc)
+-- has an adjustment checkbox
+-- has a document type (e.g. purchase receipt, purchase invoice, sales invoice, etc)
+-- has a document number
+-- has an entry number (serial)
+-- has a cost amount actual
+-- has a cost amount expected
+-- has an actual cost posted to gl
+-- has an expected cost posted to gl
+
+-- value entry - gl entry relation
+-- has a value entry
+-- has a gl entry
+
+-- gl entry
+
+
+-- warehouse entry
+-- has an entry type (positive or negative)
+-- has a part number
+-- has a shelf
+-- has a qty
+
+
+-- inventory put away
+-- has a warehouse
+-- has a source document (assembly order, purchase order, purchase return order, inbound transfer, outbound transfer, sales order return, etc)
+-- has a posting date
+
+
+-- inventory put away lines
+-- has a part number
+-- has a description
+-- has a shelf
+-- has an order quantity
+-- has a qty to handle
+-- has a qty handled
+-- has a calculated qty outstanding
+-- has a uom and due date
+
+
+
+```
+
+
+
+## `ledgers`
+
+```sql
+-- part ledger entry
+-- records the quantity change
+
+
+
+
+CREATE TYPE "accountDocumentEntryType" AS ENUM (
+  'Quote',
+  'Order',
+  'Invoice',
+  'Credit Memo',
+  'Blanket Order',
+  'Return Order'
+);
+
+CREATE TABLE "accountEntry" (
+  "id" TEXT NOT NULL DEFAULT xid(),
+  "entryNumber" SERIAL,
+  "postingDate" DATE NOT NULL,
+  "accountNumber" TEXT NOT NULL,
+  "description" TEXT,
+  "amount" NUMERIC(19, 4) NOT NULL,
+  "documentType" "accountDocumentEntryType", 
+  "documentNumber" TEXT,
+  "externalDocumentNumber" TEXT,
+
+  CONSTRAINT "accountEntry_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "accountEntry_accountNumber_fkey" FOREIGN KEY ("accountNumber") REFERENCES "account"("number")
+);
+
+CREATE TYPE "partEntryType" AS ENUM (
+  'Purchase',
+  'Sale',
+  'Positive Adjmt.',
+  'Negative Adjmt.',
+  'Transfer',
+  'Consumption',
+  'Output',
+  'Assembly Consumption',
+  'Assembly Output'
+);
+
+CREATE TYPE "costEntryType" AS ENUM (
+  'Direct Cost',
+  'Revaluation',
+  'Rounding',
+  'Indirect Cost',
+  'Variance',
+  'Total'
+);
+
+CREATE TYPE "partEntryDocumentType" AS ENUM (
+  'Sales Shipment',
+  'Sales Invoice',
+  'Sales Return Receipt',
+  'Sales Credit Memo',
+  'Purchase Receipt',
+  'Purchase Invoice',
+  'Purchase Return Shipment',
+  'Purchase Credit Memo',
+  'Transfer Shipment',
+  'Transfer Receipt',
+  'Service Shipment',
+  'Service Invoice',
+  'Service Credit Memo',
+  'Posted Assembly',
+  'Inventory Receipt',
+  'Inventory Shipment',
+  'Direct Transfer'
+);
+
+CREATE TABLE "valueEntry" (
+  "id" TEXT NOT NULL DEFAULT xid(),
+  "entryNumber" SERIAL,
+  "postingDate" DATE NOT NULL,
+  "partEntryType" "partEntryType" NOT NULL,
+  "costEntryType" "costEntryType" NOT NULL,
+  "adjustment" BOOLEAN NOT NULL DEFAULT false,
+  "documentType" "partEntryDocumentType",
+  "documentNumber" TEXT,
+  "costAmountActual" NUMERIC(19, 4) NOT NULL DEFAULT 0,
+  "costAmountExpected" NUMERIC(19, 4) NOT NULL DEFAULT 0,
+  "actualCostPostedToGl" NUMERIC(19, 4) NOT NULL DEFAULT 0,
+  "expectedCostPostedToGl" NUMERIC(19, 4) NOT NULL DEFAULT 0,
+
+  CONSTRAINT "valueEntry_pkey" PRIMARY KEY ("id")
+);
+
+CREATE TABLE "valueEntryAccountEntryRelation" (
+  "valueEntryId" TEXT NOT NULL,
+  "accountEntryId" TEXT NOT NULL,
+
+  CONSTRAINT "valueEntryAccountEntryRelation_pkey" PRIMARY KEY ("valueEntryId", "accountEntryId"),
+  CONSTRAINT "valueEntryAccountEntryRelation_valueEntryId_fkey" FOREIGN KEY ("valueEntryId") REFERENCES "valueEntry"("id"),
+  CONSTRAINT "valueEntryAccountEntryRelation_accountEntryId_fkey" FOREIGN KEY ("accountEntryId") REFERENCES "accountEntry"("id")
+);
+
+CREATE TABLE "partEntry" (
+  "id" TEXT NOT NULL DEFAULT xid(),
+  "entryNumber" SERIAL,
+  "postingDate" DATE NOT NULL,
+  "entryType" "partEntryType" NOT NULL,
+  "documentType" "partEntryDocumentType",
+  "documentNumber" TEXT,
+  "partId" TEXT NOT NULL,
+  "warehouseId" TEXT,
+  "shelfId" TEXT,
+  "quantity" NUMERIC(12, 4) NOT NULL,
+  "invoicedQuantity" NUMERIC(12, 4) NOT NULL,
+  "remainingQuantity" NUMERIC(12, 4) NOT NULL,
+  "salesAmount" NUMERIC(12, 4) NOT NULL,
+  "costAmount" NUMERIC(12, 4) NOT NULL,
+  "open" BOOLEAN NOT NULL DEFAULT true,
+
+  CONSTRAINT "partEntry_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "partEntry_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part"("id"),
+  CONSTRAINT "partEntry_warehouseId_fkey" FOREIGN KEY ("warehouseId") REFERENCES "warehouse"("id"),
+  CONSTRAINT "partEntry_shelfId_fkey" FOREIGN KEY ("shelfId") REFERENCES "shelf"("id")
+
+);
+
+
+
+
 ```
 

@@ -49,17 +49,18 @@ export interface Database {
           number: string;
           name: string;
           description: string | null;
-          accountCategoryId: string | null;
+          type: Database["public"]["Enums"]["glAccountType"];
+          accountCategoryId: string;
+          accountSubcategoryId: string | null;
+          incomeBalance: Database["public"]["Enums"]["glIncomeBalance"];
+          normalBalance: Database["public"]["Enums"]["glNormalBalance"];
           consolidatedRate:
             | Database["public"]["Enums"]["consolidatedRate"]
             | null;
           currencyCode: string | null;
-          parentAccountNumber: string | null;
           createdBy: string;
           updatedBy: string | null;
           updatedAt: string | null;
-          controlAccount: boolean;
-          cashAccount: boolean;
           active: boolean;
           createdAt: string;
         };
@@ -67,17 +68,18 @@ export interface Database {
           number: string;
           name: string;
           description?: string | null;
-          accountCategoryId?: string | null;
+          type: Database["public"]["Enums"]["glAccountType"];
+          accountCategoryId: string;
+          accountSubcategoryId?: string | null;
+          incomeBalance: Database["public"]["Enums"]["glIncomeBalance"];
+          normalBalance: Database["public"]["Enums"]["glNormalBalance"];
           consolidatedRate?:
             | Database["public"]["Enums"]["consolidatedRate"]
             | null;
           currencyCode?: string | null;
-          parentAccountNumber?: string | null;
           createdBy: string;
           updatedBy?: string | null;
           updatedAt?: string | null;
-          controlAccount?: boolean;
-          cashAccount?: boolean;
           active?: boolean;
           createdAt?: string;
         };
@@ -85,17 +87,18 @@ export interface Database {
           number?: string;
           name?: string;
           description?: string | null;
-          accountCategoryId?: string | null;
+          type?: Database["public"]["Enums"]["glAccountType"];
+          accountCategoryId?: string;
+          accountSubcategoryId?: string | null;
+          incomeBalance?: Database["public"]["Enums"]["glIncomeBalance"];
+          normalBalance?: Database["public"]["Enums"]["glNormalBalance"];
           consolidatedRate?:
             | Database["public"]["Enums"]["consolidatedRate"]
             | null;
           currencyCode?: string | null;
-          parentAccountNumber?: string | null;
           createdBy?: string;
           updatedBy?: string | null;
           updatedAt?: string | null;
-          controlAccount?: boolean;
-          cashAccount?: boolean;
           active?: boolean;
           createdAt?: string;
         };
@@ -103,7 +106,7 @@ export interface Database {
       accountCategory: {
         Row: {
           category: Database["public"]["Enums"]["glAccountCategory"];
-          type: Database["public"]["Enums"]["glAccountType"];
+          incomeBalance: Database["public"]["Enums"]["glIncomeBalance"];
           normalBalance: Database["public"]["Enums"]["glNormalBalance"];
           createdBy: string;
           updatedBy: string | null;
@@ -113,7 +116,7 @@ export interface Database {
         };
         Insert: {
           category: Database["public"]["Enums"]["glAccountCategory"];
-          type: Database["public"]["Enums"]["glAccountType"];
+          incomeBalance: Database["public"]["Enums"]["glIncomeBalance"];
           normalBalance: Database["public"]["Enums"]["glNormalBalance"];
           createdBy: string;
           updatedBy?: string | null;
@@ -123,12 +126,85 @@ export interface Database {
         };
         Update: {
           category?: Database["public"]["Enums"]["glAccountCategory"];
-          type?: Database["public"]["Enums"]["glAccountType"];
+          incomeBalance?: Database["public"]["Enums"]["glIncomeBalance"];
           normalBalance?: Database["public"]["Enums"]["glNormalBalance"];
           createdBy?: string;
           updatedBy?: string | null;
           updatedAt?: string | null;
           id?: string;
+          createdAt?: string;
+        };
+      };
+      accountEntry: {
+        Row: {
+          postingDate: string;
+          accountNumber: string;
+          description: string | null;
+          amount: number;
+          documentType:
+            | Database["public"]["Enums"]["accountDocumentEntryType"]
+            | null;
+          documentNumber: string | null;
+          externalDocumentNumber: string | null;
+          id: string;
+          entryNumber: number;
+        };
+        Insert: {
+          postingDate: string;
+          accountNumber: string;
+          description?: string | null;
+          amount: number;
+          documentType?:
+            | Database["public"]["Enums"]["accountDocumentEntryType"]
+            | null;
+          documentNumber?: string | null;
+          externalDocumentNumber?: string | null;
+          id?: string;
+          entryNumber?: number;
+        };
+        Update: {
+          postingDate?: string;
+          accountNumber?: string;
+          description?: string | null;
+          amount?: number;
+          documentType?:
+            | Database["public"]["Enums"]["accountDocumentEntryType"]
+            | null;
+          documentNumber?: string | null;
+          externalDocumentNumber?: string | null;
+          id?: string;
+          entryNumber?: number;
+        };
+      };
+      accountSubcategory: {
+        Row: {
+          name: string;
+          accountCategoryId: string;
+          createdBy: string;
+          updatedBy: string | null;
+          updatedAt: string | null;
+          id: string;
+          active: boolean;
+          createdAt: string;
+        };
+        Insert: {
+          name: string;
+          accountCategoryId: string;
+          createdBy: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          id?: string;
+          active?: boolean;
+          createdAt?: string;
+        };
+        Update: {
+          name?: string;
+          accountCategoryId?: string;
+          createdBy?: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          id?: string;
+          active?: boolean;
           createdAt?: string;
         };
       };
@@ -1095,7 +1171,7 @@ export interface Database {
           name: string;
           description: string | null;
           replenishmentSystem: Database["public"]["Enums"]["partReplenishmentSystem"];
-          partGroupId: string;
+          partGroupId: string | null;
           partType: Database["public"]["Enums"]["partType"];
           manufacturerPartNumber: string | null;
           unitOfMeasureCode: string;
@@ -1115,7 +1191,7 @@ export interface Database {
           name: string;
           description?: string | null;
           replenishmentSystem: Database["public"]["Enums"]["partReplenishmentSystem"];
-          partGroupId: string;
+          partGroupId?: string | null;
           partType: Database["public"]["Enums"]["partType"];
           manufacturerPartNumber?: string | null;
           unitOfMeasureCode: string;
@@ -1135,7 +1211,7 @@ export interface Database {
           name?: string;
           description?: string | null;
           replenishmentSystem?: Database["public"]["Enums"]["partReplenishmentSystem"];
-          partGroupId?: string;
+          partGroupId?: string | null;
           partType?: Database["public"]["Enums"]["partType"];
           manufacturerPartNumber?: string | null;
           unitOfMeasureCode?: string;
@@ -1195,12 +1271,72 @@ export interface Database {
           createdAt?: string;
         };
       };
+      partEntry: {
+        Row: {
+          postingDate: string;
+          entryType: Database["public"]["Enums"]["partEntryType"];
+          documentType:
+            | Database["public"]["Enums"]["partEntryDocumentType"]
+            | null;
+          documentNumber: string | null;
+          partId: string;
+          warehouseId: string | null;
+          shelfId: string | null;
+          quantity: number;
+          invoicedQuantity: number;
+          remainingQuantity: number;
+          salesAmount: number;
+          costAmount: number;
+          id: string;
+          entryNumber: number;
+          open: boolean;
+        };
+        Insert: {
+          postingDate: string;
+          entryType: Database["public"]["Enums"]["partEntryType"];
+          documentType?:
+            | Database["public"]["Enums"]["partEntryDocumentType"]
+            | null;
+          documentNumber?: string | null;
+          partId: string;
+          warehouseId?: string | null;
+          shelfId?: string | null;
+          quantity: number;
+          invoicedQuantity: number;
+          remainingQuantity: number;
+          salesAmount: number;
+          costAmount: number;
+          id?: string;
+          entryNumber?: number;
+          open?: boolean;
+        };
+        Update: {
+          postingDate?: string;
+          entryType?: Database["public"]["Enums"]["partEntryType"];
+          documentType?:
+            | Database["public"]["Enums"]["partEntryDocumentType"]
+            | null;
+          documentNumber?: string | null;
+          partId?: string;
+          warehouseId?: string | null;
+          shelfId?: string | null;
+          quantity?: number;
+          invoicedQuantity?: number;
+          remainingQuantity?: number;
+          salesAmount?: number;
+          costAmount?: number;
+          id?: string;
+          entryNumber?: number;
+          open?: boolean;
+        };
+      };
       partGroup: {
         Row: {
           name: string;
           description: string | null;
           salesAccountId: string | null;
           discountAccountId: string | null;
+          id: string;
           inventoryAccountId: string | null;
           costOfGoodsSoldLaborAccountId: string | null;
           costOfGoodsSoldMaterialAccountId: string | null;
@@ -1209,7 +1345,6 @@ export interface Database {
           createdBy: string;
           updatedBy: string | null;
           updatedAt: string | null;
-          id: string;
           active: boolean;
           createdAt: string;
         };
@@ -1218,6 +1353,7 @@ export interface Database {
           description?: string | null;
           salesAccountId?: string | null;
           discountAccountId?: string | null;
+          id?: string;
           inventoryAccountId?: string | null;
           costOfGoodsSoldLaborAccountId?: string | null;
           costOfGoodsSoldMaterialAccountId?: string | null;
@@ -1226,7 +1362,6 @@ export interface Database {
           createdBy: string;
           updatedBy?: string | null;
           updatedAt?: string | null;
-          id?: string;
           active?: boolean;
           createdAt?: string;
         };
@@ -1235,6 +1370,7 @@ export interface Database {
           description?: string | null;
           salesAccountId?: string | null;
           discountAccountId?: string | null;
+          id?: string;
           inventoryAccountId?: string | null;
           costOfGoodsSoldLaborAccountId?: string | null;
           costOfGoodsSoldMaterialAccountId?: string | null;
@@ -1243,7 +1379,6 @@ export interface Database {
           createdBy?: string;
           updatedBy?: string | null;
           updatedAt?: string | null;
-          id?: string;
           active?: boolean;
           createdAt?: string;
         };
@@ -1892,7 +2027,7 @@ export interface Database {
       shelf: {
         Row: {
           id: string;
-          locationId: string | null;
+          warehouseId: string | null;
           createdBy: string;
           updatedBy: string | null;
           updatedAt: string | null;
@@ -1901,7 +2036,7 @@ export interface Database {
         };
         Insert: {
           id: string;
-          locationId?: string | null;
+          warehouseId?: string | null;
           createdBy: string;
           updatedBy?: string | null;
           updatedAt?: string | null;
@@ -1910,7 +2045,7 @@ export interface Database {
         };
         Update: {
           id?: string;
-          locationId?: string | null;
+          warehouseId?: string | null;
           createdBy?: string;
           updatedBy?: string | null;
           updatedAt?: string | null;
@@ -2413,6 +2548,117 @@ export interface Database {
           createdAt?: string;
         };
       };
+      valueEntry: {
+        Row: {
+          postingDate: string;
+          partEntryType: Database["public"]["Enums"]["partEntryType"];
+          costEntryType: Database["public"]["Enums"]["costEntryType"];
+          documentType:
+            | Database["public"]["Enums"]["partEntryDocumentType"]
+            | null;
+          documentNumber: string | null;
+          id: string;
+          entryNumber: number;
+          adjustment: boolean;
+          costAmountActual: number;
+          costAmountExpected: number;
+          actualCostPostedToGl: number;
+          expectedCostPostedToGl: number;
+        };
+        Insert: {
+          postingDate: string;
+          partEntryType: Database["public"]["Enums"]["partEntryType"];
+          costEntryType: Database["public"]["Enums"]["costEntryType"];
+          documentType?:
+            | Database["public"]["Enums"]["partEntryDocumentType"]
+            | null;
+          documentNumber?: string | null;
+          id?: string;
+          entryNumber?: number;
+          adjustment?: boolean;
+          costAmountActual?: number;
+          costAmountExpected?: number;
+          actualCostPostedToGl?: number;
+          expectedCostPostedToGl?: number;
+        };
+        Update: {
+          postingDate?: string;
+          partEntryType?: Database["public"]["Enums"]["partEntryType"];
+          costEntryType?: Database["public"]["Enums"]["costEntryType"];
+          documentType?:
+            | Database["public"]["Enums"]["partEntryDocumentType"]
+            | null;
+          documentNumber?: string | null;
+          id?: string;
+          entryNumber?: number;
+          adjustment?: boolean;
+          costAmountActual?: number;
+          costAmountExpected?: number;
+          actualCostPostedToGl?: number;
+          expectedCostPostedToGl?: number;
+        };
+      };
+      valueEntryAccountEntryRelation: {
+        Row: {
+          valueEntryId: string;
+          accountEntryId: string;
+        };
+        Insert: {
+          valueEntryId: string;
+          accountEntryId: string;
+        };
+        Update: {
+          valueEntryId?: string;
+          accountEntryId?: string;
+        };
+      };
+      warehouse: {
+        Row: {
+          name: string;
+          locationId: string;
+          createdBy: string;
+          updatedBy: string | null;
+          updatedAt: string | null;
+          id: string;
+          requiresPick: boolean;
+          requiresPutAway: boolean;
+          requiresBin: boolean;
+          requiresReceive: boolean;
+          requiresShipment: boolean;
+          active: boolean;
+          createdAt: string;
+        };
+        Insert: {
+          name: string;
+          locationId: string;
+          createdBy: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          id?: string;
+          requiresPick?: boolean;
+          requiresPutAway?: boolean;
+          requiresBin?: boolean;
+          requiresReceive?: boolean;
+          requiresShipment?: boolean;
+          active?: boolean;
+          createdAt?: string;
+        };
+        Update: {
+          name?: string;
+          locationId?: string;
+          createdBy?: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          id?: string;
+          requiresPick?: boolean;
+          requiresPutAway?: boolean;
+          requiresBin?: boolean;
+          requiresReceive?: boolean;
+          requiresShipment?: boolean;
+          active?: boolean;
+          createdAt?: string;
+        };
+      };
       workCell: {
         Row: {
           name: string;
@@ -2756,7 +3002,21 @@ export interface Database {
       };
     };
     Enums: {
+      accountDocumentEntryType:
+        | "Quote"
+        | "Order"
+        | "Invoice"
+        | "Credit Memo"
+        | "Blanket Order"
+        | "Return Order";
       consolidatedRate: "Average" | "Current" | "Historical";
+      costEntryType:
+        | "Direct Cost"
+        | "Revaluation"
+        | "Rounding"
+        | "Indirect Cost"
+        | "Variance"
+        | "Total";
       documentTransactionType:
         | "Download"
         | "Edit"
@@ -2795,9 +3055,43 @@ export interface Database {
         | "Expense"
         | "Other Income"
         | "Other Expense";
-      glAccountType: "Balance Sheet" | "Income Statement";
-      glNormalBalance: "Debit" | "Credit";
+      glAccountType:
+        | "Posting"
+        | "Heading"
+        | "Total"
+        | "Begin Total"
+        | "End Total";
+      glIncomeBalance: "Balance Sheet" | "Income Statement";
+      glNormalBalance: "Debit" | "Credit" | "Both";
       partCostingMethod: "Standard" | "Average" | "LIFO" | "FIFO";
+      partEntryDocumentType:
+        | "Sales Shipment"
+        | "Sales Invoice"
+        | "Sales Return Receipt"
+        | "Sales Credit Memo"
+        | "Purchase Receipt"
+        | "Purchase Invoice"
+        | "Purchase Return Shipment"
+        | "Purchase Credit Memo"
+        | "Transfer Shipment"
+        | "Transfer Receipt"
+        | "Service Shipment"
+        | "Service Invoice"
+        | "Service Credit Memo"
+        | "Posted Assembly"
+        | "Inventory Receipt"
+        | "Inventory Shipment"
+        | "Direct Transfer";
+      partEntryType:
+        | "Purchase"
+        | "Sale"
+        | "Positive Adjmt."
+        | "Negative Adjmt."
+        | "Transfer"
+        | "Consumption"
+        | "Output"
+        | "Assembly Consumption"
+        | "Assembly Output";
       partManufacturingPolicy: "Make to Order" | "Make to Stock";
       partReorderingPolicy:
         | "Manual Reorder"

@@ -324,9 +324,7 @@ export async function getSupplierTypes(
 
 export async function insertSupplier(
   client: SupabaseClient<Database>,
-  supplier: TypeOfValidator<typeof supplierValidator> & {
-    createdBy: string;
-  }
+  supplier: TypeOfValidator<typeof supplierValidator> & {}
 ) {
   return client.from("supplier").insert([supplier]).select("id");
 }

@@ -2945,9 +2945,7 @@ CREATE TABLE "currency" (
   "name" TEXT NOT NULL,
   "code" TEXT NOT NULL,
   "symbol" TEXT,
-  "symbolPlacementBefore" BOOLEAN NOT NULL DEFAULT true,
   "exchangeRate" NUMERIC(10,4) NOT NULL DEFAULT 1.0000,
-  "currencyPrecision" INTEGER NOT NULL DEFAULT 2,
   "isBaseCurrency" BOOLEAN NOT NULL DEFAULT false,
   "createdBy" TEXT NOT NULL,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
@@ -2960,8 +2958,8 @@ CREATE TABLE "currency" (
   CONSTRAINT "currency_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
 
-INSERT INTO "currency" ("name", "code", "symbol", "symbolPlacementBefore", "exchangeRate", "currencyPrecision", "isBaseCurrency", "createdBy")
-VALUES ('US Dollar', 'USD', '$', true, 1.0000, 2, true, 'system');
+INSERT INTO "currency" ("name", "code", "symbol", "exchangeRate", "isBaseCurrency", "createdBy")
+VALUES ('US Dollar', 'USD', '$', 1.0000, true, 'system');
 
 CREATE INDEX "currency_code_index" ON "currency" ("code");
 
@@ -3102,7 +3100,7 @@ CREATE POLICY "Employees with accounting_delete can delete account categories" O
     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
   );
 
-CREATE TYPE "consolidatedRate" AS ENUM (
+CREATE TYPE "glConsolidatedRate" AS ENUM (
   'Average',
   'Current',
   'Historical'
@@ -3131,13 +3129,12 @@ CREATE INDEX "accountSubcategory_accountCategoryId_idx" ON "accountSubcategory" 
 CREATE TABLE "account" (
   "number" TEXT NOT NULL,
   "name" TEXT NOT NULL,
-  "description" TEXT,
   "type" "glAccountType" NOT NULL,
   "accountCategoryId" TEXT NOT NULL,
   "accountSubcategoryId" TEXT,
   "incomeBalance" "glIncomeBalance" NOT NULL,
   "normalBalance" "glNormalBalance" NOT NULL,
-  "consolidatedRate" "consolidatedRate",
+  "consolidatedRate" "glConsolidatedRate",
   "currencyCode" TEXT,
   "active" BOOLEAN NOT NULL DEFAULT true,
   "createdBy" TEXT NOT NULL,
@@ -3809,6 +3806,7 @@ CREATE TABLE "warehouse" (
 
 CREATE TABLE "shelf" (
   "id" TEXT NOT NULL,
+  "locationId" TEXT,
   "warehouseId" TEXT,
   "active" BOOLEAN NOT NULL DEFAULT true,
   "createdBy" TEXT NOT NULL,
@@ -3817,11 +3815,13 @@ CREATE TABLE "shelf" (
   "updatedAt" TIMESTAMP WITH TIME ZONE,
 
   CONSTRAINT "shelf_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "shelf_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "location"("id") ON DELETE CASCADE,
   CONSTRAINT "shelf_warehouseId_fkey" FOREIGN KEY ("warehouseId") REFERENCES "warehouse"("id") ON DELETE CASCADE,
   CONSTRAINT "shelf_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "shelf_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
 
+CREATE INDEX "shelf_locationId_index" ON "shelf" ("locationId");
 CREATE INDEX "shelf_warehouseId_index" ON "shelf" ("warehouseId");
 
 ALTER TABLE "shelf" ENABLE ROW LEVEL SECURITY;
@@ -5112,12 +5112,6 @@ CREATE VIEW "parts_view" AS
 ## `ledgers`
 
 ```sql
--- part ledger entry
--- records the quantity change
-
-
-
-
 CREATE TYPE "accountDocumentEntryType" AS ENUM (
   'Quote',
   'Order',
@@ -5137,6 +5131,7 @@ CREATE TABLE "accountEntry" (
   "documentType" "accountDocumentEntryType", 
   "documentNumber" TEXT,
   "externalDocumentNumber" TEXT,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
 
   CONSTRAINT "accountEntry_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "accountEntry_accountNumber_fkey" FOREIGN KEY ("accountNumber") REFERENCES "account"("number")
@@ -5196,6 +5191,7 @@ CREATE TABLE "valueEntry" (
   "costAmountExpected" NUMERIC(19, 4) NOT NULL DEFAULT 0,
   "actualCostPostedToGl" NUMERIC(19, 4) NOT NULL DEFAULT 0,
   "expectedCostPostedToGl" NUMERIC(19, 4) NOT NULL DEFAULT 0,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
 
   CONSTRAINT "valueEntry_pkey" PRIMARY KEY ("id")
 );
@@ -5217,7 +5213,7 @@ CREATE TABLE "partEntry" (
   "documentType" "partEntryDocumentType",
   "documentNumber" TEXT,
   "partId" TEXT NOT NULL,
-  "warehouseId" TEXT,
+  "locationId" TEXT,
   "shelfId" TEXT,
   "quantity" NUMERIC(12, 4) NOT NULL,
   "invoicedQuantity" NUMERIC(12, 4) NOT NULL,
@@ -5225,10 +5221,11 @@ CREATE TABLE "partEntry" (
   "salesAmount" NUMERIC(12, 4) NOT NULL,
   "costAmount" NUMERIC(12, 4) NOT NULL,
   "open" BOOLEAN NOT NULL DEFAULT true,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
 
   CONSTRAINT "partEntry_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "partEntry_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part"("id"),
-  CONSTRAINT "partEntry_warehouseId_fkey" FOREIGN KEY ("warehouseId") REFERENCES "warehouse"("id"),
+  CONSTRAINT "partEntry_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "location"("id"),
   CONSTRAINT "partEntry_shelfId_fkey" FOREIGN KEY ("shelfId") REFERENCES "shelf"("id")
 
 );

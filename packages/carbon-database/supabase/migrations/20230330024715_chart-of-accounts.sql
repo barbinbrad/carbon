@@ -3,9 +3,7 @@ CREATE TABLE "currency" (
   "name" TEXT NOT NULL,
   "code" TEXT NOT NULL,
   "symbol" TEXT,
-  "symbolPlacementBefore" BOOLEAN NOT NULL DEFAULT true,
   "exchangeRate" NUMERIC(10,4) NOT NULL DEFAULT 1.0000,
-  "currencyPrecision" INTEGER NOT NULL DEFAULT 2,
   "isBaseCurrency" BOOLEAN NOT NULL DEFAULT false,
   "createdBy" TEXT NOT NULL,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
@@ -18,8 +16,8 @@ CREATE TABLE "currency" (
   CONSTRAINT "currency_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
 
-INSERT INTO "currency" ("name", "code", "symbol", "symbolPlacementBefore", "exchangeRate", "currencyPrecision", "isBaseCurrency", "createdBy")
-VALUES ('US Dollar', 'USD', '$', true, 1.0000, 2, true, 'system');
+INSERT INTO "currency" ("name", "code", "symbol", "exchangeRate", "isBaseCurrency", "createdBy")
+VALUES ('US Dollar', 'USD', '$', 1.0000, true, 'system');
 
 CREATE INDEX "currency_code_index" ON "currency" ("code");
 
@@ -160,7 +158,7 @@ CREATE POLICY "Employees with accounting_delete can delete account categories" O
     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
   );
 
-CREATE TYPE "consolidatedRate" AS ENUM (
+CREATE TYPE "glConsolidatedRate" AS ENUM (
   'Average',
   'Current',
   'Historical'
@@ -189,13 +187,12 @@ CREATE INDEX "accountSubcategory_accountCategoryId_idx" ON "accountSubcategory" 
 CREATE TABLE "account" (
   "number" TEXT NOT NULL,
   "name" TEXT NOT NULL,
-  "description" TEXT,
   "type" "glAccountType" NOT NULL,
   "accountCategoryId" TEXT NOT NULL,
   "accountSubcategoryId" TEXT,
   "incomeBalance" "glIncomeBalance" NOT NULL,
   "normalBalance" "glNormalBalance" NOT NULL,
-  "consolidatedRate" "consolidatedRate",
+  "consolidatedRate" "glConsolidatedRate",
   "currencyCode" TEXT,
   "active" BOOLEAN NOT NULL DEFAULT true,
   "createdBy" TEXT NOT NULL,

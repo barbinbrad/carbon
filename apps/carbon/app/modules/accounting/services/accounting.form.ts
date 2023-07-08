@@ -2,6 +2,130 @@ import { withZod } from "@remix-validated-form/with-zod";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
 
+const accountDocumentEntryType = [
+  "Quote",
+  "Order",
+  "Invoice",
+  "Credit Memo",
+  "Blanket Order",
+  "Return Order",
+] as const;
+
+const costEntryTypes = [
+  "Direct Cost",
+  "Revaluation",
+  "Rounding",
+  "Indirect Cost",
+  "Variance",
+  "Total",
+] as const;
+
+const partEntryTypes = [
+  "Purchase",
+  "Sale",
+  "Positive Adjmt.",
+  "Negative Adjmt.",
+  "Transfer",
+  "Consumption",
+  "Output",
+  "Assembly Consumption",
+  "Assembly Output",
+] as const;
+
+const partEntryDocumentType = [
+  "Sales Shipment",
+  "Sales Invoice",
+  "Sales Return Receipt",
+  "Sales Credit Memo",
+  "Purchase Receipt",
+  "Purchase Invoice",
+  "Purchase Return Shipment",
+  "Purchase Credit Memo",
+  "Transfer Shipment",
+  "Transfer Receipt",
+  "Service Shipment",
+  "Service Invoice",
+  "Service Credit Memo",
+  "Posted Assembly",
+  "Inventory Receipt",
+  "Inventory Shipment",
+  "Direct Transfer",
+] as const;
+
+export const accountValidator = withZod(
+  z.object({
+    number: z.string().min(1, { message: "Number is required" }),
+    name: z.string().min(1, { message: "Name is required" }),
+    type: z.enum(["Posting", "Heading", "Total", "Begin Total", "End Total"], {
+      errorMap: (issue, ctx) => ({
+        message: "Type is required",
+      }),
+    }),
+    accountCategoryId: z.string().min(20, { message: "Category is required" }),
+    accountSubcategoryId: zfd.text(z.string().optional()),
+    incomeBalance: z.enum(["Balance Sheet", "Income Statement"], {
+      errorMap: (issue, ctx) => ({
+        message: "Income balance is required",
+      }),
+    }),
+    normalBalance: z.enum(["Debit", "Credit", "Both"], {
+      errorMap: (issue, ctx) => ({
+        message: "Normal balance is required",
+      }),
+    }),
+    consolidatedRate: z.enum(["Average", "Current", "Historical"]),
+    currencyCode: zfd.text(z.string().optional()),
+  })
+);
+
+export const accountEntryValidator = withZod(
+  z.object({
+    postingDate: z.string().min(1, { message: "Posting date is required" }),
+    accountNumber: z.string().min(1, { message: "Account is required" }),
+    description: z.string().optional(),
+    amount: z.number(),
+    documentType: z.union([z.enum(accountDocumentEntryType), z.undefined()]),
+    documentNumber: z.string().optional(),
+    externalDocumentNumber: z.string().optional(),
+  })
+);
+
+export const accountSubcategoryValidator = withZod(
+  z.object({
+    name: z.string().min(1, { message: "Name is required" }),
+    accountCategoryId: z.string().min(20, { message: "Category is required" }),
+  })
+);
+
+export const currencyValidator = withZod(
+  z.object({
+    id: zfd.text(z.string().optional()),
+    name: z.string().min(1, { message: "Name is required" }),
+    code: z.string().min(1, { message: "Code is required" }),
+    symbol: zfd.text(z.string().optional()),
+    exchangeRate: zfd.numeric(),
+    isBaseCurrency: zfd.checkbox(),
+  })
+);
+
+export const partEntryValidator = withZod(
+  z.object({
+    postingDate: z.string().min(1, { message: "Posting date is required" }),
+    entryType: z.enum(partEntryTypes),
+    documentType: z.union([z.enum(partEntryDocumentType), z.undefined()]),
+    documentNumber: z.string().optional(),
+    partId: z.string().min(1, { message: "Part is required" }),
+    locationId: z.string().optional(),
+    shelfId: z.string().optional(),
+    quantity: z.number(),
+    invoicedQuantity: z.number(),
+    remainingQuantity: z.number(),
+    salesAmount: z.number(),
+    costAmount: z.number(),
+    open: z.boolean(),
+  })
+);
+
 export const paymentTermValidator = withZod(
   z.object({
     id: zfd.text(z.string().optional()),
@@ -31,5 +155,20 @@ export const paymentTermValidator = withZod(
         message: "Calculation method is required",
       }),
     }),
+  })
+);
+
+export const valueEntryValidator = withZod(
+  z.object({
+    postingDate: z.string(),
+    partEntryType: z.enum(partEntryTypes),
+    costEntryType: z.enum(costEntryTypes),
+    adjustment: z.boolean(),
+    documentType: z.union([z.enum(partEntryDocumentType), z.undefined()]),
+    documentNumber: z.string().optional(),
+    costAmountActual: z.number(),
+    costAmountExpected: z.number(),
+    actualCostPostedToGl: z.number(),
+    expectedCostPostedToGl: z.number(),
   })
 );

@@ -48,14 +48,13 @@ export interface Database {
         Row: {
           number: string;
           name: string;
-          description: string | null;
           type: Database["public"]["Enums"]["glAccountType"];
           accountCategoryId: string;
           accountSubcategoryId: string | null;
           incomeBalance: Database["public"]["Enums"]["glIncomeBalance"];
           normalBalance: Database["public"]["Enums"]["glNormalBalance"];
           consolidatedRate:
-            | Database["public"]["Enums"]["consolidatedRate"]
+            | Database["public"]["Enums"]["glConsolidatedRate"]
             | null;
           currencyCode: string | null;
           createdBy: string;
@@ -67,14 +66,13 @@ export interface Database {
         Insert: {
           number: string;
           name: string;
-          description?: string | null;
           type: Database["public"]["Enums"]["glAccountType"];
           accountCategoryId: string;
           accountSubcategoryId?: string | null;
           incomeBalance: Database["public"]["Enums"]["glIncomeBalance"];
           normalBalance: Database["public"]["Enums"]["glNormalBalance"];
           consolidatedRate?:
-            | Database["public"]["Enums"]["consolidatedRate"]
+            | Database["public"]["Enums"]["glConsolidatedRate"]
             | null;
           currencyCode?: string | null;
           createdBy: string;
@@ -86,14 +84,13 @@ export interface Database {
         Update: {
           number?: string;
           name?: string;
-          description?: string | null;
           type?: Database["public"]["Enums"]["glAccountType"];
           accountCategoryId?: string;
           accountSubcategoryId?: string | null;
           incomeBalance?: Database["public"]["Enums"]["glIncomeBalance"];
           normalBalance?: Database["public"]["Enums"]["glNormalBalance"];
           consolidatedRate?:
-            | Database["public"]["Enums"]["consolidatedRate"]
+            | Database["public"]["Enums"]["glConsolidatedRate"]
             | null;
           currencyCode?: string | null;
           createdBy?: string;
@@ -148,6 +145,7 @@ export interface Database {
           externalDocumentNumber: string | null;
           id: string;
           entryNumber: number;
+          createdAt: string;
         };
         Insert: {
           postingDate: string;
@@ -161,6 +159,7 @@ export interface Database {
           externalDocumentNumber?: string | null;
           id?: string;
           entryNumber?: number;
+          createdAt?: string;
         };
         Update: {
           postingDate?: string;
@@ -174,6 +173,7 @@ export interface Database {
           externalDocumentNumber?: string | null;
           id?: string;
           entryNumber?: number;
+          createdAt?: string;
         };
       };
       accountSubcategory: {
@@ -455,9 +455,7 @@ export interface Database {
           updatedBy: string | null;
           updatedAt: string | null;
           id: string;
-          symbolPlacementBefore: boolean;
           exchangeRate: number;
-          currencyPrecision: number;
           isBaseCurrency: boolean;
           createdAt: string;
         };
@@ -469,9 +467,7 @@ export interface Database {
           updatedBy?: string | null;
           updatedAt?: string | null;
           id?: string;
-          symbolPlacementBefore?: boolean;
           exchangeRate?: number;
-          currencyPrecision?: number;
           isBaseCurrency?: boolean;
           createdAt?: string;
         };
@@ -483,9 +479,7 @@ export interface Database {
           updatedBy?: string | null;
           updatedAt?: string | null;
           id?: string;
-          symbolPlacementBefore?: boolean;
           exchangeRate?: number;
-          currencyPrecision?: number;
           isBaseCurrency?: boolean;
           createdAt?: string;
         };
@@ -1280,7 +1274,7 @@ export interface Database {
             | null;
           documentNumber: string | null;
           partId: string;
-          warehouseId: string | null;
+          locationId: string | null;
           shelfId: string | null;
           quantity: number;
           invoicedQuantity: number;
@@ -1290,6 +1284,7 @@ export interface Database {
           id: string;
           entryNumber: number;
           open: boolean;
+          createdAt: string;
         };
         Insert: {
           postingDate: string;
@@ -1299,7 +1294,7 @@ export interface Database {
             | null;
           documentNumber?: string | null;
           partId: string;
-          warehouseId?: string | null;
+          locationId?: string | null;
           shelfId?: string | null;
           quantity: number;
           invoicedQuantity: number;
@@ -1309,6 +1304,7 @@ export interface Database {
           id?: string;
           entryNumber?: number;
           open?: boolean;
+          createdAt?: string;
         };
         Update: {
           postingDate?: string;
@@ -1318,7 +1314,7 @@ export interface Database {
             | null;
           documentNumber?: string | null;
           partId?: string;
-          warehouseId?: string | null;
+          locationId?: string | null;
           shelfId?: string | null;
           quantity?: number;
           invoicedQuantity?: number;
@@ -1328,6 +1324,7 @@ export interface Database {
           id?: string;
           entryNumber?: number;
           open?: boolean;
+          createdAt?: string;
         };
       };
       partGroup: {
@@ -1336,12 +1333,12 @@ export interface Database {
           description: string | null;
           salesAccountId: string | null;
           discountAccountId: string | null;
-          id: string;
           inventoryAccountId: string | null;
           costOfGoodsSoldLaborAccountId: string | null;
           costOfGoodsSoldMaterialAccountId: string | null;
           costOfGoodsSoldOverheadAccountId: string | null;
           costOfGoodsSoldSubcontractorAccountId: string | null;
+          id: string;
           createdBy: string;
           updatedBy: string | null;
           updatedAt: string | null;
@@ -1353,12 +1350,12 @@ export interface Database {
           description?: string | null;
           salesAccountId?: string | null;
           discountAccountId?: string | null;
-          id?: string;
           inventoryAccountId?: string | null;
           costOfGoodsSoldLaborAccountId?: string | null;
           costOfGoodsSoldMaterialAccountId?: string | null;
           costOfGoodsSoldOverheadAccountId?: string | null;
           costOfGoodsSoldSubcontractorAccountId?: string | null;
+          id?: string;
           createdBy: string;
           updatedBy?: string | null;
           updatedAt?: string | null;
@@ -1370,12 +1367,12 @@ export interface Database {
           description?: string | null;
           salesAccountId?: string | null;
           discountAccountId?: string | null;
-          id?: string;
           inventoryAccountId?: string | null;
           costOfGoodsSoldLaborAccountId?: string | null;
           costOfGoodsSoldMaterialAccountId?: string | null;
           costOfGoodsSoldOverheadAccountId?: string | null;
           costOfGoodsSoldSubcontractorAccountId?: string | null;
+          id?: string;
           createdBy?: string;
           updatedBy?: string | null;
           updatedAt?: string | null;
@@ -2027,6 +2024,7 @@ export interface Database {
       shelf: {
         Row: {
           id: string;
+          locationId: string | null;
           warehouseId: string | null;
           createdBy: string;
           updatedBy: string | null;
@@ -2036,6 +2034,7 @@ export interface Database {
         };
         Insert: {
           id: string;
+          locationId?: string | null;
           warehouseId?: string | null;
           createdBy: string;
           updatedBy?: string | null;
@@ -2045,6 +2044,7 @@ export interface Database {
         };
         Update: {
           id?: string;
+          locationId?: string | null;
           warehouseId?: string | null;
           createdBy?: string;
           updatedBy?: string | null;
@@ -2564,6 +2564,7 @@ export interface Database {
           costAmountExpected: number;
           actualCostPostedToGl: number;
           expectedCostPostedToGl: number;
+          createdAt: string;
         };
         Insert: {
           postingDate: string;
@@ -2580,6 +2581,7 @@ export interface Database {
           costAmountExpected?: number;
           actualCostPostedToGl?: number;
           expectedCostPostedToGl?: number;
+          createdAt?: string;
         };
         Update: {
           postingDate?: string;
@@ -2596,6 +2598,7 @@ export interface Database {
           costAmountExpected?: number;
           actualCostPostedToGl?: number;
           expectedCostPostedToGl?: number;
+          createdAt?: string;
         };
       };
       valueEntryAccountEntryRelation: {
@@ -3009,7 +3012,6 @@ export interface Database {
         | "Credit Memo"
         | "Blanket Order"
         | "Return Order";
-      consolidatedRate: "Average" | "Current" | "Historical";
       costEntryType:
         | "Direct Cost"
         | "Revaluation"
@@ -3061,6 +3063,7 @@ export interface Database {
         | "Total"
         | "Begin Total"
         | "End Total";
+      glConsolidatedRate: "Average" | "Current" | "Historical";
       glIncomeBalance: "Balance Sheet" | "Income Statement";
       glNormalBalance: "Debit" | "Credit" | "Both";
       partCostingMethod: "Standard" | "Average" | "LIFO" | "FIFO";

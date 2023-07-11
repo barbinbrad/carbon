@@ -3,8 +3,28 @@ import type { AuthenticatedRouteGroup } from "~/types";
 
 const accountingRoutes: AuthenticatedRouteGroup[] = [
   {
+    name: "Manage",
+    routes: [
+      {
+        name: "Chart of Accounts",
+        to: "/x/accounting/charts",
+        role: "employee",
+      },
+    ],
+  },
+  {
     name: "Configure",
     routes: [
+      {
+        name: "Currencies",
+        to: "/x/accounting/currencies",
+        role: "employee",
+      },
+      {
+        name: "G/L Account Categories",
+        to: "/x/accounting/categories",
+        role: "employee",
+      },
       {
         name: "Payment Terms",
         to: "/x/accounting/payment-terms",

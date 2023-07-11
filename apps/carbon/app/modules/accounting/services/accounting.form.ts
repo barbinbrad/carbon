@@ -2,7 +2,7 @@ import { withZod } from "@remix-validated-form/with-zod";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
 
-const accountDocumentEntryType = [
+const accountDocumentLedgerType = [
   "Quote",
   "Order",
   "Invoice",
@@ -11,7 +11,7 @@ const accountDocumentEntryType = [
   "Return Order",
 ] as const;
 
-const costEntryTypes = [
+const costLedgerTypes = [
   "Direct Cost",
   "Revaluation",
   "Rounding",
@@ -20,7 +20,7 @@ const costEntryTypes = [
   "Total",
 ] as const;
 
-const partEntryTypes = [
+const partLedgerTypes = [
   "Purchase",
   "Sale",
   "Positive Adjmt.",
@@ -32,7 +32,7 @@ const partEntryTypes = [
   "Assembly Output",
 ] as const;
 
-const partEntryDocumentType = [
+const partLedgerDocumentType = [
   "Sales Shipment",
   "Sales Invoice",
   "Sales Return Receipt",
@@ -78,13 +78,13 @@ export const accountValidator = withZod(
   })
 );
 
-export const accountEntryValidator = withZod(
+export const accountLedgerValidator = withZod(
   z.object({
     postingDate: z.string().min(1, { message: "Posting date is required" }),
     accountNumber: z.string().min(1, { message: "Account is required" }),
     description: z.string().optional(),
     amount: z.number(),
-    documentType: z.union([z.enum(accountDocumentEntryType), z.undefined()]),
+    documentType: z.union([z.enum(accountDocumentLedgerType), z.undefined()]),
     documentNumber: z.string().optional(),
     externalDocumentNumber: z.string().optional(),
   })
@@ -92,6 +92,7 @@ export const accountEntryValidator = withZod(
 
 export const accountSubcategoryValidator = withZod(
   z.object({
+    id: zfd.text(z.string().optional()),
     name: z.string().min(1, { message: "Name is required" }),
     accountCategoryId: z.string().min(20, { message: "Category is required" }),
   })
@@ -102,17 +103,22 @@ export const currencyValidator = withZod(
     id: zfd.text(z.string().optional()),
     name: z.string().min(1, { message: "Name is required" }),
     code: z.string().min(1, { message: "Code is required" }),
-    symbol: zfd.text(z.string().optional()),
+    symbol: zfd.text(
+      z
+        .string()
+        .max(1, { message: "Symbol can only be one character" })
+        .optional()
+    ),
     exchangeRate: zfd.numeric(),
     isBaseCurrency: zfd.checkbox(),
   })
 );
 
-export const partEntryValidator = withZod(
+export const partLedgerValidator = withZod(
   z.object({
     postingDate: z.string().min(1, { message: "Posting date is required" }),
-    entryType: z.enum(partEntryTypes),
-    documentType: z.union([z.enum(partEntryDocumentType), z.undefined()]),
+    entryType: z.enum(partLedgerTypes),
+    documentType: z.union([z.enum(partLedgerDocumentType), z.undefined()]),
     documentNumber: z.string().optional(),
     partId: z.string().min(1, { message: "Part is required" }),
     locationId: z.string().optional(),
@@ -158,13 +164,13 @@ export const paymentTermValidator = withZod(
   })
 );
 
-export const valueEntryValidator = withZod(
+export const valueLedgerValidator = withZod(
   z.object({
     postingDate: z.string(),
-    partEntryType: z.enum(partEntryTypes),
-    costEntryType: z.enum(costEntryTypes),
+    partLedgerType: z.enum(partLedgerTypes),
+    costLedgerType: z.enum(costLedgerTypes),
     adjustment: z.boolean(),
-    documentType: z.union([z.enum(partEntryDocumentType), z.undefined()]),
+    documentType: z.union([z.enum(partLedgerDocumentType), z.undefined()]),
     documentNumber: z.string().optional(),
     costAmountActual: z.number(),
     costAmountExpected: z.number(),

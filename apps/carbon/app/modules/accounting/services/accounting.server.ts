@@ -5,14 +5,21 @@ import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
 import { sanitize } from "~/utils/supabase";
 import type {
-  accountEntryValidator,
+  accountLedgerValidator,
   accountSubcategoryValidator,
   accountValidator,
   currencyValidator,
-  partEntryValidator,
+  partLedgerValidator,
   paymentTermValidator,
-  valueEntryValidator,
+  valueLedgerValidator,
 } from "./accounting.form";
+
+export async function deleteCurrency(
+  client: SupabaseClient<Database>,
+  currencyId: string
+) {
+  return client.from("currency").update({ active: false }).eq("id", currencyId);
+}
 
 export async function deletePaymentTerm(
   client: SupabaseClient<Database>,
@@ -60,8 +67,33 @@ export async function getAccountsList(client: SupabaseClient<Database>) {
     .order("name", { ascending: true });
 }
 
-export async function getAccountCategories(client: SupabaseClient<Database>) {
-  return client.from("accountCategory").select("*");
+export async function getAccountCategories(
+  client: SupabaseClient<Database>,
+  args: GenericQueryFilters & {
+    name: string | null;
+  }
+) {
+  let query = client.from("accountCategory").select("*", {
+    count: "exact",
+  });
+
+  if (args.name) {
+    query = query.ilike("name", `%${args.name}%`);
+  }
+
+  query = setGenericQueryFilters(query, args, "name");
+  return query;
+}
+
+export async function getAccountCategory(
+  client: SupabaseClient<Database>,
+  accountCategoryId: string
+) {
+  return client
+    .from("accountCategory")
+    .select("*")
+    .eq("id", accountCategoryId)
+    .single();
 }
 
 export function getAccountCategoryEnum(): Database["public"]["Enums"]["glAccountCategory"][] {
@@ -133,6 +165,14 @@ export function getAccountTypeEnum(): Database["public"]["Enums"]["glAccountType
   return ["Posting", "Heading", "Total", "Begin Total", "End Total"];
 }
 
+export async function getBaseCurrency(client: SupabaseClient<Database>) {
+  return client
+    .from("currency")
+    .select("*")
+    .eq("isBaseCurrency", true)
+    .single();
+}
+
 export async function getCurrency(
   client: SupabaseClient<Database>,
   currencyId: string
@@ -143,7 +183,7 @@ export async function getCurrency(
 export async function getCurrencies(
   client: SupabaseClient<Database>,
   args: GenericQueryFilters & {
-    search: string | null;
+    name: string | null;
   }
 ) {
   let query = client
@@ -153,8 +193,8 @@ export async function getCurrencies(
     })
     .eq("active", true);
 
-  if (args.search) {
-    query = query.ilike("name", `%${args.search}%`);
+  if (args.name) {
+    query = query.ilike("name", `%${args.name}%`);
   }
 
   query = setGenericQueryFilters(query, args, "name");
@@ -222,44 +262,44 @@ export async function getPaymentTermsList(client: SupabaseClient<Database>) {
 
 export async function insertAccountEntries(
   client: SupabaseClient<Database>,
-  accountEntries: TypeOfValidator<typeof accountEntryValidator>[]
+  accountEntries: TypeOfValidator<typeof accountLedgerValidator>[]
 ) {
-  return client.from("accountEntry").insert(accountEntries).select("id");
+  return client.from("accountLedger").insert(accountEntries).select("id");
 }
 
-export async function insertAccountEntry(
+export async function insertAccountLedger(
   client: SupabaseClient<Database>,
-  accountEntry: TypeOfValidator<typeof accountEntryValidator>
+  accountEntry: TypeOfValidator<typeof accountLedgerValidator>
 ) {
-  return client.from("accountEntry").insert([accountEntry]).select("id");
+  return client.from("accountLedger").insert([accountEntry]).select("id");
 }
 
 export async function insertPartEntries(
   client: SupabaseClient<Database>,
-  partEntries: TypeOfValidator<typeof partEntryValidator>[]
+  partEntries: TypeOfValidator<typeof partLedgerValidator>[]
 ) {
-  return client.from("partEntry").insert(partEntries).select("id");
+  return client.from("partLedger").insert(partEntries).select("id");
 }
 
-export async function insertPartEntry(
+export async function insertPartLedger(
   client: SupabaseClient<Database>,
-  partEntry: TypeOfValidator<typeof partEntryValidator>
+  partEntry: TypeOfValidator<typeof partLedgerValidator>
 ) {
-  return client.from("partEntry").insert([partEntry]).select("id");
+  return client.from("partLedger").insert([partEntry]).select("id");
 }
 
 export async function insertValueEntries(
   client: SupabaseClient<Database>,
-  valueEntries: TypeOfValidator<typeof valueEntryValidator>[]
+  valueEntries: TypeOfValidator<typeof valueLedgerValidator>[]
 ) {
-  return client.from("valueEntry").insert(valueEntries).select("id");
+  return client.from("valueLedger").insert(valueEntries).select("id");
 }
 
-export async function insertValueEntry(
+export async function insertValueLedger(
   client: SupabaseClient<Database>,
-  valueEntry: TypeOfValidator<typeof valueEntryValidator>
+  valueEntry: TypeOfValidator<typeof valueLedgerValidator>
 ) {
-  return client.from("valueEntry").insert([valueEntry]).select("id");
+  return client.from("valueLedger").insert([valueEntry]).select("id");
 }
 
 export async function upsertAccount(
@@ -318,6 +358,10 @@ export async function upsertCurrency(
         updatedBy: string;
       })
 ) {
+  if (currency.isBaseCurrency) {
+    await client.from("currency").update({ isBaseCurrency: false });
+  }
+
   if ("createdBy" in currency) {
     return client.from("currency").insert([currency]).select("id");
   }

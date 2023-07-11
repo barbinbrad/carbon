@@ -1,12 +1,26 @@
 import { Grid, VStack } from "@chakra-ui/react";
-import type { MetaFunction } from "@remix-run/node";
+import type { LoaderArgs, MetaFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 import { GroupedContentSidebar } from "~/components/Layout/Sidebar";
-import { useAccountingSidebar } from "~/modules/accounting";
+import { getBaseCurrency, useAccountingSidebar } from "~/modules/accounting";
+import { requirePermissions } from "~/services/auth";
 
 export const meta: MetaFunction = () => ({
   title: "Carbon | Accounting",
 });
+
+export async function loader({ request }: LoaderArgs) {
+  const { client } = await requirePermissions(request, {
+    view: "accounting",
+  });
+
+  const [baseCurrency] = await Promise.all([getBaseCurrency(client)]);
+
+  return json({
+    baseCurrency: baseCurrency.data,
+  });
+}
 
 export default function UsersRoute() {
   const { groups } = useAccountingSidebar();

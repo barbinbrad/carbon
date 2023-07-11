@@ -132,50 +132,6 @@ export interface Database {
           createdAt?: string;
         };
       };
-      accountEntry: {
-        Row: {
-          postingDate: string;
-          accountNumber: string;
-          description: string | null;
-          amount: number;
-          documentType:
-            | Database["public"]["Enums"]["accountDocumentEntryType"]
-            | null;
-          documentNumber: string | null;
-          externalDocumentNumber: string | null;
-          id: string;
-          entryNumber: number;
-          createdAt: string;
-        };
-        Insert: {
-          postingDate: string;
-          accountNumber: string;
-          description?: string | null;
-          amount: number;
-          documentType?:
-            | Database["public"]["Enums"]["accountDocumentEntryType"]
-            | null;
-          documentNumber?: string | null;
-          externalDocumentNumber?: string | null;
-          id?: string;
-          entryNumber?: number;
-          createdAt?: string;
-        };
-        Update: {
-          postingDate?: string;
-          accountNumber?: string;
-          description?: string | null;
-          amount?: number;
-          documentType?:
-            | Database["public"]["Enums"]["accountDocumentEntryType"]
-            | null;
-          documentNumber?: string | null;
-          externalDocumentNumber?: string | null;
-          id?: string;
-          entryNumber?: number;
-          createdAt?: string;
-        };
-      };
       accountSubcategory: {
         Row: {
           name: string;
@@ -457,6 +413,7 @@ export interface Database {
           id: string;
           exchangeRate: number;
           isBaseCurrency: boolean;
+          active: boolean;
           createdAt: string;
         };
         Insert: {
@@ -469,6 +426,7 @@ export interface Database {
           id?: string;
           exchangeRate?: number;
           isBaseCurrency?: boolean;
+          active?: boolean;
           createdAt?: string;
         };
         Update: {
@@ -481,6 +439,7 @@ export interface Database {
           id?: string;
           exchangeRate?: number;
           isBaseCurrency?: boolean;
+          active?: boolean;
           createdAt?: string;
         };
       };
@@ -1016,6 +975,50 @@ export interface Database {
           createdAt?: string;
         };
       };
+      generalLedger: {
+        Row: {
+          postingDate: string;
+          accountNumber: string;
+          description: string | null;
+          amount: number;
+          documentType:
+            | Database["public"]["Enums"]["accountDocumentLedgerType"]
+            | null;
+          documentNumber: string | null;
+          externalDocumentNumber: string | null;
+          id: string;
+          entryNumber: number;
+          createdAt: string;
+        };
+        Insert: {
+          postingDate: string;
+          accountNumber: string;
+          description?: string | null;
+          amount: number;
+          documentType?:
+            | Database["public"]["Enums"]["accountDocumentLedgerType"]
+            | null;
+          documentNumber?: string | null;
+          externalDocumentNumber?: string | null;
+          id?: string;
+          entryNumber?: number;
+          createdAt?: string;
+        };
+        Update: {
+          postingDate?: string;
+          accountNumber?: string;
+          description?: string | null;
+          amount?: number;
+          documentType?:
+            | Database["public"]["Enums"]["accountDocumentLedgerType"]
+            | null;
+          documentNumber?: string | null;
+          externalDocumentNumber?: string | null;
+          id?: string;
+          entryNumber?: number;
+          createdAt?: string;
+        };
+      };
       group: {
         Row: {
           name: string;
@@ -1265,68 +1268,6 @@ export interface Database {
           createdAt?: string;
         };
       };
-      partEntry: {
-        Row: {
-          postingDate: string;
-          entryType: Database["public"]["Enums"]["partEntryType"];
-          documentType:
-            | Database["public"]["Enums"]["partEntryDocumentType"]
-            | null;
-          documentNumber: string | null;
-          partId: string;
-          locationId: string | null;
-          shelfId: string | null;
-          quantity: number;
-          invoicedQuantity: number;
-          remainingQuantity: number;
-          salesAmount: number;
-          costAmount: number;
-          id: string;
-          entryNumber: number;
-          open: boolean;
-          createdAt: string;
-        };
-        Insert: {
-          postingDate: string;
-          entryType: Database["public"]["Enums"]["partEntryType"];
-          documentType?:
-            | Database["public"]["Enums"]["partEntryDocumentType"]
-            | null;
-          documentNumber?: string | null;
-          partId: string;
-          locationId?: string | null;
-          shelfId?: string | null;
-          quantity: number;
-          invoicedQuantity: number;
-          remainingQuantity: number;
-          salesAmount: number;
-          costAmount: number;
-          id?: string;
-          entryNumber?: number;
-          open?: boolean;
-          createdAt?: string;
-        };
-        Update: {
-          postingDate?: string;
-          entryType?: Database["public"]["Enums"]["partEntryType"];
-          documentType?:
-            | Database["public"]["Enums"]["partEntryDocumentType"]
-            | null;
-          documentNumber?: string | null;
-          partId?: string;
-          locationId?: string | null;
-          shelfId?: string | null;
-          quantity?: number;
-          invoicedQuantity?: number;
-          remainingQuantity?: number;
-          salesAmount?: number;
-          costAmount?: number;
-          id?: string;
-          entryNumber?: number;
-          open?: boolean;
-          createdAt?: string;
-        };
-      };
       partGroup: {
         Row: {
           name: string;
@@ -1336,9 +1277,9 @@ export interface Database {
           inventoryAccountId: string | null;
           costOfGoodsSoldLaborAccountId: string | null;
           costOfGoodsSoldMaterialAccountId: string | null;
+          id: string;
           costOfGoodsSoldOverheadAccountId: string | null;
           costOfGoodsSoldSubcontractorAccountId: string | null;
-          id: string;
           createdBy: string;
           updatedBy: string | null;
           updatedAt: string | null;
@@ -1353,9 +1294,9 @@ export interface Database {
           inventoryAccountId?: string | null;
           costOfGoodsSoldLaborAccountId?: string | null;
           costOfGoodsSoldMaterialAccountId?: string | null;
+          id?: string;
           costOfGoodsSoldOverheadAccountId?: string | null;
           costOfGoodsSoldSubcontractorAccountId?: string | null;
-          id?: string;
           createdBy: string;
           updatedBy?: string | null;
           updatedAt?: string | null;
@@ -1370,9 +1311,9 @@ export interface Database {
           inventoryAccountId?: string | null;
           costOfGoodsSoldLaborAccountId?: string | null;
           costOfGoodsSoldMaterialAccountId?: string | null;
+          id?: string;
           costOfGoodsSoldOverheadAccountId?: string | null;
           costOfGoodsSoldSubcontractorAccountId?: string | null;
-          id?: string;
           createdBy?: string;
           updatedBy?: string | null;
           updatedAt?: string | null;
@@ -1412,6 +1353,68 @@ export interface Database {
           stockoutWarning?: boolean;
           unitVolume?: number;
           unitWeight?: number;
+          createdAt?: string;
+        };
+      };
+      partLedger: {
+        Row: {
+          postingDate: string;
+          entryType: Database["public"]["Enums"]["partLedgerType"];
+          documentType:
+            | Database["public"]["Enums"]["partLedgerDocumentType"]
+            | null;
+          documentNumber: string | null;
+          partId: string;
+          locationId: string | null;
+          shelfId: string | null;
+          quantity: number;
+          invoicedQuantity: number;
+          remainingQuantity: number;
+          salesAmount: number;
+          costAmount: number;
+          id: string;
+          entryNumber: number;
+          open: boolean;
+          createdAt: string;
+        };
+        Insert: {
+          postingDate: string;
+          entryType: Database["public"]["Enums"]["partLedgerType"];
+          documentType?:
+            | Database["public"]["Enums"]["partLedgerDocumentType"]
+            | null;
+          documentNumber?: string | null;
+          partId: string;
+          locationId?: string | null;
+          shelfId?: string | null;
+          quantity: number;
+          invoicedQuantity: number;
+          remainingQuantity: number;
+          salesAmount: number;
+          costAmount: number;
+          id?: string;
+          entryNumber?: number;
+          open?: boolean;
+          createdAt?: string;
+        };
+        Update: {
+          postingDate?: string;
+          entryType?: Database["public"]["Enums"]["partLedgerType"];
+          documentType?:
+            | Database["public"]["Enums"]["partLedgerDocumentType"]
+            | null;
+          documentNumber?: string | null;
+          partId?: string;
+          locationId?: string | null;
+          shelfId?: string | null;
+          quantity?: number;
+          invoicedQuantity?: number;
+          remainingQuantity?: number;
+          salesAmount?: number;
+          costAmount?: number;
+          id?: string;
+          entryNumber?: number;
+          open?: boolean;
           createdAt?: string;
         };
       };
@@ -2548,13 +2551,13 @@ export interface Database {
           createdAt?: string;
         };
       };
-      valueEntry: {
+      valueLedger: {
         Row: {
           postingDate: string;
-          partEntryType: Database["public"]["Enums"]["partEntryType"];
-          costEntryType: Database["public"]["Enums"]["costEntryType"];
+          partLedgerType: Database["public"]["Enums"]["partLedgerType"];
+          costLedgerType: Database["public"]["Enums"]["costLedgerType"];
           documentType:
-            | Database["public"]["Enums"]["partEntryDocumentType"]
+            | Database["public"]["Enums"]["partLedgerDocumentType"]
             | null;
           documentNumber: string | null;
           id: string;
@@ -2568,10 +2571,10 @@ export interface Database {
         };
         Insert: {
           postingDate: string;
-          partEntryType: Database["public"]["Enums"]["partEntryType"];
-          costEntryType: Database["public"]["Enums"]["costEntryType"];
+          partLedgerType: Database["public"]["Enums"]["partLedgerType"];
+          costLedgerType: Database["public"]["Enums"]["costLedgerType"];
           documentType?:
-            | Database["public"]["Enums"]["partEntryDocumentType"]
+            | Database["public"]["Enums"]["partLedgerDocumentType"]
             | null;
           documentNumber?: string | null;
           id?: string;
@@ -2585,10 +2588,10 @@ export interface Database {
         };
         Update: {
           postingDate?: string;
-          partEntryType?: Database["public"]["Enums"]["partEntryType"];
-          costEntryType?: Database["public"]["Enums"]["costEntryType"];
+          partLedgerType?: Database["public"]["Enums"]["partLedgerType"];
+          costLedgerType?: Database["public"]["Enums"]["costLedgerType"];
           documentType?:
-            | Database["public"]["Enums"]["partEntryDocumentType"]
+            | Database["public"]["Enums"]["partLedgerDocumentType"]
             | null;
           documentNumber?: string | null;
           id?: string;
@@ -2601,18 +2604,18 @@ export interface Database {
           createdAt?: string;
         };
       };
-      valueEntryAccountEntryRelation: {
+      valueLedgerAccountLedgerRelation: {
         Row: {
-          valueEntryId: string;
-          accountEntryId: string;
+          valueLedgerId: string;
+          generalLedgerId: string;
         };
         Insert: {
-          valueEntryId: string;
-          accountEntryId: string;
+          valueLedgerId: string;
+          generalLedgerId: string;
         };
         Update: {
-          valueEntryId?: string;
-          accountEntryId?: string;
+          valueLedgerId?: string;
+          generalLedgerId?: string;
         };
       };
       warehouse: {
@@ -3005,14 +3008,14 @@ export interface Database {
       };
     };
     Enums: {
-      accountDocumentEntryType:
+      accountDocumentLedgerType:
         | "Quote"
         | "Order"
         | "Invoice"
         | "Credit Memo"
         | "Blanket Order"
         | "Return Order";
-      costEntryType:
+      costLedgerType:
         | "Direct Cost"
         | "Revaluation"
         | "Rounding"
@@ -3067,7 +3070,7 @@ export interface Database {
       glIncomeBalance: "Balance Sheet" | "Income Statement";
       glNormalBalance: "Debit" | "Credit" | "Both";
       partCostingMethod: "Standard" | "Average" | "LIFO" | "FIFO";
-      partEntryDocumentType:
+      partLedgerDocumentType:
         | "Sales Shipment"
         | "Sales Invoice"
         | "Sales Return Receipt"
@@ -3085,7 +3088,7 @@ export interface Database {
         | "Inventory Receipt"
         | "Inventory Shipment"
         | "Direct Transfer";
-      partEntryType:
+      partLedgerType:
         | "Purchase"
         | "Sale"
         | "Positive Adjmt."

@@ -2937,7 +2937,7 @@ CREATE VIEW "contractors_view" AS
 
 
 
-## `chart-of-accounts`
+## `accounts`
 
 ```sql
 CREATE TABLE "currency" (
@@ -2947,6 +2947,7 @@ CREATE TABLE "currency" (
   "symbol" TEXT,
   "exchangeRate" NUMERIC(10,4) NOT NULL DEFAULT 1.0000,
   "isBaseCurrency" BOOLEAN NOT NULL DEFAULT false,
+  "active" BOOLEAN NOT NULL DEFAULT true,
   "createdBy" TEXT NOT NULL,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   "updatedBy" TEXT,
@@ -2954,6 +2955,7 @@ CREATE TABLE "currency" (
 
   CONSTRAINT "currency_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "currency_code_key" UNIQUE ("code"),
+  CONSTRAINT "currency_exchangeRate_check" CHECK ("exchangeRate" > 0),
   CONSTRAINT "currency_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "currency_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
@@ -5112,7 +5114,7 @@ CREATE VIEW "parts_view" AS
 ## `ledgers`
 
 ```sql
-CREATE TYPE "accountDocumentEntryType" AS ENUM (
+CREATE TYPE "accountDocumentLedgerType" AS ENUM (
   'Quote',
   'Order',
   'Invoice',
@@ -5121,23 +5123,23 @@ CREATE TYPE "accountDocumentEntryType" AS ENUM (
   'Return Order'
 );
 
-CREATE TABLE "accountEntry" (
+CREATE TABLE "generalLedger" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "entryNumber" SERIAL,
   "postingDate" DATE NOT NULL,
   "accountNumber" TEXT NOT NULL,
   "description" TEXT,
   "amount" NUMERIC(19, 4) NOT NULL,
-  "documentType" "accountDocumentEntryType", 
+  "documentType" "accountDocumentLedgerType", 
   "documentNumber" TEXT,
   "externalDocumentNumber" TEXT,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
 
-  CONSTRAINT "accountEntry_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "accountEntry_accountNumber_fkey" FOREIGN KEY ("accountNumber") REFERENCES "account"("number")
+  CONSTRAINT "generalLedger_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "generalLedger_accountNumber_fkey" FOREIGN KEY ("accountNumber") REFERENCES "account"("number")
 );
 
-CREATE TYPE "partEntryType" AS ENUM (
+CREATE TYPE "partLedgerType" AS ENUM (
   'Purchase',
   'Sale',
   'Positive Adjmt.',
@@ -5149,7 +5151,7 @@ CREATE TYPE "partEntryType" AS ENUM (
   'Assembly Output'
 );
 
-CREATE TYPE "costEntryType" AS ENUM (
+CREATE TYPE "costLedgerType" AS ENUM (
   'Direct Cost',
   'Revaluation',
   'Rounding',
@@ -5158,7 +5160,7 @@ CREATE TYPE "costEntryType" AS ENUM (
   'Total'
 );
 
-CREATE TYPE "partEntryDocumentType" AS ENUM (
+CREATE TYPE "partLedgerDocumentType" AS ENUM (
   'Sales Shipment',
   'Sales Invoice',
   'Sales Return Receipt',
@@ -5178,14 +5180,14 @@ CREATE TYPE "partEntryDocumentType" AS ENUM (
   'Direct Transfer'
 );
 
-CREATE TABLE "valueEntry" (
+CREATE TABLE "valueLedger" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "entryNumber" SERIAL,
   "postingDate" DATE NOT NULL,
-  "partEntryType" "partEntryType" NOT NULL,
-  "costEntryType" "costEntryType" NOT NULL,
+  "partLedgerType" "partLedgerType" NOT NULL,
+  "costLedgerType" "costLedgerType" NOT NULL,
   "adjustment" BOOLEAN NOT NULL DEFAULT false,
-  "documentType" "partEntryDocumentType",
+  "documentType" "partLedgerDocumentType",
   "documentNumber" TEXT,
   "costAmountActual" NUMERIC(19, 4) NOT NULL DEFAULT 0,
   "costAmountExpected" NUMERIC(19, 4) NOT NULL DEFAULT 0,
@@ -5193,24 +5195,24 @@ CREATE TABLE "valueEntry" (
   "expectedCostPostedToGl" NUMERIC(19, 4) NOT NULL DEFAULT 0,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
 
-  CONSTRAINT "valueEntry_pkey" PRIMARY KEY ("id")
+  CONSTRAINT "valueLedger_pkey" PRIMARY KEY ("id")
 );
 
-CREATE TABLE "valueEntryAccountEntryRelation" (
-  "valueEntryId" TEXT NOT NULL,
-  "accountEntryId" TEXT NOT NULL,
+CREATE TABLE "valueLedgerAccountLedgerRelation" (
+  "valueLedgerId" TEXT NOT NULL,
+  "generalLedgerId" TEXT NOT NULL,
 
-  CONSTRAINT "valueEntryAccountEntryRelation_pkey" PRIMARY KEY ("valueEntryId", "accountEntryId"),
-  CONSTRAINT "valueEntryAccountEntryRelation_valueEntryId_fkey" FOREIGN KEY ("valueEntryId") REFERENCES "valueEntry"("id"),
-  CONSTRAINT "valueEntryAccountEntryRelation_accountEntryId_fkey" FOREIGN KEY ("accountEntryId") REFERENCES "accountEntry"("id")
+  CONSTRAINT "valueLedgerAccountLedgerRelation_pkey" PRIMARY KEY ("valueLedgerId", "generalLedgerId"),
+  CONSTRAINT "valueLedgerAccountLedgerRelation_valueLedgerId_fkey" FOREIGN KEY ("valueLedgerId") REFERENCES "valueLedger"("id"),
+  CONSTRAINT "valueLedgerAccountLedgerRelation_generalLedgerId_fkey" FOREIGN KEY ("generalLedgerId") REFERENCES "generalLedger"("id")
 );
 
-CREATE TABLE "partEntry" (
+CREATE TABLE "partLedger" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "entryNumber" SERIAL,
   "postingDate" DATE NOT NULL,
-  "entryType" "partEntryType" NOT NULL,
-  "documentType" "partEntryDocumentType",
+  "entryType" "partLedgerType" NOT NULL,
+  "documentType" "partLedgerDocumentType",
   "documentNumber" TEXT,
   "partId" TEXT NOT NULL,
   "locationId" TEXT,
@@ -5223,10 +5225,10 @@ CREATE TABLE "partEntry" (
   "open" BOOLEAN NOT NULL DEFAULT true,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
 
-  CONSTRAINT "partEntry_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "partEntry_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part"("id"),
-  CONSTRAINT "partEntry_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "location"("id"),
-  CONSTRAINT "partEntry_shelfId_fkey" FOREIGN KEY ("shelfId") REFERENCES "shelf"("id")
+  CONSTRAINT "partLedger_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "partLedger_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part"("id"),
+  CONSTRAINT "partLedger_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "location"("id"),
+  CONSTRAINT "partLedger_shelfId_fkey" FOREIGN KEY ("shelfId") REFERENCES "shelf"("id")
 
 );
 

@@ -1,0 +1,66 @@
+import type { ActionArgs } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
+import { useNavigate } from "@remix-run/react";
+import { validationError } from "remix-validated-form";
+import {
+  AccountCategoryForm,
+  accountCategoryValidator,
+  upsertAccountCategory,
+} from "~/modules/accounting";
+import { requirePermissions } from "~/services/auth";
+import { flash } from "~/services/session";
+import { assertIsPost } from "~/utils/http";
+import { error, success } from "~/utils/result";
+
+export async function action({ request }: ActionArgs) {
+  assertIsPost(request);
+  const { client, userId } = await requirePermissions(request, {
+    update: "accounting",
+  });
+
+  const validation = await accountCategoryValidator.validate(
+    await request.formData()
+  );
+
+  if (validation.error) {
+    return validationError(validation.error);
+  }
+
+  const { id, ...data } = validation.data;
+
+  const createAccountCategory = await upsertAccountCategory(client, {
+    ...data,
+    createdBy: userId,
+  });
+  if (createAccountCategory.error) {
+    return redirect(
+      "/x/accounting/categories",
+      await flash(
+        request,
+        error(
+          createAccountCategory.error,
+          "Failed to create G/L account category"
+        )
+      )
+    );
+  }
+
+  return redirect(
+    "/x/accounting/categories",
+    await flash(request, success("Created G/L account category "))
+  );
+}
+
+export default function NewAccountCategoryRoute() {
+  const navigate = useNavigate();
+  const onClose = () => navigate("/x/accounting/categories");
+
+  const initialValues = {
+    name: "",
+    isPublic: false,
+  };
+
+  return (
+    <AccountCategoryForm onClose={onClose} initialValues={initialValues} />
+  );
+}

@@ -1,5 +1,9 @@
 import type { Database } from "@carbon/database";
-import type { getPaymentTerms } from "./services";
+import type { getCurrencies, getPaymentTerms } from "./services";
+
+export type Currency = NonNullable<
+  Awaited<ReturnType<typeof getCurrencies>>["data"]
+>[number];
 
 export type PaymentTermCalculationMethod =
   Database["public"]["Enums"]["paymentTermCalculationMethod"];

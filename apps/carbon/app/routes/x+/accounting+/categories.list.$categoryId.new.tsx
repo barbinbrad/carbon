@@ -8,7 +8,10 @@ export default function NewAccountSubcategoryRoute() {
   const navigate = useNavigate();
   const onClose = () => navigate(-1);
 
-  const initialValues = {};
+  const initialValues = {
+    name: "",
+    accountCategoryId: categoryId,
+  };
 
   return (
     <AccountSubcategoryForm initialValues={initialValues} onClose={onClose} />

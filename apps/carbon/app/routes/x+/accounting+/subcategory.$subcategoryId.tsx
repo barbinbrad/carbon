@@ -44,7 +44,7 @@ export async function action({ request, params }: ActionArgs) {
     );
 
   return redirect(
-    "/x/accounting/categorys",
+    "/x/accounting/categories",
     await flash(request, success("Successfully updated G/L subcategory"))
   );
 }

@@ -5,6 +5,7 @@ import { useUrlParams } from "~/hooks";
 import {
   AccountCategoryDetail,
   getAccountCategory,
+  getAccountSubcategoriesByCategory,
 } from "~/modules/accounting";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
@@ -20,7 +21,10 @@ export async function loader({ request, params }: LoaderArgs) {
   const { categoryId } = params;
   if (!categoryId) throw notFound("Invalid categoryId");
 
-  const accountCategory = await getAccountCategory(client, categoryId);
+  const [accountCategory, accountSubcategories] = await Promise.all([
+    getAccountCategory(client, categoryId),
+    getAccountSubcategoriesByCategory(client, categoryId),
+  ]);
   if (accountCategory.error) {
     return redirect(
       "/x/accounting/categories",
@@ -31,11 +35,28 @@ export async function loader({ request, params }: LoaderArgs) {
     );
   }
 
-  return json({ accountCategory: accountCategory.data });
+  if (accountSubcategories.error) {
+    return redirect(
+      "/x/accounting/categories",
+      await flash(
+        request,
+        error(
+          accountSubcategories.error,
+          "Failed to fetch account subcategories"
+        )
+      )
+    );
+  }
+
+  return json({
+    accountCategory: accountCategory.data,
+    accountSubcategories: accountSubcategories.data ?? [],
+  });
 }
 
 export default function AccountCategoryListRoute() {
-  const { accountCategory } = useLoaderData<typeof loader>();
+  const { accountCategory, accountSubcategories } =
+    useLoaderData<typeof loader>();
   const [params] = useUrlParams();
   const navigate = useNavigate();
   const onClose = () =>
@@ -45,6 +66,7 @@ export default function AccountCategoryListRoute() {
     <>
       <AccountCategoryDetail
         accountCategory={accountCategory}
+        accountSubcategories={accountSubcategories}
         onClose={onClose}
       />
       <Outlet />

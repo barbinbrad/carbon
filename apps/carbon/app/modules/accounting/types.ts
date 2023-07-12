@@ -1,5 +1,24 @@
 import type { Database } from "@carbon/database";
-import type { getCurrencies, getPaymentTerms } from "./services";
+import type {
+  getAccountCategories,
+  getAccountSubcategories,
+  getCurrencies,
+  getPaymentTerms,
+} from "./services";
+
+export type AccountCategory = NonNullable<
+  Awaited<ReturnType<typeof getAccountCategories>>["data"]
+>[number];
+
+export type AccountSubcategory = NonNullable<
+  Awaited<ReturnType<typeof getAccountSubcategories>>["data"]
+>[number];
+
+export type AccountIncomeBalance =
+  Database["public"]["Enums"]["glIncomeBalance"];
+
+export type AccountNormalBalance =
+  Database["public"]["Enums"]["glNormalBalance"];
 
 export type Currency = NonNullable<
   Awaited<ReturnType<typeof getCurrencies>>["data"]

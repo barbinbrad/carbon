@@ -36,7 +36,7 @@ export async function loader({ request, params }: LoaderArgs) {
   return json({ accountCategory: accountCategory.data });
 }
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request, params }: ActionArgs) {
   assertIsPost(request);
   const { client, userId } = await requirePermissions(request, {
     update: "accounting",
@@ -54,6 +54,7 @@ export async function action({ request }: ActionArgs) {
   if (!id) throw new Error("ID is was not found");
 
   const updateCategory = await upsertAccountCategory(client, {
+    id,
     ...data,
     updatedBy: userId,
   });

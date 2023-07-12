@@ -21,7 +21,7 @@ const accountingRoutes: AuthenticatedRouteGroup[] = [
         role: "employee",
       },
       {
-        name: "G/L Account Categories",
+        name: "G/L Categories",
         to: "/x/accounting/categories",
         role: "employee",
       },

@@ -23,10 +23,19 @@ export async function loader({ request }: LoaderArgs) {
   const url = new URL(request.url);
   const searchParams = new URLSearchParams(url.search);
   const name = searchParams.get("name");
+  const incomeBalance = searchParams.get("incomeBalance");
+  const normalBalance = searchParams.get("normalBalance");
   const { limit, offset, sorts } = getGenericQueryFilters(searchParams);
 
   const [categories, incomeBalances, normalBalances] = await Promise.all([
-    getAccountCategories(client, { name, limit, offset, sorts }),
+    getAccountCategories(client, {
+      name,
+      normalBalance,
+      incomeBalance,
+      limit,
+      offset,
+      sorts,
+    }),
     getIncomeBalanceEnum(),
     getNormalBalanceEnum(),
   ]);

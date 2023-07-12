@@ -94,7 +94,7 @@ CREATE TYPE "glAccountType" AS ENUM (
 
 CREATE TABLE "accountCategory" (
   "id" TEXT NOT NULL DEFAULT xid(),
-  "category" "glAccountCategory" NOT NULL,
+  "category" TEXT NOT NULL,
   "incomeBalance" "glIncomeBalance" NOT NULL,
   "normalBalance" "glNormalBalance" NOT NULL,
   "createdBy" TEXT NOT NULL,
@@ -247,3 +247,17 @@ CREATE POLICY "Employees with accounting_delete can delete accounts" ON "account
     coalesce(get_my_claim('accounting_delete')::boolean, false) = true 
     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
   );
+
+  CREATE VIEW "account_categories_view" AS
+  SELECT
+    "id",
+    "category",
+    "incomeBalance",
+    "normalBalance",
+    "createdBy",
+    "createdAt",
+    "updatedBy",
+    "updatedAt",
+    (SELECT count(*) FROM "accountSubcategory" WHERE "accountSubcategory"."accountCategoryId" = "accountCategory"."id" AND "accountSubcategory"."active" = true) AS "subCategoriesCount"
+  FROM "accountCategory"
+;

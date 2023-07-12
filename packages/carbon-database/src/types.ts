@@ -102,7 +102,7 @@ export interface Database {
       };
       accountCategory: {
         Row: {
-          category: Database["public"]["Enums"]["glAccountCategory"];
+          category: string;
           incomeBalance: Database["public"]["Enums"]["glIncomeBalance"];
           normalBalance: Database["public"]["Enums"]["glNormalBalance"];
           createdBy: string;
@@ -112,7 +112,7 @@ export interface Database {
           createdAt: string;
         };
         Insert: {
-          category: Database["public"]["Enums"]["glAccountCategory"];
+          category: string;
           incomeBalance: Database["public"]["Enums"]["glIncomeBalance"];
           normalBalance: Database["public"]["Enums"]["glNormalBalance"];
           createdBy: string;
@@ -122,7 +122,7 @@ export interface Database {
           createdAt?: string;
         };
         Update: {
-          category?: Database["public"]["Enums"]["glAccountCategory"];
+          category?: string;
           incomeBalance?: Database["public"]["Enums"]["glIncomeBalance"];
           normalBalance?: Database["public"]["Enums"]["glNormalBalance"];
           createdBy?: string;
@@ -1277,12 +1277,12 @@ export interface Database {
           inventoryAccountId: string | null;
           costOfGoodsSoldLaborAccountId: string | null;
           costOfGoodsSoldMaterialAccountId: string | null;
-          id: string;
           costOfGoodsSoldOverheadAccountId: string | null;
           costOfGoodsSoldSubcontractorAccountId: string | null;
           createdBy: string;
           updatedBy: string | null;
           updatedAt: string | null;
+          id: string;
           active: boolean;
           createdAt: string;
         };
@@ -1294,12 +1294,12 @@ export interface Database {
           inventoryAccountId?: string | null;
           costOfGoodsSoldLaborAccountId?: string | null;
           costOfGoodsSoldMaterialAccountId?: string | null;
-          id?: string;
           costOfGoodsSoldOverheadAccountId?: string | null;
           costOfGoodsSoldSubcontractorAccountId?: string | null;
           createdBy: string;
           updatedBy?: string | null;
           updatedAt?: string | null;
+          id?: string;
           active?: boolean;
           createdAt?: string;
         };
@@ -1311,12 +1311,12 @@ export interface Database {
           inventoryAccountId?: string | null;
           costOfGoodsSoldLaborAccountId?: string | null;
           costOfGoodsSoldMaterialAccountId?: string | null;
-          id?: string;
           costOfGoodsSoldOverheadAccountId?: string | null;
           costOfGoodsSoldSubcontractorAccountId?: string | null;
           createdBy?: string;
           updatedBy?: string | null;
           updatedAt?: string | null;
+          id?: string;
           active?: boolean;
           createdAt?: string;
         };
@@ -2752,6 +2752,41 @@ export interface Database {
       };
     };
     Views: {
+      account_categories_view: {
+        Row: {
+          id: string | null;
+          category: string | null;
+          incomeBalance: Database["public"]["Enums"]["glIncomeBalance"] | null;
+          normalBalance: Database["public"]["Enums"]["glNormalBalance"] | null;
+          createdBy: string | null;
+          createdAt: string | null;
+          updatedBy: string | null;
+          updatedAt: string | null;
+          subCategoriesCount: number | null;
+        };
+        Insert: {
+          id?: string | null;
+          category?: string | null;
+          incomeBalance?: Database["public"]["Enums"]["glIncomeBalance"] | null;
+          normalBalance?: Database["public"]["Enums"]["glNormalBalance"] | null;
+          createdBy?: string | null;
+          createdAt?: string | null;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          subCategoriesCount?: never;
+        };
+        Update: {
+          id?: string | null;
+          category?: string | null;
+          incomeBalance?: Database["public"]["Enums"]["glIncomeBalance"] | null;
+          normalBalance?: Database["public"]["Enums"]["glNormalBalance"] | null;
+          createdBy?: string | null;
+          createdAt?: string | null;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+          subCategoriesCount?: never;
+        };
+      };
       contractors_view: {
         Row: {
           supplierContactId: string | null;

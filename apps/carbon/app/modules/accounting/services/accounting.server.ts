@@ -5,6 +5,7 @@ import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
 import { sanitize } from "~/utils/supabase";
 import type {
+  accountCategoryValidator,
   accountLedgerValidator,
   accountSubcategoryValidator,
   accountValidator,
@@ -13,6 +14,24 @@ import type {
   paymentTermValidator,
   valueLedgerValidator,
 } from "./accounting.form";
+import { incomeBalanceType, normalBalanceType } from "./accounting.form";
+
+export async function deleteAccountCategory(
+  client: SupabaseClient<Database>,
+  accountSubcategoryId: string
+) {
+  return client.from("accountCategory").delete().eq("id", accountSubcategoryId);
+}
+
+export async function deleteAccountSubcategory(
+  client: SupabaseClient<Database>,
+  accountSubcategoryId: string
+) {
+  return client
+    .from("accountSubcategory")
+    .update({ active: false })
+    .eq("id", accountSubcategoryId);
+}
 
 export async function deleteCurrency(
   client: SupabaseClient<Database>,
@@ -71,17 +90,27 @@ export async function getAccountCategories(
   client: SupabaseClient<Database>,
   args: GenericQueryFilters & {
     name: string | null;
+    normalBalance: string | null;
+    incomeBalance: string | null;
   }
 ) {
-  let query = client.from("accountCategory").select("*", {
+  let query = client.from("account_categories_view").select("*", {
     count: "exact",
   });
 
   if (args.name) {
-    query = query.ilike("name", `%${args.name}%`);
+    query = query.ilike("category", `%${args.name}%`);
   }
 
-  query = setGenericQueryFilters(query, args, "name");
+  if (args.normalBalance) {
+    query = query.eq("normalBalance", args.normalBalance);
+  }
+
+  if (args.incomeBalance) {
+    query = query.eq("incomeBalance", args.incomeBalance);
+  }
+
+  query = setGenericQueryFilters(query, args, "category");
   return query;
 }
 
@@ -147,7 +176,8 @@ export async function getAccountSubcategoriesByCategory(
   return client
     .from("accountSubcategory")
     .select("*")
-    .eq("accountCategoryId", accountCategoryId);
+    .eq("accountCategoryId", accountCategoryId)
+    .eq("active", true);
 }
 
 export async function getAccountSubcategory(
@@ -205,12 +235,12 @@ export function getConsolidatedRateEnum(): Database["public"]["Enums"]["glConsol
   return ["Average", "Current", "Historical"];
 }
 
-export function getIncomeBalanceEnum(): Database["public"]["Enums"]["glIncomeBalance"][] {
-  return ["Balance Sheet", "Income Statement"];
+export function getIncomeBalanceEnum(): readonly Database["public"]["Enums"]["glIncomeBalance"][] {
+  return incomeBalanceType;
 }
 
-export function getNormalBalanceEnum(): Database["public"]["Enums"]["glNormalBalance"][] {
-  return ["Debit", "Credit", "Both"];
+export function getNormalBalanceEnum(): readonly Database["public"]["Enums"]["glNormalBalance"][] {
+  return normalBalanceType;
 }
 
 export async function getCurrenciesList(client: SupabaseClient<Database>) {
@@ -320,6 +350,30 @@ export async function upsertAccount(
     .from("account")
     .update(sanitize(account))
     .eq("id", account.id)
+    .select("id");
+}
+
+export async function upsertAccountCategory(
+  client: SupabaseClient<Database>,
+  accountCategory:
+    | (Omit<TypeOfValidator<typeof accountCategoryValidator>, "id"> & {
+        createdBy: string;
+      })
+    | (Omit<TypeOfValidator<typeof accountCategoryValidator>, "id"> & {
+        id: string;
+        updatedBy: string;
+      })
+) {
+  if ("createdBy" in accountCategory) {
+    return client
+      .from("accountCategory")
+      .insert([accountCategory])
+      .select("id");
+  }
+  return client
+    .from("accountCategory")
+    .update(sanitize(accountCategory))
+    .eq("id", accountCategory.id)
     .select("id");
 }
 

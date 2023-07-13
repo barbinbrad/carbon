@@ -203,6 +203,36 @@ export async function getBaseCurrency(client: SupabaseClient<Database>) {
     .single();
 }
 
+export async function getChartOfAccounts(
+  client: SupabaseClient<Database>,
+  args: Omit<GenericQueryFilters, "limit" | "offset"> & {
+    name: string | null;
+  }
+) {
+  let query = client.from("account").select("*").eq("active", true);
+
+  if (args.name) {
+    query = query.or(`name.ilike.%${args.name}%,number.ilike.%${args.name}%`);
+  }
+
+  query = setGenericQueryFilters(query, args, "number");
+
+  const response = await query;
+
+  if (response.error) return response;
+
+  return {
+    data: response.data.map((account) => ({
+      ...account,
+      level: 0,
+      accountCategory: "",
+      accountSubcategory: "",
+      totaling: "",
+    })),
+    error: null,
+  };
+}
+
 export async function getCurrency(
   client: SupabaseClient<Database>,
   currencyId: string

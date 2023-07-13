@@ -96,7 +96,7 @@ export function setGenericQueryFilters<
   V
 >(
   query: PostgrestFilterBuilder<T, U, V>,
-  args: GenericQueryFilters,
+  args: Partial<GenericQueryFilters>,
   defaultSort?: string,
   defaultAsc = true
 ): PostgrestFilterBuilder<T, U, V> {
@@ -127,7 +127,11 @@ export function setGenericQueryFilters<
     });
   }
 
-  return query.range(args.offset, args.offset + args.limit - 1);
+  if (args.offset && args.limit) {
+    query = query.range(args.offset, args.offset + args.limit - 1);
+  }
+
+  return query;
 }
 
 const getSafeNumber = (value: string) => {

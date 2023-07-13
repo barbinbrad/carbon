@@ -50,16 +50,12 @@ const AccountCategoriesTable = memo(
           cell: (item) => item.getValue(),
         },
         {
-          header: "Income Balance",
+          header: "Income/Balance",
           accessorKey: "incomeBalance",
-          cell: (item) => (
-            <Badge size="sm" variant="outline">
-              {item.getValue<string>()}
-            </Badge>
-          ),
+          cell: (item) => item.getValue(),
         },
         {
-          header: "Normal Balance",
+          header: "Debit/Credit",
           accessorKey: "normalBalance",
           cell: (item) => {
             const isDebit = item.getValue<string>() === "Debit";

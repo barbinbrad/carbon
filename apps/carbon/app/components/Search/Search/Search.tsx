@@ -179,7 +179,7 @@ const SearchModal = ({
       }}
     >
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent borderRadius="lg">
         <ModalBody p={0}>
           <InputGroup size="lg">
             <InputLeftElement
@@ -202,7 +202,7 @@ const SearchModal = ({
 
           <Box
             bg="white"
-            borderBottomRadius="lg"
+            borderRadius="lg"
             boxShadow="lg"
             maxH="66vh"
             overflowY="scroll"

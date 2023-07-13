@@ -65,6 +65,7 @@ export default function AccountCategoryListRoute() {
   return (
     <>
       <AccountCategoryDetail
+        // @ts-expect-error
         accountCategory={accountCategory}
         accountSubcategories={accountSubcategories}
         onClose={onClose}

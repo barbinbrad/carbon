@@ -25,22 +25,11 @@ export type AccountIncomeBalance =
 export type AccountNormalBalance =
   Database["public"]["Enums"]["glNormalBalance"];
 
-export type Chart = {
-  number: string;
-  name: string;
-  netChange?: number;
-  balanceAtDate?: number;
-  balance?: number;
-  accountCategory: string;
-  accountCategoryId: string | null;
-  accountSubcategory: string;
-  accountSubcategoryId: string | null;
-  type: string;
-  incomeBalance: AccountIncomeBalance;
-  normalBalance: AccountNormalBalance;
-  level: number;
-  totaling: string;
-};
+export type Chart = Account &
+  Transaction & {
+    level: number;
+    totaling: string;
+  };
 
 export type Currency = NonNullable<
   Awaited<ReturnType<typeof getCurrencies>>["data"]
@@ -52,3 +41,10 @@ export type PaymentTermCalculationMethod =
 export type PaymentTerm = NonNullable<
   Awaited<ReturnType<typeof getPaymentTerms>>["data"]
 >[number];
+
+export type Transaction = {
+  number: string;
+  netChange: number;
+  balanceAtDate: number;
+  balance: number;
+};

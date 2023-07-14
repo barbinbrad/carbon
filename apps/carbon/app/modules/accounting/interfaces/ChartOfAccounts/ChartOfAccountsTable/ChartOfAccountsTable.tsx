@@ -49,17 +49,17 @@ const ChartOfAccountsTable = memo(({ data }: ChartOfAccountsTableProps) => {
       {
         accessorKey: "netChange",
         header: "Net Change",
-        cell: (item) => "--",
+        cell: (item) => item.getValue(),
       },
       {
         accessorKey: "balanceAtDate",
-        header: "Exchange Rate",
-        cell: (item) => "--",
+        header: "Balance at Date",
+        cell: (item) => item.getValue(),
       },
       {
         accessorKey: "balance",
-        header: "Exchange Rate",
-        cell: (item) => "--",
+        header: "Balance",
+        cell: (item) => item.getValue(),
       },
       {
         accessorKey: "incomeBalance",
@@ -127,6 +127,7 @@ const ChartOfAccountsTable = memo(({ data }: ChartOfAccountsTableProps) => {
       columns={columns}
       renderContextMenu={renderContextMenu}
       withPagination={false}
+      withSimpleSorting={false}
     />
   );
 });

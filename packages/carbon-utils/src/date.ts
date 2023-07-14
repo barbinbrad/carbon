@@ -40,3 +40,9 @@ export function formatTimeAgo(isoString: string) {
     duration /= division.amount;
   }
 }
+
+export function getDateNYearsAgo(n: number) {
+  const date = new Date();
+  date.setFullYear(date.getFullYear() - n);
+  return date;
+}

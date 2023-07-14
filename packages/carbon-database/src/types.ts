@@ -2983,6 +2983,15 @@ export interface Database {
         Args: Record<PropertyKey, never>;
         Returns: Json;
       };
+      gl_transactions_by_account_number: {
+        Args: { from_date: string; to_date: string };
+        Returns: {
+          number: string;
+          balance: number;
+          balanceAtDate: number;
+          netChange: number;
+        }[];
+      };
       groups_for_user: {
         Args: { uid: string };
         Returns: string[];

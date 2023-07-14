@@ -1,9 +1,11 @@
 import type { Database } from "@carbon/database";
+import { getDateNYearsAgo } from "@carbon/utils";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { TypeOfValidator } from "~/types/validators";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
 import { sanitize } from "~/utils/supabase";
+import type { Transaction } from "../types";
 import type {
   accountCategoryValidator,
   accountLedgerValidator,
@@ -207,28 +209,54 @@ export async function getChartOfAccounts(
   client: SupabaseClient<Database>,
   args: Omit<GenericQueryFilters, "limit" | "offset"> & {
     name: string | null;
+    startDate: string | null;
+    endDate: string | null;
   }
 ) {
-  let query = client.from("account").select("*").eq("active", true);
+  let accountsQuery = client.from("account").select("*").eq("active", true);
 
-  if (args.name) {
-    query = query.or(`name.ilike.%${args.name}%,number.ilike.%${args.name}%`);
-  }
+  accountsQuery = setGenericQueryFilters(accountsQuery, args, "number");
 
-  query = setGenericQueryFilters(query, args, "number");
+  let transactionsQuery = client.rpc("gl_transactions_by_account_number", {
+    from_date:
+      args.startDate ?? getDateNYearsAgo(50).toISOString().split("T")[0],
+    to_date: args.endDate ?? new Date().toISOString().split("T")[0],
+  });
 
-  const response = await query;
+  const [accountsResponse, transactionsResponse] = await Promise.all([
+    accountsQuery,
+    transactionsQuery,
+  ]);
 
-  if (response.error) return response;
+  if (transactionsResponse.error) return transactionsResponse;
+  if (accountsResponse.error) return accountsResponse;
+
+  const transactionsByAccount = (
+    transactionsResponse.data as unknown as Transaction[]
+  ).reduce<Record<string, Transaction>>((acc, transaction: Transaction) => {
+    acc[transaction.number] = transaction;
+    return acc;
+  }, {});
 
   return {
-    data: response.data.map((account) => ({
-      ...account,
-      level: 0,
-      accountCategory: "",
-      accountSubcategory: "",
-      totaling: "",
-    })),
+    data: accountsResponse.data
+      .map((account) => ({
+        ...account,
+        ...transactionsByAccount[account.number],
+        level: 0, // TODO
+        accountCategory: "",
+        accountSubcategory: "",
+        totaling: "", // TODO
+      }))
+      .filter((account) => {
+        if (args.name) {
+          return (
+            account.name.toLowerCase().includes(args.name.toLowerCase()) ||
+            account.number.toLowerCase().includes(args.name.toLowerCase())
+          );
+        }
+        return true;
+      }),
     error: null,
   };
 }

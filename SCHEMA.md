@@ -5154,6 +5154,9 @@ CREATE TABLE "generalLedger" (
   CONSTRAINT "generalLedger_accountNumber_fkey" FOREIGN KEY ("accountNumber") REFERENCES "account"("number")
 );
 
+CREATE INDEX "generalLedger_accountNumber_idx" ON "generalLedger" ("accountNumber");
+CREATE INDEX "generalLedger_postingDate_idx" ON "generalLedger" ("postingDate");
+
 CREATE TYPE "partLedgerType" AS ENUM (
   'Purchase',
   'Sale',
@@ -5244,9 +5247,33 @@ CREATE TABLE "partLedger" (
   CONSTRAINT "partLedger_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part"("id"),
   CONSTRAINT "partLedger_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "location"("id"),
   CONSTRAINT "partLedger_shelfId_fkey" FOREIGN KEY ("shelfId") REFERENCES "shelf"("id")
-
 );
 
+
+
+CREATE OR REPLACE FUNCTION gl_transactions_by_account_number(
+  from_date DATE DEFAULT (now() - INTERVAL '100 year'),
+  to_date DATE DEFAULT now()
+) 
+RETURNS TABLE (
+  "number" TEXT,
+  "balance" NUMERIC(19, 4),
+  "balanceAtDate" NUMERIC(19, 4),
+  "netChange" NUMERIC(19, 4)
+) LANGUAGE "plpgsql" SECURITY INVOKER SET search_path = public
+AS $$
+  BEGIN
+    RETURN QUERY
+      SELECT 
+        a."number",
+        SUM(g."amount") AS "balance",
+        SUM(CASE WHEN g."postingDate" <= to_date THEN g."amount" ELSE 0 END) AS "balanceAtDate",
+        SUM(CASE WHEN g."postingDate" >= from_date AND g."postingDate" <= to_date THEN g."amount" ELSE 0 END) AS "netChange"
+      FROM "account" a
+      LEFT JOIN "generalLedger" g ON g."accountNumber" = a."number"
+      GROUP BY a."number";
+  END;
+$$;
 
 
 

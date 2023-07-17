@@ -60,6 +60,7 @@ export interface Database {
           createdBy: string;
           updatedBy: string | null;
           updatedAt: string | null;
+          id: string;
           active: boolean;
           createdAt: string;
         };
@@ -78,6 +79,7 @@ export interface Database {
           createdBy: string;
           updatedBy?: string | null;
           updatedAt?: string | null;
+          id?: string;
           active?: boolean;
           createdAt?: string;
         };
@@ -96,6 +98,7 @@ export interface Database {
           createdBy?: string;
           updatedBy?: string | null;
           updatedAt?: string | null;
+          id?: string;
           active?: boolean;
           createdAt?: string;
         };
@@ -624,12 +627,12 @@ export interface Database {
           readGroups: string[] | null;
           writeGroups: string[] | null;
           createdBy: string;
-          updatedBy: string | null;
-          updatedAt: string | null;
           id: string;
           description: string | null;
           type: string | null;
           active: boolean;
+          updatedBy: string | null;
+          updatedAt: string | null;
           createdAt: string;
         };
         Insert: {
@@ -639,12 +642,12 @@ export interface Database {
           readGroups?: string[] | null;
           writeGroups?: string[] | null;
           createdBy: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
           id?: string;
           description?: string | null;
           type?: string | null;
           active?: boolean;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
           createdAt?: string;
         };
         Update: {
@@ -654,12 +657,12 @@ export interface Database {
           readGroups?: string[] | null;
           writeGroups?: string[] | null;
           createdBy?: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
           id?: string;
           description?: string | null;
           type?: string | null;
           active?: boolean;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
           createdAt?: string;
         };
       };

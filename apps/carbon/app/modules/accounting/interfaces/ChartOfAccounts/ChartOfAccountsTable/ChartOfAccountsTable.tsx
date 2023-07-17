@@ -1,11 +1,7 @@
-import { MenuItem, Text } from "@chakra-ui/react";
-import { useNavigate } from "@remix-run/react";
+import { DataTable, DataTableColumnHeader } from "@carbon/react";
+import { Text } from "@chakra-ui/react";
 import type { ColumnDef } from "@tanstack/react-table";
-import { memo, useCallback, useMemo } from "react";
-import { BsPencilSquare } from "react-icons/bs";
-import { IoMdTrash } from "react-icons/io";
-import { Table } from "~/components";
-import { usePermissions, useUrlParams } from "~/hooks";
+import { memo, useMemo } from "react";
 import type { Chart } from "~/modules/accounting";
 
 type ChartOfAccountsTableProps = {
@@ -13,17 +9,16 @@ type ChartOfAccountsTableProps = {
 };
 
 const ChartOfAccountsTable = memo(({ data }: ChartOfAccountsTableProps) => {
-  const [params] = useUrlParams();
-  const navigate = useNavigate();
-  const permissions = usePermissions();
-
   const columns = useMemo<ColumnDef<Chart>[]>(() => {
     return [
       {
         accessorKey: "number",
-        header: "No.",
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="No." />
+        ),
         cell: ({ row }) => {
           const isPosting = row.original.type === "Posting";
+
           return (
             <Text fontWeight={isPosting ? "normal" : "bold"}>
               {row.original.number}
@@ -51,11 +46,11 @@ const ChartOfAccountsTable = memo(({ data }: ChartOfAccountsTableProps) => {
         header: "Net Change",
         cell: (item) => item.getValue(),
       },
-      {
-        accessorKey: "balanceAtDate",
-        header: "Balance at Date",
-        cell: (item) => item.getValue(),
-      },
+      // {
+      //   accessorKey: "balanceAtDate",
+      //   header: "Balance at Date",
+      //   cell: (item) => item.getValue(),
+      // },
       {
         accessorKey: "balance",
         header: "Balance",
@@ -89,47 +84,7 @@ const ChartOfAccountsTable = memo(({ data }: ChartOfAccountsTableProps) => {
     ];
   }, []);
 
-  const renderContextMenu = useCallback(
-    (row: Chart) => {
-      return (
-        <>
-          <MenuItem
-            isDisabled={!permissions.can("update", "accounting")}
-            icon={<BsPencilSquare />}
-            onClick={() => {
-              navigate(
-                `/x/accounting/charts/${row.number}?${params.toString()}`
-              );
-            }}
-          >
-            Edit Chart
-          </MenuItem>
-          <MenuItem
-            isDisabled={!permissions.can("delete", "accounting")}
-            icon={<IoMdTrash />}
-            onClick={() => {
-              navigate(
-                `/x/accounting/charts/delete/${row.number}?${params.toString()}`
-              );
-            }}
-          >
-            Delete Chart
-          </MenuItem>
-        </>
-      );
-    },
-    [navigate, params, permissions]
-  );
-
-  return (
-    <Table<Chart>
-      data={data}
-      columns={columns}
-      renderContextMenu={renderContextMenu}
-      withPagination={false}
-      withSimpleSorting={false}
-    />
-  );
+  return <DataTable data={data} columns={columns} />;
 });
 
 ChartOfAccountsTable.displayName = "ChartOfAccountsTable";

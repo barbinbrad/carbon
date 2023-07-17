@@ -187,6 +187,7 @@ CREATE INDEX "accountSubcategory_accountCategoryId_idx" ON "accountSubcategory" 
 
 
 CREATE TABLE "account" (
+  "id" TEXT NOT NULL DEFAULT xid(),
   "number" TEXT NOT NULL,
   "name" TEXT NOT NULL,
   "type" "glAccountType" NOT NULL,
@@ -202,13 +203,20 @@ CREATE TABLE "account" (
   "updatedBy" TEXT,
   "updatedAt" TIMESTAMP WITH TIME ZONE,
 
-  CONSTRAINT "account_pkey" PRIMARY KEY ("number"),
+  CONSTRAINT "account_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "account_number_key" UNIQUE ("number"),
   CONSTRAINT "account_name_key" UNIQUE ("name"),
   CONSTRAINT "account_accountCategoryId_fkey" FOREIGN KEY ("accountCategoryId") REFERENCES "accountCategory"("id"),
   CONSTRAINT "account_currencyCode_fkey" FOREIGN KEY ("currencyCode") REFERENCES "currency"("code") ON DELETE SET NULL,
   CONSTRAINT "account_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "account_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
+
+CREATE INDEX "account_number_idx" ON "account" ("number");
+CREATE INDEX "account_type_idx" ON "account" ("type");
+CREATE INDEX "account_incomeBalance_idx" ON "account" ("incomeBalance");
+CREATE INDEX "account_accountCategoryId_idx" ON "account" ("accountCategoryId");
+CREATE INDEX "account_accountSubcategoryId_idx" ON "account" ("accountSubcategoryId");
 
 
 ALTER TABLE "account" ENABLE ROW LEVEL SECURITY;

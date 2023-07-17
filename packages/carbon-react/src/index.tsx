@@ -1,5 +1,6 @@
 import Button from "./Button";
 import Count from "./Count";
+import DataTable, { DataTableColumnHeader } from "./DataTable";
 import Dot from "./Dot";
 import HTML from "./HTML";
 import type { OptionBase, OptionProps, GroupBase } from "./Inputs";
@@ -38,6 +39,8 @@ export {
   ContextMenu,
   Count,
   CreatableSelect,
+  DataTable,
+  DataTableColumnHeader,
   DatePicker,
   DateTimePicker,
   DateRangePicker,

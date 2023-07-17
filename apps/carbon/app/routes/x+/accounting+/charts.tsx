@@ -3,14 +3,9 @@ import type { LoaderArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
-import {
-  ChartOfAccountsTable,
-  ChartOfAccountsTableFilters,
-  getChartOfAccounts,
-} from "~/modules/accounting";
+import { ChartOfAccountsTable, getChartOfAccounts } from "~/modules/accounting";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
-import { getGenericQueryFilters } from "~/utils/query";
 import { error } from "~/utils/result";
 
 export async function loader({ request }: LoaderArgs) {
@@ -22,11 +17,11 @@ export async function loader({ request }: LoaderArgs) {
   const url = new URL(request.url);
   const searchParams = new URLSearchParams(url.search);
   const name = searchParams.get("name");
-  const { sorts } = getGenericQueryFilters(searchParams);
 
   const chartOfAccounts = await getChartOfAccounts(client, {
     name,
-    sorts,
+    startDate: null,
+    endDate: null,
   });
 
   if (chartOfAccounts.error) {
@@ -49,7 +44,6 @@ export default function ChartOfAccountsRoute() {
 
   return (
     <VStack w="full" h="full" spacing={0}>
-      <ChartOfAccountsTableFilters />
       <ChartOfAccountsTable data={chartOfAccounts} />
       <Outlet />
     </VStack>

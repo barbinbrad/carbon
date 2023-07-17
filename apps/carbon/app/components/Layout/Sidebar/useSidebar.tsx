@@ -9,8 +9,8 @@ import {
   BsShieldLock,
 } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
-import { GoSettings } from "react-icons/go";
 import { HiOutlineCube, HiOutlineDocumentDuplicate } from "react-icons/hi";
+import { LuSettings2 } from "react-icons/lu";
 import { TbPigMoney } from "react-icons/tb";
 import { usePermissions } from "~/hooks";
 
@@ -94,7 +94,7 @@ export function useSidebar() {
       permission: "settings",
       name: "Settings",
       to: "/x/settings",
-      icon: <GoSettings />,
+      icon: <LuSettings2 />,
     },
     {
       name: "My Account",

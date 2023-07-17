@@ -53,25 +53,23 @@ const Pagination = (props: PaginationProps) => {
       w="full"
       zIndex={1}
     >
-      <HStack spacing={2}>
-        <Menu>
-          <MenuButton as={Button} variant="ghost">
-            {pageSize} {pageSizeLabel}
-          </MenuButton>
-          <MenuList fontSize="sm" boxShadow="xl" minW={48}>
-            {pageSizes.map((size) => (
-              <MenuItem
-                key={`${size}`}
-                onClick={() => {
-                  setPageSize(size);
-                }}
-              >
-                {size} {pageSizeLabel}
-              </MenuItem>
-            ))}
-          </MenuList>
-        </Menu>
-      </HStack>
+      <Menu>
+        <MenuButton as={Button} variant="ghost">
+          {pageSize} {pageSizeLabel}
+        </MenuButton>
+        <MenuList fontSize="sm" boxShadow="xl" minW={48}>
+          {pageSizes.map((size) => (
+            <MenuItem
+              key={`${size}`}
+              onClick={() => {
+                setPageSize(size);
+              }}
+            >
+              {size} {pageSizeLabel}
+            </MenuItem>
+          ))}
+        </MenuList>
+      </Menu>
       <HStack spacing={2}>
         <PaginationButtons {...props} />
       </HStack>

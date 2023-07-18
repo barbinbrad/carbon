@@ -34,7 +34,7 @@ const ChartOfAccountsTable = memo(({ data }: ChartOfAccountsTableProps) => {
           return (
             <Text
               fontWeight={isPosting ? "normal" : "bold"}
-              pl={`calc(${0.5 * row.original.level}rem)`}
+              pl={`calc(${0.75 * row.original.level}rem)`}
             >
               {row.original.name}
             </Text>
@@ -44,7 +44,7 @@ const ChartOfAccountsTable = memo(({ data }: ChartOfAccountsTableProps) => {
       {
         accessorKey: "netChange",
         header: "Net Change",
-        cell: (item) => item.getValue(),
+        cell: ({ row }) => (row.original.netChange ?? 0).toFixed(2),
       },
       // {
       //   accessorKey: "balanceAtDate",
@@ -54,12 +54,22 @@ const ChartOfAccountsTable = memo(({ data }: ChartOfAccountsTableProps) => {
       {
         accessorKey: "balance",
         header: "Balance",
-        cell: (item) => item.getValue(),
+        cell: ({ row }) => (row.original.balance ?? 0).toFixed(2),
       },
       {
         accessorKey: "incomeBalance",
         header: "Income/Balance",
         cell: (item) => item.getValue(),
+      },
+      {
+        accessorKey: "type",
+        header: "Account Type",
+        cell: (item) => item.getValue(),
+      },
+      {
+        acessorKey: "totaling",
+        header: "Totaling",
+        cell: ({ row }) => row.original.totaling ?? "",
       },
       {
         accessorKey: "accountCategory",
@@ -69,16 +79,6 @@ const ChartOfAccountsTable = memo(({ data }: ChartOfAccountsTableProps) => {
       {
         accessorKey: "accountSubCategory",
         header: "Account Subcategory",
-        cell: (item) => item.getValue(),
-      },
-      {
-        accessorKey: "type",
-        header: "Account Type",
-        cell: (item) => item.getValue(),
-      },
-      {
-        acessorKey: "Totaling",
-        header: "Totaling",
         cell: (item) => item.getValue(),
       },
     ];

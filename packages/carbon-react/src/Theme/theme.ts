@@ -95,6 +95,13 @@ export const theme = {
       defaultProps: {
         borderRadius: "md",
       },
+      sizes: {
+        sm: {
+          field: {
+            borderRadius: "md",
+          },
+        },
+      },
       variants: {
         outline: focusRingOutlined,
         filled: focusRingFilled,

@@ -2,7 +2,13 @@ import { useRef } from "react";
 import { useDatePickerState } from "@react-stately/datepicker";
 import { useDatePicker } from "@react-aria/datepicker";
 import { MdOutlineCalendarToday, MdOutlineDoNotDisturb } from "react-icons/md";
-import { Box, Icon, InputGroup, InputRightElement } from "@chakra-ui/react";
+import {
+  Box,
+  Icon,
+  InputGroup,
+  InputRightElement,
+  useOutsideClick,
+} from "@chakra-ui/react";
 import type { DatePickerProps } from "@react-types/datepicker";
 import type { CalendarDate } from "@internationalized/date";
 
@@ -20,6 +26,11 @@ const DatePicker = (props: DatePickerProps<CalendarDate>) => {
   const ref = useRef<HTMLDivElement>(null);
   const { groupProps, fieldProps, buttonProps, dialogProps, calendarProps } =
     useDatePicker(props, state, ref);
+
+  useOutsideClick({
+    ref,
+    handler: () => state.setOpen(false),
+  });
 
   return (
     <Box

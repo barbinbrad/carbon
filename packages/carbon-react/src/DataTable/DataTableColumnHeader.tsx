@@ -1,14 +1,14 @@
 import {
+  Flex,
   HStack,
-  Icon,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
-  Th,
+  chakra,
 } from "@chakra-ui/react";
 import type { Column } from "@tanstack/react-table";
-import { LuChevronsUpDown } from "react-icons/lu";
+import { FaSortDown, FaSortUp, FaSort } from "react-icons/fa";
 import {
   MdDisabledVisible,
   MdKeyboardArrowUp,
@@ -24,23 +24,31 @@ interface DataTableColumnHeaderProps<TData, TValue>
 export function DataTableColumnHeader<TData, TValue>({
   column,
   title,
-  className,
 }: DataTableColumnHeaderProps<TData, TValue>) {
   if (!column.getCanSort()) {
-    return <Th>{title}</Th>;
+    return <span>{title}</span>;
   }
 
   return (
     <Menu>
-      <MenuButton as={HStack}>
-        <span>{title}</span>
-        {column.getIsSorted() === "desc" ? (
-          <Icon as={MdKeyboardArrowDown} ml={2} />
-        ) : column.getIsSorted() === "asc" ? (
-          <Icon as={MdKeyboardArrowUp} ml={2} />
-        ) : (
-          <Icon as={LuChevronsUpDown} ml={2} />
-        )}
+      <MenuButton as={HStack} cursor="pointer" justifyContent="space-between">
+        <Flex
+          justify="flex-start"
+          align="center"
+          fontSize="xs"
+          color="gray.500"
+        >
+          {title}
+          <chakra.span pl="4">
+            {column.getIsSorted() === "desc" ? (
+              <FaSortDown aria-label="sorted descending" />
+            ) : column.getIsSorted() === "asc" ? (
+              <FaSortUp aria-label="sorted ascending" />
+            ) : (
+              <FaSort aria-label="sort" />
+            )}
+          </chakra.span>
+        </Flex>
       </MenuButton>
       <MenuList>
         <MenuItem

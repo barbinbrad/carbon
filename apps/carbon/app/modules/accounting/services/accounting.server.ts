@@ -5,7 +5,7 @@ import type { TypeOfValidator } from "~/types/validators";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
 import { sanitize } from "~/utils/supabase";
-import type { Transaction } from "../types";
+import type { Account, Transaction } from "../types";
 import type {
   accountCategoryValidator,
   accountLedgerValidator,
@@ -209,11 +209,16 @@ export async function getChartOfAccounts(
   client: SupabaseClient<Database>,
   args: Omit<GenericQueryFilters, "limit" | "offset"> & {
     name: string | null;
+    incomeBalance: string | null;
     startDate: string | null;
     endDate: string | null;
   }
 ) {
   let accountsQuery = client.from("account").select("*").eq("active", true);
+
+  if (args.incomeBalance) {
+    accountsQuery = accountsQuery.eq("incomeBalance", args.incomeBalance);
+  }
 
   accountsQuery = setGenericQueryFilters(accountsQuery, args, "number");
 
@@ -238,27 +243,100 @@ export async function getChartOfAccounts(
     return acc;
   }, {});
 
+  const accounts: Account[] = accountsResponse.data;
+
   return {
-    data: accountsResponse.data
-      .map((account) => ({
-        ...account,
-        ...transactionsByAccount[account.number],
-        level: 0, // TODO
-        accountCategory: "",
-        accountSubcategory: "",
-        totaling: "", // TODO
-      }))
-      .filter((account) => {
-        if (args.name) {
-          return (
-            account.name.toLowerCase().includes(args.name.toLowerCase()) ||
-            account.number.toLowerCase().includes(args.name.toLowerCase())
-          );
-        }
-        return true;
-      }),
+    data: assignLevelsAndTotalsToAccounts(accounts).map((account) => ({
+      ...account,
+      netChange: getAccountTotal(
+        accounts,
+        account,
+        "netChange",
+        transactionsByAccount
+      ),
+
+      balance: getAccountTotal(
+        accounts,
+        account,
+        "balance",
+        transactionsByAccount
+      ),
+
+      balanceAtDate: getAccountTotal(
+        accounts,
+        account,
+        "balanceAtDate",
+        transactionsByAccount
+      ),
+      accountCategory: "",
+      accountSubcategory: "",
+    })),
     error: null,
   };
+}
+
+type AccountWithTotals = Account & { level: number; totaling: string };
+
+function assignLevelsAndTotalsToAccounts(
+  accounts: Account[]
+): AccountWithTotals[] {
+  let result: AccountWithTotals[] = [];
+  let beginTotalAccounts: string[] = [];
+  let endTotalAccounts: string[] = [];
+
+  accounts.forEach((account) => {
+    if (account.type === "End Total") {
+      endTotalAccounts.push(account.number);
+    }
+
+    let level = beginTotalAccounts.length - endTotalAccounts.length;
+
+    if (account.type === "Begin Total") {
+      beginTotalAccounts.push(account.number);
+    }
+
+    if (account.type === "Heading") {
+      level = 0;
+    }
+
+    let totaling = "";
+
+    if (account.type === "End Total") {
+      let startAccount = beginTotalAccounts.pop();
+      let endAccount = endTotalAccounts.pop();
+
+      totaling = `${startAccount}..${endAccount}`;
+    }
+
+    result.push({
+      ...account,
+      level,
+      totaling,
+    });
+  });
+
+  return result;
+}
+
+function getAccountTotal(
+  accounts: Account[],
+  account: AccountWithTotals,
+  type: "netChange" | "balance" | "balanceAtDate",
+  transactionsByAccount: Record<string, Transaction>
+) {
+  if (!account.totaling)
+    return transactionsByAccount[account.number][type] ?? 0;
+
+  let total = 0;
+  const [start, end] = account.totaling.split("..");
+
+  accounts.forEach((account) => {
+    if (account.number >= start && account.number <= end) {
+      total += transactionsByAccount[account.number][type] ?? 0;
+    }
+  });
+
+  return total;
 }
 
 export async function getCurrency(

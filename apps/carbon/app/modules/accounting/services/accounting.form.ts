@@ -2,13 +2,21 @@ import { withZod } from "@remix-validated-form/with-zod";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
 
-const accountDocumentLedgerType = [
+export const accountDocumentLedgerType = [
   "Quote",
   "Order",
   "Invoice",
   "Credit Memo",
   "Blanket Order",
   "Return Order",
+] as const;
+
+export const accountTypes = [
+  "Posting",
+  "Heading",
+  // "Total",
+  "Begin Total",
+  "End Total",
 ] as const;
 
 const costLedgerTypes = [
@@ -57,9 +65,10 @@ export const normalBalanceType = ["Debit", "Credit", "Both"] as const;
 
 export const accountValidator = withZod(
   z.object({
+    id: zfd.text(z.string().optional()),
     number: z.string().min(1, { message: "Number is required" }),
     name: z.string().min(1, { message: "Name is required" }),
-    type: z.enum(["Posting", "Heading", "Total", "Begin Total", "End Total"], {
+    type: z.enum(accountTypes, {
       errorMap: (issue, ctx) => ({
         message: "Type is required",
       }),

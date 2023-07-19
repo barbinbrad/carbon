@@ -18,6 +18,49 @@ import type {
 } from "./accounting.form";
 import { incomeBalanceType, normalBalanceType } from "./accounting.form";
 
+type AccountWithTotals = Account & { level: number; totaling: string };
+
+function addLevelsAndTotalsToAccounts(
+  accounts: Account[]
+): AccountWithTotals[] {
+  let result: AccountWithTotals[] = [];
+  let beginTotalAccounts: string[] = [];
+  let endTotalAccounts: string[] = [];
+
+  accounts.forEach((account) => {
+    if (account.type === "End Total") {
+      endTotalAccounts.push(account.number);
+    }
+
+    let level = beginTotalAccounts.length - endTotalAccounts.length;
+
+    if (account.type === "Begin Total") {
+      beginTotalAccounts.push(account.number);
+    }
+
+    if (account.type === "Heading") {
+      level = 0;
+    }
+
+    let totaling = "";
+
+    if (account.type === "End Total") {
+      let startAccount = beginTotalAccounts.pop();
+      let endAccount = endTotalAccounts.pop();
+
+      totaling = `${startAccount}..${endAccount}`;
+    }
+
+    result.push({
+      ...account,
+      level,
+      totaling,
+    });
+  });
+
+  return result;
+}
+
 export async function deleteAccountCategory(
   client: SupabaseClient<Database>,
   accountSubcategoryId: string
@@ -116,6 +159,15 @@ export async function getAccountCategories(
   return query;
 }
 
+export async function getAccountCategoriesList(
+  client: SupabaseClient<Database>
+) {
+  return client
+    .from("accountCategory")
+    .select("*")
+    .order("category", { ascending: true });
+}
+
 export async function getAccountCategory(
   client: SupabaseClient<Database>,
   accountCategoryId: string
@@ -193,6 +245,28 @@ export async function getAccountSubcategory(
     .single();
 }
 
+function getAccountTotal(
+  accounts: Account[],
+  account: AccountWithTotals,
+  type: "netChange" | "balance" | "balanceAtDate",
+  transactionsByAccount: Record<string, Transaction>
+) {
+  if (!account.totaling)
+    return transactionsByAccount[account.number][type] ?? 0;
+
+  let total = 0;
+  const [start, end] = account.totaling.split("..");
+  if (!start || !end) throw new Error("Invalid totaling");
+
+  accounts.forEach((account) => {
+    if (account.number >= start && account.number <= end) {
+      total += transactionsByAccount[account.number][type] ?? 0;
+    }
+  });
+
+  return total;
+}
+
 export function getAccountTypeEnum(): Database["public"]["Enums"]["glAccountType"][] {
   return ["Posting", "Heading", "Total", "Begin Total", "End Total"];
 }
@@ -246,7 +320,7 @@ export async function getChartOfAccounts(
   const accounts: Account[] = accountsResponse.data;
 
   return {
-    data: assignLevelsAndTotalsToAccounts(accounts).map((account) => ({
+    data: addLevelsAndTotalsToAccounts(accounts).map((account) => ({
       ...account,
       netChange: getAccountTotal(
         accounts,
@@ -273,70 +347,6 @@ export async function getChartOfAccounts(
     })),
     error: null,
   };
-}
-
-type AccountWithTotals = Account & { level: number; totaling: string };
-
-function assignLevelsAndTotalsToAccounts(
-  accounts: Account[]
-): AccountWithTotals[] {
-  let result: AccountWithTotals[] = [];
-  let beginTotalAccounts: string[] = [];
-  let endTotalAccounts: string[] = [];
-
-  accounts.forEach((account) => {
-    if (account.type === "End Total") {
-      endTotalAccounts.push(account.number);
-    }
-
-    let level = beginTotalAccounts.length - endTotalAccounts.length;
-
-    if (account.type === "Begin Total") {
-      beginTotalAccounts.push(account.number);
-    }
-
-    if (account.type === "Heading") {
-      level = 0;
-    }
-
-    let totaling = "";
-
-    if (account.type === "End Total") {
-      let startAccount = beginTotalAccounts.pop();
-      let endAccount = endTotalAccounts.pop();
-
-      totaling = `${startAccount}..${endAccount}`;
-    }
-
-    result.push({
-      ...account,
-      level,
-      totaling,
-    });
-  });
-
-  return result;
-}
-
-function getAccountTotal(
-  accounts: Account[],
-  account: AccountWithTotals,
-  type: "netChange" | "balance" | "balanceAtDate",
-  transactionsByAccount: Record<string, Transaction>
-) {
-  if (!account.totaling)
-    return transactionsByAccount[account.number][type] ?? 0;
-
-  let total = 0;
-  const [start, end] = account.totaling.split("..");
-
-  accounts.forEach((account) => {
-    if (account.number >= start && account.number <= end) {
-      total += transactionsByAccount[account.number][type] ?? 0;
-    }
-  });
-
-  return total;
 }
 
 export async function getCurrency(

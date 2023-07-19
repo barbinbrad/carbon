@@ -15,6 +15,9 @@ export type AccountCategory = NonNullable<
   Awaited<ReturnType<typeof getAccountCategories>>["data"]
 >[number];
 
+export type AccountConsolidatedRate =
+  Database["public"]["Enums"]["glConsolidatedRate"];
+
 export type AccountSubcategory = NonNullable<
   Awaited<ReturnType<typeof getAccountSubcategories>>["data"]
 >[number];
@@ -24,6 +27,8 @@ export type AccountIncomeBalance =
 
 export type AccountNormalBalance =
   Database["public"]["Enums"]["glNormalBalance"];
+
+export type AccountType = Database["public"]["Enums"]["glAccountType"];
 
 export type Chart = Account &
   Transaction & {

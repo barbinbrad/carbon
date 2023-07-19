@@ -1,6 +1,7 @@
 import Abilities from "./Abilities";
 import Ability from "./Ability";
 import Account from "./Account";
+import AccountCategory from "./AccountCategory";
 import Array from "./Array";
 import Boolean from "./Boolean";
 import Color from "./Color";
@@ -39,6 +40,7 @@ export {
   Abilities,
   Ability,
   Account,
+  AccountCategory,
   Array,
   Boolean,
   Color,

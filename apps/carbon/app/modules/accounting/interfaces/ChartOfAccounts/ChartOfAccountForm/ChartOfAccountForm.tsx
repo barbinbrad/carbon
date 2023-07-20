@@ -14,17 +14,25 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
+import { useState } from "react";
 
 import { ValidatedForm } from "remix-validated-form";
 import {
   AccountCategory,
+  AccountSubcategory,
+  Currency,
   Hidden,
   Input,
   Select,
+  SelectControlled,
   Submit,
 } from "~/components/Form";
 import { usePermissions } from "~/hooks";
-import type { AccountCategory as AccountCategoryType } from "~/modules/accounting";
+import type {
+  AccountCategory as AccountCategoryType,
+  AccountIncomeBalance,
+  AccountNormalBalance,
+} from "~/modules/accounting";
 import {
   accountTypes,
   accountValidator,
@@ -43,28 +51,27 @@ const ChartOfAccountForm = ({ initialValues }: ChartOfAccountFormProps) => {
   const onClose = () => navigate(-1);
   const borderColor = useColor("gray.200");
 
+  const [accountCategoryId, setAccountCategoryId] = useState<string>(
+    initialValues.accountCategoryId
+  );
+  const [incomeBalance, setIncomeBalance] = useState<
+    "Balance Sheet" | "Income Statement"
+  >(initialValues.incomeBalance);
+  const [normalBalance, setNormalBalance] = useState<
+    "Debit" | "Credit" | "Both"
+  >(initialValues.normalBalance);
+
   const isEditing = initialValues.id !== undefined;
   const isDisabled = isEditing
     ? !permissions.can("update", "accounting")
     : !permissions.can("create", "accounting");
 
-  const accountTypeOptions = accountTypes.map((accountType) => ({
-    label: accountType,
-    value: accountType,
-  }));
-
-  const normalBalanceOptions = normalBalanceType.map((normalBalance) => ({
-    label: normalBalance,
-    value: normalBalance,
-  }));
-
-  const incomeBalanceOptions = incomeBalanceType.map((incomeBalance) => ({
-    label: incomeBalance,
-    value: incomeBalance,
-  }));
-
   const onAccountCategoryChange = (category?: AccountCategoryType) => {
-    console.log(category);
+    if (category) {
+      setAccountCategoryId(category.id ?? "");
+      setIncomeBalance(category.incomeBalance ?? "Income Statement");
+      setNormalBalance(category.normalBalance ?? "Debit");
+    }
   };
 
   return (
@@ -107,13 +114,55 @@ const ChartOfAccountForm = ({ initialValues }: ChartOfAccountFormProps) => {
               <VStack spacing={4} alignItems="start">
                 <Input name="number" label="Number" />
                 <Input name="name" label="Name" />
-                <Select name="type" label="Type" options={accountTypeOptions} />
+                <Select
+                  name="type"
+                  label="Type"
+                  options={accountTypes.map((accountType) => ({
+                    label: accountType,
+                    value: accountType,
+                  }))}
+                />
               </VStack>
               <VStack spacing={4} alignItems="start">
                 <AccountCategory
                   name="accountCategoryId"
                   onChange={onAccountCategoryChange}
                 />
+                <AccountSubcategory
+                  name="accountSubcategoryId"
+                  accountCategoryId={accountCategoryId}
+                />
+                <SelectControlled
+                  name="incomeBalance"
+                  label="Income/Balance"
+                  options={incomeBalanceType.map((incomeBalance) => ({
+                    label: incomeBalance,
+                    value: incomeBalance,
+                  }))}
+                  isReadOnly
+                  value={incomeBalance}
+                  onChange={(newValue) => {
+                    if (newValue)
+                      setIncomeBalance(newValue as AccountIncomeBalance);
+                  }}
+                />
+              </VStack>
+              <VStack spacing={4} alignItems="start">
+                <SelectControlled
+                  name="normalBalance"
+                  label="Normal Balance"
+                  isReadOnly
+                  options={normalBalanceType.map((normalBalance) => ({
+                    label: normalBalance,
+                    value: normalBalance,
+                  }))}
+                  value={normalBalance}
+                  onChange={(newValue) => {
+                    if (newValue)
+                      setNormalBalance(newValue as AccountNormalBalance);
+                  }}
+                />
+                <Currency name="currencyCode" label="Currency" />
               </VStack>
             </Grid>
           </DrawerBody>

@@ -3,33 +3,13 @@ import { Button, HStack } from "@chakra-ui/react";
 import { Link } from "@remix-run/react";
 import { IoMdAdd } from "react-icons/io";
 import { DebouncedInput } from "~/components/Search";
-import { usePermissions, useRouteData, useUrlParams } from "~/hooks";
-import type {
-  AccountIncomeBalance,
-  AccountNormalBalance,
-} from "~/modules/accounting";
+import { usePermissions, useUrlParams } from "~/hooks";
+import { incomeBalanceTypes, normalBalanceTypes } from "~/modules/accounting";
 
 const AttributeCategoriesTableFilters = () => {
   const permissions = usePermissions();
   const [params, setParams] = useUrlParams();
   const borderColor = useColor("gray.200");
-
-  const routeData = useRouteData<{
-    incomeBalances: AccountIncomeBalance[];
-    normalBalances: AccountNormalBalance[];
-  }>("/x/accounting/categories");
-
-  const incomeBalanceOptions =
-    routeData?.incomeBalances.map((incomeBalance) => ({
-      value: incomeBalance,
-      label: incomeBalance,
-    })) ?? [];
-
-  const normalBalanceOptions =
-    routeData?.normalBalances.map((normalBalance) => ({
-      value: normalBalance,
-      label: normalBalance,
-    })) ?? [];
 
   return (
     <HStack
@@ -53,11 +33,17 @@ const AttributeCategoriesTableFilters = () => {
           size="sm"
           minW={180}
           placeholder="Income Balance"
-          value={incomeBalanceOptions.filter(
-            (type) => type.value === params.get("incomeBalance")
-          )}
+          value={incomeBalanceTypes
+            .map((incomeBalance) => ({
+              value: incomeBalance,
+              label: incomeBalance,
+            }))
+            .filter((type) => type.value === params.get("incomeBalance"))}
           isClearable
-          options={incomeBalanceOptions}
+          options={incomeBalanceTypes.map((incomeBalance) => ({
+            value: incomeBalance,
+            label: incomeBalance,
+          }))}
           onChange={(selected) => {
             setParams({ incomeBalance: selected?.value });
           }}
@@ -67,11 +53,17 @@ const AttributeCategoriesTableFilters = () => {
           size="sm"
           minW={180}
           placeholder="Normal Balance"
-          value={normalBalanceOptions.filter(
-            (type) => type.value === params.get("normalBalance")
-          )}
+          value={normalBalanceTypes
+            .map((normalBalance) => ({
+              value: normalBalance,
+              label: normalBalance,
+            }))
+            .filter((type) => type.value === params.get("normalBalance"))}
           isClearable
-          options={normalBalanceOptions}
+          options={normalBalanceTypes.map((normalBalance) => ({
+            value: normalBalance,
+            label: normalBalance,
+          }))}
           onChange={(selected) => {
             setParams({ normalBalance: selected?.value });
           }}

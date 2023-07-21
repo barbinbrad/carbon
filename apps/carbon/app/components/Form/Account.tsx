@@ -33,7 +33,7 @@ const Account = ({
     useFetcher<Awaited<ReturnType<typeof getAccountsList>>>();
 
   useEffect(() => {
-    accountFetcher.load("/api/accounting/accounts");
+    accountFetcher.load("/api/accounting/accounts?type=Posting");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -42,7 +42,7 @@ const Account = ({
       accountFetcher.data?.data
         ? accountFetcher.data?.data.map((c) => ({
             value: c.number,
-            label: c.name,
+            label: `${c.number} - ${c.name}`,
           }))
         : [],
     [accountFetcher.data]

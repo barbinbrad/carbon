@@ -6,5 +6,9 @@ import { requirePermissions } from "~/services/auth";
 export async function loader({ request }: LoaderArgs) {
   const authorized = await requirePermissions(request, {});
 
-  return json(await getAccountsList(authorized.client));
+  const url = new URL(request.url);
+  const searchParams = new URLSearchParams(url.search);
+  const type = searchParams.get("type");
+
+  return json(await getAccountsList(authorized.client, type));
 }

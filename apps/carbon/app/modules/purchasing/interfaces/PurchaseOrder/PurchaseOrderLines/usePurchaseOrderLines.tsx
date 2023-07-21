@@ -25,7 +25,7 @@ export default function usePurchaseOrderLines() {
 
   useEffect(() => {
     if (accountsFetcher.type === "init") {
-      accountsFetcher.load("/api/accounting/accounts");
+      accountsFetcher.load("/api/accounting/accounts?type=Posting");
     }
   }, [accountsFetcher]);
 

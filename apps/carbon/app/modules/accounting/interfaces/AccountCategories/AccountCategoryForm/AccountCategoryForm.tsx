@@ -12,12 +12,12 @@ import {
 } from "@chakra-ui/react";
 import { ValidatedForm } from "remix-validated-form";
 import { Input, Hidden, Submit, Select } from "~/components/Form";
-import { usePermissions, useRouteData } from "~/hooks";
-import type {
-  AccountIncomeBalance,
-  AccountNormalBalance,
+import { usePermissions } from "~/hooks";
+import {
+  accountCategoryValidator,
+  incomeBalanceTypes,
+  normalBalanceTypes,
 } from "~/modules/accounting";
-import { accountCategoryValidator } from "~/modules/accounting";
 import type { TypeOfValidator } from "~/types/validators";
 
 type AccountCategoryFormProps = {
@@ -29,23 +29,6 @@ const AccountCategoryForm = ({
   initialValues,
   onClose,
 }: AccountCategoryFormProps) => {
-  const routeData = useRouteData<{
-    incomeBalances: AccountIncomeBalance[];
-    normalBalances: AccountNormalBalance[];
-  }>("/x/accounting/categories");
-
-  const incomeBalanceOptions =
-    routeData?.incomeBalances.map((incomeBalance) => ({
-      value: incomeBalance,
-      label: incomeBalance,
-    })) ?? [];
-
-  const normalBalanceOptions =
-    routeData?.normalBalances.map((normalBalance) => ({
-      value: normalBalance,
-      label: normalBalance,
-    })) ?? [];
-
   const permissions = usePermissions();
 
   const isEditing = initialValues.id !== undefined;
@@ -78,12 +61,18 @@ const AccountCategoryForm = ({
               <Select
                 name="incomeBalance"
                 label="Income Balance"
-                options={incomeBalanceOptions}
+                options={incomeBalanceTypes.map((incomeBalance) => ({
+                  value: incomeBalance,
+                  label: incomeBalance,
+                }))}
               />
               <Select
                 name="normalBalance"
                 label="Normal Balance"
-                options={normalBalanceOptions}
+                options={normalBalanceTypes.map((normalBalance) => ({
+                  value: normalBalance,
+                  label: normalBalance,
+                }))}
               />
             </VStack>
           </DrawerBody>

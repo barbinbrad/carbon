@@ -19,6 +19,12 @@ export const accountTypes = [
   "End Total",
 ] as const;
 
+export const consolidatedRateTypes = [
+  "Average",
+  "Current",
+  "Historical",
+] as const;
+
 const costLedgerTypes = [
   "Direct Cost",
   "Revaluation",
@@ -40,7 +46,7 @@ const partLedgerTypes = [
   "Assembly Output",
 ] as const;
 
-const partLedgerDocumentType = [
+const partLedgerDocumentTypes = [
   "Sales Shipment",
   "Sales Invoice",
   "Sales Return Receipt",
@@ -60,46 +66,59 @@ const partLedgerDocumentType = [
   "Direct Transfer",
 ] as const;
 
-export const incomeBalanceType = ["Balance Sheet", "Income Statement"] as const;
-export const normalBalanceType = ["Debit", "Credit", "Both"] as const;
+export const incomeBalanceTypes = [
+  "Balance Sheet",
+  "Income Statement",
+] as const;
+export const normalBalanceTypes = ["Debit", "Credit", "Both"] as const;
 
 export const accountValidator = withZod(
-  z.object({
-    id: zfd.text(z.string().optional()),
-    number: z.string().min(1, { message: "Number is required" }),
-    name: z.string().min(1, { message: "Name is required" }),
-    type: z.enum(accountTypes, {
-      errorMap: (issue, ctx) => ({
-        message: "Type is required",
+  z
+    .object({
+      id: zfd.text(z.string().optional()),
+      number: z.string().min(1, { message: "Number is required" }),
+      name: z.string().min(1, { message: "Name is required" }),
+      type: z.enum(accountTypes, {
+        errorMap: (issue, ctx) => ({
+          message: "Type is required",
+        }),
       }),
-    }),
-    accountCategoryId: z.string().min(20, { message: "Category is required" }),
-    accountSubcategoryId: zfd.text(z.string().optional()),
-    incomeBalance: z.enum(incomeBalanceType, {
-      errorMap: (issue, ctx) => ({
-        message: "Income balance is required",
+      accountCategoryId: zfd.text(z.string().optional()),
+      accountSubcategoryId: zfd.text(z.string().optional()),
+      incomeBalance: z.enum(incomeBalanceTypes, {
+        errorMap: (issue, ctx) => ({
+          message: "Income balance is required",
+        }),
       }),
-    }),
-    normalBalance: z.enum(normalBalanceType, {
-      errorMap: (issue, ctx) => ({
-        message: "Normal balance is required",
+      normalBalance: z.enum(normalBalanceTypes, {
+        errorMap: (issue, ctx) => ({
+          message: "Normal balance is required",
+        }),
       }),
-    }),
-    consolidatedRate: z.enum(["Average", "Current", "Historical"]),
-    currencyCode: zfd.text(z.string().optional()),
-  })
+      consolidatedRate: z.enum(consolidatedRateTypes),
+      directPosting: zfd.checkbox(),
+    })
+    .refine(
+      (data) => {
+        if (data.type === "Heading") {
+          return !data.accountCategoryId;
+        }
+        return true;
+      },
+      { message: "Account category is required" }
+    )
 );
 
 export const accountCategoryValidator = withZod(
   z.object({
     id: zfd.text(z.string().optional()),
     category: z.string().min(1, { message: "Category is required" }),
-    incomeBalance: z.enum(incomeBalanceType, {
+    incomeBalance: z.enum(incomeBalanceTypes, {
       errorMap: (issue, ctx) => ({
         message: "Income balance is required",
       }),
     }),
-    normalBalance: z.enum(normalBalanceType, {
+    normalBalance: z.enum(normalBalanceTypes, {
       errorMap: (issue, ctx) => ({
         message: "Normal balance is required",
       }),
@@ -147,7 +166,7 @@ export const partLedgerValidator = withZod(
   z.object({
     postingDate: z.string().min(1, { message: "Posting date is required" }),
     entryType: z.enum(partLedgerTypes),
-    documentType: z.union([z.enum(partLedgerDocumentType), z.undefined()]),
+    documentType: z.union([z.enum(partLedgerDocumentTypes), z.undefined()]),
     documentNumber: z.string().optional(),
     partId: z.string().min(1, { message: "Part is required" }),
     locationId: z.string().optional(),
@@ -199,7 +218,7 @@ export const valueLedgerValidator = withZod(
     partLedgerType: z.enum(partLedgerTypes),
     costLedgerType: z.enum(costLedgerTypes),
     adjustment: z.boolean(),
-    documentType: z.union([z.enum(partLedgerDocumentType), z.undefined()]),
+    documentType: z.union([z.enum(partLedgerDocumentTypes), z.undefined()]),
     documentNumber: z.string().optional(),
     costAmountActual: z.number(),
     costAmountExpected: z.number(),

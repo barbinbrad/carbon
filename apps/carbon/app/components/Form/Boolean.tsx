@@ -4,6 +4,7 @@ import { HStack } from "@chakra-ui/react";
 import {
   FormControl,
   FormErrorMessage,
+  FormHelperText,
   FormLabel,
   Text,
   chakra,
@@ -17,12 +18,13 @@ import { useControlField, useField } from "remix-validated-form";
 type FormBooleanProps = Omit<SwitchProps, "onChange"> & {
   name: string;
   label?: string;
+  helperText?: string;
   description?: string;
   onChange?: (value: boolean) => void;
 };
 
 const Boolean = forwardRef<HTMLInputElement, FormBooleanProps>(
-  ({ name, label, description, onChange, ...props }, ref) => {
+  ({ name, label, description, helperText, onChange, ...props }, ref) => {
     const { getInputProps, error } = useField(name);
     const [value, setValue] = useControlField<boolean>(name);
 
@@ -100,8 +102,11 @@ const Boolean = forwardRef<HTMLInputElement, FormBooleanProps>(
             </HStack>
           </chakra.label>
         </HStack>
-
-        {error && <FormErrorMessage>{error}</FormErrorMessage>}
+        {error ? (
+          <FormErrorMessage>{error}</FormErrorMessage>
+        ) : (
+          helperText && <FormHelperText>{helperText}</FormHelperText>
+        )}
       </FormControl>
     );
   }

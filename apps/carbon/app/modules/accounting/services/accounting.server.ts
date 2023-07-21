@@ -16,7 +16,6 @@ import type {
   paymentTermValidator,
   valueLedgerValidator,
 } from "./accounting.form";
-import { incomeBalanceType, normalBalanceType } from "./accounting.form";
 
 type AccountWithTotals = Account & { level: number; totaling: string };
 
@@ -26,13 +25,17 @@ function addLevelsAndTotalsToAccounts(
   let result: AccountWithTotals[] = [];
   let beginTotalAccounts: string[] = [];
   let endTotalAccounts: string[] = [];
+  let hasHeading = false;
 
   accounts.forEach((account) => {
     if (account.type === "End Total") {
       endTotalAccounts.push(account.number);
     }
 
-    let level = beginTotalAccounts.length - endTotalAccounts.length;
+    let level =
+      beginTotalAccounts.length -
+      endTotalAccounts.length +
+      (hasHeading ? 1 : 0);
 
     if (account.type === "Begin Total") {
       beginTotalAccounts.push(account.number);
@@ -40,6 +43,7 @@ function addLevelsAndTotalsToAccounts(
 
     if (account.type === "Heading") {
       level = 0;
+      hasHeading = true;
     }
 
     let totaling = "";
@@ -123,12 +127,19 @@ export async function getAccounts(
   return query;
 }
 
-export async function getAccountsList(client: SupabaseClient<Database>) {
-  return client
-    .from("account")
-    .select("number, name")
-    .eq("active", true)
-    .order("name", { ascending: true });
+export async function getAccountsList(
+  client: SupabaseClient<Database>,
+  type: string | null
+) {
+  let query = client.from("account").select("number, name").eq("active", true);
+
+  if (type) {
+    query = query.eq("type", type);
+  }
+
+  query = query.order("name", { ascending: true });
+
+  return query;
 }
 
 export async function getAccountCategories(
@@ -177,29 +188,6 @@ export async function getAccountCategory(
     .select("*")
     .eq("id", accountCategoryId)
     .single();
-}
-
-export function getAccountCategoryEnum(): Database["public"]["Enums"]["glAccountCategory"][] {
-  return [
-    "Bank",
-    "Accounts Receivable",
-    "Inventory",
-    "Other Current Asset",
-    "Fixed Asset",
-    "Accumulated Depreciation",
-    "Other Asset",
-    "Accounts Payable",
-    "Other Current Liability",
-    "Long Term Liability",
-    "Equity - No Close",
-    "Equity - Close",
-    "Retained Earnings",
-    "Income",
-    "Cost of Goods Sold",
-    "Expense",
-    "Other Income",
-    "Other Expense",
-  ];
 }
 
 export async function getAccountSubcategories(
@@ -267,10 +255,6 @@ function getAccountTotal(
   return total;
 }
 
-export function getAccountTypeEnum(): Database["public"]["Enums"]["glAccountType"][] {
-  return ["Posting", "Heading", "Total", "Begin Total", "End Total"];
-}
-
 export async function getBaseCurrency(client: SupabaseClient<Database>) {
   return client
     .from("currency")
@@ -288,7 +272,10 @@ export async function getChartOfAccounts(
     endDate: string | null;
   }
 ) {
-  let accountsQuery = client.from("account").select("*").eq("active", true);
+  let accountsQuery = client
+    .from("accounts_view")
+    .select("*")
+    .eq("active", true);
 
   if (args.incomeBalance) {
     accountsQuery = accountsQuery.eq("incomeBalance", args.incomeBalance);
@@ -317,7 +304,7 @@ export async function getChartOfAccounts(
     return acc;
   }, {});
 
-  const accounts: Account[] = accountsResponse.data;
+  const accounts: Account[] = accountsResponse.data as Account[];
 
   return {
     data: addLevelsAndTotalsToAccounts(accounts).map((account) => ({
@@ -342,8 +329,6 @@ export async function getChartOfAccounts(
         "balanceAtDate",
         transactionsByAccount
       ),
-      accountCategory: "",
-      accountSubcategory: "",
     })),
     error: null,
   };
@@ -375,18 +360,6 @@ export async function getCurrencies(
 
   query = setGenericQueryFilters(query, args, "name");
   return query;
-}
-
-export function getConsolidatedRateEnum(): Database["public"]["Enums"]["glConsolidatedRate"][] {
-  return ["Average", "Current", "Historical"];
-}
-
-export function getIncomeBalanceEnum(): readonly Database["public"]["Enums"]["glIncomeBalance"][] {
-  return incomeBalanceType;
-}
-
-export function getNormalBalanceEnum(): readonly Database["public"]["Enums"]["glNormalBalance"][] {
-  return normalBalanceType;
 }
 
 export async function getCurrenciesList(client: SupabaseClient<Database>) {

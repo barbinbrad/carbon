@@ -191,12 +191,12 @@ CREATE TABLE "account" (
   "number" TEXT NOT NULL,
   "name" TEXT NOT NULL,
   "type" "glAccountType" NOT NULL,
-  "accountCategoryId" TEXT NOT NULL,
+  "accountCategoryId" TEXT,
   "accountSubcategoryId" TEXT,
   "incomeBalance" "glIncomeBalance" NOT NULL,
   "normalBalance" "glNormalBalance" NOT NULL,
   "consolidatedRate" "glConsolidatedRate",
-  "currencyCode" TEXT,
+  "directPosting" BOOLEAN NOT NULL DEFAULT false,
   "active" BOOLEAN NOT NULL DEFAULT true,
   "createdBy" TEXT NOT NULL,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
@@ -207,7 +207,6 @@ CREATE TABLE "account" (
   CONSTRAINT "account_number_key" UNIQUE ("number"),
   CONSTRAINT "account_name_key" UNIQUE ("name"),
   CONSTRAINT "account_accountCategoryId_fkey" FOREIGN KEY ("accountCategoryId") REFERENCES "accountCategory"("id"),
-  CONSTRAINT "account_currencyCode_fkey" FOREIGN KEY ("currencyCode") REFERENCES "currency"("code") ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT "account_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "account_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
@@ -256,7 +255,7 @@ CREATE POLICY "Employees with accounting_delete can delete accounts" ON "account
     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
   );
 
-  CREATE VIEW "account_categories_view" AS
+CREATE VIEW "account_categories_view" AS
   SELECT
     "id",
     "category",
@@ -268,4 +267,26 @@ CREATE POLICY "Employees with accounting_delete can delete accounts" ON "account
     "updatedAt",
     (SELECT count(*) FROM "accountSubcategory" WHERE "accountSubcategory"."accountCategoryId" = "accountCategory"."id" AND "accountSubcategory"."active" = true) AS "subCategoriesCount"
   FROM "accountCategory"
+;
+
+CREATE VIEW "accounts_view" AS
+  SELECT 
+    "id",
+    "number",
+    "name",
+    "type",
+    "accountCategoryId",
+    (SELECT "category" FROM "accountCategory" WHERE "accountCategory"."id" = "account"."accountCategoryId") AS "accountCategory",
+    "accountSubcategoryId",
+    (SELECT "name" FROM "accountSubcategory" WHERE "accountSubcategory"."id" = "account"."accountSubcategoryId") AS "accountSubCategory",
+    "incomeBalance",
+    "normalBalance",
+    "consolidatedRate",
+    "directPosting",
+    "active",
+    "createdBy",
+    "createdAt",
+    "updatedBy",
+    "updatedAt"
+  FROM "account"
 ;

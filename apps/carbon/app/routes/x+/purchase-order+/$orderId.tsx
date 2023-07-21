@@ -50,7 +50,7 @@ export default function PurchaseOrderRoute() {
     <>
       <PurchaseOrderHeader />
       <Grid
-        gridTemplateColumns={["1fr", "1fr", "2fr 8fr"]}
+        gridTemplateColumns={["1fr", "1fr", "1fr 4fr"]}
         gridColumnGap={4}
         w="full"
       >

@@ -20,9 +20,10 @@ import { ValidatedForm } from "remix-validated-form";
 import {
   AccountCategory,
   AccountSubcategory,
-  Currency,
+  Boolean,
   Hidden,
   Input,
+  Number,
   Select,
   SelectControlled,
   Submit,
@@ -36,8 +37,9 @@ import type {
 import {
   accountTypes,
   accountValidator,
-  incomeBalanceType,
-  normalBalanceType,
+  consolidatedRateTypes,
+  incomeBalanceTypes,
+  normalBalanceTypes,
 } from "~/modules/accounting";
 import type { TypeOfValidator } from "~/types/validators";
 
@@ -52,7 +54,7 @@ const ChartOfAccountForm = ({ initialValues }: ChartOfAccountFormProps) => {
   const borderColor = useColor("gray.200");
 
   const [accountCategoryId, setAccountCategoryId] = useState<string>(
-    initialValues.accountCategoryId
+    initialValues.accountCategoryId ?? ""
   );
   const [incomeBalance, setIncomeBalance] = useState<
     "Balance Sheet" | "Income Statement"
@@ -112,7 +114,7 @@ const ChartOfAccountForm = ({ initialValues }: ChartOfAccountFormProps) => {
               w="full"
             >
               <VStack spacing={4} alignItems="start">
-                <Input name="number" label="Number" />
+                <Number name="number" label="Number" />
                 <Input name="name" label="Name" />
                 <Select
                   name="type"
@@ -135,11 +137,10 @@ const ChartOfAccountForm = ({ initialValues }: ChartOfAccountFormProps) => {
                 <SelectControlled
                   name="incomeBalance"
                   label="Income/Balance"
-                  options={incomeBalanceType.map((incomeBalance) => ({
+                  options={incomeBalanceTypes.map((incomeBalance) => ({
                     label: incomeBalance,
                     value: incomeBalance,
                   }))}
-                  isReadOnly
                   value={incomeBalance}
                   onChange={(newValue) => {
                     if (newValue)
@@ -151,8 +152,7 @@ const ChartOfAccountForm = ({ initialValues }: ChartOfAccountFormProps) => {
                 <SelectControlled
                   name="normalBalance"
                   label="Normal Balance"
-                  isReadOnly
-                  options={normalBalanceType.map((normalBalance) => ({
+                  options={normalBalanceTypes.map((normalBalance) => ({
                     label: normalBalance,
                     value: normalBalance,
                   }))}
@@ -162,7 +162,17 @@ const ChartOfAccountForm = ({ initialValues }: ChartOfAccountFormProps) => {
                       setNormalBalance(newValue as AccountNormalBalance);
                   }}
                 />
-                <Currency name="currencyCode" label="Currency" />
+                <Select
+                  name="consolidatedRate"
+                  label="Consolidated Rate"
+                  options={consolidatedRateTypes.map(
+                    (consolidatedRateType) => ({
+                      label: consolidatedRateType,
+                      value: consolidatedRateType,
+                    })
+                  )}
+                />
+                <Boolean name="directPosting" label="Direct Posting" />
               </VStack>
             </Grid>
           </DrawerBody>

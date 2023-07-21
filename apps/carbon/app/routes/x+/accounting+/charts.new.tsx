@@ -74,9 +74,10 @@ export default function NewAccountRoute() {
     number: "",
     type: "Posting" as AccountType,
     accountCategoryId: "",
-    incomeBalance: "Income Statement" as AccountIncomeBalance,
+    incomeBalance: "Balance Sheet" as AccountIncomeBalance,
     normalBalance: "Debit" as AccountNormalBalance,
     consolidatedRate: "Average" as AccountConsolidatedRate,
+    directPosting: false,
   };
 
   return <ChartOfAccountForm initialValues={initialValues} />;

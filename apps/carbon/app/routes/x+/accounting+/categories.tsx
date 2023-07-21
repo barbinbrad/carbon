@@ -7,8 +7,6 @@ import {
   AccountCategoriesTable,
   AccountCategoriesTableFilters,
   getAccountCategories,
-  getIncomeBalanceEnum,
-  getNormalBalanceEnum,
 } from "~/modules/accounting";
 import { flash } from "~/services/session";
 import { getGenericQueryFilters } from "~/utils/query";
@@ -27,7 +25,7 @@ export async function loader({ request }: LoaderArgs) {
   const normalBalance = searchParams.get("normalBalance");
   const { limit, offset, sorts } = getGenericQueryFilters(searchParams);
 
-  const [categories, incomeBalances, normalBalances] = await Promise.all([
+  const [categories] = await Promise.all([
     getAccountCategories(client, {
       name,
       normalBalance,
@@ -36,8 +34,6 @@ export async function loader({ request }: LoaderArgs) {
       offset,
       sorts,
     }),
-    getIncomeBalanceEnum(),
-    getNormalBalanceEnum(),
   ]);
 
   if (categories.error) {
@@ -53,8 +49,6 @@ export async function loader({ request }: LoaderArgs) {
   return json({
     count: categories.count ?? 0,
     categories: categories.data ?? [],
-    incomeBalances,
-    normalBalances,
   });
 }
 

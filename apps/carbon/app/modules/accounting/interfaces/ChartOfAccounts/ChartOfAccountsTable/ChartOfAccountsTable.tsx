@@ -1,5 +1,5 @@
 import { DataTable, DataTableColumnHeader } from "@carbon/react";
-import { Text } from "@chakra-ui/react";
+import { Checkbox, HStack, Link, Text } from "@chakra-ui/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo } from "react";
 import type { Chart } from "~/modules/accounting";
@@ -9,6 +9,8 @@ type ChartOfAccountsTableProps = {
 };
 
 const ChartOfAccountsTable = memo(({ data }: ChartOfAccountsTableProps) => {
+  console.log(data);
+
   const columns = useMemo<ColumnDef<Chart>[]>(() => {
     return [
       {
@@ -20,9 +22,15 @@ const ChartOfAccountsTable = memo(({ data }: ChartOfAccountsTableProps) => {
           const isPosting = row.original.type === "Posting";
 
           return (
-            <Text fontWeight={isPosting ? "normal" : "bold"}>
-              {row.original.number}
-            </Text>
+            <HStack>
+              {isPosting ? (
+                <Link>{row.original.number}</Link>
+              ) : (
+                <Text fontWeight={isPosting ? "normal" : "bold"}>
+                  {row.original.number}
+                </Text>
+              )}
+            </HStack>
           );
         },
       },
@@ -46,11 +54,11 @@ const ChartOfAccountsTable = memo(({ data }: ChartOfAccountsTableProps) => {
         header: "Net Change",
         cell: ({ row }) => (row.original.netChange ?? 0).toFixed(2),
       },
-      // {
-      //   accessorKey: "balanceAtDate",
-      //   header: "Balance at Date",
-      //   cell: (item) => item.getValue(),
-      // },
+      {
+        accessorKey: "balanceAtDate",
+        header: "Balance at Date",
+        cell: ({ row }) => (row.original.balanceAtDate ?? 0).toFixed(2),
+      },
       {
         accessorKey: "balance",
         header: "Balance",
@@ -80,6 +88,11 @@ const ChartOfAccountsTable = memo(({ data }: ChartOfAccountsTableProps) => {
         accessorKey: "accountSubCategory",
         header: "Account Subcategory",
         cell: (item) => item.getValue(),
+      },
+      {
+        accessorKey: "directPosting",
+        header: "Direct Posting",
+        cell: (item) => <Checkbox isChecked={item.getValue<boolean>()} />,
       },
     ];
   }, []);

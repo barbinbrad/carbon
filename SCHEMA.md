@@ -452,8 +452,8 @@ CREATE TABLE "userAttributeCategory" (
   "updatedBy" TEXT,
 
   CONSTRAINT "userAttributeCategory_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "userAttributeCategory_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
-  CONSTRAINT "userAttributeCategory_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id") 
+  CONSTRAINT "userAttributeCategory_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id") ON UPDATE CASCADE,
+  CONSTRAINT "userAttributeCategory_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id") ON UPDATE CASCADE
 );
 
 -- ALTER TABLE "userAttributeCategory" ENABLE ROW LEVEL SECURITY;
@@ -550,8 +550,8 @@ CREATE TABLE "userAttribute" (
   CONSTRAINT "userAttribute_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "userAttribute_userAttributeCategoryId_fkey" FOREIGN KEY ("userAttributeCategoryId") REFERENCES "userAttributeCategory"("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "userAttribute_attributeDataTypeId_fkey" FOREIGN KEY ("attributeDataTypeId") REFERENCES "attributeDataType"("id") ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT "userAttribute_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
-  CONSTRAINT "userAttribute_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
+  CONSTRAINT "userAttribute_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id") ON UPDATE CASCADE,
+  CONSTRAINT "userAttribute_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id") ON UPDATE CASCADE
 
 );
 
@@ -756,8 +756,8 @@ CREATE TABLE "supplier" (
     CONSTRAINT "supplier_supplierTypeId_fkey" FOREIGN KEY ("supplierTypeId") REFERENCES "supplierType"("id") ON UPDATE CASCADE ON DELETE SET NULL,
     CONSTRAINT "supplier_supplierStatusId_fkey" FOREIGN KEY ("supplierStatusId") REFERENCES "supplierStatus"("id") ON UPDATE CASCADE ON DELETE SET NULL,
     CONSTRAINT "supplier_accountManagerId_fkey" FOREIGN KEY ("accountManagerId") REFERENCES "user"("id") ON UPDATE CASCADE ON DELETE SET NULL,
-    CONSTRAINT "supplier_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id") ON UPDATE CASCADE ON DELETE SET NULL,
-    CONSTRAINT "supplier_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id") ON UPDATE CASCADE ON DELETE SET NULL,
+    CONSTRAINT "supplier_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id") ON UPDATE CASCADE,
+    CONSTRAINT "supplier_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id") ON UPDATE CASCADE,
     CONSTRAINT "supplier_name_unique" UNIQUE ("name")
 );
 
@@ -3029,7 +3029,7 @@ CREATE TYPE "glNormalBalance" AS ENUM (
 CREATE TYPE "glAccountType" AS ENUM (
   'Posting',
   'Heading',
-  'Total',
+  -- 'Total',
   'Begin Total',
   'End Total'
 );
@@ -3133,12 +3133,12 @@ CREATE TABLE "account" (
   "number" TEXT NOT NULL,
   "name" TEXT NOT NULL,
   "type" "glAccountType" NOT NULL,
-  "accountCategoryId" TEXT NOT NULL,
+  "accountCategoryId" TEXT,
   "accountSubcategoryId" TEXT,
   "incomeBalance" "glIncomeBalance" NOT NULL,
   "normalBalance" "glNormalBalance" NOT NULL,
   "consolidatedRate" "glConsolidatedRate",
-  "currencyCode" TEXT,
+  "directPosting" BOOLEAN NOT NULL DEFAULT false,
   "active" BOOLEAN NOT NULL DEFAULT true,
   "createdBy" TEXT NOT NULL,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
@@ -3149,7 +3149,6 @@ CREATE TABLE "account" (
   CONSTRAINT "account_number_key" UNIQUE ("number"),
   CONSTRAINT "account_name_key" UNIQUE ("name"),
   CONSTRAINT "account_accountCategoryId_fkey" FOREIGN KEY ("accountCategoryId") REFERENCES "accountCategory"("id"),
-  CONSTRAINT "account_currencyCode_fkey" FOREIGN KEY ("currencyCode") REFERENCES "currency"("code") ON DELETE SET NULL,
   CONSTRAINT "account_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "account_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
@@ -3198,7 +3197,7 @@ CREATE POLICY "Employees with accounting_delete can delete accounts" ON "account
     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
   );
 
-  CREATE VIEW "account_categories_view" AS
+CREATE VIEW "account_categories_view" AS
   SELECT
     "id",
     "category",
@@ -3210,6 +3209,28 @@ CREATE POLICY "Employees with accounting_delete can delete accounts" ON "account
     "updatedAt",
     (SELECT count(*) FROM "accountSubcategory" WHERE "accountSubcategory"."accountCategoryId" = "accountCategory"."id" AND "accountSubcategory"."active" = true) AS "subCategoriesCount"
   FROM "accountCategory"
+;
+
+CREATE VIEW "accounts_view" AS
+  SELECT 
+    "id",
+    "number",
+    "name",
+    "type",
+    "accountCategoryId",
+    (SELECT "category" FROM "accountCategory" WHERE "accountCategory"."id" = "account"."accountCategoryId") AS "accountCategory",
+    "accountSubcategoryId",
+    (SELECT "name" FROM "accountSubcategory" WHERE "accountSubcategory"."id" = "account"."accountSubcategoryId") AS "accountSubCategory",
+    "incomeBalance",
+    "normalBalance",
+    "consolidatedRate",
+    "directPosting",
+    "active",
+    "createdBy",
+    "createdAt",
+    "updatedBy",
+    "updatedAt"
+  FROM "account"
 ;
 ```
 
@@ -3237,13 +3258,13 @@ CREATE TABLE "partGroup" (
 
   CONSTRAINT "partGroup_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "partGroup_name_key" UNIQUE ("name"),
-  CONSTRAINT "partGroup_salesAccountId_fkey" FOREIGN KEY ("salesAccountId") REFERENCES "account"("number") ON DELETE CASCADE,
-  CONSTRAINT "partGroup_discountAccountId_fkey" FOREIGN KEY ("discountAccountId") REFERENCES "account"("number") ON DELETE CASCADE,
-  CONSTRAINT "partGroup_inventoryAccountId_fkey" FOREIGN KEY ("inventoryAccountId") REFERENCES "account"("number") ON DELETE CASCADE,
-  CONSTRAINT "partGroup_costOfGoodsSoldLaborAccountId_fkey" FOREIGN KEY ("costOfGoodsSoldLaborAccountId") REFERENCES "account"("number") ON DELETE CASCADE,
-  CONSTRAINT "partGroup_costOfGoodsSoldMaterialAccountId_fkey" FOREIGN KEY ("costOfGoodsSoldMaterialAccountId") REFERENCES "account"("number") ON DELETE CASCADE,
-  CONSTRAINT "partGroup_costOfGoodsSoldOverheadAccountId_fkey" FOREIGN KEY ("costOfGoodsSoldOverheadAccountId") REFERENCES "account"("number") ON DELETE CASCADE,
-  CONSTRAINT "partGroup_costOfGoodsSoldSubcontractorAccountId_fkey" FOREIGN KEY ("costOfGoodsSoldSubcontractorAccountId") REFERENCES "account"("number") ON DELETE CASCADE,
+  CONSTRAINT "partGroup_salesAccountId_fkey" FOREIGN KEY ("salesAccountId") REFERENCES "account"("number") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "partGroup_discountAccountId_fkey" FOREIGN KEY ("discountAccountId") REFERENCES "account"("number") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "partGroup_inventoryAccountId_fkey" FOREIGN KEY ("inventoryAccountId") REFERENCES "account"("number") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "partGroup_costOfGoodsSoldLaborAccountId_fkey" FOREIGN KEY ("costOfGoodsSoldLaborAccountId") REFERENCES "account"("number") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "partGroup_costOfGoodsSoldMaterialAccountId_fkey" FOREIGN KEY ("costOfGoodsSoldMaterialAccountId") REFERENCES "account"("number") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "partGroup_costOfGoodsSoldOverheadAccountId_fkey" FOREIGN KEY ("costOfGoodsSoldOverheadAccountId") REFERENCES "account"("number") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "partGroup_costOfGoodsSoldSubcontractorAccountId_fkey" FOREIGN KEY ("costOfGoodsSoldSubcontractorAccountId") REFERENCES "account"("number") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "partGroup_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "partGroup_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
@@ -3387,7 +3408,7 @@ CREATE TABLE "part" (
   "updatedAt" TIMESTAMP WITH TIME ZONE,
 
   CONSTRAINT "part_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "part_unitOfMeasureCode_fkey" FOREIGN KEY ("unitOfMeasureCode") REFERENCES "unitOfMeasure"("code") ON DELETE SET NULL,
+  CONSTRAINT "part_unitOfMeasureCode_fkey" FOREIGN KEY ("unitOfMeasureCode") REFERENCES "unitOfMeasure"("code") ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT "part_partGroupId_fkey" FOREIGN KEY ("partGroupId") REFERENCES "partGroup"("id") ON DELETE SET NULL,
   CONSTRAINT "part_approvedBy_fkey" FOREIGN KEY ("approvedBy") REFERENCES "user"("id"),
   CONSTRAINT "part_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
@@ -3499,10 +3520,10 @@ CREATE TABLE "partCost" (
   "updatedBy" TEXT,
   "updatedAt" TIMESTAMP WITH TIME ZONE,
 
-  CONSTRAINT "partCost_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part"("id") ON DELETE CASCADE,
-  CONSTRAINT "partGroup_salesAccountId_fkey" FOREIGN KEY ("salesAccountId") REFERENCES "account"("number") ON DELETE CASCADE,
-  CONSTRAINT "partGroup_discountAccountId_fkey" FOREIGN KEY ("discountAccountId") REFERENCES "account"("number") ON DELETE CASCADE,
-  CONSTRAINT "partGroup_inventoryAccountId_fkey" FOREIGN KEY ("inventoryAccountId") REFERENCES "account"("number") ON DELETE CASCADE,
+  CONSTRAINT "partCost_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "partGroup_salesAccountId_fkey" FOREIGN KEY ("salesAccountId") REFERENCES "account"("number") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "partGroup_discountAccountId_fkey" FOREIGN KEY ("discountAccountId") REFERENCES "account"("number") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "partGroup_inventoryAccountId_fkey" FOREIGN KEY ("inventoryAccountId") REFERENCES "account"("number") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "partGroup_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "partGroup_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
@@ -3538,8 +3559,8 @@ CREATE TABLE "partUnitSalePrice" (
   "updatedBy" TEXT,
   "updatedAt" TIMESTAMP WITH TIME ZONE,
 
-  CONSTRAINT "partUnitSalePrice_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part"("id") ON DELETE CASCADE,
-  CONSTRAINT "partUnitSalePrice_currencyCode_fkey" FOREIGN KEY ("currencyCode") REFERENCES "currency"("code") ON DELETE SET NULL,
+  CONSTRAINT "partUnitSalePrice_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "partUnitSalePrice_currencyCode_fkey" FOREIGN KEY ("currencyCode") REFERENCES "currency"("code") ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT "partUnitSalePrice_salesUnitOfMeasureId_fkey" FOREIGN KEY ("salesUnitOfMeasureCode") REFERENCES "unitOfMeasure"("code") ON DELETE SET NULL,
   CONSTRAINT "partUnitSalePrice_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "partUnitSalePrice_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
@@ -3578,7 +3599,7 @@ CREATE TABLE "partSupplier" (
   "updatedAt" TIMESTAMP WITH TIME ZONE,
 
   CONSTRAINT "partSupplier_id_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "partSupplier_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part"("id") ON DELETE CASCADE,
+  CONSTRAINT "partSupplier_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part"("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "partSupplier_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "supplier"("id") ON DELETE CASCADE,
   CONSTRAINT "partSupplier_part_supplier_unique" UNIQUE ("partId", "supplierId"),
   CONSTRAINT "partSupplier_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
@@ -3665,9 +3686,9 @@ CREATE TABLE "partReplenishment" (
   "updatedBy" TEXT,
   "updatedAt" TIMESTAMP WITH TIME ZONE,
   
-  CONSTRAINT "partReplenishment_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part"("id") ON DELETE CASCADE,
+  CONSTRAINT "partReplenishment_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part"("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "partReplenishment_preferredSupplierId_fkey" FOREIGN KEY ("preferredSupplierId") REFERENCES "supplier"("id") ON DELETE SET NULL,
-  CONSTRAINT "partReplenishment_purchaseUnitOfMeasureCode_fkey" FOREIGN KEY ("purchasingUnitOfMeasureCode") REFERENCES "unitOfMeasure"("code") ON DELETE SET NULL,
+  CONSTRAINT "partReplenishment_purchaseUnitOfMeasureCode_fkey" FOREIGN KEY ("purchasingUnitOfMeasureCode") REFERENCES "unitOfMeasure"("code") ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT "partReplenishment_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "partReplenishment_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
@@ -3901,7 +3922,7 @@ CREATE TABLE "partPlanning" (
   "updatedBy" TEXT,
   "updatedAt" TIMESTAMP WITH TIME ZONE,
 
-  CONSTRAINT "partPlanning_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part"("id") ON DELETE CASCADE,
+  CONSTRAINT "partPlanning_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part"("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "partPlanning_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "partPlanning_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
@@ -3936,7 +3957,7 @@ CREATE TABLE "partInventory" (
   "updatedAt" TIMESTAMP WITH TIME ZONE,
 
   CONSTRAINT "partInventory_partId_shelfId_key" UNIQUE ("partId", "shelfId"),
-  CONSTRAINT "partInventory_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part"("id") ON DELETE CASCADE,
+  CONSTRAINT "partInventory_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part"("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "partInventory_shelfId_fkey" FOREIGN KEY ("shelfId") REFERENCES "shelf"("id") ON DELETE SET NULL,
   CONSTRAINT "partInventory_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "partInventory_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
@@ -4307,7 +4328,7 @@ CREATE TABLE "shippingMethod" (
 
   CONSTRAINT "shippingMethod_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "shippingMethod_name_key" UNIQUE ("name"),
-  CONSTRAINT "shippingMethod_carrierAccountId_fkey" FOREIGN KEY ("carrierAccountId") REFERENCES "account" ("number") ON DELETE CASCADE,
+  CONSTRAINT "shippingMethod_carrierAccountId_fkey" FOREIGN KEY ("carrierAccountId") REFERENCES "account" ("number") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "shippingMethod_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE CASCADE,
   CONSTRAINT "shippingMethod_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE CASCADE
 );
@@ -4435,11 +4456,11 @@ CREATE TABLE "purchaseOrderLine" (
 
   CONSTRAINT "purchaseOrderLine_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "purchaseOrderLine_purchaseOrderId_fkey" FOREIGN KEY ("purchaseOrderId") REFERENCES "purchaseOrder" ("id") ON DELETE CASCADE,
-  CONSTRAINT "purchaseOrderLine_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part" ("id") ON DELETE CASCADE,
-  CONSTRAINT "purchaseOrderLine_accountNumber_fkey" FOREIGN KEY ("accountNumber") REFERENCES "account" ("number") ON DELETE CASCADE,
+  CONSTRAINT "purchaseOrderLine_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "purchaseOrderLine_accountNumber_fkey" FOREIGN KEY ("accountNumber") REFERENCES "account" ("number") ON DELETE CASCADE ON UPDATE CASCADE,
   -- TODO: Add assetId foreign key
   CONSTRAINT "purchaseOrderLine_shelfId_fkey" FOREIGN KEY ("shelfId") REFERENCES "shelf" ("id") ON DELETE CASCADE,
-  CONSTRAINT "purchaseOrderLine_unitOfMeasureCode_fkey" FOREIGN KEY ("unitOfMeasureCode") REFERENCES "unitOfMeasure" ("code") ON DELETE CASCADE,
+  CONSTRAINT "purchaseOrderLine_unitOfMeasureCode_fkey" FOREIGN KEY ("unitOfMeasureCode") REFERENCES "unitOfMeasure" ("code") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "purchaseOrderLine_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE CASCADE,
   CONSTRAINT "purchaseOrderLine_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE CASCADE
 );
@@ -4461,7 +4482,7 @@ CREATE TABLE "purchaseOrderPayment" (
   CONSTRAINT "purchaseOrderPayment_invoiceSupplierLocationId_fkey" FOREIGN KEY ("invoiceSupplierLocationId") REFERENCES "supplierLocation" ("id") ON DELETE CASCADE,
   CONSTRAINT "purchaseOrderPayment_invoiceSupplierContactId_fkey" FOREIGN KEY ("invoiceSupplierContactId") REFERENCES "supplierContact" ("id") ON DELETE CASCADE,
   CONSTRAINT "purchaseOrderPayment_paymentTermId_fkey" FOREIGN KEY ("paymentTermId") REFERENCES "paymentTerm" ("id") ON DELETE CASCADE,
-  CONSTRAINT "purchaseOrderPayment_currencyCode_fkey" FOREIGN KEY ("currencyCode") REFERENCES "currency" ("code") ON DELETE CASCADE
+  CONSTRAINT "purchaseOrderPayment_currencyCode_fkey" FOREIGN KEY ("currencyCode") REFERENCES "currency" ("code") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE INDEX "purchaseOrderPayment_invoiceSupplierId_idx" ON "purchaseOrderPayment" ("invoiceSupplierId");
@@ -5050,6 +5071,7 @@ CREATE VIEW "parts_view" AS
 -- TODO: after Postgres 15, we can use security_invoker = on
 -- ALTER VIEW "contractors_view" SET (security_invoker = on);
 -- ALTER VIEW "partners_view" SET (security_invoker = on);
+-- ALTER VIEW "accounts_view" SET (security_invoker = on);
 -- ALTER VIEW "account_categories_view" SET (security_invoker = on);
 -- ALTER VIEW "documents_labels_view" SET (security_invoker = on);
 -- ALTER VIEW "documents_view" SET (security_invoker = on);
@@ -5057,6 +5079,7 @@ CREATE VIEW "parts_view" AS
 -- ALTER VIEW "purchase_order_suppliers_view" SET (security_invoker = on);
 -- ALTER VIEW "suppliers_view" SET (security_invoker = on);
 -- ALTER VIEW "parts_view" SET (security_invoker = on);
+
 ```
 
 
@@ -5159,7 +5182,7 @@ CREATE TABLE "generalLedger" (
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
 
   CONSTRAINT "generalLedger_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "generalLedger_accountNumber_fkey" FOREIGN KEY ("accountNumber") REFERENCES "account"("number")
+  CONSTRAINT "generalLedger_accountNumber_fkey" FOREIGN KEY ("accountNumber") REFERENCES "account"("number") ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 CREATE INDEX "generalLedger_accountNumber_idx" ON "generalLedger" ("accountNumber");
@@ -5252,9 +5275,9 @@ CREATE TABLE "partLedger" (
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
 
   CONSTRAINT "partLedger_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "partLedger_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part"("id"),
-  CONSTRAINT "partLedger_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "location"("id"),
-  CONSTRAINT "partLedger_shelfId_fkey" FOREIGN KEY ("shelfId") REFERENCES "shelf"("id")
+  CONSTRAINT "partLedger_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part"("id") ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT "partLedger_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "location"("id") ON UPDATE CASCADE ON DELETE SET NULL,
+  CONSTRAINT "partLedger_shelfId_fkey" FOREIGN KEY ("shelfId") REFERENCES "shelf"("id") ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 

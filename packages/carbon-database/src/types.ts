@@ -49,18 +49,18 @@ export interface Database {
           number: string;
           name: string;
           type: Database["public"]["Enums"]["glAccountType"];
-          accountCategoryId: string;
+          accountCategoryId: string | null;
           accountSubcategoryId: string | null;
           incomeBalance: Database["public"]["Enums"]["glIncomeBalance"];
           normalBalance: Database["public"]["Enums"]["glNormalBalance"];
           consolidatedRate:
             | Database["public"]["Enums"]["glConsolidatedRate"]
             | null;
-          currencyCode: string | null;
           createdBy: string;
           updatedBy: string | null;
           updatedAt: string | null;
           id: string;
+          directPosting: boolean;
           active: boolean;
           createdAt: string;
         };
@@ -68,18 +68,18 @@ export interface Database {
           number: string;
           name: string;
           type: Database["public"]["Enums"]["glAccountType"];
-          accountCategoryId: string;
+          accountCategoryId?: string | null;
           accountSubcategoryId?: string | null;
           incomeBalance: Database["public"]["Enums"]["glIncomeBalance"];
           normalBalance: Database["public"]["Enums"]["glNormalBalance"];
           consolidatedRate?:
             | Database["public"]["Enums"]["glConsolidatedRate"]
             | null;
-          currencyCode?: string | null;
           createdBy: string;
           updatedBy?: string | null;
           updatedAt?: string | null;
           id?: string;
+          directPosting?: boolean;
           active?: boolean;
           createdAt?: string;
         };
@@ -87,18 +87,18 @@ export interface Database {
           number?: string;
           name?: string;
           type?: Database["public"]["Enums"]["glAccountType"];
-          accountCategoryId?: string;
+          accountCategoryId?: string | null;
           accountSubcategoryId?: string | null;
           incomeBalance?: Database["public"]["Enums"]["glIncomeBalance"];
           normalBalance?: Database["public"]["Enums"]["glNormalBalance"];
           consolidatedRate?:
             | Database["public"]["Enums"]["glConsolidatedRate"]
             | null;
-          currencyCode?: string | null;
           createdBy?: string;
           updatedBy?: string | null;
           updatedAt?: string | null;
           id?: string;
+          directPosting?: boolean;
           active?: boolean;
           createdAt?: string;
         };
@@ -627,12 +627,12 @@ export interface Database {
           readGroups: string[] | null;
           writeGroups: string[] | null;
           createdBy: string;
+          updatedBy: string | null;
+          updatedAt: string | null;
           id: string;
           description: string | null;
           type: string | null;
           active: boolean;
-          updatedBy: string | null;
-          updatedAt: string | null;
           createdAt: string;
         };
         Insert: {
@@ -642,12 +642,12 @@ export interface Database {
           readGroups?: string[] | null;
           writeGroups?: string[] | null;
           createdBy: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
           id?: string;
           description?: string | null;
           type?: string | null;
           active?: boolean;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
           createdAt?: string;
         };
         Update: {
@@ -657,12 +657,12 @@ export interface Database {
           readGroups?: string[] | null;
           writeGroups?: string[] | null;
           createdBy?: string;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
           id?: string;
           description?: string | null;
           type?: string | null;
           active?: boolean;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
           createdAt?: string;
         };
       };
@@ -2790,6 +2790,71 @@ export interface Database {
           subCategoriesCount?: never;
         };
       };
+      accounts_view: {
+        Row: {
+          id: string | null;
+          number: string | null;
+          name: string | null;
+          type: Database["public"]["Enums"]["glAccountType"] | null;
+          accountCategoryId: string | null;
+          accountCategory: string | null;
+          accountSubcategoryId: string | null;
+          accountSubCategory: string | null;
+          incomeBalance: Database["public"]["Enums"]["glIncomeBalance"] | null;
+          normalBalance: Database["public"]["Enums"]["glNormalBalance"] | null;
+          consolidatedRate:
+            | Database["public"]["Enums"]["glConsolidatedRate"]
+            | null;
+          directPosting: boolean | null;
+          active: boolean | null;
+          createdBy: string | null;
+          createdAt: string | null;
+          updatedBy: string | null;
+          updatedAt: string | null;
+        };
+        Insert: {
+          id?: string | null;
+          number?: string | null;
+          name?: string | null;
+          type?: Database["public"]["Enums"]["glAccountType"] | null;
+          accountCategoryId?: string | null;
+          accountCategory?: never;
+          accountSubcategoryId?: string | null;
+          accountSubCategory?: never;
+          incomeBalance?: Database["public"]["Enums"]["glIncomeBalance"] | null;
+          normalBalance?: Database["public"]["Enums"]["glNormalBalance"] | null;
+          consolidatedRate?:
+            | Database["public"]["Enums"]["glConsolidatedRate"]
+            | null;
+          directPosting?: boolean | null;
+          active?: boolean | null;
+          createdBy?: string | null;
+          createdAt?: string | null;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+        };
+        Update: {
+          id?: string | null;
+          number?: string | null;
+          name?: string | null;
+          type?: Database["public"]["Enums"]["glAccountType"] | null;
+          accountCategoryId?: string | null;
+          accountCategory?: never;
+          accountSubcategoryId?: string | null;
+          accountSubCategory?: never;
+          incomeBalance?: Database["public"]["Enums"]["glIncomeBalance"] | null;
+          normalBalance?: Database["public"]["Enums"]["glNormalBalance"] | null;
+          consolidatedRate?:
+            | Database["public"]["Enums"]["glConsolidatedRate"]
+            | null;
+          directPosting?: boolean | null;
+          active?: boolean | null;
+          createdBy?: string | null;
+          createdAt?: string | null;
+          updatedBy?: string | null;
+          updatedAt?: string | null;
+        };
+      };
       contractors_view: {
         Row: {
           supplierContactId: string | null;
@@ -3107,12 +3172,7 @@ export interface Database {
         | "Expense"
         | "Other Income"
         | "Other Expense";
-      glAccountType:
-        | "Posting"
-        | "Heading"
-        | "Total"
-        | "Begin Total"
-        | "End Total";
+      glAccountType: "Posting" | "Heading" | "Begin Total" | "End Total";
       glConsolidatedRate: "Average" | "Current" | "Historical";
       glIncomeBalance: "Balance Sheet" | "Income Statement";
       glNormalBalance: "Debit" | "Credit" | "Both";

@@ -34,6 +34,43 @@ VALUES
   ('2% 10 Net 30', 30, 'Net', 10, 2, 'system'),
   ('Due on Receipt', 0, 'Net', 0, 0, 'system'),
   ('Net EOM 10', 10, 'End of Month', 0, 0, 'system');
+
+ALTER TABLE "paymentTerm" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Certain employees can view payment terms" ON "paymentTerm"
+  FOR SELECT
+  USING (
+    (
+      coalesce(get_my_claim('accounting_view')::boolean, false) = true OR
+      coalesce(get_my_claim('parts_view')::boolean, false) = true OR
+      coalesce(get_my_claim('resources_view')::boolean, false) = true OR
+      coalesce(get_my_claim('sales_view')::boolean, false) = true OR
+      coalesce(get_my_claim('purchasing_view')::boolean, false) = true
+    )
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+  
+
+CREATE POLICY "Employees with accounting_create can insert payment terms" ON "paymentTerm"
+  FOR INSERT
+  WITH CHECK (   
+    coalesce(get_my_claim('accounting_create')::boolean,false) 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+);
+
+CREATE POLICY "Employees with accounting_update can update payment terms" ON "paymentTerm"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('accounting_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Employees with accounting_delete can delete payment terms" ON "paymentTerm"
+  FOR DELETE
+  USING (
+    coalesce(get_my_claim('accounting_delete')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
   
 
 CREATE TYPE "shippingCarrier" AS ENUM (
@@ -64,6 +101,42 @@ CREATE TABLE "shippingMethod" (
 );
 
 CREATE INDEX "shippingMethod_name_idx" ON "shippingMethod" ("name");
+
+
+CREATE POLICY "Certain employees can view shipping methods" ON "shippingMethod"
+  FOR SELECT
+  USING (
+    (
+      coalesce(get_my_claim('accounting_view')::boolean, false) = true OR
+      coalesce(get_my_claim('inventory_view')::boolean, false) = true OR
+      coalesce(get_my_claim('parts_view')::boolean, false) = true OR
+      coalesce(get_my_claim('purchasing_view')::boolean, false) = true OR
+      coalesce(get_my_claim('sales_view')::boolean, false) = true
+    )
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+  
+
+CREATE POLICY "Employees with inventory_create can insert shipping methods" ON "shippingMethod"
+  FOR INSERT
+  WITH CHECK (   
+    coalesce(get_my_claim('inventory_create')::boolean,false) 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+);
+
+CREATE POLICY "Employees with inventory_update can update shipping methods" ON "shippingMethod"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('inventory_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Employees with inventory_delete can delete shipping methods" ON "shippingMethod"
+  FOR DELETE
+  USING (
+    coalesce(get_my_claim('inventory_delete')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
 
 CREATE TABLE "shippingTerm" (
   "id" TEXT NOT NULL DEFAULT xid(),

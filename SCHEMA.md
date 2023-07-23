@@ -3127,6 +3127,36 @@ CREATE TABLE "accountSubcategory" (
 
 CREATE INDEX "accountSubcategory_accountCategoryId_idx" ON "accountSubcategory" ("accountCategoryId");
 
+ALTER TABLE "accountSubcategory" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Employees with accounting_view can view account subcategories" ON "accountSubcategory"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('accounting_view')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+  
+
+CREATE POLICY "Employees with accounting_create can insert account subcategories" ON "accountSubcategory"
+  FOR INSERT
+  WITH CHECK (   
+    coalesce(get_my_claim('accounting_create')::boolean,false) 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+);
+
+CREATE POLICY "Employees with accounting_update can update account subcategories" ON "accountSubcategory"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('accounting_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Employees with accounting_delete can delete account subcategories" ON "accountSubcategory"
+  FOR DELETE
+  USING (
+    coalesce(get_my_claim('accounting_delete')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
 
 CREATE TABLE "account" (
   "id" TEXT NOT NULL DEFAULT xid(),
@@ -4304,6 +4334,43 @@ VALUES
   ('2% 10 Net 30', 30, 'Net', 10, 2, 'system'),
   ('Due on Receipt', 0, 'Net', 0, 0, 'system'),
   ('Net EOM 10', 10, 'End of Month', 0, 0, 'system');
+
+ALTER TABLE "paymentTerm" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Certain employees can view payment terms" ON "paymentTerm"
+  FOR SELECT
+  USING (
+    (
+      coalesce(get_my_claim('accounting_view')::boolean, false) = true OR
+      coalesce(get_my_claim('parts_view')::boolean, false) = true OR
+      coalesce(get_my_claim('resources_view')::boolean, false) = true OR
+      coalesce(get_my_claim('sales_view')::boolean, false) = true OR
+      coalesce(get_my_claim('purchasing_view')::boolean, false) = true
+    )
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+  
+
+CREATE POLICY "Employees with accounting_create can insert payment terms" ON "paymentTerm"
+  FOR INSERT
+  WITH CHECK (   
+    coalesce(get_my_claim('accounting_create')::boolean,false) 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+);
+
+CREATE POLICY "Employees with accounting_update can update payment terms" ON "paymentTerm"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('accounting_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Employees with accounting_delete can delete payment terms" ON "paymentTerm"
+  FOR DELETE
+  USING (
+    coalesce(get_my_claim('accounting_delete')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
   
 
 CREATE TYPE "shippingCarrier" AS ENUM (
@@ -4334,6 +4401,42 @@ CREATE TABLE "shippingMethod" (
 );
 
 CREATE INDEX "shippingMethod_name_idx" ON "shippingMethod" ("name");
+
+
+CREATE POLICY "Certain employees can view shipping methods" ON "shippingMethod"
+  FOR SELECT
+  USING (
+    (
+      coalesce(get_my_claim('accounting_view')::boolean, false) = true OR
+      coalesce(get_my_claim('inventory_view')::boolean, false) = true OR
+      coalesce(get_my_claim('parts_view')::boolean, false) = true OR
+      coalesce(get_my_claim('purchasing_view')::boolean, false) = true OR
+      coalesce(get_my_claim('sales_view')::boolean, false) = true
+    )
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+  
+
+CREATE POLICY "Employees with inventory_create can insert shipping methods" ON "shippingMethod"
+  FOR INSERT
+  WITH CHECK (   
+    coalesce(get_my_claim('inventory_create')::boolean,false) 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+);
+
+CREATE POLICY "Employees with inventory_update can update shipping methods" ON "shippingMethod"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('inventory_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Employees with inventory_delete can delete shipping methods" ON "shippingMethod"
+  FOR DELETE
+  USING (
+    coalesce(get_my_claim('inventory_delete')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
 
 CREATE TABLE "shippingTerm" (
   "id" TEXT NOT NULL DEFAULT xid(),
@@ -5188,6 +5291,25 @@ CREATE TABLE "generalLedger" (
 CREATE INDEX "generalLedger_accountNumber_idx" ON "generalLedger" ("accountNumber");
 CREATE INDEX "generalLedger_postingDate_idx" ON "generalLedger" ("postingDate");
 
+ALTER TABLE "generalLedger" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Employees with accounting_view can view general ledger entries" ON "generalLedger"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('accounting_view')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+  
+
+CREATE POLICY "Employees with accounting_create can insert general ledger entries" ON "generalLedger"
+  FOR INSERT
+  WITH CHECK (   
+    coalesce(get_my_claim('accounting_create')::boolean,false) 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+);
+
+-- delete and update are not availble for general ledger entries
+
 CREATE TYPE "partLedgerType" AS ENUM (
   'Purchase',
   'Sale',
@@ -5247,6 +5369,15 @@ CREATE TABLE "valueLedger" (
   CONSTRAINT "valueLedger_pkey" PRIMARY KEY ("id")
 );
 
+ALTER TABLE "valueLedger" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Employees with accounting_view can view the value ledger" ON "valueLedger"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('accounting_view')::boolean, false) = true AND
+    (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
 CREATE TABLE "valueLedgerAccountLedgerRelation" (
   "valueLedgerId" TEXT NOT NULL,
   "generalLedgerId" TEXT NOT NULL,
@@ -5255,6 +5386,15 @@ CREATE TABLE "valueLedgerAccountLedgerRelation" (
   CONSTRAINT "valueLedgerAccountLedgerRelation_valueLedgerId_fkey" FOREIGN KEY ("valueLedgerId") REFERENCES "valueLedger"("id"),
   CONSTRAINT "valueLedgerAccountLedgerRelation_generalLedgerId_fkey" FOREIGN KEY ("generalLedgerId") REFERENCES "generalLedger"("id")
 );
+
+ALTER TABLE "valueLedgerAccountLedgerRelation" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Employees with accounting_view can view the value ledger account relations" ON "valueLedgerAccountLedgerRelation"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('accounting_view')::boolean, false) = true AND
+    (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
 
 CREATE TABLE "partLedger" (
   "id" TEXT NOT NULL DEFAULT xid(),
@@ -5279,6 +5419,19 @@ CREATE TABLE "partLedger" (
   CONSTRAINT "partLedger_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "location"("id") ON UPDATE CASCADE ON DELETE SET NULL,
   CONSTRAINT "partLedger_shelfId_fkey" FOREIGN KEY ("shelfId") REFERENCES "shelf"("id") ON UPDATE CASCADE ON DELETE SET NULL
 );
+
+ALTER TABLE "partLedger" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Certain employees can view the parts ledger" ON "partLedger"
+  FOR SELECT
+  USING (
+    (
+      coalesce(get_my_claim('accounting_view')::boolean, false) = true OR
+      coalesce(get_my_claim('parts_view')::boolean, false) = true
+    )
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+  
 
 
 

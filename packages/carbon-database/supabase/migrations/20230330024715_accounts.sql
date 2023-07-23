@@ -185,6 +185,36 @@ CREATE TABLE "accountSubcategory" (
 
 CREATE INDEX "accountSubcategory_accountCategoryId_idx" ON "accountSubcategory" ("accountCategoryId");
 
+ALTER TABLE "accountSubcategory" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Employees with accounting_view can view account subcategories" ON "accountSubcategory"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('accounting_view')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+  
+
+CREATE POLICY "Employees with accounting_create can insert account subcategories" ON "accountSubcategory"
+  FOR INSERT
+  WITH CHECK (   
+    coalesce(get_my_claim('accounting_create')::boolean,false) 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+);
+
+CREATE POLICY "Employees with accounting_update can update account subcategories" ON "accountSubcategory"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('accounting_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Employees with accounting_delete can delete account subcategories" ON "accountSubcategory"
+  FOR DELETE
+  USING (
+    coalesce(get_my_claim('accounting_delete')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
 
 CREATE TABLE "account" (
   "id" TEXT NOT NULL DEFAULT xid(),

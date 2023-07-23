@@ -26,6 +26,25 @@ CREATE TABLE "generalLedger" (
 CREATE INDEX "generalLedger_accountNumber_idx" ON "generalLedger" ("accountNumber");
 CREATE INDEX "generalLedger_postingDate_idx" ON "generalLedger" ("postingDate");
 
+ALTER TABLE "generalLedger" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Employees with accounting_view can view general ledger entries" ON "generalLedger"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('accounting_view')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+  
+
+CREATE POLICY "Employees with accounting_create can insert general ledger entries" ON "generalLedger"
+  FOR INSERT
+  WITH CHECK (   
+    coalesce(get_my_claim('accounting_create')::boolean,false) 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+);
+
+-- delete and update are not availble for general ledger entries
+
 CREATE TYPE "partLedgerType" AS ENUM (
   'Purchase',
   'Sale',
@@ -85,6 +104,15 @@ CREATE TABLE "valueLedger" (
   CONSTRAINT "valueLedger_pkey" PRIMARY KEY ("id")
 );
 
+ALTER TABLE "valueLedger" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Employees with accounting_view can view the value ledger" ON "valueLedger"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('accounting_view')::boolean, false) = true AND
+    (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
 CREATE TABLE "valueLedgerAccountLedgerRelation" (
   "valueLedgerId" TEXT NOT NULL,
   "generalLedgerId" TEXT NOT NULL,
@@ -93,6 +121,15 @@ CREATE TABLE "valueLedgerAccountLedgerRelation" (
   CONSTRAINT "valueLedgerAccountLedgerRelation_valueLedgerId_fkey" FOREIGN KEY ("valueLedgerId") REFERENCES "valueLedger"("id"),
   CONSTRAINT "valueLedgerAccountLedgerRelation_generalLedgerId_fkey" FOREIGN KEY ("generalLedgerId") REFERENCES "generalLedger"("id")
 );
+
+ALTER TABLE "valueLedgerAccountLedgerRelation" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Employees with accounting_view can view the value ledger account relations" ON "valueLedgerAccountLedgerRelation"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('accounting_view')::boolean, false) = true AND
+    (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
 
 CREATE TABLE "partLedger" (
   "id" TEXT NOT NULL DEFAULT xid(),
@@ -117,6 +154,19 @@ CREATE TABLE "partLedger" (
   CONSTRAINT "partLedger_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "location"("id") ON UPDATE CASCADE ON DELETE SET NULL,
   CONSTRAINT "partLedger_shelfId_fkey" FOREIGN KEY ("shelfId") REFERENCES "shelf"("id") ON UPDATE CASCADE ON DELETE SET NULL
 );
+
+ALTER TABLE "partLedger" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Certain employees can view the parts ledger" ON "partLedger"
+  FOR SELECT
+  USING (
+    (
+      coalesce(get_my_claim('accounting_view')::boolean, false) = true OR
+      coalesce(get_my_claim('parts_view')::boolean, false) = true
+    )
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+  
 
 
 

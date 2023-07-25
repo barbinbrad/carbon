@@ -24,7 +24,6 @@ export const Queue = <Payload>(
   name: string,
   handler: Processor<Payload>
 ): BullQueue<Payload> => {
-  // if (isVercel()) return mockQueue as any;
   if (registeredQueues[name]) {
     return registeredQueues[name].queue;
   }

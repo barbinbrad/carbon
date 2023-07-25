@@ -71,8 +71,6 @@ export async function action({ request }: ActionArgs) {
 export default function EditChartOfAccountsRoute() {
   const { account } = useLoaderData<typeof loader>();
 
-  console.log({ account });
-
   const initialValues = {
     id: account?.id ?? undefined,
     number: account?.number ?? "",

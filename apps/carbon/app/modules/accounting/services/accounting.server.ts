@@ -65,6 +65,13 @@ function addLevelsAndTotalsToAccounts(
   return result;
 }
 
+export async function deleteAccount(
+  client: SupabaseClient<Database>,
+  accountId: string
+) {
+  return client.from("account").delete().eq("id", accountId);
+}
+
 export async function deleteAccountCategory(
   client: SupabaseClient<Database>,
   accountSubcategoryId: string
@@ -101,9 +108,9 @@ export async function deletePaymentTerm(
 
 export async function getAccount(
   client: SupabaseClient<Database>,
-  number: string
+  accountId: string
 ) {
-  return client.from("account").select("*").eq("number", number).single();
+  return client.from("account").select("*").eq("id", accountId).single();
 }
 
 export async function getAccounts(

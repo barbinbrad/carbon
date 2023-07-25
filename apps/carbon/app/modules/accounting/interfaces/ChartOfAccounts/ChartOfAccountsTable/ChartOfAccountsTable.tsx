@@ -1,7 +1,9 @@
 import { DataTable, DataTableColumnHeader } from "@carbon/react";
-import { Checkbox, HStack, Link, Text } from "@chakra-ui/react";
+import { Box, Checkbox, HStack, IconButton, Text } from "@chakra-ui/react";
+import { Link } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo } from "react";
+import { MdMoreHoriz } from "react-icons/md";
 import type { Chart } from "~/modules/accounting";
 
 type ChartOfAccountsTableProps = {
@@ -9,8 +11,6 @@ type ChartOfAccountsTableProps = {
 };
 
 const ChartOfAccountsTable = memo(({ data }: ChartOfAccountsTableProps) => {
-  console.log(data);
-
   const columns = useMemo<ColumnDef<Chart>[]>(() => {
     return [
       {
@@ -23,13 +23,23 @@ const ChartOfAccountsTable = memo(({ data }: ChartOfAccountsTableProps) => {
 
           return (
             <HStack>
-              {isPosting ? (
-                <Link>{row.original.number}</Link>
-              ) : (
-                <Text fontWeight={isPosting ? "normal" : "bold"}>
-                  {row.original.number}
-                </Text>
-              )}
+              <Text fontWeight={isPosting ? "normal" : "bold"}>
+                {row.original.number}
+              </Text>
+              <Box position="relative" w={6} h={6}>
+                <IconButton
+                  aria-label="Edit account"
+                  as={Link}
+                  icon={<MdMoreHoriz />}
+                  size="sm"
+                  position="absolute"
+                  right={-1}
+                  top={-1}
+                  to={`${row.original.id}`}
+                  onClick={(e) => e.stopPropagation()}
+                  variant="ghost"
+                />
+              </Box>
             </HStack>
           );
         },

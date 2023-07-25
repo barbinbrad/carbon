@@ -1,4 +1,3 @@
-import { useColor } from "@carbon/react";
 import {
   Button,
   Drawer,
@@ -9,7 +8,6 @@ import {
   DrawerHeader,
   DrawerOverlay,
   Grid,
-  Heading,
   HStack,
   VStack,
 } from "@chakra-ui/react";
@@ -51,7 +49,6 @@ const ChartOfAccountForm = ({ initialValues }: ChartOfAccountFormProps) => {
   const permissions = usePermissions();
   const navigate = useNavigate();
   const onClose = () => navigate(-1);
-  const borderColor = useColor("gray.200");
 
   const [accountCategoryId, setAccountCategoryId] = useState<string>(
     initialValues.accountCategoryId ?? ""
@@ -91,21 +88,13 @@ const ChartOfAccountForm = ({ initialValues }: ChartOfAccountFormProps) => {
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader>{isEditing ? "Edit" : "New"} Account</DrawerHeader>
+          <DrawerHeader>
+            {isEditing
+              ? `${initialValues.number} - ${initialValues.name}`
+              : "New Account"}
+          </DrawerHeader>
           <DrawerBody pb={8}>
             <Hidden name="id" />
-            {isEditing && (
-              <Heading
-                size="2xl"
-                pb={6}
-                mb={6}
-                borderBottom="1px solid"
-                borderColor={borderColor}
-                noOfLines={1}
-              >
-                {`${initialValues.number} - ${initialValues.name}`}
-              </Heading>
-            )}
 
             <Grid
               gridTemplateColumns={["1fr", "1fr", "1fr 1fr 1fr"]}

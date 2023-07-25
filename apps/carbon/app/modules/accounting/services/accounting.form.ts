@@ -100,12 +100,12 @@ export const accountValidator = withZod(
     })
     .refine(
       (data) => {
-        if (data.type === "Heading") {
-          return !data.accountCategoryId;
+        if (data.type !== "Heading") {
+          return !!data.accountCategoryId;
         }
         return true;
       },
-      { message: "Account category is required" }
+      { message: "Account category is required", path: ["accountCategoryId"] }
     )
 );
 

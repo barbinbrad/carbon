@@ -60,7 +60,7 @@ const Cell = <T extends object>({
           ? "yellow.100"
           : isEditMode && !hasEditableTableCellComponent
           ? "gray.50"
-          : undefined
+          : "white"
       }
       borderRightColor={borderColor}
       borderRightStyle="solid"

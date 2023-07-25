@@ -467,6 +467,7 @@ const Table = <T extends object>({
               borderRightWidth={4}
               position="sticky"
               left={0}
+              zIndex={50}
             >
               <Thead>
                 {table.getLeftHeaderGroups().map((headerGroup) => (

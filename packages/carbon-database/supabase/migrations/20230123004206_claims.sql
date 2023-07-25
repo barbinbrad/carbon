@@ -44,12 +44,9 @@ CREATE OR REPLACE FUNCTION get_claims(uid uuid) RETURNS "jsonb"
     AS $$
     DECLARE retval jsonb;
     BEGIN
-      IF NOT is_claims_admin() THEN
-          RETURN '{"error":"access denied"}'::jsonb;
-      ELSE
-        select raw_app_meta_data from auth.users into retval where id = uid::uuid;
+      select raw_app_meta_data from auth.users into retval where id = uid::uuid;
         return retval;
-      END IF;
+      
     END;
 $$;
 
@@ -58,12 +55,9 @@ CREATE OR REPLACE FUNCTION get_claim(uid uuid, claim text) RETURNS "jsonb"
     AS $$
     DECLARE retval jsonb;
     BEGIN
-      IF NOT is_claims_admin() THEN
-          RETURN '{"error":"access denied"}'::jsonb;
-      ELSE
-        select coalesce(raw_app_meta_data->claim, null) from auth.users into retval where id = uid::uuid;
+      select coalesce(raw_app_meta_data->claim, null) from auth.users into retval where id = uid::uuid;
         return retval;
-      END IF;
+      
     END;
 $$;
 

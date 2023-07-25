@@ -526,7 +526,8 @@ export async function getUserClaims(
   } finally {
     // if we don't have permissions from redis, get them from the database
     if (!claims) {
-      const rawClaims = await getClaims(client, userId);
+      const rawClaims = await getClaims(getSupabaseServiceRole(), userId);
+
       if (rawClaims.error || rawClaims.data === null) {
         throw redirect(
           "/x",

@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
 import { Input } from "@chakra-ui/react";
-import type { PostgrestResponse } from "@supabase/supabase-js";
+import type { PostgrestSingleResponse } from "@supabase/supabase-js";
 import type { FocusEvent, KeyboardEvent } from "react";
 import type { EditableTableCellComponentProps } from "~/components/Editable";
 
@@ -10,7 +10,7 @@ const EditableText =
       accessorKey: string,
       newValue: string,
       row: T
-    ) => Promise<PostgrestResponse<unknown>>
+    ) => Promise<PostgrestSingleResponse<null>>
   ) =>
   ({
     value,

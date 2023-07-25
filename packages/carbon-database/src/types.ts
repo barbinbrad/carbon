@@ -3,208 +3,320 @@ export type Json =
   | number
   | boolean
   | null
-  | { [key: string]: Json }
+  | { [key: string]: Json | undefined }
   | Json[];
 
 export interface Database {
+  graphql_public: {
+    Tables: {
+      [_ in never]: never;
+    };
+    Views: {
+      [_ in never]: never;
+    };
+    Functions: {
+      graphql: {
+        Args: {
+          operationName?: string;
+          query?: string;
+          variables?: Json;
+          extensions?: Json;
+        };
+        Returns: Json;
+      };
+    };
+    Enums: {
+      [_ in never]: never;
+    };
+    CompositeTypes: {
+      [_ in never]: never;
+    };
+  };
   public: {
     Tables: {
       ability: {
         Row: {
-          name: string;
-          createdBy: string;
-          updatedAt: string | null;
-          updatedBy: string | null;
-          id: string;
-          curve: Json;
-          shadowWeeks: number;
           active: boolean;
           createdAt: string;
+          createdBy: string;
+          curve: Json;
+          id: string;
+          name: string;
+          shadowWeeks: number;
+          updatedAt: string | null;
+          updatedBy: string | null;
         };
         Insert: {
-          name: string;
-          createdBy: string;
-          updatedAt?: string | null;
-          updatedBy?: string | null;
-          id?: string;
-          curve?: Json;
-          shadowWeeks?: number;
           active?: boolean;
           createdAt?: string;
+          createdBy: string;
+          curve?: Json;
+          id?: string;
+          name: string;
+          shadowWeeks?: number;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
         Update: {
-          name?: string;
-          createdBy?: string;
-          updatedAt?: string | null;
-          updatedBy?: string | null;
-          id?: string;
-          curve?: Json;
-          shadowWeeks?: number;
           active?: boolean;
           createdAt?: string;
+          createdBy?: string;
+          curve?: Json;
+          id?: string;
+          name?: string;
+          shadowWeeks?: number;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "abilities_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "abilities_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       account: {
         Row: {
-          number: string;
-          name: string;
-          type: Database["public"]["Enums"]["glAccountType"];
           accountCategoryId: string | null;
           accountSubcategoryId: string | null;
-          incomeBalance: Database["public"]["Enums"]["glIncomeBalance"];
-          normalBalance: Database["public"]["Enums"]["glNormalBalance"];
+          active: boolean;
           consolidatedRate:
             | Database["public"]["Enums"]["glConsolidatedRate"]
             | null;
-          createdBy: string;
-          updatedBy: string | null;
-          updatedAt: string | null;
-          id: string;
-          directPosting: boolean;
-          active: boolean;
           createdAt: string;
+          createdBy: string;
+          directPosting: boolean;
+          id: string;
+          incomeBalance: Database["public"]["Enums"]["glIncomeBalance"];
+          name: string;
+          normalBalance: Database["public"]["Enums"]["glNormalBalance"];
+          number: string;
+          type: Database["public"]["Enums"]["glAccountType"];
+          updatedAt: string | null;
+          updatedBy: string | null;
         };
         Insert: {
-          number: string;
-          name: string;
-          type: Database["public"]["Enums"]["glAccountType"];
           accountCategoryId?: string | null;
           accountSubcategoryId?: string | null;
-          incomeBalance: Database["public"]["Enums"]["glIncomeBalance"];
-          normalBalance: Database["public"]["Enums"]["glNormalBalance"];
+          active?: boolean;
           consolidatedRate?:
             | Database["public"]["Enums"]["glConsolidatedRate"]
             | null;
-          createdBy: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          id?: string;
-          directPosting?: boolean;
-          active?: boolean;
           createdAt?: string;
+          createdBy: string;
+          directPosting?: boolean;
+          id?: string;
+          incomeBalance: Database["public"]["Enums"]["glIncomeBalance"];
+          name: string;
+          normalBalance: Database["public"]["Enums"]["glNormalBalance"];
+          number: string;
+          type: Database["public"]["Enums"]["glAccountType"];
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
         Update: {
-          number?: string;
-          name?: string;
-          type?: Database["public"]["Enums"]["glAccountType"];
           accountCategoryId?: string | null;
           accountSubcategoryId?: string | null;
-          incomeBalance?: Database["public"]["Enums"]["glIncomeBalance"];
-          normalBalance?: Database["public"]["Enums"]["glNormalBalance"];
+          active?: boolean;
           consolidatedRate?:
             | Database["public"]["Enums"]["glConsolidatedRate"]
             | null;
-          createdBy?: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          id?: string;
-          directPosting?: boolean;
-          active?: boolean;
           createdAt?: string;
+          createdBy?: string;
+          directPosting?: boolean;
+          id?: string;
+          incomeBalance?: Database["public"]["Enums"]["glIncomeBalance"];
+          name?: string;
+          normalBalance?: Database["public"]["Enums"]["glNormalBalance"];
+          number?: string;
+          type?: Database["public"]["Enums"]["glAccountType"];
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "account_accountCategoryId_fkey";
+            columns: ["accountCategoryId"];
+            referencedRelation: "accountCategory";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "account_accountCategoryId_fkey";
+            columns: ["accountCategoryId"];
+            referencedRelation: "account_categories_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "account_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "account_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       accountCategory: {
         Row: {
           category: string;
+          createdAt: string;
+          createdBy: string;
+          id: string;
           incomeBalance: Database["public"]["Enums"]["glIncomeBalance"];
           normalBalance: Database["public"]["Enums"]["glNormalBalance"];
-          createdBy: string;
-          updatedBy: string | null;
           updatedAt: string | null;
-          id: string;
-          createdAt: string;
+          updatedBy: string | null;
         };
         Insert: {
           category: string;
+          createdAt?: string;
+          createdBy: string;
+          id?: string;
           incomeBalance: Database["public"]["Enums"]["glIncomeBalance"];
           normalBalance: Database["public"]["Enums"]["glNormalBalance"];
-          createdBy: string;
-          updatedBy?: string | null;
           updatedAt?: string | null;
-          id?: string;
-          createdAt?: string;
+          updatedBy?: string | null;
         };
         Update: {
           category?: string;
+          createdAt?: string;
+          createdBy?: string;
+          id?: string;
           incomeBalance?: Database["public"]["Enums"]["glIncomeBalance"];
           normalBalance?: Database["public"]["Enums"]["glNormalBalance"];
-          createdBy?: string;
-          updatedBy?: string | null;
           updatedAt?: string | null;
-          id?: string;
-          createdAt?: string;
+          updatedBy?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "accountCategory_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "accountCategory_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       accountSubcategory: {
         Row: {
-          name: string;
           accountCategoryId: string;
-          createdBy: string;
-          updatedBy: string | null;
-          updatedAt: string | null;
-          id: string;
           active: boolean;
           createdAt: string;
+          createdBy: string;
+          id: string;
+          name: string;
+          updatedAt: string | null;
+          updatedBy: string | null;
         };
         Insert: {
-          name: string;
           accountCategoryId: string;
-          createdBy: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          id?: string;
           active?: boolean;
           createdAt?: string;
+          createdBy: string;
+          id?: string;
+          name: string;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
         Update: {
-          name?: string;
           accountCategoryId?: string;
-          createdBy?: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          id?: string;
           active?: boolean;
           createdAt?: string;
+          createdBy?: string;
+          id?: string;
+          name?: string;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "accountSubcategory_accountCategoryId_fkey";
+            columns: ["accountCategoryId"];
+            referencedRelation: "accountCategory";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "accountSubcategory_accountCategoryId_fkey";
+            columns: ["accountCategoryId"];
+            referencedRelation: "account_categories_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "accountSubcategory_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "accountSubcategory_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       address: {
         Row: {
           addressLine1: string | null;
           addressLine2: string | null;
           city: string | null;
-          state: string | null;
-          postalCode: string | null;
           countryId: number | null;
-          phone: string | null;
           fax: string | null;
           id: string;
+          phone: string | null;
+          postalCode: string | null;
+          state: string | null;
         };
         Insert: {
           addressLine1?: string | null;
           addressLine2?: string | null;
           city?: string | null;
-          state?: string | null;
-          postalCode?: string | null;
           countryId?: number | null;
-          phone?: string | null;
           fax?: string | null;
           id?: string;
+          phone?: string | null;
+          postalCode?: string | null;
+          state?: string | null;
         };
         Update: {
           addressLine1?: string | null;
           addressLine2?: string | null;
           city?: string | null;
-          state?: string | null;
-          postalCode?: string | null;
           countryId?: number | null;
-          phone?: string | null;
           fax?: string | null;
           id?: string;
+          phone?: string | null;
+          postalCode?: string | null;
+          state?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "address_countryId_fkey";
+            columns: ["countryId"];
+            referencedRelation: "country";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       attributeDataType: {
         Row: {
-          label: string;
           id: number;
           isBoolean: boolean;
           isDate: boolean;
@@ -212,9 +324,9 @@ export interface Database {
           isNumeric: boolean;
           isText: boolean;
           isUser: boolean;
+          label: string;
         };
         Insert: {
-          label: string;
           id?: number;
           isBoolean?: boolean;
           isDate?: boolean;
@@ -222,9 +334,9 @@ export interface Database {
           isNumeric?: boolean;
           isText?: boolean;
           isUser?: boolean;
+          label: string;
         };
         Update: {
-          label?: string;
           id?: number;
           isBoolean?: boolean;
           isDate?: boolean;
@@ -232,439 +344,654 @@ export interface Database {
           isNumeric?: boolean;
           isText?: boolean;
           isUser?: boolean;
+          label?: string;
         };
+        Relationships: [];
       };
       contact: {
         Row: {
-          firstName: string;
-          lastName: string;
-          email: string;
-          title: string | null;
-          mobilePhone: string | null;
-          homePhone: string | null;
-          workPhone: string | null;
-          fax: string | null;
           addressLine1: string | null;
           addressLine2: string | null;
-          city: string | null;
-          state: string | null;
-          postalCode: string | null;
-          countryId: number | null;
           birthday: string | null;
-          notes: string | null;
+          city: string | null;
+          countryId: number | null;
+          email: string;
+          fax: string | null;
+          firstName: string;
+          homePhone: string | null;
           id: string;
+          lastName: string;
+          mobilePhone: string | null;
+          notes: string | null;
+          postalCode: string | null;
+          state: string | null;
+          title: string | null;
+          workPhone: string | null;
         };
         Insert: {
-          firstName: string;
-          lastName: string;
-          email: string;
-          title?: string | null;
-          mobilePhone?: string | null;
-          homePhone?: string | null;
-          workPhone?: string | null;
-          fax?: string | null;
           addressLine1?: string | null;
           addressLine2?: string | null;
-          city?: string | null;
-          state?: string | null;
-          postalCode?: string | null;
-          countryId?: number | null;
           birthday?: string | null;
-          notes?: string | null;
+          city?: string | null;
+          countryId?: number | null;
+          email: string;
+          fax?: string | null;
+          firstName: string;
+          homePhone?: string | null;
           id?: string;
+          lastName: string;
+          mobilePhone?: string | null;
+          notes?: string | null;
+          postalCode?: string | null;
+          state?: string | null;
+          title?: string | null;
+          workPhone?: string | null;
         };
         Update: {
-          firstName?: string;
-          lastName?: string;
-          email?: string;
-          title?: string | null;
-          mobilePhone?: string | null;
-          homePhone?: string | null;
-          workPhone?: string | null;
-          fax?: string | null;
           addressLine1?: string | null;
           addressLine2?: string | null;
-          city?: string | null;
-          state?: string | null;
-          postalCode?: string | null;
-          countryId?: number | null;
           birthday?: string | null;
-          notes?: string | null;
+          city?: string | null;
+          countryId?: number | null;
+          email?: string;
+          fax?: string | null;
+          firstName?: string;
+          homePhone?: string | null;
           id?: string;
+          lastName?: string;
+          mobilePhone?: string | null;
+          notes?: string | null;
+          postalCode?: string | null;
+          state?: string | null;
+          title?: string | null;
+          workPhone?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "contact_countryId_fkey";
+            columns: ["countryId"];
+            referencedRelation: "country";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       contractor: {
         Row: {
-          id: string;
-          createdBy: string;
-          updatedBy: string | null;
-          updatedAt: string | null;
-          hoursPerWeek: number;
           active: boolean;
           createdAt: string;
+          createdBy: string;
+          hoursPerWeek: number;
+          id: string;
+          updatedAt: string | null;
+          updatedBy: string | null;
         };
         Insert: {
-          id: string;
-          createdBy: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          hoursPerWeek?: number;
           active?: boolean;
           createdAt?: string;
+          createdBy: string;
+          hoursPerWeek?: number;
+          id: string;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
         Update: {
-          id?: string;
-          createdBy?: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          hoursPerWeek?: number;
           active?: boolean;
           createdAt?: string;
+          createdBy?: string;
+          hoursPerWeek?: number;
+          id?: string;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "contractor_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "contractor_id_fkey";
+            columns: ["id"];
+            referencedRelation: "supplierContact";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "contractor_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       contractorAbility: {
         Row: {
-          contractorId: string;
           abilityId: string;
-          createdBy: string;
+          contractorId: string;
           createdAt: string;
+          createdBy: string;
         };
         Insert: {
-          contractorId: string;
           abilityId: string;
-          createdBy: string;
+          contractorId: string;
           createdAt?: string;
+          createdBy: string;
         };
         Update: {
-          contractorId?: string;
           abilityId?: string;
-          createdBy?: string;
+          contractorId?: string;
           createdAt?: string;
+          createdBy?: string;
         };
+        Relationships: [
+          {
+            foreignKeyName: "contractorAbility_abilityId_fkey";
+            columns: ["abilityId"];
+            referencedRelation: "ability";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "contractorAbility_contractorId_fkey";
+            columns: ["contractorId"];
+            referencedRelation: "contractor";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "contractorAbility_contractorId_fkey";
+            columns: ["contractorId"];
+            referencedRelation: "contractors_view";
+            referencedColumns: ["supplierContactId"];
+          },
+          {
+            foreignKeyName: "contractorAbility_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       country: {
         Row: {
-          name: string;
           code: string;
           id: number;
+          name: string;
         };
         Insert: {
-          name: string;
           code: string;
           id?: number;
+          name: string;
         };
         Update: {
-          name?: string;
           code?: string;
           id?: number;
+          name?: string;
         };
+        Relationships: [];
       };
       crew: {
         Row: {
-          name: string;
-          description: string | null;
           crewLeaderId: string | null;
+          description: string | null;
           groupId: string;
-          workCellId: string | null;
           id: string;
+          name: string;
+          workCellId: string | null;
         };
         Insert: {
-          name: string;
-          description?: string | null;
           crewLeaderId?: string | null;
+          description?: string | null;
           groupId: string;
-          workCellId?: string | null;
           id?: string;
+          name: string;
+          workCellId?: string | null;
         };
         Update: {
-          name?: string;
-          description?: string | null;
           crewLeaderId?: string | null;
+          description?: string | null;
           groupId?: string;
-          workCellId?: string | null;
           id?: string;
+          name?: string;
+          workCellId?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "crew_crewLeaderId_fkey";
+            columns: ["crewLeaderId"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "crew_groupId_fkey";
+            columns: ["groupId"];
+            referencedRelation: "group";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "crew_workCellId_fkey";
+            columns: ["workCellId"];
+            referencedRelation: "workCell";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       crewAbility: {
         Row: {
-          crewId: string;
           abilityId: string;
-          id: string;
           active: boolean;
+          crewId: string;
+          id: string;
         };
         Insert: {
-          crewId: string;
           abilityId: string;
-          id?: string;
           active?: boolean;
+          crewId: string;
+          id?: string;
         };
         Update: {
-          crewId?: string;
           abilityId?: string;
-          id?: string;
           active?: boolean;
+          crewId?: string;
+          id?: string;
         };
+        Relationships: [
+          {
+            foreignKeyName: "crewAbility_abilityId_fkey";
+            columns: ["abilityId"];
+            referencedRelation: "ability";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "crewAbility_crewId_fkey";
+            columns: ["crewId"];
+            referencedRelation: "crew";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       currency: {
         Row: {
-          name: string;
-          code: string;
-          symbol: string | null;
-          createdBy: string;
-          updatedBy: string | null;
-          updatedAt: string | null;
-          id: string;
-          exchangeRate: number;
-          isBaseCurrency: boolean;
           active: boolean;
+          code: string;
           createdAt: string;
+          createdBy: string;
+          exchangeRate: number;
+          id: string;
+          isBaseCurrency: boolean;
+          name: string;
+          symbol: string | null;
+          updatedAt: string | null;
+          updatedBy: string | null;
         };
         Insert: {
-          name: string;
-          code: string;
-          symbol?: string | null;
-          createdBy: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          id?: string;
-          exchangeRate?: number;
-          isBaseCurrency?: boolean;
           active?: boolean;
+          code: string;
           createdAt?: string;
+          createdBy: string;
+          exchangeRate?: number;
+          id?: string;
+          isBaseCurrency?: boolean;
+          name: string;
+          symbol?: string | null;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
         Update: {
-          name?: string;
-          code?: string;
-          symbol?: string | null;
-          createdBy?: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          id?: string;
-          exchangeRate?: number;
-          isBaseCurrency?: boolean;
           active?: boolean;
+          code?: string;
           createdAt?: string;
+          createdBy?: string;
+          exchangeRate?: number;
+          id?: string;
+          isBaseCurrency?: boolean;
+          name?: string;
+          symbol?: string | null;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "currency_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "currency_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       customer: {
         Row: {
-          name: string;
-          customerTypeId: string | null;
-          customerStatusId: string | null;
-          taxId: string | null;
           accountManagerId: string | null;
-          logo: string | null;
+          createdAt: string;
           createdBy: string | null;
+          customerStatusId: string | null;
+          customerTypeId: string | null;
+          id: string;
+          logo: string | null;
+          name: string;
+          taxId: string | null;
           updatedAt: string | null;
           updatedBy: string | null;
-          id: string;
-          createdAt: string;
         };
         Insert: {
-          name: string;
-          customerTypeId?: string | null;
-          customerStatusId?: string | null;
-          taxId?: string | null;
           accountManagerId?: string | null;
-          logo?: string | null;
+          createdAt?: string;
           createdBy?: string | null;
+          customerStatusId?: string | null;
+          customerTypeId?: string | null;
+          id?: string;
+          logo?: string | null;
+          name: string;
+          taxId?: string | null;
           updatedAt?: string | null;
           updatedBy?: string | null;
-          id?: string;
-          createdAt?: string;
         };
         Update: {
-          name?: string;
-          customerTypeId?: string | null;
-          customerStatusId?: string | null;
-          taxId?: string | null;
           accountManagerId?: string | null;
-          logo?: string | null;
+          createdAt?: string;
           createdBy?: string | null;
+          customerStatusId?: string | null;
+          customerTypeId?: string | null;
+          id?: string;
+          logo?: string | null;
+          name?: string;
+          taxId?: string | null;
           updatedAt?: string | null;
           updatedBy?: string | null;
-          id?: string;
-          createdAt?: string;
         };
+        Relationships: [
+          {
+            foreignKeyName: "customer_accountManagerId_fkey";
+            columns: ["accountManagerId"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "customer_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "customer_customerStatusId_fkey";
+            columns: ["customerStatusId"];
+            referencedRelation: "customerStatus";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "customer_customerTypeId_fkey";
+            columns: ["customerTypeId"];
+            referencedRelation: "customerType";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "customer_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       customerAccount: {
         Row: {
-          id: string;
           customerId: string;
+          id: string;
         };
         Insert: {
-          id: string;
           customerId: string;
+          id: string;
         };
         Update: {
-          id?: string;
           customerId?: string;
+          id?: string;
         };
+        Relationships: [
+          {
+            foreignKeyName: "customerAccount_customerId_fkey";
+            columns: ["customerId"];
+            referencedRelation: "customer";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "customerAccount_id_fkey";
+            columns: ["id"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       customerContact: {
         Row: {
-          customerId: string;
           contactId: string;
+          customerId: string;
           customerLocationId: string | null;
-          userId: string | null;
           id: string;
+          userId: string | null;
         };
         Insert: {
-          customerId: string;
           contactId: string;
+          customerId: string;
           customerLocationId?: string | null;
-          userId?: string | null;
           id?: string;
+          userId?: string | null;
         };
         Update: {
-          customerId?: string;
           contactId?: string;
+          customerId?: string;
           customerLocationId?: string | null;
-          userId?: string | null;
           id?: string;
+          userId?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "customerContact_contactId_fkey";
+            columns: ["contactId"];
+            referencedRelation: "contact";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "customerContact_customerId_fkey";
+            columns: ["customerId"];
+            referencedRelation: "customer";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "customerContact_customerLocationId_fkey";
+            columns: ["customerLocationId"];
+            referencedRelation: "customerLocation";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "customerContact_userId_fkey";
+            columns: ["userId"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       customerLocation: {
         Row: {
-          customerId: string;
           addressId: string;
+          customerId: string;
           id: string;
         };
         Insert: {
-          customerId: string;
           addressId: string;
+          customerId: string;
           id?: string;
         };
         Update: {
-          customerId?: string;
           addressId?: string;
+          customerId?: string;
           id?: string;
         };
+        Relationships: [
+          {
+            foreignKeyName: "customerLocation_addressId_fkey";
+            columns: ["addressId"];
+            referencedRelation: "address";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "customerLocation_customerId_fkey";
+            columns: ["customerId"];
+            referencedRelation: "customer";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       customerStatus: {
         Row: {
+          createdAt: string;
+          id: string;
           name: string;
           updatedAt: string | null;
-          id: string;
-          createdAt: string;
         };
         Insert: {
+          createdAt?: string;
+          id?: string;
           name: string;
           updatedAt?: string | null;
-          id?: string;
-          createdAt?: string;
         };
         Update: {
+          createdAt?: string;
+          id?: string;
           name?: string;
           updatedAt?: string | null;
-          id?: string;
-          createdAt?: string;
         };
+        Relationships: [];
       };
       customerType: {
         Row: {
-          name: string;
-          updatedAt: string | null;
-          id: string;
           color: string | null;
-          protected: boolean;
           createdAt: string;
+          id: string;
+          name: string;
+          protected: boolean;
+          updatedAt: string | null;
         };
         Insert: {
-          name: string;
-          updatedAt?: string | null;
-          id?: string;
           color?: string | null;
-          protected?: boolean;
           createdAt?: string;
+          id?: string;
+          name: string;
+          protected?: boolean;
+          updatedAt?: string | null;
         };
         Update: {
-          name?: string;
-          updatedAt?: string | null;
-          id?: string;
           color?: string | null;
-          protected?: boolean;
           createdAt?: string;
+          id?: string;
+          name?: string;
+          protected?: boolean;
+          updatedAt?: string | null;
         };
+        Relationships: [];
       };
       department: {
         Row: {
-          name: string;
-          parentDepartmentId: string | null;
-          createdBy: string;
-          updatedBy: string | null;
-          updatedAt: string | null;
-          id: string;
           color: string;
           createdAt: string;
+          createdBy: string;
+          id: string;
+          name: string;
+          parentDepartmentId: string | null;
+          updatedAt: string | null;
+          updatedBy: string | null;
         };
         Insert: {
+          color?: string;
+          createdAt?: string;
+          createdBy: string;
+          id?: string;
           name: string;
           parentDepartmentId?: string | null;
-          createdBy: string;
-          updatedBy?: string | null;
           updatedAt?: string | null;
-          id?: string;
-          color?: string;
-          createdAt?: string;
+          updatedBy?: string | null;
         };
         Update: {
-          name?: string;
-          parentDepartmentId?: string | null;
-          createdBy?: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          id?: string;
           color?: string;
           createdAt?: string;
+          createdBy?: string;
+          id?: string;
+          name?: string;
+          parentDepartmentId?: string | null;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "department_parentDepartmentId_fkey";
+            columns: ["parentDepartmentId"];
+            referencedRelation: "department";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       document: {
         Row: {
-          path: string;
-          name: string;
-          size: number;
-          readGroups: string[] | null;
-          writeGroups: string[] | null;
-          createdBy: string;
-          updatedBy: string | null;
-          updatedAt: string | null;
-          id: string;
-          description: string | null;
-          type: string | null;
           active: boolean;
           createdAt: string;
+          createdBy: string;
+          description: string | null;
+          id: string;
+          name: string;
+          path: string;
+          readGroups: string[] | null;
+          size: number;
+          type: string | null;
+          updatedAt: string | null;
+          updatedBy: string | null;
+          writeGroups: string[] | null;
         };
         Insert: {
-          path: string;
-          name: string;
-          size: number;
-          readGroups?: string[] | null;
-          writeGroups?: string[] | null;
-          createdBy: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          id?: string;
-          description?: string | null;
-          type?: string | null;
           active?: boolean;
           createdAt?: string;
+          createdBy: string;
+          description?: string | null;
+          id?: string;
+          name: string;
+          path: string;
+          readGroups?: string[] | null;
+          size: number;
+          type?: string | null;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
+          writeGroups?: string[] | null;
         };
         Update: {
-          path?: string;
-          name?: string;
-          size?: number;
-          readGroups?: string[] | null;
-          writeGroups?: string[] | null;
-          createdBy?: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          id?: string;
-          description?: string | null;
-          type?: string | null;
           active?: boolean;
           createdAt?: string;
+          createdBy?: string;
+          description?: string | null;
+          id?: string;
+          name?: string;
+          path?: string;
+          readGroups?: string[] | null;
+          size?: number;
+          type?: string | null;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
+          writeGroups?: string[] | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "document_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "document_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       documentFavorite: {
         Row: {
@@ -679,1152 +1006,2008 @@ export interface Database {
           documentId?: string;
           userId?: string;
         };
+        Relationships: [
+          {
+            foreignKeyName: "documentFavorites_documentId_fkey";
+            columns: ["documentId"];
+            referencedRelation: "document";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "documentFavorites_documentId_fkey";
+            columns: ["documentId"];
+            referencedRelation: "documents_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "documentFavorites_userId_fkey";
+            columns: ["userId"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       documentLabel: {
         Row: {
           documentId: string;
-          userId: string;
           label: string;
+          userId: string;
         };
         Insert: {
           documentId: string;
-          userId: string;
           label: string;
+          userId: string;
         };
         Update: {
           documentId?: string;
-          userId?: string;
           label?: string;
+          userId?: string;
         };
+        Relationships: [
+          {
+            foreignKeyName: "documentLabels_documentId_fkey";
+            columns: ["documentId"];
+            referencedRelation: "document";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "documentLabels_documentId_fkey";
+            columns: ["documentId"];
+            referencedRelation: "documents_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "documentLabels_userId_fkey";
+            columns: ["userId"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       documentTransaction: {
         Row: {
+          createdAt: string;
           documentId: string;
+          id: string;
           type: Database["public"]["Enums"]["documentTransactionType"];
           userId: string;
-          id: string;
-          createdAt: string;
         };
         Insert: {
+          createdAt?: string;
           documentId: string;
+          id?: string;
           type: Database["public"]["Enums"]["documentTransactionType"];
           userId: string;
-          id?: string;
-          createdAt?: string;
         };
         Update: {
+          createdAt?: string;
           documentId?: string;
+          id?: string;
           type?: Database["public"]["Enums"]["documentTransactionType"];
           userId?: string;
-          id?: string;
-          createdAt?: string;
         };
+        Relationships: [
+          {
+            foreignKeyName: "documentTransaction_documentId_fkey";
+            columns: ["documentId"];
+            referencedRelation: "document";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "documentTransaction_documentId_fkey";
+            columns: ["documentId"];
+            referencedRelation: "documents_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "documentTransaction_userId_fkey";
+            columns: ["userId"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       employee: {
         Row: {
-          id: string;
           employeeTypeId: string;
+          id: string;
         };
         Insert: {
-          id: string;
           employeeTypeId: string;
+          id: string;
         };
         Update: {
-          id?: string;
           employeeTypeId?: string;
+          id?: string;
         };
+        Relationships: [
+          {
+            foreignKeyName: "employee_employeeTypeId_fkey";
+            columns: ["employeeTypeId"];
+            referencedRelation: "employeeType";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "employee_id_fkey";
+            columns: ["id"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       employeeAbility: {
         Row: {
-          employeeId: string;
           abilityId: string;
-          lastTrainingDate: string | null;
-          id: string;
           active: boolean;
-          trainingDays: number;
+          employeeId: string;
+          id: string;
+          lastTrainingDate: string | null;
           trainingCompleted: boolean | null;
+          trainingDays: number;
         };
         Insert: {
-          employeeId: string;
           abilityId: string;
-          lastTrainingDate?: string | null;
-          id?: string;
           active?: boolean;
-          trainingDays?: number;
+          employeeId: string;
+          id?: string;
+          lastTrainingDate?: string | null;
           trainingCompleted?: boolean | null;
+          trainingDays?: number;
         };
         Update: {
-          employeeId?: string;
           abilityId?: string;
-          lastTrainingDate?: string | null;
-          id?: string;
           active?: boolean;
-          trainingDays?: number;
+          employeeId?: string;
+          id?: string;
+          lastTrainingDate?: string | null;
           trainingCompleted?: boolean | null;
+          trainingDays?: number;
         };
+        Relationships: [
+          {
+            foreignKeyName: "employeeAbilities_abilityId_fkey";
+            columns: ["abilityId"];
+            referencedRelation: "ability";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "employeeAbilities_employeeId_fkey";
+            columns: ["employeeId"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       employeeJob: {
         Row: {
+          departmentId: string | null;
           id: string;
           locationId: string | null;
-          shiftId: string | null;
           managerId: string | null;
-          title: string | null;
+          shiftId: string | null;
           startDate: string | null;
-          departmentId: string | null;
+          title: string | null;
           workCellId: string | null;
         };
         Insert: {
+          departmentId?: string | null;
           id: string;
           locationId?: string | null;
-          shiftId?: string | null;
           managerId?: string | null;
-          title?: string | null;
+          shiftId?: string | null;
           startDate?: string | null;
-          departmentId?: string | null;
+          title?: string | null;
           workCellId?: string | null;
         };
         Update: {
+          departmentId?: string | null;
           id?: string;
           locationId?: string | null;
-          shiftId?: string | null;
           managerId?: string | null;
-          title?: string | null;
+          shiftId?: string | null;
           startDate?: string | null;
-          departmentId?: string | null;
+          title?: string | null;
           workCellId?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "employeeJob_departmentId_fkey";
+            columns: ["departmentId"];
+            referencedRelation: "department";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "employeeJob_id_fkey";
+            columns: ["id"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "employeeJob_locationId_fkey";
+            columns: ["locationId"];
+            referencedRelation: "location";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "employeeJob_managerId_fkey";
+            columns: ["managerId"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "employeeJob_shiftId_fkey";
+            columns: ["shiftId"];
+            referencedRelation: "shift";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "employeeJob_workCellId_fkey";
+            columns: ["workCellId"];
+            referencedRelation: "workCell";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       employeeShift: {
         Row: {
           employeeId: string;
-          shiftId: string;
           id: string;
+          shiftId: string;
         };
         Insert: {
           employeeId: string;
-          shiftId: string;
           id?: string;
+          shiftId: string;
         };
         Update: {
           employeeId?: string;
-          shiftId?: string;
           id?: string;
+          shiftId?: string;
         };
+        Relationships: [
+          {
+            foreignKeyName: "employeeShift_employeeId_fkey";
+            columns: ["employeeId"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "employeeShift_shiftId_fkey";
+            columns: ["shiftId"];
+            referencedRelation: "shift";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       employeeType: {
         Row: {
-          name: string;
-          updatedAt: string | null;
-          id: string;
           color: string;
-          protected: boolean;
           createdAt: string;
+          id: string;
+          name: string;
+          protected: boolean;
+          updatedAt: string | null;
         };
         Insert: {
-          name: string;
-          updatedAt?: string | null;
-          id?: string;
           color?: string;
-          protected?: boolean;
           createdAt?: string;
+          id?: string;
+          name: string;
+          protected?: boolean;
+          updatedAt?: string | null;
         };
         Update: {
-          name?: string;
-          updatedAt?: string | null;
-          id?: string;
           color?: string;
-          protected?: boolean;
           createdAt?: string;
+          id?: string;
+          name?: string;
+          protected?: boolean;
+          updatedAt?: string | null;
         };
+        Relationships: [];
       };
       employeeTypePermission: {
         Row: {
+          create: boolean;
+          createdAt: string;
+          delete: boolean;
           employeeTypeId: string;
           featureId: string;
-          updatedAt: string | null;
-          create: boolean;
-          delete: boolean;
           update: boolean;
+          updatedAt: string | null;
           view: boolean;
-          createdAt: string;
         };
         Insert: {
+          create?: boolean;
+          createdAt?: string;
+          delete?: boolean;
           employeeTypeId: string;
           featureId: string;
-          updatedAt?: string | null;
-          create?: boolean;
-          delete?: boolean;
           update?: boolean;
+          updatedAt?: string | null;
           view?: boolean;
-          createdAt?: string;
         };
         Update: {
+          create?: boolean;
+          createdAt?: string;
+          delete?: boolean;
           employeeTypeId?: string;
           featureId?: string;
-          updatedAt?: string | null;
-          create?: boolean;
-          delete?: boolean;
           update?: boolean;
+          updatedAt?: string | null;
           view?: boolean;
-          createdAt?: string;
         };
+        Relationships: [
+          {
+            foreignKeyName: "employeeTypePermission_employeeTypeId_fkey";
+            columns: ["employeeTypeId"];
+            referencedRelation: "employeeType";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "employeeTypePermission_featureId_fkey";
+            columns: ["featureId"];
+            referencedRelation: "feature";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       equipment: {
         Row: {
-          name: string;
+          active: boolean;
+          activeDate: string | null;
+          createdAt: string;
+          createdBy: string;
           description: string | null;
           equipmentTypeId: string;
-          locationId: string;
-          workCellId: string | null;
-          activeDate: string | null;
-          createdBy: string;
-          updatedBy: string | null;
-          updatedAt: string | null;
           id: string;
+          locationId: string;
+          name: string;
           operatorsRequired: number;
           setupHours: number;
-          active: boolean;
-          createdAt: string;
+          updatedAt: string | null;
+          updatedBy: string | null;
+          workCellId: string | null;
         };
         Insert: {
-          name: string;
+          active?: boolean;
+          activeDate?: string | null;
+          createdAt?: string;
+          createdBy: string;
           description?: string | null;
           equipmentTypeId: string;
-          locationId: string;
-          workCellId?: string | null;
-          activeDate?: string | null;
-          createdBy: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
           id?: string;
+          locationId: string;
+          name: string;
           operatorsRequired?: number;
           setupHours?: number;
-          active?: boolean;
-          createdAt?: string;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
+          workCellId?: string | null;
         };
         Update: {
-          name?: string;
+          active?: boolean;
+          activeDate?: string | null;
+          createdAt?: string;
+          createdBy?: string;
           description?: string | null;
           equipmentTypeId?: string;
-          locationId?: string;
-          workCellId?: string | null;
-          activeDate?: string | null;
-          createdBy?: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
           id?: string;
+          locationId?: string;
+          name?: string;
           operatorsRequired?: number;
           setupHours?: number;
-          active?: boolean;
-          createdAt?: string;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
+          workCellId?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "equipment_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "equipment_equipmentTypeId_fkey";
+            columns: ["equipmentTypeId"];
+            referencedRelation: "equipmentType";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "equipment_locationId_fkey";
+            columns: ["locationId"];
+            referencedRelation: "location";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "equipment_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "equipment_workCellId_fkey";
+            columns: ["workCellId"];
+            referencedRelation: "workCell";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       equipmentType: {
         Row: {
-          name: string;
-          description: string | null;
-          requiredAbility: string | null;
-          createdBy: string;
-          updatedBy: string | null;
-          updatedAt: string | null;
-          id: string;
-          color: string;
           active: boolean;
+          color: string;
           createdAt: string;
+          createdBy: string;
+          description: string | null;
+          id: string;
+          name: string;
+          requiredAbility: string | null;
+          updatedAt: string | null;
+          updatedBy: string | null;
         };
         Insert: {
-          name: string;
-          description?: string | null;
-          requiredAbility?: string | null;
-          createdBy: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          id?: string;
-          color?: string;
           active?: boolean;
+          color?: string;
           createdAt?: string;
+          createdBy: string;
+          description?: string | null;
+          id?: string;
+          name: string;
+          requiredAbility?: string | null;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
         Update: {
-          name?: string;
-          description?: string | null;
-          requiredAbility?: string | null;
-          createdBy?: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          id?: string;
-          color?: string;
           active?: boolean;
+          color?: string;
           createdAt?: string;
+          createdBy?: string;
+          description?: string | null;
+          id?: string;
+          name?: string;
+          requiredAbility?: string | null;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "equipmentType_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "equipmentType_requiredAbility_fkey";
+            columns: ["requiredAbility"];
+            referencedRelation: "ability";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "equipmentType_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       feature: {
         Row: {
+          createdAt: string;
+          id: string;
           name: string;
           updatedAt: string | null;
-          id: string;
-          createdAt: string;
         };
         Insert: {
+          createdAt?: string;
+          id?: string;
           name: string;
           updatedAt?: string | null;
-          id?: string;
-          createdAt?: string;
         };
         Update: {
+          createdAt?: string;
+          id?: string;
           name?: string;
           updatedAt?: string | null;
-          id?: string;
-          createdAt?: string;
         };
+        Relationships: [];
       };
       generalLedger: {
         Row: {
-          postingDate: string;
           accountNumber: string;
-          description: string | null;
           amount: number;
+          createdAt: string;
+          description: string | null;
+          documentNumber: string | null;
           documentType:
             | Database["public"]["Enums"]["accountDocumentLedgerType"]
             | null;
-          documentNumber: string | null;
+          entryNumber: number;
           externalDocumentNumber: string | null;
           id: string;
-          entryNumber: number;
-          createdAt: string;
+          postingDate: string;
         };
         Insert: {
-          postingDate: string;
           accountNumber: string;
-          description?: string | null;
           amount: number;
+          createdAt?: string;
+          description?: string | null;
+          documentNumber?: string | null;
           documentType?:
             | Database["public"]["Enums"]["accountDocumentLedgerType"]
             | null;
-          documentNumber?: string | null;
+          entryNumber?: number;
           externalDocumentNumber?: string | null;
           id?: string;
-          entryNumber?: number;
-          createdAt?: string;
+          postingDate: string;
         };
         Update: {
-          postingDate?: string;
           accountNumber?: string;
-          description?: string | null;
           amount?: number;
+          createdAt?: string;
+          description?: string | null;
+          documentNumber?: string | null;
           documentType?:
             | Database["public"]["Enums"]["accountDocumentLedgerType"]
             | null;
-          documentNumber?: string | null;
+          entryNumber?: number;
           externalDocumentNumber?: string | null;
           id?: string;
-          entryNumber?: number;
-          createdAt?: string;
+          postingDate?: string;
         };
+        Relationships: [
+          {
+            foreignKeyName: "generalLedger_accountNumber_fkey";
+            columns: ["accountNumber"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "generalLedger_accountNumber_fkey";
+            columns: ["accountNumber"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          }
+        ];
       };
       group: {
         Row: {
-          name: string;
+          createdAt: string;
           id: string;
-          updatedAt: string | null;
-          isIdentityGroup: boolean;
-          isEmployeeTypeGroup: boolean;
           isCustomerOrgGroup: boolean;
           isCustomerTypeGroup: boolean;
-          isSupplierTypeGroup: boolean;
+          isEmployeeTypeGroup: boolean;
+          isIdentityGroup: boolean;
           isSupplierOrgGroup: boolean;
-          createdAt: string;
+          isSupplierTypeGroup: boolean;
+          name: string;
+          updatedAt: string | null;
         };
         Insert: {
-          name: string;
+          createdAt?: string;
           id?: string;
-          updatedAt?: string | null;
-          isIdentityGroup?: boolean;
-          isEmployeeTypeGroup?: boolean;
           isCustomerOrgGroup?: boolean;
           isCustomerTypeGroup?: boolean;
-          isSupplierTypeGroup?: boolean;
+          isEmployeeTypeGroup?: boolean;
+          isIdentityGroup?: boolean;
           isSupplierOrgGroup?: boolean;
-          createdAt?: string;
+          isSupplierTypeGroup?: boolean;
+          name: string;
+          updatedAt?: string | null;
         };
         Update: {
-          name?: string;
+          createdAt?: string;
           id?: string;
-          updatedAt?: string | null;
-          isIdentityGroup?: boolean;
-          isEmployeeTypeGroup?: boolean;
           isCustomerOrgGroup?: boolean;
           isCustomerTypeGroup?: boolean;
-          isSupplierTypeGroup?: boolean;
+          isEmployeeTypeGroup?: boolean;
+          isIdentityGroup?: boolean;
           isSupplierOrgGroup?: boolean;
-          createdAt?: string;
+          isSupplierTypeGroup?: boolean;
+          name?: string;
+          updatedAt?: string | null;
         };
+        Relationships: [];
       };
       holiday: {
         Row: {
-          name: string;
-          date: string;
-          createdBy: string;
-          updatedBy: string | null;
-          updatedAt: string | null;
-          id: string;
-          year: number | null;
           createdAt: string;
+          createdBy: string;
+          date: string;
+          id: string;
+          name: string;
+          updatedAt: string | null;
+          updatedBy: string | null;
+          year: number | null;
         };
         Insert: {
-          name: string;
-          date: string;
-          createdBy: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          id?: string;
-          year?: number | null;
           createdAt?: string;
+          createdBy: string;
+          date: string;
+          id?: string;
+          name: string;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
+          year?: number | null;
         };
         Update: {
-          name?: string;
-          date?: string;
-          createdBy?: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          id?: string;
-          year?: number | null;
           createdAt?: string;
+          createdBy?: string;
+          date?: string;
+          id?: string;
+          name?: string;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
+          year?: number | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "holiday_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "holiday_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       location: {
         Row: {
-          name: string;
           addressLine1: string;
           addressLine2: string | null;
           city: string;
-          state: string;
-          postalCode: string;
           country: string | null;
-          timezone: string;
+          createdAt: string;
+          createdBy: string;
+          id: string;
           latitude: number | null;
           longitude: number | null;
-          createdBy: string;
-          updatedBy: string | null;
+          name: string;
+          postalCode: string;
+          state: string;
+          timezone: string;
           updatedAt: string | null;
-          id: string;
-          createdAt: string;
+          updatedBy: string | null;
         };
         Insert: {
-          name: string;
           addressLine1: string;
           addressLine2?: string | null;
           city: string;
-          state: string;
-          postalCode: string;
           country?: string | null;
-          timezone: string;
+          createdAt?: string;
+          createdBy: string;
+          id?: string;
           latitude?: number | null;
           longitude?: number | null;
-          createdBy: string;
-          updatedBy?: string | null;
+          name: string;
+          postalCode: string;
+          state: string;
+          timezone: string;
           updatedAt?: string | null;
-          id?: string;
-          createdAt?: string;
+          updatedBy?: string | null;
         };
         Update: {
-          name?: string;
           addressLine1?: string;
           addressLine2?: string | null;
           city?: string;
-          state?: string;
-          postalCode?: string;
           country?: string | null;
-          timezone?: string;
+          createdAt?: string;
+          createdBy?: string;
+          id?: string;
           latitude?: number | null;
           longitude?: number | null;
-          createdBy?: string;
-          updatedBy?: string | null;
+          name?: string;
+          postalCode?: string;
+          state?: string;
+          timezone?: string;
           updatedAt?: string | null;
-          id?: string;
-          createdAt?: string;
+          updatedBy?: string | null;
         };
+        Relationships: [];
       };
       membership: {
         Row: {
           groupId: string;
+          id: number;
           memberGroupId: string | null;
           memberUserId: string | null;
-          id: number;
         };
         Insert: {
           groupId: string;
+          id?: number;
           memberGroupId?: string | null;
           memberUserId?: string | null;
-          id?: number;
         };
         Update: {
           groupId?: string;
+          id?: number;
           memberGroupId?: string | null;
           memberUserId?: string | null;
-          id?: number;
         };
+        Relationships: [
+          {
+            foreignKeyName: "membership_groupId_fkey";
+            columns: ["groupId"];
+            referencedRelation: "group";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "membership_memberGroupId_fkey";
+            columns: ["memberGroupId"];
+            referencedRelation: "group";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "membership_memberUserId_fkey";
+            columns: ["memberUserId"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       part: {
         Row: {
-          id: string;
-          name: string;
-          description: string | null;
-          replenishmentSystem: Database["public"]["Enums"]["partReplenishmentSystem"];
-          partGroupId: string | null;
-          partType: Database["public"]["Enums"]["partType"];
-          manufacturerPartNumber: string | null;
-          unitOfMeasureCode: string;
-          approvedBy: string | null;
-          fromDate: string | null;
-          toDate: string | null;
-          createdBy: string;
-          updatedBy: string | null;
-          updatedAt: string | null;
-          blocked: boolean;
           active: boolean;
           approved: boolean;
+          approvedBy: string | null;
+          blocked: boolean;
           createdAt: string;
+          createdBy: string;
+          description: string | null;
+          fromDate: string | null;
+          id: string;
+          manufacturerPartNumber: string | null;
+          name: string;
+          partGroupId: string | null;
+          partType: Database["public"]["Enums"]["partType"];
+          replenishmentSystem: Database["public"]["Enums"]["partReplenishmentSystem"];
+          toDate: string | null;
+          unitOfMeasureCode: string;
+          updatedAt: string | null;
+          updatedBy: string | null;
         };
         Insert: {
-          id: string;
-          name: string;
+          active?: boolean;
+          approved?: boolean;
+          approvedBy?: string | null;
+          blocked?: boolean;
+          createdAt?: string;
+          createdBy: string;
           description?: string | null;
-          replenishmentSystem: Database["public"]["Enums"]["partReplenishmentSystem"];
+          fromDate?: string | null;
+          id: string;
+          manufacturerPartNumber?: string | null;
+          name: string;
           partGroupId?: string | null;
           partType: Database["public"]["Enums"]["partType"];
-          manufacturerPartNumber?: string | null;
-          unitOfMeasureCode: string;
-          approvedBy?: string | null;
-          fromDate?: string | null;
+          replenishmentSystem: Database["public"]["Enums"]["partReplenishmentSystem"];
           toDate?: string | null;
-          createdBy: string;
-          updatedBy?: string | null;
+          unitOfMeasureCode: string;
           updatedAt?: string | null;
-          blocked?: boolean;
-          active?: boolean;
-          approved?: boolean;
-          createdAt?: string;
+          updatedBy?: string | null;
         };
         Update: {
-          id?: string;
-          name?: string;
-          description?: string | null;
-          replenishmentSystem?: Database["public"]["Enums"]["partReplenishmentSystem"];
-          partGroupId?: string | null;
-          partType?: Database["public"]["Enums"]["partType"];
-          manufacturerPartNumber?: string | null;
-          unitOfMeasureCode?: string;
-          approvedBy?: string | null;
-          fromDate?: string | null;
-          toDate?: string | null;
-          createdBy?: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          blocked?: boolean;
           active?: boolean;
           approved?: boolean;
+          approvedBy?: string | null;
+          blocked?: boolean;
           createdAt?: string;
+          createdBy?: string;
+          description?: string | null;
+          fromDate?: string | null;
+          id?: string;
+          manufacturerPartNumber?: string | null;
+          name?: string;
+          partGroupId?: string | null;
+          partType?: Database["public"]["Enums"]["partType"];
+          replenishmentSystem?: Database["public"]["Enums"]["partReplenishmentSystem"];
+          toDate?: string | null;
+          unitOfMeasureCode?: string;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "part_approvedBy_fkey";
+            columns: ["approvedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "part_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "part_partGroupId_fkey";
+            columns: ["partGroupId"];
+            referencedRelation: "partGroup";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "part_unitOfMeasureCode_fkey";
+            columns: ["unitOfMeasureCode"];
+            referencedRelation: "unitOfMeasure";
+            referencedColumns: ["code"];
+          },
+          {
+            foreignKeyName: "part_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       partCost: {
         Row: {
-          partId: string;
           costingMethod: Database["public"]["Enums"]["partCostingMethod"];
-          salesAccountId: string | null;
-          discountAccountId: string | null;
-          inventoryAccountId: string | null;
-          createdBy: string;
-          updatedBy: string | null;
-          updatedAt: string | null;
-          standardCost: number;
-          unitCost: number;
           costIsAdjusted: boolean;
           createdAt: string;
+          createdBy: string;
+          discountAccountId: string | null;
+          inventoryAccountId: string | null;
+          partId: string;
+          salesAccountId: string | null;
+          standardCost: number;
+          unitCost: number;
+          updatedAt: string | null;
+          updatedBy: string | null;
         };
         Insert: {
-          partId: string;
           costingMethod: Database["public"]["Enums"]["partCostingMethod"];
-          salesAccountId?: string | null;
-          discountAccountId?: string | null;
-          inventoryAccountId?: string | null;
-          createdBy: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          standardCost?: number;
-          unitCost?: number;
           costIsAdjusted?: boolean;
           createdAt?: string;
+          createdBy: string;
+          discountAccountId?: string | null;
+          inventoryAccountId?: string | null;
+          partId: string;
+          salesAccountId?: string | null;
+          standardCost?: number;
+          unitCost?: number;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
         Update: {
-          partId?: string;
           costingMethod?: Database["public"]["Enums"]["partCostingMethod"];
-          salesAccountId?: string | null;
-          discountAccountId?: string | null;
-          inventoryAccountId?: string | null;
-          createdBy?: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          standardCost?: number;
-          unitCost?: number;
           costIsAdjusted?: boolean;
           createdAt?: string;
+          createdBy?: string;
+          discountAccountId?: string | null;
+          inventoryAccountId?: string | null;
+          partId?: string;
+          salesAccountId?: string | null;
+          standardCost?: number;
+          unitCost?: number;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "partCost_partId_fkey";
+            columns: ["partId"];
+            referencedRelation: "part";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partCost_partId_fkey";
+            columns: ["partId"];
+            referencedRelation: "parts_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partGroup_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partGroup_discountAccountId_fkey";
+            columns: ["discountAccountId"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "partGroup_discountAccountId_fkey";
+            columns: ["discountAccountId"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "partGroup_inventoryAccountId_fkey";
+            columns: ["inventoryAccountId"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "partGroup_inventoryAccountId_fkey";
+            columns: ["inventoryAccountId"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "partGroup_salesAccountId_fkey";
+            columns: ["salesAccountId"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "partGroup_salesAccountId_fkey";
+            columns: ["salesAccountId"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "partGroup_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       partGroup: {
         Row: {
-          name: string;
-          description: string | null;
-          salesAccountId: string | null;
-          discountAccountId: string | null;
-          inventoryAccountId: string | null;
+          active: boolean;
           costOfGoodsSoldLaborAccountId: string | null;
           costOfGoodsSoldMaterialAccountId: string | null;
           costOfGoodsSoldOverheadAccountId: string | null;
           costOfGoodsSoldSubcontractorAccountId: string | null;
-          createdBy: string;
-          updatedBy: string | null;
-          updatedAt: string | null;
-          id: string;
-          active: boolean;
           createdAt: string;
+          createdBy: string;
+          description: string | null;
+          discountAccountId: string | null;
+          id: string;
+          inventoryAccountId: string | null;
+          name: string;
+          salesAccountId: string | null;
+          updatedAt: string | null;
+          updatedBy: string | null;
         };
         Insert: {
-          name: string;
-          description?: string | null;
-          salesAccountId?: string | null;
-          discountAccountId?: string | null;
-          inventoryAccountId?: string | null;
+          active?: boolean;
           costOfGoodsSoldLaborAccountId?: string | null;
           costOfGoodsSoldMaterialAccountId?: string | null;
           costOfGoodsSoldOverheadAccountId?: string | null;
           costOfGoodsSoldSubcontractorAccountId?: string | null;
-          createdBy: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          id?: string;
-          active?: boolean;
           createdAt?: string;
+          createdBy: string;
+          description?: string | null;
+          discountAccountId?: string | null;
+          id?: string;
+          inventoryAccountId?: string | null;
+          name: string;
+          salesAccountId?: string | null;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
         Update: {
-          name?: string;
-          description?: string | null;
-          salesAccountId?: string | null;
-          discountAccountId?: string | null;
-          inventoryAccountId?: string | null;
+          active?: boolean;
           costOfGoodsSoldLaborAccountId?: string | null;
           costOfGoodsSoldMaterialAccountId?: string | null;
           costOfGoodsSoldOverheadAccountId?: string | null;
           costOfGoodsSoldSubcontractorAccountId?: string | null;
-          createdBy?: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          id?: string;
-          active?: boolean;
           createdAt?: string;
+          createdBy?: string;
+          description?: string | null;
+          discountAccountId?: string | null;
+          id?: string;
+          inventoryAccountId?: string | null;
+          name?: string;
+          salesAccountId?: string | null;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "partGroup_costOfGoodsSoldLaborAccountId_fkey";
+            columns: ["costOfGoodsSoldLaborAccountId"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "partGroup_costOfGoodsSoldLaborAccountId_fkey";
+            columns: ["costOfGoodsSoldLaborAccountId"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "partGroup_costOfGoodsSoldMaterialAccountId_fkey";
+            columns: ["costOfGoodsSoldMaterialAccountId"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "partGroup_costOfGoodsSoldMaterialAccountId_fkey";
+            columns: ["costOfGoodsSoldMaterialAccountId"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "partGroup_costOfGoodsSoldOverheadAccountId_fkey";
+            columns: ["costOfGoodsSoldOverheadAccountId"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "partGroup_costOfGoodsSoldOverheadAccountId_fkey";
+            columns: ["costOfGoodsSoldOverheadAccountId"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "partGroup_costOfGoodsSoldSubcontractorAccountId_fkey";
+            columns: ["costOfGoodsSoldSubcontractorAccountId"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "partGroup_costOfGoodsSoldSubcontractorAccountId_fkey";
+            columns: ["costOfGoodsSoldSubcontractorAccountId"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "partGroup_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partGroup_discountAccountId_fkey";
+            columns: ["discountAccountId"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "partGroup_discountAccountId_fkey";
+            columns: ["discountAccountId"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "partGroup_inventoryAccountId_fkey";
+            columns: ["inventoryAccountId"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "partGroup_inventoryAccountId_fkey";
+            columns: ["inventoryAccountId"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "partGroup_salesAccountId_fkey";
+            columns: ["salesAccountId"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "partGroup_salesAccountId_fkey";
+            columns: ["salesAccountId"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "partGroup_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       partInventory: {
         Row: {
+          createdAt: string;
+          createdBy: string;
           partId: string;
           shelfId: string | null;
-          createdBy: string;
-          updatedBy: string | null;
-          updatedAt: string | null;
           stockoutWarning: boolean;
           unitVolume: number;
           unitWeight: number;
-          createdAt: string;
+          updatedAt: string | null;
+          updatedBy: string | null;
         };
         Insert: {
+          createdAt?: string;
+          createdBy: string;
           partId: string;
           shelfId?: string | null;
-          createdBy: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
           stockoutWarning?: boolean;
           unitVolume?: number;
           unitWeight?: number;
-          createdAt?: string;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
         Update: {
+          createdAt?: string;
+          createdBy?: string;
           partId?: string;
           shelfId?: string | null;
-          createdBy?: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
           stockoutWarning?: boolean;
           unitVolume?: number;
           unitWeight?: number;
-          createdAt?: string;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "partInventory_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partInventory_partId_fkey";
+            columns: ["partId"];
+            referencedRelation: "part";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partInventory_partId_fkey";
+            columns: ["partId"];
+            referencedRelation: "parts_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partInventory_shelfId_fkey";
+            columns: ["shelfId"];
+            referencedRelation: "shelf";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partInventory_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       partLedger: {
         Row: {
-          postingDate: string;
-          entryType: Database["public"]["Enums"]["partLedgerType"];
+          costAmount: number;
+          createdAt: string;
+          documentNumber: string | null;
           documentType:
             | Database["public"]["Enums"]["partLedgerDocumentType"]
             | null;
-          documentNumber: string | null;
-          partId: string;
-          locationId: string | null;
-          shelfId: string | null;
-          quantity: number;
+          entryNumber: number;
+          entryType: Database["public"]["Enums"]["partLedgerType"];
+          id: string;
           invoicedQuantity: number;
+          locationId: string | null;
+          open: boolean;
+          partId: string;
+          postingDate: string;
+          quantity: number;
           remainingQuantity: number;
           salesAmount: number;
-          costAmount: number;
-          id: string;
-          entryNumber: number;
-          open: boolean;
-          createdAt: string;
+          shelfId: string | null;
         };
         Insert: {
-          postingDate: string;
-          entryType: Database["public"]["Enums"]["partLedgerType"];
+          costAmount: number;
+          createdAt?: string;
+          documentNumber?: string | null;
           documentType?:
             | Database["public"]["Enums"]["partLedgerDocumentType"]
             | null;
-          documentNumber?: string | null;
-          partId: string;
-          locationId?: string | null;
-          shelfId?: string | null;
-          quantity: number;
+          entryNumber?: number;
+          entryType: Database["public"]["Enums"]["partLedgerType"];
+          id?: string;
           invoicedQuantity: number;
+          locationId?: string | null;
+          open?: boolean;
+          partId: string;
+          postingDate: string;
+          quantity: number;
           remainingQuantity: number;
           salesAmount: number;
-          costAmount: number;
-          id?: string;
-          entryNumber?: number;
-          open?: boolean;
-          createdAt?: string;
+          shelfId?: string | null;
         };
         Update: {
-          postingDate?: string;
-          entryType?: Database["public"]["Enums"]["partLedgerType"];
+          costAmount?: number;
+          createdAt?: string;
+          documentNumber?: string | null;
           documentType?:
             | Database["public"]["Enums"]["partLedgerDocumentType"]
             | null;
-          documentNumber?: string | null;
-          partId?: string;
-          locationId?: string | null;
-          shelfId?: string | null;
-          quantity?: number;
+          entryNumber?: number;
+          entryType?: Database["public"]["Enums"]["partLedgerType"];
+          id?: string;
           invoicedQuantity?: number;
+          locationId?: string | null;
+          open?: boolean;
+          partId?: string;
+          postingDate?: string;
+          quantity?: number;
           remainingQuantity?: number;
           salesAmount?: number;
-          costAmount?: number;
-          id?: string;
-          entryNumber?: number;
-          open?: boolean;
-          createdAt?: string;
+          shelfId?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "partLedger_locationId_fkey";
+            columns: ["locationId"];
+            referencedRelation: "location";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partLedger_partId_fkey";
+            columns: ["partId"];
+            referencedRelation: "part";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partLedger_partId_fkey";
+            columns: ["partId"];
+            referencedRelation: "parts_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partLedger_shelfId_fkey";
+            columns: ["shelfId"];
+            referencedRelation: "shelf";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       partner: {
         Row: {
-          id: string;
-          createdBy: string;
-          updatedBy: string | null;
-          updatedAt: string | null;
-          hoursPerWeek: number;
           active: boolean;
           createdAt: string;
+          createdBy: string;
+          hoursPerWeek: number;
+          id: string;
+          updatedAt: string | null;
+          updatedBy: string | null;
         };
         Insert: {
-          id: string;
-          createdBy: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          hoursPerWeek?: number;
           active?: boolean;
           createdAt?: string;
+          createdBy: string;
+          hoursPerWeek?: number;
+          id: string;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
         Update: {
-          id?: string;
-          createdBy?: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          hoursPerWeek?: number;
           active?: boolean;
           createdAt?: string;
+          createdBy?: string;
+          hoursPerWeek?: number;
+          id?: string;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "partner_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partner_id_fkey";
+            columns: ["id"];
+            referencedRelation: "supplierLocation";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partner_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       partnerAbility: {
         Row: {
-          partnerId: string;
           abilityId: string;
-          createdBy: string;
           createdAt: string;
+          createdBy: string;
+          partnerId: string;
         };
         Insert: {
-          partnerId: string;
           abilityId: string;
-          createdBy: string;
           createdAt?: string;
+          createdBy: string;
+          partnerId: string;
         };
         Update: {
-          partnerId?: string;
           abilityId?: string;
-          createdBy?: string;
           createdAt?: string;
+          createdBy?: string;
+          partnerId?: string;
         };
+        Relationships: [
+          {
+            foreignKeyName: "partnerAbility_abilityId_fkey";
+            columns: ["abilityId"];
+            referencedRelation: "ability";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partnerAbility_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partnerAbility_partnerId_fkey";
+            columns: ["partnerId"];
+            referencedRelation: "partner";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partnerAbility_partnerId_fkey";
+            columns: ["partnerId"];
+            referencedRelation: "partners_view";
+            referencedColumns: ["supplierLocationId"];
+          }
+        ];
       };
       partPlanning: {
         Row: {
-          partId: string;
+          createdAt: string;
           createdBy: string;
-          updatedBy: string | null;
-          updatedAt: string | null;
-          reorderingPolicy: Database["public"]["Enums"]["partReorderingPolicy"];
           critical: boolean;
-          safetyStockQuantity: number;
-          safetyStockLeadTime: number;
+          demandAccumulationIncludesInventory: boolean;
           demandAccumulationPeriod: number;
           demandReschedulingPeriod: number;
-          demandAccumulationIncludesInventory: boolean;
-          reorderPoint: number;
-          reorderQuantity: number;
+          maximumOrderQuantity: number;
+          minimumOrderQuantity: number;
+          orderMultiple: number;
+          partId: string;
+          reorderingPolicy: Database["public"]["Enums"]["partReorderingPolicy"];
           reorderMaximumInventory: number;
           reorderOverflowLevel: number;
+          reorderPoint: number;
+          reorderQuantity: number;
           reorderTimeBucket: number;
-          minimumOrderQuantity: number;
-          maximumOrderQuantity: number;
-          orderMultiple: number;
-          createdAt: string;
+          safetyStockLeadTime: number;
+          safetyStockQuantity: number;
+          updatedAt: string | null;
+          updatedBy: string | null;
         };
         Insert: {
-          partId: string;
+          createdAt?: string;
           createdBy: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          reorderingPolicy?: Database["public"]["Enums"]["partReorderingPolicy"];
           critical?: boolean;
-          safetyStockQuantity?: number;
-          safetyStockLeadTime?: number;
+          demandAccumulationIncludesInventory?: boolean;
           demandAccumulationPeriod?: number;
           demandReschedulingPeriod?: number;
-          demandAccumulationIncludesInventory?: boolean;
-          reorderPoint?: number;
-          reorderQuantity?: number;
+          maximumOrderQuantity?: number;
+          minimumOrderQuantity?: number;
+          orderMultiple?: number;
+          partId: string;
+          reorderingPolicy?: Database["public"]["Enums"]["partReorderingPolicy"];
           reorderMaximumInventory?: number;
           reorderOverflowLevel?: number;
+          reorderPoint?: number;
+          reorderQuantity?: number;
           reorderTimeBucket?: number;
-          minimumOrderQuantity?: number;
-          maximumOrderQuantity?: number;
-          orderMultiple?: number;
-          createdAt?: string;
+          safetyStockLeadTime?: number;
+          safetyStockQuantity?: number;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
         Update: {
-          partId?: string;
+          createdAt?: string;
           createdBy?: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          reorderingPolicy?: Database["public"]["Enums"]["partReorderingPolicy"];
           critical?: boolean;
-          safetyStockQuantity?: number;
-          safetyStockLeadTime?: number;
+          demandAccumulationIncludesInventory?: boolean;
           demandAccumulationPeriod?: number;
           demandReschedulingPeriod?: number;
-          demandAccumulationIncludesInventory?: boolean;
-          reorderPoint?: number;
-          reorderQuantity?: number;
+          maximumOrderQuantity?: number;
+          minimumOrderQuantity?: number;
+          orderMultiple?: number;
+          partId?: string;
+          reorderingPolicy?: Database["public"]["Enums"]["partReorderingPolicy"];
           reorderMaximumInventory?: number;
           reorderOverflowLevel?: number;
+          reorderPoint?: number;
+          reorderQuantity?: number;
           reorderTimeBucket?: number;
-          minimumOrderQuantity?: number;
-          maximumOrderQuantity?: number;
-          orderMultiple?: number;
-          createdAt?: string;
+          safetyStockLeadTime?: number;
+          safetyStockQuantity?: number;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "partPlanning_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partPlanning_partId_fkey";
+            columns: ["partId"];
+            referencedRelation: "part";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partPlanning_partId_fkey";
+            columns: ["partId"];
+            referencedRelation: "parts_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partPlanning_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       partReplenishment: {
         Row: {
+          conversionFactor: number;
+          createdAt: string;
+          createdBy: string;
+          lotSize: number | null;
+          manufacturingBlocked: boolean;
+          manufacturingLeadTime: number;
+          manufacturingPolicy: Database["public"]["Enums"]["partManufacturingPolicy"];
           partId: string;
           preferredSupplierId: string | null;
-          purchasingUnitOfMeasureCode: string | null;
-          lotSize: number | null;
-          createdBy: string;
-          updatedBy: string | null;
-          updatedAt: string | null;
-          purchasingLeadTime: number;
-          conversionFactor: number;
           purchasingBlocked: boolean;
-          manufacturingPolicy: Database["public"]["Enums"]["partManufacturingPolicy"];
-          manufacturingLeadTime: number;
-          manufacturingBlocked: boolean;
+          purchasingLeadTime: number;
+          purchasingUnitOfMeasureCode: string | null;
           requiresConfiguration: boolean;
           scrapPercentage: number;
-          createdAt: string;
+          updatedAt: string | null;
+          updatedBy: string | null;
         };
         Insert: {
+          conversionFactor?: number;
+          createdAt?: string;
+          createdBy: string;
+          lotSize?: number | null;
+          manufacturingBlocked?: boolean;
+          manufacturingLeadTime?: number;
+          manufacturingPolicy?: Database["public"]["Enums"]["partManufacturingPolicy"];
           partId: string;
           preferredSupplierId?: string | null;
-          purchasingUnitOfMeasureCode?: string | null;
-          lotSize?: number | null;
-          createdBy: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          purchasingLeadTime?: number;
-          conversionFactor?: number;
           purchasingBlocked?: boolean;
-          manufacturingPolicy?: Database["public"]["Enums"]["partManufacturingPolicy"];
-          manufacturingLeadTime?: number;
-          manufacturingBlocked?: boolean;
+          purchasingLeadTime?: number;
+          purchasingUnitOfMeasureCode?: string | null;
           requiresConfiguration?: boolean;
           scrapPercentage?: number;
-          createdAt?: string;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
         Update: {
+          conversionFactor?: number;
+          createdAt?: string;
+          createdBy?: string;
+          lotSize?: number | null;
+          manufacturingBlocked?: boolean;
+          manufacturingLeadTime?: number;
+          manufacturingPolicy?: Database["public"]["Enums"]["partManufacturingPolicy"];
           partId?: string;
           preferredSupplierId?: string | null;
-          purchasingUnitOfMeasureCode?: string | null;
-          lotSize?: number | null;
-          createdBy?: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          purchasingLeadTime?: number;
-          conversionFactor?: number;
           purchasingBlocked?: boolean;
-          manufacturingPolicy?: Database["public"]["Enums"]["partManufacturingPolicy"];
-          manufacturingLeadTime?: number;
-          manufacturingBlocked?: boolean;
+          purchasingLeadTime?: number;
+          purchasingUnitOfMeasureCode?: string | null;
           requiresConfiguration?: boolean;
           scrapPercentage?: number;
-          createdAt?: string;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "partReplenishment_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partReplenishment_partId_fkey";
+            columns: ["partId"];
+            referencedRelation: "part";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partReplenishment_partId_fkey";
+            columns: ["partId"];
+            referencedRelation: "parts_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partReplenishment_preferredSupplierId_fkey";
+            columns: ["preferredSupplierId"];
+            referencedRelation: "supplier";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partReplenishment_preferredSupplierId_fkey";
+            columns: ["preferredSupplierId"];
+            referencedRelation: "contractors_view";
+            referencedColumns: ["supplierId"];
+          },
+          {
+            foreignKeyName: "partReplenishment_preferredSupplierId_fkey";
+            columns: ["preferredSupplierId"];
+            referencedRelation: "partners_view";
+            referencedColumns: ["supplierId"];
+          },
+          {
+            foreignKeyName: "partReplenishment_preferredSupplierId_fkey";
+            columns: ["preferredSupplierId"];
+            referencedRelation: "purchase_order_suppliers_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partReplenishment_preferredSupplierId_fkey";
+            columns: ["preferredSupplierId"];
+            referencedRelation: "suppliers_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partReplenishment_purchaseUnitOfMeasureCode_fkey";
+            columns: ["purchasingUnitOfMeasureCode"];
+            referencedRelation: "unitOfMeasure";
+            referencedColumns: ["code"];
+          },
+          {
+            foreignKeyName: "partReplenishment_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       partSupplier: {
         Row: {
+          active: boolean;
+          conversionFactor: number;
+          createdAt: string;
+          createdBy: string;
+          id: string;
+          minimumOrderQuantity: number | null;
           partId: string;
           supplierId: string;
           supplierPartId: string | null;
           supplierUnitOfMeasureCode: string | null;
-          createdBy: string;
-          updatedBy: string | null;
           updatedAt: string | null;
-          id: string;
-          minimumOrderQuantity: number | null;
-          conversionFactor: number;
-          active: boolean;
-          createdAt: string;
+          updatedBy: string | null;
         };
         Insert: {
+          active?: boolean;
+          conversionFactor?: number;
+          createdAt?: string;
+          createdBy: string;
+          id?: string;
+          minimumOrderQuantity?: number | null;
           partId: string;
           supplierId: string;
           supplierPartId?: string | null;
           supplierUnitOfMeasureCode?: string | null;
-          createdBy: string;
-          updatedBy?: string | null;
           updatedAt?: string | null;
-          id?: string;
-          minimumOrderQuantity?: number | null;
-          conversionFactor?: number;
-          active?: boolean;
-          createdAt?: string;
+          updatedBy?: string | null;
         };
         Update: {
+          active?: boolean;
+          conversionFactor?: number;
+          createdAt?: string;
+          createdBy?: string;
+          id?: string;
+          minimumOrderQuantity?: number | null;
           partId?: string;
           supplierId?: string;
           supplierPartId?: string | null;
           supplierUnitOfMeasureCode?: string | null;
-          createdBy?: string;
-          updatedBy?: string | null;
           updatedAt?: string | null;
-          id?: string;
-          minimumOrderQuantity?: number | null;
-          conversionFactor?: number;
-          active?: boolean;
-          createdAt?: string;
+          updatedBy?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "partSupplier_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partSupplier_partId_fkey";
+            columns: ["partId"];
+            referencedRelation: "part";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partSupplier_partId_fkey";
+            columns: ["partId"];
+            referencedRelation: "parts_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partSupplier_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "supplier";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partSupplier_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "contractors_view";
+            referencedColumns: ["supplierId"];
+          },
+          {
+            foreignKeyName: "partSupplier_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "partners_view";
+            referencedColumns: ["supplierId"];
+          },
+          {
+            foreignKeyName: "partSupplier_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "purchase_order_suppliers_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partSupplier_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "suppliers_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partSupplier_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       partUnitSalePrice: {
         Row: {
-          partId: string;
-          currencyCode: string;
-          salesUnitOfMeasureCode: string | null;
-          createdBy: string;
-          updatedBy: string | null;
-          updatedAt: string | null;
-          unitSalePrice: number;
-          salesBlocked: boolean;
-          priceIncludesTax: boolean;
           allowInvoiceDiscount: boolean;
           createdAt: string;
+          createdBy: string;
+          currencyCode: string;
+          partId: string;
+          priceIncludesTax: boolean;
+          salesBlocked: boolean;
+          salesUnitOfMeasureCode: string | null;
+          unitSalePrice: number;
+          updatedAt: string | null;
+          updatedBy: string | null;
         };
         Insert: {
-          partId: string;
-          currencyCode: string;
-          salesUnitOfMeasureCode?: string | null;
-          createdBy: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          unitSalePrice?: number;
-          salesBlocked?: boolean;
-          priceIncludesTax?: boolean;
           allowInvoiceDiscount?: boolean;
           createdAt?: string;
+          createdBy: string;
+          currencyCode: string;
+          partId: string;
+          priceIncludesTax?: boolean;
+          salesBlocked?: boolean;
+          salesUnitOfMeasureCode?: string | null;
+          unitSalePrice?: number;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
         Update: {
-          partId?: string;
-          currencyCode?: string;
-          salesUnitOfMeasureCode?: string | null;
-          createdBy?: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          unitSalePrice?: number;
-          salesBlocked?: boolean;
-          priceIncludesTax?: boolean;
           allowInvoiceDiscount?: boolean;
           createdAt?: string;
+          createdBy?: string;
+          currencyCode?: string;
+          partId?: string;
+          priceIncludesTax?: boolean;
+          salesBlocked?: boolean;
+          salesUnitOfMeasureCode?: string | null;
+          unitSalePrice?: number;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "partUnitSalePrice_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partUnitSalePrice_currencyCode_fkey";
+            columns: ["currencyCode"];
+            referencedRelation: "currency";
+            referencedColumns: ["code"];
+          },
+          {
+            foreignKeyName: "partUnitSalePrice_partId_fkey";
+            columns: ["partId"];
+            referencedRelation: "part";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partUnitSalePrice_partId_fkey";
+            columns: ["partId"];
+            referencedRelation: "parts_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partUnitSalePrice_salesUnitOfMeasureId_fkey";
+            columns: ["salesUnitOfMeasureCode"];
+            referencedRelation: "unitOfMeasure";
+            referencedColumns: ["code"];
+          },
+          {
+            foreignKeyName: "partUnitSalePrice_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       paymentTerm: {
         Row: {
-          name: string;
+          active: boolean;
+          calculationMethod: Database["public"]["Enums"]["paymentTermCalculationMethod"];
+          createdAt: string;
           createdBy: string;
+          daysDiscount: number;
+          daysDue: number;
+          discountPercentage: number;
+          id: string;
+          name: string;
           updatedAt: string | null;
           updatedBy: string | null;
-          id: string;
-          daysDue: number;
-          daysDiscount: number;
-          discountPercentage: number;
-          calculationMethod: Database["public"]["Enums"]["paymentTermCalculationMethod"];
-          active: boolean;
-          createdAt: string;
         };
         Insert: {
-          name: string;
+          active?: boolean;
+          calculationMethod?: Database["public"]["Enums"]["paymentTermCalculationMethod"];
+          createdAt?: string;
           createdBy: string;
+          daysDiscount?: number;
+          daysDue?: number;
+          discountPercentage?: number;
+          id?: string;
+          name: string;
           updatedAt?: string | null;
           updatedBy?: string | null;
-          id?: string;
-          daysDue?: number;
-          daysDiscount?: number;
-          discountPercentage?: number;
-          calculationMethod?: Database["public"]["Enums"]["paymentTermCalculationMethod"];
-          active?: boolean;
-          createdAt?: string;
         };
         Update: {
-          name?: string;
+          active?: boolean;
+          calculationMethod?: Database["public"]["Enums"]["paymentTermCalculationMethod"];
+          createdAt?: string;
           createdBy?: string;
+          daysDiscount?: number;
+          daysDue?: number;
+          discountPercentage?: number;
+          id?: string;
+          name?: string;
           updatedAt?: string | null;
           updatedBy?: string | null;
-          id?: string;
-          daysDue?: number;
-          daysDiscount?: number;
-          discountPercentage?: number;
-          calculationMethod?: Database["public"]["Enums"]["paymentTermCalculationMethod"];
-          active?: boolean;
-          createdAt?: string;
         };
+        Relationships: [
+          {
+            foreignKeyName: "paymentTerm_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "paymentTerm_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       purchaseOrder: {
         Row: {
-          purchaseOrderId: string;
-          type: Database["public"]["Enums"]["purchaseOrderType"];
-          status: Database["public"]["Enums"]["purchaseOrderApprovalStatus"];
-          notes: string | null;
-          supplierId: string;
-          supplierContactId: string | null;
-          supplierReference: string | null;
+          closed: boolean;
           closedAt: string | null;
           closedBy: string | null;
+          createdAt: string;
           createdBy: string;
+          id: string;
+          notes: string | null;
+          orderDate: string;
+          purchaseOrderId: string;
+          status: Database["public"]["Enums"]["purchaseOrderApprovalStatus"];
+          supplierContactId: string | null;
+          supplierId: string;
+          supplierReference: string | null;
+          type: Database["public"]["Enums"]["purchaseOrderType"];
           updatedAt: string | null;
           updatedBy: string | null;
-          id: string;
-          orderDate: string;
-          closed: boolean;
-          createdAt: string;
         };
         Insert: {
-          purchaseOrderId: string;
-          type: Database["public"]["Enums"]["purchaseOrderType"];
-          status: Database["public"]["Enums"]["purchaseOrderApprovalStatus"];
-          notes?: string | null;
-          supplierId: string;
-          supplierContactId?: string | null;
-          supplierReference?: string | null;
+          closed?: boolean;
           closedAt?: string | null;
           closedBy?: string | null;
+          createdAt?: string;
           createdBy: string;
+          id?: string;
+          notes?: string | null;
+          orderDate?: string;
+          purchaseOrderId: string;
+          status: Database["public"]["Enums"]["purchaseOrderApprovalStatus"];
+          supplierContactId?: string | null;
+          supplierId: string;
+          supplierReference?: string | null;
+          type: Database["public"]["Enums"]["purchaseOrderType"];
           updatedAt?: string | null;
           updatedBy?: string | null;
-          id?: string;
-          orderDate?: string;
-          closed?: boolean;
-          createdAt?: string;
         };
         Update: {
-          purchaseOrderId?: string;
-          type?: Database["public"]["Enums"]["purchaseOrderType"];
-          status?: Database["public"]["Enums"]["purchaseOrderApprovalStatus"];
-          notes?: string | null;
-          supplierId?: string;
-          supplierContactId?: string | null;
-          supplierReference?: string | null;
+          closed?: boolean;
           closedAt?: string | null;
           closedBy?: string | null;
+          createdAt?: string;
           createdBy?: string;
+          id?: string;
+          notes?: string | null;
+          orderDate?: string;
+          purchaseOrderId?: string;
+          status?: Database["public"]["Enums"]["purchaseOrderApprovalStatus"];
+          supplierContactId?: string | null;
+          supplierId?: string;
+          supplierReference?: string | null;
+          type?: Database["public"]["Enums"]["purchaseOrderType"];
           updatedAt?: string | null;
           updatedBy?: string | null;
-          id?: string;
-          orderDate?: string;
-          closed?: boolean;
-          createdAt?: string;
         };
+        Relationships: [
+          {
+            foreignKeyName: "purchaseOrder_closedBy_fkey";
+            columns: ["closedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrder_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrder_supplierContactId_fkey";
+            columns: ["supplierContactId"];
+            referencedRelation: "supplierContact";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrder_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "supplier";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrder_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "contractors_view";
+            referencedColumns: ["supplierId"];
+          },
+          {
+            foreignKeyName: "purchaseOrder_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "partners_view";
+            referencedColumns: ["supplierId"];
+          },
+          {
+            foreignKeyName: "purchaseOrder_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "purchase_order_suppliers_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrder_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "suppliers_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrder_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       purchaseOrderDelivery: {
         Row: {
-          id: string;
-          locationId: string | null;
-          shippingMethodId: string | null;
-          shippingTermId: string | null;
-          receiptRequestedDate: string | null;
-          receiptPromisedDate: string | null;
-          deliveryDate: string | null;
-          notes: string | null;
-          trackingNumber: string | null;
           customerId: string | null;
           customerLocationId: string | null;
-          updatedBy: string | null;
-          updatedAt: string | null;
+          deliveryDate: string | null;
           dropShipment: boolean;
+          id: string;
+          locationId: string | null;
+          notes: string | null;
+          receiptPromisedDate: string | null;
+          receiptRequestedDate: string | null;
+          shippingMethodId: string | null;
+          shippingTermId: string | null;
+          trackingNumber: string | null;
+          updatedAt: string | null;
+          updatedBy: string | null;
         };
         Insert: {
+          customerId?: string | null;
+          customerLocationId?: string | null;
+          deliveryDate?: string | null;
+          dropShipment?: boolean;
           id: string;
           locationId?: string | null;
+          notes?: string | null;
+          receiptPromisedDate?: string | null;
+          receiptRequestedDate?: string | null;
           shippingMethodId?: string | null;
           shippingTermId?: string | null;
-          receiptRequestedDate?: string | null;
-          receiptPromisedDate?: string | null;
-          deliveryDate?: string | null;
-          notes?: string | null;
           trackingNumber?: string | null;
-          customerId?: string | null;
-          customerLocationId?: string | null;
-          updatedBy?: string | null;
           updatedAt?: string | null;
-          dropShipment?: boolean;
+          updatedBy?: string | null;
         };
         Update: {
-          id?: string;
-          locationId?: string | null;
-          shippingMethodId?: string | null;
-          shippingTermId?: string | null;
-          receiptRequestedDate?: string | null;
-          receiptPromisedDate?: string | null;
-          deliveryDate?: string | null;
-          notes?: string | null;
-          trackingNumber?: string | null;
           customerId?: string | null;
           customerLocationId?: string | null;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
+          deliveryDate?: string | null;
           dropShipment?: boolean;
+          id?: string;
+          locationId?: string | null;
+          notes?: string | null;
+          receiptPromisedDate?: string | null;
+          receiptRequestedDate?: string | null;
+          shippingMethodId?: string | null;
+          shippingTermId?: string | null;
+          trackingNumber?: string | null;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "purchaseOrderDelivery_customerId_fkey";
+            columns: ["customerId"];
+            referencedRelation: "customer";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrderDelivery_customerLocationId_fkey";
+            columns: ["customerLocationId"];
+            referencedRelation: "customerLocation";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrderDelivery_id_fkey";
+            columns: ["id"];
+            referencedRelation: "purchaseOrder";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrderDelivery_id_fkey";
+            columns: ["id"];
+            referencedRelation: "purchase_order_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrderDelivery_locationId_fkey";
+            columns: ["locationId"];
+            referencedRelation: "location";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrderDelivery_shippingMethodId_fkey";
+            columns: ["shippingMethodId"];
+            referencedRelation: "shippingMethod";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrderDelivery_shippingTermId_fkey";
+            columns: ["shippingTermId"];
+            referencedRelation: "shippingTerm";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrderDelivery_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       purchaseOrderFavorite: {
         Row: {
@@ -1839,392 +3022,695 @@ export interface Database {
           purchaseOrderId?: string;
           userId?: string;
         };
+        Relationships: [
+          {
+            foreignKeyName: "purchaseOrderFavorites_purchaseOrderId_fkey";
+            columns: ["purchaseOrderId"];
+            referencedRelation: "purchaseOrder";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrderFavorites_purchaseOrderId_fkey";
+            columns: ["purchaseOrderId"];
+            referencedRelation: "purchase_order_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrderFavorites_userId_fkey";
+            columns: ["userId"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       purchaseOrderLine: {
         Row: {
-          purchaseOrderId: string;
-          purchaseOrderLineType: Database["public"]["Enums"]["purchaseOrderLineType"];
-          partId: string | null;
           accountNumber: string | null;
           assetId: string | null;
-          description: string | null;
-          unitPrice: number | null;
-          unitOfMeasureCode: string | null;
-          shelfId: string | null;
-          setupPrice: number | null;
-          createdBy: string;
-          updatedAt: string | null;
-          updatedBy: string | null;
-          id: string;
-          purchaseQuantity: number | null;
-          receivedComplete: boolean;
-          invoiceComplete: boolean;
-          requiresInspection: boolean;
           createdAt: string;
-        };
-        Insert: {
+          createdBy: string;
+          description: string | null;
+          id: string;
+          invoiceComplete: boolean;
+          partId: string | null;
           purchaseOrderId: string;
           purchaseOrderLineType: Database["public"]["Enums"]["purchaseOrderLineType"];
-          partId?: string | null;
+          purchaseQuantity: number | null;
+          receivedComplete: boolean;
+          requiresInspection: boolean;
+          setupPrice: number | null;
+          shelfId: string | null;
+          unitOfMeasureCode: string | null;
+          unitPrice: number | null;
+          updatedAt: string | null;
+          updatedBy: string | null;
+        };
+        Insert: {
           accountNumber?: string | null;
           assetId?: string | null;
-          description?: string | null;
-          unitPrice?: number | null;
-          unitOfMeasureCode?: string | null;
-          shelfId?: string | null;
-          setupPrice?: number | null;
+          createdAt?: string;
           createdBy: string;
-          updatedAt?: string | null;
-          updatedBy?: string | null;
+          description?: string | null;
           id?: string;
+          invoiceComplete?: boolean;
+          partId?: string | null;
+          purchaseOrderId: string;
+          purchaseOrderLineType: Database["public"]["Enums"]["purchaseOrderLineType"];
           purchaseQuantity?: number | null;
           receivedComplete?: boolean;
-          invoiceComplete?: boolean;
           requiresInspection?: boolean;
-          createdAt?: string;
+          setupPrice?: number | null;
+          shelfId?: string | null;
+          unitOfMeasureCode?: string | null;
+          unitPrice?: number | null;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
         Update: {
-          purchaseOrderId?: string;
-          purchaseOrderLineType?: Database["public"]["Enums"]["purchaseOrderLineType"];
-          partId?: string | null;
           accountNumber?: string | null;
           assetId?: string | null;
-          description?: string | null;
-          unitPrice?: number | null;
-          unitOfMeasureCode?: string | null;
-          shelfId?: string | null;
-          setupPrice?: number | null;
+          createdAt?: string;
           createdBy?: string;
-          updatedAt?: string | null;
-          updatedBy?: string | null;
+          description?: string | null;
           id?: string;
+          invoiceComplete?: boolean;
+          partId?: string | null;
+          purchaseOrderId?: string;
+          purchaseOrderLineType?: Database["public"]["Enums"]["purchaseOrderLineType"];
           purchaseQuantity?: number | null;
           receivedComplete?: boolean;
-          invoiceComplete?: boolean;
           requiresInspection?: boolean;
-          createdAt?: string;
+          setupPrice?: number | null;
+          shelfId?: string | null;
+          unitOfMeasureCode?: string | null;
+          unitPrice?: number | null;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "purchaseOrderLine_accountNumber_fkey";
+            columns: ["accountNumber"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "purchaseOrderLine_accountNumber_fkey";
+            columns: ["accountNumber"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "purchaseOrderLine_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrderLine_partId_fkey";
+            columns: ["partId"];
+            referencedRelation: "part";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrderLine_partId_fkey";
+            columns: ["partId"];
+            referencedRelation: "parts_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrderLine_purchaseOrderId_fkey";
+            columns: ["purchaseOrderId"];
+            referencedRelation: "purchaseOrder";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrderLine_purchaseOrderId_fkey";
+            columns: ["purchaseOrderId"];
+            referencedRelation: "purchase_order_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrderLine_shelfId_fkey";
+            columns: ["shelfId"];
+            referencedRelation: "shelf";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrderLine_unitOfMeasureCode_fkey";
+            columns: ["unitOfMeasureCode"];
+            referencedRelation: "unitOfMeasure";
+            referencedColumns: ["code"];
+          },
+          {
+            foreignKeyName: "purchaseOrderLine_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       purchaseOrderPayment: {
         Row: {
+          currencyCode: string;
           id: string;
+          invoiceSupplierContactId: string | null;
           invoiceSupplierId: string | null;
           invoiceSupplierLocationId: string | null;
-          invoiceSupplierContactId: string | null;
+          paymentComplete: boolean;
           paymentTermId: string | null;
           updatedAt: string | null;
           updatedBy: string | null;
-          paymentComplete: boolean;
-          currencyCode: string;
         };
         Insert: {
+          currencyCode?: string;
           id: string;
+          invoiceSupplierContactId?: string | null;
           invoiceSupplierId?: string | null;
           invoiceSupplierLocationId?: string | null;
-          invoiceSupplierContactId?: string | null;
+          paymentComplete?: boolean;
           paymentTermId?: string | null;
           updatedAt?: string | null;
           updatedBy?: string | null;
-          paymentComplete?: boolean;
-          currencyCode?: string;
         };
         Update: {
+          currencyCode?: string;
           id?: string;
+          invoiceSupplierContactId?: string | null;
           invoiceSupplierId?: string | null;
           invoiceSupplierLocationId?: string | null;
-          invoiceSupplierContactId?: string | null;
+          paymentComplete?: boolean;
           paymentTermId?: string | null;
           updatedAt?: string | null;
           updatedBy?: string | null;
-          paymentComplete?: boolean;
-          currencyCode?: string;
         };
+        Relationships: [
+          {
+            foreignKeyName: "purchaseOrderPayment_currencyCode_fkey";
+            columns: ["currencyCode"];
+            referencedRelation: "currency";
+            referencedColumns: ["code"];
+          },
+          {
+            foreignKeyName: "purchaseOrderPayment_id_fkey";
+            columns: ["id"];
+            referencedRelation: "purchaseOrder";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrderPayment_id_fkey";
+            columns: ["id"];
+            referencedRelation: "purchase_order_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrderPayment_invoiceSupplierContactId_fkey";
+            columns: ["invoiceSupplierContactId"];
+            referencedRelation: "supplierContact";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrderPayment_invoiceSupplierId_fkey";
+            columns: ["invoiceSupplierId"];
+            referencedRelation: "supplier";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrderPayment_invoiceSupplierId_fkey";
+            columns: ["invoiceSupplierId"];
+            referencedRelation: "contractors_view";
+            referencedColumns: ["supplierId"];
+          },
+          {
+            foreignKeyName: "purchaseOrderPayment_invoiceSupplierId_fkey";
+            columns: ["invoiceSupplierId"];
+            referencedRelation: "partners_view";
+            referencedColumns: ["supplierId"];
+          },
+          {
+            foreignKeyName: "purchaseOrderPayment_invoiceSupplierId_fkey";
+            columns: ["invoiceSupplierId"];
+            referencedRelation: "purchase_order_suppliers_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrderPayment_invoiceSupplierId_fkey";
+            columns: ["invoiceSupplierId"];
+            referencedRelation: "suppliers_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrderPayment_invoiceSupplierLocationId_fkey";
+            columns: ["invoiceSupplierLocationId"];
+            referencedRelation: "supplierLocation";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrderPayment_paymentTermId_fkey";
+            columns: ["paymentTermId"];
+            referencedRelation: "paymentTerm";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       purchaseOrderTransaction: {
         Row: {
+          createdAt: string;
+          id: string;
           purchaseOrderId: string;
           type: Database["public"]["Enums"]["purchaseOrderTransactionType"];
           userId: string;
-          id: string;
-          createdAt: string;
         };
         Insert: {
+          createdAt?: string;
+          id?: string;
           purchaseOrderId: string;
           type: Database["public"]["Enums"]["purchaseOrderTransactionType"];
           userId: string;
-          id?: string;
-          createdAt?: string;
         };
         Update: {
+          createdAt?: string;
+          id?: string;
           purchaseOrderId?: string;
           type?: Database["public"]["Enums"]["purchaseOrderTransactionType"];
           userId?: string;
-          id?: string;
-          createdAt?: string;
         };
+        Relationships: [
+          {
+            foreignKeyName: "purchaseOrderTransaction_purchaseOrderId_fkey";
+            columns: ["purchaseOrderId"];
+            referencedRelation: "purchaseOrder";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrderTransaction_purchaseOrderId_fkey";
+            columns: ["purchaseOrderId"];
+            referencedRelation: "purchase_order_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrderTransaction_userId_fkey";
+            columns: ["userId"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       search: {
         Row: {
-          id: number;
-          name: string;
-          entity: Database["public"]["Enums"]["searchEntity"] | null;
-          uuid: string | null;
-          link: string;
           description: string | null;
+          entity: Database["public"]["Enums"]["searchEntity"] | null;
           fts: unknown | null;
+          id: number;
+          link: string;
+          name: string;
+          uuid: string | null;
         };
         Insert: {
-          id?: number;
-          name: string;
-          entity?: Database["public"]["Enums"]["searchEntity"] | null;
-          uuid?: string | null;
-          link: string;
           description?: string | null;
+          entity?: Database["public"]["Enums"]["searchEntity"] | null;
           fts?: unknown | null;
+          id?: number;
+          link: string;
+          name: string;
+          uuid?: string | null;
         };
         Update: {
-          id?: number;
-          name?: string;
-          entity?: Database["public"]["Enums"]["searchEntity"] | null;
-          uuid?: string | null;
-          link?: string;
           description?: string | null;
+          entity?: Database["public"]["Enums"]["searchEntity"] | null;
           fts?: unknown | null;
+          id?: number;
+          link?: string;
+          name?: string;
+          uuid?: string | null;
         };
+        Relationships: [];
       };
       sequence: {
         Row: {
-          table: string;
           name: string;
-          prefix: string | null;
-          suffix: string | null;
-          updatedAt: string | null;
-          updatedBy: string | null;
           next: number;
+          prefix: string | null;
           size: number;
           step: number;
+          suffix: string | null;
+          table: string;
+          updatedAt: string | null;
+          updatedBy: string | null;
         };
         Insert: {
-          table: string;
           name: string;
-          prefix?: string | null;
-          suffix?: string | null;
-          updatedAt?: string | null;
-          updatedBy?: string | null;
           next?: number;
+          prefix?: string | null;
           size?: number;
           step?: number;
+          suffix?: string | null;
+          table: string;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
         Update: {
-          table?: string;
           name?: string;
-          prefix?: string | null;
-          suffix?: string | null;
-          updatedAt?: string | null;
-          updatedBy?: string | null;
           next?: number;
+          prefix?: string | null;
           size?: number;
           step?: number;
+          suffix?: string | null;
+          table?: string;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "sequence_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       shelf: {
         Row: {
-          id: string;
-          locationId: string | null;
-          warehouseId: string | null;
-          createdBy: string;
-          updatedBy: string | null;
-          updatedAt: string | null;
           active: boolean;
           createdAt: string;
+          createdBy: string;
+          id: string;
+          locationId: string | null;
+          updatedAt: string | null;
+          updatedBy: string | null;
+          warehouseId: string | null;
         };
         Insert: {
+          active?: boolean;
+          createdAt?: string;
+          createdBy: string;
           id: string;
           locationId?: string | null;
-          warehouseId?: string | null;
-          createdBy: string;
-          updatedBy?: string | null;
           updatedAt?: string | null;
-          active?: boolean;
-          createdAt?: string;
+          updatedBy?: string | null;
+          warehouseId?: string | null;
         };
         Update: {
-          id?: string;
-          locationId?: string | null;
-          warehouseId?: string | null;
-          createdBy?: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
           active?: boolean;
           createdAt?: string;
+          createdBy?: string;
+          id?: string;
+          locationId?: string | null;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
+          warehouseId?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "shelf_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "shelf_locationId_fkey";
+            columns: ["locationId"];
+            referencedRelation: "location";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "shelf_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "shelf_warehouseId_fkey";
+            columns: ["warehouseId"];
+            referencedRelation: "warehouse";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       shift: {
         Row: {
-          name: string;
-          startTime: string;
+          active: boolean;
           endTime: string;
-          locationId: string;
+          friday: boolean;
           id: string;
-          sunday: boolean;
+          locationId: string;
           monday: boolean;
+          name: string;
+          saturday: boolean;
+          startTime: string;
+          sunday: boolean;
+          thursday: boolean;
           tuesday: boolean;
           wednesday: boolean;
-          thursday: boolean;
-          friday: boolean;
-          saturday: boolean;
-          active: boolean;
         };
         Insert: {
-          name: string;
-          startTime: string;
+          active?: boolean;
           endTime: string;
-          locationId: string;
+          friday?: boolean;
           id?: string;
-          sunday?: boolean;
+          locationId: string;
           monday?: boolean;
+          name: string;
+          saturday?: boolean;
+          startTime: string;
+          sunday?: boolean;
+          thursday?: boolean;
           tuesday?: boolean;
           wednesday?: boolean;
-          thursday?: boolean;
-          friday?: boolean;
-          saturday?: boolean;
-          active?: boolean;
         };
         Update: {
-          name?: string;
-          startTime?: string;
+          active?: boolean;
           endTime?: string;
-          locationId?: string;
+          friday?: boolean;
           id?: string;
-          sunday?: boolean;
+          locationId?: string;
           monday?: boolean;
+          name?: string;
+          saturday?: boolean;
+          startTime?: string;
+          sunday?: boolean;
+          thursday?: boolean;
           tuesday?: boolean;
           wednesday?: boolean;
-          thursday?: boolean;
-          friday?: boolean;
-          saturday?: boolean;
-          active?: boolean;
         };
+        Relationships: [
+          {
+            foreignKeyName: "shifts_locationId_fkey";
+            columns: ["locationId"];
+            referencedRelation: "location";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       shippingMethod: {
         Row: {
-          name: string;
+          active: boolean;
+          carrier: Database["public"]["Enums"]["shippingCarrier"];
           carrierAccountId: string | null;
-          trackingUrl: string | null;
+          createdAt: string;
           createdBy: string;
+          id: string;
+          name: string;
+          trackingUrl: string | null;
           updatedAt: string | null;
           updatedBy: string | null;
-          id: string;
-          carrier: Database["public"]["Enums"]["shippingCarrier"];
-          active: boolean;
-          createdAt: string;
         };
         Insert: {
-          name: string;
+          active?: boolean;
+          carrier?: Database["public"]["Enums"]["shippingCarrier"];
           carrierAccountId?: string | null;
-          trackingUrl?: string | null;
+          createdAt?: string;
           createdBy: string;
+          id?: string;
+          name: string;
+          trackingUrl?: string | null;
           updatedAt?: string | null;
           updatedBy?: string | null;
-          id?: string;
-          carrier?: Database["public"]["Enums"]["shippingCarrier"];
-          active?: boolean;
-          createdAt?: string;
         };
         Update: {
-          name?: string;
+          active?: boolean;
+          carrier?: Database["public"]["Enums"]["shippingCarrier"];
           carrierAccountId?: string | null;
-          trackingUrl?: string | null;
+          createdAt?: string;
           createdBy?: string;
+          id?: string;
+          name?: string;
+          trackingUrl?: string | null;
           updatedAt?: string | null;
           updatedBy?: string | null;
-          id?: string;
-          carrier?: Database["public"]["Enums"]["shippingCarrier"];
-          active?: boolean;
-          createdAt?: string;
         };
+        Relationships: [
+          {
+            foreignKeyName: "shippingMethod_carrierAccountId_fkey";
+            columns: ["carrierAccountId"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "shippingMethod_carrierAccountId_fkey";
+            columns: ["carrierAccountId"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "shippingMethod_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "shippingMethod_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       shippingTerm: {
         Row: {
-          name: string;
-          createdBy: string;
-          updatedAt: string | null;
-          updatedBy: string | null;
-          id: string;
           active: boolean;
           createdAt: string;
+          createdBy: string;
+          id: string;
+          name: string;
+          updatedAt: string | null;
+          updatedBy: string | null;
         };
         Insert: {
-          name: string;
-          createdBy: string;
-          updatedAt?: string | null;
-          updatedBy?: string | null;
-          id?: string;
           active?: boolean;
           createdAt?: string;
+          createdBy: string;
+          id?: string;
+          name: string;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
         Update: {
-          name?: string;
-          createdBy?: string;
-          updatedAt?: string | null;
-          updatedBy?: string | null;
-          id?: string;
           active?: boolean;
           createdAt?: string;
+          createdBy?: string;
+          id?: string;
+          name?: string;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "shippingTerm_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "shippingTerm_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       supplier: {
         Row: {
-          name: string;
-          supplierTypeId: string | null;
-          supplierStatusId: string | null;
-          taxId: string | null;
           accountManagerId: string | null;
-          logo: string | null;
-          createdBy: string | null;
-          updatedAt: string | null;
-          updatedBy: string | null;
-          id: string;
           createdAt: string;
+          createdBy: string | null;
           defaultCurrencyCode: string | null;
           defaultPaymentTermId: string | null;
           defaultShippingMethodId: string | null;
           defaultShippingTermId: string | null;
+          id: string;
+          logo: string | null;
+          name: string;
+          supplierStatusId: string | null;
+          supplierTypeId: string | null;
+          taxId: string | null;
+          updatedAt: string | null;
+          updatedBy: string | null;
         };
         Insert: {
-          name: string;
-          supplierTypeId?: string | null;
-          supplierStatusId?: string | null;
-          taxId?: string | null;
           accountManagerId?: string | null;
-          logo?: string | null;
-          createdBy?: string | null;
-          updatedAt?: string | null;
-          updatedBy?: string | null;
-          id?: string;
           createdAt?: string;
+          createdBy?: string | null;
           defaultCurrencyCode?: string | null;
           defaultPaymentTermId?: string | null;
           defaultShippingMethodId?: string | null;
           defaultShippingTermId?: string | null;
+          id?: string;
+          logo?: string | null;
+          name: string;
+          supplierStatusId?: string | null;
+          supplierTypeId?: string | null;
+          taxId?: string | null;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
         Update: {
-          name?: string;
-          supplierTypeId?: string | null;
-          supplierStatusId?: string | null;
-          taxId?: string | null;
           accountManagerId?: string | null;
-          logo?: string | null;
-          createdBy?: string | null;
-          updatedAt?: string | null;
-          updatedBy?: string | null;
-          id?: string;
           createdAt?: string;
+          createdBy?: string | null;
           defaultCurrencyCode?: string | null;
           defaultPaymentTermId?: string | null;
           defaultShippingMethodId?: string | null;
           defaultShippingTermId?: string | null;
+          id?: string;
+          logo?: string | null;
+          name?: string;
+          supplierStatusId?: string | null;
+          supplierTypeId?: string | null;
+          taxId?: string | null;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "supplier_accountManagerId_fkey";
+            columns: ["accountManagerId"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "supplier_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "supplier_defaultPaymentTermId_fkey";
+            columns: ["defaultPaymentTermId"];
+            referencedRelation: "paymentTerm";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "supplier_defaultShippingMethodId_fkey";
+            columns: ["defaultShippingMethodId"];
+            referencedRelation: "shippingMethod";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "supplier_defaultShippingTermId_fkey";
+            columns: ["defaultShippingTermId"];
+            referencedRelation: "shippingTerm";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "supplier_supplierStatusId_fkey";
+            columns: ["supplierStatusId"];
+            referencedRelation: "supplierStatus";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "supplier_supplierTypeId_fkey";
+            columns: ["supplierTypeId"];
+            referencedRelation: "supplierType";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "supplier_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       supplierAccount: {
         Row: {
@@ -2239,247 +3725,435 @@ export interface Database {
           id?: string;
           supplierId?: string;
         };
+        Relationships: [
+          {
+            foreignKeyName: "supplierAccount_id_fkey";
+            columns: ["id"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "supplierAccount_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "supplier";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "supplierAccount_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "contractors_view";
+            referencedColumns: ["supplierId"];
+          },
+          {
+            foreignKeyName: "supplierAccount_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "partners_view";
+            referencedColumns: ["supplierId"];
+          },
+          {
+            foreignKeyName: "supplierAccount_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "purchase_order_suppliers_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "supplierAccount_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "suppliers_view";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       supplierContact: {
         Row: {
-          supplierId: string;
           contactId: string;
+          id: string;
+          supplierId: string;
           supplierLocationId: string | null;
           userId: string | null;
-          id: string;
         };
         Insert: {
-          supplierId: string;
           contactId: string;
+          id?: string;
+          supplierId: string;
           supplierLocationId?: string | null;
           userId?: string | null;
-          id?: string;
         };
         Update: {
-          supplierId?: string;
           contactId?: string;
+          id?: string;
+          supplierId?: string;
           supplierLocationId?: string | null;
           userId?: string | null;
-          id?: string;
         };
+        Relationships: [
+          {
+            foreignKeyName: "supplierContact_contactId_fkey";
+            columns: ["contactId"];
+            referencedRelation: "contact";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "supplierContact_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "supplier";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "supplierContact_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "contractors_view";
+            referencedColumns: ["supplierId"];
+          },
+          {
+            foreignKeyName: "supplierContact_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "partners_view";
+            referencedColumns: ["supplierId"];
+          },
+          {
+            foreignKeyName: "supplierContact_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "purchase_order_suppliers_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "supplierContact_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "suppliers_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "supplierContact_supplierLocationId_fkey";
+            columns: ["supplierLocationId"];
+            referencedRelation: "supplierLocation";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "supplierContact_userId_fkey";
+            columns: ["userId"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       supplierLocation: {
         Row: {
-          supplierId: string;
           addressId: string;
           id: string;
+          supplierId: string;
         };
         Insert: {
-          supplierId: string;
           addressId: string;
           id?: string;
+          supplierId: string;
         };
         Update: {
-          supplierId?: string;
           addressId?: string;
           id?: string;
+          supplierId?: string;
         };
+        Relationships: [
+          {
+            foreignKeyName: "supplierLocation_addressId_fkey";
+            columns: ["addressId"];
+            referencedRelation: "address";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "supplierLocation_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "supplier";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "supplierLocation_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "contractors_view";
+            referencedColumns: ["supplierId"];
+          },
+          {
+            foreignKeyName: "supplierLocation_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "partners_view";
+            referencedColumns: ["supplierId"];
+          },
+          {
+            foreignKeyName: "supplierLocation_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "purchase_order_suppliers_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "supplierLocation_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "suppliers_view";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       supplierStatus: {
         Row: {
+          createdAt: string;
+          id: string;
           name: string;
           updatedAt: string | null;
-          id: string;
-          createdAt: string;
         };
         Insert: {
+          createdAt?: string;
+          id?: string;
           name: string;
           updatedAt?: string | null;
-          id?: string;
-          createdAt?: string;
         };
         Update: {
+          createdAt?: string;
+          id?: string;
           name?: string;
           updatedAt?: string | null;
-          id?: string;
-          createdAt?: string;
         };
+        Relationships: [];
       };
       supplierType: {
         Row: {
-          name: string;
-          updatedAt: string | null;
-          id: string;
           color: string | null;
-          protected: boolean;
           createdAt: string;
+          id: string;
+          name: string;
+          protected: boolean;
+          updatedAt: string | null;
         };
         Insert: {
-          name: string;
-          updatedAt?: string | null;
-          id?: string;
           color?: string | null;
-          protected?: boolean;
           createdAt?: string;
+          id?: string;
+          name: string;
+          protected?: boolean;
+          updatedAt?: string | null;
         };
         Update: {
-          name?: string;
-          updatedAt?: string | null;
-          id?: string;
           color?: string | null;
-          protected?: boolean;
           createdAt?: string;
+          id?: string;
+          name?: string;
+          protected?: boolean;
+          updatedAt?: string | null;
         };
+        Relationships: [];
       };
       unitOfMeasure: {
         Row: {
-          code: string;
-          name: string;
-          createdBy: string;
-          updatedBy: string | null;
-          updatedAt: string | null;
-          id: string;
           active: boolean;
+          code: string;
           createdAt: string;
+          createdBy: string;
+          id: string;
+          name: string;
+          updatedAt: string | null;
+          updatedBy: string | null;
         };
         Insert: {
-          code: string;
-          name: string;
-          createdBy: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          id?: string;
           active?: boolean;
+          code: string;
           createdAt?: string;
+          createdBy: string;
+          id?: string;
+          name: string;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
         Update: {
-          code?: string;
-          name?: string;
-          createdBy?: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          id?: string;
           active?: boolean;
+          code?: string;
           createdAt?: string;
+          createdBy?: string;
+          id?: string;
+          name?: string;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "unitOfMeasure_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "unitOfMeasure_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       user: {
         Row: {
-          id: string;
-          email: string;
-          firstName: string;
-          lastName: string;
-          avatarUrl: string | null;
-          emailVerified: string | null;
-          updatedAt: string | null;
-          fullName: string | null;
           about: string;
           active: boolean | null;
+          avatarUrl: string | null;
           createdAt: string;
+          email: string;
+          emailVerified: string | null;
+          firstName: string;
+          fullName: string | null;
+          id: string;
+          lastName: string;
+          updatedAt: string | null;
         };
         Insert: {
-          id: string;
-          email: string;
-          firstName: string;
-          lastName: string;
-          avatarUrl?: string | null;
-          emailVerified?: string | null;
-          updatedAt?: string | null;
-          fullName?: string | null;
           about?: string;
           active?: boolean | null;
+          avatarUrl?: string | null;
           createdAt?: string;
+          email: string;
+          emailVerified?: string | null;
+          firstName: string;
+          fullName?: string | null;
+          id: string;
+          lastName: string;
+          updatedAt?: string | null;
         };
         Update: {
-          id?: string;
-          email?: string;
-          firstName?: string;
-          lastName?: string;
-          avatarUrl?: string | null;
-          emailVerified?: string | null;
-          updatedAt?: string | null;
-          fullName?: string | null;
           about?: string;
           active?: boolean | null;
+          avatarUrl?: string | null;
           createdAt?: string;
+          email?: string;
+          emailVerified?: string | null;
+          firstName?: string;
+          fullName?: string | null;
+          id?: string;
+          lastName?: string;
+          updatedAt?: string | null;
         };
+        Relationships: [];
       };
       userAttribute: {
         Row: {
-          name: string;
-          userAttributeCategoryId: string;
+          active: boolean | null;
           attributeDataTypeId: number;
-          listOptions: string[] | null;
+          canSelfManage: boolean | null;
+          createdAt: string;
           createdBy: string;
+          id: string;
+          listOptions: string[] | null;
+          name: string;
+          sortOrder: number;
           updatedAt: string | null;
           updatedBy: string | null;
-          id: string;
-          sortOrder: number;
-          canSelfManage: boolean | null;
-          active: boolean | null;
-          createdAt: string;
+          userAttributeCategoryId: string;
         };
         Insert: {
-          name: string;
-          userAttributeCategoryId: string;
+          active?: boolean | null;
           attributeDataTypeId: number;
-          listOptions?: string[] | null;
+          canSelfManage?: boolean | null;
+          createdAt?: string;
           createdBy: string;
+          id?: string;
+          listOptions?: string[] | null;
+          name: string;
+          sortOrder?: number;
           updatedAt?: string | null;
           updatedBy?: string | null;
-          id?: string;
-          sortOrder?: number;
-          canSelfManage?: boolean | null;
-          active?: boolean | null;
-          createdAt?: string;
+          userAttributeCategoryId: string;
         };
         Update: {
-          name?: string;
-          userAttributeCategoryId?: string;
+          active?: boolean | null;
           attributeDataTypeId?: number;
-          listOptions?: string[] | null;
+          canSelfManage?: boolean | null;
+          createdAt?: string;
           createdBy?: string;
+          id?: string;
+          listOptions?: string[] | null;
+          name?: string;
+          sortOrder?: number;
           updatedAt?: string | null;
           updatedBy?: string | null;
-          id?: string;
-          sortOrder?: number;
-          canSelfManage?: boolean | null;
-          active?: boolean | null;
-          createdAt?: string;
+          userAttributeCategoryId?: string;
         };
+        Relationships: [
+          {
+            foreignKeyName: "userAttribute_attributeDataTypeId_fkey";
+            columns: ["attributeDataTypeId"];
+            referencedRelation: "attributeDataType";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "userAttribute_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "userAttribute_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "userAttribute_userAttributeCategoryId_fkey";
+            columns: ["userAttributeCategoryId"];
+            referencedRelation: "userAttributeCategory";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       userAttributeCategory: {
         Row: {
-          name: string;
-          createdBy: string;
-          updatedAt: string | null;
-          updatedBy: string | null;
-          id: string;
-          public: boolean | null;
-          protected: boolean | null;
           active: boolean | null;
           createdAt: string;
+          createdBy: string;
+          id: string;
+          name: string;
+          protected: boolean | null;
+          public: boolean | null;
+          updatedAt: string | null;
+          updatedBy: string | null;
         };
         Insert: {
-          name: string;
-          createdBy: string;
-          updatedAt?: string | null;
-          updatedBy?: string | null;
-          id?: string;
-          public?: boolean | null;
-          protected?: boolean | null;
           active?: boolean | null;
           createdAt?: string;
+          createdBy: string;
+          id?: string;
+          name: string;
+          protected?: boolean | null;
+          public?: boolean | null;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
         Update: {
-          name?: string;
-          createdBy?: string;
-          updatedAt?: string | null;
-          updatedBy?: string | null;
-          id?: string;
-          public?: boolean | null;
-          protected?: boolean | null;
           active?: boolean | null;
           createdAt?: string;
+          createdBy?: string;
+          id?: string;
+          name?: string;
+          protected?: boolean | null;
+          public?: boolean | null;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "userAttributeCategory_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "userAttributeCategory_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       userAttributeValue: {
         Row: {
+          createdAt: string;
+          createdBy: string;
+          id: string;
+          updatedAt: string | null;
+          updatedBy: string | null;
           userAttributeId: string;
           userId: string;
           valueBoolean: boolean | null;
@@ -2487,13 +4161,13 @@ export interface Database {
           valueNumeric: number | null;
           valueText: string | null;
           valueUser: string | null;
-          createdBy: string;
-          updatedAt: string | null;
-          updatedBy: string | null;
-          id: string;
-          createdAt: string;
         };
         Insert: {
+          createdAt?: string;
+          createdBy: string;
+          id?: string;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
           userAttributeId: string;
           userId: string;
           valueBoolean?: boolean | null;
@@ -2501,13 +4175,13 @@ export interface Database {
           valueNumeric?: number | null;
           valueText?: string | null;
           valueUser?: string | null;
-          createdBy: string;
-          updatedAt?: string | null;
-          updatedBy?: string | null;
-          id?: string;
-          createdAt?: string;
         };
         Update: {
+          createdAt?: string;
+          createdBy?: string;
+          id?: string;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
           userAttributeId?: string;
           userId?: string;
           valueBoolean?: boolean | null;
@@ -2515,515 +4189,805 @@ export interface Database {
           valueNumeric?: number | null;
           valueText?: string | null;
           valueUser?: string | null;
-          createdBy?: string;
-          updatedAt?: string | null;
-          updatedBy?: string | null;
-          id?: string;
-          createdAt?: string;
         };
+        Relationships: [
+          {
+            foreignKeyName: "userAttributeValue_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "userAttributeValue_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "userAttributeValue_userAttributeId_fkey";
+            columns: ["userAttributeId"];
+            referencedRelation: "userAttribute";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "userAttributeValue_userId_fkey";
+            columns: ["userId"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "userAttributeValue_valueUser_fkey";
+            columns: ["valueUser"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       userNote: {
         Row: {
-          userId: string;
-          note: string;
-          id: string;
-          noteRichText: Json;
           active: boolean;
-          createdBy: string;
-          updatedAt: string | null;
           createdAt: string;
+          createdBy: string;
+          id: string;
+          note: string;
+          noteRichText: Json;
+          updatedAt: string | null;
+          userId: string;
         };
         Insert: {
-          userId: string;
-          note: string;
-          id?: string;
-          noteRichText?: Json;
           active?: boolean;
-          createdBy: string;
-          updatedAt?: string | null;
           createdAt?: string;
+          createdBy: string;
+          id?: string;
+          note: string;
+          noteRichText?: Json;
+          updatedAt?: string | null;
+          userId: string;
         };
         Update: {
-          userId?: string;
-          note?: string;
-          id?: string;
-          noteRichText?: Json;
           active?: boolean;
-          createdBy?: string;
-          updatedAt?: string | null;
           createdAt?: string;
+          createdBy?: string;
+          id?: string;
+          note?: string;
+          noteRichText?: Json;
+          updatedAt?: string | null;
+          userId?: string;
         };
+        Relationships: [
+          {
+            foreignKeyName: "notes_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "notes_userId_fkey";
+            columns: ["userId"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       valueLedger: {
         Row: {
-          postingDate: string;
-          partLedgerType: Database["public"]["Enums"]["partLedgerType"];
-          costLedgerType: Database["public"]["Enums"]["costLedgerType"];
-          documentType:
-            | Database["public"]["Enums"]["partLedgerDocumentType"]
-            | null;
-          documentNumber: string | null;
-          id: string;
-          entryNumber: number;
+          actualCostPostedToGl: number;
           adjustment: boolean;
           costAmountActual: number;
           costAmountExpected: number;
-          actualCostPostedToGl: number;
-          expectedCostPostedToGl: number;
+          costLedgerType: Database["public"]["Enums"]["costLedgerType"];
           createdAt: string;
+          documentNumber: string | null;
+          documentType:
+            | Database["public"]["Enums"]["partLedgerDocumentType"]
+            | null;
+          entryNumber: number;
+          expectedCostPostedToGl: number;
+          id: string;
+          partLedgerType: Database["public"]["Enums"]["partLedgerType"];
+          postingDate: string;
         };
         Insert: {
-          postingDate: string;
-          partLedgerType: Database["public"]["Enums"]["partLedgerType"];
-          costLedgerType: Database["public"]["Enums"]["costLedgerType"];
-          documentType?:
-            | Database["public"]["Enums"]["partLedgerDocumentType"]
-            | null;
-          documentNumber?: string | null;
-          id?: string;
-          entryNumber?: number;
+          actualCostPostedToGl?: number;
           adjustment?: boolean;
           costAmountActual?: number;
           costAmountExpected?: number;
-          actualCostPostedToGl?: number;
-          expectedCostPostedToGl?: number;
+          costLedgerType: Database["public"]["Enums"]["costLedgerType"];
           createdAt?: string;
+          documentNumber?: string | null;
+          documentType?:
+            | Database["public"]["Enums"]["partLedgerDocumentType"]
+            | null;
+          entryNumber?: number;
+          expectedCostPostedToGl?: number;
+          id?: string;
+          partLedgerType: Database["public"]["Enums"]["partLedgerType"];
+          postingDate: string;
         };
         Update: {
-          postingDate?: string;
-          partLedgerType?: Database["public"]["Enums"]["partLedgerType"];
-          costLedgerType?: Database["public"]["Enums"]["costLedgerType"];
-          documentType?:
-            | Database["public"]["Enums"]["partLedgerDocumentType"]
-            | null;
-          documentNumber?: string | null;
-          id?: string;
-          entryNumber?: number;
+          actualCostPostedToGl?: number;
           adjustment?: boolean;
           costAmountActual?: number;
           costAmountExpected?: number;
-          actualCostPostedToGl?: number;
-          expectedCostPostedToGl?: number;
+          costLedgerType?: Database["public"]["Enums"]["costLedgerType"];
           createdAt?: string;
+          documentNumber?: string | null;
+          documentType?:
+            | Database["public"]["Enums"]["partLedgerDocumentType"]
+            | null;
+          entryNumber?: number;
+          expectedCostPostedToGl?: number;
+          id?: string;
+          partLedgerType?: Database["public"]["Enums"]["partLedgerType"];
+          postingDate?: string;
         };
+        Relationships: [];
       };
       valueLedgerAccountLedgerRelation: {
         Row: {
-          valueLedgerId: string;
           generalLedgerId: string;
+          valueLedgerId: string;
         };
         Insert: {
-          valueLedgerId: string;
           generalLedgerId: string;
+          valueLedgerId: string;
         };
         Update: {
-          valueLedgerId?: string;
           generalLedgerId?: string;
+          valueLedgerId?: string;
         };
+        Relationships: [
+          {
+            foreignKeyName: "valueLedgerAccountLedgerRelation_generalLedgerId_fkey";
+            columns: ["generalLedgerId"];
+            referencedRelation: "generalLedger";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "valueLedgerAccountLedgerRelation_valueLedgerId_fkey";
+            columns: ["valueLedgerId"];
+            referencedRelation: "valueLedger";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       warehouse: {
         Row: {
-          name: string;
-          locationId: string;
-          createdBy: string;
-          updatedBy: string | null;
-          updatedAt: string | null;
-          id: string;
-          requiresPick: boolean;
-          requiresPutAway: boolean;
-          requiresBin: boolean;
-          requiresReceive: boolean;
-          requiresShipment: boolean;
           active: boolean;
           createdAt: string;
+          createdBy: string;
+          id: string;
+          locationId: string;
+          name: string;
+          requiresBin: boolean;
+          requiresPick: boolean;
+          requiresPutAway: boolean;
+          requiresReceive: boolean;
+          requiresShipment: boolean;
+          updatedAt: string | null;
+          updatedBy: string | null;
         };
         Insert: {
-          name: string;
-          locationId: string;
-          createdBy: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          id?: string;
-          requiresPick?: boolean;
-          requiresPutAway?: boolean;
-          requiresBin?: boolean;
-          requiresReceive?: boolean;
-          requiresShipment?: boolean;
           active?: boolean;
           createdAt?: string;
+          createdBy: string;
+          id?: string;
+          locationId: string;
+          name: string;
+          requiresBin?: boolean;
+          requiresPick?: boolean;
+          requiresPutAway?: boolean;
+          requiresReceive?: boolean;
+          requiresShipment?: boolean;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
         Update: {
-          name?: string;
-          locationId?: string;
-          createdBy?: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          id?: string;
-          requiresPick?: boolean;
-          requiresPutAway?: boolean;
-          requiresBin?: boolean;
-          requiresReceive?: boolean;
-          requiresShipment?: boolean;
           active?: boolean;
           createdAt?: string;
+          createdBy?: string;
+          id?: string;
+          locationId?: string;
+          name?: string;
+          requiresBin?: boolean;
+          requiresPick?: boolean;
+          requiresPutAway?: boolean;
+          requiresReceive?: boolean;
+          requiresShipment?: boolean;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "warehouse_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "warehouse_locationId_fkey";
+            columns: ["locationId"];
+            referencedRelation: "location";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "warehouse_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       workCell: {
         Row: {
-          name: string;
-          description: string | null;
-          departmentId: string;
-          locationId: string | null;
-          workCellTypeId: string;
-          activeDate: string | null;
-          createdBy: string;
-          updatedBy: string | null;
-          updatedAt: string | null;
-          id: string;
-          defaultStandardFactor: Database["public"]["Enums"]["factor"];
           active: boolean;
+          activeDate: string | null;
           createdAt: string;
+          createdBy: string;
+          defaultStandardFactor: Database["public"]["Enums"]["factor"];
+          departmentId: string;
+          description: string | null;
+          id: string;
+          locationId: string | null;
+          name: string;
+          updatedAt: string | null;
+          updatedBy: string | null;
+          workCellTypeId: string;
         };
         Insert: {
-          name: string;
-          description?: string | null;
-          departmentId: string;
-          locationId?: string | null;
-          workCellTypeId: string;
-          activeDate?: string | null;
-          createdBy: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          id?: string;
-          defaultStandardFactor?: Database["public"]["Enums"]["factor"];
           active?: boolean;
+          activeDate?: string | null;
           createdAt?: string;
+          createdBy: string;
+          defaultStandardFactor?: Database["public"]["Enums"]["factor"];
+          departmentId: string;
+          description?: string | null;
+          id?: string;
+          locationId?: string | null;
+          name: string;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
+          workCellTypeId: string;
         };
         Update: {
-          name?: string;
-          description?: string | null;
-          departmentId?: string;
-          locationId?: string | null;
-          workCellTypeId?: string;
-          activeDate?: string | null;
-          createdBy?: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          id?: string;
-          defaultStandardFactor?: Database["public"]["Enums"]["factor"];
           active?: boolean;
+          activeDate?: string | null;
           createdAt?: string;
+          createdBy?: string;
+          defaultStandardFactor?: Database["public"]["Enums"]["factor"];
+          departmentId?: string;
+          description?: string | null;
+          id?: string;
+          locationId?: string | null;
+          name?: string;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
+          workCellTypeId?: string;
         };
+        Relationships: [
+          {
+            foreignKeyName: "workCell_departmentId_fkey";
+            columns: ["departmentId"];
+            referencedRelation: "department";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "workCell_locationId_fkey";
+            columns: ["locationId"];
+            referencedRelation: "location";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "workCell_workCellTypeId_fkey";
+            columns: ["workCellTypeId"];
+            referencedRelation: "workCellType";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       workCellType: {
         Row: {
-          name: string;
-          description: string | null;
-          requiredAbility: string | null;
-          createdBy: string;
-          updatedBy: string | null;
-          updatedAt: string | null;
-          id: string;
-          color: string;
           active: boolean;
+          color: string;
           createdAt: string;
+          createdBy: string;
+          description: string | null;
+          id: string;
+          name: string;
+          requiredAbility: string | null;
+          updatedAt: string | null;
+          updatedBy: string | null;
         };
         Insert: {
-          name: string;
-          description?: string | null;
-          requiredAbility?: string | null;
-          createdBy: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          id?: string;
-          color?: string;
           active?: boolean;
+          color?: string;
           createdAt?: string;
+          createdBy: string;
+          description?: string | null;
+          id?: string;
+          name: string;
+          requiredAbility?: string | null;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
         Update: {
-          name?: string;
-          description?: string | null;
-          requiredAbility?: string | null;
-          createdBy?: string;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
-          id?: string;
-          color?: string;
           active?: boolean;
+          color?: string;
           createdAt?: string;
+          createdBy?: string;
+          description?: string | null;
+          id?: string;
+          name?: string;
+          requiredAbility?: string | null;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "workCellType_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "workCellType_requiredAbility_fkey";
+            columns: ["requiredAbility"];
+            referencedRelation: "ability";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "workCellType_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
     };
     Views: {
       account_categories_view: {
         Row: {
-          id: string | null;
           category: string | null;
+          createdAt: string | null;
+          createdBy: string | null;
+          id: string | null;
           incomeBalance: Database["public"]["Enums"]["glIncomeBalance"] | null;
           normalBalance: Database["public"]["Enums"]["glNormalBalance"] | null;
-          createdBy: string | null;
-          createdAt: string | null;
-          updatedBy: string | null;
-          updatedAt: string | null;
           subCategoriesCount: number | null;
+          updatedAt: string | null;
+          updatedBy: string | null;
         };
         Insert: {
-          id?: string | null;
           category?: string | null;
+          createdAt?: string | null;
+          createdBy?: string | null;
+          id?: string | null;
           incomeBalance?: Database["public"]["Enums"]["glIncomeBalance"] | null;
           normalBalance?: Database["public"]["Enums"]["glNormalBalance"] | null;
-          createdBy?: string | null;
-          createdAt?: string | null;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
           subCategoriesCount?: never;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
         Update: {
-          id?: string | null;
           category?: string | null;
+          createdAt?: string | null;
+          createdBy?: string | null;
+          id?: string | null;
           incomeBalance?: Database["public"]["Enums"]["glIncomeBalance"] | null;
           normalBalance?: Database["public"]["Enums"]["glNormalBalance"] | null;
-          createdBy?: string | null;
-          createdAt?: string | null;
-          updatedBy?: string | null;
-          updatedAt?: string | null;
           subCategoriesCount?: never;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "accountCategory_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "accountCategory_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       accounts_view: {
         Row: {
-          id: string | null;
-          number: string | null;
-          name: string | null;
-          type: Database["public"]["Enums"]["glAccountType"] | null;
-          accountCategoryId: string | null;
           accountCategory: string | null;
-          accountSubcategoryId: string | null;
+          accountCategoryId: string | null;
           accountSubCategory: string | null;
-          incomeBalance: Database["public"]["Enums"]["glIncomeBalance"] | null;
-          normalBalance: Database["public"]["Enums"]["glNormalBalance"] | null;
+          accountSubcategoryId: string | null;
+          active: boolean | null;
           consolidatedRate:
             | Database["public"]["Enums"]["glConsolidatedRate"]
             | null;
-          directPosting: boolean | null;
-          active: boolean | null;
-          createdBy: string | null;
           createdAt: string | null;
-          updatedBy: string | null;
+          createdBy: string | null;
+          directPosting: boolean | null;
+          id: string | null;
+          incomeBalance: Database["public"]["Enums"]["glIncomeBalance"] | null;
+          name: string | null;
+          normalBalance: Database["public"]["Enums"]["glNormalBalance"] | null;
+          number: string | null;
+          type: Database["public"]["Enums"]["glAccountType"] | null;
           updatedAt: string | null;
+          updatedBy: string | null;
         };
         Insert: {
-          id?: string | null;
-          number?: string | null;
-          name?: string | null;
-          type?: Database["public"]["Enums"]["glAccountType"] | null;
-          accountCategoryId?: string | null;
           accountCategory?: never;
-          accountSubcategoryId?: string | null;
+          accountCategoryId?: string | null;
           accountSubCategory?: never;
-          incomeBalance?: Database["public"]["Enums"]["glIncomeBalance"] | null;
-          normalBalance?: Database["public"]["Enums"]["glNormalBalance"] | null;
+          accountSubcategoryId?: string | null;
+          active?: boolean | null;
           consolidatedRate?:
             | Database["public"]["Enums"]["glConsolidatedRate"]
             | null;
-          directPosting?: boolean | null;
-          active?: boolean | null;
-          createdBy?: string | null;
           createdAt?: string | null;
-          updatedBy?: string | null;
+          createdBy?: string | null;
+          directPosting?: boolean | null;
+          id?: string | null;
+          incomeBalance?: Database["public"]["Enums"]["glIncomeBalance"] | null;
+          name?: string | null;
+          normalBalance?: Database["public"]["Enums"]["glNormalBalance"] | null;
+          number?: string | null;
+          type?: Database["public"]["Enums"]["glAccountType"] | null;
           updatedAt?: string | null;
+          updatedBy?: string | null;
         };
         Update: {
-          id?: string | null;
-          number?: string | null;
-          name?: string | null;
-          type?: Database["public"]["Enums"]["glAccountType"] | null;
-          accountCategoryId?: string | null;
           accountCategory?: never;
-          accountSubcategoryId?: string | null;
+          accountCategoryId?: string | null;
           accountSubCategory?: never;
-          incomeBalance?: Database["public"]["Enums"]["glIncomeBalance"] | null;
-          normalBalance?: Database["public"]["Enums"]["glNormalBalance"] | null;
+          accountSubcategoryId?: string | null;
+          active?: boolean | null;
           consolidatedRate?:
             | Database["public"]["Enums"]["glConsolidatedRate"]
             | null;
-          directPosting?: boolean | null;
-          active?: boolean | null;
-          createdBy?: string | null;
           createdAt?: string | null;
-          updatedBy?: string | null;
+          createdBy?: string | null;
+          directPosting?: boolean | null;
+          id?: string | null;
+          incomeBalance?: Database["public"]["Enums"]["glIncomeBalance"] | null;
+          name?: string | null;
+          normalBalance?: Database["public"]["Enums"]["glNormalBalance"] | null;
+          number?: string | null;
+          type?: Database["public"]["Enums"]["glAccountType"] | null;
           updatedAt?: string | null;
+          updatedBy?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "account_accountCategoryId_fkey";
+            columns: ["accountCategoryId"];
+            referencedRelation: "accountCategory";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "account_accountCategoryId_fkey";
+            columns: ["accountCategoryId"];
+            referencedRelation: "account_categories_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "account_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "account_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       contractors_view: {
         Row: {
-          supplierContactId: string | null;
+          abilityIds: string[] | null;
           active: boolean | null;
+          email: string | null;
+          firstName: string | null;
           hoursPerWeek: number | null;
+          lastName: string | null;
+          supplierContactId: string | null;
           supplierId: string | null;
           supplierName: string | null;
-          firstName: string | null;
-          lastName: string | null;
-          email: string | null;
-          abilityIds: string[] | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "contractor_id_fkey";
+            columns: ["supplierContactId"];
+            referencedRelation: "supplierContact";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       documents_labels_view: {
         Row: {
           label: string | null;
           userId: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "documentLabels_userId_fkey";
+            columns: ["userId"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       documents_view: {
         Row: {
-          id: string | null;
-          path: string | null;
-          name: string | null;
-          description: string | null;
-          size: number | null;
-          type: string | null;
           active: boolean | null;
-          readGroups: string[] | null;
-          writeGroups: string[] | null;
+          createdAt: string | null;
           createdBy: string | null;
           createdByAvatar: string | null;
           createdByFullName: string | null;
-          createdAt: string | null;
+          description: string | null;
+          favorite: boolean | null;
+          id: string | null;
+          labels: string[] | null;
+          lastActivityAt: string | null;
+          name: string | null;
+          path: string | null;
+          readGroups: string[] | null;
+          size: number | null;
+          type: string | null;
+          updatedAt: string | null;
           updatedBy: string | null;
           updatedByAvatar: string | null;
           updatedByFullName: string | null;
-          updatedAt: string | null;
-          labels: string[] | null;
-          favorite: boolean | null;
-          lastActivityAt: string | null;
+          writeGroups: string[] | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "document_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "document_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       group_member: {
         Row: {
+          groupId: string | null;
           id: number | null;
-          name: string | null;
-          isIdentityGroup: boolean | null;
-          isEmployeeTypeGroup: boolean | null;
           isCustomerOrgGroup: boolean | null;
           isCustomerTypeGroup: boolean | null;
+          isEmployeeTypeGroup: boolean | null;
+          isIdentityGroup: boolean | null;
           isSupplierOrgGroup: boolean | null;
           isSupplierTypeGroup: boolean | null;
-          groupId: string | null;
           memberGroupId: string | null;
           memberUserId: string | null;
+          name: string | null;
           user: Json | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "membership_groupId_fkey";
+            columns: ["groupId"];
+            referencedRelation: "group";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "membership_memberGroupId_fkey";
+            columns: ["memberGroupId"];
+            referencedRelation: "group";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "membership_memberUserId_fkey";
+            columns: ["memberUserId"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       groups_recursive: {
         Row: {
           groupId: string | null;
-          name: string | null;
-          parentId: string | null;
-          isIdentityGroup: boolean | null;
-          isEmployeeTypeGroup: boolean | null;
           isCustomerOrgGroup: boolean | null;
           isCustomerTypeGroup: boolean | null;
+          isEmployeeTypeGroup: boolean | null;
+          isIdentityGroup: boolean | null;
           isSupplierOrgGroup: boolean | null;
           isSupplierTypeGroup: boolean | null;
+          name: string | null;
+          parentId: string | null;
           user: Json | null;
         };
+        Relationships: [];
       };
       groups_view: {
         Row: {
           id: string | null;
-          isEmployeeTypeGroup: boolean | null;
           isCustomerOrgGroup: boolean | null;
           isCustomerTypeGroup: boolean | null;
+          isEmployeeTypeGroup: boolean | null;
           isSupplierOrgGroup: boolean | null;
           isSupplierTypeGroup: boolean | null;
           name: string | null;
           parentId: string | null;
           users: Json | null;
         };
+        Relationships: [];
       };
       holiday_years: {
         Row: {
           year: number | null;
         };
+        Relationships: [];
       };
       partners_view: {
         Row: {
-          supplierLocationId: string | null;
-          active: boolean | null;
-          hoursPerWeek: number | null;
-          supplierId: string | null;
-          supplierName: string | null;
-          city: string | null;
-          state: string | null;
           abilityIds: string[] | null;
+          active: boolean | null;
+          city: string | null;
+          hoursPerWeek: number | null;
+          state: string | null;
+          supplierId: string | null;
+          supplierLocationId: string | null;
+          supplierName: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "partner_id_fkey";
+            columns: ["supplierLocationId"];
+            referencedRelation: "supplierLocation";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       parts_view: {
         Row: {
+          active: boolean | null;
+          description: string | null;
           id: string | null;
           name: string | null;
-          description: string | null;
-          partType: Database["public"]["Enums"]["partType"] | null;
-          partGroupId: string | null;
           partGroup: string | null;
+          partGroupId: string | null;
+          partType: Database["public"]["Enums"]["partType"] | null;
           replenishmentSystem:
             | Database["public"]["Enums"]["partReplenishmentSystem"]
             | null;
-          active: boolean | null;
           supplierIds: string[] | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "part_partGroupId_fkey";
+            columns: ["partGroupId"];
+            referencedRelation: "partGroup";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       purchase_order_suppliers_view: {
         Row: {
           id: string | null;
           name: string | null;
         };
+        Relationships: [];
       };
       purchase_order_view: {
         Row: {
-          id: string | null;
-          purchaseOrderId: string | null;
-          status:
-            | Database["public"]["Enums"]["purchaseOrderApprovalStatus"]
-            | null;
-          type: Database["public"]["Enums"]["purchaseOrderType"] | null;
-          orderDate: string | null;
-          notes: string | null;
-          supplierId: string | null;
-          supplierContactId: string | null;
-          supplierReference: string | null;
-          createdBy: string | null;
-          receiptRequestedDate: string | null;
-          receiptPromisedDate: string | null;
-          dropShipment: boolean | null;
-          lineCount: number | null;
-          locationName: string | null;
-          supplierName: string | null;
-          createdByAvatar: string | null;
-          createdByFullName: string | null;
-          createdAt: string | null;
-          updatedBy: string | null;
-          updatedByAvatar: string | null;
-          updatedByFullName: string | null;
-          updatedAt: string | null;
           closed: boolean | null;
           closedAt: string | null;
           closedByAvatar: string | null;
           closedByFullName: string | null;
+          createdAt: string | null;
+          createdBy: string | null;
+          createdByAvatar: string | null;
+          createdByFullName: string | null;
+          dropShipment: boolean | null;
           favorite: boolean | null;
+          id: string | null;
+          lineCount: number | null;
+          locationName: string | null;
+          notes: string | null;
+          orderDate: string | null;
+          purchaseOrderId: string | null;
+          receiptPromisedDate: string | null;
+          receiptRequestedDate: string | null;
+          status:
+            | Database["public"]["Enums"]["purchaseOrderApprovalStatus"]
+            | null;
+          supplierContactId: string | null;
+          supplierId: string | null;
+          supplierName: string | null;
+          supplierReference: string | null;
+          type: Database["public"]["Enums"]["purchaseOrderType"] | null;
+          updatedAt: string | null;
+          updatedBy: string | null;
+          updatedByAvatar: string | null;
+          updatedByFullName: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "purchaseOrder_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrder_supplierContactId_fkey";
+            columns: ["supplierContactId"];
+            referencedRelation: "supplierContact";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrder_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "supplier";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrder_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "contractors_view";
+            referencedColumns: ["supplierId"];
+          },
+          {
+            foreignKeyName: "purchaseOrder_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "partners_view";
+            referencedColumns: ["supplierId"];
+          },
+          {
+            foreignKeyName: "purchaseOrder_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "purchase_order_suppliers_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrder_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "suppliers_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrder_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       suppliers_view: {
         Row: {
           id: string | null;
           name: string | null;
-          supplierTypeId: string | null;
-          type: string | null;
-          supplierStatusId: string | null;
-          status: string | null;
           orderCount: number | null;
           partCount: number | null;
+          status: string | null;
+          supplierStatusId: string | null;
+          supplierTypeId: string | null;
+          type: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "supplier_supplierStatusId_fkey";
+            columns: ["supplierStatusId"];
+            referencedRelation: "supplierStatus";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "supplier_supplierTypeId_fkey";
+            columns: ["supplierTypeId"];
+            referencedRelation: "supplierType";
+            referencedColumns: ["id"];
+          }
+        ];
       };
     };
     Functions: {
@@ -3032,19 +4996,29 @@ export interface Database {
         Returns: number;
       };
       delete_claim: {
-        Args: { uid: string; claim: string };
+        Args: {
+          uid: string;
+          claim: string;
+        };
         Returns: string;
       };
       get_claim: {
-        Args: { uid: string; claim: string };
+        Args: {
+          uid: string;
+          claim: string;
+        };
         Returns: Json;
       };
       get_claims: {
-        Args: { uid: string };
+        Args: {
+          uid: string;
+        };
         Returns: Json;
       };
       get_my_claim: {
-        Args: { claim: string };
+        Args: {
+          claim: string;
+        };
         Returns: Json;
       };
       get_my_claims: {
@@ -3052,7 +5026,10 @@ export interface Database {
         Returns: Json;
       };
       gl_transactions_by_account_number: {
-        Args: { from_date: string; to_date: string };
+        Args: {
+          from_date?: string;
+          to_date?: string;
+        };
         Returns: {
           number: string;
           balance: number;
@@ -3061,11 +5038,16 @@ export interface Database {
         }[];
       };
       groups_for_user: {
-        Args: { uid: string };
-        Returns: string[];
+        Args: {
+          uid: string;
+        };
+        Returns: unknown;
       };
       groups_query: {
-        Args: { _name: string; _uid: string };
+        Args: {
+          _name?: string;
+          _uid?: string;
+        };
         Returns: {
           id: string;
           name: string;
@@ -3083,39 +5065,59 @@ export interface Database {
         Returns: boolean;
       };
       set_claim: {
-        Args: { uid: string; claim: string; value: Json };
+        Args: {
+          uid: string;
+          claim: string;
+          value: Json;
+        };
         Returns: string;
       };
       users_for_groups: {
-        Args: { groups: string[] };
+        Args: {
+          groups: string[];
+        };
         Returns: Json;
       };
       xid: {
-        Args: { _at: string };
+        Args: {
+          _at?: string;
+        };
         Returns: unknown;
       };
       xid_counter: {
-        Args: { _xid: unknown };
+        Args: {
+          _xid: unknown;
+        };
         Returns: number;
       };
       xid_decode: {
-        Args: { _xid: unknown };
-        Returns: number[];
+        Args: {
+          _xid: unknown;
+        };
+        Returns: unknown;
       };
       xid_encode: {
-        Args: { _id: number[] };
+        Args: {
+          _id: number[];
+        };
         Returns: unknown;
       };
       xid_machine: {
-        Args: { _xid: unknown };
-        Returns: number[];
+        Args: {
+          _xid: unknown;
+        };
+        Returns: unknown;
       };
       xid_pid: {
-        Args: { _xid: unknown };
+        Args: {
+          _xid: unknown;
+        };
         Returns: number;
       };
       xid_time: {
-        Args: { _xid: unknown };
+        Args: {
+          _xid: unknown;
+        };
         Returns: string;
       };
     };
@@ -3241,6 +5243,188 @@ export interface Database {
         | "Sales Order"
         | "Document";
       shippingCarrier: "UPS" | "FedEx" | "USPS" | "DHL" | "Other";
+    };
+    CompositeTypes: {
+      [_ in never]: never;
+    };
+  };
+  storage: {
+    Tables: {
+      buckets: {
+        Row: {
+          allowed_mime_types: string[] | null;
+          avif_autodetection: boolean | null;
+          created_at: string | null;
+          file_size_limit: number | null;
+          id: string;
+          name: string;
+          owner: string | null;
+          public: boolean | null;
+          updated_at: string | null;
+        };
+        Insert: {
+          allowed_mime_types?: string[] | null;
+          avif_autodetection?: boolean | null;
+          created_at?: string | null;
+          file_size_limit?: number | null;
+          id: string;
+          name: string;
+          owner?: string | null;
+          public?: boolean | null;
+          updated_at?: string | null;
+        };
+        Update: {
+          allowed_mime_types?: string[] | null;
+          avif_autodetection?: boolean | null;
+          created_at?: string | null;
+          file_size_limit?: number | null;
+          id?: string;
+          name?: string;
+          owner?: string | null;
+          public?: boolean | null;
+          updated_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "buckets_owner_fkey";
+            columns: ["owner"];
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      migrations: {
+        Row: {
+          executed_at: string | null;
+          hash: string;
+          id: number;
+          name: string;
+        };
+        Insert: {
+          executed_at?: string | null;
+          hash: string;
+          id: number;
+          name: string;
+        };
+        Update: {
+          executed_at?: string | null;
+          hash?: string;
+          id?: number;
+          name?: string;
+        };
+        Relationships: [];
+      };
+      objects: {
+        Row: {
+          bucket_id: string | null;
+          created_at: string | null;
+          id: string;
+          last_accessed_at: string | null;
+          metadata: Json | null;
+          name: string | null;
+          owner: string | null;
+          path_tokens: string[] | null;
+          updated_at: string | null;
+          version: string | null;
+        };
+        Insert: {
+          bucket_id?: string | null;
+          created_at?: string | null;
+          id?: string;
+          last_accessed_at?: string | null;
+          metadata?: Json | null;
+          name?: string | null;
+          owner?: string | null;
+          path_tokens?: string[] | null;
+          updated_at?: string | null;
+          version?: string | null;
+        };
+        Update: {
+          bucket_id?: string | null;
+          created_at?: string | null;
+          id?: string;
+          last_accessed_at?: string | null;
+          metadata?: Json | null;
+          name?: string | null;
+          owner?: string | null;
+          path_tokens?: string[] | null;
+          updated_at?: string | null;
+          version?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "objects_bucketId_fkey";
+            columns: ["bucket_id"];
+            referencedRelation: "buckets";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+    };
+    Views: {
+      [_ in never]: never;
+    };
+    Functions: {
+      can_insert_object: {
+        Args: {
+          bucketid: string;
+          name: string;
+          owner: string;
+          metadata: Json;
+        };
+        Returns: undefined;
+      };
+      extension: {
+        Args: {
+          name: string;
+        };
+        Returns: string;
+      };
+      filename: {
+        Args: {
+          name: string;
+        };
+        Returns: string;
+      };
+      foldername: {
+        Args: {
+          name: string;
+        };
+        Returns: unknown;
+      };
+      get_size_by_bucket: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          size: number;
+          bucket_id: string;
+        }[];
+      };
+      search: {
+        Args: {
+          prefix: string;
+          bucketname: string;
+          limits?: number;
+          levels?: number;
+          offsets?: number;
+          search?: string;
+          sortcolumn?: string;
+          sortorder?: string;
+        };
+        Returns: {
+          name: string;
+          id: string;
+          updated_at: string;
+          created_at: string;
+          last_accessed_at: string;
+          metadata: Json;
+        }[];
+      };
+    };
+    Enums: {
+      [_ in never]: never;
+    };
+    CompositeTypes: {
+      [_ in never]: never;
     };
   };
 }

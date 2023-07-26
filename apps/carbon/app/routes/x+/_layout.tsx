@@ -3,7 +3,7 @@ import { Flex, Grid, GridItem, VStack } from "@chakra-ui/react";
 import { SkipNavContent } from "@chakra-ui/skip-nav";
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Outlet, useLoaderData, useTransition } from "@remix-run/react";
+import { Outlet, useLoaderData, useNavigation } from "@remix-run/react";
 import NProgress from "nprogress";
 import { useEffect } from "react";
 import { IconSidebar, Topbar } from "~/components/Layout";
@@ -57,7 +57,7 @@ export async function loader({ request }: LoaderArgs) {
 export default function AuthenticatedRoute() {
   const { session, result } = useLoaderData<typeof loader>();
   const notify = useNotification();
-  const transition = useTransition();
+  const transition = useNavigation();
 
   /* Toast Messages */
   useEffect(() => {

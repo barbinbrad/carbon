@@ -62,8 +62,8 @@ const EquipmentForm = ({
     initialValues.locationId ?? null
   );
 
-  const onLocationChange = ({ value }: { value: string | number }) => {
-    setLocation(value as string);
+  const onLocationChange = (location: { value: string | number } | null) => {
+    setLocation((location?.value as string) ?? null);
   };
 
   useEffect(() => {

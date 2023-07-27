@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
 import { Select } from "@carbon/react";
-import type { PostgrestResponse } from "@supabase/supabase-js";
+import type { PostgrestSingleResponse } from "@supabase/supabase-js";
 import type { EditableTableCellComponentProps } from "~/components/Editable";
 
 const EditableList =
@@ -9,7 +9,7 @@ const EditableList =
       accessorKey: string,
       newValue: string,
       row: T
-    ) => Promise<PostgrestResponse<unknown>>,
+    ) => Promise<PostgrestSingleResponse<unknown>>,
     options: { label: string; value: string }[]
   ) =>
   ({

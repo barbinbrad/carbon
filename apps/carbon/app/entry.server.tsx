@@ -63,6 +63,7 @@ const handleBotRequest = (
           responseHeaders.set("Content-Type", "text/html");
 
           resolve(
+            // @ts-expect-error
             new Response(bodyWithStyles, {
               headers: responseHeaders,
               status: didError ? 500 : responseStatusCode,
@@ -110,6 +111,7 @@ const handleBrowserRequest = (
           responseHeaders.set("Content-Type", "text/html");
 
           resolve(
+            // @ts-expect-error
             new Response(bodyWithStyles, {
               headers: responseHeaders,
               status: didError ? 500 : responseStatusCode,

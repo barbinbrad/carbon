@@ -1,6 +1,8 @@
 const path = require("node:path");
 const { flatRoutes } = require("remix-flat-routes");
 
+/** @type {import('@remix-run/dev').AppConfig} */
+
 module.exports = {
   future: {
     v2_dev: false,

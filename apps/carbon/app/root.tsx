@@ -66,7 +66,7 @@ function Document({
           }}
         />
         <Scripts />
-        <LiveReload />
+        <LiveReload port={8002} />
       </body>
     </html>
   );

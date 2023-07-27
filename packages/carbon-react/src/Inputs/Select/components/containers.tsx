@@ -6,7 +6,6 @@ import type {
   IndicatorsContainerProps,
   ValueContainerProps,
 } from "react-select";
-import { useColor } from "../../../hooks";
 
 export const SelectContainer = <
   Option,
@@ -23,13 +22,13 @@ export const SelectContainer = <
     isDisabled,
     isRtl,
     hasValue,
+    // @ts-ignore
     selectProps: { chakraStyles, borderRadius, maxW, minW, w },
   } = props;
 
   const initialSx: SystemStyleObject = {
     position: "relative",
     direction: isRtl ? "rtl" : undefined,
-    background: useColor("white"),
     ...(isDisabled ? { cursor: "not-allowed" } : {}),
   };
 

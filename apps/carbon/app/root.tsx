@@ -1,7 +1,6 @@
 // root.tsx
 import { ThemeProvider } from "@carbon/react";
 import { SkipNavLink } from "@chakra-ui/skip-nav";
-import { withEmotionCache } from "@emotion/react";
 import {
   Links,
   LiveReload,
@@ -13,11 +12,11 @@ import {
 } from "@remix-run/react";
 import { json } from "@remix-run/node";
 import type { MetaFunction } from "@remix-run/node";
-import React, { useContext, useEffect } from "react";
+import React from "react";
 import { getBrowserEnv } from "~/config/env";
-import { ServerStyleContext, ClientStyleContext } from "~/lib/emotion";
 import Background from "~/styles/background.css";
 import NProgress from "~/styles/nprogress.css";
+import { Box, Heading } from "@chakra-ui/react";
 
 export function links() {
   return [
@@ -32,10 +31,6 @@ export const meta: MetaFunction = () => ({
   viewport: "width=device-width",
 });
 
-interface DocumentProps {
-  children: React.ReactNode;
-}
-
 export async function loader() {
   const { SUPABASE_API_URL, SUPABASE_ANON_PUBLIC } = getBrowserEnv();
   return json({
@@ -46,60 +41,64 @@ export async function loader() {
   });
 }
 
-const Document = withEmotionCache(
-  ({ children }: DocumentProps, emotionCache) => {
-    const { env } = useLoaderData<typeof loader>();
-    const serverStyleData = useContext(ServerStyleContext);
-    const clientStyleData = useContext(ClientStyleContext);
+function Document({
+  children,
+  title = "Carbon ERP",
+}: {
+  children: React.ReactNode;
+  title?: string;
+}) {
+  const { env } = useLoaderData<typeof loader>();
 
-    useEffect(() => {
-      emotionCache.sheet.container = document.head;
-      const tags = emotionCache.sheet.tags;
-      emotionCache.sheet.flush();
-      tags.forEach((tag) => {
-        (emotionCache.sheet as any)._insertTag(tag);
-      });
-      clientStyleData?.reset();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    return (
-      <html lang="en">
-        <head>
-          <Meta />
-          <Links />
-          {serverStyleData?.map(({ key, ids, css }) => (
-            <style
-              key={key}
-              data-emotion={`${key} ${ids.join(" ")}`}
-              dangerouslySetInnerHTML={{ __html: css }}
-            />
-          ))}
-        </head>
-        <body>
-          <ThemeProvider>
-            <SkipNavLink zIndex={7}>Skip to content</SkipNavLink>
-            {children}
-          </ThemeProvider>
-
-          <ScrollRestoration />
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `window.env = ${JSON.stringify(env)}`,
-            }}
-          />
-          <Scripts />
-          <LiveReload />
-        </body>
-      </html>
-    );
-  }
-);
+  return (
+    <html lang="en">
+      <head>
+        <Meta />
+        <title>{title}</title>
+        <Links />
+      </head>
+      <body>
+        {children}
+        <ScrollRestoration />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.env = ${JSON.stringify(env)}`,
+          }}
+        />
+        <Scripts />
+        <LiveReload />
+      </body>
+    </html>
+  );
+}
 
 export default function App() {
   return (
     <Document>
-      <Outlet />
+      <ThemeProvider>
+        <SkipNavLink zIndex={7}>Skip to content</SkipNavLink>
+        <Outlet />
+      </ThemeProvider>
+    </Document>
+  );
+}
+
+export function ErrorBoundary({ error }: { error: Error }) {
+  return (
+    <Document title="Error!">
+      <ThemeProvider>
+        <Box
+          w="full"
+          h="100vh"
+          alignItems="center"
+          gap={4}
+          bg="black"
+          color="white"
+        >
+          <Heading as="h1">Something went wrong</Heading>
+          <p>{error.message}</p>
+        </Box>
+      </ThemeProvider>
     </Document>
   );
 }

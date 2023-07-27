@@ -7,7 +7,7 @@ import { TbArrowBarLeft, TbArrowBarRight } from "react-icons/tb";
 const MotionBox = motion(Box);
 const variants = {
   visible: {
-    width: "15rem",
+    width: 180,
   },
   hidden: {
     width: 15,

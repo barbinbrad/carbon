@@ -3316,6 +3316,197 @@ export interface Database {
           }
         ];
       };
+      receipt: {
+        Row: {
+          createdAt: string;
+          createdBy: string;
+          expectedDeliveryDate: string | null;
+          id: string;
+          locationId: string | null;
+          postingDate: string | null;
+          receiptId: string;
+          sourceDocument: Database["public"]["Enums"]["receiptSourceDocument"];
+          sourceDocumentId: string;
+          supplierId: string;
+          supplierInvoiceNumber: string | null;
+          supplierShipmentNumber: string | null;
+          updatedAt: string | null;
+          updatedBy: string | null;
+        };
+        Insert: {
+          createdAt?: string;
+          createdBy: string;
+          expectedDeliveryDate?: string | null;
+          id?: string;
+          locationId?: string | null;
+          postingDate?: string | null;
+          receiptId: string;
+          sourceDocument: Database["public"]["Enums"]["receiptSourceDocument"];
+          sourceDocumentId: string;
+          supplierId: string;
+          supplierInvoiceNumber?: string | null;
+          supplierShipmentNumber?: string | null;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
+        };
+        Update: {
+          createdAt?: string;
+          createdBy?: string;
+          expectedDeliveryDate?: string | null;
+          id?: string;
+          locationId?: string | null;
+          postingDate?: string | null;
+          receiptId?: string;
+          sourceDocument?: Database["public"]["Enums"]["receiptSourceDocument"];
+          sourceDocumentId?: string;
+          supplierId?: string;
+          supplierInvoiceNumber?: string | null;
+          supplierShipmentNumber?: string | null;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "receipt_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "receipt_locationId_fkey";
+            columns: ["locationId"];
+            referencedRelation: "location";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "receipt_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "supplier";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "receipt_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "contractors_view";
+            referencedColumns: ["supplierId"];
+          },
+          {
+            foreignKeyName: "receipt_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "partners_view";
+            referencedColumns: ["supplierId"];
+          },
+          {
+            foreignKeyName: "receipt_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "purchase_order_suppliers_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "receipt_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "suppliers_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "receipt_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      receiptLine: {
+        Row: {
+          createdAt: string;
+          createdBy: string;
+          id: string;
+          locationId: string | null;
+          partId: string;
+          quantity: number;
+          receiptId: string;
+          receivedComplete: boolean;
+          shelfId: string | null;
+          unitOfMeasure: string;
+          unitPrice: number;
+          updatedAt: string | null;
+          updatedBy: string | null;
+        };
+        Insert: {
+          createdAt?: string;
+          createdBy: string;
+          id?: string;
+          locationId?: string | null;
+          partId: string;
+          quantity: number;
+          receiptId: string;
+          receivedComplete?: boolean;
+          shelfId?: string | null;
+          unitOfMeasure: string;
+          unitPrice: number;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
+        };
+        Update: {
+          createdAt?: string;
+          createdBy?: string;
+          id?: string;
+          locationId?: string | null;
+          partId?: string;
+          quantity?: number;
+          receiptId?: string;
+          receivedComplete?: boolean;
+          shelfId?: string | null;
+          unitOfMeasure?: string;
+          unitPrice?: number;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "receiptLine_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "receiptLine_locationId_fkey";
+            columns: ["locationId"];
+            referencedRelation: "location";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "receiptLine_partId_fkey";
+            columns: ["partId"];
+            referencedRelation: "part";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "receiptLine_partId_fkey";
+            columns: ["partId"];
+            referencedRelation: "parts_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "receiptLine_receiptId_fkey";
+            columns: ["receiptId"];
+            referencedRelation: "receipt";
+            referencedColumns: ["receiptId"];
+          },
+          {
+            foreignKeyName: "receiptLine_shelfId_fkey";
+            columns: ["shelfId"];
+            referencedRelation: "shelf";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "receiptLine_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
       search: {
         Row: {
           description: string | null;
@@ -5232,6 +5423,15 @@ export interface Database {
         | "Reject"
         | "Request Approval";
       purchaseOrderType: "Draft" | "Purchase" | "Return";
+      receiptSourceDocument:
+        | "Sales Order"
+        | "Sales Return Order"
+        | "Purchase Order"
+        | "Purchase Return Order"
+        | "Inbound Transfer"
+        | "Outbound Transfer"
+        | "Manufacturing Consumption"
+        | "Manufacturing Output";
       searchEntity:
         | "Resource"
         | "Person"

@@ -1,3 +1,5 @@
+<p align="center"><a href="https://carbon.us.org" target="_blank"><img src="https://raw.githubusercontent.com/barbinbrad/carbon/master/www/public/logo-full.png" width="500" alt="Carbon Logo"></a></p>
+
 # Carbon ERP
 
 Carbon is a high permformance, open-source, single tenant (incomplete) ERP written in Typescript. It allows customers, suppliers, and employees to share a common platform for manufacturing.
@@ -14,7 +16,7 @@ It includes:
 ## Project Status
 
 - [x] Pre-Alpha: Developing foundation
-- [ ] Alpha: Heavy feature development
+- [ ] Alpha: Heavy feature development and refinement
 - [ ] Public Alpha: Ready for use. But go easy on us, there'll be bugs.
 - [ ] Public Beta: Stable enough for most non-enterprise use-cases.
 - [ ] Public: Production-ready

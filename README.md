@@ -1,4 +1,4 @@
-<p align="center"><a href="https://carbon.us.org" target="_blank"><img src="https://raw.githubusercontent.com/barbinbrad/carbon/master/www/public/logo-full.png" width="500" alt="Carbon Logo"></a></p>
+<p align="center"><a href="https://carbon.us.org" target="_blank"><img src="https://raw.githubusercontent.com/barbinbrad/carbon/main/www/public/logo-full.png" width="500" alt="Carbon Logo"></a></p>
 
 # Carbon ERP
 

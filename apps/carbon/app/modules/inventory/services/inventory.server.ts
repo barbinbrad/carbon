@@ -35,7 +35,7 @@ export async function getReceipts(
     query = query.eq("sourceDocument", args.type);
   }
 
-  query = setGenericQueryFilters(query, args, "name");
+  query = setGenericQueryFilters(query, args, "receiptId", false);
   return query;
 }
 

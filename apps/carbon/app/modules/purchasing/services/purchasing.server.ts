@@ -125,7 +125,7 @@ export async function getPurchaseOrders(
     query = query.eq("supplierId", args.supplierId);
   }
 
-  query = setGenericQueryFilters(query, args, "purchaseOrderId");
+  query = setGenericQueryFilters(query, args, "purchaseOrderId", false);
   return query;
 }
 

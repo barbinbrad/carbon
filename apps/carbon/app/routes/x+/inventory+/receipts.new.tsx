@@ -2,13 +2,13 @@ import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
-import { useRouteData } from "~/hooks";
-import type { ShippingCarrier } from "~/modules/inventory";
+import type { ReceiptSourceDocument } from "~/modules/inventory";
 import {
-  ShippingMethodForm,
-  shippingMethodValidator,
-  upsertShippingMethod,
+  ReceiptForm,
+  receiptValidator,
+  upsertReceipt,
 } from "~/modules/inventory";
+import { getNextSequence, rollbackNextSequence } from "~/modules/settings";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
@@ -28,64 +28,52 @@ export async function action({ request }: ActionArgs) {
     create: "inventory",
   });
 
-  const validation = await shippingMethodValidator.validate(
-    await request.formData()
-  );
+  const validation = await receiptValidator.validate(await request.formData());
 
   if (validation.error) {
     return validationError(validation.error);
   }
 
-  const { name, carrier, carrierAccountId, trackingUrl } = validation.data;
+  const { id, receiptId, ...data } = validation.data;
 
-  const insertShippingMethod = await upsertShippingMethod(client, {
-    name,
-    carrier,
-    carrierAccountId,
-    trackingUrl,
-    createdBy: userId,
-  });
-  if (insertShippingMethod.error) {
-    return json(
-      {},
+  const nextSequence = await getNextSequence(client, "receipt", userId);
+  if (nextSequence.error) {
+    return redirect(
+      "/x/receipts/new",
       await flash(
         request,
-        error(insertShippingMethod.error, "Failed to insert shipping method")
+        error(nextSequence.error, "Failed to get next sequence")
       )
     );
   }
 
-  const shippingMethodId = insertShippingMethod.data[0]?.id;
-  if (!shippingMethodId) {
+  const insertReceipt = await upsertReceipt(client, {
+    ...data,
+    receiptId: nextSequence.data,
+    createdBy: userId,
+  });
+  if (insertReceipt.error) {
+    await rollbackNextSequence(client, "receipt", userId);
     return json(
       {},
       await flash(
         request,
-        error(insertShippingMethod, "Failed to insert shipping method")
+        error(insertReceipt.error, "Failed to insert receipt")
       )
     );
   }
 
   return redirect(
-    "/x/inventory/shipping-methods",
-    await flash(request, success("Shipping method created"))
+    "/x/inventory/receipts",
+    await flash(request, success("Receipt created"))
   );
 }
 
-export default function NewShippingMethodsRoute() {
-  const routeData = useRouteData<{
-    accounts: { name: string; number: string }[];
-  }>("/x/inventory/shipping-methods");
-
+export default function NewReceiptsRoute() {
   const initialValues = {
-    name: "",
-    carrier: "" as ShippingCarrier,
+    sourceDocument: "Purchase Order" as ReceiptSourceDocument,
+    sourceDocumentId: "",
   };
 
-  return (
-    <ShippingMethodForm
-      initialValues={initialValues}
-      accounts={routeData?.accounts ?? []}
-    />
-  );
+  return <ReceiptForm initialValues={initialValues} />;
 }

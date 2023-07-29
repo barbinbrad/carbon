@@ -4,7 +4,10 @@ import type { TypeOfValidator } from "~/types/validators";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
 import { sanitize } from "~/utils/supabase";
-import type { shippingMethodValidator } from "./inventory.form";
+import type {
+  receiptValidator,
+  shippingMethodValidator,
+} from "./inventory.form";
 
 export async function deleteShippingMethod(
   client: SupabaseClient<Database>,
@@ -85,6 +88,29 @@ export async function getShippingTermsList(client: SupabaseClient<Database>) {
     .select("id, name")
     .eq("active", true)
     .order("name", { ascending: true });
+}
+
+export async function upsertReceipt(
+  client: SupabaseClient<Database>,
+  receipt:
+    | (Omit<TypeOfValidator<typeof receiptValidator>, "id" | "receiptId"> & {
+        receiptId: string;
+        createdBy: string;
+      })
+    | (Omit<TypeOfValidator<typeof receiptValidator>, "id" | "receiptId"> & {
+        id: string;
+        receiptId: string;
+        updatedBy: string;
+      })
+) {
+  if ("createdBy" in receipt) {
+    return client.from("receipt").insert([receipt]).select("id");
+  }
+  return client
+    .from("receipt")
+    .update(sanitize(receipt))
+    .eq("id", receipt.id)
+    .select("id");
 }
 
 export async function upsertShippingMethod(

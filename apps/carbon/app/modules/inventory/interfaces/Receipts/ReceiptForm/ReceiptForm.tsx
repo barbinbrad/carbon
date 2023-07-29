@@ -14,11 +14,11 @@ import { useNavigate } from "@remix-run/react";
 import { ValidatedForm } from "remix-validated-form";
 import { Hidden, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
-import { shippingMethodValidator } from "~/modules/inventory";
+import { receiptValidator } from "~/modules/inventory";
 import type { TypeOfValidator } from "~/types/validators";
 
 type ReceiptFormProps = {
-  initialValues: TypeOfValidator<typeof shippingMethodValidator>;
+  initialValues: TypeOfValidator<typeof receiptValidator>;
 };
 
 const ReceiptForm = ({ initialValues }: ReceiptFormProps) => {
@@ -34,7 +34,7 @@ const ReceiptForm = ({ initialValues }: ReceiptFormProps) => {
   return (
     <Drawer onClose={onClose} isOpen={true} size="full">
       <ValidatedForm
-        validator={shippingMethodValidator}
+        validator={receiptValidator}
         method="post"
         action={
           isEditing

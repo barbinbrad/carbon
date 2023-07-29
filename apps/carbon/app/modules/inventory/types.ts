@@ -5,6 +5,9 @@ export type Receipt = NonNullable<
   Awaited<ReturnType<typeof getReceipts>>["data"]
 >[number];
 
+export type ReceiptSourceDocument =
+  Database["public"]["Enums"]["receiptSourceDocument"];
+
 export interface ReceiptListItem {
   partId: string;
   vendorPartId?: string;

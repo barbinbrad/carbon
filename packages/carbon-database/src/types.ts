@@ -3327,7 +3327,7 @@ export interface Database {
           receiptId: string;
           sourceDocument: Database["public"]["Enums"]["receiptSourceDocument"];
           sourceDocumentId: string;
-          supplierId: string;
+          supplierId: string | null;
           supplierInvoiceNumber: string | null;
           supplierShipmentNumber: string | null;
           updatedAt: string | null;
@@ -3343,7 +3343,7 @@ export interface Database {
           receiptId: string;
           sourceDocument: Database["public"]["Enums"]["receiptSourceDocument"];
           sourceDocumentId: string;
-          supplierId: string;
+          supplierId?: string | null;
           supplierInvoiceNumber?: string | null;
           supplierShipmentNumber?: string | null;
           updatedAt?: string | null;
@@ -3359,7 +3359,7 @@ export interface Database {
           receiptId?: string;
           sourceDocument?: Database["public"]["Enums"]["receiptSourceDocument"];
           sourceDocumentId?: string;
-          supplierId?: string;
+          supplierId?: string | null;
           supplierInvoiceNumber?: string | null;
           supplierShipmentNumber?: string | null;
           updatedAt?: string | null;

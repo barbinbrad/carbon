@@ -5478,7 +5478,7 @@ CREATE TABLE "receipt" (
   "locationId" TEXT,
   "sourceDocument" "receiptSourceDocument" NOT NULL,
   "sourceDocumentId" TEXT NOT NULL,
-  "supplierId" TEXT NOT NULL,
+  "supplierId" TEXT,
   "supplierInvoiceNumber" TEXT,
   "supplierShipmentNumber" TEXT,
   "postingDate" DATE,

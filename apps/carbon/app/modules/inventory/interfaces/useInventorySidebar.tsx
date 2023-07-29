@@ -7,7 +7,7 @@ const inventoryRoutes: AuthenticatedRouteGroup[] = [
     routes: [
       {
         name: "Receipts",
-        to: "/x/inventory/reciepts",
+        to: "/x/inventory/receipts",
       },
       {
         name: "Shipments",

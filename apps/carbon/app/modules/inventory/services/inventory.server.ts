@@ -16,6 +16,29 @@ export async function deleteShippingMethod(
     .eq("id", shippingMethodId);
 }
 
+export async function getReceipts(
+  client: SupabaseClient<Database>,
+  args: GenericQueryFilters & {
+    name: string | null;
+    type: string | null;
+  }
+) {
+  let query = client.from("receipt").select("*", {
+    count: "exact",
+  });
+
+  if (args.name) {
+    query = query.ilike("sourceDocumentId", `%${args.name}%`);
+  }
+
+  if (args.type) {
+    query = query.eq("sourceDocument", args.type);
+  }
+
+  query = setGenericQueryFilters(query, args, "name");
+  return query;
+}
+
 export async function getShippingMethod(
   client: SupabaseClient<Database>,
   shippingMethodId: string

@@ -3,11 +3,10 @@ import type { LoaderArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
-import { getAccountsList } from "~/modules/accounting";
 import {
-  ShippingMethodsTable,
-  ShippingMethodsTableFilters,
-  getShippingMethods,
+  ReceiptsTable,
+  ReceiptsTableFilters,
+  getReceipts,
 } from "~/modules/inventory";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
@@ -23,38 +22,39 @@ export async function loader({ request }: LoaderArgs) {
   const url = new URL(request.url);
   const searchParams = new URLSearchParams(url.search);
   const name = searchParams.get("name");
+  const type = searchParams.get("type");
   const { limit, offset, sorts } = getGenericQueryFilters(searchParams);
 
-  const [shippingMethods] = await Promise.all([
-    getShippingMethods(client, {
+  const [receipts] = await Promise.all([
+    getReceipts(client, {
       name,
+      type,
       limit,
       offset,
       sorts,
     }),
-    getAccountsList(client),
   ]);
 
-  if (shippingMethods.error) {
+  if (receipts.error) {
     return redirect(
       "/x/inventory",
-      await flash(request, error(null, "Error loading shipping methods"))
+      await flash(request, error(null, "Error loading receipts"))
     );
   }
 
   return json({
-    shippingMethods: shippingMethods.data ?? [],
-    count: shippingMethods.count ?? 0,
+    receipts: receipts.data ?? [],
+    count: receipts.count ?? 0,
   });
 }
 
-export default function ShippingMethodsRoute() {
-  const { shippingMethods, count } = useLoaderData<typeof loader>();
+export default function ReceiptsRoute() {
+  const { receipts, count } = useLoaderData<typeof loader>();
 
   return (
     <VStack w="full" h="full" spacing={0}>
-      <ShippingMethodsTableFilters />
-      <ShippingMethodsTable data={shippingMethods ?? []} count={count ?? 0} />
+      <ReceiptsTableFilters />
+      <ReceiptsTable data={receipts ?? []} count={count ?? 0} />
       <Outlet />
     </VStack>
   );

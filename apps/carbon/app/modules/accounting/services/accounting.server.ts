@@ -136,17 +136,14 @@ export async function getAccounts(
 
 export async function getAccountsList(
   client: SupabaseClient<Database>,
-  type: string | null
+  type = "Posting"
 ) {
-  let query = client.from("account").select("number, name").eq("active", true);
-
-  if (type) {
-    query = query.eq("type", type);
-  }
-
-  query = query.order("name", { ascending: true });
-
-  return query;
+  return client
+    .from("account")
+    .select("number, name")
+    .eq("active", true)
+    .eq("type", type)
+    .order("name", { ascending: true });
 }
 
 export async function getAccountCategories(

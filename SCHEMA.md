@@ -4753,7 +4753,7 @@ CREATE TABLE "sequence" (
 );
 
 INSERT INTO "sequence" ("table", "name", "prefix", "suffix", "next", "size", "step")
-VALUES ('purchaseOrder', 'Purchase Order', 'PO', NULL, 0, 5, 1);
+VALUES ('purchaseOrder', 'Purchase Order', 'PO', NULL, 0, 9, 1);
 
 
 ```
@@ -5500,6 +5500,9 @@ CREATE INDEX "receipt_receiptId_idx" ON "receipt" ("receiptId");
 CREATE INDEX "receipt_locationId_idx" ON "receipt" ("locationId");
 CREATE INDEX "receipt_sourceDocumentId_idx" ON "receipt" ("sourceDocumentId");
 CREATE INDEX "receipt_supplierId_idx" ON "receipt" ("supplierId");
+
+INSERT INTO "sequence" ("table", "name", "prefix", "suffix", "next", "size", "step")
+VALUES ('receipt', 'Receipt', 'RE', NULL, 0, 9, 1);
 
 CREATE TABLE "receiptLine" (
   "id" TEXT NOT NULL DEFAULT xid(),

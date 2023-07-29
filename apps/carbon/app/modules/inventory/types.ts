@@ -1,5 +1,9 @@
 import type { Database } from "@carbon/database";
-import type { getShippingMethods } from "./services";
+import type { getReceipts, getShippingMethods } from "./services";
+
+export type Receipt = NonNullable<
+  Awaited<ReturnType<typeof getReceipts>>["data"]
+>[number];
 
 export interface ReceiptListItem {
   partId: string;

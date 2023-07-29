@@ -3,6 +3,7 @@ import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
+import { useRouteData } from "~/hooks";
 import type { ShippingCarrier } from "~/modules/inventory";
 import {
   ShippingMethodForm,
@@ -72,6 +73,9 @@ export async function action({ request }: ActionArgs) {
 
 export default function EditShippingMethodsRoute() {
   const { shippingMethod } = useLoaderData<typeof loader>();
+  const routeData = useRouteData<{
+    accounts: { name: string; number: string }[];
+  }>("/x/inventory/shipping-methods");
 
   const initialValues = {
     id: shippingMethod?.id ?? undefined,
@@ -81,5 +85,10 @@ export default function EditShippingMethodsRoute() {
     trackingUrl: shippingMethod?.trackingUrl ?? "",
   };
 
-  return <ShippingMethodForm initialValues={initialValues} />;
+  return (
+    <ShippingMethodForm
+      initialValues={initialValues}
+      accounts={routeData?.accounts ?? []}
+    />
+  );
 }

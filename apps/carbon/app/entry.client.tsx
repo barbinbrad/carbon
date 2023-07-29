@@ -25,10 +25,3 @@ if (typeof requestIdleCallback === "function") {
   // https://caniuse.com/requestidlecallback
   setTimeout(hydrate, 1);
 }
-
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    // we will register it after the page complete the load
-    navigator.serviceWorker.register("/serviceWorker.js");
-  });
-}

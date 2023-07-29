@@ -1,5 +1,5 @@
 import { redirect } from "@remix-run/node";
 
 export async function loader() {
-  return redirect("/x/inventory/shipping-methods");
+  return redirect("/x/inventory/receipts");
 }

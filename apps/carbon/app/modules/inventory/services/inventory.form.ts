@@ -2,21 +2,22 @@ import { withZod } from "@remix-validated-form/with-zod";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
 
-const receiptSourceDocumentType = [
-  "Sales Order",
-  "Sales Return Order",
+export const receiptSourceDocumentType = [
+  // "Sales Order",
+  // "Sales Return Order",
   "Purchase Order",
-  "Purchase Return Order",
-  "Inbound Transfer",
-  "Outbound Transfer",
-  "Manufacturing Consumption",
-  "Manufacturing Output",
+  // "Purchase Return Order",
+  // "Inbound Transfer",
+  // "Outbound Transfer",
+  // "Manufacturing Consumption",
+  // "Manufacturing Output",
 ] as const;
 
 export const receiptValidator = withZod(
   z.object({
     id: zfd.text(z.string().optional()),
     receiptId: zfd.text(z.string().optional()),
+    locationId: zfd.text(z.string().optional()),
     sourceDocument: z.enum(receiptSourceDocumentType, {
       errorMap: (issue, ctx) => ({
         message: "Source Document is required",
@@ -26,9 +27,8 @@ export const receiptValidator = withZod(
       .string()
       .min(1, { message: "Source Document ID is required" }),
     supplierId: zfd.text(z.string().optional()),
-    supplierInvoiceNumber: zfd.text(z.string().optional()),
-    supplierShipmentNumber: zfd.text(z.string().optional()),
     expectedDeliveryDate: zfd.text(z.string().optional()),
+    postingDate: zfd.text(z.string().optional()),
   })
 );
 

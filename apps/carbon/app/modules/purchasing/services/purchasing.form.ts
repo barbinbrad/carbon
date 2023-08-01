@@ -32,6 +32,7 @@ export const purchaseOrderValidator = withZod(
     supplierId: z.string().min(36, { message: "Supplier is required" }),
     supplierContactId: zfd.text(z.string().optional()),
     supplierReference: zfd.text(z.string().optional()),
+    released: zfd.checkbox(),
     closed: zfd.checkbox(),
   })
 );

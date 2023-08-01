@@ -122,6 +122,12 @@ const PurchaseOrderForm = ({
               {isEditing && (
                 <>
                   <Boolean
+                    name="released"
+                    label="Released"
+                    isReadOnly={isSupplier}
+                    isDisabled={isSupplier}
+                  />
+                  <Boolean
                     name="closed"
                     label="Closed"
                     isReadOnly={isSupplier}

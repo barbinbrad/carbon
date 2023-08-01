@@ -17,5 +17,5 @@ CREATE TABLE "sequence" (
 );
 
 INSERT INTO "sequence" ("table", "name", "prefix", "suffix", "next", "size", "step")
-VALUES ('purchaseOrder', 'Purchase Order', 'PO', NULL, 0, 9, 1);
+VALUES ('purchaseOrder', 'Purchase Order', 'PO', NULL, 0, 6, 1);
 

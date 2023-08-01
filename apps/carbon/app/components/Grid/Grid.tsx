@@ -351,8 +351,6 @@ const Grid = <T extends object>({
         w="full"
         h="full"
         bg={useColor("white")}
-        overflow="scroll"
-        style={{ contain: "strict" }}
         ref={tableContainerRef}
         onKeyDown={onKeyDown}
       >

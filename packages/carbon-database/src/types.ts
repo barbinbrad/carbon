@@ -1229,6 +1229,12 @@ export interface Database {
             referencedColumns: ["id"];
           },
           {
+            foreignKeyName: "employeeJob_locationId_fkey";
+            columns: ["locationId"];
+            referencedRelation: "purchase_order_view";
+            referencedColumns: ["locationId"];
+          },
+          {
             foreignKeyName: "employeeJob_managerId_fkey";
             columns: ["managerId"];
             referencedRelation: "user";
@@ -1419,6 +1425,12 @@ export interface Database {
             columns: ["locationId"];
             referencedRelation: "location";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "equipment_locationId_fkey";
+            columns: ["locationId"];
+            referencedRelation: "purchase_order_view";
+            referencedColumns: ["locationId"];
           },
           {
             foreignKeyName: "equipment_updatedBy_fkey";
@@ -2237,6 +2249,12 @@ export interface Database {
             referencedColumns: ["id"];
           },
           {
+            foreignKeyName: "partLedger_locationId_fkey";
+            columns: ["locationId"];
+            referencedRelation: "purchase_order_view";
+            referencedColumns: ["locationId"];
+          },
+          {
             foreignKeyName: "partLedger_partId_fkey";
             columns: ["partId"];
             referencedRelation: "part";
@@ -2808,6 +2826,7 @@ export interface Database {
           notes: string | null;
           orderDate: string;
           purchaseOrderId: string;
+          released: boolean;
           status: Database["public"]["Enums"]["purchaseOrderApprovalStatus"];
           supplierContactId: string | null;
           supplierId: string;
@@ -2826,6 +2845,7 @@ export interface Database {
           notes?: string | null;
           orderDate?: string;
           purchaseOrderId: string;
+          released?: boolean;
           status: Database["public"]["Enums"]["purchaseOrderApprovalStatus"];
           supplierContactId?: string | null;
           supplierId: string;
@@ -2844,6 +2864,7 @@ export interface Database {
           notes?: string | null;
           orderDate?: string;
           purchaseOrderId?: string;
+          released?: boolean;
           status?: Database["public"]["Enums"]["purchaseOrderApprovalStatus"];
           supplierContactId?: string | null;
           supplierId?: string;
@@ -2988,6 +3009,12 @@ export interface Database {
             columns: ["locationId"];
             referencedRelation: "location";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrderDelivery_locationId_fkey";
+            columns: ["locationId"];
+            referencedRelation: "purchase_order_view";
+            referencedColumns: ["locationId"];
           },
           {
             foreignKeyName: "purchaseOrderDelivery_shippingMethodId_fkey";
@@ -3320,7 +3347,6 @@ export interface Database {
         Row: {
           createdAt: string;
           createdBy: string;
-          expectedDeliveryDate: string | null;
           id: string;
           locationId: string | null;
           postingDate: string | null;
@@ -3328,15 +3354,12 @@ export interface Database {
           sourceDocument: Database["public"]["Enums"]["receiptSourceDocument"];
           sourceDocumentId: string;
           supplierId: string | null;
-          supplierInvoiceNumber: string | null;
-          supplierShipmentNumber: string | null;
           updatedAt: string | null;
           updatedBy: string | null;
         };
         Insert: {
           createdAt?: string;
           createdBy: string;
-          expectedDeliveryDate?: string | null;
           id?: string;
           locationId?: string | null;
           postingDate?: string | null;
@@ -3344,15 +3367,12 @@ export interface Database {
           sourceDocument: Database["public"]["Enums"]["receiptSourceDocument"];
           sourceDocumentId: string;
           supplierId?: string | null;
-          supplierInvoiceNumber?: string | null;
-          supplierShipmentNumber?: string | null;
           updatedAt?: string | null;
           updatedBy?: string | null;
         };
         Update: {
           createdAt?: string;
           createdBy?: string;
-          expectedDeliveryDate?: string | null;
           id?: string;
           locationId?: string | null;
           postingDate?: string | null;
@@ -3360,8 +3380,6 @@ export interface Database {
           sourceDocument?: Database["public"]["Enums"]["receiptSourceDocument"];
           sourceDocumentId?: string;
           supplierId?: string | null;
-          supplierInvoiceNumber?: string | null;
-          supplierShipmentNumber?: string | null;
           updatedAt?: string | null;
           updatedBy?: string | null;
         };
@@ -3377,6 +3395,12 @@ export interface Database {
             columns: ["locationId"];
             referencedRelation: "location";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "receipt_locationId_fkey";
+            columns: ["locationId"];
+            referencedRelation: "purchase_order_view";
+            referencedColumns: ["locationId"];
           },
           {
             foreignKeyName: "receipt_supplierId_fkey";
@@ -3474,6 +3498,12 @@ export interface Database {
             columns: ["locationId"];
             referencedRelation: "location";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "receiptLine_locationId_fkey";
+            columns: ["locationId"];
+            referencedRelation: "purchase_order_view";
+            referencedColumns: ["locationId"];
           },
           {
             foreignKeyName: "receiptLine_partId_fkey";
@@ -3625,6 +3655,12 @@ export interface Database {
             referencedColumns: ["id"];
           },
           {
+            foreignKeyName: "shelf_locationId_fkey";
+            columns: ["locationId"];
+            referencedRelation: "purchase_order_view";
+            referencedColumns: ["locationId"];
+          },
+          {
             foreignKeyName: "shelf_updatedBy_fkey";
             columns: ["updatedBy"];
             referencedRelation: "user";
@@ -3690,6 +3726,12 @@ export interface Database {
             columns: ["locationId"];
             referencedRelation: "location";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "shifts_locationId_fkey";
+            columns: ["locationId"];
+            referencedRelation: "purchase_order_view";
+            referencedColumns: ["locationId"];
           }
         ];
       };
@@ -4602,6 +4644,12 @@ export interface Database {
             referencedColumns: ["id"];
           },
           {
+            foreignKeyName: "warehouse_locationId_fkey";
+            columns: ["locationId"];
+            referencedRelation: "purchase_order_view";
+            referencedColumns: ["locationId"];
+          },
+          {
             foreignKeyName: "warehouse_updatedBy_fkey";
             columns: ["updatedBy"];
             referencedRelation: "user";
@@ -4667,6 +4715,12 @@ export interface Database {
             columns: ["locationId"];
             referencedRelation: "location";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "workCell_locationId_fkey";
+            columns: ["locationId"];
+            referencedRelation: "purchase_order_view";
+            referencedColumns: ["locationId"];
           },
           {
             foreignKeyName: "workCell_workCellTypeId_fkey";
@@ -5084,6 +5138,7 @@ export interface Database {
           favorite: boolean | null;
           id: string | null;
           lineCount: number | null;
+          locationId: string | null;
           locationName: string | null;
           notes: string | null;
           orderDate: string | null;

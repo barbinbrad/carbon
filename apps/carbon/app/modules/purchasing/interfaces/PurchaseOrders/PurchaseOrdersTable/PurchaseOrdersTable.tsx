@@ -3,6 +3,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { BsPencilSquare, BsStar, BsStarFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
+import { MdCallReceived } from "react-icons/md";
 import { Avatar, Table } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions } from "~/hooks";
@@ -26,7 +27,7 @@ const PurchaseOrdersTable = memo(
       setRows(data);
     }, [data]);
 
-    const { edit, favorite } = usePurchaseOrder();
+    const { edit, favorite, receive } = usePurchaseOrder();
 
     const [selectedPurchaseOrder, setSelectedPurchaseOrder] =
       useState<PurchaseOrder | null>(null);
@@ -158,6 +159,14 @@ const PurchaseOrdersTable = memo(
             Favorite
           </MenuItem>
           <MenuItem
+            icon={<MdCallReceived />}
+            onClick={() => {
+              receive(row);
+            }}
+          >
+            Receive
+          </MenuItem>
+          <MenuItem
             icon={<IoMdTrash />}
             isDisabled={!permissions.can("delete", "purchasing")}
             onClick={() => {
@@ -169,7 +178,7 @@ const PurchaseOrdersTable = memo(
           </MenuItem>
         </>
       );
-    }, [closePurchaseOrderModal, edit, onFavorite, permissions]);
+    }, [closePurchaseOrderModal, edit, onFavorite, permissions, receive]);
 
     return (
       <>

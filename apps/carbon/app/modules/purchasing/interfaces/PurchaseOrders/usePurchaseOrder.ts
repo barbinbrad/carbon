@@ -51,8 +51,17 @@ export const usePurchaseOrder = () => {
     [insertTransaction, supabase, user?.id]
   );
 
+  const receive = useCallback(
+    (purchaseOrder: PurchaseOrder) =>
+      navigate(
+        `/x/inventory/receipts/new?sourceDocument=Purchase Order&sourceDocumentId=${purchaseOrder.id}`
+      ),
+    [navigate]
+  );
+
   return {
     edit,
     favorite,
+    receive,
   };
 };

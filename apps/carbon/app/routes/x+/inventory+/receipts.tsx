@@ -8,6 +8,8 @@ import {
   ReceiptsTableFilters,
   getReceipts,
 } from "~/modules/inventory";
+import { getSuppliersList } from "~/modules/purchasing";
+import { getLocationsList } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { getGenericQueryFilters } from "~/utils/query";
@@ -25,7 +27,7 @@ export async function loader({ request }: LoaderArgs) {
   const type = searchParams.get("type");
   const { limit, offset, sorts } = getGenericQueryFilters(searchParams);
 
-  const [receipts] = await Promise.all([
+  const [receipts, suppliers, locations] = await Promise.all([
     getReceipts(client, {
       name,
       type,
@@ -33,6 +35,8 @@ export async function loader({ request }: LoaderArgs) {
       offset,
       sorts,
     }),
+    getSuppliersList(client),
+    getLocationsList(client),
   ]);
 
   if (receipts.error) {
@@ -45,6 +49,8 @@ export async function loader({ request }: LoaderArgs) {
   return json({
     receipts: receipts.data ?? [],
     count: receipts.count ?? 0,
+    locations: locations.data ?? [],
+    suppliers: suppliers.data ?? [],
   });
 }
 

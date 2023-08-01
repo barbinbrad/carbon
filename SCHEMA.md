@@ -4473,6 +4473,7 @@ CREATE TABLE "purchaseOrder" (
   "supplierId" TEXT NOT NULL,
   "supplierContactId" TEXT,
   "supplierReference" TEXT,
+  "released" BOOLEAN NOT NULL DEFAULT FALSE,
   "closed" BOOLEAN NOT NULL DEFAULT FALSE,
   "closedAt" DATE,
   "closedBy" TEXT,
@@ -4681,6 +4682,7 @@ CREATE VIEW "purchase_order_view" AS
     pd."receiptPromisedDate",
     pd."dropShipment",
     pol."lineCount",
+    l."id" AS "locationId",
     l."name" AS "locationName",
     s."name" AS "supplierName",
     u."avatarUrl" AS "createdByAvatar",
@@ -4753,7 +4755,7 @@ CREATE TABLE "sequence" (
 );
 
 INSERT INTO "sequence" ("table", "name", "prefix", "suffix", "next", "size", "step")
-VALUES ('purchaseOrder', 'Purchase Order', 'PO', NULL, 0, 9, 1);
+VALUES ('purchaseOrder', 'Purchase Order', 'PO', NULL, 0, 6, 1);
 
 
 ```
@@ -5479,10 +5481,7 @@ CREATE TABLE "receipt" (
   "sourceDocument" "receiptSourceDocument" NOT NULL,
   "sourceDocumentId" TEXT NOT NULL,
   "supplierId" TEXT,
-  "supplierInvoiceNumber" TEXT,
-  "supplierShipmentNumber" TEXT,
   "postingDate" DATE,
-  "expectedDeliveryDate" DATE,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   "createdBy" TEXT NOT NULL,
   "updatedAt" TIMESTAMP WITH TIME ZONE,
@@ -5502,7 +5501,7 @@ CREATE INDEX "receipt_sourceDocumentId_idx" ON "receipt" ("sourceDocumentId");
 CREATE INDEX "receipt_supplierId_idx" ON "receipt" ("supplierId");
 
 INSERT INTO "sequence" ("table", "name", "prefix", "suffix", "next", "size", "step")
-VALUES ('receipt', 'Receipt', 'RE', NULL, 0, 9, 1);
+VALUES ('receipt', 'Receipt', 'RE', NULL, 0, 6, 1);
 
 CREATE TABLE "receiptLine" (
   "id" TEXT NOT NULL DEFAULT xid(),

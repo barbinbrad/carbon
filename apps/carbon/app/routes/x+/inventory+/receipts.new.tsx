@@ -1,3 +1,4 @@
+import { getLocalTimeZone, today } from "@internationalized/date";
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
@@ -73,6 +74,7 @@ export default function NewReceiptsRoute() {
   const initialValues = {
     sourceDocument: "Purchase Order" as ReceiptSourceDocument,
     sourceDocumentId: "",
+    postingDate: today(getLocalTimeZone()).toString(),
   };
 
   return <ReceiptForm initialValues={initialValues} />;

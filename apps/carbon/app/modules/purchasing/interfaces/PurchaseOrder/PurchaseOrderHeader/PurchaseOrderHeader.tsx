@@ -82,7 +82,7 @@ const PartPreview = () => {
             alignItems="start"
             justifyContent="space-between"
           >
-            <Text color="gray.500">Order Status</Text>
+            <Text color="gray.500">Approval Status</Text>
             <Text fontWeight="bold">{routeData?.purchaseOrder?.status}</Text>
           </Stack>
         </Stack>

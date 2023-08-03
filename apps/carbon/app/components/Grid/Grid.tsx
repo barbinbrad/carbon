@@ -437,6 +437,20 @@ const Grid = <T extends object>({
                 />
               );
             })}
+            {rows.length === 0 && !onNewRow && (
+              <Tr
+                h={10}
+                _hover={{
+                  backgroundColor: "gray.100",
+                }}
+              >
+                <Td colSpan={24}>
+                  <Text color="gray.500" w="full" textAlign="center">
+                    No Data
+                  </Text>
+                </Td>
+              </Tr>
+            )}
             {onNewRow && (
               <Tr
                 onClick={onNewRow}

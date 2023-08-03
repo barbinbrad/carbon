@@ -27,8 +27,21 @@ export const receiptValidator = withZod(
       .string()
       .min(1, { message: "Source Document ID is required" }),
     supplierId: zfd.text(z.string().optional()),
-    expectedDeliveryDate: zfd.text(z.string().optional()),
-    postingDate: zfd.text(z.string().optional()),
+    receiptItems: z.array(
+      z.object({
+        partId: z.string().min(1, { message: "Part ID is required" }),
+        description: z.string().min(1, { message: "Description is required" }),
+        quantity: z.number().min(0, { message: "Quantity is required" }),
+        unitCost: z
+          .number()
+          .min(0.0000001, { message: "Unit Cost is required" }),
+        location: zfd.text(z.string().optional()),
+        shelfId: zfd.text(z.string().optional()),
+        unitOfMeasure: z
+          .string()
+          .min(1, { message: "Unit of Measure is required" }),
+      })
+    ),
   })
 );
 

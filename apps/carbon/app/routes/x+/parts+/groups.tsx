@@ -34,6 +34,8 @@ export async function loader({ request }: LoaderArgs) {
     }),
     getAccountsList(client),
   ]);
+
+  console.log({ partGroups, accounts });
   if (partGroups.error) {
     return redirect(
       "/x/parts",

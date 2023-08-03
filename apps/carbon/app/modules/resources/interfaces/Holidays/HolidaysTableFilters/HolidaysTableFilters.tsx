@@ -34,7 +34,7 @@ const HolidaysTableFilters = ({ years }: HolidaysTableFiltersProps) => {
           param="name"
           size="sm"
           minW={180}
-          placeholder="Filter by name"
+          placeholder="Search"
         />
         <Select
           // @ts-ignore

@@ -47,7 +47,7 @@ const SuppliersTableFilters = ({
           param="name"
           size="sm"
           minW={180}
-          placeholder="Filter by name"
+          placeholder="Search"
         />
         {supplierTypeOptions.length > 0 && (
           <Select

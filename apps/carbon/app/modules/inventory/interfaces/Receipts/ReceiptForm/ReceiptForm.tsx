@@ -12,12 +12,12 @@ import {
   HStack,
   Grid,
   VStack,
+  FormLabel,
 } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import { useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import {
-  DatePicker,
   Hidden,
   Input,
   Select,
@@ -52,6 +52,10 @@ const ReceiptForm = ({ initialValues }: ReceiptFormProps) => {
     locations: ListItem[];
   }>("/x/inventory/receipts");
 
+  const [receiptItems, setReceiptItems] = useState<ReceiptListItem[]>(
+    initialValues.receiptItems ?? []
+  );
+
   const [locationId, setLocationId] = useState<string | null>(
     initialValues.locationId ?? null
   );
@@ -67,10 +71,12 @@ const ReceiptForm = ({ initialValues }: ReceiptFormProps) => {
     initialValues.sourceDocumentId ?? null
   );
 
-  const { sourceDocuments } = useReceiptForm({
+  const { receiptItemColumns, sourceDocuments } = useReceiptForm({
+    locations: routeData?.locations ?? [],
     sourceDocument,
     sourceDocumentId,
     setLocationId,
+    setReceiptItems,
     setSourceDocument,
     setSourceDocumentId,
     setSupplierId,
@@ -114,16 +120,17 @@ const ReceiptForm = ({ initialValues }: ReceiptFormProps) => {
                   >
                     <Input name="receiptId" label="Receipt ID" isDisabled />
                     <SelectControlled
-                      name="locationId"
-                      label="Location"
+                      name="supplierId"
+                      label="Supplier"
                       options={
-                        routeData?.locations?.map((l) => ({
+                        routeData?.suppliers?.map((l) => ({
                           label: l.name,
                           value: l.id,
                         })) ?? []
                       }
-                      value={locationId ?? undefined}
-                      onChange={(newValue) => setLocationId(newValue as string)}
+                      value={supplierId ?? undefined}
+                      onChange={(newValue) => console.log(newValue)}
+                      isReadOnly
                     />
                     <Select
                       name="sourceDocument"
@@ -151,33 +158,28 @@ const ReceiptForm = ({ initialValues }: ReceiptFormProps) => {
                         setSourceDocumentId(newValue as string)
                       }
                     />
-                    <DatePicker name="postingDate" label="Posting Date" />
                     <SelectControlled
-                      name="supplierId"
-                      label="Supplier"
+                      name="locationId"
+                      label="Location"
                       options={
-                        routeData?.suppliers?.map((l) => ({
+                        routeData?.locations?.map((l) => ({
                           label: l.name,
                           value: l.id,
                         })) ?? []
                       }
-                      value={supplierId ?? undefined}
-                      onChange={(newValue) => console.log(newValue)}
-                      isReadOnly
+                      value={locationId ?? undefined}
+                      onChange={(newValue) => setLocationId(newValue as string)}
                     />
                   </Grid>
-                  <DataGrid<ReceiptListItem>
-                    data={[]}
-                    columns={[
-                      {
-                        id: "partId",
-                        header: "Part",
-                        cell: (item) => item.getValue(),
-                      },
-                    ]}
-                    canEdit={true}
-                    editableComponents={{}}
-                  />
+                  <VStack spacing={0} w="full" alignItems="start">
+                    <FormLabel>Receipt Lines</FormLabel>
+                    <DataGrid<ReceiptListItem>
+                      data={receiptItems}
+                      columns={receiptItemColumns}
+                      canEdit={true}
+                      editableComponents={{}}
+                    />
+                  </VStack>
                 </VStack>
               </Box>
               <VStack spacing={8} w="full" alignItems="start" py={[8, 8, 0]}>

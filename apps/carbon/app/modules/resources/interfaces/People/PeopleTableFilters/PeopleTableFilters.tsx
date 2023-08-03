@@ -37,7 +37,7 @@ const PeopleTableFilters = ({ employeeTypes }: PeopleTableFiltersProps) => {
           param="name"
           size="sm"
           minW={180}
-          placeholder="Filter by name"
+          placeholder="Search"
         />
         <Select
           // @ts-ignore

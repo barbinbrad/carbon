@@ -19,7 +19,7 @@ const SequencesTableFilters = () => {
           param="name"
           size="sm"
           minW={180}
-          placeholder="Filter by name"
+          placeholder="Search"
         />
       </HStack>
     </HStack>

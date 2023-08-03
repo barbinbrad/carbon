@@ -10,12 +10,11 @@ export type ReceiptSourceDocument =
 
 export interface ReceiptListItem {
   partId: string;
-  vendorPartId?: string;
-  description: string;
+  description?: string;
   quantity: number;
   unitCost: number;
-  location: string;
-  shelfId: string | null;
+  location?: string;
+  shelfId?: string;
   unitOfMeasure: string;
 }
 

@@ -47,7 +47,7 @@ const CustomersTableFilters = ({
           param="name"
           size="sm"
           minW={180}
-          placeholder="Filter by name"
+          placeholder="Search"
         />
         {customerTypeOptions.length > 0 && (
           <Select

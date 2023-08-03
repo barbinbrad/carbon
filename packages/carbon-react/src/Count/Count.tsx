@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import type { BoxProps } from "@chakra-ui/react";
 
 export interface CountProps extends BoxProps {
@@ -8,16 +8,18 @@ export interface CountProps extends BoxProps {
 const Count = ({ count, ...props }: CountProps) => {
   const c = count > 99 ? "99+" : count;
   return (
-    <Box
+    <Flex
       as="span"
       bg="gray.700"
       borderRadius="full"
       fontSize="sm"
-      py={1}
-      px={2}
+      h={5}
+      minW={5}
+      alignItems="center"
+      justifyContent="center"
       color="white"
       {...props}
-    >{`${c}`}</Box>
+    >{`${c}`}</Flex>
   );
 };
 

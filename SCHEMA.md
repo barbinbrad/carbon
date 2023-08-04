@@ -3433,7 +3433,7 @@ CREATE TABLE "part" (
 
   CONSTRAINT "part_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "part_unitOfMeasureCode_fkey" FOREIGN KEY ("unitOfMeasureCode") REFERENCES "unitOfMeasure"("code") ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT "part_partGroupId_fkey" FOREIGN KEY ("partGroupId") REFERENCES "partGroup"("id") ON DELETE SET NULL,
+  CONSTRAINT "part_partGroupId_fkey" FOREIGN KEY ("partGroupId") REFERENCES "partGroup"("id"),
   CONSTRAINT "part_approvedBy_fkey" FOREIGN KEY ("approvedBy") REFERENCES "user"("id"),
   CONSTRAINT "part_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "part_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
@@ -4694,6 +4694,7 @@ CREATE VIEW "purchase_order_view" AS
     p."updatedAt",
     p."closed",
     p."closedAt",
+    p."released",
     u3."avatarUrl" AS "closedByAvatar",
     u3."fullName" AS "closedByFullName",
     EXISTS(SELECT 1 FROM "purchaseOrderFavorite" pf WHERE pf."purchaseOrderId" = p.id AND pf."userId" = auth.uid()::text) AS favorite
@@ -5478,8 +5479,8 @@ CREATE TABLE "receipt" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "receiptId" TEXT NOT NULL,
   "locationId" TEXT,
-  "sourceDocument" "receiptSourceDocument" NOT NULL,
-  "sourceDocumentId" TEXT NOT NULL,
+  "sourceDocument" "receiptSourceDocument",
+  "sourceDocumentId" TEXT,
   "supplierId" TEXT,
   "postingDate" DATE,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
@@ -5507,7 +5508,8 @@ CREATE TABLE "receiptLine" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "receiptId" TEXT NOT NULL,
   "partId" TEXT NOT NULL,
-  "quantity" NUMERIC(18, 4) NOT NULL,
+  "orderQuantity" NUMERIC(18, 4) NOT NULL,
+  "receivedQuantity" NUMERIC(18, 4) NOT NULL DEFAULT 0,
   "locationId" TEXT,
   "shelfId" TEXT,
   "unitOfMeasure" TEXT NOT NULL,

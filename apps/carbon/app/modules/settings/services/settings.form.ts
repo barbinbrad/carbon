@@ -7,7 +7,7 @@ export const sequenceValidator = withZod(
     table: z.string().min(1, { message: "Table is required" }),
     prefix: zfd.text(z.string().optional()),
     suffix: zfd.text(z.string().optional()),
-    next: zfd.numeric(z.number().min(1)),
+    next: zfd.numeric(z.number().min(0)),
     step: zfd.numeric(z.number().min(1)),
     size: zfd.numeric(z.number().min(1).max(20)),
   })

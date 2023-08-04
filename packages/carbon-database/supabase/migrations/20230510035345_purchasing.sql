@@ -400,6 +400,7 @@ CREATE VIEW "purchase_order_view" AS
     p."updatedAt",
     p."closed",
     p."closedAt",
+    p."released",
     u3."avatarUrl" AS "closedByAvatar",
     u3."fullName" AS "closedByFullName",
     EXISTS(SELECT 1 FROM "purchaseOrderFavorite" pf WHERE pf."purchaseOrderId" = p.id AND pf."userId" = auth.uid()::text) AS favorite

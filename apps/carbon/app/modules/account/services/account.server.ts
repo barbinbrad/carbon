@@ -150,7 +150,8 @@ export async function upsertUserAttributeValue(
         updatedBy,
       })
       .eq("id", userAttributeValueId)
-      .select("id");
+      .select("id")
+      .single();
   } else {
     return client
       .from("userAttributeValue")
@@ -160,6 +161,7 @@ export async function upsertUserAttributeValue(
         userId,
         createdBy: updatedBy,
       })
-      .select("id");
+      .select("id")
+      .single();
   }
 }

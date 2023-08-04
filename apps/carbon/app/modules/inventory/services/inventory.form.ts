@@ -16,32 +16,13 @@ export const receiptSourceDocumentType = [
 export const receiptValidator = withZod(
   z.object({
     id: zfd.text(z.string().optional()),
-    receiptId: zfd.text(z.string().optional()),
+    receiptId: z.string().min(1, { message: "Receipt ID is required" }),
     locationId: zfd.text(z.string().optional()),
-    sourceDocument: z.enum(receiptSourceDocumentType, {
-      errorMap: (issue, ctx) => ({
-        message: "Source Document is required",
-      }),
-    }),
-    sourceDocumentId: z
-      .string()
-      .min(1, { message: "Source Document ID is required" }),
-    supplierId: zfd.text(z.string().optional()),
-    receiptItems: z.array(
-      z.object({
-        partId: z.string().min(1, { message: "Part ID is required" }),
-        description: z.string().min(1, { message: "Description is required" }),
-        quantity: z.number().min(0, { message: "Quantity is required" }),
-        unitCost: z
-          .number()
-          .min(0.0000001, { message: "Unit Cost is required" }),
-        location: zfd.text(z.string().optional()),
-        shelfId: zfd.text(z.string().optional()),
-        unitOfMeasure: z
-          .string()
-          .min(1, { message: "Unit of Measure is required" }),
-      })
+    sourceDocument: z.enum(receiptSourceDocumentType).optional(),
+    sourceDocumentId: zfd.text(
+      z.string().min(1, { message: "Source Document ID is required" })
     ),
+    supplierId: zfd.text(z.string().optional()),
   })
 );
 

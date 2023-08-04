@@ -785,7 +785,7 @@ export async function insertAbility(
     createdBy: string;
   }
 ) {
-  return client.from("ability").insert([ability]).select("id");
+  return client.from("ability").insert([ability]).select("id").single();
 }
 
 export async function insertEmployeeAbilities(
@@ -799,7 +799,11 @@ export async function insertEmployeeAbilities(
     trainingCompleted: true,
   }));
 
-  return client.from("employeeAbility").insert(employeeAbilities).select("id");
+  return client
+    .from("employeeAbility")
+    .insert(employeeAbilities)
+    .select("id")
+    .single();
 }
 
 export async function insertAttribute(
@@ -827,7 +831,8 @@ export async function insertAttribute(
   return client
     .from("userAttribute")
     .upsert([{ ...attribute, sortOrder: maxSortOrder + 1 }])
-    .select("id");
+    .select("id")
+    .single();
 }
 
 export async function insertAttributeCategory(
@@ -841,7 +846,8 @@ export async function insertAttributeCategory(
   return client
     .from("userAttributeCategory")
     .upsert([attributeCategory])
-    .select("id");
+    .select("id")
+    .single();
 }
 
 export async function insertNote(
@@ -852,7 +858,7 @@ export async function insertNote(
     createdBy: string;
   }
 ) {
-  return client.from("userNote").insert([note]).select("id");
+  return client.from("userNote").insert([note]).select("id").single();
 }
 
 export async function updateAbility(
@@ -1002,7 +1008,7 @@ export async function upsertDepartment(
       .update(sanitize(department))
       .eq("id", department.id);
   }
-  return client.from("department").insert(department).select("id");
+  return client.from("department").insert(department).select("id").single();
 }
 
 export async function upsertEmployeeAbility(
@@ -1038,7 +1044,8 @@ export async function upsertEmployeeAbility(
   return client
     .from("employeeAbility")
     .insert([{ ...update }])
-    .select("id");
+    .select("id")
+    .single();
 }
 
 export async function upsertEmployeeJob(
@@ -1085,7 +1092,7 @@ export async function upsertEquipment(
     const { id, ...update } = equipment;
     return client.from("equipment").update(sanitize(update)).eq("id", id);
   }
-  return client.from("equipment").insert([equipment]).select("id");
+  return client.from("equipment").insert([equipment]).select("id").single();
 }
 
 export async function upsertEquipmentType(
@@ -1111,7 +1118,11 @@ export async function upsertEquipmentType(
     const { id, ...update } = equipmentType;
     return client.from("equipmentType").update(sanitize(update)).eq("id", id);
   }
-  return client.from("equipmentType").insert([equipmentType]).select("id");
+  return client
+    .from("equipmentType")
+    .insert([equipmentType])
+    .select("id")
+    .single();
 }
 
 export async function upsertHoliday(
@@ -1135,7 +1146,7 @@ export async function upsertHoliday(
       .update(sanitize(holiday))
       .eq("id", holiday.id);
   }
-  return client.from("holiday").insert(holiday).select("id");
+  return client.from("holiday").insert(holiday).select("id").single();
 }
 
 export async function upsertLocation(
@@ -1155,7 +1166,7 @@ export async function upsertLocation(
       .update(sanitize(location))
       .eq("id", location.id);
   }
-  return client.from("location").insert([location]).select("id");
+  return client.from("location").insert([location]).select("id").single();
 }
 
 export async function upsertPartner(
@@ -1230,7 +1241,7 @@ export async function upsertShift(
     return client.from("shift").update(sanitize(update)).eq("id", id);
   }
 
-  return client.from("shift").insert([update]).select("id");
+  return client.from("shift").insert([update]).select("id").single();
 }
 
 export async function upsertWorkCell(
@@ -1260,7 +1271,7 @@ export async function upsertWorkCell(
     const { id, ...update } = workCell;
     return client.from("workCell").update(sanitize(update)).eq("id", id);
   }
-  return client.from("workCell").insert([workCell]).select("id");
+  return client.from("workCell").insert([workCell]).select("id").single();
 }
 
 export async function upsertWorkCellType(
@@ -1286,5 +1297,9 @@ export async function upsertWorkCellType(
     const { id, ...update } = workCellType;
     return client.from("workCellType").update(sanitize(update)).eq("id", id);
   }
-  return client.from("workCellType").insert([workCellType]).select("id");
+  return client
+    .from("workCellType")
+    .insert([workCellType])
+    .select("id")
+    .single();
 }

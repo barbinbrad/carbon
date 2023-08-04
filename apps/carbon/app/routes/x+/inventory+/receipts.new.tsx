@@ -2,6 +2,7 @@ import { getLocalTimeZone, today } from "@internationalized/date";
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
 import type { ReceiptSourceDocument } from "~/modules/inventory";
 import {
@@ -16,11 +17,43 @@ import { assertIsPost } from "~/utils/http";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request }: LoaderArgs) {
-  await requirePermissions(request, {
+  const { client, userId } = await requirePermissions(request, {
     create: "inventory",
   });
 
-  return null;
+  const nextSequence = await getNextSequence(client, "receipt", userId);
+  if (nextSequence.error) {
+    return redirect(
+      "/x/receipts/new",
+      await flash(
+        request,
+        error(nextSequence.error, "Failed to get next sequence")
+      )
+    );
+  }
+
+  const insertReceipt = await upsertReceipt(client, {
+    receiptId: nextSequence.data,
+    sourceDocumentId: "",
+    createdBy: userId,
+  });
+  if (insertReceipt.error) {
+    await rollbackNextSequence(client, "receipt", userId);
+    return redirect(
+      "/x/receipts",
+      await flash(
+        request,
+        error(insertReceipt.error, "Failed to generate receipt")
+      )
+    );
+  }
+
+  return json({
+    receipt: {
+      id: insertReceipt.data.id,
+      receiptId: nextSequence.data,
+    },
+  });
 }
 
 export async function action({ request }: ActionArgs) {
@@ -71,11 +104,20 @@ export async function action({ request }: ActionArgs) {
 }
 
 export default function NewReceiptsRoute() {
+  const { receipt } = useLoaderData<typeof loader>();
   const initialValues = {
+    ...receipt,
     sourceDocument: "Purchase Order" as ReceiptSourceDocument,
     sourceDocumentId: "",
     postingDate: today(getLocalTimeZone()).toString(),
   };
 
-  return <ReceiptForm initialValues={initialValues} />;
+  return (
+    <ReceiptForm
+      // @ts-expect-error --> TODO: remove this when we use the whole enum in inventory.form
+      initialValues={initialValues}
+      isPosted={false}
+      receiptItems={[]}
+    />
+  );
 }

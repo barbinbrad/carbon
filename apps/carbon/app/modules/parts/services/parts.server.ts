@@ -292,7 +292,8 @@ export async function insertShelf(
         createdBy: userId,
       },
     ])
-    .select("id");
+    .select("id")
+    .single();
 }
 
 export async function upsertPart(
@@ -302,7 +303,7 @@ export async function upsertPart(
     | (TypeOfValidator<typeof partValidator> & { updatedBy: string })
 ) {
   if ("createdBy" in part) {
-    return client.from("part").insert(part).select("id");
+    return client.from("part").insert(part).select("id").single();
   }
   return client.from("part").update(sanitize(part)).eq("id", part.id);
 }
@@ -390,7 +391,7 @@ export async function upsertPartGroup(
       }
 ) {
   if ("createdBy" in partGroup) {
-    return client.from("partGroup").insert([partGroup]).select("id");
+    return client.from("partGroup").insert([partGroup]).select("id").single();
   }
   return (
     client
@@ -414,13 +415,18 @@ export async function upsertPartSupplier(
       })
 ) {
   if ("createdBy" in partSupplier) {
-    return client.from("partSupplier").insert([partSupplier]).select("id");
+    return client
+      .from("partSupplier")
+      .insert([partSupplier])
+      .select("id")
+      .single();
   }
   return client
     .from("partSupplier")
     .update(sanitize(partSupplier))
     .eq("id", partSupplier.id)
-    .select("id");
+    .select("id")
+    .single();
 }
 
 export async function upsertPartUnitSalePrice(
@@ -446,8 +452,13 @@ export async function upsertUnitOfMeasure(
       .from("unitOfMeasure")
       .update(sanitize(unitOfMeasure))
       .eq("id", unitOfMeasure.id)
-      .select("id");
+      .select("id")
+      .single();
   }
 
-  return client.from("unitOfMeasure").insert([unitOfMeasure]).select("id");
+  return client
+    .from("unitOfMeasure")
+    .insert([unitOfMeasure])
+    .select("id")
+    .single();
 }

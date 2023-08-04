@@ -1,6 +1,6 @@
 import { Loading } from "@carbon/react";
 import type { IconProps } from "@chakra-ui/react";
-import { Box, Icon, List, ListItem, MenuIcon, Text } from "@chakra-ui/react";
+import { Box, HStack, Icon, List, ListItem, Text } from "@chakra-ui/react";
 import { FaCheck, FaChevronRight } from "react-icons/fa";
 import type { OptionGroup, IndividualOrGroup } from "../types";
 import useUserSelectContext from "../provider";
@@ -146,7 +146,7 @@ const Option = ({
       onClick={onClick}
       sx={sx}
     >
-      <MenuIcon>
+      <HStack spacing={1} w="full" alignItems="center">
         <CheckIcon
           display="block"
           marginEnd="0.75rem"
@@ -155,8 +155,8 @@ const Option = ({
           h={4}
           opacity={isSelected ? 1 : 0}
         />
-      </MenuIcon>
-      <Text noOfLines={1}>{name}</Text>
+        <Text noOfLines={1}>{name}</Text>
+      </HStack>
     </ListItem>
   );
 };

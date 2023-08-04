@@ -3351,8 +3351,10 @@ export interface Database {
           locationId: string | null;
           postingDate: string | null;
           receiptId: string;
-          sourceDocument: Database["public"]["Enums"]["receiptSourceDocument"];
-          sourceDocumentId: string;
+          sourceDocument:
+            | Database["public"]["Enums"]["receiptSourceDocument"]
+            | null;
+          sourceDocumentId: string | null;
           supplierId: string | null;
           updatedAt: string | null;
           updatedBy: string | null;
@@ -3364,8 +3366,10 @@ export interface Database {
           locationId?: string | null;
           postingDate?: string | null;
           receiptId: string;
-          sourceDocument: Database["public"]["Enums"]["receiptSourceDocument"];
-          sourceDocumentId: string;
+          sourceDocument?:
+            | Database["public"]["Enums"]["receiptSourceDocument"]
+            | null;
+          sourceDocumentId?: string | null;
           supplierId?: string | null;
           updatedAt?: string | null;
           updatedBy?: string | null;
@@ -3377,8 +3381,10 @@ export interface Database {
           locationId?: string | null;
           postingDate?: string | null;
           receiptId?: string;
-          sourceDocument?: Database["public"]["Enums"]["receiptSourceDocument"];
-          sourceDocumentId?: string;
+          sourceDocument?:
+            | Database["public"]["Enums"]["receiptSourceDocument"]
+            | null;
+          sourceDocumentId?: string | null;
           supplierId?: string | null;
           updatedAt?: string | null;
           updatedBy?: string | null;
@@ -3446,10 +3452,11 @@ export interface Database {
           createdBy: string;
           id: string;
           locationId: string | null;
+          orderQuantity: number;
           partId: string;
-          quantity: number;
           receiptId: string;
           receivedComplete: boolean;
+          receivedQuantity: number;
           shelfId: string | null;
           unitOfMeasure: string;
           unitPrice: number;
@@ -3461,10 +3468,11 @@ export interface Database {
           createdBy: string;
           id?: string;
           locationId?: string | null;
+          orderQuantity: number;
           partId: string;
-          quantity: number;
           receiptId: string;
           receivedComplete?: boolean;
+          receivedQuantity?: number;
           shelfId?: string | null;
           unitOfMeasure: string;
           unitPrice: number;
@@ -3476,10 +3484,11 @@ export interface Database {
           createdBy?: string;
           id?: string;
           locationId?: string | null;
+          orderQuantity?: number;
           partId?: string;
-          quantity?: number;
           receiptId?: string;
           receivedComplete?: boolean;
+          receivedQuantity?: number;
           shelfId?: string | null;
           unitOfMeasure?: string;
           unitPrice?: number;
@@ -5145,6 +5154,7 @@ export interface Database {
           purchaseOrderId: string | null;
           receiptPromisedDate: string | null;
           receiptRequestedDate: string | null;
+          released: boolean | null;
           status:
             | Database["public"]["Enums"]["purchaseOrderApprovalStatus"]
             | null;

@@ -577,7 +577,11 @@ async function insertCustomerAccount(
     customerId: string;
   }
 ) {
-  return client.from("customerAccount").insert(customerAccount).select("id");
+  return client
+    .from("customerAccount")
+    .insert(customerAccount)
+    .select("id")
+    .single();
 }
 
 export async function insertEmployee(
@@ -591,14 +595,18 @@ export async function insertEmployeeType(
   client: SupabaseClient<Database>,
   employeeType: { id?: string; name: string; color?: string }
 ) {
-  return client.from("employeeType").insert([employeeType]).select("id");
+  return client
+    .from("employeeType")
+    .insert([employeeType])
+    .select("id")
+    .single();
 }
 
 export async function insertGroup(
   client: SupabaseClient<Database>,
   group: { name: string }
 ) {
-  return client.from("group").insert(group).select("id");
+  return client.from("group").insert(group).select("id").single();
 }
 
 async function insertSupplierAccount(
@@ -608,7 +616,11 @@ async function insertSupplierAccount(
     supplierId: string;
   }
 ) {
-  return client.from("supplierAccount").insert(supplierAccount).select("id");
+  return client
+    .from("supplierAccount")
+    .insert(supplierAccount)
+    .select("id")
+    .single();
 }
 
 async function insertUser(
@@ -886,7 +898,11 @@ export async function upsertEmployeeType(
   client: SupabaseClient<Database>,
   employeeType: { id?: string; name: string; color?: string }
 ) {
-  return client.from("employeeType").upsert([employeeType]).select("id");
+  return client
+    .from("employeeType")
+    .upsert([employeeType])
+    .select("id")
+    .single();
 }
 
 export async function upsertEmployeeTypePermissions(

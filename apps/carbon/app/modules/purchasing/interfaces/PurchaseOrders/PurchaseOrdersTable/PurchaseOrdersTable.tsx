@@ -160,6 +160,9 @@ const PurchaseOrdersTable = memo(
           </MenuItem>
           <MenuItem
             icon={<MdCallReceived />}
+            isDisabled={
+              !row.released || !permissions.can("update", "inventory")
+            }
             onClick={() => {
               receive(row);
             }}

@@ -1,15 +1,16 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { flushSync } from "react-dom";
-import { useUrlParams } from "~/hooks";
+import { useUrlParams, useUser } from "~/hooks";
 import { useSupabase } from "~/lib/supabase";
 import type {
-  ReceiptListItem,
+  ReceiptLineItem,
   ReceiptSourceDocument,
 } from "~/modules/inventory/types";
 import type { ListItem } from "~/types";
 
 export default function useReceiptForm({
+  receiptId,
   locations,
   sourceDocument,
   sourceDocumentId,
@@ -19,15 +20,17 @@ export default function useReceiptForm({
   setSourceDocumentId,
   setSupplierId,
 }: {
+  receiptId: string;
   locations: ListItem[];
   sourceDocument: ReceiptSourceDocument;
   sourceDocumentId: string | null;
   setLocationId: (locationId: string | null) => void;
-  setReceiptItems: (receiptItems: ReceiptListItem[]) => void;
+  setReceiptItems: (receiptItems: ReceiptLineItem[]) => void;
   setSourceDocument: (sourceDocument: ReceiptSourceDocument) => void;
   setSourceDocumentId: (sourceDocumentId: string | null) => void;
   setSupplierId: (supplierId: string | null) => void;
 }) {
+  const user = useUser();
   const [sourceDocuments, setSourceDocuments] = useState<ListItem[]>([]);
   const [params] = useUrlParams();
   const [error, setError] = useState<string | null>(null);
@@ -50,6 +53,28 @@ export default function useReceiptForm({
     sourceDocumentFromParams,
     sourceDocumentIdFromParams,
   ]);
+
+  // TODO: this should call an API method that uses the service role to delete the receipt after
+  //      checking that it is not posted or received
+  const deleteReceipt = useCallback(() => {
+    if (!supabase) return;
+
+    return supabase
+      .from("receipt")
+      .delete()
+      .eq("id", receiptId)
+      .then((response) => {
+        if (response.error) {
+          setError(response.error.message);
+        }
+      });
+  }, [receiptId, supabase]);
+
+  const deleteReceiptLines = useCallback(async () => {
+    if (!supabase) throw new Error("supabase client is not defined");
+
+    return supabase.from("receiptLine").delete().eq("receiptId", receiptId);
+  }, [receiptId, supabase]);
 
   const fetchSourceDocuments = useCallback(() => {
     if (!supabase) return;
@@ -79,7 +104,13 @@ export default function useReceiptForm({
   }, [sourceDocument, supabase]);
 
   const fetchSourceDocument = useCallback(async () => {
-    if (!supabase) return;
+    if (!supabase || !sourceDocumentId) return;
+
+    const deleteExistingLines = await deleteReceiptLines();
+    if (deleteExistingLines.error) {
+      setError(deleteExistingLines.error.message);
+      return;
+    }
 
     switch (sourceDocument) {
       case "Purchase Order":
@@ -107,30 +138,43 @@ export default function useReceiptForm({
         if (purchaseOrderLines.error) {
           setError(purchaseOrderLines.error.message);
         } else {
-          setReceiptItems(
-            purchaseOrderLines.data.reduce<ReceiptListItem[]>((acc, d) => {
-              if (
-                !d.partId ||
-                !d.description ||
-                !d.purchaseQuantity ||
-                !d.unitPrice
-              ) {
-                return acc;
-              }
-
-              acc.push({
-                partId: d.partId,
-                description: d.description,
-                quantity: d.purchaseQuantity,
-                unitCost: d.unitPrice,
-                unitOfMeasure: d.unitOfMeasureCode ?? "EA",
-                location: purchaseOrder.data.locationId ?? undefined,
-                shelfId: d.shelfId ?? undefined,
-              });
-
+          const receiptItems = purchaseOrderLines.data.reduce<
+            ReceiptLineItem[]
+          >((acc, d) => {
+            if (
+              !d.partId ||
+              !d.purchaseQuantity ||
+              d.unitPrice === null ||
+              isNaN(d.unitPrice)
+            ) {
               return acc;
-            }, [])
-          );
+            }
+
+            acc.push({
+              receiptId,
+              partId: d.partId,
+              orderQuantity: d.purchaseQuantity,
+              receivedQuantity: 0,
+              unitPrice: d.unitPrice,
+              unitOfMeasure: d.unitOfMeasureCode ?? "EA",
+              locationId: purchaseOrder.data.locationId,
+              shelfId: d.shelfId,
+              receivedComplete: false,
+            });
+
+            return acc;
+          }, []);
+
+          setReceiptItems(receiptItems);
+          supabase
+            .from("receiptLine")
+            .insert(receiptItems.map((r) => ({ ...r, createdBy: user.id })))
+            .then((response) => {
+              if (response.error) {
+                setError(response.error.message);
+                setReceiptItems([]);
+              }
+            });
         }
 
         break;
@@ -138,12 +182,15 @@ export default function useReceiptForm({
         return;
     }
   }, [
+    deleteReceiptLines,
+    receiptId,
     setLocationId,
     setReceiptItems,
     setSupplierId,
     sourceDocument,
     sourceDocumentId,
     supabase,
+    user.id,
   ]);
 
   useEffect(() => {
@@ -159,7 +206,7 @@ export default function useReceiptForm({
     }
   }, [fetchSourceDocument, setLocationId, setSupplierId, sourceDocumentId]);
 
-  const receiptItemColumns = useMemo<ColumnDef<ReceiptListItem>[]>(() => {
+  const receiptItemColumns = useMemo<ColumnDef<ReceiptLineItem>[]>(() => {
     return [
       {
         accessorKey: "partId",
@@ -167,25 +214,25 @@ export default function useReceiptForm({
         cell: (item) => item.getValue(),
       },
       {
-        accessorKey: "description",
-        header: "Description",
+        accessorKey: "orderQuantity",
+        header: "Order Quantity",
         cell: (item) => item.getValue(),
       },
       {
-        accessorKey: "quantity",
-        header: "Quantity",
+        accessorKey: "receivedQuantity",
+        header: "Received Quantity",
         cell: (item) => item.getValue(),
       },
       {
-        accessorKey: "unitCost",
+        accessorKey: "unitPrice",
         header: "Unit Cost",
         cell: (item) => item.getValue(),
       },
       {
-        accessorKey: "location",
+        accessorKey: "locationId",
         header: "Location",
         cell: ({ row }) =>
-          locations.find((l) => l.id === row.original.location)?.name ?? null,
+          locations.find((l) => l.id === row.original.locationId)?.name ?? null,
       },
       {
         accessorKey: "shelfId",
@@ -201,8 +248,9 @@ export default function useReceiptForm({
   }, [locations]);
 
   return {
+    deleteReceipt,
+    error,
     receiptItemColumns,
     sourceDocuments,
-    error,
   };
 }

@@ -42,6 +42,13 @@ export async function getReceipts(
   return query;
 }
 
+export async function getReceiptLines(
+  client: SupabaseClient<Database>,
+  receiptId: string
+) {
+  return client.from("receiptLine").select("*").eq("receiptId", receiptId);
+}
+
 export async function getShippingMethod(
   client: SupabaseClient<Database>,
   shippingMethodId: string
@@ -104,13 +111,14 @@ export async function upsertReceipt(
       })
 ) {
   if ("createdBy" in receipt) {
-    return client.from("receipt").insert([receipt]).select("id");
+    return client.from("receipt").insert([receipt]).select("id").single();
   }
   return client
     .from("receipt")
     .update(sanitize(receipt))
     .eq("id", receipt.id)
-    .select("id");
+    .select("id")
+    .single();
 }
 
 export async function upsertShippingMethod(
@@ -125,11 +133,16 @@ export async function upsertShippingMethod(
       })
 ) {
   if ("createdBy" in shippingMethod) {
-    return client.from("shippingMethod").insert([shippingMethod]).select("id");
+    return client
+      .from("shippingMethod")
+      .insert([shippingMethod])
+      .select("id")
+      .single();
   }
   return client
     .from("shippingMethod")
     .update(sanitize(shippingMethod))
     .eq("id", shippingMethod.id)
-    .select("id");
+    .select("id")
+    .single();
 }

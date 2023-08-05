@@ -3,13 +3,13 @@ import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
-import { useRouteData } from "~/hooks";
-import type { ShippingCarrier } from "~/modules/inventory";
+import type { ReceiptSourceDocument } from "~/modules/inventory";
 import {
-  ShippingMethodForm,
-  shippingMethodValidator,
-  getShippingMethod,
-  upsertShippingMethod,
+  ReceiptForm,
+  receiptValidator,
+  getReceipt,
+  upsertReceipt,
+  getReceiptLines,
 } from "~/modules/inventory";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
@@ -22,13 +22,17 @@ export async function loader({ request, params }: LoaderArgs) {
     role: "employee",
   });
 
-  const { shippingMethodId } = params;
-  if (!shippingMethodId) throw notFound("shippingMethodId not found");
+  const { receiptId } = params;
+  if (!receiptId) throw notFound("receiptId not found");
 
-  const shippingMethod = await getShippingMethod(client, shippingMethodId);
+  const [receipt, receiptItems] = await Promise.all([
+    getReceipt(client, receiptId),
+    getReceiptLines(client, receiptId),
+  ]);
 
   return json({
-    shippingMethod: shippingMethod?.data ?? null,
+    receipt: receipt?.data ?? null,
+    receiptItems: receiptItems?.data ?? [],
   });
 }
 
@@ -38,9 +42,7 @@ export async function action({ request }: ActionArgs) {
     update: "inventory",
   });
 
-  const validation = await shippingMethodValidator.validate(
-    await request.formData()
-  );
+  const validation = await receiptValidator.validate(await request.formData());
 
   if (validation.error) {
     return validationError(validation.error);
@@ -49,46 +51,48 @@ export async function action({ request }: ActionArgs) {
   const { id, ...data } = validation.data;
   if (!id) throw new Error("id not found");
 
-  const updateShippingMethod = await upsertShippingMethod(client, {
+  const updateReceipt = await upsertReceipt(client, {
     id,
     ...data,
     updatedBy: userId,
   });
 
-  if (updateShippingMethod.error) {
+  if (updateReceipt.error) {
     return json(
       {},
       await flash(
         request,
-        error(updateShippingMethod.error, "Failed to update shipping method")
+        error(updateReceipt.error, "Failed to update receipt")
       )
     );
   }
 
   return redirect(
-    "/x/inventory/shipping-methods",
-    await flash(request, success("Updated shipping method"))
+    "/x/inventory/receipts",
+    await flash(request, success("Updated receipt"))
   );
 }
 
-export default function EditShippingMethodsRoute() {
-  const { shippingMethod } = useLoaderData<typeof loader>();
-  const routeData = useRouteData<{
-    accounts: { name: string; number: string }[];
-  }>("/x/inventory/shipping-methods");
+export default function EditReceiptsRoute() {
+  const { receipt, receiptItems } = useLoaderData<typeof loader>();
+  if (!receipt?.receiptId) throw notFound("receiptId not found");
+  if (!receipt?.sourceDocumentId) throw notFound("sourceDocumentId not found");
 
   const initialValues = {
-    id: shippingMethod?.id ?? undefined,
-    name: shippingMethod?.name ?? "",
-    carrier: (shippingMethod?.carrier ?? "") as ShippingCarrier,
-    carrierAccountId: shippingMethod?.carrierAccountId ?? "",
-    trackingUrl: shippingMethod?.trackingUrl ?? "",
+    ...receipt,
+    receiptId: receipt.receiptId ?? undefined,
+    sourceDocument: (receipt.sourceDocument ??
+      "Purchase Order") as ReceiptSourceDocument,
+    sourceDocumentId: receipt.sourceDocumentId ?? undefined,
+    locationId: receipt.locationId ?? undefined,
   };
 
   return (
-    <ShippingMethodForm
+    <ReceiptForm
+      // @ts-expect-error
       initialValues={initialValues}
-      accounts={routeData?.accounts ?? []}
+      isPosted={!!receipt?.postingDate ?? false}
+      receiptItems={receiptItems}
     />
   );
 }

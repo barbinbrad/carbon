@@ -96,7 +96,7 @@ const ReceiptForm = ({
 
   const onClose = () => {
     if (!sourceDocumentId && initialValues.id) {
-      deleteReceipt();
+      deleteReceipt(initialValues.id);
     }
     navigate(-1);
   };
@@ -110,8 +110,8 @@ const ReceiptForm = ({
         method="post"
         action={
           isEditing
-            ? `x/inventory/receipts/new`
-            : `/x/inventory/receipts/${initialValues.id}`
+            ? `x/inventory/receipts/${initialValues.id}`
+            : `/x/inventory/receipts/new`
         }
         defaultValues={initialValues}
       >
@@ -135,7 +135,7 @@ const ReceiptForm = ({
                       gridRowGap={4}
                       w="full"
                     >
-                      <Input name="receiptId" label="Receipt ID" isDisabled />
+                      <Input name="receiptId" label="Receipt ID" isReadOnly />
                       <SelectControlled
                         name="supplierId"
                         label="Supplier"
@@ -146,7 +146,9 @@ const ReceiptForm = ({
                           })) ?? []
                         }
                         value={supplierId ?? undefined}
-                        onChange={(newValue) => console.log(newValue)}
+                        onChange={(newValue) =>
+                          setSupplierId(newValue as string)
+                        }
                         isReadOnly
                       />
                       <Select

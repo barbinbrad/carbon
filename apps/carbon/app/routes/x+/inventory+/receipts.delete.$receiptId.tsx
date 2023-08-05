@@ -2,7 +2,7 @@ import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData, useNavigate, useParams } from "@remix-run/react";
 import { ConfirmDelete } from "~/components/Modals";
-import { deleteShippingMethod, getShippingMethod } from "~/modules/inventory";
+import { deleteReceipt, getReceipt } from "~/modules/inventory";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { error, success } from "~/utils/result";
@@ -10,23 +10,20 @@ import { notFound } from "~/utils/http";
 
 export async function loader({ request, params }: LoaderArgs) {
   const { client } = await requirePermissions(request, {
-    view: "inventory",
+    delete: "inventory",
   });
-  const { shippingMethodId } = params;
-  if (!shippingMethodId) throw notFound("shippingMethodId not found");
+  const { receiptId } = params;
+  if (!receiptId) throw notFound("receiptId not found");
 
-  const shippingMethod = await getShippingMethod(client, shippingMethodId);
-  if (shippingMethod.error) {
+  const receipt = await getReceipt(client, receiptId);
+  if (receipt.error) {
     return redirect(
-      "/x/inventory/shipping-methods",
-      await flash(
-        request,
-        error(shippingMethod.error, "Failed to get shipping method")
-      )
+      "/x/inventory/receipts",
+      await flash(request, error(receipt.error, "Failed to get receipt"))
     );
   }
 
-  return json({ shippingMethod: shippingMethod.data });
+  return json({ receipt: receipt.data });
 }
 
 export async function action({ request, params }: ActionArgs) {
@@ -34,48 +31,67 @@ export async function action({ request, params }: ActionArgs) {
     delete: "inventory",
   });
 
-  const { shippingMethodId } = params;
-  if (!shippingMethodId) {
+  const { receiptId } = params;
+  if (!receiptId) {
     return redirect(
-      "/x/inventory/shipping-methods",
-      await flash(request, error(params, "Failed to get an shipping method id"))
+      "/x/inventory/receipts",
+      await flash(request, error(params, "Failed to get an receipt id"))
     );
   }
 
-  const { error: deleteTypeError } = await deleteShippingMethod(
+  // make sure the receipt has not been posted
+  const { error: getReceiptError, data: receipt } = await getReceipt(
     client,
-    shippingMethodId
+    receiptId
   );
-  if (deleteTypeError) {
+  if (getReceiptError) {
     return redirect(
-      "/x/inventory/shipping-methods",
+      "/x/inventory/receipts",
+      await flash(request, error(getReceiptError, "Failed to get receipt"))
+    );
+  }
+
+  if (receipt?.postingDate) {
+    return redirect(
+      "/x/inventory/receipts",
       await flash(
         request,
-        error(deleteTypeError, "Failed to delete shipping method")
+        error(getReceiptError, "Cannot delete a posted receipt")
+      )
+    );
+  }
+
+  const { error: deleteReceiptError } = await deleteReceipt(client, receiptId);
+  if (deleteReceiptError) {
+    return redirect(
+      "/x/inventory/receipts",
+      await flash(
+        request,
+        error(deleteReceiptError, "Failed to delete receipt")
       )
     );
   }
 
   return redirect(
-    "/x/inventory/shipping-methods",
-    await flash(request, success("Successfully deleted shipping method"))
+    "/x/inventory/receipts",
+    await flash(request, success("Successfully deleted receipt"))
   );
 }
 
 export default function DeleteShippingMethodRoute() {
-  const { shippingMethodId } = useParams();
-  const { shippingMethod } = useLoaderData<typeof loader>();
+  const { receiptId } = useParams();
+  const { receipt } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
 
-  if (!shippingMethodId || !shippingMethod) return null; // TODO - handle this better (404?)
+  if (!receiptId || !receipt) return null; // TODO - handle this better (404?)
 
-  const onCancel = () => navigate("/x/inventory/shipping-methods");
+  const onCancel = () => navigate("/x/inventory/receipts");
 
   return (
     <ConfirmDelete
-      action={`/x/inventory/shipping-methods/delete/${shippingMethodId}`}
-      name={shippingMethod.name}
-      text={`Are you sure you want to delete the shipping method: ${shippingMethod.name}? This cannot be undone.`}
+      action={`/x/inventory/receipts/delete/${receiptId}`}
+      name={receipt.receiptId}
+      text={`Are you sure you want to delete the receipt: ${receipt.receiptId}? This cannot be undone.`}
       onCancel={onCancel}
     />
   );

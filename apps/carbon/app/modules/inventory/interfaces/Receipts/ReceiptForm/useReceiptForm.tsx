@@ -1,3 +1,4 @@
+import { Checkbox } from "@chakra-ui/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { flushSync } from "react-dom";
@@ -56,19 +57,22 @@ export default function useReceiptForm({
 
   // TODO: this should call an API method that uses the service role to delete the receipt after
   //      checking that it is not posted or received
-  const deleteReceipt = useCallback(() => {
-    if (!supabase) return;
+  const deleteReceipt = useCallback(
+    (id: string) => {
+      if (!supabase) return;
 
-    return supabase
-      .from("receipt")
-      .delete()
-      .eq("id", receiptId)
-      .then((response) => {
-        if (response.error) {
-          setError(response.error.message);
-        }
-      });
-  }, [receiptId, supabase]);
+      return supabase
+        .from("receipt")
+        .delete()
+        .eq("id", id)
+        .then((response) => {
+          if (response.error) {
+            setError(response.error.message);
+          }
+        });
+    },
+    [supabase]
+  );
 
   const deleteReceiptLines = useCallback(async () => {
     if (!supabase) throw new Error("supabase client is not defined");
@@ -124,7 +128,8 @@ export default function useReceiptForm({
             .from("purchaseOrderLine")
             .select("*")
             .eq("purchaseOrderId", sourceDocumentId)
-            .eq("purchaseOrderLineType", "Part"),
+            .eq("purchaseOrderLineType", "Part")
+            .eq("receivedComplete", false),
         ]);
 
         if (purchaseOrder.error) {
@@ -243,6 +248,13 @@ export default function useReceiptForm({
         accessorKey: "unitOfMeasure",
         header: "Unit of Measure",
         cell: (item) => item.getValue(),
+      },
+      {
+        accessorKey: "receivedComplete",
+        header: "Received Complete",
+        cell: (item) => (
+          <Checkbox isChecked={item.getValue<boolean>()} readOnly />
+        ),
       },
     ];
   }, [locations]);

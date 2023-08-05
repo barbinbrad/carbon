@@ -68,31 +68,20 @@ export async function action({ request }: ActionArgs) {
     return validationError(validation.error);
   }
 
-  const { id, receiptId, ...data } = validation.data;
+  const { id, ...data } = validation.data;
+  if (!id) throw new Error("id not found");
 
-  const nextSequence = await getNextSequence(client, "receipt", userId);
-  if (nextSequence.error) {
-    return redirect(
-      "/x/receipts/new",
-      await flash(
-        request,
-        error(nextSequence.error, "Failed to get next sequence")
-      )
-    );
-  }
-
-  const insertReceipt = await upsertReceipt(client, {
+  const updateReceipt = await upsertReceipt(client, {
+    id,
     ...data,
-    receiptId: nextSequence.data,
-    createdBy: userId,
+    updatedBy: userId,
   });
-  if (insertReceipt.error) {
-    await rollbackNextSequence(client, "receipt", userId);
+  if (updateReceipt.error) {
     return json(
       {},
       await flash(
         request,
-        error(insertReceipt.error, "Failed to insert receipt")
+        error(updateReceipt.error, "Failed to update receipt")
       )
     );
   }
@@ -114,7 +103,7 @@ export default function NewReceiptsRoute() {
 
   return (
     <ReceiptForm
-      // @ts-expect-error --> TODO: remove this when we use the whole enum in inventory.form
+      // @ts-expect-error
       initialValues={initialValues}
       isPosted={false}
       receiptItems={[]}

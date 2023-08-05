@@ -9,6 +9,13 @@ import type {
   shippingMethodValidator,
 } from "./inventory.form";
 
+export async function deleteReceipt(
+  client: SupabaseClient<Database>,
+  receiptId: string
+) {
+  return client.from("receipt").delete().eq("id", receiptId);
+}
+
 export async function deleteShippingMethod(
   client: SupabaseClient<Database>,
   shippingMethodId: string
@@ -40,6 +47,13 @@ export async function getReceipts(
 
   query = setGenericQueryFilters(query, args, "receiptId", false);
   return query;
+}
+
+export async function getReceipt(
+  client: SupabaseClient<Database>,
+  receiptId: string
+) {
+  return client.from("receipt").select("*").eq("id", receiptId).single();
 }
 
 export async function getReceiptLines(

@@ -3355,6 +3355,7 @@ export interface Database {
             | Database["public"]["Enums"]["receiptSourceDocument"]
             | null;
           sourceDocumentId: string | null;
+          sourceDocumentReadableId: string | null;
           supplierId: string | null;
           updatedAt: string | null;
           updatedBy: string | null;
@@ -3370,6 +3371,7 @@ export interface Database {
             | Database["public"]["Enums"]["receiptSourceDocument"]
             | null;
           sourceDocumentId?: string | null;
+          sourceDocumentReadableId?: string | null;
           supplierId?: string | null;
           updatedAt?: string | null;
           updatedBy?: string | null;
@@ -3385,6 +3387,7 @@ export interface Database {
             | Database["public"]["Enums"]["receiptSourceDocument"]
             | null;
           sourceDocumentId?: string | null;
+          sourceDocumentReadableId?: string | null;
           supplierId?: string | null;
           updatedAt?: string | null;
           updatedBy?: string | null;

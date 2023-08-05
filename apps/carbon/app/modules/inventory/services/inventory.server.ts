@@ -33,9 +33,11 @@ export async function getReceipts(
     type: string | null;
   }
 ) {
-  let query = client.from("receipt").select("*", {
-    count: "exact",
-  });
+  let query = client
+    .from("receipt")
+    .select("*, location(name), supplier(name)", {
+      count: "exact",
+    });
 
   if (args.name) {
     query = query.ilike("sourceDocumentId", `%${args.name}%`);

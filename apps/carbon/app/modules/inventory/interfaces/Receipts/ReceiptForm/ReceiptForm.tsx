@@ -128,6 +128,13 @@ const ReceiptForm = ({
               >
                 <Box w="full">
                   <Hidden name="id" />
+                  <Hidden
+                    name="sourceDocumentReadableId"
+                    value={
+                      sourceDocuments.find((d) => d.id === sourceDocumentId)
+                        ?.name ?? ""
+                    }
+                  />
                   <VStack spacing={4} w="full" alignItems="start" minH="full">
                     <Grid
                       gridTemplateColumns={["1fr", "1fr", "1fr 1fr"]}
@@ -174,9 +181,9 @@ const ReceiptForm = ({
                           value: d.id,
                         }))}
                         value={sourceDocumentId ?? undefined}
-                        onChange={(newValue) =>
-                          setSourceDocumentId(newValue as string)
-                        }
+                        onChange={(newValue) => {
+                          setSourceDocumentId(newValue as string);
+                        }}
                         isReadOnly={isEditing}
                       />
                       <SelectControlled
@@ -192,7 +199,6 @@ const ReceiptForm = ({
                         onChange={(newValue) =>
                           setLocationId(newValue as string)
                         }
-                        isReadOnly={isEditing}
                       />
                     </Grid>
                   </VStack>

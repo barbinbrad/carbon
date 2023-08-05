@@ -1,3 +1,4 @@
+import { formatDate } from "@carbon/utils";
 import { MenuItem } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
@@ -26,6 +27,31 @@ const ReceiptsTable = memo(({ data, count }: ReceiptsTableProps) => {
         accessorKey: "receiptId",
         header: "Receipt ID",
         cell: (item) => item.getValue(),
+      },
+      {
+        accessorKey: "sourceDocument",
+        header: "Source Document",
+        cell: (item) => item.getValue(),
+      },
+      {
+        accessorKey: "sourceDocumentReadableId",
+        header: "Source Document ID",
+        cell: (item) => item.getValue(),
+      },
+      {
+        accessorKey: "location.name",
+        header: "Location",
+        cell: (item) => item.getValue(),
+      },
+      {
+        accessorKey: "supplier.name",
+        header: "Supplier",
+        cell: (item) => item.getValue(),
+      },
+      {
+        accessorKey: "postingDate",
+        header: "Posting Date",
+        cell: (item) => formatDate(item.getValue<string>()),
       },
     ];
 

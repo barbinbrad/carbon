@@ -15,6 +15,7 @@ CREATE TABLE "receipt" (
   "locationId" TEXT,
   "sourceDocument" "receiptSourceDocument",
   "sourceDocumentId" TEXT,
+  "sourceDocumentReadableId" TEXT,
   "supplierId" TEXT,
   "postingDate" DATE,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),

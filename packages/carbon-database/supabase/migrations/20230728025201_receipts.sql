@@ -42,6 +42,7 @@ VALUES ('receipt', 'Receipt', 'RE', NULL, 0, 6, 1);
 CREATE TABLE "receiptLine" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "receiptId" TEXT NOT NULL,
+  "lineId" TEXT,
   "partId" TEXT NOT NULL,
   "orderQuantity" NUMERIC(18, 4) NOT NULL,
   "receivedQuantity" NUMERIC(18, 4) NOT NULL DEFAULT 0,

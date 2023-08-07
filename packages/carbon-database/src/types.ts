@@ -3454,6 +3454,7 @@ export interface Database {
           createdAt: string;
           createdBy: string;
           id: string;
+          lineId: string | null;
           locationId: string | null;
           orderQuantity: number;
           partId: string;
@@ -3470,6 +3471,7 @@ export interface Database {
           createdAt?: string;
           createdBy: string;
           id?: string;
+          lineId?: string | null;
           locationId?: string | null;
           orderQuantity: number;
           partId: string;
@@ -3486,6 +3488,7 @@ export interface Database {
           createdAt?: string;
           createdBy?: string;
           id?: string;
+          lineId?: string | null;
           locationId?: string | null;
           orderQuantity?: number;
           partId?: string;

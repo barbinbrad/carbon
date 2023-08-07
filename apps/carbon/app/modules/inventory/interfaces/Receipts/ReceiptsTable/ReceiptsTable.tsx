@@ -41,12 +41,12 @@ const ReceiptsTable = memo(({ data, count }: ReceiptsTableProps) => {
       {
         accessorKey: "location.name",
         header: "Location",
-        cell: (item) => item.getValue(),
+        cell: (item) => item.getValue() ?? null,
       },
       {
         accessorKey: "supplier.name",
         header: "Supplier",
-        cell: (item) => item.getValue(),
+        cell: (item) => item.getValue() ?? null,
       },
       {
         accessorKey: "postingDate",

@@ -2,16 +2,20 @@ import { Checkbox } from "@chakra-ui/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { flushSync } from "react-dom";
+import { EditableNumber } from "~/components/Editable";
 import { useUrlParams, useUser } from "~/hooks";
 import { useSupabase } from "~/lib/supabase";
+import type { receiptValidator } from "~/modules/inventory";
 import type {
+  ReceiptLine,
   ReceiptLineItem,
   ReceiptSourceDocument,
 } from "~/modules/inventory/types";
 import type { ListItem } from "~/types";
+import type { TypeOfValidator } from "~/types/validators";
 
 export default function useReceiptForm({
-  receiptId,
+  receipt,
   locations,
   sourceDocument,
   sourceDocumentId,
@@ -21,12 +25,12 @@ export default function useReceiptForm({
   setSourceDocumentId,
   setSupplierId,
 }: {
-  receiptId: string;
+  receipt: TypeOfValidator<typeof receiptValidator>;
   locations: ListItem[];
   sourceDocument: ReceiptSourceDocument;
   sourceDocumentId: string | null;
   setLocationId: (locationId: string | null) => void;
-  setReceiptItems: (receiptItems: ReceiptLineItem[]) => void;
+  setReceiptItems: (receiptLines: ReceiptLine[]) => void;
   setSourceDocument: (sourceDocument: ReceiptSourceDocument) => void;
   setSourceDocumentId: (sourceDocumentId: string | null) => void;
   setSupplierId: (supplierId: string | null) => void;
@@ -74,11 +78,14 @@ export default function useReceiptForm({
     [supabase]
   );
 
-  const deleteReceiptLines = useCallback(async () => {
+  const deleteReceiptItems = useCallback(async () => {
     if (!supabase) throw new Error("supabase client is not defined");
 
-    return supabase.from("receiptLine").delete().eq("receiptId", receiptId);
-  }, [receiptId, supabase]);
+    return supabase
+      .from("receiptLine")
+      .delete()
+      .eq("receiptId", receipt.receiptId);
+  }, [receipt.receiptId, supabase]);
 
   const fetchSourceDocuments = useCallback(() => {
     if (!supabase) return;
@@ -110,92 +117,128 @@ export default function useReceiptForm({
   const fetchSourceDocument = useCallback(async () => {
     if (!supabase || !sourceDocumentId) return;
 
-    const deleteExistingLines = await deleteReceiptLines();
-    if (deleteExistingLines.error) {
-      setError(deleteExistingLines.error.message);
-      return;
-    }
-
     switch (sourceDocument) {
       case "Purchase Order":
-        const [purchaseOrder, purchaseOrderLines] = await Promise.all([
-          supabase
-            .from("purchase_order_view")
-            .select("*")
-            .eq("id", sourceDocumentId)
-            .single(),
-          supabase
-            .from("purchaseOrderLine")
-            .select("*")
-            .eq("purchaseOrderId", sourceDocumentId)
-            .eq("purchaseOrderLineType", "Part")
-            .eq("receivedComplete", false),
-        ]);
+        const [purchaseOrder, purchaseOrderLines, receiptLines] =
+          await Promise.all([
+            supabase
+              .from("purchase_order_view")
+              .select("*")
+              .eq("id", sourceDocumentId)
+              .single(),
+            supabase
+              .from("purchaseOrderLine")
+              .select("*")
+              .eq("purchaseOrderId", sourceDocumentId)
+              .eq("purchaseOrderLineType", "Part")
+              .eq("receivedComplete", false),
+            supabase
+              .from("receiptLine")
+              .select("*")
+              .eq("receiptId", receipt.receiptId),
+          ]);
 
         if (purchaseOrder.error) {
           setError(purchaseOrder.error.message);
+          setReceiptItems([]);
           break;
         } else {
           setLocationId(purchaseOrder.data.locationId);
           setSupplierId(purchaseOrder.data.supplierId);
         }
 
-        if (purchaseOrderLines.error) {
-          setError(purchaseOrderLines.error.message);
-        } else {
-          const receiptItems = purchaseOrderLines.data.reduce<
-            ReceiptLineItem[]
-          >((acc, d) => {
-            if (
-              !d.partId ||
-              !d.purchaseQuantity ||
-              d.unitPrice === null ||
-              isNaN(d.unitPrice)
-            ) {
-              return acc;
-            }
-
-            acc.push({
-              receiptId,
-              partId: d.partId,
-              orderQuantity: d.purchaseQuantity,
-              receivedQuantity: 0,
-              unitPrice: d.unitPrice,
-              unitOfMeasure: d.unitOfMeasureCode ?? "EA",
-              locationId: purchaseOrder.data.locationId,
-              shelfId: d.shelfId,
-              receivedComplete: false,
-            });
-
-            return acc;
-          }, []);
-
-          setReceiptItems(receiptItems);
-          supabase
-            .from("receiptLine")
-            .insert(receiptItems.map((r) => ({ ...r, createdBy: user.id })))
-            .then((response) => {
-              if (response.error) {
-                setError(response.error.message);
-                setReceiptItems([]);
-              }
-            });
+        if (receiptLines.error) {
+          setError(receiptLines.error.message);
+          setReceiptItems([]);
+          break;
         }
 
+        if (
+          receipt.sourceDocumentId === sourceDocumentId &&
+          receiptLines.data.length > 0
+        ) {
+          // no need to insert and fetch lines if they already exist
+          setReceiptItems(receiptLines.data);
+          break;
+        }
+
+        const deleteExistingLines = await deleteReceiptItems();
+        if (deleteExistingLines.error) {
+          setError(deleteExistingLines.error.message);
+          break;
+        }
+
+        if (purchaseOrderLines.error) {
+          setError(purchaseOrderLines.error.message);
+          break;
+        }
+
+        const receiptLineItems = purchaseOrderLines.data.reduce<
+          ReceiptLineItem[]
+        >((acc, d) => {
+          if (
+            !d.partId ||
+            !d.purchaseQuantity ||
+            d.unitPrice === null ||
+            isNaN(d.unitPrice)
+          ) {
+            return acc;
+          }
+
+          acc.push({
+            receiptId: receipt.receiptId,
+            lineId: d.id,
+            partId: d.partId,
+            orderQuantity: d.purchaseQuantity,
+            receivedQuantity: 0,
+            unitPrice: d.unitPrice,
+            unitOfMeasure: d.unitOfMeasureCode ?? "EA",
+            locationId: purchaseOrder.data.locationId,
+            shelfId: d.shelfId,
+            receivedComplete: false,
+            createdBy: user?.id ?? "",
+          });
+
+          return acc;
+        }, []);
+
+        const { error: insertError } = await supabase
+          .from("receiptLine")
+          .insert(receiptLineItems);
+
+        if (insertError) {
+          setError(insertError.message);
+          setReceiptItems([]);
+          break;
+        }
+
+        const { data: receiptLinesData, error: selectError } = await supabase
+          .from("receiptLine")
+          .select("*")
+          .eq("receiptId", receipt.receiptId);
+
+        if (selectError) {
+          setError(selectError.message);
+          setReceiptItems([]);
+          break;
+        }
+
+        setReceiptItems(receiptLinesData ?? []);
         break;
       default:
         return;
     }
   }, [
-    deleteReceiptLines,
-    receiptId,
+    deleteReceiptItems,
+    receipt.receiptId,
+    receipt.sourceDocumentId,
     setLocationId,
     setReceiptItems,
     setSupplierId,
     sourceDocument,
     sourceDocumentId,
     supabase,
-    user.id,
+    user?.id,
   ]);
 
   useEffect(() => {
@@ -211,7 +254,7 @@ export default function useReceiptForm({
     }
   }, [fetchSourceDocument, setLocationId, setSupplierId, sourceDocumentId]);
 
-  const receiptItemColumns = useMemo<ColumnDef<ReceiptLineItem>[]>(() => {
+  const receiptItemColumns = useMemo<ColumnDef<ReceiptLine>[]>(() => {
     return [
       {
         accessorKey: "partId",
@@ -259,8 +302,30 @@ export default function useReceiptForm({
     ];
   }, [locations]);
 
+  const handleCellEdit = useCallback(
+    async (id: string, value: unknown, row: ReceiptLine) => {
+      if (!supabase) throw new Error("Supabase client not found");
+      return await supabase
+        .from("receiptLine")
+        .update({
+          [id]: value,
+        })
+        .eq("id", row.id);
+    },
+    [supabase]
+  );
+
+  const receiptItemEditableComponents = useMemo(
+    () => ({
+      receivedQuantity: EditableNumber(handleCellEdit),
+      unitPrice: EditableNumber(handleCellEdit),
+    }),
+    [handleCellEdit]
+  );
+
   return {
     deleteReceipt,
+    editableComponents: receiptItemEditableComponents,
     error,
     receiptItemColumns,
     sourceDocuments,

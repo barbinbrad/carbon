@@ -148,7 +148,7 @@ const PurchaseOrdersTable = memo(
             isDisabled={!permissions.can("view", "purchasing")}
             onClick={() => edit(row)}
           >
-            View
+            Edit
           </MenuItem>
           <MenuItem
             icon={<BsStar />}

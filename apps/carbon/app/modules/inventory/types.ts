@@ -18,7 +18,7 @@ export type ReceiptLine = NonNullable<
 
 export type ReceiptLineItem = Omit<
   ReceiptLine,
-  "id" | "createdBy" | "updatedBy" | "createdAt" | "updatedAt"
+  "id" | "updatedBy" | "createdAt" | "updatedAt"
 >;
 
 export type ShippingCarrier = Database["public"]["Enums"]["shippingCarrier"];

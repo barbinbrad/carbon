@@ -26,10 +26,7 @@ import {
 } from "~/components/Form";
 import DataGrid from "~/components/Grid";
 import { usePermissions, useRouteData } from "~/hooks";
-import type {
-  ReceiptLineItem,
-  ReceiptSourceDocument,
-} from "~/modules/inventory";
+import type { ReceiptLine, ReceiptSourceDocument } from "~/modules/inventory";
 import {
   receiptValidator,
   receiptSourceDocumentType,
@@ -41,7 +38,7 @@ import useReceiptForm from "./useReceiptForm";
 type ReceiptFormProps = {
   initialValues: TypeOfValidator<typeof receiptValidator>;
   isPosted: boolean;
-  receiptItems?: ReceiptLineItem[];
+  receiptItems?: ReceiptLine[];
 };
 
 const ReceiptForm = ({
@@ -61,7 +58,7 @@ const ReceiptForm = ({
     locations: ListItem[];
   }>("/x/inventory/receipts");
 
-  const [internalReceiptItems, setReceiptItems] = useState<ReceiptLineItem[]>(
+  const [internalReceiptItems, setReceiptItems] = useState<ReceiptLine[]>(
     receiptItems ?? []
   );
 
@@ -80,19 +77,22 @@ const ReceiptForm = ({
     initialValues.sourceDocumentId ?? null
   );
 
-  const { deleteReceipt, receiptItemColumns, sourceDocuments } = useReceiptForm(
-    {
-      receiptId: initialValues.receiptId,
-      locations: routeData?.locations ?? [],
-      sourceDocument,
-      sourceDocumentId,
-      setLocationId,
-      setReceiptItems,
-      setSourceDocument,
-      setSourceDocumentId,
-      setSupplierId,
-    }
-  );
+  const {
+    deleteReceipt,
+    editableComponents,
+    receiptItemColumns,
+    sourceDocuments,
+  } = useReceiptForm({
+    receipt: initialValues,
+    locations: routeData?.locations ?? [],
+    sourceDocument,
+    sourceDocumentId,
+    setLocationId,
+    setReceiptItems,
+    setSourceDocument,
+    setSourceDocumentId,
+    setSupplierId,
+  });
 
   const onClose = () => {
     if (!sourceDocumentId && initialValues.id) {
@@ -110,7 +110,7 @@ const ReceiptForm = ({
         method="post"
         action={
           isEditing
-            ? `x/inventory/receipts/${initialValues.id}`
+            ? `/x/inventory/receipts/${initialValues.id}`
             : `/x/inventory/receipts/new`
         }
         defaultValues={initialValues}
@@ -171,7 +171,7 @@ const ReceiptForm = ({
                           );
                           setSourceDocumentId(null);
                         }}
-                        isReadOnly={isEditing}
+                        isReadOnly={isPosted}
                       />
                       <SelectControlled
                         name="sourceDocumentId"
@@ -184,7 +184,7 @@ const ReceiptForm = ({
                         onChange={(newValue) => {
                           setSourceDocumentId(newValue as string);
                         }}
-                        isReadOnly={isEditing}
+                        isReadOnly={isPosted}
                       />
                       <SelectControlled
                         name="locationId"
@@ -199,6 +199,7 @@ const ReceiptForm = ({
                         onChange={(newValue) =>
                           setLocationId(newValue as string)
                         }
+                        isReadOnly={isPosted}
                       />
                     </Grid>
                   </VStack>
@@ -215,11 +216,11 @@ const ReceiptForm = ({
               </Grid>
               <VStack w="full" alignItems="start">
                 <FormLabel>Receipt Lines</FormLabel>
-                <DataGrid<ReceiptLineItem>
+                <DataGrid<ReceiptLine>
                   data={internalReceiptItems}
                   columns={receiptItemColumns}
                   canEdit={!isPosted}
-                  editableComponents={{}}
+                  editableComponents={editableComponents}
                 />
               </VStack>
             </VStack>

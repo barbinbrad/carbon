@@ -135,6 +135,17 @@ export const theme = {
         colorScheme: "green",
       },
     },
+    Tabs: {
+      variants: {
+        line: {
+          tab: {
+            _selected: {
+              color: "black",
+            },
+          },
+        },
+      },
+    },
     Textarea: {
       variants: {
         outline: () => focusRingOutlined,

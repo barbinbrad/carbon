@@ -51,7 +51,7 @@ export async function action({ request }: ActionArgs) {
     );
   }
 
-  const unitOfMeasureId = insertUnitOfMeasure.data[0]?.id;
+  const unitOfMeasureId = insertUnitOfMeasure.data?.id;
   if (!unitOfMeasureId) {
     return json(
       {},

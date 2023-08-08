@@ -39,7 +39,7 @@ export async function action({ request }: ActionArgs) {
     );
   }
 
-  const supplierId = createSupplier.data[0]?.id;
+  const supplierId = createSupplier.data?.id;
 
   return redirect(
     `/x/purchasing/suppliers/${supplierId}`,

@@ -400,6 +400,7 @@ export async function upsertPartGroup(
       // @ts-ignore
       .eq("id", partGroup.id)
       .select("id")
+      .single()
   );
 }
 

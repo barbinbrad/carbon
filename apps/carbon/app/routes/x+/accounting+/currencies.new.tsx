@@ -48,7 +48,7 @@ export async function action({ request }: ActionArgs) {
     );
   }
 
-  const currencyId = insertCurrency.data[0]?.id;
+  const currencyId = insertCurrency.data?.id;
   if (!currencyId) {
     return json(
       {},

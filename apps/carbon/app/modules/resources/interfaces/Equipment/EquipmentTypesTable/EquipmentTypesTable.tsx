@@ -5,6 +5,7 @@ import {
   HStack,
   Icon,
   IconButton,
+  Link,
   MenuItem,
   Text,
   useDisclosure,
@@ -50,14 +51,16 @@ const EquipmentTypesTable = memo(
       deleteModal.onClose();
     };
 
-    const columns = useMemo<ColumnDef<typeof data[number]>[]>(() => {
+    const columns = useMemo<ColumnDef<(typeof data)[number]>[]>(() => {
       return [
         {
           accessorKey: "name",
           header: "Equipment Type",
           cell: ({ row }) => (
             <HStack>
-              <span>{row.original.name}</span>
+              <Link onClick={() => navigate(row.original.id)}>
+                {row.original.name}
+              </Link>
               {row.original.requiredAbility && (
                 <Icon
                   as={BsFillCheckCircleFill}
@@ -128,7 +131,7 @@ const EquipmentTypesTable = memo(
     }, [params]);
 
     const renderContextMenu = useCallback<
-      (row: typeof data[number]) => JSX.Element
+      (row: (typeof data)[number]) => JSX.Element
     >(
       (row) => (
         <>
@@ -177,7 +180,7 @@ const EquipmentTypesTable = memo(
 
     return (
       <>
-        <Table<typeof data[number]>
+        <Table<(typeof data)[number]>
           data={data}
           columns={columns}
           count={count ?? 0}

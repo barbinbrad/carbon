@@ -78,7 +78,7 @@ export async function action({ request }: ActionArgs) {
     );
   }
 
-  const employeeTypeId = createEmployeeType.data[0]?.id;
+  const employeeTypeId = createEmployeeType.data?.id;
   if (!employeeTypeId) {
     return json(
       {},
@@ -123,10 +123,5 @@ export default function NewEmployeeTypesRoute() {
     permissions,
   };
 
-  return (
-    <EmployeeTypeForm
-      //@ts-expect-error
-      initialValues={initialValues}
-    />
-  );
+  return <EmployeeTypeForm initialValues={initialValues} />;
 }

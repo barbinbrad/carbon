@@ -1,6 +1,13 @@
 import { DataTable, DataTableColumnHeader } from "@carbon/react";
-import { Box, Checkbox, HStack, IconButton, Text } from "@chakra-ui/react";
-import { Link } from "@remix-run/react";
+import {
+  Box,
+  Checkbox,
+  HStack,
+  IconButton,
+  Link,
+  Text,
+} from "@chakra-ui/react";
+import { Link as RemixLink, useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo } from "react";
 import { MdMoreHoriz } from "react-icons/md";
@@ -11,6 +18,7 @@ type ChartOfAccountsTableProps = {
 };
 
 const ChartOfAccountsTable = memo(({ data }: ChartOfAccountsTableProps) => {
+  const navigate = useNavigate();
   const columns = useMemo<ColumnDef<Chart>[]>(() => {
     return [
       {
@@ -23,13 +31,17 @@ const ChartOfAccountsTable = memo(({ data }: ChartOfAccountsTableProps) => {
 
           return (
             <HStack>
-              <Text fontWeight={isPosting ? "normal" : "bold"}>
+              <Link
+                onClick={() => navigate(row.original.id)}
+                fontWeight={isPosting ? "normal" : "bold"}
+              >
                 {row.original.number}
-              </Text>
+              </Link>
+
               <Box position="relative" w={6} h={6}>
                 <IconButton
                   aria-label="Edit account"
-                  as={Link}
+                  as={RemixLink}
                   icon={<MdMoreHoriz />}
                   size="sm"
                   position="absolute"
@@ -105,7 +117,7 @@ const ChartOfAccountsTable = memo(({ data }: ChartOfAccountsTableProps) => {
         cell: (item) => <Checkbox isChecked={item.getValue<boolean>()} />,
       },
     ];
-  }, []);
+  }, [navigate]);
 
   return <DataTable data={data} columns={columns} />;
 });

@@ -1,4 +1,4 @@
-import { MenuItem } from "@chakra-ui/react";
+import { Link, MenuItem } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo } from "react";
@@ -21,7 +21,11 @@ const PartsTable = memo(({ data, count }: PartsTableProps) => {
       {
         accessorKey: "id",
         header: "Part ID",
-        cell: (item) => item.getValue(),
+        cell: ({ row }) => (
+          <Link onClick={() => navigate(row.original.id as string)}>
+            {row.original.id}
+          </Link>
+        ),
       },
       {
         accessorKey: "name",

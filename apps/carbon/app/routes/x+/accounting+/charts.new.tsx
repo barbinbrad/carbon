@@ -54,7 +54,7 @@ export async function action({ request }: ActionArgs) {
     );
   }
 
-  const accountNumber = insertAccount.data[0]?.id;
+  const accountNumber = insertAccount.data?.id;
   if (!accountNumber) {
     return json(
       {},

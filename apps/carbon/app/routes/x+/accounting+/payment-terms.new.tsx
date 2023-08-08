@@ -56,7 +56,7 @@ export async function action({ request }: ActionArgs) {
     );
   }
 
-  const paymentTermId = insertPaymentTerm.data[0]?.id;
+  const paymentTermId = insertPaymentTerm.data?.id;
   if (!paymentTermId) {
     return json(
       {},

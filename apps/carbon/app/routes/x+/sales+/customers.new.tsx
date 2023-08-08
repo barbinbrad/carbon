@@ -39,7 +39,7 @@ export async function action({ request }: ActionArgs) {
     );
   }
 
-  const customerId = createCustomer.data[0]?.id;
+  const customerId = createCustomer.data?.id;
 
   return redirect(
     `/x/sales/customers/${customerId}`,

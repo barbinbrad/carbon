@@ -86,8 +86,13 @@ export async function createCustomerAccount(
     return error(updateContact.error, "Failed to update customer contact");
   }
 
+  const generatedId = Array.isArray(insertUser.data)
+    ? insertUser.data[0].id
+    : // @ts-ignore
+      insertUser.data?.id!;
+
   const createCustomerAccount = await insertCustomerAccount(client, {
-    id: insertUser.data[0].id,
+    id: generatedId,
     customerId,
   });
 
@@ -538,7 +543,7 @@ export async function getUserClaims(
         );
       }
       // convert rawClaims to permissions
-      claims = makePermissionsFromClaims(rawClaims.data);
+      claims = makePermissionsFromClaims(rawClaims.data as Json[]);
 
       // store claims in redis
       await redis.set(getPermissionCacheKey(userId), JSON.stringify(claims));
@@ -588,7 +593,7 @@ export async function insertEmployee(
   client: SupabaseClient<Database>,
   employee: EmployeeRow
 ) {
-  return client.from("employee").insert([employee]);
+  return client.from("employee").insert([employee]).select("id").single();
 }
 
 export async function insertEmployeeType(
@@ -880,8 +885,8 @@ export async function updatePermissions(
     });
 
     const claimsUpdate = await setUserClaims(id, {
-      ...currentClaims,
-      ...newClaims,
+      ...(currentClaims as Record<string, boolean>),
+      ...(newClaims as Record<string, boolean>),
     });
     if (claimsUpdate.error)
       return error(claimsUpdate.error, "Failed to update claims");

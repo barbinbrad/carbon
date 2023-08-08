@@ -3,6 +3,7 @@ import {
   Button,
   ButtonGroup,
   IconButton,
+  Link,
   MenuItem,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -42,12 +43,16 @@ const AttributeCategoriesTable = memo(
       deleteModal.onClose();
     };
 
-    const columns = useMemo<ColumnDef<typeof data[number]>[]>(() => {
+    const columns = useMemo<ColumnDef<(typeof data)[number]>[]>(() => {
       return [
         {
           accessorKey: "name",
           header: "Category",
-          cell: (item) => item.getValue(),
+          cell: ({ row }) => (
+            <Link onClick={() => navigate(row.original.id)}>
+              {row.original.name}
+            </Link>
+          ),
         },
         {
           header: "Attributes",
@@ -101,7 +106,7 @@ const AttributeCategoriesTable = memo(
     }, [navigate, params]);
 
     const renderContextMenu = useCallback(
-      (row: typeof data[number]) => {
+      (row: (typeof data)[number]) => {
         return (
           <>
             <MenuItem
@@ -150,7 +155,7 @@ const AttributeCategoriesTable = memo(
 
     return (
       <>
-        <Table<typeof data[number]>
+        <Table<(typeof data)[number]>
           data={data}
           columns={columns}
           count={count ?? 0}

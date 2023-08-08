@@ -1,4 +1,4 @@
-import { AvatarGroup, Badge, MenuItem } from "@chakra-ui/react";
+import { AvatarGroup, Badge, Link, MenuItem } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
@@ -67,7 +67,7 @@ const ShiftsTable = memo(({ data, count }: ShiftsTableProps) => {
       : [],
   }));
 
-  const renderDays = useCallback((row: typeof rows[number]) => {
+  const renderDays = useCallback((row: (typeof rows)[number]) => {
     const days = [
       row.monday && "M",
       row.tuesday && "Tu",
@@ -85,12 +85,16 @@ const ShiftsTable = memo(({ data, count }: ShiftsTableProps) => {
     ));
   }, []);
 
-  const columns = useMemo<ColumnDef<typeof rows[number]>[]>(() => {
+  const columns = useMemo<ColumnDef<(typeof rows)[number]>[]>(() => {
     return [
       {
         accessorKey: "name",
         header: "Shift",
-        cell: (item) => item.getValue(),
+        cell: ({ row }) => (
+          <Link onClick={() => navigate(row.original.id)}>
+            {row.original.name}
+          </Link>
+        ),
       },
       {
         header: "Employees",
@@ -128,10 +132,10 @@ const ShiftsTable = memo(({ data, count }: ShiftsTableProps) => {
         cell: ({ row }) => renderDays(row.original),
       },
     ];
-  }, [renderDays]);
+  }, [navigate, renderDays]);
 
   const renderContextMenu = useCallback(
-    (row: typeof rows[number]) => {
+    (row: (typeof rows)[number]) => {
       return (
         <>
           <MenuItem
@@ -160,7 +164,7 @@ const ShiftsTable = memo(({ data, count }: ShiftsTableProps) => {
   );
 
   return (
-    <Table<typeof rows[number]>
+    <Table<(typeof rows)[number]>
       data={rows}
       count={count}
       columns={columns}

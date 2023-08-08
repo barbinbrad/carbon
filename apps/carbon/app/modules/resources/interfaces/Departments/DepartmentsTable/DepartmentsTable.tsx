@@ -1,4 +1,4 @@
-import { Box, MenuItem } from "@chakra-ui/react";
+import { Box, Link, MenuItem } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
@@ -26,12 +26,16 @@ const DepartmentsTable = memo(({ data, count }: DepartmentsTableProps) => {
         : row.department?.name) ?? "",
   }));
 
-  const columns = useMemo<ColumnDef<typeof rows[number]>[]>(() => {
+  const columns = useMemo<ColumnDef<(typeof rows)[number]>[]>(() => {
     return [
       {
         accessorKey: "name",
         header: "Department",
-        cell: (item) => item.getValue(),
+        cell: ({ row }) => (
+          <Link onClick={() => navigate(row.original.id)}>
+            {row.original.name}
+          </Link>
+        ),
       },
       {
         accessorKey: "color",
@@ -52,10 +56,10 @@ const DepartmentsTable = memo(({ data, count }: DepartmentsTableProps) => {
         cell: ({ row }) => row.original.parentDepartment,
       },
     ];
-  }, []);
+  }, [navigate]);
 
   const renderContextMenu = useCallback(
-    (row: typeof data[number]) => {
+    (row: (typeof data)[number]) => {
       return (
         <>
           <MenuItem
@@ -86,7 +90,7 @@ const DepartmentsTable = memo(({ data, count }: DepartmentsTableProps) => {
   );
 
   return (
-    <Table<typeof rows[number]>
+    <Table<(typeof rows)[number]>
       data={rows}
       count={count}
       columns={columns}

@@ -1,4 +1,11 @@
-import { HStack, Icon, MenuItem, Text, useDisclosure } from "@chakra-ui/react";
+import {
+  HStack,
+  Icon,
+  Link,
+  MenuItem,
+  Text,
+  useDisclosure,
+} from "@chakra-ui/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { BsPencilSquare, BsStar, BsStarFill } from "react-icons/bs";
@@ -66,7 +73,10 @@ const PurchaseOrdersTable = memo(
                 as={row.original.favorite ? BsStarFill : BsStar}
                 onClick={() => onFavorite(row.original)}
               />
-              <span>{row.original.purchaseOrderId}</span>
+
+              <Link onClick={() => edit(row.original)}>
+                {row.original.purchaseOrderId}
+              </Link>
             </HStack>
           ),
         },
@@ -120,7 +130,7 @@ const PurchaseOrdersTable = memo(
           cell: (item) => item.getValue(),
         },
       ];
-    }, [onFavorite]);
+    }, [edit, onFavorite]);
 
     const actions = useMemo(() => {
       return [

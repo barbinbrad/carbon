@@ -60,7 +60,7 @@ export async function action({ request }: ActionArgs) {
     );
   }
 
-  const partGroupId = insertPartGroup.data[0]?.id;
+  const partGroupId = insertPartGroup.data?.id;
   if (!partGroupId) {
     return json(
       {},

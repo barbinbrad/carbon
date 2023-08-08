@@ -1,4 +1,4 @@
-import { AvatarGroup, MenuItem } from "@chakra-ui/react";
+import { AvatarGroup, MenuItem, Link } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
@@ -55,12 +55,18 @@ const AbilitiesTable = memo(({ data, count }: AbilitiesTableProps) => {
       : [],
   }));
 
-  const columns = useMemo<ColumnDef<typeof rows[number]>[]>(() => {
+  const columns = useMemo<ColumnDef<(typeof rows)[number]>[]>(() => {
     return [
       {
         accessorKey: "name",
         header: "Ability",
-        cell: (item) => item.getValue(),
+        cell: ({ row }) => (
+          <Link
+            onClick={() => navigate(`/x/resources/ability/${row.original.id}`)}
+          >
+            {row.original.name}
+          </Link>
+        ),
       },
       {
         header: "Employees",
@@ -96,10 +102,10 @@ const AbilitiesTable = memo(({ data, count }: AbilitiesTableProps) => {
         ),
       },
     ];
-  }, []);
+  }, [navigate]);
 
   const renderContextMenu = useCallback(
-    (row: typeof rows[number]) => {
+    (row: (typeof rows)[number]) => {
       return (
         <>
           <MenuItem
@@ -126,7 +132,7 @@ const AbilitiesTable = memo(({ data, count }: AbilitiesTableProps) => {
   );
 
   return (
-    <Table<typeof rows[number]>
+    <Table<(typeof rows)[number]>
       data={rows}
       count={count}
       columns={columns}

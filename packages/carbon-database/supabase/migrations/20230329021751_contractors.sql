@@ -105,7 +105,7 @@ CREATE VIEW "contractors_view" AS
       ON s.id = sc."supplierId"
     INNER JOIN "contact" c 
       ON c.id = sc."contactId"
-    INNER JOIN "contractorAbility" pa
+    LEFT JOIN "contractorAbility" pa
       ON pa."contractorId" = p.id
   WHERE p."active" = true
   GROUP BY p.id, p.active, p."hoursPerWeek", s.id, c.id, s.name, c."firstName", c."lastName", c."email"

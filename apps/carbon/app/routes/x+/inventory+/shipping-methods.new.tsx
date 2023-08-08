@@ -54,7 +54,7 @@ export async function action({ request }: ActionArgs) {
     );
   }
 
-  const shippingMethodId = insertShippingMethod.data[0]?.id;
+  const shippingMethodId = insertShippingMethod.data?.id;
   if (!shippingMethodId) {
     return json(
       {},

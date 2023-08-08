@@ -50,7 +50,7 @@ export async function action({ request }: ActionArgs) {
     );
   }
 
-  const supplierTypeId = insertSupplierType.data[0]?.id;
+  const supplierTypeId = insertSupplierType.data?.id;
   if (!supplierTypeId) {
     return json(
       {},

@@ -5,6 +5,7 @@ import {
   HStack,
   Icon,
   IconButton,
+  Link,
   MenuItem,
   Text,
   useDisclosure,
@@ -47,14 +48,16 @@ const WorkCellTypesTable = memo(({ data, count }: WorkCellTypesTableProps) => {
     deleteModal.onClose();
   };
 
-  const columns = useMemo<ColumnDef<typeof data[number]>[]>(() => {
+  const columns = useMemo<ColumnDef<(typeof data)[number]>[]>(() => {
     return [
       {
         accessorKey: "name",
         header: "Work Cell Type",
         cell: ({ row }) => (
           <HStack>
-            <span>{row.original.name}</span>
+            <Link onClick={() => navigate(row.original.id)}>
+              {row.original.name}
+            </Link>
             {row.original.requiredAbility && (
               <Icon
                 as={BsFillCheckCircleFill}
@@ -125,7 +128,7 @@ const WorkCellTypesTable = memo(({ data, count }: WorkCellTypesTableProps) => {
   }, [params]);
 
   const renderContextMenu = useCallback<
-    (row: typeof data[number]) => JSX.Element
+    (row: (typeof data)[number]) => JSX.Element
   >(
     (row) => (
       <>
@@ -172,7 +175,7 @@ const WorkCellTypesTable = memo(({ data, count }: WorkCellTypesTableProps) => {
 
   return (
     <>
-      <Table<typeof data[number]>
+      <Table<(typeof data)[number]>
         data={data}
         columns={columns}
         count={count ?? 0}

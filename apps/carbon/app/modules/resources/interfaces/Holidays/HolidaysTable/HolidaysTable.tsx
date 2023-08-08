@@ -1,4 +1,4 @@
-import { MenuItem } from "@chakra-ui/react";
+import { Link, MenuItem } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
@@ -20,12 +20,16 @@ const HolidaysTable = memo(({ data, count }: HolidaysTableProps) => {
 
   const rows = data;
 
-  const columns = useMemo<ColumnDef<typeof rows[number]>[]>(() => {
+  const columns = useMemo<ColumnDef<(typeof rows)[number]>[]>(() => {
     return [
       {
         accessorKey: "name",
         header: "Holiday",
-        cell: (item) => item.getValue(),
+        cell: ({ row }) => (
+          <Link onClick={() => navigate(row.original.id)}>
+            {`${row.original.name} (${row.original.year})`}
+          </Link>
+        ),
       },
       {
         accessorKey: "date",
@@ -33,10 +37,10 @@ const HolidaysTable = memo(({ data, count }: HolidaysTableProps) => {
         cell: (item) => item.getValue(),
       },
     ];
-  }, []);
+  }, [navigate]);
 
   const renderContextMenu = useCallback(
-    (row: typeof data[number]) => {
+    (row: (typeof data)[number]) => {
       return (
         <>
           <MenuItem
@@ -65,7 +69,7 @@ const HolidaysTable = memo(({ data, count }: HolidaysTableProps) => {
   );
 
   return (
-    <Table<typeof rows[number]>
+    <Table<(typeof rows)[number]>
       data={rows}
       count={count}
       columns={columns}

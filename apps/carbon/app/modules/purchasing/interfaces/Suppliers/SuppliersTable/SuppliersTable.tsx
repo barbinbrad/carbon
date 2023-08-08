@@ -1,4 +1,10 @@
-import { Button, ButtonGroup, IconButton, MenuItem } from "@chakra-ui/react";
+import {
+  Button,
+  ButtonGroup,
+  IconButton,
+  Link,
+  MenuItem,
+} from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo } from "react";
@@ -21,7 +27,11 @@ const SuppliersTable = memo(({ data, count }: SuppliersTableProps) => {
       {
         accessorKey: "name",
         header: "Name",
-        cell: (item) => item.getValue(),
+        cell: ({ row }) => (
+          <Link onClick={() => navigate(row.original.id as string)}>
+            {row.original.name}
+          </Link>
+        ),
       },
       {
         accessorKey: "type",

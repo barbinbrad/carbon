@@ -1,4 +1,4 @@
-import { MenuItem } from "@chakra-ui/react";
+import { Link, MenuItem } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
@@ -22,12 +22,16 @@ const PartGroupsTable = memo(({ data, count }: PartGroupsTableProps) => {
 
   const rows = useMemo(() => data, [data]);
 
-  const columns = useMemo<ColumnDef<typeof rows[number]>[]>(() => {
-    const result: ColumnDef<typeof rows[number]>[] = [
+  const columns = useMemo<ColumnDef<(typeof rows)[number]>[]>(() => {
+    const result: ColumnDef<(typeof rows)[number]>[] = [
       {
         accessorKey: "name",
         header: "Name",
-        cell: (item) => item.getValue(),
+        cell: ({ row }) => (
+          <Link onClick={() => navigate(row.original.id)}>
+            {row.original.name}
+          </Link>
+        ),
       },
       {
         accessorKey: "description",
@@ -55,10 +59,10 @@ const PartGroupsTable = memo(({ data, count }: PartGroupsTableProps) => {
           },
         ])
       : result;
-  }, [hasAccounting]);
+  }, [hasAccounting, navigate]);
 
   const renderContextMenu = useCallback(
-    (row: typeof rows[number]) => {
+    (row: (typeof rows)[number]) => {
       return (
         <>
           <MenuItem
@@ -86,7 +90,7 @@ const PartGroupsTable = memo(({ data, count }: PartGroupsTableProps) => {
   );
 
   return (
-    <Table<typeof rows[number]>
+    <Table<(typeof rows)[number]>
       data={data}
       columns={columns}
       count={count}

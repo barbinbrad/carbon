@@ -325,7 +325,14 @@ export async function getSupplierTypes(
 
 export async function insertSupplier(
   client: SupabaseClient<Database>,
-  supplier: TypeOfValidator<typeof supplierValidator> & {}
+  supplier:
+    | (Omit<TypeOfValidator<typeof supplierValidator>, "id"> & {
+        createdBy: string;
+      })
+    | (Omit<TypeOfValidator<typeof supplierValidator>, "id"> & {
+        id: string;
+        updatedBy: string;
+      })
 ) {
   return client.from("supplier").insert([supplier]).select("id").single();
 }
@@ -364,7 +371,7 @@ export async function insertSupplierContact(
     return insertContact;
   }
 
-  const contactId = insertContact.data[0].id;
+  const contactId = insertContact.data?.id;
   if (!contactId) {
     return { data: null, error: new Error("Contact ID not found") };
   }
@@ -404,7 +411,7 @@ export async function insertSupplierLocation(
     return insertAddress;
   }
 
-  const addressId = insertAddress.data[0].id;
+  const addressId = insertAddress.data?.id;
   if (!addressId) {
     return { data: null, error: new Error("Address ID not found") };
   }

@@ -50,7 +50,7 @@ export async function action({ request }: ActionArgs) {
     );
   }
 
-  const customerTypeId = insertCustomerType.data[0]?.id;
+  const customerTypeId = insertCustomerType.data?.id;
   if (!customerTypeId) {
     return json(
       {},

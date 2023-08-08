@@ -39,7 +39,7 @@ export async function action({ request }: ActionArgs) {
     );
   }
 
-  const partId = createPart.data[0]?.id;
+  const partId = createPart.data?.id;
 
   return redirect(
     `/x/part/${partId}`,

@@ -36,7 +36,7 @@ export async function action({ request }: ActionArgs) {
     );
   }
 
-  const groupId = createGroup.data[0]?.id;
+  const groupId = createGroup.data?.id;
   if (!groupId) {
     return json(
       {},

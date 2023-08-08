@@ -215,7 +215,7 @@ export async function insertCustomerContact(
     return insertContact;
   }
 
-  const contactId = insertContact.data[0].id;
+  const contactId = insertContact.data?.id;
   if (!contactId) {
     return { data: null, error: new Error("Contact ID not found") };
   }
@@ -255,7 +255,7 @@ export async function insertCustomerLocation(
     return insertAddress;
   }
 
-  const addressId = insertAddress.data[0].id;
+  const addressId = insertAddress.data?.id;
   if (!addressId) {
     return { data: null, error: new Error("Address ID not found") };
   }

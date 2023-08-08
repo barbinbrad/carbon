@@ -1,5 +1,5 @@
 import { formatDate } from "@carbon/utils";
-import { MenuItem } from "@chakra-ui/react";
+import { Link, MenuItem } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
@@ -26,7 +26,11 @@ const ReceiptsTable = memo(({ data, count }: ReceiptsTableProps) => {
       {
         accessorKey: "receiptId",
         header: "Receipt ID",
-        cell: (item) => item.getValue(),
+        cell: ({ row }) => (
+          <Link onClick={() => navigate(row.original.id)}>
+            {row.original.receiptId}
+          </Link>
+        ),
       },
       {
         accessorKey: "sourceDocument",
@@ -56,7 +60,7 @@ const ReceiptsTable = memo(({ data, count }: ReceiptsTableProps) => {
     ];
 
     return result;
-  }, []);
+  }, [navigate]);
 
   const renderContextMenu = useCallback(
     (row: (typeof data)[number]) => {

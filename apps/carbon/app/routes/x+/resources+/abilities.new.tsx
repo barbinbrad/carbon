@@ -68,7 +68,7 @@ export async function action({ request }: ActionArgs) {
     );
   }
 
-  const abilityId = createAbility.data[0]?.id;
+  const abilityId = createAbility.data?.id;
   if (!abilityId) {
     return json(
       {},

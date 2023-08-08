@@ -1,4 +1,10 @@
-import { Button, ButtonGroup, IconButton, MenuItem } from "@chakra-ui/react";
+import {
+  Button,
+  ButtonGroup,
+  IconButton,
+  Link,
+  MenuItem,
+} from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo } from "react";
@@ -21,7 +27,11 @@ const CustomersTable = memo(({ data, count }: CustomersTableProps) => {
       {
         accessorKey: "name",
         header: "Name",
-        cell: (item) => item.getValue(),
+        cell: ({ row }) => (
+          <Link onClick={() => navigate(row.original.id)}>
+            {row.original.name}
+          </Link>
+        ),
       },
       {
         // @ts-ignore
@@ -74,7 +84,7 @@ const CustomersTable = memo(({ data, count }: CustomersTableProps) => {
         ),
       },
     ];
-  }, []);
+  }, [navigate]);
 
   const renderContextMenu = useMemo(
     // eslint-disable-next-line react/display-name

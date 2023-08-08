@@ -1,4 +1,4 @@
-import { MenuItem } from "@chakra-ui/react";
+import { Link, MenuItem } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
@@ -17,12 +17,16 @@ const SequencesTable = memo(({ data, count }: SequencesTableProps) => {
   const navigate = useNavigate();
   const permissions = usePermissions();
 
-  const columns = useMemo<ColumnDef<typeof data[number]>[]>(() => {
+  const columns = useMemo<ColumnDef<(typeof data)[number]>[]>(() => {
     return [
       {
         accessorKey: "name",
         header: "Name",
-        cell: (item) => item.getValue(),
+        cell: ({ row }) => (
+          <Link onClick={() => navigate(row.original.table)}>
+            {row.original.name}
+          </Link>
+        ),
       },
       {
         accessorKey: "prefix",
@@ -50,10 +54,10 @@ const SequencesTable = memo(({ data, count }: SequencesTableProps) => {
         cell: (item) => item.getValue(),
       },
     ];
-  }, []);
+  }, [navigate]);
 
   const renderContextMenu = useCallback(
-    (row: typeof data[number]) => {
+    (row: (typeof data)[number]) => {
       return (
         <>
           <MenuItem
@@ -74,7 +78,7 @@ const SequencesTable = memo(({ data, count }: SequencesTableProps) => {
   );
 
   return (
-    <Table<typeof data[number]>
+    <Table<(typeof data)[number]>
       data={data}
       columns={columns}
       count={count}

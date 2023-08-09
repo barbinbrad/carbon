@@ -45,6 +45,10 @@ export async function loader({ request, params }: LoaderArgs) {
   });
 }
 
+export async function action() {
+  return null;
+}
+
 export default function PurchaseOrderRoute() {
   return (
     <>

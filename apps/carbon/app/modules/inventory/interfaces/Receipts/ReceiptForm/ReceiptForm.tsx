@@ -6,6 +6,7 @@ import {
   DrawerBody,
   DrawerCloseButton,
   DrawerContent,
+  DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
   Heading,
@@ -123,7 +124,7 @@ const ReceiptForm = ({
               <Menubar mb={2} mt={-2}>
                 <MenubarItem
                   onClick={() => alert("post")}
-                  isDisabled={!receiptItems || receiptItems.length === 0}
+                  isDisabled={internalReceiptItems.length === 0 || isPosted}
                 >
                   Post Receipt
                 </MenubarItem>
@@ -216,19 +217,21 @@ const ReceiptForm = ({
                   editableComponents={editableComponents}
                 />
               </VStack>
-              <HStack spacing={2}>
-                <Submit isDisabled={isDisabled}>Save</Submit>
-                <Button
-                  size="md"
-                  colorScheme="gray"
-                  variant="solid"
-                  onClick={onClose}
-                >
-                  Cancel
-                </Button>
-              </HStack>
             </VStack>
           </DrawerBody>
+          <DrawerFooter>
+            <HStack spacing={2}>
+              <Submit isDisabled={isDisabled}>Save</Submit>
+              <Button
+                size="md"
+                colorScheme="gray"
+                variant="solid"
+                onClick={onClose}
+              >
+                Cancel
+              </Button>
+            </HStack>
+          </DrawerFooter>
         </DrawerContent>
       </ValidatedForm>
     </Drawer>

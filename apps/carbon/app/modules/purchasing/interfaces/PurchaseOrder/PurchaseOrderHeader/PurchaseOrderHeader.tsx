@@ -23,19 +23,24 @@ const PartPreview = () => {
     `/x/purchase-order/${orderId}`
   );
 
-  const { receive } = usePurchaseOrder();
+  const { receive, release } = usePurchaseOrder();
 
   return (
     <VStack w="full" alignItems="start" spacing={2}>
       <Menubar>
         <MenubarItem
           onClick={() => {
+            if (routeData?.purchaseOrder) release(routeData.purchaseOrder);
+          }}
+          isDisabled={routeData?.purchaseOrder?.released !== false}
+        >
+          Release
+        </MenubarItem>
+        <MenubarItem
+          onClick={() => {
             if (routeData?.purchaseOrder) receive(routeData.purchaseOrder);
           }}
-          isDisabled={
-            !routeData?.purchaseOrder ||
-            routeData?.purchaseOrder?.released !== true
-          }
+          isDisabled={routeData?.purchaseOrder?.released !== true}
         >
           Receive
         </MenubarItem>

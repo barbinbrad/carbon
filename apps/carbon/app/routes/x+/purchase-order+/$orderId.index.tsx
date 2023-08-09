@@ -86,6 +86,7 @@ export default function PurchaseOrderBasicRoute() {
     receiptPromisedDate: orderData?.purchaseOrder?.receiptPromisedDate ?? "",
     notes: orderData?.purchaseOrder?.notes ?? "",
     closed: orderData?.purchaseOrder?.closed ?? false,
+    released: orderData?.purchaseOrder?.released ?? false,
   };
 
   return (

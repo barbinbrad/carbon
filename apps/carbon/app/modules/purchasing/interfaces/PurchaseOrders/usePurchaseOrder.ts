@@ -1,4 +1,4 @@
-import { useNavigate } from "@remix-run/react";
+import { useNavigate, useSubmit } from "@remix-run/react";
 import { useCallback } from "react";
 import { useUser } from "~/hooks";
 import { useSupabase } from "~/lib/supabase";
@@ -8,6 +8,7 @@ import type {
 } from "~/modules/purchasing";
 
 export const usePurchaseOrder = () => {
+  const submit = useSubmit();
   const navigate = useNavigate();
   const { supabase } = useSupabase();
   const user = useUser();
@@ -59,9 +60,30 @@ export const usePurchaseOrder = () => {
     [navigate]
   );
 
+  const release = useCallback(
+    async (purchaseOrder: PurchaseOrder) => {
+      if (!supabase) throw new Error("Supabase is undefined");
+
+      const { error } = await supabase
+        .from("purchaseOrder")
+        .update({
+          released: true,
+        })
+        .eq("id", purchaseOrder.id);
+
+      if (!error) {
+        submit(`/x/purchase-order/${purchaseOrder.id}`, {
+          method: "post",
+        });
+      }
+    },
+    [submit, supabase]
+  );
+
   return {
     edit,
     favorite,
     receive,
+    release,
   };
 };

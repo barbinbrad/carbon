@@ -48,7 +48,8 @@ function Document({
   children: React.ReactNode;
   title?: string;
 }) {
-  const { env } = useLoaderData<typeof loader>();
+  const loaderData = useLoaderData<typeof loader>();
+  const env = loaderData.env ?? {};
 
   return (
     <html lang="en">

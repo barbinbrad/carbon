@@ -17,8 +17,9 @@ import {
   useEditor,
 } from "./Inputs";
 import Loading from "./Loading";
-import { ActionMenu, ContextMenu } from "./Overlay";
+import { Menubar, MenubarItem, MenubarTrigger } from "./Menu";
 import { useNotification } from "./Message";
+import { ActionMenu, ContextMenu } from "./Overlay";
 import ThemeProvider, { theme } from "./Theme";
 import { ClientOnly } from "./SSR";
 import {
@@ -49,6 +50,9 @@ export {
   File,
   HTML,
   Loading,
+  Menubar,
+  MenubarItem,
+  MenubarTrigger,
   Select,
   ThemeProvider,
   TimePicker,

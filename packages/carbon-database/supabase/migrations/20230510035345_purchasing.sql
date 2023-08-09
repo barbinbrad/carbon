@@ -217,6 +217,11 @@ CREATE TABLE "purchaseOrderLine" (
   "assetId" TEXT,
   "description" TEXT,
   "purchaseQuantity" NUMERIC(9,2) DEFAULT 0,
+  "quantityToReceive" NUMERIC(9,2) DEFAULT 0,
+  "quantityReceived" NUMERIC(9,2) DEFAULT 0,
+  "quantityToInvoice" NUMERIC(9,2) DEFAULT 0,
+  "quantityInvoiced" NUMERIC(9,2) DEFAULT 0,
+  "quantity"
   "unitPrice" NUMERIC(9,2),
   "unitOfMeasureCode" TEXT,
   "shelfId" TEXT,

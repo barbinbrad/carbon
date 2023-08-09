@@ -127,8 +127,8 @@ export function setGenericQueryFilters<
     });
   }
 
-  if (args.offset && args.limit) {
-    query = query.range(args.offset, args.offset + args.limit - 1);
+  if (Number.isInteger(args.offset) && Number.isInteger(args.limit)) {
+    query = query.range(args.offset!, args.offset! + args.limit! - 1);
   }
 
   return query;

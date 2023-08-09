@@ -1,3 +1,4 @@
+import { Menubar, MenubarItem } from "@carbon/react";
 import {
   Button,
   Box,
@@ -12,11 +13,6 @@ import {
   Grid,
   VStack,
   FormLabel,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
 } from "@chakra-ui/react";
 import { useMatches, useNavigate } from "@remix-run/react";
 import { useState } from "react";
@@ -58,7 +54,6 @@ const ReceiptForm = ({
   const navigate = useNavigate();
 
   const routeData = useRouteData<{
-    suppliers: ListItem[];
     locations: ListItem[];
   }>("/x/inventory/receipts");
 
@@ -109,165 +104,133 @@ const ReceiptForm = ({
 
   return (
     <Drawer onClose={onClose} isOpen={true} size="full">
-      <DrawerOverlay />
-      <DrawerContent>
-        <DrawerCloseButton />
-        <DrawerHeader>{initialValues.receiptId}</DrawerHeader>
-        <DrawerBody pb={8}>
-          <Tabs>
-            <TabList>
-              <Tab>Process</Tab>
-              <Tab>Posting</Tab>
-            </TabList>
-
-            <TabPanels>
-              <TabPanel>
-                <ValidatedForm
-                  validator={receiptValidator}
-                  method="post"
-                  action={
-                    isEditing
-                      ? `/x/inventory/receipts/${initialValues.id}`
-                      : `/x/inventory/receipts/new`
-                  }
-                  defaultValues={initialValues}
+      <ValidatedForm
+        validator={receiptValidator}
+        method="post"
+        action={
+          isEditing
+            ? `/x/inventory/receipts/${initialValues.id}`
+            : `/x/inventory/receipts/new`
+        }
+        defaultValues={initialValues}
+      >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader>{initialValues.receiptId}</DrawerHeader>
+          <DrawerBody pb={8}>
+            <VStack spacing={4} w="full" alignItems="start">
+              <Menubar mb={2} mt={-2}>
+                <MenubarItem
+                  onClick={() => alert("post")}
+                  isDisabled={!receiptItems || receiptItems.length === 0}
                 >
-                  <VStack spacing={4} w="full" alignItems="start">
+                  Post Receipt
+                </MenubarItem>
+              </Menubar>
+              <Grid
+                gridTemplateColumns={["1fr", "1fr", "5fr 2fr"]}
+                gridColumnGap={8}
+                w="full"
+              >
+                <Box w="full">
+                  <Hidden name="id" />
+                  <Hidden
+                    name="sourceDocumentReadableId"
+                    value={
+                      sourceDocuments.find((d) => d.id === sourceDocumentId)
+                        ?.name ?? ""
+                    }
+                  />
+                  <Hidden name="supplierId" value={supplierId ?? ""} />
+                  <VStack spacing={4} w="full" alignItems="start" minH="full">
                     <Grid
-                      gridTemplateColumns={["1fr", "1fr", "5fr 2fr"]}
+                      gridTemplateColumns={["1fr", "1fr", "1fr 1fr"]}
                       gridColumnGap={8}
+                      gridRowGap={4}
                       w="full"
                     >
-                      <Box w="full">
-                        <Hidden name="id" />
-                        <Hidden
-                          name="sourceDocumentReadableId"
-                          value={
-                            sourceDocuments.find(
-                              (d) => d.id === sourceDocumentId
-                            )?.name ?? ""
-                          }
-                        />
-                        <VStack
-                          spacing={4}
-                          w="full"
-                          alignItems="start"
-                          minH="full"
-                        >
-                          <Grid
-                            gridTemplateColumns={["1fr", "1fr", "1fr 1fr"]}
-                            gridColumnGap={8}
-                            gridRowGap={4}
-                            w="full"
-                          >
-                            <Input
-                              name="receiptId"
-                              label="Receipt ID"
-                              isReadOnly
-                            />
-                            <SelectControlled
-                              name="supplierId"
-                              label="Supplier"
-                              options={
-                                routeData?.suppliers?.map((l) => ({
-                                  label: l.name,
-                                  value: l.id,
-                                })) ?? []
-                              }
-                              value={supplierId ?? undefined}
-                              onChange={(newValue) =>
-                                setSupplierId(newValue as string)
-                              }
-                              isReadOnly
-                            />
-                            <Select
-                              name="sourceDocument"
-                              label="Source Document"
-                              options={receiptSourceDocumentType.map((v) => ({
-                                label: v,
-                                value: v,
-                              }))}
-                              onChange={(newValue) => {
-                                setSourceDocument(
-                                  newValue.value as ReceiptSourceDocument
-                                );
-                                setSourceDocumentId(null);
-                              }}
-                              isReadOnly={isPosted}
-                            />
-                            <SelectControlled
-                              name="sourceDocumentId"
-                              label="Source Document ID"
-                              options={sourceDocuments.map((d) => ({
-                                label: d.name,
-                                value: d.id,
-                              }))}
-                              value={sourceDocumentId ?? undefined}
-                              onChange={(newValue) => {
-                                setSourceDocumentId(newValue as string);
-                              }}
-                              isReadOnly={isPosted}
-                            />
-                            <SelectControlled
-                              name="locationId"
-                              label="Location"
-                              options={
-                                routeData?.locations?.map((l) => ({
-                                  label: l.name,
-                                  value: l.id,
-                                })) ?? []
-                              }
-                              value={locationId ?? undefined}
-                              onChange={(newValue) =>
-                                setLocationId(newValue as string)
-                              }
-                              isReadOnly={isPosted}
-                            />
-                          </Grid>
-                        </VStack>
-                      </Box>
-                      <VStack
-                        spacing={8}
-                        w="full"
-                        alignItems="start"
-                        py={[8, 8, 0]}
-                      >
-                        {/* TODO: notes component */}
-                        <VStack alignItems="start" w="full" spacing={4} mb={4}>
-                          <HStack w="full" justifyContent="flex-start">
-                            <Heading size="md">Notes</Heading>
-                          </HStack>
-                        </VStack>
-                        {/* end notes component */}
-                      </VStack>
-                    </Grid>
-                    <VStack w="full" alignItems="start">
-                      <FormLabel>Receipt Lines</FormLabel>
-                      <DataGrid<ReceiptLine>
-                        data={internalReceiptItems}
-                        columns={receiptItemColumns}
-                        canEdit={!isPosted}
-                        editableComponents={editableComponents}
+                      <Input name="receiptId" label="Receipt ID" isReadOnly />
+                      <SelectControlled
+                        name="locationId"
+                        label="Location"
+                        options={
+                          routeData?.locations?.map((l) => ({
+                            label: l.name,
+                            value: l.id,
+                          })) ?? []
+                        }
+                        value={locationId ?? undefined}
+                        onChange={(newValue) =>
+                          setLocationId(newValue as string)
+                        }
+                        isReadOnly={isPosted}
                       />
-                    </VStack>
-                    <HStack spacing={2}>
-                      <Submit isDisabled={isDisabled}>Save</Submit>
-                      <Button
-                        size="md"
-                        colorScheme="gray"
-                        variant="solid"
-                        onClick={onClose}
-                      >
-                        Cancel
-                      </Button>
+                      <Select
+                        name="sourceDocument"
+                        label="Source Document"
+                        options={receiptSourceDocumentType.map((v) => ({
+                          label: v,
+                          value: v,
+                        }))}
+                        onChange={(newValue) => {
+                          setSourceDocument(
+                            newValue.value as ReceiptSourceDocument
+                          );
+                          setSourceDocumentId(null);
+                        }}
+                        isReadOnly={isPosted}
+                      />
+                      <SelectControlled
+                        name="sourceDocumentId"
+                        label="Source Document ID"
+                        options={sourceDocuments.map((d) => ({
+                          label: d.name,
+                          value: d.id,
+                        }))}
+                        value={sourceDocumentId ?? undefined}
+                        onChange={(newValue) => {
+                          setSourceDocumentId(newValue as string);
+                        }}
+                        isReadOnly={isPosted}
+                      />
+                    </Grid>
+                  </VStack>
+                </Box>
+                <VStack spacing={8} w="full" alignItems="start" py={[8, 8, 0]}>
+                  {/* TODO: notes component */}
+                  <VStack alignItems="start" w="full" spacing={4} mb={4}>
+                    <HStack w="full" justifyContent="flex-start">
+                      <Heading size="md">Notes</Heading>
                     </HStack>
                   </VStack>
-                </ValidatedForm>
-              </TabPanel>
-            </TabPanels>
-          </Tabs>
-        </DrawerBody>
-      </DrawerContent>
+                  {/* end notes component */}
+                </VStack>
+              </Grid>
+              <VStack w="full" alignItems="start">
+                <FormLabel>Receipt Lines</FormLabel>
+                <DataGrid<ReceiptLine>
+                  data={internalReceiptItems}
+                  columns={receiptItemColumns}
+                  canEdit={!isPosted}
+                  editableComponents={editableComponents}
+                />
+              </VStack>
+              <HStack spacing={2}>
+                <Submit isDisabled={isDisabled}>Save</Submit>
+                <Button
+                  size="md"
+                  colorScheme="gray"
+                  variant="solid"
+                  onClick={onClose}
+                >
+                  Cancel
+                </Button>
+              </HStack>
+            </VStack>
+          </DrawerBody>
+        </DrawerContent>
+      </ValidatedForm>
     </Drawer>
   );
 };

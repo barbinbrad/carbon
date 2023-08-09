@@ -18,20 +18,6 @@ export async function loader({ request }: LoaderArgs) {
     view: "purchasing",
   });
 
-  // const [paymentTerms] = await Promise.all([
-  //   getPaymentTermsList(client),
-  // ]);
-
-  // if (paymentTerms.error) {
-  //   return redirect(
-  //     "/x/purchasing/orders",
-  //     await flash(
-  //       request,
-  //       error(paymentTerms.error, "Failed to load payment terms")
-  //     )
-  //   );
-  // }
-
   return {
     purchaseOrderApprovalStatuses: getPurchaseOrderApprovalStatuses(),
     purchaseOrderLineTypes: getPurchaseOrderLineTypes(),

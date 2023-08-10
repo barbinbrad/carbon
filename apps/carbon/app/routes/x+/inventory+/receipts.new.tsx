@@ -4,6 +4,7 @@ import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
+import { useUser } from "~/hooks";
 import type { ReceiptSourceDocument } from "~/modules/inventory";
 import {
   ReceiptForm,
@@ -94,10 +95,13 @@ export async function action({ request }: ActionArgs) {
 
 export default function NewReceiptsRoute() {
   const { receipt } = useLoaderData<typeof loader>();
+  const { defaults } = useUser();
+
   const initialValues = {
     ...receipt,
     sourceDocument: "Purchase Order" as ReceiptSourceDocument,
     sourceDocumentId: "",
+    locationId: defaults.locationId ?? undefined,
     postingDate: today(getLocalTimeZone()).toString(),
   };
 

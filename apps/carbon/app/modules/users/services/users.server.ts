@@ -567,6 +567,17 @@ export async function getUserGroups(
   return client.rpc("groups_for_user", { uid: userId });
 }
 
+export async function getUserDefaults(
+  client: SupabaseClient<Database>,
+  userId: string
+) {
+  return client
+    .from("user_default_view")
+    .select("*")
+    .eq("userId", userId)
+    .single();
+}
+
 export async function getUsers(client: SupabaseClient<Database>) {
   return client
     .from("user")

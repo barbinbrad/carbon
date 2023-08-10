@@ -8,7 +8,12 @@ import NProgress from "nprogress";
 import { useEffect } from "react";
 import { IconSidebar, Topbar } from "~/components/Layout";
 import { getSupabase, SupabaseProvider } from "~/lib/supabase";
-import { getUserClaims, getUser, getUserGroups } from "~/modules/users";
+import {
+  getUserClaims,
+  getUser,
+  getUserDefaults,
+  getUserGroups,
+} from "~/modules/users";
 import {
   destroyAuthSession,
   getSessionFlash,
@@ -23,11 +28,12 @@ export async function loader({ request }: LoaderArgs) {
   const client = getSupabase(accessToken);
 
   // parallelize the requests
-  const [sessionFlash, user, claims, groups] = await Promise.all([
+  const [sessionFlash, user, claims, groups, defaults] = await Promise.all([
     getSessionFlash(request),
     getUser(client, userId),
     getUserClaims(request, client),
     getUserGroups(client, userId),
+    getUserDefaults(client, userId),
   ]);
 
   if (!claims || user.error || !user.data || !groups.data) {
@@ -44,6 +50,7 @@ export async function loader({ request }: LoaderArgs) {
 
       user: user.data,
       groups: groups.data,
+      defaults: defaults.data,
       permissions: claims?.permissions,
       role: claims?.role,
       result: sessionFlash?.result,

@@ -22,14 +22,16 @@ export async function loader({ request }: LoaderArgs) {
 
   const url = new URL(request.url);
   const searchParams = new URLSearchParams(url.search);
-  const name = searchParams.get("name");
-  const type = searchParams.get("type");
+  const search = searchParams.get("search");
+  const document = searchParams.get("document");
+  const location = searchParams.get("location");
   const { limit, offset, sorts } = getGenericQueryFilters(searchParams);
 
   const [receipts, locations] = await Promise.all([
     getReceipts(client, {
-      name,
-      type,
+      search,
+      document,
+      location,
       limit,
       offset,
       sorts,
@@ -52,11 +54,11 @@ export async function loader({ request }: LoaderArgs) {
 }
 
 export default function ReceiptsRoute() {
-  const { receipts, count } = useLoaderData<typeof loader>();
+  const { receipts, count, locations } = useLoaderData<typeof loader>();
 
   return (
     <VStack w="full" h="full" spacing={0}>
-      <ReceiptsTableFilters />
+      <ReceiptsTableFilters locations={locations ?? []} />
       <ReceiptsTable data={receipts ?? []} count={count ?? 0} />
       <Outlet />
     </VStack>

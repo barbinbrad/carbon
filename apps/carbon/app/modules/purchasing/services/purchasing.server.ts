@@ -173,18 +173,10 @@ export async function getPurchaseOrderLine(
     .single();
 }
 
-export function getPurchaseOrderLineTypes(): Database["public"]["Enums"]["purchaseOrderLineType"][] {
-  return ["Part", "G/L Account", "Fixed Asset", "Comment"];
-}
-
 export async function getPurchaseOrderSuppliers(
   client: SupabaseClient<Database>
 ) {
   return client.from("purchase_order_suppliers_view").select("id, name");
-}
-
-export function getPurchaseOrderTypes(): Database["public"]["Enums"]["purchaseOrderType"][] {
-  return ["Draft", "Purchase", "Return"];
 }
 
 export async function getSupplier(

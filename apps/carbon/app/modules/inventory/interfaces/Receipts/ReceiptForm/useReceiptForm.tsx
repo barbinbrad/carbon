@@ -1,7 +1,6 @@
 import { Checkbox } from "@chakra-ui/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { flushSync } from "react-dom";
 import { EditableNumber } from "~/components/Editable";
 import { useUrlParams, useUser } from "~/hooks";
 import { useSupabase } from "~/lib/supabase";
@@ -46,10 +45,7 @@ export default function useReceiptForm({
 
   useEffect(() => {
     if (sourceDocumentIdFromParams && sourceDocumentFromParams) {
-      flushSync(() => {
-        setSourceDocument(sourceDocumentFromParams as ReceiptSourceDocument);
-      });
-
+      setSourceDocument(sourceDocumentFromParams as ReceiptSourceDocument);
       setSourceDocumentId(sourceDocumentIdFromParams);
     }
   }, [
@@ -92,10 +88,10 @@ export default function useReceiptForm({
 
     switch (sourceDocument) {
       case "Purchase Order":
-        return supabase
+        supabase
           ?.from("purchaseOrder")
           .select("id, purchaseOrderId")
-          .eq("released", true)
+          .eq("status", "Released")
           .then((response) => {
             if (response.error) {
               setError(response.error.message);

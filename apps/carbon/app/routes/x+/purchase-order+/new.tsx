@@ -3,7 +3,6 @@ import { getLocalTimeZone, today } from "@internationalized/date";
 import type { ActionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
-import { useRouteData } from "~/hooks";
 import type {
   PurchaseOrderStatus,
   PurchaseOrderType,
@@ -74,10 +73,6 @@ export async function action({ request }: ActionArgs) {
 }
 
 export default function PurchaseOrderNewRoute() {
-  const routeData = useRouteData<{
-    purchaseOrderTypes: PurchaseOrderType[];
-  }>("/x/purchase-order");
-
   const initialValues = {
     id: undefined,
     purchaseOrderId: undefined,
@@ -91,7 +86,6 @@ export default function PurchaseOrderNewRoute() {
       <PurchaseOrderForm
         // @ts-expect-error
         initialValues={initialValues}
-        purchaseOrderTypes={routeData?.purchaseOrderTypes ?? []}
       />
     </Box>
   );

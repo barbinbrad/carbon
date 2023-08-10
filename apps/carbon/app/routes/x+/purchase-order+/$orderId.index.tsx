@@ -3,7 +3,7 @@ import { redirect } from "@remix-run/node";
 import { useParams } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
 import { useRouteData } from "~/hooks";
-import type { PurchaseOrder, PurchaseOrderType } from "~/modules/purchasing";
+import type { PurchaseOrder } from "~/modules/purchasing";
 import {
   PurchaseOrderForm,
   purchaseOrderValidator,
@@ -58,10 +58,6 @@ export async function action({ request, params }: ActionArgs) {
 }
 
 export default function PurchaseOrderBasicRoute() {
-  const sharedPurchaseOrdersData = useRouteData<{
-    purchaseOrderTypes: PurchaseOrderType[];
-  }>("/x/purchase-order");
-
   const { orderId } = useParams();
   const orderData = useRouteData<{ purchaseOrder: PurchaseOrder }>(
     `/x/purchase-order/${orderId}`
@@ -82,10 +78,5 @@ export default function PurchaseOrderBasicRoute() {
     notes: orderData?.purchaseOrder?.notes ?? "",
   };
 
-  return (
-    <PurchaseOrderForm
-      initialValues={initialValues}
-      purchaseOrderTypes={sharedPurchaseOrdersData?.purchaseOrderTypes ?? []}
-    />
-  );
+  return <PurchaseOrderForm initialValues={initialValues} />;
 }

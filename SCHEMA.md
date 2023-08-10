@@ -4455,7 +4455,6 @@ CREATE TYPE "purchaseOrderType" AS ENUM (
 );
 
 CREATE TYPE "purchaseOrderStatus" AS ENUM (
-  'Draft',
   'Open',
   'In Review',
   'In External Review',

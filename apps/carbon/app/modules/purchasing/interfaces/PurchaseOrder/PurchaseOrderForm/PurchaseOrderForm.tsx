@@ -22,9 +22,9 @@ import {
   TextArea,
 } from "~/components/Form";
 import { usePermissions } from "~/hooks";
-import type { PurchaseOrderType } from "~/modules/purchasing";
 import {
   purchaseOrderStatusType,
+  purchaseOrderTypeType,
   purchaseOrderValidator,
 } from "~/modules/purchasing";
 import type { TypeOfValidator } from "~/types/validators";
@@ -33,13 +33,9 @@ type PurchaseOrderFormValues = TypeOfValidator<typeof purchaseOrderValidator>;
 
 type PurchaseOrderFormProps = {
   initialValues: PurchaseOrderFormValues;
-  purchaseOrderTypes: PurchaseOrderType[];
 };
 
-const PurchaseOrderForm = ({
-  initialValues,
-  purchaseOrderTypes,
-}: PurchaseOrderFormProps) => {
+const PurchaseOrderForm = ({ initialValues }: PurchaseOrderFormProps) => {
   const permissions = usePermissions();
   const [supplier, setSupplier] = useState<string | undefined>(
     initialValues.supplierId
@@ -52,7 +48,7 @@ const PurchaseOrderForm = ({
     value: status,
   }));
 
-  const typeOptions = purchaseOrderTypes.map((type) => ({
+  const typeOptions = purchaseOrderTypeType.map((type) => ({
     label: type,
     value: type,
   }));

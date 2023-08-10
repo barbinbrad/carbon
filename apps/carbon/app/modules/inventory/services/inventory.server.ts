@@ -29,8 +29,9 @@ export async function deleteShippingMethod(
 export async function getReceipts(
   client: SupabaseClient<Database>,
   args: GenericQueryFilters & {
-    name: string | null;
-    type: string | null;
+    search: string | null;
+    document: string | null;
+    location: string | null;
   }
 ) {
   let query = client
@@ -39,12 +40,18 @@ export async function getReceipts(
       count: "exact",
     });
 
-  if (args.name) {
-    query = query.ilike("sourceDocumentId", `%${args.name}%`);
+  if (args.search) {
+    query = query.or(
+      `receiptId.ilike.%${args.search}%,sourceDocumentReadableId.ilike.%${args.search}%`
+    );
   }
 
-  if (args.type) {
-    query = query.eq("sourceDocument", args.type);
+  if (args.document) {
+    query = query.eq("sourceDocument", args.document);
+  }
+
+  if (args.location) {
+    query = query.eq("locationId", args.location);
   }
 
   query = setGenericQueryFilters(query, args, "receiptId", false);

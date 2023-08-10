@@ -32,17 +32,16 @@ import {
 import { usePermissions } from "~/hooks";
 import { useSupabase } from "~/lib/supabase";
 import type { PurchaseOrderLineType } from "~/modules/purchasing";
+import { purchaseOrderLineType } from "~/modules/purchasing";
 import { purchaseOrderLineValidator } from "~/modules/purchasing";
 import type { TypeOfValidator } from "~/types/validators";
 
 type PurchaseOrderLineFormProps = {
   initialValues: TypeOfValidator<typeof purchaseOrderLineValidator>;
-  purchaseOrderLineTypes: PurchaseOrderLineType[];
 };
 
 const PurchaseOrderLineForm = ({
   initialValues,
-  purchaseOrderLineTypes,
 }: PurchaseOrderLineFormProps) => {
   const permissions = usePermissions();
   const { supabase } = useSupabase();
@@ -67,7 +66,7 @@ const PurchaseOrderLineForm = ({
     ? !permissions.can("update", "purchasing")
     : !permissions.can("create", "purchasing");
 
-  const purchaseOrderLineTypeOptions = purchaseOrderLineTypes.map((type) => ({
+  const purchaseOrderLineTypeOptions = purchaseOrderLineType.map((type) => ({
     label: type,
     value: type,
   }));

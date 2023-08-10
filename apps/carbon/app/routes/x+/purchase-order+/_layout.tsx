@@ -3,7 +3,6 @@ import type { LoaderArgs, MetaFunction } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 
 import {
-  getPurchaseOrderApprovalStatuses,
   getPurchaseOrderLineTypes,
   getPurchaseOrderTypes,
 } from "~/modules/purchasing";
@@ -19,7 +18,6 @@ export async function loader({ request }: LoaderArgs) {
   });
 
   return {
-    purchaseOrderApprovalStatuses: getPurchaseOrderApprovalStatuses(),
     purchaseOrderLineTypes: getPurchaseOrderLineTypes(),
     purchaseOrderTypes: getPurchaseOrderTypes(),
   };

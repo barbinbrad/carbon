@@ -152,17 +152,6 @@ export async function getPurchaseOrderPayment(
     .single();
 }
 
-export function getPurchaseOrderApprovalStatuses(): Database["public"]["Enums"]["purchaseOrderApprovalStatus"][] {
-  return [
-    "Draft",
-    "In Review",
-    "In External Review",
-    "Approved",
-    "Rejected",
-    "Confirmed",
-  ];
-}
-
 export async function getPurchaseOrderLines(
   client: SupabaseClient<Database>,
   purchaseOrderId: string

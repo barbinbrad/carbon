@@ -3,6 +3,16 @@ import { z } from "zod";
 import { zfd } from "zod-form-data";
 import { address, contact } from "~/types/validators";
 
+export const purchaseOrderStatusType = [
+  "Open",
+  "In Review",
+  "In External Review",
+  "Approved",
+  "Rejected",
+  "Released",
+  "Closed",
+] as const;
+
 export const purchaseOrderValidator = withZod(
   z.object({
     id: zfd.text(z.string().optional()),
@@ -13,27 +23,11 @@ export const purchaseOrderValidator = withZod(
         message: "Type is required",
       }),
     }),
-    status: z.enum(
-      [
-        "Draft",
-        "In Review",
-        "In External Review",
-        "Approved",
-        "Rejected",
-        "Confirmed",
-      ],
-      {
-        errorMap: (issue, ctx) => ({
-          message: "Status is required",
-        }),
-      }
-    ),
+    status: z.enum(purchaseOrderStatusType).optional(),
     notes: zfd.text(z.string().optional()),
     supplierId: z.string().min(36, { message: "Supplier is required" }),
     supplierContactId: zfd.text(z.string().optional()),
     supplierReference: zfd.text(z.string().optional()),
-    released: zfd.checkbox(),
-    closed: zfd.checkbox(),
   })
 );
 

@@ -12,11 +12,12 @@ import {
 } from "@chakra-ui/react";
 import { useParams } from "@remix-run/react";
 import { FaHistory } from "react-icons/fa";
-import { useRouteData } from "~/hooks";
+import { usePermissions, useRouteData } from "~/hooks";
 import type { PurchaseOrder } from "~/modules/purchasing";
 import { usePurchaseOrder } from "../../PurchaseOrders/usePurchaseOrder";
 
 const PartPreview = () => {
+  const permissions = usePermissions();
   const { orderId } = useParams();
   if (!orderId) throw new Error("Could not find orderId");
   const routeData = useRouteData<{ purchaseOrder: PurchaseOrder }>(
@@ -27,24 +28,30 @@ const PartPreview = () => {
 
   return (
     <VStack w="full" alignItems="start" spacing={2}>
-      <Menubar>
-        <MenubarItem
-          onClick={() => {
-            if (routeData?.purchaseOrder) release(routeData.purchaseOrder);
-          }}
-          isDisabled={routeData?.purchaseOrder?.released !== false}
-        >
-          Release
-        </MenubarItem>
-        <MenubarItem
-          onClick={() => {
-            if (routeData?.purchaseOrder) receive(routeData.purchaseOrder);
-          }}
-          isDisabled={routeData?.purchaseOrder?.released !== true}
-        >
-          Receive
-        </MenubarItem>
-      </Menubar>
+      {permissions.is("employee") && (
+        <Menubar>
+          <MenubarItem
+            onClick={() => {
+              if (routeData?.purchaseOrder) release(routeData.purchaseOrder);
+            }}
+            isDisabled={
+              !["Open", "Approved"].includes(
+                routeData?.purchaseOrder?.status ?? ""
+              )
+            }
+          >
+            Release
+          </MenubarItem>
+          <MenubarItem
+            onClick={() => {
+              if (routeData?.purchaseOrder) receive(routeData.purchaseOrder);
+            }}
+            isDisabled={routeData?.purchaseOrder?.status !== "Released"}
+          >
+            Receive
+          </MenubarItem>
+        </Menubar>
+      )}
 
       <Card w="full">
         <CardHeader>
@@ -109,7 +116,7 @@ const PartPreview = () => {
               alignItems="start"
               justifyContent="space-between"
             >
-              <Text color="gray.500">Approval Status</Text>
+              <Text color="gray.500">Status</Text>
               <Text fontWeight="bold">{routeData?.purchaseOrder?.status}</Text>
             </Stack>
           </Stack>

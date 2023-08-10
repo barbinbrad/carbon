@@ -160,27 +160,27 @@ CREATE TYPE "purchaseOrderType" AS ENUM (
   'Return'
 );
 
-CREATE TYPE "purchaseOrderApprovalStatus" AS ENUM (
+CREATE TYPE "purchaseOrderStatus" AS ENUM (
   'Draft',
+  'Open',
   'In Review',
   'In External Review',
   'Approved',
   'Rejected',
-  'Confirmed'
+  'Released',
+  'Closed'
 );
 
 CREATE TABLE "purchaseOrder" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "purchaseOrderId" TEXT NOT NULL,
   "type" "purchaseOrderType" NOT NULL,
-  "status" "purchaseOrderApprovalStatus" NOT NULL,
+  "status" "purchaseOrderStatus" NOT NULL DEFAULT 'Open',
   "orderDate" DATE NOT NULL DEFAULT CURRENT_DATE,
   "notes" TEXT,
   "supplierId" TEXT NOT NULL,
   "supplierContactId" TEXT,
   "supplierReference" TEXT,
-  "released" BOOLEAN NOT NULL DEFAULT FALSE,
-  "closed" BOOLEAN NOT NULL DEFAULT FALSE,
   "closedAt" DATE,
   "closedBy" TEXT,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
@@ -200,6 +200,7 @@ CREATE TABLE "purchaseOrder" (
 CREATE INDEX "purchaseOrder_purchaseOrderId_idx" ON "purchaseOrder" ("purchaseOrderId");
 CREATE INDEX "purchaseOrder_supplierId_idx" ON "purchaseOrder" ("supplierId");
 CREATE INDEX "purchaseOrder_supplierContactId_idx" ON "purchaseOrder" ("supplierContactId");
+CREATE INDEX "purchaseOrder_status_idx" ON "purchaseOrder" ("status");
 
 CREATE TYPE "purchaseOrderLineType" AS ENUM (
   'Comment',
@@ -221,7 +222,6 @@ CREATE TABLE "purchaseOrderLine" (
   "quantityReceived" NUMERIC(9,2) DEFAULT 0,
   "quantityToInvoice" NUMERIC(9,2) DEFAULT 0,
   "quantityInvoiced" NUMERIC(9,2) DEFAULT 0,
-  "quantity"
   "unitPrice" NUMERIC(9,2),
   "unitOfMeasureCode" TEXT,
   "shelfId" TEXT,
@@ -403,9 +403,7 @@ CREATE VIEW "purchase_order_view" AS
     u2."avatarUrl" AS "updatedByAvatar",
     u2."fullName" AS "updatedByFullName",
     p."updatedAt",
-    p."closed",
     p."closedAt",
-    p."released",
     u3."avatarUrl" AS "closedByAvatar",
     u3."fullName" AS "closedByFullName",
     EXISTS(SELECT 1 FROM "purchaseOrderFavorite" pf WHERE pf."purchaseOrderId" = p.id AND pf."userId" = auth.uid()::text) AS favorite

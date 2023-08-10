@@ -4,18 +4,7 @@ import { Link } from "@remix-run/react";
 import { IoMdAdd } from "react-icons/io";
 import { DebouncedInput } from "~/components/Search";
 import { usePermissions, useUrlParams } from "~/hooks";
-
-const purchaseOrderStatusOptions = [
-  "Draft",
-  "In Review",
-  "In External Review",
-  "Approved",
-  "Rejected",
-  "Confirmed",
-].map((type) => ({
-  label: type,
-  value: type,
-}));
+import { purchaseOrderStatusType } from "~/modules/purchasing";
 
 type PurchaseOrdersTableFiltersProps = {
   suppliers: { id: string | null; name: string | null }[];
@@ -35,6 +24,11 @@ const PurchaseOrdersTableFilters = ({
       label: supplier.name,
       value: supplier.id,
     }));
+
+  const purchaseOrderStatusOptions = purchaseOrderStatusType.map((status) => ({
+    label: status,
+    value: status,
+  }));
 
   return (
     <HStack

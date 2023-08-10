@@ -72,7 +72,7 @@ export const ValueContainer = <
     isMulti,
     hasValue,
     innerProps,
-    selectProps: { size, chakraStyles },
+    selectProps: { size, chakraStyles, isReadOnly },
   } = props;
 
   // Getting the css from input instead of select
@@ -91,6 +91,7 @@ export const ValueContainer = <
     WebkitOverflowScrolling: "touch",
     position: "relative",
     overflow: "hidden",
+    bg: isReadOnly ? "gray.100" : undefined,
   };
 
   const sx = chakraStyles?.valueContainer
@@ -127,7 +128,7 @@ export const IndicatorsContainer = <
     className,
     cx,
     innerProps,
-    selectProps: { chakraStyles },
+    selectProps: { chakraStyles, isReadOnly },
   } = props;
 
   const initialSx: SystemStyleObject = {
@@ -135,6 +136,7 @@ export const IndicatorsContainer = <
     alignItems: "center",
     alignSelf: "stretch",
     flexShrink: 0,
+    bg: isReadOnly ? "gray.100" : undefined,
   };
 
   const sx = chakraStyles?.indicatorsContainer

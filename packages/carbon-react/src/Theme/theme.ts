@@ -83,6 +83,12 @@ export const theme = {
         overlay: {
           backdropFilter: "blur(3px)",
         },
+        header: {
+          borderColor: "gray.200",
+          borderBottomWidth: "1px",
+          borderBottomStyle: "solid",
+          marginBottom: 4,
+        },
         footer: {
           borderColor: "gray.200",
           borderTopWidth: "1px",

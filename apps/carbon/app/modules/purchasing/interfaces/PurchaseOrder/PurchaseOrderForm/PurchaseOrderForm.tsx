@@ -11,35 +11,33 @@ import {
 import { useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import {
-  Boolean,
   DatePicker,
   Hidden,
   Input,
   Select,
+  SelectControlled,
   Submit,
   Supplier,
   SupplierContact,
   TextArea,
 } from "~/components/Form";
 import { usePermissions } from "~/hooks";
-import type {
-  PurchaseOrderApprovalStatus,
-  PurchaseOrderType,
+import type { PurchaseOrderType } from "~/modules/purchasing";
+import {
+  purchaseOrderStatusType,
+  purchaseOrderValidator,
 } from "~/modules/purchasing";
-import { purchaseOrderValidator } from "~/modules/purchasing";
 import type { TypeOfValidator } from "~/types/validators";
 
 type PurchaseOrderFormValues = TypeOfValidator<typeof purchaseOrderValidator>;
 
 type PurchaseOrderFormProps = {
   initialValues: PurchaseOrderFormValues;
-  purchaseOrderApprovalStatuses: PurchaseOrderApprovalStatus[];
   purchaseOrderTypes: PurchaseOrderType[];
 };
 
 const PurchaseOrderForm = ({
   initialValues,
-  purchaseOrderApprovalStatuses,
   purchaseOrderTypes,
 }: PurchaseOrderFormProps) => {
   const permissions = usePermissions();
@@ -49,9 +47,9 @@ const PurchaseOrderForm = ({
   const isEditing = initialValues.id !== undefined;
   const isSupplier = permissions.is("supplier");
 
-  const approvalOptions = purchaseOrderApprovalStatuses.map((approval) => ({
-    label: approval,
-    value: approval,
+  const statusOptions = purchaseOrderStatusType.map((status) => ({
+    label: status,
+    value: status,
   }));
 
   const typeOptions = purchaseOrderTypes.map((type) => ({
@@ -110,29 +108,25 @@ const PurchaseOrderForm = ({
                 label="Order Date"
                 isDisabled={isSupplier}
               />
-              <Select name="type" label="Type" options={typeOptions} />
               <Select
-                name="status"
-                label="Approval Status"
+                name="type"
+                label="Type"
+                options={typeOptions}
                 isReadOnly={isSupplier}
-                options={approvalOptions}
               />
+              {isEditing && (
+                <SelectControlled
+                  name="status"
+                  label="Status"
+                  value={initialValues.status}
+                  options={statusOptions}
+                  isReadOnly={isSupplier}
+                />
+              )}
             </VStack>
             <VStack alignItems="start" spacing={2} w="full">
               {isEditing && (
                 <>
-                  <Boolean
-                    name="released"
-                    label="Released"
-                    isReadOnly={isSupplier}
-                    isDisabled={isSupplier}
-                  />
-                  <Boolean
-                    name="closed"
-                    label="Closed"
-                    isReadOnly={isSupplier}
-                    isDisabled={isSupplier}
-                  />
                   <TextArea
                     name="notes"
                     label="Notes"

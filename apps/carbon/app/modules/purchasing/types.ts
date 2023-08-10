@@ -26,8 +26,8 @@ export type PurchaseOrderLine = NonNullable<
 export type PurchaseOrderLineType =
   Database["public"]["Enums"]["purchaseOrderLineType"];
 
-export type PurchaseOrderApprovalStatus =
-  Database["public"]["Enums"]["purchaseOrderApprovalStatus"];
+export type PurchaseOrderStatus =
+  Database["public"]["Enums"]["purchaseOrderStatus"];
 
 export type PurchaseOrderType =
   Database["public"]["Enums"]["purchaseOrderType"];

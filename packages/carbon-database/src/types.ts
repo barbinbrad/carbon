@@ -2817,7 +2817,6 @@ export interface Database {
       };
       purchaseOrder: {
         Row: {
-          closed: boolean;
           closedAt: string | null;
           closedBy: string | null;
           createdAt: string;
@@ -2826,8 +2825,7 @@ export interface Database {
           notes: string | null;
           orderDate: string;
           purchaseOrderId: string;
-          released: boolean;
-          status: Database["public"]["Enums"]["purchaseOrderApprovalStatus"];
+          status: Database["public"]["Enums"]["purchaseOrderStatus"];
           supplierContactId: string | null;
           supplierId: string;
           supplierReference: string | null;
@@ -2836,7 +2834,6 @@ export interface Database {
           updatedBy: string | null;
         };
         Insert: {
-          closed?: boolean;
           closedAt?: string | null;
           closedBy?: string | null;
           createdAt?: string;
@@ -2845,8 +2842,7 @@ export interface Database {
           notes?: string | null;
           orderDate?: string;
           purchaseOrderId: string;
-          released?: boolean;
-          status: Database["public"]["Enums"]["purchaseOrderApprovalStatus"];
+          status?: Database["public"]["Enums"]["purchaseOrderStatus"];
           supplierContactId?: string | null;
           supplierId: string;
           supplierReference?: string | null;
@@ -2855,7 +2851,6 @@ export interface Database {
           updatedBy?: string | null;
         };
         Update: {
-          closed?: boolean;
           closedAt?: string | null;
           closedBy?: string | null;
           createdAt?: string;
@@ -2864,8 +2859,7 @@ export interface Database {
           notes?: string | null;
           orderDate?: string;
           purchaseOrderId?: string;
-          released?: boolean;
-          status?: Database["public"]["Enums"]["purchaseOrderApprovalStatus"];
+          status?: Database["public"]["Enums"]["purchaseOrderStatus"];
           supplierContactId?: string | null;
           supplierId?: string;
           supplierReference?: string | null;
@@ -3083,6 +3077,10 @@ export interface Database {
           purchaseOrderId: string;
           purchaseOrderLineType: Database["public"]["Enums"]["purchaseOrderLineType"];
           purchaseQuantity: number | null;
+          quantityInvoiced: number | null;
+          quantityReceived: number | null;
+          quantityToInvoice: number | null;
+          quantityToReceive: number | null;
           receivedComplete: boolean;
           requiresInspection: boolean;
           setupPrice: number | null;
@@ -3104,6 +3102,10 @@ export interface Database {
           purchaseOrderId: string;
           purchaseOrderLineType: Database["public"]["Enums"]["purchaseOrderLineType"];
           purchaseQuantity?: number | null;
+          quantityInvoiced?: number | null;
+          quantityReceived?: number | null;
+          quantityToInvoice?: number | null;
+          quantityToReceive?: number | null;
           receivedComplete?: boolean;
           requiresInspection?: boolean;
           setupPrice?: number | null;
@@ -3125,6 +3127,10 @@ export interface Database {
           purchaseOrderId?: string;
           purchaseOrderLineType?: Database["public"]["Enums"]["purchaseOrderLineType"];
           purchaseQuantity?: number | null;
+          quantityInvoiced?: number | null;
+          quantityReceived?: number | null;
+          quantityToInvoice?: number | null;
+          quantityToReceive?: number | null;
           receivedComplete?: boolean;
           requiresInspection?: boolean;
           setupPrice?: number | null;
@@ -5141,7 +5147,6 @@ export interface Database {
       };
       purchase_order_view: {
         Row: {
-          closed: boolean | null;
           closedAt: string | null;
           closedByAvatar: string | null;
           closedByFullName: string | null;
@@ -5160,10 +5165,7 @@ export interface Database {
           purchaseOrderId: string | null;
           receiptPromisedDate: string | null;
           receiptRequestedDate: string | null;
-          released: boolean | null;
-          status:
-            | Database["public"]["Enums"]["purchaseOrderApprovalStatus"]
-            | null;
+          status: Database["public"]["Enums"]["purchaseOrderStatus"] | null;
           supplierContactId: string | null;
           supplierId: string | null;
           supplierName: string | null;
@@ -5478,14 +5480,15 @@ export interface Database {
       partReplenishmentSystem: "Buy" | "Make" | "Buy and Make";
       partType: "Inventory" | "Non-Inventory" | "Service";
       paymentTermCalculationMethod: "Net" | "End of Month" | "Day of Month";
-      purchaseOrderApprovalStatus:
-        | "Draft"
+      purchaseOrderLineType: "Comment" | "G/L Account" | "Part" | "Fixed Asset";
+      purchaseOrderStatus:
+        | "Open"
         | "In Review"
         | "In External Review"
         | "Approved"
         | "Rejected"
-        | "Confirmed";
-      purchaseOrderLineType: "Comment" | "G/L Account" | "Part" | "Fixed Asset";
+        | "Released"
+        | "Closed";
       purchaseOrderTransactionType:
         | "Edit"
         | "Favorite"

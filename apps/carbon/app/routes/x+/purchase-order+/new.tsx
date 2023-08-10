@@ -5,7 +5,7 @@ import { redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
 import { useRouteData } from "~/hooks";
 import type {
-  PurchaseOrderApprovalStatus,
+  PurchaseOrderStatus,
   PurchaseOrderType,
 } from "~/modules/purchasing";
 import {
@@ -75,7 +75,6 @@ export async function action({ request }: ActionArgs) {
 
 export default function PurchaseOrderNewRoute() {
   const routeData = useRouteData<{
-    purchaseOrderApprovalStatuses: PurchaseOrderApprovalStatus[];
     purchaseOrderTypes: PurchaseOrderType[];
   }>("/x/purchase-order");
 
@@ -83,7 +82,7 @@ export default function PurchaseOrderNewRoute() {
     id: undefined,
     purchaseOrderId: undefined,
     orderDate: today(getLocalTimeZone()).toString(),
-    status: "Draft" as PurchaseOrderApprovalStatus,
+    status: "Open" as PurchaseOrderStatus,
     type: "Purchase" as PurchaseOrderType,
   };
 
@@ -92,9 +91,6 @@ export default function PurchaseOrderNewRoute() {
       <PurchaseOrderForm
         // @ts-expect-error
         initialValues={initialValues}
-        purchaseOrderApprovalStatuses={
-          routeData?.purchaseOrderApprovalStatuses ?? []
-        }
         purchaseOrderTypes={routeData?.purchaseOrderTypes ?? []}
       />
     </Box>

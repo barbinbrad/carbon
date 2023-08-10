@@ -17,7 +17,7 @@ export type SelectControlledProps = {
   isLoading?: boolean;
   placeholder?: string;
   value: string | undefined;
-  onChange: (newValue: string | number | undefined) => void;
+  onChange?: (newValue: string | number | undefined) => void;
 };
 
 const SelectControlled = ({

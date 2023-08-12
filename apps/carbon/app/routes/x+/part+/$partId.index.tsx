@@ -59,19 +59,21 @@ export default function PartBasicRoute() {
   }>("/x/part");
 
   const { partId } = useParams();
-  const partData = useRouteData<PartSummary>(`/x/part/${partId}`);
+  const partData = useRouteData<{ partSummary: PartSummary }>(
+    `/x/part/${partId}`
+  );
   if (!partData) throw new Error("Could not find part data");
 
   const initialValues = {
-    id: partData.id,
-    name: partData.name ?? "",
-    description: partData.description ?? undefined,
-    partType: partData.partType,
-    partGroupId: partData.partGroupId,
-    replenishmentSystem: partData.replenishmentSystem,
-    unitOfMeasureCode: partData.unitOfMeasureCode,
-    blocked: partData.blocked,
-    active: partData.active,
+    id: partData.partSummary?.id,
+    name: partData.partSummary?.name ?? "",
+    description: partData.partSummary?.description ?? undefined,
+    partType: partData.partSummary?.partType,
+    partGroupId: partData.partSummary?.partGroupId ?? undefined,
+    replenishmentSystem: partData.partSummary?.replenishmentSystem,
+    unitOfMeasureCode: partData.partSummary?.unitOfMeasureCode,
+    blocked: partData.partSummary?.blocked,
+    active: partData.partSummary?.active,
   };
 
   return (

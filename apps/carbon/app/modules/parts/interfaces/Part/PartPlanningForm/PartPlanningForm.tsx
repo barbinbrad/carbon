@@ -1,33 +1,45 @@
+import { Select } from "@carbon/react";
 import {
+  Box,
   Card,
   CardBody,
   CardFooter,
   CardHeader,
   Grid,
   Heading,
+  HStack,
   VStack,
 } from "@chakra-ui/react";
 import { ValidatedForm } from "remix-validated-form";
-import { Boolean, Hidden, Number, Select, Submit } from "~/components/Form";
+import {
+  Boolean,
+  Hidden,
+  Number,
+  Select as SelectForm,
+  Submit,
+} from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import type { PartReorderingPolicy } from "~/modules/parts";
 import { partPlanningValidator } from "~/modules/parts";
+import type { ListItem } from "~/types";
 import type { TypeOfValidator } from "~/types/validators";
 
 type PartPlanningFormProps = {
   initialValues: TypeOfValidator<typeof partPlanningValidator>;
+  locations: ListItem[];
   partReorderingPolicies: PartReorderingPolicy[];
 };
 
 const PartPlanningForm = ({
   initialValues,
+  locations,
   partReorderingPolicies,
 }: PartPlanningFormProps) => {
   const permissions = usePermissions();
 
-  const partReorderingOptions = partReorderingPolicies.map((policy) => ({
-    label: policy,
-    value: policy,
+  const locationOptions = locations.map((location) => ({
+    label: location.name,
+    value: location.id,
   }));
 
   return (
@@ -38,10 +50,27 @@ const PartPlanningForm = ({
     >
       <Card w="full">
         <CardHeader>
-          <Heading size="md">Planning</Heading>
+          <HStack w="full" justifyContent="space-between">
+            <Heading size="md">Planning</Heading>
+            <Box w={180}>
+              <Select
+                // @ts-ignore
+                size="sm"
+                value={locationOptions.find(
+                  (location) => location.value === initialValues.locationId
+                )}
+                options={locationOptions}
+                onChange={(selected) => {
+                  // hard refresh because initialValues update has no effect otherwise
+                  window.location.href = `/x/part/${initialValues.partId}/planning?location=${selected?.value}`;
+                }}
+              />
+            </Box>
+          </HStack>
         </CardHeader>
         <CardBody>
           <Hidden name="partId" />
+          <Hidden name="locationId" />
           <Grid
             gridTemplateColumns={["1fr", "1fr", "1fr 1fr 1fr"]}
             gridColumnGap={8}
@@ -49,10 +78,13 @@ const PartPlanningForm = ({
             w="full"
           >
             <VStack alignItems="start" spacing={2} w="full">
-              <Select
+              <SelectForm
                 name="reorderingPolicy"
                 label="Reordering Policy"
-                options={partReorderingOptions}
+                options={partReorderingPolicies.map((policy) => ({
+                  label: policy,
+                  value: policy,
+                }))}
               />
               <Boolean name="critical" label="Critical" />
               <Number
@@ -93,14 +125,6 @@ const PartPlanningForm = ({
               <Number
                 name="reorderMaximumInventory"
                 label="Reorder Maximum Inventory"
-              />
-              <Number
-                name="reorderOverflowLevel"
-                label="Reorder Overflow Level"
-              />
-              <Number
-                name="reorderTimeBucket"
-                label="Reorder Time Bucket (Days)"
               />
             </VStack>
           </Grid>

@@ -38,7 +38,8 @@ export async function getReceipts(
     .from("receipt")
     .select("*, location(name), supplier(name)", {
       count: "exact",
-    });
+    })
+    .neq("sourceDocumentId", "");
 
   if (args.search) {
     query = query.or(

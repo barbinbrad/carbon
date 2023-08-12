@@ -15,7 +15,8 @@ export async function loader({ request, params }: LoaderArgs) {
   const { partId } = params;
   if (!partId) throw new Error("Could not find partId");
 
-  const partSummary = await getPartSummary(client, partId);
+  const [partSummary] = await Promise.all([getPartSummary(client, partId)]);
+
   if (partSummary.error) {
     return redirect(
       "/x/parts",
@@ -26,7 +27,9 @@ export async function loader({ request, params }: LoaderArgs) {
     );
   }
 
-  return json(partSummary.data);
+  return json({
+    partSummary: partSummary.data,
+  });
 }
 
 export default function PartRoute() {

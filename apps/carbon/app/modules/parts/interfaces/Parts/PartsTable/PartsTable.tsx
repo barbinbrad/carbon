@@ -22,7 +22,7 @@ const PartsTable = memo(({ data, count }: PartsTableProps) => {
         accessorKey: "id",
         header: "Part ID",
         cell: ({ row }) => (
-          <Link onClick={() => navigate(row.original.id as string)}>
+          <Link onClick={() => navigate(`/x/part/${row.original.id}`)}>
             {row.original.id}
           </Link>
         ),

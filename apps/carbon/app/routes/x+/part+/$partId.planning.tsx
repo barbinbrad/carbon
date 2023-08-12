@@ -10,29 +10,84 @@ import {
   partPlanningValidator,
   upsertPartPlanning,
 } from "~/modules/parts";
+import { getLocationsList } from "~/modules/resources";
+import { getUserDefaults } from "~/modules/users";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import type { ListItem } from "~/types";
 import { assertIsPost } from "~/utils/http";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderArgs) {
-  const { client } = await requirePermissions(request, {
+  const { client, userId } = await requirePermissions(request, {
     view: "parts",
   });
 
   const { partId } = params;
   if (!partId) throw new Error("Could not find partId");
 
-  const partPlanning = await getPartPlanning(client, partId);
+  const url = new URL(request.url);
+  const searchParams = new URLSearchParams(url.search);
+  let locationId = searchParams.get("location");
 
-  if (partPlanning.error) {
-    return redirect(
-      "/x/parts",
-      await flash(
-        request,
-        error(partPlanning.error, "Failed to load part planning")
-      )
-    );
+  if (!locationId) {
+    const userDefaults = await getUserDefaults(client, userId);
+    if (userDefaults.error) {
+      return redirect(
+        `/x/part/${partId}`,
+        await flash(
+          request,
+          error(userDefaults.error, "Failed to load default location")
+        )
+      );
+    }
+
+    locationId = userDefaults.data?.locationId ?? null;
+  }
+
+  if (!locationId) {
+    const locations = await getLocationsList(client);
+    if (locations.error || !locations.data?.length) {
+      return redirect(
+        `/x/part/${partId}`,
+        await flash(
+          request,
+          error(locations.error, "Failed to load any locations")
+        )
+      );
+    }
+    locationId = locations.data?.[0].id as string;
+  }
+
+  let partPlanning = await getPartPlanning(client, partId, locationId);
+
+  if (partPlanning.error || !partPlanning.data) {
+    const insertPartPlanning = await upsertPartPlanning(client, {
+      partId,
+      locationId,
+      createdBy: userId,
+    });
+
+    if (insertPartPlanning.error) {
+      return redirect(
+        `/x/part/${partId}`,
+        await flash(
+          request,
+          error(insertPartPlanning.error, "Failed to insert part planning")
+        )
+      );
+    }
+
+    partPlanning = await getPartPlanning(client, partId, locationId);
+    if (partPlanning.error || !partPlanning.data) {
+      return redirect(
+        `/x/part/${partId}`,
+        await flash(
+          request,
+          error(partPlanning.error, "Failed to load part planning")
+        )
+      );
+    }
   }
 
   return json({
@@ -82,14 +137,17 @@ export async function action({ request, params }: ActionArgs) {
 export default function PartPlanningRoute() {
   const sharedPartsData = useRouteData<{
     partReorderingPolicies: PartReorderingPolicy[];
+    locations: ListItem[];
   }>("/x/part");
 
   const { partPlanning } = useLoaderData<typeof loader>();
 
   if (!sharedPartsData) throw new Error("Could not load shared parts data");
+
   return (
     <PartPlanningForm
       initialValues={partPlanning}
+      locations={sharedPartsData.locations ?? []}
       partReorderingPolicies={sharedPartsData.partReorderingPolicies}
     />
   );

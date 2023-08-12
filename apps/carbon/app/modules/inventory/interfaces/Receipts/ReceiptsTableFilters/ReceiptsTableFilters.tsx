@@ -46,7 +46,7 @@ const ReceiptsTableFilters = ({ locations }: ReceiptsTableFiltersProps) => {
         <Select
           // @ts-ignore
           size="sm"
-          value={sourceDocumentOptions.filter(
+          value={sourceDocumentOptions.find(
             (document) => document.value === params.get("document")
           )}
           isClearable
@@ -61,7 +61,7 @@ const ReceiptsTableFilters = ({ locations }: ReceiptsTableFiltersProps) => {
         <Select
           // @ts-ignore
           size="sm"
-          value={locationOptions.filter(
+          value={locationOptions.find(
             (location) => location.value === params.get("location")
           )}
           isClearable

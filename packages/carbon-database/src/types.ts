@@ -2375,33 +2375,27 @@ export interface Database {
         Row: {
           createdAt: string;
           createdBy: string;
+          defaultShelfId: string | null;
+          locationId: string;
           partId: string;
-          shelfId: string | null;
-          stockoutWarning: boolean;
-          unitVolume: number;
-          unitWeight: number;
           updatedAt: string | null;
           updatedBy: string | null;
         };
         Insert: {
           createdAt?: string;
           createdBy: string;
+          defaultShelfId?: string | null;
+          locationId: string;
           partId: string;
-          shelfId?: string | null;
-          stockoutWarning?: boolean;
-          unitVolume?: number;
-          unitWeight?: number;
           updatedAt?: string | null;
           updatedBy?: string | null;
         };
         Update: {
           createdAt?: string;
           createdBy?: string;
+          defaultShelfId?: string | null;
+          locationId?: string;
           partId?: string;
-          shelfId?: string | null;
-          stockoutWarning?: boolean;
-          unitVolume?: number;
-          unitWeight?: number;
           updatedAt?: string | null;
           updatedBy?: string | null;
         };
@@ -2419,6 +2413,18 @@ export interface Database {
             referencedColumns: ["userId"];
           },
           {
+            foreignKeyName: "partInventory_locationId_fkey";
+            columns: ["locationId"];
+            referencedRelation: "location";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partInventory_locationId_fkey";
+            columns: ["locationId"];
+            referencedRelation: "purchase_order_view";
+            referencedColumns: ["locationId"];
+          },
+          {
             foreignKeyName: "partInventory_partId_fkey";
             columns: ["partId"];
             referencedRelation: "part";
@@ -2432,7 +2438,7 @@ export interface Database {
           },
           {
             foreignKeyName: "partInventory_shelfId_fkey";
-            columns: ["shelfId"];
+            columns: ["defaultShelfId"];
             referencedRelation: "shelf";
             referencedColumns: ["id"];
           },
@@ -2665,16 +2671,15 @@ export interface Database {
           demandAccumulationIncludesInventory: boolean;
           demandAccumulationPeriod: number;
           demandReschedulingPeriod: number;
+          locationId: string;
           maximumOrderQuantity: number;
           minimumOrderQuantity: number;
           orderMultiple: number;
           partId: string;
           reorderingPolicy: Database["public"]["Enums"]["partReorderingPolicy"];
           reorderMaximumInventory: number;
-          reorderOverflowLevel: number;
           reorderPoint: number;
           reorderQuantity: number;
-          reorderTimeBucket: number;
           safetyStockLeadTime: number;
           safetyStockQuantity: number;
           updatedAt: string | null;
@@ -2687,16 +2692,15 @@ export interface Database {
           demandAccumulationIncludesInventory?: boolean;
           demandAccumulationPeriod?: number;
           demandReschedulingPeriod?: number;
+          locationId: string;
           maximumOrderQuantity?: number;
           minimumOrderQuantity?: number;
           orderMultiple?: number;
           partId: string;
           reorderingPolicy?: Database["public"]["Enums"]["partReorderingPolicy"];
           reorderMaximumInventory?: number;
-          reorderOverflowLevel?: number;
           reorderPoint?: number;
           reorderQuantity?: number;
-          reorderTimeBucket?: number;
           safetyStockLeadTime?: number;
           safetyStockQuantity?: number;
           updatedAt?: string | null;
@@ -2709,16 +2713,15 @@ export interface Database {
           demandAccumulationIncludesInventory?: boolean;
           demandAccumulationPeriod?: number;
           demandReschedulingPeriod?: number;
+          locationId?: string;
           maximumOrderQuantity?: number;
           minimumOrderQuantity?: number;
           orderMultiple?: number;
           partId?: string;
           reorderingPolicy?: Database["public"]["Enums"]["partReorderingPolicy"];
           reorderMaximumInventory?: number;
-          reorderOverflowLevel?: number;
           reorderPoint?: number;
           reorderQuantity?: number;
-          reorderTimeBucket?: number;
           safetyStockLeadTime?: number;
           safetyStockQuantity?: number;
           updatedAt?: string | null;
@@ -2736,6 +2739,18 @@ export interface Database {
             columns: ["createdBy"];
             referencedRelation: "user_default_view";
             referencedColumns: ["userId"];
+          },
+          {
+            foreignKeyName: "partPlanning_locationId_fkey";
+            columns: ["locationId"];
+            referencedRelation: "location";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partPlanning_locationId_fkey";
+            columns: ["locationId"];
+            referencedRelation: "purchase_order_view";
+            referencedColumns: ["locationId"];
           },
           {
             foreignKeyName: "partPlanning_partId_fkey";

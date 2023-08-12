@@ -85,6 +85,7 @@ export const partManufacturingValidator = withZod(
 export const partPlanningValidator = withZod(
   z.object({
     partId: z.string().min(1, { message: "Part ID is required" }),
+    locationId: z.string().min(20, { message: "Location is required" }),
     reorderingPolicy: z.enum(
       [
         "Manual Reorder",
@@ -107,8 +108,6 @@ export const partPlanningValidator = withZod(
     reorderPoint: zfd.numeric(z.number().min(0)),
     reorderQuantity: zfd.numeric(z.number().min(0)),
     reorderMaximumInventory: zfd.numeric(z.number().min(0)),
-    reorderOverflowLevel: zfd.numeric(z.number().min(0)),
-    reorderTimeBucket: zfd.numeric(z.number().min(0)),
     minimumOrderQuantity: zfd.numeric(z.number().min(0)),
     maximumOrderQuantity: zfd.numeric(z.number().min(0)),
     orderMultiple: zfd.numeric(z.number().min(1)),

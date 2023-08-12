@@ -13,11 +13,13 @@ const PartSidebar = () => {
       "PartSidebar requires a partId and could not find partId in params"
     );
 
-  const routeData = useRouteData<PartSummary>(`/x/part/${partId}`);
-  if (!routeData?.replenishmentSystem)
+  const routeData = useRouteData<{ partSummary: PartSummary }>(
+    `/x/part/${partId}`
+  );
+  if (!routeData?.partSummary?.replenishmentSystem)
     throw new Error("Could not find replenishmentSystem in routeData");
 
-  const links = usePartSidebar(routeData.replenishmentSystem);
+  const links = usePartSidebar(routeData.partSummary.replenishmentSystem);
   const matches = useMatches();
 
   return (

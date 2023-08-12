@@ -113,9 +113,15 @@ export async function getPartManufacturing(
 
 export async function getPartPlanning(
   client: SupabaseClient<Database>,
-  id: string
+  partId: string,
+  locationId: string
 ) {
-  return client.from("partPlanning").select("*").eq("partId", id).single();
+  return client
+    .from("partPlanning")
+    .select("*")
+    .eq("partId", partId)
+    .eq("locationId", locationId)
+    .single();
 }
 
 export async function getPartPurchasing(
@@ -347,14 +353,24 @@ export async function upsertPartManufacturing(
 
 export async function upsertPartPlanning(
   client: SupabaseClient<Database>,
-  partPlanning: TypeOfValidator<typeof partPlanningValidator> & {
-    updatedBy: string;
-  }
+  partPlanning:
+    | {
+        partId: string;
+        locationId: string;
+        createdBy: string;
+      }
+    | (TypeOfValidator<typeof partPlanningValidator> & {
+        updatedBy: string;
+      })
 ) {
+  if ("createdBy" in partPlanning) {
+    return client.from("partPlanning").insert(partPlanning);
+  }
   return client
     .from("partPlanning")
     .update(sanitize(partPlanning))
-    .eq("partId", partPlanning.partId);
+    .eq("partId", partPlanning.partId)
+    .eq("locationId", partPlanning.locationId);
 }
 
 export async function upsertPartPurchasing(

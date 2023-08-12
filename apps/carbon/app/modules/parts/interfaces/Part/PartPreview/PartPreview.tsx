@@ -16,15 +16,17 @@ import type { PartSummary } from "~/modules/parts";
 const PartPreview = () => {
   const { partId } = useParams();
   if (!partId) throw new Error("Could not find partId");
-  const routeData = useRouteData<PartSummary>(`/x/part/${partId}`);
+  const routeData = useRouteData<{ partSummary: PartSummary }>(
+    `/x/part/${partId}`
+  );
 
   return (
     <Card w="full">
       <CardHeader>
         <HStack justifyContent="space-between" alignItems="start">
           <Stack direction={["column", "column", "row"]} spacing={2}>
-            <Heading size="md">{routeData?.id}</Heading>
-            <Text color="gray.500">{routeData?.name}</Text>
+            <Heading size="md">{routeData?.partSummary?.id}</Heading>
+            <Text color="gray.500">{routeData?.partSummary?.name}</Text>
           </Stack>
           <Button onClick={() => alert("TODO")} leftIcon={<FaHistory />}>
             View History
@@ -39,7 +41,9 @@ const PartPreview = () => {
             justifyContent="space-between"
           >
             <Text color="gray.500">Replenishment System</Text>
-            <Text fontWeight="bold">{routeData?.replenishmentSystem}</Text>
+            <Text fontWeight="bold">
+              {routeData?.partSummary?.replenishmentSystem}
+            </Text>
           </Stack>
           <Stack
             direction={["row", "row", "column"]}
@@ -47,7 +51,7 @@ const PartPreview = () => {
             justifyContent="space-between"
           >
             <Text color="gray.500">Part Type</Text>
-            <Text fontWeight="bold">{routeData?.partType}</Text>
+            <Text fontWeight="bold">{routeData?.partSummary?.partType}</Text>
           </Stack>
           <Stack
             direction={["row", "row", "column"]}
@@ -55,15 +59,9 @@ const PartPreview = () => {
             justifyContent="space-between"
           >
             <Text color="gray.500">Unit of Measure</Text>
-            <Text fontWeight="bold">{routeData?.unitOfMeasureCode}</Text>
-          </Stack>
-          <Stack
-            direction={["row", "row", "column"]}
-            alignItems="start"
-            justifyContent="space-between"
-          >
-            <Text color="gray.500">Location</Text>
-            <Text fontWeight="bold">--</Text>
+            <Text fontWeight="bold">
+              {routeData?.partSummary?.unitOfMeasureCode}
+            </Text>
           </Stack>
         </Stack>
       </CardBody>

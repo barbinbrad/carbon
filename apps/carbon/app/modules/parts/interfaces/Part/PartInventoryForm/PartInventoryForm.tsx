@@ -9,13 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
-import {
-  Boolean,
-  CreatableSelect,
-  Hidden,
-  Number,
-  Submit,
-} from "~/components/Form";
+import { CreatableSelect, Hidden, Number, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { partInventoryValidator } from "~/modules/parts";
 import type { TypeOfValidator } from "~/types/validators";
@@ -78,18 +72,20 @@ const PartInventoryForm = ({
                 label="Quantity On Hand"
                 isReadOnly
               />
+            </VStack>
+            <VStack alignItems="start" spacing={2} w="full">
               <Number
                 name="quantityAvailable"
                 label="Quantity Available"
                 isReadOnly
               />
-            </VStack>
-            <VStack alignItems="start" spacing={2} w="full">
               <Number
                 name="quantityOnPurchaseOrder"
                 label="Quantity On Purchase Order"
                 isReadOnly
               />
+            </VStack>
+            <VStack alignItems="start" spacing={2} w="full">
               <Number
                 name="quantityOnProdOrder"
                 label="Quantity On Prod Order"
@@ -100,11 +96,6 @@ const PartInventoryForm = ({
                 label="Quantity On Sales Order"
                 isReadOnly
               />
-            </VStack>
-            <VStack alignItems="start" spacing={2} w="full">
-              <Number name="unitVolume" label="Unit Volume" />
-              <Number name="unitWeight" label="Unit Weight" />
-              <Boolean name="stockoutWarning" label="Stockout Warning" />
             </VStack>
           </Grid>
         </CardBody>

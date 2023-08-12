@@ -10,6 +10,7 @@ import {
   getPartTypes,
   getUnitOfMeasuresList,
 } from "~/modules/parts";
+import { getLocationsList } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 
 export const meta: MetaFunction = () => ({
@@ -21,12 +22,14 @@ export async function loader({ request }: LoaderArgs) {
     view: "parts",
   });
 
-  const [partGroups, unitOfMeasures] = await Promise.all([
+  const [partGroups, unitOfMeasures, locations] = await Promise.all([
     getPartGroupsList(client),
     getUnitOfMeasuresList(client),
+    getLocationsList(client),
   ]);
 
   return {
+    locations: locations?.data ?? [],
     partCostingMethods: getPartCostingMethods(),
     partGroups: partGroups?.data ?? [],
     partManufacturingPolicies: getPartManufacturingPolicies(),

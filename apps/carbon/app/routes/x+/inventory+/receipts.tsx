@@ -56,8 +56,6 @@ export async function loader({ request }: LoaderArgs) {
 export default function ReceiptsRoute() {
   const { receipts, count, locations } = useLoaderData<typeof loader>();
 
-  console.log({ receipts });
-
   return (
     <VStack w="full" h="full" spacing={0}>
       <ReceiptsTableFilters locations={locations ?? []} />

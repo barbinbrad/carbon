@@ -41,7 +41,7 @@ const PartnersTableFilters = ({ abilities }: PartnersTableFiltersProps) => {
         <Select
           // @ts-ignore
           size="sm"
-          value={abilitiesOptions.filter(
+          value={abilitiesOptions.find(
             (type) => type.value === params.get("ability")
           )}
           isClearable

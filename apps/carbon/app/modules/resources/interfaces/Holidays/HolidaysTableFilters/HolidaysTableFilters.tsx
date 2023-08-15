@@ -41,7 +41,7 @@ const HolidaysTableFilters = ({ years }: HolidaysTableFiltersProps) => {
           size="sm"
           value={
             params.get("year")
-              ? yearsOptions.filter(
+              ? yearsOptions.find(
                   (year) => year.value.toString() === params.get("year")
                 )
               : {

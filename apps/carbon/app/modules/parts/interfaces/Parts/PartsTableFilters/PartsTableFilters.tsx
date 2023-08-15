@@ -53,7 +53,7 @@ const PartsTableFilters = ({
             // @ts-ignore
             size="sm"
             isClearable
-            value={partGroupsOptions.filter(
+            value={partGroupsOptions.find(
               (type) => type.value === params.get("group")
             )}
             options={partGroupsOptions}
@@ -69,7 +69,7 @@ const PartsTableFilters = ({
           <Select
             // @ts-ignore
             size="sm"
-            value={partTypeOptions.filter(
+            value={partTypeOptions.find(
               (type) => type.value === params.get("type")
             )}
             isClearable

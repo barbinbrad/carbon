@@ -44,7 +44,7 @@ const CustomerAccountsTableFilters = ({
         <Select
           // @ts-ignore
           size="sm"
-          value={customerTypeOptions.filter(
+          value={customerTypeOptions.find(
             (type) => type.value === params.get("type")
           )}
           isClearable

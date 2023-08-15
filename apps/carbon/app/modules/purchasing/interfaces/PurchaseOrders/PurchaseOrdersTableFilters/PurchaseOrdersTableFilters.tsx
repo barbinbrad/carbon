@@ -50,7 +50,7 @@ const PurchaseOrdersTableFilters = ({
         <Select
           // @ts-ignore
           size="sm"
-          value={purchaseOrderStatusOptions.filter(
+          value={purchaseOrderStatusOptions.find(
             (type) => type.value === params.get("status")
           )}
           isClearable
@@ -65,7 +65,7 @@ const PurchaseOrdersTableFilters = ({
         <Select
           // @ts-ignore
           size="sm"
-          value={supplierOptions.filter(
+          value={supplierOptions.find(
             (supplier) => supplier.value === params.get("supplierId")
           )}
           isClearable

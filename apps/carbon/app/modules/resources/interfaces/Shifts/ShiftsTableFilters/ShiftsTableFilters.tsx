@@ -40,7 +40,7 @@ const ShiftsTableFilters = ({ locations }: ShiftsTableFiltersProps) => {
         <Select
           // @ts-ignore
           size="sm"
-          value={locationOptions.filter(
+          value={locationOptions.find(
             (type) => type.value === params.get("location")
           )}
           isClearable

@@ -44,7 +44,7 @@ const SupplierAccountsTableFilters = ({
         <Select
           // @ts-ignore
           size="sm"
-          value={supplierTypeOptions.filter(
+          value={supplierTypeOptions.find(
             (type) => type.value === params.get("type")
           )}
           isClearable

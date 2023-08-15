@@ -56,7 +56,7 @@ const DocumentsTableFilters = ({ labels }: DocumentTableFiltersProps) => {
         <Select
           // @ts-ignore
           size="sm"
-          value={documentTypeOptions.filter(
+          value={documentTypeOptions.find(
             (type) => type.value === params.get("type")
           )}
           isClearable
@@ -72,7 +72,7 @@ const DocumentsTableFilters = ({ labels }: DocumentTableFiltersProps) => {
           <Select
             // @ts-ignore
             size="sm"
-            value={labelOptions.filter(
+            value={labelOptions.find(
               (label) =>
                 params.getAll("labels").includes(label.value as string) ||
                 label.value === params.get("label")

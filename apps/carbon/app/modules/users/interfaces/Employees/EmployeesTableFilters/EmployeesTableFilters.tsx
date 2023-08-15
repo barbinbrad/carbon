@@ -44,7 +44,7 @@ const EmployeesTableFilters = ({
         <Select
           // @ts-ignore
           size="sm"
-          value={employeeTypeOptions.filter(
+          value={employeeTypeOptions.find(
             (type) => type.value === params.get("type")
           )}
           isClearable

@@ -58,6 +58,9 @@ export default function PartsNewRoute() {
   const initialValues = {
     name: "",
     description: "",
+    partType: "Inventory" as "Inventory",
+    replenishmentSystem: "Buy" as "Buy",
+    unitOfMeasureCode: "EA",
   };
 
   return (

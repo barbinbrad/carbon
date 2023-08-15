@@ -223,6 +223,7 @@ CREATE TABLE "purchaseOrderLine" (
   "quantityInvoiced" NUMERIC(9,2) DEFAULT 0,
   "unitPrice" NUMERIC(9,2),
   "unitOfMeasureCode" TEXT,
+  "locationId" TEXT,
   "shelfId" TEXT,
   "setupPrice" NUMERIC(9,2),
   "receivedComplete" BOOLEAN NOT NULL DEFAULT FALSE,
@@ -267,7 +268,7 @@ CREATE TABLE "purchaseOrderLine" (
   CONSTRAINT "purchaseOrderLine_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "purchaseOrderLine_accountNumber_fkey" FOREIGN KEY ("accountNumber") REFERENCES "account" ("number") ON DELETE CASCADE ON UPDATE CASCADE,
   -- TODO: Add assetId foreign key
-  CONSTRAINT "purchaseOrderLine_shelfId_fkey" FOREIGN KEY ("shelfId") REFERENCES "shelf" ("id") ON DELETE CASCADE,
+  CONSTRAINT "purchaseOrderLine_shelfId_fkey" FOREIGN KEY ("shelfId", "locationId") REFERENCES "shelf" ("id", "locationId") ON DELETE CASCADE,
   CONSTRAINT "purchaseOrderLine_unitOfMeasureCode_fkey" FOREIGN KEY ("unitOfMeasureCode") REFERENCES "unitOfMeasure" ("code") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "purchaseOrderLine_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE CASCADE,
   CONSTRAINT "purchaseOrderLine_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE CASCADE

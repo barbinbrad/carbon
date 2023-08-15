@@ -58,7 +58,8 @@ export const partGroupValidator = withZod(
 export const partInventoryValidator = withZod(
   z.object({
     partId: z.string().min(1, { message: "Part ID is required" }),
-    shelfId: zfd.text(z.string().optional()),
+    locationId: z.string().min(20, { message: "Location is required" }),
+    defaultShelfId: zfd.text(z.string().optional()),
     hasNewShelf: z.enum(["true", "false"]),
   })
 );

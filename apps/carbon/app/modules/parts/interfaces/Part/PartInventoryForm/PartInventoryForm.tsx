@@ -1,10 +1,13 @@
+import { Select } from "@carbon/react";
 import {
+  Box,
   Card,
   CardBody,
   CardFooter,
   CardHeader,
   Grid,
   Heading,
+  HStack,
   VStack,
 } from "@chakra-ui/react";
 import { useState } from "react";
@@ -12,6 +15,7 @@ import { ValidatedForm } from "remix-validated-form";
 import { CreatableSelect, Hidden, Number, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { partInventoryValidator } from "~/modules/parts";
+import type { ListItem } from "~/types";
 import type { TypeOfValidator } from "~/types/validators";
 
 type PartInventoryFormProps = {
@@ -19,16 +23,22 @@ type PartInventoryFormProps = {
     TypeOfValidator<typeof partInventoryValidator>,
     "hasNewShelf"
   >;
+  locations: ListItem[];
   shelves: string[];
 };
 
 const PartInventoryForm = ({
   initialValues,
+  locations,
   shelves,
 }: PartInventoryFormProps) => {
   const permissions = usePermissions();
   const [hasNewShelf, setHasNewShelf] = useState(false);
   const shelfOptions = shelves.map((shelf) => ({ value: shelf, label: shelf }));
+  const locationOptions = locations.map((location) => ({
+    label: location.name,
+    value: location.id,
+  }));
 
   return (
     <ValidatedForm
@@ -47,10 +57,27 @@ const PartInventoryForm = ({
     >
       <Card w="full">
         <CardHeader>
-          <Heading size="md">Inventory</Heading>
+          <HStack w="full" justifyContent="space-between">
+            <Heading size="md">Inventory</Heading>
+            <Box w={180}>
+              <Select
+                // @ts-ignore
+                size="sm"
+                value={locationOptions.find(
+                  (location) => location.value === initialValues.locationId
+                )}
+                options={locationOptions}
+                onChange={(selected) => {
+                  // hard refresh because initialValues update has no effect otherwise
+                  window.location.href = `/x/part/${initialValues.partId}/inventory?location=${selected?.value}`;
+                }}
+              />
+            </Box>
+          </HStack>
         </CardHeader>
         <CardBody>
           <Hidden name="partId" />
+          <Hidden name="locationId" />
           <Hidden name="hasNewShelf" value={hasNewShelf.toString()} />
           <Grid
             gridTemplateColumns={["1fr", "1fr", "1fr 1fr 1fr"]}
@@ -61,8 +88,8 @@ const PartInventoryForm = ({
             <VStack alignItems="start" spacing={2} w="full">
               <CreatableSelect
                 options={shelfOptions}
-                name="shelfId"
-                label="Shelf"
+                name="defaultShelfId"
+                label="Default Shelf"
                 onUsingCreatedChanged={setHasNewShelf}
                 // @ts-ignore
                 w="full"

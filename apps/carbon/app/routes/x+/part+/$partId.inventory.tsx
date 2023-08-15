@@ -2,6 +2,7 @@ import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
+import { useRouteData } from "~/hooks";
 import {
   PartInventoryForm,
   getPartInventory,
@@ -10,33 +11,89 @@ import {
   partInventoryValidator,
   upsertPartInventory,
 } from "~/modules/parts";
+import { getLocationsList } from "~/modules/resources";
+import { getUserDefaults } from "~/modules/users";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import type { ListItem } from "~/types";
 import { assertIsPost } from "~/utils/http";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderArgs) {
-  const { client } = await requirePermissions(request, {
+  const { client, userId } = await requirePermissions(request, {
     view: "parts",
   });
 
   const { partId } = params;
   if (!partId) throw new Error("Could not find partId");
 
-  const [partInventory, shelves] = await Promise.all([
-    getPartInventory(client, partId),
+  const url = new URL(request.url);
+  const searchParams = new URLSearchParams(url.search);
+  let locationId = searchParams.get("location");
+
+  if (!locationId) {
+    const userDefaults = await getUserDefaults(client, userId);
+    if (userDefaults.error) {
+      return redirect(
+        `/x/part/${partId}`,
+        await flash(
+          request,
+          error(userDefaults.error, "Failed to load default location")
+        )
+      );
+    }
+
+    locationId = userDefaults.data?.locationId ?? null;
+  }
+
+  if (!locationId) {
+    const locations = await getLocationsList(client);
+    if (locations.error || !locations.data?.length) {
+      return redirect(
+        `/x/part/${partId}`,
+        await flash(
+          request,
+          error(locations.error, "Failed to load any locations")
+        )
+      );
+    }
+    locationId = locations.data?.[0].id as string;
+  }
+
+  let [partInventory, shelves] = await Promise.all([
+    getPartInventory(client, partId, locationId),
     getShelvesList(client),
   ]);
 
-  if (partInventory.error) {
-    return redirect(
-      "/x/parts",
-      await flash(
-        request,
-        error(partInventory.error, "Failed to load part inventory")
-      )
-    );
+  if (partInventory.error || !partInventory.data) {
+    const insertPartInventory = await upsertPartInventory(client, {
+      partId,
+      locationId,
+      createdBy: userId,
+    });
+
+    if (insertPartInventory.error) {
+      return redirect(
+        `/x/part/${partId}`,
+        await flash(
+          request,
+          error(insertPartInventory.error, "Failed to insert part inventory")
+        )
+      );
+    }
+
+    partInventory = await getPartInventory(client, partId, locationId);
+    if (partInventory.error || !partInventory.data) {
+      return redirect(
+        `/x/part/${partId}`,
+        await flash(
+          request,
+          error(partInventory.error, "Failed to load part inventory")
+        )
+      );
+    }
   }
+
   if (shelves.error) {
     return redirect(
       "/x/parts",
@@ -70,8 +127,13 @@ export async function action({ request, params }: ActionArgs) {
 
   const { hasNewShelf, ...update } = validation.data;
 
-  if (hasNewShelf === "true" && update.shelfId) {
-    const createShelf = await insertShelf(client, update.shelfId, userId);
+  if (hasNewShelf === "true" && update.defaultShelfId) {
+    const createShelf = await insertShelf(
+      client,
+      update.defaultShelfId,
+      update.locationId,
+      userId
+    );
     if (createShelf.error) {
       return redirect(
         `/x/part/${partId}/inventory`,
@@ -99,16 +161,24 @@ export async function action({ request, params }: ActionArgs) {
   }
 
   return redirect(
-    `/x/part/${partId}/inventory`,
+    `/x/part/${partId}/inventory?location=${update.locationId}`,
     await flash(request, success("Updated part inventory"))
   );
 }
 
 export default function PartInventoryRoute() {
+  const sharedPartsData = useRouteData<{ locations: ListItem[] }>("/x/part");
   const { partInventory, shelves } = useLoaderData<typeof loader>();
+
   const initialValues = {
     ...partInventory,
-    shelfId: partInventory.shelfId ?? undefined,
+    defaultShelfId: partInventory.defaultShelfId ?? undefined,
   };
-  return <PartInventoryForm initialValues={initialValues} shelves={shelves} />;
+  return (
+    <PartInventoryForm
+      initialValues={initialValues}
+      locations={sharedPartsData?.locations ?? []}
+      shelves={shelves}
+    />
+  );
 }

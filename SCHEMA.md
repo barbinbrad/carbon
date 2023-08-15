@@ -3869,7 +3869,7 @@ CREATE TABLE "warehouse" (
 
 CREATE TABLE "shelf" (
   "id" TEXT NOT NULL,
-  "locationId" TEXT,
+  "locationId" TEXT NOT NULL,
   "warehouseId" TEXT,
   "active" BOOLEAN NOT NULL DEFAULT true,
   "createdBy" TEXT NOT NULL,
@@ -3877,14 +3877,14 @@ CREATE TABLE "shelf" (
   "updatedBy" TEXT,
   "updatedAt" TIMESTAMP WITH TIME ZONE,
 
-  CONSTRAINT "shelf_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "shelf_pkey" PRIMARY KEY ("id", "locationId"),
   CONSTRAINT "shelf_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "location"("id") ON DELETE CASCADE,
   CONSTRAINT "shelf_warehouseId_fkey" FOREIGN KEY ("warehouseId") REFERENCES "warehouse"("id") ON DELETE CASCADE,
   CONSTRAINT "shelf_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "shelf_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
 
-CREATE INDEX "shelf_locationId_index" ON "shelf" ("locationId");
+CREATE INDEX "shelf_id_locationId_index" ON "shelf" ("id", "locationId");
 CREATE INDEX "shelf_warehouseId_index" ON "shelf" ("warehouseId");
 
 ALTER TABLE "shelf" ENABLE ROW LEVEL SECURITY;
@@ -3947,8 +3947,7 @@ CREATE TABLE "partPlanning" (
   CONSTRAINT "partPlanning_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
 
-CREATE INDEX "partPlanning_partId_index" ON "partPlanning" ("partId");
-CREATE INDEX "partPlanning_locationId_index" ON "partPlanning" ("locationId");
+CREATE INDEX "partPlanning_partId_locationId_index" ON "partPlanning" ("partId", "locationId");
 ALTER TABLE "partPlanning" ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Employees with part_view can view part planning" ON "partPlanning"
@@ -3986,13 +3985,12 @@ CREATE TABLE "partInventory" (
   CONSTRAINT "partInventory_partId_locationId_key" UNIQUE ("partId", "locationId"),
   CONSTRAINT "partInventory_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part"("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "partInventory_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "location"("id") ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT "partInventory_shelfId_fkey" FOREIGN KEY ("defaultShelfId") REFERENCES "shelf"("id") ON DELETE SET NULL,
+  CONSTRAINT "partInventory_shelfId_fkey" FOREIGN KEY ("defaultShelfId", "locationId") REFERENCES "shelf"("id", "locationId") ON DELETE SET NULL,
   CONSTRAINT "partInventory_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "partInventory_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
 
-CREATE INDEX "partInventory_partId_index" ON "partInventory" ("partId");
-CREATE INDEX "partInventory_locationId_index" ON "partInventory" ("locationId");
+CREATE INDEX "partInventory_partId_locationId_index" ON "partInventory" ("partId", "locationId");
 CREATE INDEX "partInventory_shelfId_index" ON "partInventory" ("defaultShelfId");
 
 ALTER TABLE "partInventory" ENABLE ROW LEVEL SECURITY;
@@ -4530,6 +4528,7 @@ CREATE TABLE "purchaseOrderLine" (
   "quantityInvoiced" NUMERIC(9,2) DEFAULT 0,
   "unitPrice" NUMERIC(9,2),
   "unitOfMeasureCode" TEXT,
+  "locationId" TEXT,
   "shelfId" TEXT,
   "setupPrice" NUMERIC(9,2),
   "receivedComplete" BOOLEAN NOT NULL DEFAULT FALSE,
@@ -4574,7 +4573,7 @@ CREATE TABLE "purchaseOrderLine" (
   CONSTRAINT "purchaseOrderLine_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "purchaseOrderLine_accountNumber_fkey" FOREIGN KEY ("accountNumber") REFERENCES "account" ("number") ON DELETE CASCADE ON UPDATE CASCADE,
   -- TODO: Add assetId foreign key
-  CONSTRAINT "purchaseOrderLine_shelfId_fkey" FOREIGN KEY ("shelfId") REFERENCES "shelf" ("id") ON DELETE CASCADE,
+  CONSTRAINT "purchaseOrderLine_shelfId_fkey" FOREIGN KEY ("shelfId", "locationId") REFERENCES "shelf" ("id", "locationId") ON DELETE CASCADE,
   CONSTRAINT "purchaseOrderLine_unitOfMeasureCode_fkey" FOREIGN KEY ("unitOfMeasureCode") REFERENCES "unitOfMeasure" ("code") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "purchaseOrderLine_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE CASCADE,
   CONSTRAINT "purchaseOrderLine_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE CASCADE
@@ -5428,7 +5427,7 @@ CREATE TABLE "partLedger" (
   CONSTRAINT "partLedger_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "partLedger_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part"("id") ON UPDATE CASCADE ON DELETE CASCADE,
   CONSTRAINT "partLedger_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "location"("id") ON UPDATE CASCADE ON DELETE SET NULL,
-  CONSTRAINT "partLedger_shelfId_fkey" FOREIGN KEY ("shelfId") REFERENCES "shelf"("id") ON UPDATE CASCADE ON DELETE SET NULL
+  CONSTRAINT "partLedger_shelfId_fkey" FOREIGN KEY ("shelfId", "locationId") REFERENCES "shelf"("id", "locationId") ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 ALTER TABLE "partLedger" ENABLE ROW LEVEL SECURITY;
@@ -5541,7 +5540,7 @@ CREATE TABLE "receiptLine" (
   CONSTRAINT "receiptLine_receiptId_fkey" FOREIGN KEY ("receiptId") REFERENCES "receipt" ("receiptId") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "receiptLine_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "receiptLine_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "location" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT "receiptLine_shelfId_fkey" FOREIGN KEY ("shelfId") REFERENCES "shelf" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT "receiptLine_shelfId_fkey" FOREIGN KEY ("shelfId", "locationId") REFERENCES "shelf" ("id", "locationId") ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT "receiptLine_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "receiptLine_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );

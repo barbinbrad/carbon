@@ -152,7 +152,7 @@ CREATE TABLE "partLedger" (
   CONSTRAINT "partLedger_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "partLedger_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part"("id") ON UPDATE CASCADE ON DELETE CASCADE,
   CONSTRAINT "partLedger_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "location"("id") ON UPDATE CASCADE ON DELETE SET NULL,
-  CONSTRAINT "partLedger_shelfId_fkey" FOREIGN KEY ("shelfId") REFERENCES "shelf"("id") ON UPDATE CASCADE ON DELETE SET NULL
+  CONSTRAINT "partLedger_shelfId_fkey" FOREIGN KEY ("shelfId", "locationId") REFERENCES "shelf"("id", "locationId") ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 ALTER TABLE "partLedger" ENABLE ROW LEVEL SECURITY;

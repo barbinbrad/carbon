@@ -129,7 +129,7 @@ export async function action({ request, params }: ActionArgs) {
   }
 
   return redirect(
-    `/x/part/${partId}/planning`,
+    `/x/part/${partId}/planning?location=${validation.data.locationId}`,
     await flash(request, success("Updated part planning"))
   );
 }

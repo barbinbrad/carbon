@@ -2438,9 +2438,9 @@ export interface Database {
           },
           {
             foreignKeyName: "partInventory_shelfId_fkey";
-            columns: ["defaultShelfId"];
+            columns: ["defaultShelfId", "locationId"];
             referencedRelation: "shelf";
-            referencedColumns: ["id"];
+            referencedColumns: ["id", "locationId"];
           },
           {
             foreignKeyName: "partInventory_updatedBy_fkey";
@@ -2544,9 +2544,9 @@ export interface Database {
           },
           {
             foreignKeyName: "partLedger_shelfId_fkey";
-            columns: ["shelfId"];
+            columns: ["shelfId", "locationId"];
             referencedRelation: "shelf";
-            referencedColumns: ["id"];
+            referencedColumns: ["id", "locationId"];
           }
         ];
       };
@@ -3466,6 +3466,7 @@ export interface Database {
           description: string | null;
           id: string;
           invoiceComplete: boolean;
+          locationId: string | null;
           partId: string | null;
           purchaseOrderId: string;
           purchaseOrderLineType: Database["public"]["Enums"]["purchaseOrderLineType"];
@@ -3491,6 +3492,7 @@ export interface Database {
           description?: string | null;
           id?: string;
           invoiceComplete?: boolean;
+          locationId?: string | null;
           partId?: string | null;
           purchaseOrderId: string;
           purchaseOrderLineType: Database["public"]["Enums"]["purchaseOrderLineType"];
@@ -3516,6 +3518,7 @@ export interface Database {
           description?: string | null;
           id?: string;
           invoiceComplete?: boolean;
+          locationId?: string | null;
           partId?: string | null;
           purchaseOrderId?: string;
           purchaseOrderLineType?: Database["public"]["Enums"]["purchaseOrderLineType"];
@@ -3584,9 +3587,9 @@ export interface Database {
           },
           {
             foreignKeyName: "purchaseOrderLine_shelfId_fkey";
-            columns: ["shelfId"];
+            columns: ["shelfId", "locationId"];
             referencedRelation: "shelf";
-            referencedColumns: ["id"];
+            referencedColumns: ["id", "locationId"];
           },
           {
             foreignKeyName: "purchaseOrderLine_unitOfMeasureCode_fkey";
@@ -3975,9 +3978,9 @@ export interface Database {
           },
           {
             foreignKeyName: "receiptLine_shelfId_fkey";
-            columns: ["shelfId"];
+            columns: ["shelfId", "locationId"];
             referencedRelation: "shelf";
-            referencedColumns: ["id"];
+            referencedColumns: ["id", "locationId"];
           },
           {
             foreignKeyName: "receiptLine_updatedBy_fkey";
@@ -4078,7 +4081,7 @@ export interface Database {
           createdAt: string;
           createdBy: string;
           id: string;
-          locationId: string | null;
+          locationId: string;
           updatedAt: string | null;
           updatedBy: string | null;
           warehouseId: string | null;
@@ -4088,7 +4091,7 @@ export interface Database {
           createdAt?: string;
           createdBy: string;
           id: string;
-          locationId?: string | null;
+          locationId: string;
           updatedAt?: string | null;
           updatedBy?: string | null;
           warehouseId?: string | null;
@@ -4098,7 +4101,7 @@ export interface Database {
           createdAt?: string;
           createdBy?: string;
           id?: string;
-          locationId?: string | null;
+          locationId?: string;
           updatedAt?: string | null;
           updatedBy?: string | null;
           warehouseId?: string | null;

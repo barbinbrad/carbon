@@ -99,9 +99,15 @@ export async function getPartGroupsList(
 
 export async function getPartInventory(
   client: SupabaseClient<Database>,
-  id: string
+  partId: string,
+  locationId: string
 ) {
-  return client.from("partInventory").select("*").eq("partId", id).single();
+  return client
+    .from("partInventory")
+    .select("*")
+    .eq("partId", partId)
+    .eq("locationId", locationId)
+    .maybeSingle();
 }
 
 export async function getPartManufacturing(
@@ -121,7 +127,7 @@ export async function getPartPlanning(
     .select("*")
     .eq("partId", partId)
     .eq("locationId", locationId)
-    .single();
+    .maybeSingle();
 }
 
 export async function getPartPurchasing(
@@ -241,8 +247,15 @@ export function getPartCostingMethods(): Database["public"]["Enums"]["partCostin
   return ["Standard", "Average", "FIFO", "LIFO"];
 }
 
-export async function getShelvesList(client: SupabaseClient<Database>) {
-  return client.from("shelf").select("id").eq("active", true);
+export async function getShelvesList(
+  client: SupabaseClient<Database>,
+  locationId: string
+) {
+  return client
+    .from("shelf")
+    .select("id")
+    .eq("active", true)
+    .eq("locationId", locationId);
 }
 
 export async function getUnitOfMeasure(
@@ -279,13 +292,19 @@ export async function getUnitOfMeasuresList(client: SupabaseClient<Database>) {
 export async function insertShelf(
   client: SupabaseClient<Database>,
   shelfId: string,
+  locationId: string,
   userId: string
 ) {
-  const shelfLookup = await client.from("shelf").select("id").eq("id", shelfId);
+  const shelfLookup = await client
+    .from("shelf")
+    .select("id")
+    .eq("id", shelfId)
+    .eq("locationId", locationId)
+    .maybeSingle();
   if (shelfLookup.error) return shelfLookup;
 
   // the shelf is inactive, so we can just reactivate it
-  if (shelfLookup.data?.length) {
+  if (shelfLookup.data) {
     return client.from("shelf").update({ active: true }).eq("id", shelfId);
   }
 
@@ -295,6 +314,7 @@ export async function insertShelf(
     .insert([
       {
         id: shelfId,
+        locationId,
         createdBy: userId,
       },
     ])
@@ -326,17 +346,25 @@ export async function upsertPartCost(
 
 export async function upsertPartInventory(
   client: SupabaseClient<Database>,
-  partInventory: Omit<
-    TypeOfValidator<typeof partInventoryValidator>,
-    "hasNewShelf"
-  > & {
-    updatedBy: string;
-  }
+  partInventory:
+    | {
+        partId: string;
+        locationId: string;
+        createdBy: string;
+      }
+    | (Omit<TypeOfValidator<typeof partInventoryValidator>, "hasNewShelf"> & {
+        updatedBy: string;
+      })
 ) {
+  if ("createdBy" in partInventory) {
+    return client.from("partInventory").insert(partInventory);
+  }
+
   return client
     .from("partInventory")
     .update(sanitize(partInventory))
-    .eq("partId", partInventory.partId);
+    .eq("partId", partInventory.partId)
+    .eq("locationId", partInventory.locationId);
 }
 
 export async function upsertPartManufacturing(

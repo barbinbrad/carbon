@@ -62,7 +62,7 @@ export async function loader({ request, params }: LoaderArgs) {
 
   let [partInventory, shelves] = await Promise.all([
     getPartInventory(client, partId, locationId),
-    getShelvesList(client),
+    getShelvesList(client, locationId),
   ]);
 
   if (partInventory.error || !partInventory.data) {

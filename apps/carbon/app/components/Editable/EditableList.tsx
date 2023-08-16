@@ -40,6 +40,7 @@ const EditableList =
     return (
       <Select
         autoFocus
+        borderRadius="none"
         options={options}
         // @ts-ignore
         onChange={onChange}

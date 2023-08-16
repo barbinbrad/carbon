@@ -3,6 +3,7 @@ import { getLocalTimeZone, today } from "@internationalized/date";
 import type { ActionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
+import { useUrlParams } from "~/hooks";
 import type {
   PurchaseOrderStatus,
   PurchaseOrderType,
@@ -73,9 +74,12 @@ export async function action({ request }: ActionArgs) {
 }
 
 export default function PurchaseOrderNewRoute() {
+  const [params] = useUrlParams();
+  const supplierId = params.get("supplierId");
   const initialValues = {
     id: undefined,
     purchaseOrderId: undefined,
+    supplierId: supplierId ?? undefined,
     orderDate: today(getLocalTimeZone()).toString(),
     status: "Open" as PurchaseOrderStatus,
     type: "Purchase" as PurchaseOrderType,

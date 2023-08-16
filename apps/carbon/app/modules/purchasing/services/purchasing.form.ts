@@ -100,6 +100,7 @@ export const purchaseOrderLineValidator = withZod(
       unitOfMeasureCode: zfd.text(z.string().optional()),
       unitPrice: zfd.numeric(z.number().optional()),
       setupPrice: zfd.numeric(z.number().optional()),
+      locationId: zfd.text(z.string().optional()),
       shelfId: zfd.text(z.string().optional()),
     })
     .refine(

@@ -1,11 +1,10 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
 import type { PurchaseOrderLineType } from "~/modules/purchasing";
-import { getPurchaseOrderLine } from "~/modules/purchasing";
 import {
+  getPurchaseOrderLine,
   PurchaseOrderLineForm,
   purchaseOrderLineValidator,
   upsertPurchaseOrderLine,
@@ -98,6 +97,7 @@ export default function EditPurchaseOrderLineRoute() {
       purchaseOrderLine?.purchaseOrderLineType ??
       ("Part" as PurchaseOrderLineType),
     partId: purchaseOrderLine?.partId ?? "",
+    description: purchaseOrderLine?.description ?? "",
     purchaseQuantity: purchaseOrderLine?.purchaseQuantity ?? 1,
     unitPrice: purchaseOrderLine?.unitPrice ?? 0,
     setupPrice: purchaseOrderLine?.setupPrice ?? 0,

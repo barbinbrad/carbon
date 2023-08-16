@@ -57,7 +57,12 @@ const EditableNumber =
 
     // eslint-disable-next-line jsx-a11y/no-autofocus
     return (
-      <NumberInput defaultValue={value as number} size="sm" w="full">
+      <NumberInput
+        defaultValue={value as number}
+        size="sm"
+        w="full"
+        borderRadius="none"
+      >
         <NumberInputField autoFocus onKeyDown={onKeyDown} onBlur={onBlur} />
       </NumberInput>
     );

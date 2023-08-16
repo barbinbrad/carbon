@@ -58,6 +58,7 @@ const EditableText =
       <Input
         autoFocus
         defaultValue={value as string}
+        borderRadius="none"
         size="sm"
         w="full"
         onBlur={onBlur}

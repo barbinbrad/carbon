@@ -27,7 +27,7 @@ const Part = ({
   onChange,
   ...props
 }: PartSelectProps) => {
-  const { getInputProps, error, defaultValue } = useField(name);
+  const { getInputProps, error } = useField(name);
   const [value, setValue] = useControlField<string | undefined>(name);
 
   const partFetcher = useFetcher<Awaited<ReturnType<typeof getPartsList>>>();
@@ -69,14 +69,6 @@ const Part = ({
     () => options.find((option) => option.value === value),
     [value, options]
   );
-
-  // so that we can call onChange on load
-  useEffect(() => {
-    if (controlledValue && controlledValue.value === defaultValue) {
-      handleChange(controlledValue);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [controlledValue?.value]);
 
   return (
     <FormControl isInvalid={!!error}>

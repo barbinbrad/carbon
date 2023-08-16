@@ -81,18 +81,7 @@ const PartPreview = () => {
                 {routeData?.purchaseOrder?.orderDate}
               </Text>
             </Stack>
-            <Stack
-              direction={["row", "row", "column"]}
-              alignItems="start"
-              justifyContent="space-between"
-            >
-              <Text color="gray.500">Delivery Location</Text>
-              <Text fontWeight="bold">
-                {routeData?.purchaseOrder?.dropShipment
-                  ? "Drop Ship"
-                  : routeData?.purchaseOrder?.locationName}
-              </Text>
-            </Stack>
+
             <Stack
               direction={["row", "row", "column"]}
               alignItems="start"
@@ -108,7 +97,7 @@ const PartPreview = () => {
               alignItems="start"
               justifyContent="space-between"
             >
-              <Text color="gray.500">Order Type</Text>
+              <Text color="gray.500">Type</Text>
               <Text fontWeight="bold">{routeData?.purchaseOrder?.type}</Text>
             </Stack>
             <Stack

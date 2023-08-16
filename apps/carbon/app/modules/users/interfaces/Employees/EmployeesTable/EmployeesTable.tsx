@@ -1,4 +1,4 @@
-import { HStack, MenuItem, useDisclosure } from "@chakra-ui/react";
+import { HStack, Link, MenuItem, useDisclosure } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo, useState } from "react";
@@ -10,8 +10,8 @@ import { usePermissions, useUrlParams } from "~/hooks";
 import type { Employee } from "~/modules/users";
 import {
   BulkEditPermissionsForm,
-  ResendInviteModal,
   DeactivateUsersModal,
+  ResendInviteModal,
 } from "~/modules/users";
 
 type EmployeesTableProps = {
@@ -55,7 +55,7 @@ const EmployeesTable = memo(
       [data]
     );
 
-    const columns = useMemo<ColumnDef<typeof rows[number]>[]>(() => {
+    const columns = useMemo<ColumnDef<(typeof rows)[number]>[]>(() => {
       return [
         {
           header: "User",
@@ -68,13 +68,21 @@ const EmployeesTable = memo(
                 // @ts-ignore
                 path={row.original.user?.avatarUrl}
               />
-
-              <span>
+              {/* // @ts-ignore */}
+              <Link
+                onClick={() =>
+                  navigate(
+                    `/x/users/employees/${
+                      row.original.user?.id
+                    }?${params.toString()}`
+                  )
+                }
+              >
                 {
                   // @ts-ignore
                   `${row.original.user?.firstName} ${row.original.user?.lastName}`
                 }
-              </span>
+              </Link>
             </HStack>
           ),
         },
@@ -158,7 +166,7 @@ const EmployeesTable = memo(
     }, []);
 
     const renderContextMenu = useCallback(
-      ({ user }: typeof rows[number]) => {
+      ({ user }: (typeof rows)[number]) => {
         if (Array.isArray(user) || user === null) return null;
         return (
           <>
@@ -198,7 +206,7 @@ const EmployeesTable = memo(
 
     return (
       <>
-        <Table<typeof rows[number]>
+        <Table<(typeof rows)[number]>
           actions={actions}
           count={count}
           columns={columns}

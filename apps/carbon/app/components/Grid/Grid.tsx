@@ -7,10 +7,10 @@ import {
   Icon,
   Table,
   Tbody,
-  Text,
-  Thead,
   Td,
+  Text,
   Th,
+  Thead,
   Tr,
   VStack,
 } from "@chakra-ui/react";
@@ -22,11 +22,11 @@ import {
 } from "@tanstack/react-table";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { BsPlus } from "react-icons/bs";
-import { Row } from "./components";
 import type {
   EditableTableCellComponent,
   Position,
 } from "~/components/Editable";
+import { Row } from "./components";
 import { getAccessorKey, updateNestedProperty } from "./utils";
 
 interface GridProps<T extends object> {
@@ -351,6 +351,10 @@ const Grid = <T extends object>({
         w="full"
         h="full"
         bg={useColor("white")}
+        overflowX="auto"
+        style={{
+          contain: "strict",
+        }}
         ref={tableContainerRef}
         onKeyDown={onKeyDown}
       >

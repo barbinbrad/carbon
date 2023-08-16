@@ -5,8 +5,8 @@ import type {
   PostgrestSingleResponse,
   SupabaseClient,
 } from "@supabase/supabase-js";
-import type { PurchaseOrderLine } from "~/modules/purchasing";
 import type { EditableTableCellComponentProps } from "~/components/Editable";
+import type { PurchaseOrderLine } from "~/modules/purchasing";
 
 const EditablePurchaseOrderLineNumber =
   (
@@ -19,6 +19,7 @@ const EditablePurchaseOrderLineNumber =
       client?: SupabaseClient<Database>;
       parts: { label: string; value: string }[];
       accounts: { label: string; value: string }[];
+      defaultLocationId: string | null;
     }
   ) =>
   ({
@@ -93,8 +94,9 @@ const EditablePurchaseOrderLineNumber =
           .single(),
         client
           .from("partInventory")
-          .select("shelfId")
+          .select("defaultShelfId")
           .eq("partId", partId)
+          .eq("locationId", options.defaultLocationId)
           .single(),
         client
           .from("partCost")
@@ -108,12 +110,19 @@ const EditablePurchaseOrderLineNumber =
         return;
       }
 
+      console.log({
+        partId,
+        locationId: options.defaultLocationId,
+        shelfId: shelf.data?.defaultShelfId,
+      });
+
       onUpdate("partId", partId);
       onUpdate("description", part.data?.name);
       onUpdate("assetId", null);
       onUpdate("accountNumber", null);
       onUpdate("unitOfMeasureCode", part.data?.unitOfMeasureCode ?? null);
-      onUpdate("shelfId", shelf.data?.shelfId ?? null);
+      onUpdate("locationId", options.defaultLocationId);
+      onUpdate("shelfId", shelf.data?.defaultShelfId ?? null);
       onUpdate("unitPrice", cost.data?.unitCost ?? null);
 
       try {
@@ -125,7 +134,8 @@ const EditablePurchaseOrderLineNumber =
             accountNumber: null,
             description: part.data?.name,
             unitOfMeasureCode: part.data?.unitOfMeasureCode ?? null,
-            shelfId: shelf.data?.shelfId ?? null,
+            locationId: options.defaultLocationId,
+            shelfId: shelf.data?.defaultShelfId ?? null,
             unitPrice: cost.data?.unitCost ?? null,
           })
           .eq("id", row.id);
@@ -158,6 +168,7 @@ const EditablePurchaseOrderLineNumber =
         options={selectOptions}
         onChange={onChange}
         // @ts-ignore
+        borderRadius="none"
         size="sm"
       />
     );

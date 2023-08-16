@@ -9,6 +9,7 @@ import {
   PurchaseOrderHeader,
   PurchaseOrderSidebar,
 } from "~/modules/purchasing";
+import { getLocationsList } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { error } from "~/utils/result";
@@ -21,11 +22,12 @@ export async function loader({ request, params }: LoaderArgs) {
   const { orderId } = params;
   if (!orderId) throw new Error("Could not find orderId");
 
-  const [purchaseOrder, externalDocuments, internalDocuments] =
+  const [purchaseOrder, externalDocuments, internalDocuments, locations] =
     await Promise.all([
       getPurchaseOrder(client, orderId),
       getExternalDocuments(client, orderId),
       getInternalDocuments(client, orderId),
+      getLocationsList(client),
     ]);
 
   if (purchaseOrder.error) {
@@ -42,6 +44,7 @@ export async function loader({ request, params }: LoaderArgs) {
     purchaseOrder: purchaseOrder.data,
     externalDocuments: externalDocuments.data ?? [],
     internalDocuments: internalDocuments.data ?? [],
+    locations: locations.data ?? [],
   });
 }
 

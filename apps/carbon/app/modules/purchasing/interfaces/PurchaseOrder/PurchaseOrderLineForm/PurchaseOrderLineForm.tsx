@@ -33,7 +33,10 @@ import {
 import { usePermissions, useRouteData, useUser } from "~/hooks";
 import { useSupabase } from "~/lib/supabase";
 import type { getShelvesList } from "~/modules/parts";
-import type { PurchaseOrderLineType } from "~/modules/purchasing";
+import type {
+  PurchaseOrder,
+  PurchaseOrderLineType,
+} from "~/modules/purchasing";
 import {
   purchaseOrderLineType,
   purchaseOrderLineValidator,
@@ -54,14 +57,20 @@ const PurchaseOrderLineForm = ({
   const { defaults } = useUser();
   const { orderId } = useParams();
 
-  const routeData = useRouteData<{ locations: ListItem[] }>(
-    `/x/purchase-order/${orderId}`
-  );
+  const routeData = useRouteData<{
+    locations: ListItem[];
+    purchaseOrder: PurchaseOrder;
+  }>(`/x/purchase-order/${orderId}`);
+
   const locations = routeData?.locations ?? [];
   const locationOptions = locations.map((location) => ({
     label: location.name,
     value: location.id,
   }));
+
+  const isEditable = ["Open", "In Review", "In External Review"].includes(
+    routeData?.purchaseOrder?.status ?? ""
+  );
 
   const [type, setType] = useState(initialValues.purchaseOrderLineType);
   const [locationId, setLocationId] = useState(defaults.locationId ?? "");
@@ -85,11 +94,8 @@ const PurchaseOrderLineForm = ({
     if (locationId) {
       shelfFetcher.load(`/api/parts/shelf?locationId=${locationId}`);
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [locationId]);
-
-  console.log(shelfFetcher.data?.data);
 
   const shelfOptions = useMemo(
     () =>
@@ -101,7 +107,9 @@ const PurchaseOrderLineForm = ({
   );
 
   const isEditing = initialValues.id !== undefined;
-  const isDisabled = isEditing
+  const isDisabled = !isEditable
+    ? true
+    : isEditing
     ? !permissions.can("update", "purchasing")
     : !permissions.can("create", "purchasing");
 
@@ -289,7 +297,7 @@ const PurchaseOrderLineForm = ({
           <DrawerFooter>
             <HStack>
               <Submit isDisabled={isDisabled}>Save</Submit>
-              <Button variant="ghost" onClick={onClose}>
+              <Button size="md" variant="ghost" onClick={onClose}>
                 Cancel
               </Button>
             </HStack>

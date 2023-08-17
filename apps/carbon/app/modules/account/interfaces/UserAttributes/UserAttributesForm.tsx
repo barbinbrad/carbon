@@ -17,14 +17,15 @@ import {
   Boolean as BooleanInput,
   DatePicker,
   Employee,
-  Input,
   Hidden,
+  Input,
   Number as NumberInput,
-  Submit,
   Select,
+  Submit,
 } from "~/components/Form";
 import { UserSelect } from "~/components/Selectors";
 import { usePermissions, useUser } from "~/hooks";
+import type { PublicAttributes } from "~/modules/account";
 import {
   attributeBooleanValidator,
   attributeNumericValidator,
@@ -32,7 +33,6 @@ import {
   attributeUserValidator,
   deleteUserAttributeValueValidator,
 } from "~/modules/account";
-import type { PublicAttributes } from "~/modules/account";
 import { DataType } from "~/modules/users";
 
 type UserAttributesFormProps = {
@@ -183,7 +183,7 @@ function renderTypedForm({
               <Submit size="sm" type="submit">
                 Save
               </Submit>
-              <Button variant="ghost" onClick={onClose}>
+              <Button size="md" variant="ghost" onClick={onClose}>
                 Cancel
               </Button>
             </HStack>

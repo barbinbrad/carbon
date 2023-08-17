@@ -121,6 +121,13 @@ export const theme = {
         },
       },
     },
+    NumberInput: {
+      variants: {
+        outline: focusRingOutlined,
+        filled: focusRingFilled,
+        flushed: focusRingFlushed,
+      },
+    },
     Radio: {
       defaultProps: {
         colorScheme: "blackAlpha",

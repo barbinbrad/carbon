@@ -1,7 +1,7 @@
 import { Menubar, MenubarItem } from "@carbon/react";
 import {
-  Button,
   Box,
+  Button,
   Drawer,
   DrawerBody,
   DrawerCloseButton,
@@ -9,11 +9,11 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
+  FormLabel,
+  Grid,
   Heading,
   HStack,
-  Grid,
   VStack,
-  FormLabel,
 } from "@chakra-ui/react";
 import { useMatches, useNavigate } from "@remix-run/react";
 import { useState } from "react";
@@ -29,8 +29,8 @@ import DataGrid from "~/components/Grid";
 import { usePermissions, useRouteData } from "~/hooks";
 import type { ReceiptLine, ReceiptSourceDocument } from "~/modules/inventory";
 import {
-  receiptValidator,
   receiptSourceDocumentType,
+  receiptValidator,
 } from "~/modules/inventory";
 import type { ListItem } from "~/types";
 import type { TypeOfValidator } from "~/types/validators";
@@ -214,6 +214,7 @@ const ReceiptForm = ({
                   data={internalReceiptItems}
                   columns={receiptItemColumns}
                   canEdit={!isPosted}
+                  contained={false}
                   editableComponents={editableComponents}
                 />
               </VStack>

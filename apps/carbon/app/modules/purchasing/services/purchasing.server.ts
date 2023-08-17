@@ -3,9 +3,9 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { getSupabaseServiceRole } from "~/lib/supabase";
 import { getEmployeeJob } from "~/modules/resources";
 import type { TypeOfValidator } from "~/types/validators";
-import { sanitize } from "~/utils/supabase";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
+import { sanitize } from "~/utils/supabase";
 import type {
   purchaseOrderDeliveryValidator,
   purchaseOrderLineValidator,
@@ -40,6 +40,16 @@ export async function deletePurchaseOrder(
     client.from("purchaseOrderDelivery").delete().eq("id", purchaseOrderId),
     client.from("purchaseOrderPayment").delete().eq("id", purchaseOrderId),
   ]);
+}
+
+export async function deletePurchaseOrderLine(
+  client: SupabaseClient<Database>,
+  purchaseOrderLineId: string
+) {
+  return client
+    .from("purchaseOrderLine")
+    .delete()
+    .eq("id", purchaseOrderLineId);
 }
 
 export async function deleteSupplierContact(

@@ -25,7 +25,7 @@ import {
 } from "~/components/Editable";
 import Grid from "~/components/Grid";
 import { useRouteData, useUser } from "~/hooks";
-import type { PurchaseOrderLine } from "~/modules/purchasing";
+import type { PurchaseOrder, PurchaseOrderLine } from "~/modules/purchasing";
 import type { ListItem } from "~/types";
 import usePurchaseOrderLines from "./usePurchaseOrderLines";
 
@@ -40,13 +40,24 @@ const PurchaseOrderLines = ({
   if (!orderId) throw new Error("orderId not found");
 
   const navigate = useNavigate();
-  const routeData = useRouteData<{ locations: ListItem[] }>(
-    `/x/purchase-order/${orderId}`
-  );
+  const routeData = useRouteData<{
+    locations: ListItem[];
+    purchaseOrder: PurchaseOrder;
+  }>(`/x/purchase-order/${orderId}`);
   const locations = routeData?.locations ?? [];
   const { defaults } = useUser();
-  const { canEdit, supabase, partOptions, accountOptions, handleCellEdit } =
-    usePurchaseOrderLines();
+  const {
+    canEdit,
+    canDelete,
+    supabase,
+    partOptions,
+    accountOptions,
+    handleCellEdit,
+  } = usePurchaseOrderLines();
+
+  const isEditable = ["Open", "In Review", "In External Review"].includes(
+    routeData?.purchaseOrder?.status ?? ""
+  );
 
   const columns = useMemo<ColumnDef<PurchaseOrderLine>[]>(() => {
     return [
@@ -77,10 +88,17 @@ const PurchaseOrderLines = ({
                   <MenuItem
                     icon={<BsPencilSquare />}
                     onClick={() => navigate(row.original.id)}
+                    isDisabled={!isEditable || !canEdit}
                   >
                     Edit Line
                   </MenuItem>
-                  <MenuItem icon={<IoMdTrash />}>Delete Line</MenuItem>
+                  <MenuItem
+                    icon={<IoMdTrash />}
+                    onClick={() => navigate(`delete/${row.original.id}`)}
+                    isDisabled={!isEditable || !canDelete}
+                  >
+                    Delete Line
+                  </MenuItem>
                 </MenuList>
               </Menu>
             </Box>
@@ -208,7 +226,7 @@ const PurchaseOrderLines = ({
           <Heading size="md" display="inline-flex">
             Purchase Order Lines
           </Heading>
-          {canEdit && (
+          {canEdit && isEditable && (
             <Button colorScheme="brand" as={Link} to="new">
               New
             </Button>
@@ -218,9 +236,9 @@ const PurchaseOrderLines = ({
           <Grid<PurchaseOrderLine>
             data={purchaseOrderLines}
             columns={columns}
-            canEdit={canEdit}
+            canEdit={canEdit && isEditable}
             editableComponents={editableComponents}
-            onNewRow={canEdit ? () => navigate("new") : undefined}
+            onNewRow={canEdit && isEditable ? () => navigate("new") : undefined}
           />
         </CardBody>
       </Card>

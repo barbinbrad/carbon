@@ -40,7 +40,7 @@ const ReceiptsTable = memo(({ data, count }: ReceiptsTableProps) => {
       {
         accessorKey: "sourceDocumentReadableId",
         header: "Source Document ID",
-        cell: (item) => item.getValue(),
+        cell: (item) => item.getValue() ?? null,
       },
       {
         accessorKey: "location.name",

@@ -95,7 +95,7 @@ const PartSupplierForm = ({ initialValues }: PartSupplierFormProps) => {
           <DrawerFooter>
             <HStack>
               <Submit isDisabled={isDisabled}>Save</Submit>
-              <Button variant="ghost" onClick={onClose}>
+              <Button size="md" variant="ghost" onClick={onClose}>
                 Cancel
               </Button>
             </HStack>

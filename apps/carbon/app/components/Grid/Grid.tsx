@@ -32,6 +32,7 @@ import { getAccessorKey, updateNestedProperty } from "./utils";
 interface GridProps<T extends object> {
   canEdit?: boolean;
   columns: ColumnDef<T>[];
+  contained?: boolean;
   data: T[];
   defaultColumnOrder?: string[];
   defaultColumnVisibility?: Record<string, boolean>;
@@ -46,6 +47,7 @@ interface GridProps<T extends object> {
 const Grid = <T extends object>({
   canEdit = true,
   columns,
+  contained = true,
   data,
   editableComponents,
   defaultColumnOrder,
@@ -353,7 +355,7 @@ const Grid = <T extends object>({
         bg={useColor("white")}
         overflowX="auto"
         style={{
-          contain: "strict",
+          contain: contained ? "strict" : undefined,
         }}
         ref={tableContainerRef}
         onKeyDown={onKeyDown}

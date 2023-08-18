@@ -1,15 +1,14 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
 import type { ReceiptSourceDocument } from "~/modules/inventory";
 import {
+  getReceipt,
+  getReceiptLines,
   ReceiptForm,
   receiptValidator,
-  getReceipt,
   upsertReceipt,
-  getReceiptLines,
 } from "~/modules/inventory";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
@@ -25,14 +24,14 @@ export async function loader({ request, params }: LoaderArgs) {
   const { receiptId } = params;
   if (!receiptId) throw notFound("receiptId not found");
 
-  const [receipt, receiptItems] = await Promise.all([
+  const [receipt, receiptLines] = await Promise.all([
     getReceipt(client, receiptId),
     getReceiptLines(client, receiptId),
   ]);
 
   return json({
     receipt: receipt?.data ?? null,
-    receiptItems: receiptItems?.data ?? [],
+    receiptLines: receiptLines?.data ?? [],
   });
 }
 
@@ -74,7 +73,7 @@ export async function action({ request }: ActionArgs) {
 }
 
 export default function EditReceiptsRoute() {
-  const { receipt, receiptItems } = useLoaderData<typeof loader>();
+  const { receipt, receiptLines } = useLoaderData<typeof loader>();
   if (!receipt?.receiptId) throw notFound("receiptId not found");
   if (!receipt?.sourceDocumentId) throw notFound("sourceDocumentId not found");
 
@@ -89,10 +88,9 @@ export default function EditReceiptsRoute() {
 
   return (
     <ReceiptForm
-      // @ts-expect-error
       initialValues={initialValues}
       isPosted={!!receipt?.postingDate ?? false}
-      receiptItems={receiptItems}
+      receiptLines={receiptLines}
     />
   );
 }

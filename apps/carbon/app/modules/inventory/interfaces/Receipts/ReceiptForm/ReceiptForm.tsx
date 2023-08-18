@@ -15,8 +15,6 @@ import {
   HStack,
   VStack,
 } from "@chakra-ui/react";
-import { useMatches, useNavigate } from "@remix-run/react";
-import { useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import {
   Hidden,
@@ -26,82 +24,44 @@ import {
   Submit,
 } from "~/components/Form";
 import DataGrid from "~/components/Grid";
-import { usePermissions, useRouteData } from "~/hooks";
 import type { ReceiptLine, ReceiptSourceDocument } from "~/modules/inventory";
 import {
   receiptSourceDocumentType,
   receiptValidator,
 } from "~/modules/inventory";
-import type { ListItem } from "~/types";
 import type { TypeOfValidator } from "~/types/validators";
 import useReceiptForm from "./useReceiptForm";
 
 type ReceiptFormProps = {
   initialValues: TypeOfValidator<typeof receiptValidator>;
   isPosted: boolean;
-  receiptItems?: ReceiptLine[];
+  receiptLines?: ReceiptLine[];
 };
 
 const ReceiptForm = ({
   initialValues,
   isPosted,
-  receiptItems,
+  receiptLines,
 }: ReceiptFormProps) => {
-  const isEditing = !useMatches().some(({ pathname }) =>
-    pathname.includes("new")
-  );
-
-  const permissions = usePermissions();
-  const navigate = useNavigate();
-
-  const routeData = useRouteData<{
-    locations: ListItem[];
-  }>("/x/inventory/receipts");
-
-  const [internalReceiptItems, setReceiptItems] = useState<ReceiptLine[]>(
-    receiptItems ?? []
-  );
-
-  const [locationId, setLocationId] = useState<string | null>(
-    initialValues.locationId ?? null
-  );
-  const [supplierId, setSupplierId] = useState<string | null>(
-    initialValues.supplierId ?? null
-  );
-
-  const [sourceDocument, setSourceDocument] = useState<ReceiptSourceDocument>(
-    initialValues.sourceDocument ?? "Purchase Order"
-  );
-
-  const [sourceDocumentId, setSourceDocumentId] = useState<string | null>(
-    initialValues.sourceDocumentId ?? null
-  );
-
   const {
-    deleteReceipt,
     editableComponents,
-    receiptItemColumns,
-    sourceDocuments,
-  } = useReceiptForm({
-    receipt: initialValues,
-    locations: routeData?.locations ?? [],
-    sourceDocument,
+    locationId,
+    locations,
+    internalReceiptItems,
+    isEditing,
+    isDisabled,
+    receiptLineColumns,
     sourceDocumentId,
+    supplierId,
+    sourceDocuments,
+    onClose,
     setLocationId,
-    setReceiptItems,
     setSourceDocument,
     setSourceDocumentId,
-    setSupplierId,
+  } = useReceiptForm({
+    receipt: initialValues,
+    receiptLines: receiptLines ?? [],
   });
-
-  const onClose = () => {
-    if (!sourceDocumentId && initialValues.id) {
-      deleteReceipt(initialValues.id);
-    }
-    navigate(-1);
-  };
-
-  const isDisabled = !permissions.can("update", "inventory");
 
   return (
     <Drawer onClose={onClose} isOpen={true} size="full">
@@ -156,7 +116,7 @@ const ReceiptForm = ({
                         name="locationId"
                         label="Location"
                         options={
-                          routeData?.locations?.map((l) => ({
+                          locations.map((l) => ({
                             label: l.name,
                             value: l.id,
                           })) ?? []
@@ -212,7 +172,7 @@ const ReceiptForm = ({
                 <FormLabel>Receipt Lines</FormLabel>
                 <DataGrid<ReceiptLine>
                   data={internalReceiptItems}
-                  columns={receiptItemColumns}
+                  columns={receiptLineColumns}
                   canEdit={!isPosted}
                   contained={false}
                   editableComponents={editableComponents}

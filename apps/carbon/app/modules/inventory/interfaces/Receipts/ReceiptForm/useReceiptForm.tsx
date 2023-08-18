@@ -1,8 +1,8 @@
-import { Checkbox } from "@chakra-ui/react";
+import { useMatches, useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { EditableNumber } from "~/components/Editable";
-import { useUrlParams, useUser } from "~/hooks";
+import { usePermissions, useRouteData, useUrlParams, useUser } from "~/hooks";
 import { useSupabase } from "~/lib/supabase";
 import type { receiptValidator } from "~/modules/inventory";
 import type {
@@ -15,30 +15,53 @@ import type { TypeOfValidator } from "~/types/validators";
 
 export default function useReceiptForm({
   receipt,
-  locations,
-  sourceDocument,
-  sourceDocumentId,
-  setLocationId,
-  setReceiptItems,
-  setSourceDocument,
-  setSourceDocumentId,
-  setSupplierId,
+  receiptLines,
 }: {
   receipt: TypeOfValidator<typeof receiptValidator>;
-  locations: ListItem[];
-  sourceDocument: ReceiptSourceDocument;
-  sourceDocumentId: string | null;
-  setLocationId: (locationId: string | null) => void;
-  setReceiptItems: (receiptLines: ReceiptLine[]) => void;
-  setSourceDocument: (sourceDocument: ReceiptSourceDocument) => void;
-  setSourceDocumentId: (sourceDocumentId: string | null) => void;
-  setSupplierId: (supplierId: string | null) => void;
+  receiptLines: ReceiptLine[];
 }) {
+  const permissions = usePermissions();
+  const navigate = useNavigate();
   const user = useUser();
-  const [sourceDocuments, setSourceDocuments] = useState<ListItem[]>([]);
   const [params] = useUrlParams();
   const [error, setError] = useState<string | null>(null);
   const { supabase } = useSupabase();
+
+  const isDisabled = !permissions.can("update", "inventory");
+  const isEditing = !useMatches().some(({ pathname }) =>
+    pathname.includes("new")
+  );
+
+  const routeData = useRouteData<{
+    locations: ListItem[];
+  }>("/x/inventory/receipts");
+
+  const [internalReceiptItems, setReceiptItems] = useState<ReceiptLine[]>(
+    receiptLines ?? []
+  );
+
+  const [locationId, setLocationId] = useState<string | null>(
+    receipt.locationId ?? user.defaults.locationId ?? null
+  );
+  const [supplierId, setSupplierId] = useState<string | null>(
+    receipt.supplierId ?? null
+  );
+
+  const [sourceDocuments, setSourceDocuments] = useState<ListItem[]>([]);
+  const [sourceDocument, setSourceDocument] = useState<ReceiptSourceDocument>(
+    receipt.sourceDocument ?? "Purchase Order"
+  );
+
+  const [sourceDocumentId, setSourceDocumentId] = useState<string | null>(
+    receipt.sourceDocumentId ?? null
+  );
+
+  const onClose = () => {
+    if (!sourceDocumentId && receipt.id) {
+      deleteReceipt(receipt.id);
+    }
+    navigate(-1);
+  };
 
   const sourceDocumentIdFromParams = params.get("sourceDocumentId");
   const sourceDocumentFromParams = params.get("sourceDocument");
@@ -115,31 +138,38 @@ export default function useReceiptForm({
 
     switch (sourceDocument) {
       case "Purchase Order":
-        const [purchaseOrder, purchaseOrderLines, receiptLines] =
-          await Promise.all([
-            supabase
-              .from("purchase_order_view")
-              .select("*")
-              .eq("id", sourceDocumentId)
-              .single(),
-            supabase
-              .from("purchaseOrderLine")
-              .select("*")
-              .eq("purchaseOrderId", sourceDocumentId)
-              .eq("purchaseOrderLineType", "Part")
-              .eq("receivedComplete", false),
-            supabase
-              .from("receiptLine")
-              .select("*")
-              .eq("receiptId", receipt.receiptId),
-          ]);
+        const [
+          purchaseOrder,
+          purchaseOrderLines,
+          receiptLines,
+          previouslyReceivedLines,
+        ] = await Promise.all([
+          supabase
+            .from("purchase_order_view")
+            .select("*")
+            .eq("id", sourceDocumentId)
+            .single(),
+          supabase
+            .from("purchaseOrderLine")
+            .select("*")
+            .eq("purchaseOrderId", sourceDocumentId)
+            .eq("purchaseOrderLineType", "Part")
+            .eq("locationId", locationId),
+          supabase
+            .from("receiptLine")
+            .select("*")
+            .eq("receiptId", receipt.receiptId),
+          supabase
+            .from("receipt_quantity_received_by_line")
+            .select("*")
+            .eq("sourceDocumentId", sourceDocumentId),
+        ]);
 
         if (purchaseOrder.error) {
           setError(purchaseOrder.error.message);
           setReceiptItems([]);
           break;
         } else {
-          setLocationId(purchaseOrder.data.locationId);
           setSupplierId(purchaseOrder.data.supplierId);
         }
 
@@ -169,6 +199,18 @@ export default function useReceiptForm({
           break;
         }
 
+        const previouslyReceivedQuantitiesByLine = (
+          previouslyReceivedLines.data ?? []
+        ).reduce<Record<string, number>>((acc, d) => {
+          acc[d.lineId] = d.receivedQuantity ?? 0;
+          return acc;
+        }, {});
+
+        console.log({
+          previouslyReceivedLines,
+          previouslyReceivedQuantitiesByLine,
+        });
+
         const receiptLineItems = purchaseOrderLines.data.reduce<
           ReceiptLineItem[]
         >((acc, d) => {
@@ -186,12 +228,14 @@ export default function useReceiptForm({
             lineId: d.id,
             partId: d.partId,
             orderQuantity: d.purchaseQuantity,
+            outstandingQuantity:
+              d.purchaseQuantity -
+              (previouslyReceivedQuantitiesByLine[d.id] ?? 0),
             receivedQuantity: 0,
             unitPrice: d.unitPrice,
             unitOfMeasure: d.unitOfMeasureCode ?? "EA",
-            locationId: purchaseOrder.data.locationId,
+            locationId: d.locationId,
             shelfId: d.shelfId,
-            receivedComplete: false,
             createdBy: user?.id ?? "",
           });
 
@@ -226,11 +270,9 @@ export default function useReceiptForm({
     }
   }, [
     deleteReceiptItems,
+    locationId,
     receipt.receiptId,
     receipt.sourceDocumentId,
-    setLocationId,
-    setReceiptItems,
-    setSupplierId,
     sourceDocument,
     sourceDocumentId,
     supabase,
@@ -245,12 +287,11 @@ export default function useReceiptForm({
     if (sourceDocumentId) {
       fetchSourceDocument();
     } else {
-      setLocationId(null);
       setSupplierId(null);
     }
   }, [fetchSourceDocument, setLocationId, setSupplierId, sourceDocumentId]);
 
-  const receiptItemColumns = useMemo<ColumnDef<ReceiptLine>[]>(() => {
+  const receiptLineColumns = useMemo<ColumnDef<ReceiptLine>[]>(() => {
     return [
       {
         accessorKey: "partId",
@@ -260,6 +301,11 @@ export default function useReceiptForm({
       {
         accessorKey: "orderQuantity",
         header: "Order Quantity",
+        cell: (item) => item.getValue(),
+      },
+      {
+        accessorKey: "outstandingQuantity",
+        header: "Outstanding Quantity",
         cell: (item) => item.getValue(),
       },
       {
@@ -276,7 +322,9 @@ export default function useReceiptForm({
         accessorKey: "locationId",
         header: "Location",
         cell: ({ row }) =>
-          locations.find((l) => l.id === row.original.locationId)?.name ?? null,
+          (routeData?.locations ?? []).find(
+            (l) => l.id === row.original.locationId
+          )?.name ?? null,
       },
       {
         accessorKey: "shelfId",
@@ -288,15 +336,8 @@ export default function useReceiptForm({
         header: "Unit of Measure",
         cell: (item) => item.getValue(),
       },
-      {
-        accessorKey: "receivedComplete",
-        header: "Received Complete",
-        cell: (item) => (
-          <Checkbox isChecked={item.getValue<boolean>()} readOnly />
-        ),
-      },
     ];
-  }, [locations]);
+  }, [routeData?.locations]);
 
   const handleCellEdit = useCallback(
     async (id: string, value: unknown, row: ReceiptLine) => {
@@ -311,7 +352,7 @@ export default function useReceiptForm({
     [supabase]
   );
 
-  const receiptItemEditableComponents = useMemo(
+  const receiptLineEditableComponents = useMemo(
     () => ({
       receivedQuantity: EditableNumber(handleCellEdit),
       unitPrice: EditableNumber(handleCellEdit),
@@ -320,10 +361,21 @@ export default function useReceiptForm({
   );
 
   return {
-    deleteReceipt,
-    editableComponents: receiptItemEditableComponents,
+    editableComponents: receiptLineEditableComponents,
     error,
-    receiptItemColumns,
+    locationId,
+    locations: routeData?.locations ?? [],
+    internalReceiptItems,
+    isEditing,
+    isDisabled,
+    receiptLineColumns,
+    sourceDocument,
+    sourceDocumentId,
+    supplierId,
     sourceDocuments,
+    onClose,
+    setLocationId,
+    setSourceDocument,
+    setSourceDocumentId,
   };
 }

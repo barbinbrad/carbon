@@ -5525,12 +5525,12 @@ CREATE TABLE "receiptLine" (
   "lineId" TEXT,
   "partId" TEXT NOT NULL,
   "orderQuantity" NUMERIC(18, 4) NOT NULL,
+  "outstandingQuantity" NUMERIC(18, 4) NOT NULL DEFAULT 0,
   "receivedQuantity" NUMERIC(18, 4) NOT NULL DEFAULT 0,
   "locationId" TEXT,
   "shelfId" TEXT,
   "unitOfMeasure" TEXT NOT NULL,
   "unitPrice" NUMERIC(18, 4) NOT NULL,
-  "receivedComplete" BOOLEAN NOT NULL DEFAULT FALSE,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   "createdBy" TEXT NOT NULL,
   "updatedAt" TIMESTAMP WITH TIME ZONE,
@@ -5544,6 +5544,21 @@ CREATE TABLE "receiptLine" (
   CONSTRAINT "receiptLine_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "receiptLine_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+CREATE INDEX "receiptLine_receiptId_idx" ON "receiptLine" ("receiptId");
+CREATE INDEX "receiptLine_lineId_idx" ON "receiptLine" ("lineId");
+CREATE INDEX "receiptLine_receiptId_lineId_idx" ON "receiptLine" ("receiptId", "lineId");
+
+CREATE VIEW "receipt_quantity_received_by_line" AS 
+  SELECT
+    r."sourceDocumentId",
+    l."lineId",
+    SUM(l."receivedQuantity") AS "receivedQuantity"
+  FROM "receipt" r 
+  INNER JOIN "receiptLine" l
+    ON l."receiptId" = r."receiptId"
+  GROUP BY r."sourceDocumentId", l."lineId";
+
 ```
 
 

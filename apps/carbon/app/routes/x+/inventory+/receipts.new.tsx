@@ -1,7 +1,5 @@
-import { getLocalTimeZone, today } from "@internationalized/date";
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
 import { useUser } from "~/hooks";
@@ -25,7 +23,7 @@ export async function loader({ request }: LoaderArgs) {
   const nextSequence = await getNextSequence(client, "receipt", userId);
   if (nextSequence.error) {
     return redirect(
-      "/x/receipts/new",
+      "/x/inventory/receipts/new",
       await flash(
         request,
         error(nextSequence.error, "Failed to get next sequence")
@@ -41,7 +39,7 @@ export async function loader({ request }: LoaderArgs) {
   if (insertReceipt.error) {
     await rollbackNextSequence(client, "receipt", userId);
     return redirect(
-      "/x/receipts",
+      "/x/inventory/receipts",
       await flash(
         request,
         error(insertReceipt.error, "Failed to generate receipt")
@@ -102,15 +100,13 @@ export default function NewReceiptsRoute() {
     sourceDocument: "Purchase Order" as ReceiptSourceDocument,
     sourceDocumentId: "",
     locationId: defaults.locationId ?? undefined,
-    postingDate: today(getLocalTimeZone()).toString(),
   };
 
   return (
     <ReceiptForm
-      // @ts-expect-error
       initialValues={initialValues}
       isPosted={false}
-      receiptItems={[]}
+      receiptLines={[]}
     />
   );
 }

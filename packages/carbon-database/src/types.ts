@@ -3889,9 +3889,9 @@ export interface Database {
           lineId: string | null;
           locationId: string | null;
           orderQuantity: number;
+          outstandingQuantity: number;
           partId: string;
           receiptId: string;
-          receivedComplete: boolean;
           receivedQuantity: number;
           shelfId: string | null;
           unitOfMeasure: string;
@@ -3906,9 +3906,9 @@ export interface Database {
           lineId?: string | null;
           locationId?: string | null;
           orderQuantity: number;
+          outstandingQuantity?: number;
           partId: string;
           receiptId: string;
-          receivedComplete?: boolean;
           receivedQuantity?: number;
           shelfId?: string | null;
           unitOfMeasure: string;
@@ -3923,9 +3923,9 @@ export interface Database {
           lineId?: string | null;
           locationId?: string | null;
           orderQuantity?: number;
+          outstandingQuantity?: number;
           partId?: string;
           receiptId?: string;
-          receivedComplete?: boolean;
           receivedQuantity?: number;
           shelfId?: string | null;
           unitOfMeasure?: string;
@@ -5892,6 +5892,14 @@ export interface Database {
             referencedColumns: ["userId"];
           }
         ];
+      };
+      receipt_quantity_received_by_line: {
+        Row: {
+          lineId: string | null;
+          receivedQuantity: number | null;
+          sourceDocumentId: string | null;
+        };
+        Relationships: [];
       };
       suppliers_view: {
         Row: {

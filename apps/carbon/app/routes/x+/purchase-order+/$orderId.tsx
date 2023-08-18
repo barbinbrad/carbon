@@ -1,5 +1,5 @@
 import { Grid } from "@chakra-ui/react";
-import type { LoaderArgs } from "@remix-run/node";
+import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 import {
@@ -48,8 +48,8 @@ export async function loader({ request, params }: LoaderArgs) {
   });
 }
 
-export async function action() {
-  return null;
+export async function action({ request }: ActionArgs) {
+  return redirect(request.headers.get("Referer") ?? request.url);
 }
 
 export default function PurchaseOrderRoute() {
@@ -58,7 +58,7 @@ export default function PurchaseOrderRoute() {
       <PurchaseOrderHeader />
       <Grid
         gridTemplateColumns={["1fr", "1fr", "1fr 4fr"]}
-        gridColumnGap={4}
+        gridGap={4}
         w="full"
       >
         <PurchaseOrderSidebar />

@@ -202,14 +202,9 @@ export default function useReceiptForm({
         const previouslyReceivedQuantitiesByLine = (
           previouslyReceivedLines.data ?? []
         ).reduce<Record<string, number>>((acc, d) => {
-          acc[d.lineId] = d.receivedQuantity ?? 0;
+          if (d.lineId) acc[d.lineId] = d.receivedQuantity ?? 0;
           return acc;
         }, {});
-
-        console.log({
-          previouslyReceivedLines,
-          previouslyReceivedQuantitiesByLine,
-        });
 
         const receiptLineItems = purchaseOrderLines.data.reduce<
           ReceiptLineItem[]

@@ -21,7 +21,7 @@ const ReceiptsTable = memo(({ data, count }: ReceiptsTableProps) => {
 
   const rows = useMemo(() => data, [data]);
 
-  const columns = useMemo<ColumnDef<(typeof data)[number]>[]>(() => {
+  const columns = useMemo<ColumnDef<Receipt>[]>(() => {
     const result: ColumnDef<(typeof rows)[number]>[] = [
       {
         accessorKey: "receiptId",
@@ -63,7 +63,7 @@ const ReceiptsTable = memo(({ data, count }: ReceiptsTableProps) => {
   }, [navigate]);
 
   const renderContextMenu = useCallback(
-    (row: (typeof data)[number]) => {
+    (row: Receipt) => {
       return (
         <>
           <MenuItem
@@ -76,7 +76,9 @@ const ReceiptsTable = memo(({ data, count }: ReceiptsTableProps) => {
             Edit Receipt
           </MenuItem>
           <MenuItem
-            isDisabled={!permissions.can("delete", "inventory")}
+            isDisabled={
+              !permissions.can("delete", "inventory") || !!row.postingDate
+            }
             icon={<IoMdTrash />}
             onClick={() => {
               navigate(

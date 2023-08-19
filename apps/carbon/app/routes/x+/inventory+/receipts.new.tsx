@@ -104,6 +104,7 @@ export default function NewReceiptsRoute() {
 
   return (
     <ReceiptForm
+      // @ts-expect-error
       initialValues={initialValues}
       isPosted={false}
       receiptLines={[]}

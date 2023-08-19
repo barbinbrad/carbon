@@ -1,13 +1,12 @@
 import { VStack } from "@chakra-ui/react";
 import type { LoaderArgs } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import { getAccountsList } from "~/modules/accounting";
 import {
+  getPartGroups,
   PartGroupsTable,
   PartGroupsTableFilters,
-  getPartGroups,
 } from "~/modules/parts";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
@@ -35,7 +34,6 @@ export async function loader({ request }: LoaderArgs) {
     getAccountsList(client),
   ]);
 
-  console.log({ partGroups, accounts });
   if (partGroups.error) {
     return redirect(
       "/x/parts",

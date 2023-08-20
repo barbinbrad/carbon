@@ -7,6 +7,7 @@ import { sanitize } from "~/utils/supabase";
 import type { PartReplenishmentSystem } from "../types";
 import type {
   partCostValidator,
+  partGroupValidator,
   partInventoryValidator,
   partManufacturingValidator,
   partPlanningValidator,
@@ -47,27 +48,16 @@ export async function getPartGroup(
   client: SupabaseClient<Database>,
   id: string
 ) {
-  return client
-    .from("partGroup")
-    .select(
-      "id, name, description, salesAccountId, discountAccountId, inventoryAccountId"
-    )
-    .eq("id", id)
-    .single();
+  return client.from("partGroup").select("*").eq("id", id).single();
 }
 
 export async function getPartGroups(
   client: SupabaseClient<Database>,
   args?: GenericQueryFilters & { name: string | null }
 ) {
-  let query = client
-    .from("partGroup")
-    .select(
-      "id, name, description, salesAccountId, discountAccountId, inventoryAccountId",
-      {
-        count: "exact",
-      }
-    );
+  let query = client.from("partGroup").select("*", {
+    count: "exact",
+  });
 
   if (args?.name) {
     query = query.ilike("name", `%${args.name}%`);
@@ -416,25 +406,16 @@ export async function upsertPartPurchasing(
 export async function upsertPartGroup(
   client: SupabaseClient<Database>,
   partGroup:
-    | {
-        name: string;
-        description?: string;
-        salesAccountId?: string | null;
-        inventoryAccountId?: string | null;
-        discountAccountId?: string | null;
+    | (Omit<TypeOfValidator<typeof partGroupValidator>, "id"> & {
         createdBy: string;
-      }
-    | {
+      })
+    | (Omit<TypeOfValidator<typeof partGroupValidator>, "id"> & {
         id: string;
-        name: string;
-        description?: string;
-        salesAccountId?: string | null;
-        inventoryAccountId?: string | null;
-        discountAccountId?: string | null;
         updatedBy: string;
-      }
+      })
 ) {
   if ("createdBy" in partGroup) {
+    console.log("inserting", partGroup);
     return client.from("partGroup").insert([partGroup]).select("id").single();
   }
   return (

@@ -34,20 +34,10 @@ export async function action({ request }: ActionArgs) {
     return validationError(validation.error);
   }
 
-  const {
-    name,
-    description,
-    salesAccountId,
-    discountAccountId,
-    inventoryAccountId,
-  } = validation.data;
+  const { id, ...data } = validation.data;
 
   const insertPartGroup = await upsertPartGroup(client, {
-    name,
-    description,
-    salesAccountId,
-    discountAccountId,
-    inventoryAccountId,
+    ...data,
     createdBy: userId,
   });
   if (insertPartGroup.error) {
@@ -85,9 +75,6 @@ export default function NewPartGroupsRoute() {
   const initialValues = {
     name: "",
     description: "",
-    salesAccountId: "",
-    discountAccountId: "",
-    inventoryAccountId: "",
   };
 
   return (

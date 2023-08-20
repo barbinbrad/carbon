@@ -2211,104 +2211,35 @@ export interface Database {
       partGroup: {
         Row: {
           active: boolean;
-          costOfGoodsSoldLaborAccountId: string | null;
-          costOfGoodsSoldMaterialAccountId: string | null;
-          costOfGoodsSoldOverheadAccountId: string | null;
-          costOfGoodsSoldSubcontractorAccountId: string | null;
           createdAt: string;
           createdBy: string;
           description: string | null;
-          discountAccountId: string | null;
           id: string;
-          inventoryAccountId: string | null;
           name: string;
-          salesAccountId: string | null;
           updatedAt: string | null;
           updatedBy: string | null;
         };
         Insert: {
           active?: boolean;
-          costOfGoodsSoldLaborAccountId?: string | null;
-          costOfGoodsSoldMaterialAccountId?: string | null;
-          costOfGoodsSoldOverheadAccountId?: string | null;
-          costOfGoodsSoldSubcontractorAccountId?: string | null;
           createdAt?: string;
           createdBy: string;
           description?: string | null;
-          discountAccountId?: string | null;
           id?: string;
-          inventoryAccountId?: string | null;
           name: string;
-          salesAccountId?: string | null;
           updatedAt?: string | null;
           updatedBy?: string | null;
         };
         Update: {
           active?: boolean;
-          costOfGoodsSoldLaborAccountId?: string | null;
-          costOfGoodsSoldMaterialAccountId?: string | null;
-          costOfGoodsSoldOverheadAccountId?: string | null;
-          costOfGoodsSoldSubcontractorAccountId?: string | null;
           createdAt?: string;
           createdBy?: string;
           description?: string | null;
-          discountAccountId?: string | null;
           id?: string;
-          inventoryAccountId?: string | null;
           name?: string;
-          salesAccountId?: string | null;
           updatedAt?: string | null;
           updatedBy?: string | null;
         };
         Relationships: [
-          {
-            foreignKeyName: "partGroup_costOfGoodsSoldLaborAccountId_fkey";
-            columns: ["costOfGoodsSoldLaborAccountId"];
-            referencedRelation: "account";
-            referencedColumns: ["number"];
-          },
-          {
-            foreignKeyName: "partGroup_costOfGoodsSoldLaborAccountId_fkey";
-            columns: ["costOfGoodsSoldLaborAccountId"];
-            referencedRelation: "accounts_view";
-            referencedColumns: ["number"];
-          },
-          {
-            foreignKeyName: "partGroup_costOfGoodsSoldMaterialAccountId_fkey";
-            columns: ["costOfGoodsSoldMaterialAccountId"];
-            referencedRelation: "account";
-            referencedColumns: ["number"];
-          },
-          {
-            foreignKeyName: "partGroup_costOfGoodsSoldMaterialAccountId_fkey";
-            columns: ["costOfGoodsSoldMaterialAccountId"];
-            referencedRelation: "accounts_view";
-            referencedColumns: ["number"];
-          },
-          {
-            foreignKeyName: "partGroup_costOfGoodsSoldOverheadAccountId_fkey";
-            columns: ["costOfGoodsSoldOverheadAccountId"];
-            referencedRelation: "account";
-            referencedColumns: ["number"];
-          },
-          {
-            foreignKeyName: "partGroup_costOfGoodsSoldOverheadAccountId_fkey";
-            columns: ["costOfGoodsSoldOverheadAccountId"];
-            referencedRelation: "accounts_view";
-            referencedColumns: ["number"];
-          },
-          {
-            foreignKeyName: "partGroup_costOfGoodsSoldSubcontractorAccountId_fkey";
-            columns: ["costOfGoodsSoldSubcontractorAccountId"];
-            referencedRelation: "account";
-            referencedColumns: ["number"];
-          },
-          {
-            foreignKeyName: "partGroup_costOfGoodsSoldSubcontractorAccountId_fkey";
-            columns: ["costOfGoodsSoldSubcontractorAccountId"];
-            referencedRelation: "accounts_view";
-            referencedColumns: ["number"];
-          },
           {
             foreignKeyName: "partGroup_createdBy_fkey";
             columns: ["createdBy"];
@@ -2320,42 +2251,6 @@ export interface Database {
             columns: ["createdBy"];
             referencedRelation: "user_default_view";
             referencedColumns: ["userId"];
-          },
-          {
-            foreignKeyName: "partGroup_discountAccountId_fkey";
-            columns: ["discountAccountId"];
-            referencedRelation: "account";
-            referencedColumns: ["number"];
-          },
-          {
-            foreignKeyName: "partGroup_discountAccountId_fkey";
-            columns: ["discountAccountId"];
-            referencedRelation: "accounts_view";
-            referencedColumns: ["number"];
-          },
-          {
-            foreignKeyName: "partGroup_inventoryAccountId_fkey";
-            columns: ["inventoryAccountId"];
-            referencedRelation: "account";
-            referencedColumns: ["number"];
-          },
-          {
-            foreignKeyName: "partGroup_inventoryAccountId_fkey";
-            columns: ["inventoryAccountId"];
-            referencedRelation: "accounts_view";
-            referencedColumns: ["number"];
-          },
-          {
-            foreignKeyName: "partGroup_salesAccountId_fkey";
-            columns: ["salesAccountId"];
-            referencedRelation: "account";
-            referencedColumns: ["number"];
-          },
-          {
-            foreignKeyName: "partGroup_salesAccountId_fkey";
-            columns: ["salesAccountId"];
-            referencedRelation: "accounts_view";
-            referencedColumns: ["number"];
           },
           {
             foreignKeyName: "partGroup_updatedBy_fkey";

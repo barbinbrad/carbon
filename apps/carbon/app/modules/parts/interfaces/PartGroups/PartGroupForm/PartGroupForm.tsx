@@ -12,11 +12,10 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import { ValidatedForm } from "remix-validated-form";
-import { Hidden, Input, Select, Submit, TextArea } from "~/components/Form";
+import { Hidden, Input, Submit, TextArea } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { partGroupValidator } from "~/modules/parts";
 import type { TypeOfValidator } from "~/types/validators";
-import { mapRowsToOptions } from "~/utils/form";
 
 type PartGroupFormProps = {
   initialValues: TypeOfValidator<typeof partGroupValidator>;
@@ -35,12 +34,6 @@ const PartGroupForm = ({ accounts, initialValues }: PartGroupFormProps) => {
   const isDisabled = isEditing
     ? !permissions.can("update", "parts")
     : !permissions.can("create", "parts");
-
-  const accountOptions = mapRowsToOptions({
-    data: accounts,
-    value: "number",
-    label: "name",
-  });
 
   return (
     <Drawer onClose={onClose} isOpen={true} size="sm">
@@ -63,25 +56,6 @@ const PartGroupForm = ({ accounts, initialValues }: PartGroupFormProps) => {
             <VStack spacing={4} alignItems="start">
               <Input name="name" label="Part Group" />
               <TextArea name="description" label="Description" />
-              {permissions.has("accounting") && (
-                <>
-                  <Select
-                    name="salesAccountId"
-                    label="Sales Account"
-                    options={accountOptions}
-                  />
-                  <Select
-                    name="discountAccountId"
-                    label="Discount Account"
-                    options={accountOptions}
-                  />
-                  <Select
-                    name="inventoryAccountId"
-                    label="Inventory Account"
-                    options={accountOptions}
-                  />
-                </>
-              )}
             </VStack>
           </DrawerBody>
           <DrawerFooter>

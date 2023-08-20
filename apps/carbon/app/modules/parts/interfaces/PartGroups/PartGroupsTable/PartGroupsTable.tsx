@@ -17,13 +17,13 @@ const PartGroupsTable = memo(({ data, count }: PartGroupsTableProps) => {
   const [params] = useUrlParams();
   const navigate = useNavigate();
   const permissions = usePermissions();
-  const hasAccounting =
-    permissions.has("accounting") && permissions.can("view", "accounting");
+  // const hasAccounting =
+  //   permissions.has("accounting") && permissions.can("view", "accounting");
 
   const rows = useMemo(() => data, [data]);
 
-  const columns = useMemo<ColumnDef<(typeof rows)[number]>[]>(() => {
-    const result: ColumnDef<(typeof rows)[number]>[] = [
+  const columns = useMemo<ColumnDef<(typeof rows)[number]>[]>(
+    () => [
       {
         accessorKey: "name",
         header: "Name",
@@ -38,28 +38,9 @@ const PartGroupsTable = memo(({ data, count }: PartGroupsTableProps) => {
         header: "Description",
         cell: (item) => item.getValue(),
       },
-    ];
-
-    return hasAccounting
-      ? result.concat([
-          {
-            accessorKey: "salesAccountId",
-            header: "Sales Account",
-            cell: (item) => item.getValue(),
-          },
-          {
-            accessorKey: "inventoryAccountId",
-            header: "Inventory Account",
-            cell: (item) => item.getValue(),
-          },
-          {
-            accessorKey: "discountAccountId",
-            header: "Discount Account",
-            cell: (item) => item.getValue(),
-          },
-        ])
-      : result;
-  }, [hasAccounting, navigate]);
+    ],
+    [navigate]
+  );
 
   const renderContextMenu = useCallback(
     (row: (typeof rows)[number]) => {

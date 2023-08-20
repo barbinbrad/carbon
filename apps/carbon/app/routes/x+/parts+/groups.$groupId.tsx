@@ -1,13 +1,12 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
 import { useRouteData } from "~/hooks";
-import { PartGroupForm } from "~/modules/parts";
 import {
-  partGroupValidator,
   getPartGroup,
+  PartGroupForm,
+  partGroupValidator,
   upsertPartGroup,
 } from "~/modules/parts";
 import { requirePermissions } from "~/services/auth";
@@ -48,21 +47,9 @@ export async function action({ request, params }: ActionArgs) {
     return validationError(validation.error);
   }
 
-  const {
-    name,
-    description,
-    salesAccountId,
-    discountAccountId,
-    inventoryAccountId,
-  } = validation.data;
-
   const updatePartGroup = await upsertPartGroup(client, {
     id: groupId,
-    name,
-    description,
-    salesAccountId: salesAccountId ?? null,
-    discountAccountId: discountAccountId ?? null,
-    inventoryAccountId: inventoryAccountId ?? null,
+    ...validation.data,
     updatedBy: userId,
   });
 
@@ -92,9 +79,6 @@ export default function EditPartGroupsRoute() {
     id: partGroup?.id ?? undefined,
     name: partGroup?.name ?? "",
     description: partGroup?.description ?? "",
-    salesAccountId: partGroup?.salesAccountId ?? "",
-    discountAccountId: partGroup?.discountAccountId ?? "",
-    inventoryAccountId: partGroup?.inventoryAccountId ?? "",
   };
 
   return (

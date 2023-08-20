@@ -3267,13 +3267,6 @@ CREATE TABLE "partGroup" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "name" TEXT NOT NULL,
   "description" TEXT,
-  "salesAccountId" TEXT,
-  "discountAccountId" TEXT,
-  "inventoryAccountId" TEXT,
-  "costOfGoodsSoldLaborAccountId" TEXT,
-  "costOfGoodsSoldMaterialAccountId" TEXT,
-  "costOfGoodsSoldOverheadAccountId" TEXT,
-  "costOfGoodsSoldSubcontractorAccountId" TEXT,
   "active" BOOLEAN NOT NULL DEFAULT true,
   "createdBy" TEXT NOT NULL,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
@@ -3282,13 +3275,6 @@ CREATE TABLE "partGroup" (
 
   CONSTRAINT "partGroup_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "partGroup_name_key" UNIQUE ("name"),
-  CONSTRAINT "partGroup_salesAccountId_fkey" FOREIGN KEY ("salesAccountId") REFERENCES "account"("number") ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT "partGroup_discountAccountId_fkey" FOREIGN KEY ("discountAccountId") REFERENCES "account"("number") ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT "partGroup_inventoryAccountId_fkey" FOREIGN KEY ("inventoryAccountId") REFERENCES "account"("number") ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT "partGroup_costOfGoodsSoldLaborAccountId_fkey" FOREIGN KEY ("costOfGoodsSoldLaborAccountId") REFERENCES "account"("number") ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT "partGroup_costOfGoodsSoldMaterialAccountId_fkey" FOREIGN KEY ("costOfGoodsSoldMaterialAccountId") REFERENCES "account"("number") ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT "partGroup_costOfGoodsSoldOverheadAccountId_fkey" FOREIGN KEY ("costOfGoodsSoldOverheadAccountId") REFERENCES "account"("number") ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT "partGroup_costOfGoodsSoldSubcontractorAccountId_fkey" FOREIGN KEY ("costOfGoodsSoldSubcontractorAccountId") REFERENCES "account"("number") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "partGroup_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "partGroup_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );

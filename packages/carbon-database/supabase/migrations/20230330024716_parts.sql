@@ -245,9 +245,6 @@ CREATE TABLE "partCost" (
   "costingMethod" "partCostingMethod" NOT NULL,
   "standardCost" NUMERIC(15,5) NOT NULL DEFAULT 0,
   "unitCost" NUMERIC(15,5) NOT NULL DEFAULT 0,
-  "salesAccountId" TEXT,
-  "discountAccountId" TEXT,
-  "inventoryAccountId" TEXT,
   "costIsAdjusted" BOOLEAN NOT NULL DEFAULT false,
   "createdBy" TEXT NOT NULL,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
@@ -255,9 +252,6 @@ CREATE TABLE "partCost" (
   "updatedAt" TIMESTAMP WITH TIME ZONE,
 
   CONSTRAINT "partCost_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part"("id") ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT "partGroup_salesAccountId_fkey" FOREIGN KEY ("salesAccountId") REFERENCES "account"("number") ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT "partGroup_discountAccountId_fkey" FOREIGN KEY ("discountAccountId") REFERENCES "account"("number") ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT "partGroup_inventoryAccountId_fkey" FOREIGN KEY ("inventoryAccountId") REFERENCES "account"("number") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "partGroup_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "partGroup_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );

@@ -254,17 +254,17 @@ export interface Database {
         Row: {
           accumulatedDepreciationAccount: string;
           accumulatedDepreciationOnDisposalAccount: string;
-          aquisitionCostAccount: string;
-          aquisitionCostOnDisposalAccount: string;
+          assetAquisitionCostAccount: string;
+          assetAquisitionCostOnDisposalAccount: string;
+          assetDepreciationExpenseAccount: string;
+          assetGainsAndLossesAccount: string;
           bankCashAccount: string;
           bankForeignCurrencyAccount: string;
           bankLocalCurrencyAccount: string;
           capacityVarianceAccount: string;
           costOfGoodsSoldAccount: string;
           customerPaymentDiscountAccount: string;
-          depreciationExpenseAccount: string;
           directCostAppliedAccount: string;
-          gainsAndLossesAccount: string;
           id: boolean;
           interestAccount: string;
           inventoryAccount: string;
@@ -277,15 +277,15 @@ export interface Database {
           payablesAccount: string;
           prepaymentAccount: string;
           purchaseAccount: string;
-          purchaseTaxAccount: string;
+          purchaseTaxPayableAccount: string;
           purchaseVarianceAccount: string;
           receivablesAccount: string;
           retainedEarningsAccount: string;
-          reverseChargeSalesTaxAccount: string;
+          reverseChargeSalesTaxPayableAccount: string;
           roundingAccount: string;
           salesAccount: string;
           salesDiscountAccount: string;
-          salesTaxAccount: string;
+          salesTaxPayableAccount: string;
           serviceChargeAccount: string;
           supplierPaymentDiscountAccount: string;
           updatedBy: string | null;
@@ -294,17 +294,17 @@ export interface Database {
         Insert: {
           accumulatedDepreciationAccount: string;
           accumulatedDepreciationOnDisposalAccount: string;
-          aquisitionCostAccount: string;
-          aquisitionCostOnDisposalAccount: string;
+          assetAquisitionCostAccount: string;
+          assetAquisitionCostOnDisposalAccount: string;
+          assetDepreciationExpenseAccount: string;
+          assetGainsAndLossesAccount: string;
           bankCashAccount: string;
           bankForeignCurrencyAccount: string;
           bankLocalCurrencyAccount: string;
           capacityVarianceAccount: string;
           costOfGoodsSoldAccount: string;
           customerPaymentDiscountAccount: string;
-          depreciationExpenseAccount: string;
           directCostAppliedAccount: string;
-          gainsAndLossesAccount: string;
           id?: boolean;
           interestAccount: string;
           inventoryAccount: string;
@@ -317,15 +317,15 @@ export interface Database {
           payablesAccount: string;
           prepaymentAccount: string;
           purchaseAccount: string;
-          purchaseTaxAccount: string;
+          purchaseTaxPayableAccount: string;
           purchaseVarianceAccount: string;
           receivablesAccount: string;
           retainedEarningsAccount: string;
-          reverseChargeSalesTaxAccount: string;
+          reverseChargeSalesTaxPayableAccount: string;
           roundingAccount: string;
           salesAccount: string;
           salesDiscountAccount: string;
-          salesTaxAccount: string;
+          salesTaxPayableAccount: string;
           serviceChargeAccount: string;
           supplierPaymentDiscountAccount: string;
           updatedBy?: string | null;
@@ -334,17 +334,17 @@ export interface Database {
         Update: {
           accumulatedDepreciationAccount?: string;
           accumulatedDepreciationOnDisposalAccount?: string;
-          aquisitionCostAccount?: string;
-          aquisitionCostOnDisposalAccount?: string;
+          assetAquisitionCostAccount?: string;
+          assetAquisitionCostOnDisposalAccount?: string;
+          assetDepreciationExpenseAccount?: string;
+          assetGainsAndLossesAccount?: string;
           bankCashAccount?: string;
           bankForeignCurrencyAccount?: string;
           bankLocalCurrencyAccount?: string;
           capacityVarianceAccount?: string;
           costOfGoodsSoldAccount?: string;
           customerPaymentDiscountAccount?: string;
-          depreciationExpenseAccount?: string;
           directCostAppliedAccount?: string;
-          gainsAndLossesAccount?: string;
           id?: boolean;
           interestAccount?: string;
           inventoryAccount?: string;
@@ -357,15 +357,15 @@ export interface Database {
           payablesAccount?: string;
           prepaymentAccount?: string;
           purchaseAccount?: string;
-          purchaseTaxAccount?: string;
+          purchaseTaxPayableAccount?: string;
           purchaseVarianceAccount?: string;
           receivablesAccount?: string;
           retainedEarningsAccount?: string;
-          reverseChargeSalesTaxAccount?: string;
+          reverseChargeSalesTaxPayableAccount?: string;
           roundingAccount?: string;
           salesAccount?: string;
           salesDiscountAccount?: string;
-          salesTaxAccount?: string;
+          salesTaxPayableAccount?: string;
           serviceChargeAccount?: string;
           supplierPaymentDiscountAccount?: string;
           updatedBy?: string | null;
@@ -398,25 +398,49 @@ export interface Database {
           },
           {
             foreignKeyName: "accountDefault_aquisitionCostAccount_fkey";
-            columns: ["aquisitionCostAccount"];
+            columns: ["assetAquisitionCostAccount"];
             referencedRelation: "account";
             referencedColumns: ["number"];
           },
           {
             foreignKeyName: "accountDefault_aquisitionCostAccount_fkey";
-            columns: ["aquisitionCostAccount"];
+            columns: ["assetAquisitionCostAccount"];
             referencedRelation: "accounts_view";
             referencedColumns: ["number"];
           },
           {
             foreignKeyName: "accountDefault_aquisitionCostOnDisposalAccount_fkey";
-            columns: ["aquisitionCostOnDisposalAccount"];
+            columns: ["assetAquisitionCostOnDisposalAccount"];
             referencedRelation: "account";
             referencedColumns: ["number"];
           },
           {
             foreignKeyName: "accountDefault_aquisitionCostOnDisposalAccount_fkey";
-            columns: ["aquisitionCostOnDisposalAccount"];
+            columns: ["assetAquisitionCostOnDisposalAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_assetDepreciationExpenseAccount_fkey";
+            columns: ["assetDepreciationExpenseAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_assetDepreciationExpenseAccount_fkey";
+            columns: ["assetDepreciationExpenseAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_assetGainsAndLossesAccount_fkey";
+            columns: ["assetGainsAndLossesAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_assetGainsAndLossesAccount_fkey";
+            columns: ["assetGainsAndLossesAccount"];
             referencedRelation: "accounts_view";
             referencedColumns: ["number"];
           },
@@ -493,18 +517,6 @@ export interface Database {
             referencedColumns: ["number"];
           },
           {
-            foreignKeyName: "accountDefault_depreciationExpenseAccount_fkey";
-            columns: ["depreciationExpenseAccount"];
-            referencedRelation: "account";
-            referencedColumns: ["number"];
-          },
-          {
-            foreignKeyName: "accountDefault_depreciationExpenseAccount_fkey";
-            columns: ["depreciationExpenseAccount"];
-            referencedRelation: "accounts_view";
-            referencedColumns: ["number"];
-          },
-          {
             foreignKeyName: "accountDefault_directCostAppliedAccount_fkey";
             columns: ["directCostAppliedAccount"];
             referencedRelation: "account";
@@ -513,18 +525,6 @@ export interface Database {
           {
             foreignKeyName: "accountDefault_directCostAppliedAccount_fkey";
             columns: ["directCostAppliedAccount"];
-            referencedRelation: "accounts_view";
-            referencedColumns: ["number"];
-          },
-          {
-            foreignKeyName: "accountDefault_gainsAndLossesAccount_fkey";
-            columns: ["gainsAndLossesAccount"];
-            referencedRelation: "account";
-            referencedColumns: ["number"];
-          },
-          {
-            foreignKeyName: "accountDefault_gainsAndLossesAccount_fkey";
-            columns: ["gainsAndLossesAccount"];
             referencedRelation: "accounts_view";
             referencedColumns: ["number"];
           },
@@ -661,14 +661,14 @@ export interface Database {
             referencedColumns: ["number"];
           },
           {
-            foreignKeyName: "accountDefault_purchaseTaxAccount_fkey";
-            columns: ["purchaseTaxAccount"];
+            foreignKeyName: "accountDefault_purchaseTaxPayableAccount_fkey";
+            columns: ["purchaseTaxPayableAccount"];
             referencedRelation: "account";
             referencedColumns: ["number"];
           },
           {
-            foreignKeyName: "accountDefault_purchaseTaxAccount_fkey";
-            columns: ["purchaseTaxAccount"];
+            foreignKeyName: "accountDefault_purchaseTaxPayableAccount_fkey";
+            columns: ["purchaseTaxPayableAccount"];
             referencedRelation: "accounts_view";
             referencedColumns: ["number"];
           },
@@ -709,14 +709,14 @@ export interface Database {
             referencedColumns: ["number"];
           },
           {
-            foreignKeyName: "accountDefault_reverseChargeSalesTaxAccount_fkey";
-            columns: ["reverseChargeSalesTaxAccount"];
+            foreignKeyName: "accountDefault_reverseChargeSalesTaxPayableAccount_fkey";
+            columns: ["reverseChargeSalesTaxPayableAccount"];
             referencedRelation: "account";
             referencedColumns: ["number"];
           },
           {
-            foreignKeyName: "accountDefault_reverseChargeSalesTaxAccount_fkey";
-            columns: ["reverseChargeSalesTaxAccount"];
+            foreignKeyName: "accountDefault_reverseChargeSalesTaxPayableAccount_fkey";
+            columns: ["reverseChargeSalesTaxPayableAccount"];
             referencedRelation: "accounts_view";
             referencedColumns: ["number"];
           },
@@ -757,14 +757,14 @@ export interface Database {
             referencedColumns: ["number"];
           },
           {
-            foreignKeyName: "accountDefault_salesTaxAccount_fkey";
-            columns: ["salesTaxAccount"];
+            foreignKeyName: "accountDefault_salesTaxPayableAccount_fkey";
+            columns: ["salesTaxPayableAccount"];
             referencedRelation: "account";
             referencedColumns: ["number"];
           },
           {
-            foreignKeyName: "accountDefault_salesTaxAccount_fkey";
-            columns: ["salesTaxAccount"];
+            foreignKeyName: "accountDefault_salesTaxPayableAccount_fkey";
+            columns: ["salesTaxPayableAccount"];
             referencedRelation: "accounts_view";
             referencedColumns: ["number"];
           },
@@ -2664,10 +2664,7 @@ export interface Database {
           costIsAdjusted: boolean;
           createdAt: string;
           createdBy: string;
-          discountAccountId: string | null;
-          inventoryAccountId: string | null;
           partId: string;
-          salesAccountId: string | null;
           standardCost: number;
           unitCost: number;
           updatedAt: string | null;
@@ -2678,10 +2675,7 @@ export interface Database {
           costIsAdjusted?: boolean;
           createdAt?: string;
           createdBy: string;
-          discountAccountId?: string | null;
-          inventoryAccountId?: string | null;
           partId: string;
-          salesAccountId?: string | null;
           standardCost?: number;
           unitCost?: number;
           updatedAt?: string | null;
@@ -2692,10 +2686,7 @@ export interface Database {
           costIsAdjusted?: boolean;
           createdAt?: string;
           createdBy?: string;
-          discountAccountId?: string | null;
-          inventoryAccountId?: string | null;
           partId?: string;
-          salesAccountId?: string | null;
           standardCost?: number;
           unitCost?: number;
           updatedAt?: string | null;
@@ -2725,42 +2716,6 @@ export interface Database {
             columns: ["createdBy"];
             referencedRelation: "user_default_view";
             referencedColumns: ["userId"];
-          },
-          {
-            foreignKeyName: "partGroup_discountAccountId_fkey";
-            columns: ["discountAccountId"];
-            referencedRelation: "account";
-            referencedColumns: ["number"];
-          },
-          {
-            foreignKeyName: "partGroup_discountAccountId_fkey";
-            columns: ["discountAccountId"];
-            referencedRelation: "accounts_view";
-            referencedColumns: ["number"];
-          },
-          {
-            foreignKeyName: "partGroup_inventoryAccountId_fkey";
-            columns: ["inventoryAccountId"];
-            referencedRelation: "account";
-            referencedColumns: ["number"];
-          },
-          {
-            foreignKeyName: "partGroup_inventoryAccountId_fkey";
-            columns: ["inventoryAccountId"];
-            referencedRelation: "accounts_view";
-            referencedColumns: ["number"];
-          },
-          {
-            foreignKeyName: "partGroup_salesAccountId_fkey";
-            columns: ["salesAccountId"];
-            referencedRelation: "account";
-            referencedColumns: ["number"];
-          },
-          {
-            foreignKeyName: "partGroup_salesAccountId_fkey";
-            columns: ["salesAccountId"];
-            referencedRelation: "accounts_view";
-            referencedColumns: ["number"];
           },
           {
             foreignKeyName: "partGroup_updatedBy_fkey";

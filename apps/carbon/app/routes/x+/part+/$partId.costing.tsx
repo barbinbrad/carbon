@@ -6,8 +6,8 @@ import { useRouteData } from "~/hooks";
 import { getAccountsList } from "~/modules/accounting";
 import type { PartCostingMethod } from "~/modules/parts";
 import {
-  PartCostingForm,
   getPartCost,
+  PartCostingForm,
   partCostValidator,
   upsertPartCost,
 } from "~/modules/parts";
@@ -90,11 +90,10 @@ export default function PartCostingRoute() {
     partCostingMethods: PartCostingMethod[];
   }>("/x/part");
 
-  const { partCost, accounts } = useLoaderData<typeof loader>();
+  const { partCost } = useLoaderData<typeof loader>();
   return (
     <PartCostingForm
       initialValues={partCost}
-      accounts={accounts}
       partCostingMethods={sharedPartsData?.partCostingMethods ?? []}
     />
   );

@@ -20,8 +20,8 @@ CREATE TABLE "accountDefault" (
     "maintenanceAccount" TEXT NOT NULL,
 
     -- depreciaition of fixed assets
-    "depreciationExpenseAccount" TEXT NOT NULL,
-    "gainsAndLossesAccount" TEXT NOT NULL,
+    "assetDepreciationExpenseAccount" TEXT NOT NULL,
+    "assetGainsAndLossesAccount" TEXT NOT NULL,
     "serviceChargeAccount" TEXT NOT NULL,
 
     -- interest
@@ -32,8 +32,8 @@ CREATE TABLE "accountDefault" (
 
   -- balance sheet
     -- assets
-    "aquisitionCostAccount" TEXT NOT NULL,
-    "aquisitionCostOnDisposalAccount" TEXT NOT NULL,
+    "assetAquisitionCostAccount" TEXT NOT NULL,
+    "assetAquisitionCostOnDisposalAccount" TEXT NOT NULL,
     "accumulatedDepreciationAccount" TEXT NOT NULL,
     "accumulatedDepreciationOnDisposalAccount" TEXT NOT NULL,
 
@@ -49,9 +49,9 @@ CREATE TABLE "accountDefault" (
     -- liabilities
     "prepaymentAccount" TEXT NOT NULL,
     "payablesAccount" TEXT NOT NULL,
-    "salesTaxAccount" TEXT NOT NULL,
-    "reverseChargeSalesTaxAccount" TEXT NOT NULL,
-    "purchaseTaxAccount" TEXT NOT NULL,
+    "salesTaxPayableAccount" TEXT NOT NULL,
+    "purchaseTaxPayableAccount" TEXT NOT NULL,
+    "reverseChargeSalesTaxPayableAccount" TEXT NOT NULL,
 
     -- retained earnings
     "retainedEarningsAccount" TEXT NOT NULL,
@@ -76,15 +76,15 @@ CREATE TABLE "accountDefault" (
   CONSTRAINT "accountDefault_capacityVarianceAccount_fkey" FOREIGN KEY ("capacityVarianceAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "accountDefault_overheadAccount_fkey" FOREIGN KEY ("overheadAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "accountDefault_maintenanceAccount_fkey" FOREIGN KEY ("maintenanceAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
-  CONSTRAINT "accountDefault_depreciationExpenseAccount_fkey" FOREIGN KEY ("depreciationExpenseAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
-  CONSTRAINT "accountDefault_gainsAndLossesAccount_fkey" FOREIGN KEY ("gainsAndLossesAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_assetDepreciationExpenseAccount_fkey" FOREIGN KEY ("assetDepreciationExpenseAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_assetGainsAndLossesAccount_fkey" FOREIGN KEY ("assetGainsAndLossesAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "accountDefault_serviceChargeAccount_fkey" FOREIGN KEY ("serviceChargeAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "accountDefault_interestAccount_fkey" FOREIGN KEY ("interestAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "accountDefault_supplierPaymentDiscountAccount_fkey" FOREIGN KEY ("supplierPaymentDiscountAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "accountDefault_customerPaymentDiscountAccount_fkey" FOREIGN KEY ("customerPaymentDiscountAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "accountDefault_roundingAccount_fkey" FOREIGN KEY ("roundingAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
-  CONSTRAINT "accountDefault_aquisitionCostAccount_fkey" FOREIGN KEY ("aquisitionCostAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
-  CONSTRAINT "accountDefault_aquisitionCostOnDisposalAccount_fkey" FOREIGN KEY ("aquisitionCostOnDisposalAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_aquisitionCostAccount_fkey" FOREIGN KEY ("assetAquisitionCostAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_aquisitionCostOnDisposalAccount_fkey" FOREIGN KEY ("assetAquisitionCostOnDisposalAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "accountDefault_accumulatedDepreciationAccount_fkey" FOREIGN KEY ("accumulatedDepreciationAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "accountDefault_accumulatedDepreciationOnDisposalAccount_fkey" FOREIGN KEY ("accumulatedDepreciationOnDisposalAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "accountDefault_inventoryAccount_fkey" FOREIGN KEY ("inventoryAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
@@ -96,9 +96,9 @@ CREATE TABLE "accountDefault" (
   CONSTRAINT "accountDefault_bankForeignCurrencyAccount_fkey" FOREIGN KEY ("bankForeignCurrencyAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "accountDefault_prepaymentAccount_fkey" FOREIGN KEY ("prepaymentAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "accountDefault_payablesAccount_fkey" FOREIGN KEY ("payablesAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
-  CONSTRAINT "accountDefault_salesTaxAccount_fkey" FOREIGN KEY ("salesTaxAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
-  CONSTRAINT "accountDefault_reverseChargeSalesTaxAccount_fkey" FOREIGN KEY ("reverseChargeSalesTaxAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
-  CONSTRAINT "accountDefault_purchaseTaxAccount_fkey" FOREIGN KEY ("purchaseTaxAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_salesTaxPayableAccount_fkey" FOREIGN KEY ("salesTaxPayableAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_reverseChargeSalesTaxPayableAccount_fkey" FOREIGN KEY ("reverseChargeSalesTaxPayableAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_purchaseTaxPayableAccount_fkey" FOREIGN KEY ("purchaseTaxPayableAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "accountDefault_retainedEarningsAccount_fkey" FOREIGN KEY ("retainedEarningsAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "accountDefault_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );

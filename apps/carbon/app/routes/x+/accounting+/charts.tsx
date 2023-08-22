@@ -1,10 +1,9 @@
 import { VStack } from "@chakra-ui/react";
 import type { LoaderArgs } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import { ChartOfAccountsTable, getChartOfAccounts } from "~/modules/accounting";
-import ChartOfAccountsTableFilters from "~/modules/accounting/interfaces/ChartOfAccounts/ChartOfAccountsTableFilters";
+import ChartOfAccountsTableFilters from "~/modules/accounting/ui/ChartOfAccounts/ChartOfAccountsTableFilters";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { error } from "~/utils/result";

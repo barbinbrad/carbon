@@ -3,7 +3,6 @@ import { redirect } from "@remix-run/node";
 import { useLoaderData, useNavigate, useParams } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
 import { useRouteData } from "~/hooks";
-import { EmployeeAbilityForm } from "~/modules/resources/interfaces/Abilities";
 import type { Ability } from "~/modules/resources";
 import {
   AbilityEmployeeStatus,
@@ -12,6 +11,7 @@ import {
   getTrainingStatus,
   upsertEmployeeAbility,
 } from "~/modules/resources";
+import { EmployeeAbilityForm } from "~/modules/resources/ui/Abilities";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { error, success } from "~/utils/result";

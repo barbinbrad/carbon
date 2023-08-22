@@ -162,6 +162,117 @@ export const currencyValidator = withZod(
   })
 );
 
+export const defaultAcountValidator = withZod(
+  z.object({
+    salesAccount: z.string().min(1, { message: "Sales account is required" }),
+    salesDiscountAccount: z.string().min(1, {
+      message: "Sales discount account is required",
+    }),
+    costOfGoodsSoldAccount: z.string().min(1, {
+      message: "Cost of goods sold account is required",
+    }),
+    purchaseAccount: z.string().min(1, {
+      message: "Purchase account is required",
+    }),
+    directCostAppliedAccount: z.string().min(1, {
+      message: "Direct cost applied account is required",
+    }),
+    overheadCostAppliedAccount: z.string().min(1, {
+      message: "Overhead cost applied account is required",
+    }),
+    purchaseVarianceAccount: z.string().min(1, {
+      message: "Purchase variance account is required",
+    }),
+    inventoryAdjustmentVariannceAccount: z.string().min(1, {
+      message: "Inventory adjustment variance account is required",
+    }),
+    materialVariannceAccount: z.string().min(1, {
+      message: "Material variance account is required",
+    }),
+    capacityVarianceAccount: z.string().min(1, {
+      message: "Capacity variance account is required",
+    }),
+    overheadAccount: z.string().min(1, {
+      message: "Overhead account is required",
+    }),
+    maintenanceAccount: z.string().min(1, {
+      message: "Maintenance account is required",
+    }),
+    assetDepreciationExpenseAccount: z.string().min(1, {
+      message: "Depreciation expense account is required",
+    }),
+    assetGainsAndLossesAccount: z.string().min(1, {
+      message: "Gains and losses account is required",
+    }),
+    serviceChargeAccount: z.string().min(1, {
+      message: "Service charge account is required",
+    }),
+    interestAccount: z.string().min(1, {
+      message: "Interest account is required",
+    }),
+    supplierPaymentDiscountAccount: z.string().min(1, {
+      message: "Supplier payment discount account is required",
+    }),
+    customerPaymentDiscountAccount: z.string().min(1, {
+      message: "Customer payment discount account is required",
+    }),
+    roundingAccount: z.string().min(1, {
+      message: "Rounding account is required",
+    }),
+    assetAquisitionCostAccount: z.string().min(1, {
+      message: "Aquisition cost account is required",
+    }),
+    assetAquisitionCostOnDisposalAccount: z.string().min(1, {
+      message: "Aquisition cost on disposal account is required",
+    }),
+    accumulatedDepreciationAccount: z.string().min(1, {
+      message: "Accumulated depreciation account is required",
+    }),
+    accumulatedDepreciationOnDisposalAccount: z.string().min(1, {
+      message: "Accumulated depreciation on disposal account is required",
+    }),
+    inventoryAccount: z.string().min(1, {
+      message: "Inventory account is required",
+    }),
+    inventoryInterimAccrualAccount: z.string().min(1, {
+      message: "Inventory interim accrual account is required",
+    }),
+    workInProgressAccount: z.string().min(1, {
+      message: "Work in progress account is required",
+    }),
+    receivablesAccount: z.string().min(1, {
+      message: "Receivables account is required",
+    }),
+    bankCashAccount: z.string().min(1, {
+      message: "Bank cash account is required",
+    }),
+    bankLocalCurrencyAccount: z.string().min(1, {
+      message: "Bank local currency account is required",
+    }),
+    bankForeignCurrencyAccount: z.string().min(1, {
+      message: "Bank foreign currency account is required",
+    }),
+    prepaymentAccount: z.string().min(1, {
+      message: "Prepayment account is required",
+    }),
+    payablesAccount: z.string().min(1, {
+      message: "Payables account is required",
+    }),
+    salesTaxPayableAccount: z.string().min(1, {
+      message: "Sales tax payable account is required",
+    }),
+    purchaseTaxPayableAccount: z.string().min(1, {
+      message: "Purchase tax payable account is required",
+    }),
+    reverseChargeSalesTaxPayableAccount: z.string().min(1, {
+      message: "Reverse charge sales tax payable account is required",
+    }),
+    retainedEarningsAccount: z.string().min(1, {
+      message: "Retained earnings account is required",
+    }),
+  })
+);
+
 export const partLedgerValidator = withZod(
   z.object({
     postingDate: z.string().min(1, { message: "Posting date is required" }),

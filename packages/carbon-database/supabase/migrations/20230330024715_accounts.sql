@@ -18,9 +18,6 @@ CREATE TABLE "currency" (
   CONSTRAINT "currency_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
 
-INSERT INTO "currency" ("name", "code", "symbol", "exchangeRate", "isBaseCurrency", "createdBy")
-VALUES ('US Dollar', 'USD', '$', 1.0000, true, 'system');
-
 CREATE INDEX "currency_code_index" ON "currency" ("code");
 
 ALTER TABLE "currency" ENABLE ROW LEVEL SECURITY;
@@ -107,27 +104,6 @@ CREATE TABLE "accountCategory" (
   CONSTRAINT "accountCategory_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "accountCategory_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
-
-INSERT INTO "accountCategory" ("category", "incomeBalance", "normalBalance", "createdBy")
-VALUES 
-  ('Bank', 'Balance Sheet', 'Credit', 'system'),
-  ('Accounts Receivable', 'Balance Sheet', 'Credit', 'system'),
-  ('Inventory', 'Balance Sheet', 'Debit', 'system'),
-  ('Other Current Asset', 'Balance Sheet', 'Debit', 'system'),
-  ('Fixed Asset', 'Balance Sheet', 'Debit', 'system'),
-  ('Accumulated Depreciation', 'Balance Sheet', 'Credit', 'system'),
-  ('Other Asset', 'Balance Sheet', 'Debit', 'system'),
-  ('Accounts Payable', 'Balance Sheet', 'Debit', 'system'),
-  ('Other Current Liability', 'Balance Sheet', 'Debit', 'system'),
-  ('Long Term Liability', 'Balance Sheet', 'Debit', 'system'),
-  ('Equity - No Close', 'Balance Sheet', 'Credit', 'system'),
-  ('Equity - Close', 'Balance Sheet', 'Credit', 'system'),
-  ('Retained Earnings', 'Balance Sheet', 'Credit', 'system'),
-  ('Income', 'Income Statement', 'Credit', 'system'),
-  ('Cost of Goods Sold', 'Income Statement', 'Debit', 'system'),
-  ('Expense', 'Income Statement', 'Debit', 'system'),
-  ('Other Income', 'Income Statement', 'Credit', 'system'),
-  ('Other Expense', 'Income Statement', 'Debit', 'system');
 
 ALTER TABLE "accountCategory" ENABLE ROW LEVEL SECURITY;
 

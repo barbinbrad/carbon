@@ -52,8 +52,6 @@ CREATE TABLE "supplierStatus" (
     CONSTRAINT "supplierStatus_pkey" PRIMARY KEY ("id")
 );
 
-INSERT INTO "supplierStatus" ("name") VALUES ('Active'), ('Inactive'), ('Pending'), ('Rejected');
-
 CREATE TABLE "supplierType" (
     "id" TEXT NOT NULL DEFAULT uuid_generate_v4(),
     "name" TEXT NOT NULL,
@@ -133,8 +131,6 @@ CREATE TABLE "customerStatus" (
 
     CONSTRAINT "customerStatus_pkey" PRIMARY KEY ("id")
 );
-
-INSERT INTO "customerStatus" ("name") VALUES ('Active'), ('Inactive'), ('Prospect'), ('Lead'), ('On Hold'), ('Cancelled'), ('Archived');
 
 CREATE TABLE "customerType" (
     "id" TEXT NOT NULL DEFAULT uuid_generate_v4(),

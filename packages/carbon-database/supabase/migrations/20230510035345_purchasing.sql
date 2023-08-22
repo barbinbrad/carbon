@@ -23,18 +23,6 @@ CREATE TABLE "paymentTerm" (
   CONSTRAINT "paymentTerm_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE CASCADE
 );
 
-INSERT INTO "paymentTerm" ("name", "daysDue", "calculationMethod", "daysDiscount", "discountPercentage", "createdBy") 
-VALUES 
-  ('Net 15', 15, 'Net', 0, 0, 'system'),
-  ('Net 30', 30, 'Net', 0, 0, 'system'),
-  ('Net 50', 50, 'Net', 0, 0, 'system'),
-  ('Net 60', 60, 'Net', 0, 0, 'system'),
-  ('Net 90', 90, 'Net', 0, 0, 'system'),
-  ('1% 10 Net 30', 30, 'Net', 10, 1, 'system'),
-  ('2% 10 Net 30', 30, 'Net', 10, 2, 'system'),
-  ('Due on Receipt', 0, 'Net', 0, 0, 'system'),
-  ('Net EOM 10', 10, 'End of Month', 0, 0, 'system');
-
 ALTER TABLE "paymentTerm" ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Certain employees can view payment terms" ON "paymentTerm"

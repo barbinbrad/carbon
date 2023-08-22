@@ -285,9 +285,6 @@ CREATE TABLE "user" (
     CONSTRAINT "user_pkey" PRIMARY KEY ("id")
 );
 
-INSERT INTO "user" ("id", "email", "firstName", "lastName")
-VALUES ('system', 'system@carbon.us.org', 'System', 'Operation');
-
 CREATE UNIQUE INDEX "index_user_email_key" ON "user"("email");
 CREATE INDEX "index_user_fullName" ON "user"("fullName");
 
@@ -515,16 +512,6 @@ CREATE TABLE "attributeDataType" (
     )
 );
 
-INSERT INTO "attributeDataType" ("label", "isBoolean", "isDate", "isList", "isNumeric", "isText", "isUser")
-VALUES 
-  ('Yes/No', true, false, false, false, false, false),
-  ('Date', false, true, false, false, false, false),
-  ('List', false, false, true, false, false, false),
-  ('Numeric', false, false, false, true, false, false),
-  ('Text', false, false, false, false, true, false),
-  ('User', false, false, false, false, false, true);
-  
-
 -- ALTER TABLE "attributeDataType" ENABLE ROW LEVEL SECURITY;
 
 CREATE TABLE "userAttribute" (
@@ -719,8 +706,6 @@ CREATE TABLE "supplierStatus" (
     CONSTRAINT "supplierStatus_pkey" PRIMARY KEY ("id")
 );
 
-INSERT INTO "supplierStatus" ("name") VALUES ('Active'), ('Inactive'), ('Pending'), ('Rejected');
-
 CREATE TABLE "supplierType" (
     "id" TEXT NOT NULL DEFAULT uuid_generate_v4(),
     "name" TEXT NOT NULL,
@@ -800,8 +785,6 @@ CREATE TABLE "customerStatus" (
 
     CONSTRAINT "customerStatus_pkey" PRIMARY KEY ("id")
 );
-
-INSERT INTO "customerStatus" ("name") VALUES ('Active'), ('Inactive'), ('Prospect'), ('Lead'), ('On Hold'), ('Cancelled'), ('Archived');
 
 CREATE TABLE "customerType" (
     "id" TEXT NOT NULL DEFAULT uuid_generate_v4(),
@@ -2954,9 +2937,6 @@ CREATE TABLE "currency" (
   CONSTRAINT "currency_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
 
-INSERT INTO "currency" ("name", "code", "symbol", "exchangeRate", "isBaseCurrency", "createdBy")
-VALUES ('US Dollar', 'USD', '$', 1.0000, true, 'system');
-
 CREATE INDEX "currency_code_index" ON "currency" ("code");
 
 ALTER TABLE "currency" ENABLE ROW LEVEL SECURITY;
@@ -3043,27 +3023,6 @@ CREATE TABLE "accountCategory" (
   CONSTRAINT "accountCategory_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "accountCategory_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );
-
-INSERT INTO "accountCategory" ("category", "incomeBalance", "normalBalance", "createdBy")
-VALUES 
-  ('Bank', 'Balance Sheet', 'Credit', 'system'),
-  ('Accounts Receivable', 'Balance Sheet', 'Credit', 'system'),
-  ('Inventory', 'Balance Sheet', 'Debit', 'system'),
-  ('Other Current Asset', 'Balance Sheet', 'Debit', 'system'),
-  ('Fixed Asset', 'Balance Sheet', 'Debit', 'system'),
-  ('Accumulated Depreciation', 'Balance Sheet', 'Credit', 'system'),
-  ('Other Asset', 'Balance Sheet', 'Debit', 'system'),
-  ('Accounts Payable', 'Balance Sheet', 'Debit', 'system'),
-  ('Other Current Liability', 'Balance Sheet', 'Debit', 'system'),
-  ('Long Term Liability', 'Balance Sheet', 'Debit', 'system'),
-  ('Equity - No Close', 'Balance Sheet', 'Credit', 'system'),
-  ('Equity - Close', 'Balance Sheet', 'Credit', 'system'),
-  ('Retained Earnings', 'Balance Sheet', 'Credit', 'system'),
-  ('Income', 'Income Statement', 'Credit', 'system'),
-  ('Cost of Goods Sold', 'Income Statement', 'Debit', 'system'),
-  ('Expense', 'Income Statement', 'Debit', 'system'),
-  ('Other Income', 'Income Statement', 'Credit', 'system'),
-  ('Other Expense', 'Income Statement', 'Debit', 'system');
 
 ALTER TABLE "accountCategory" ENABLE ROW LEVEL SECURITY;
 
@@ -3360,11 +3319,6 @@ CREATE TABLE "unitOfMeasure" (
 );
 
 CREATE INDEX "unitOfMeasure_code_index" ON "unitOfMeasure"("code");
-
-INSERT INTO "unitOfMeasure" ("code", "name", "createdBy")
-VALUES 
-( 'EA', 'Each', 'system'),
-( 'PCS', 'Pieces', 'system');
 
 ALTER TABLE "unitOfMeasure" ENABLE ROW LEVEL SECURITY;
 
@@ -4314,18 +4268,6 @@ CREATE TABLE "paymentTerm" (
   CONSTRAINT "paymentTerm_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE CASCADE
 );
 
-INSERT INTO "paymentTerm" ("name", "daysDue", "calculationMethod", "daysDiscount", "discountPercentage", "createdBy") 
-VALUES 
-  ('Net 15', 15, 'Net', 0, 0, 'system'),
-  ('Net 30', 30, 'Net', 0, 0, 'system'),
-  ('Net 50', 50, 'Net', 0, 0, 'system'),
-  ('Net 60', 60, 'Net', 0, 0, 'system'),
-  ('Net 90', 90, 'Net', 0, 0, 'system'),
-  ('1% 10 Net 30', 30, 'Net', 10, 1, 'system'),
-  ('2% 10 Net 30', 30, 'Net', 10, 2, 'system'),
-  ('Due on Receipt', 0, 'Net', 0, 0, 'system'),
-  ('Net EOM 10', 10, 'End of Month', 0, 0, 'system');
-
 ALTER TABLE "paymentTerm" ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Certain employees can view payment terms" ON "paymentTerm"
@@ -4754,9 +4696,6 @@ CREATE TABLE "sequence" (
   CONSTRAINT "sequence_step_check" CHECK ("step" >= 1),
   CONSTRAINT "sequence_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
-
-INSERT INTO "sequence" ("table", "name", "prefix", "suffix", "next", "size", "step")
-VALUES ('purchaseOrder', 'Purchase Order', 'PO', NULL, 0, 6, 1);
 
 
 ```
@@ -5502,9 +5441,6 @@ CREATE INDEX "receipt_locationId_idx" ON "receipt" ("locationId");
 CREATE INDEX "receipt_sourceDocumentId_idx" ON "receipt" ("sourceDocumentId");
 CREATE INDEX "receipt_supplierId_idx" ON "receipt" ("supplierId");
 
-INSERT INTO "sequence" ("table", "name", "prefix", "suffix", "next", "size", "step")
-VALUES ('receipt', 'Receipt', 'RE', NULL, 0, 6, 1);
-
 CREATE TABLE "receiptLine" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "receiptId" TEXT NOT NULL,
@@ -5558,5 +5494,116 @@ CREATE VIEW "user_default_view" AS
     ej."locationId"
   FROM "user" u
   LEFT JOIN "employeeJob" ej ON ej.id = u.id;
+```
+
+
+
+## `posting-groups`
+
+```sql
+CREATE TABLE "accountDefault" (
+  "id" BOOLEAN NOT NULL DEFAULT TRUE,
+  -- income statement
+    -- revenue
+    "salesAccount" TEXT NOT NULL,
+    "salesDiscountAccount" TEXT NOT NULL,
+
+    -- part cost
+    "costOfGoodsSoldAccount" TEXT NOT NULL,
+    "purchaseAccount" TEXT NOT NULL,
+    "directCostAppliedAccount" TEXT NOT NULL,
+    "overheadCostAppliedAccount" TEXT NOT NULL,
+    "purchaseVarianceAccount" TEXT NOT NULL,
+    "inventoryAdjustmentVarianceAccount" TEXT NOT NULL,
+
+    -- direct costs
+    "materialVarianceAccount" TEXT NOT NULL,
+    "capacityVarianceAccount" TEXT NOT NULL,
+    "overheadAccount" TEXT NOT NULL,
+    "maintenanceAccount" TEXT NOT NULL,
+
+    -- depreciaition of fixed assets
+    "depreciationExpenseAccount" TEXT NOT NULL,
+    "gainsAndLossesAccount" TEXT NOT NULL,
+    "serviceChargeAccount" TEXT NOT NULL,
+
+    -- interest
+    "interestAccount" TEXT NOT NULL,
+    "supplierPaymentDiscountAccount" TEXT NOT NULL,
+    "customerPaymentDiscountAccount" TEXT NOT NULL,
+    "roundingAccount" TEXT NOT NULL,
+
+  -- balance sheet
+    -- assets
+    "aquisitionCostAccount" TEXT NOT NULL,
+    "aquisitionCostOnDisposalAccount" TEXT NOT NULL,
+    "accumulatedDepreciationAccount" TEXT NOT NULL,
+    "accumulatedDepreciationOnDisposalAccount" TEXT NOT NULL,
+
+    -- current assets
+    "inventoryAccount" TEXT NOT NULL,
+    "inventoryInterimAccrualAccount" TEXT NOT NULL,
+    "workInProgressAccount" TEXT NOT NULL,
+    "receivablesAccount" TEXT NOT NULL,
+    "bankCashAccount" TEXT NOT NULL,
+    "bankLocalCurrencyAccount" TEXT NOT NULL,
+    "bankForeignCurrencyAccount" TEXT NOT NULL,
+
+    -- liabilities
+    "prepaymentAccount" TEXT NOT NULL,
+    "payablesAccount" TEXT NOT NULL,
+    "salesTaxAccount" TEXT NOT NULL,
+    "reverseChargeSalesTaxAccount" TEXT NOT NULL,
+    "purchaseTaxAccount" TEXT NOT NULL,
+
+    -- retained earnings
+    "retainedEarningsAccount" TEXT NOT NULL,
+
+    "updatedBy" TEXT,
+
+
+
+  CONSTRAINT "accountDefault_pkey" PRIMARY KEY ("id"),
+  -- this is a hack to make sure that this table only ever has one row
+  CONSTRAINT "accountDefault_id_check" CHECK ("id" = TRUE),
+  CONSTRAINT "accountDefault_id_unique" UNIQUE ("id"),
+  CONSTRAINT "accountDefault_salesAccount_fkey" FOREIGN KEY ("salesAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_salesDiscountAccount_fkey" FOREIGN KEY ("salesDiscountAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_costOfGoodsSoldAccount_fkey" FOREIGN KEY ("costOfGoodsSoldAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_purchaseAccount_fkey" FOREIGN KEY ("purchaseAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_directCostAppliedAccount_fkey" FOREIGN KEY ("directCostAppliedAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_overheadCostAppliedAccount_fkey" FOREIGN KEY ("overheadCostAppliedAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_purchaseVarianceAccount_fkey" FOREIGN KEY ("purchaseVarianceAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_inventoryAdjustmentVarianceAccount_fkey" FOREIGN KEY ("inventoryAdjustmentVarianceAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_materialVarianceAccount_fkey" FOREIGN KEY ("materialVarianceAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_capacityVarianceAccount_fkey" FOREIGN KEY ("capacityVarianceAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_overheadAccount_fkey" FOREIGN KEY ("overheadAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_maintenanceAccount_fkey" FOREIGN KEY ("maintenanceAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_depreciationExpenseAccount_fkey" FOREIGN KEY ("depreciationExpenseAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_gainsAndLossesAccount_fkey" FOREIGN KEY ("gainsAndLossesAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_serviceChargeAccount_fkey" FOREIGN KEY ("serviceChargeAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_interestAccount_fkey" FOREIGN KEY ("interestAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_supplierPaymentDiscountAccount_fkey" FOREIGN KEY ("supplierPaymentDiscountAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_customerPaymentDiscountAccount_fkey" FOREIGN KEY ("customerPaymentDiscountAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_roundingAccount_fkey" FOREIGN KEY ("roundingAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_aquisitionCostAccount_fkey" FOREIGN KEY ("aquisitionCostAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_aquisitionCostOnDisposalAccount_fkey" FOREIGN KEY ("aquisitionCostOnDisposalAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_accumulatedDepreciationAccount_fkey" FOREIGN KEY ("accumulatedDepreciationAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_accumulatedDepreciationOnDisposalAccount_fkey" FOREIGN KEY ("accumulatedDepreciationOnDisposalAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_inventoryAccount_fkey" FOREIGN KEY ("inventoryAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_inventoryInterimAccrualAccount_fkey" FOREIGN KEY ("inventoryInterimAccrualAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_workInProgressAccount_fkey" FOREIGN KEY ("workInProgressAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_receivablesAccount_fkey" FOREIGN KEY ("receivablesAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_bankCashAccount_fkey" FOREIGN KEY ("bankCashAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_bankLocalCurrencyAccount_fkey" FOREIGN KEY ("bankLocalCurrencyAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_bankForeignCurrencyAccount_fkey" FOREIGN KEY ("bankForeignCurrencyAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_prepaymentAccount_fkey" FOREIGN KEY ("prepaymentAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_payablesAccount_fkey" FOREIGN KEY ("payablesAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_salesTaxAccount_fkey" FOREIGN KEY ("salesTaxAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_reverseChargeSalesTaxAccount_fkey" FOREIGN KEY ("reverseChargeSalesTaxAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_purchaseTaxAccount_fkey" FOREIGN KEY ("purchaseTaxAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_retainedEarningsAccount_fkey" FOREIGN KEY ("retainedEarningsAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
 ```
 

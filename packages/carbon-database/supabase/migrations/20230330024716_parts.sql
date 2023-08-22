@@ -96,11 +96,6 @@ CREATE TABLE "unitOfMeasure" (
 
 CREATE INDEX "unitOfMeasure_code_index" ON "unitOfMeasure"("code");
 
-INSERT INTO "unitOfMeasure" ("code", "name", "createdBy")
-VALUES 
-( 'EA', 'Each', 'system'),
-( 'PCS', 'Pieces', 'system');
-
 ALTER TABLE "unitOfMeasure" ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Authenticated users can view units of measure" ON "unitOfMeasure"

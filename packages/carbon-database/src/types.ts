@@ -250,6 +250,574 @@ export interface Database {
           }
         ];
       };
+      accountDefault: {
+        Row: {
+          accumulatedDepreciationAccount: string;
+          accumulatedDepreciationOnDisposalAccount: string;
+          aquisitionCostAccount: string;
+          aquisitionCostOnDisposalAccount: string;
+          bankCashAccount: string;
+          bankForeignCurrencyAccount: string;
+          bankLocalCurrencyAccount: string;
+          capacityVarianceAccount: string;
+          costOfGoodsSoldAccount: string;
+          customerPaymentDiscountAccount: string;
+          depreciationExpenseAccount: string;
+          directCostAppliedAccount: string;
+          gainsAndLossesAccount: string;
+          id: boolean;
+          interestAccount: string;
+          inventoryAccount: string;
+          inventoryAdjustmentVarianceAccount: string;
+          inventoryInterimAccrualAccount: string;
+          maintenanceAccount: string;
+          materialVarianceAccount: string;
+          overheadAccount: string;
+          overheadCostAppliedAccount: string;
+          payablesAccount: string;
+          prepaymentAccount: string;
+          purchaseAccount: string;
+          purchaseTaxAccount: string;
+          purchaseVarianceAccount: string;
+          receivablesAccount: string;
+          retainedEarningsAccount: string;
+          reverseChargeSalesTaxAccount: string;
+          roundingAccount: string;
+          salesAccount: string;
+          salesDiscountAccount: string;
+          salesTaxAccount: string;
+          serviceChargeAccount: string;
+          supplierPaymentDiscountAccount: string;
+          updatedBy: string | null;
+          workInProgressAccount: string;
+        };
+        Insert: {
+          accumulatedDepreciationAccount: string;
+          accumulatedDepreciationOnDisposalAccount: string;
+          aquisitionCostAccount: string;
+          aquisitionCostOnDisposalAccount: string;
+          bankCashAccount: string;
+          bankForeignCurrencyAccount: string;
+          bankLocalCurrencyAccount: string;
+          capacityVarianceAccount: string;
+          costOfGoodsSoldAccount: string;
+          customerPaymentDiscountAccount: string;
+          depreciationExpenseAccount: string;
+          directCostAppliedAccount: string;
+          gainsAndLossesAccount: string;
+          id?: boolean;
+          interestAccount: string;
+          inventoryAccount: string;
+          inventoryAdjustmentVarianceAccount: string;
+          inventoryInterimAccrualAccount: string;
+          maintenanceAccount: string;
+          materialVarianceAccount: string;
+          overheadAccount: string;
+          overheadCostAppliedAccount: string;
+          payablesAccount: string;
+          prepaymentAccount: string;
+          purchaseAccount: string;
+          purchaseTaxAccount: string;
+          purchaseVarianceAccount: string;
+          receivablesAccount: string;
+          retainedEarningsAccount: string;
+          reverseChargeSalesTaxAccount: string;
+          roundingAccount: string;
+          salesAccount: string;
+          salesDiscountAccount: string;
+          salesTaxAccount: string;
+          serviceChargeAccount: string;
+          supplierPaymentDiscountAccount: string;
+          updatedBy?: string | null;
+          workInProgressAccount: string;
+        };
+        Update: {
+          accumulatedDepreciationAccount?: string;
+          accumulatedDepreciationOnDisposalAccount?: string;
+          aquisitionCostAccount?: string;
+          aquisitionCostOnDisposalAccount?: string;
+          bankCashAccount?: string;
+          bankForeignCurrencyAccount?: string;
+          bankLocalCurrencyAccount?: string;
+          capacityVarianceAccount?: string;
+          costOfGoodsSoldAccount?: string;
+          customerPaymentDiscountAccount?: string;
+          depreciationExpenseAccount?: string;
+          directCostAppliedAccount?: string;
+          gainsAndLossesAccount?: string;
+          id?: boolean;
+          interestAccount?: string;
+          inventoryAccount?: string;
+          inventoryAdjustmentVarianceAccount?: string;
+          inventoryInterimAccrualAccount?: string;
+          maintenanceAccount?: string;
+          materialVarianceAccount?: string;
+          overheadAccount?: string;
+          overheadCostAppliedAccount?: string;
+          payablesAccount?: string;
+          prepaymentAccount?: string;
+          purchaseAccount?: string;
+          purchaseTaxAccount?: string;
+          purchaseVarianceAccount?: string;
+          receivablesAccount?: string;
+          retainedEarningsAccount?: string;
+          reverseChargeSalesTaxAccount?: string;
+          roundingAccount?: string;
+          salesAccount?: string;
+          salesDiscountAccount?: string;
+          salesTaxAccount?: string;
+          serviceChargeAccount?: string;
+          supplierPaymentDiscountAccount?: string;
+          updatedBy?: string | null;
+          workInProgressAccount?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "accountDefault_accumulatedDepreciationAccount_fkey";
+            columns: ["accumulatedDepreciationAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_accumulatedDepreciationAccount_fkey";
+            columns: ["accumulatedDepreciationAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_accumulatedDepreciationOnDisposalAccount_fkey";
+            columns: ["accumulatedDepreciationOnDisposalAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_accumulatedDepreciationOnDisposalAccount_fkey";
+            columns: ["accumulatedDepreciationOnDisposalAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_aquisitionCostAccount_fkey";
+            columns: ["aquisitionCostAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_aquisitionCostAccount_fkey";
+            columns: ["aquisitionCostAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_aquisitionCostOnDisposalAccount_fkey";
+            columns: ["aquisitionCostOnDisposalAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_aquisitionCostOnDisposalAccount_fkey";
+            columns: ["aquisitionCostOnDisposalAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_bankCashAccount_fkey";
+            columns: ["bankCashAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_bankCashAccount_fkey";
+            columns: ["bankCashAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_bankForeignCurrencyAccount_fkey";
+            columns: ["bankForeignCurrencyAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_bankForeignCurrencyAccount_fkey";
+            columns: ["bankForeignCurrencyAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_bankLocalCurrencyAccount_fkey";
+            columns: ["bankLocalCurrencyAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_bankLocalCurrencyAccount_fkey";
+            columns: ["bankLocalCurrencyAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_capacityVarianceAccount_fkey";
+            columns: ["capacityVarianceAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_capacityVarianceAccount_fkey";
+            columns: ["capacityVarianceAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_costOfGoodsSoldAccount_fkey";
+            columns: ["costOfGoodsSoldAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_costOfGoodsSoldAccount_fkey";
+            columns: ["costOfGoodsSoldAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_customerPaymentDiscountAccount_fkey";
+            columns: ["customerPaymentDiscountAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_customerPaymentDiscountAccount_fkey";
+            columns: ["customerPaymentDiscountAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_depreciationExpenseAccount_fkey";
+            columns: ["depreciationExpenseAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_depreciationExpenseAccount_fkey";
+            columns: ["depreciationExpenseAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_directCostAppliedAccount_fkey";
+            columns: ["directCostAppliedAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_directCostAppliedAccount_fkey";
+            columns: ["directCostAppliedAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_gainsAndLossesAccount_fkey";
+            columns: ["gainsAndLossesAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_gainsAndLossesAccount_fkey";
+            columns: ["gainsAndLossesAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_interestAccount_fkey";
+            columns: ["interestAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_interestAccount_fkey";
+            columns: ["interestAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_inventoryAccount_fkey";
+            columns: ["inventoryAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_inventoryAccount_fkey";
+            columns: ["inventoryAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_inventoryAdjustmentVarianceAccount_fkey";
+            columns: ["inventoryAdjustmentVarianceAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_inventoryAdjustmentVarianceAccount_fkey";
+            columns: ["inventoryAdjustmentVarianceAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_inventoryInterimAccrualAccount_fkey";
+            columns: ["inventoryInterimAccrualAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_inventoryInterimAccrualAccount_fkey";
+            columns: ["inventoryInterimAccrualAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_maintenanceAccount_fkey";
+            columns: ["maintenanceAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_maintenanceAccount_fkey";
+            columns: ["maintenanceAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_materialVarianceAccount_fkey";
+            columns: ["materialVarianceAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_materialVarianceAccount_fkey";
+            columns: ["materialVarianceAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_overheadAccount_fkey";
+            columns: ["overheadAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_overheadAccount_fkey";
+            columns: ["overheadAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_overheadCostAppliedAccount_fkey";
+            columns: ["overheadCostAppliedAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_overheadCostAppliedAccount_fkey";
+            columns: ["overheadCostAppliedAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_payablesAccount_fkey";
+            columns: ["payablesAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_payablesAccount_fkey";
+            columns: ["payablesAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_prepaymentAccount_fkey";
+            columns: ["prepaymentAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_prepaymentAccount_fkey";
+            columns: ["prepaymentAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_purchaseAccount_fkey";
+            columns: ["purchaseAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_purchaseAccount_fkey";
+            columns: ["purchaseAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_purchaseTaxAccount_fkey";
+            columns: ["purchaseTaxAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_purchaseTaxAccount_fkey";
+            columns: ["purchaseTaxAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_purchaseVarianceAccount_fkey";
+            columns: ["purchaseVarianceAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_purchaseVarianceAccount_fkey";
+            columns: ["purchaseVarianceAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_receivablesAccount_fkey";
+            columns: ["receivablesAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_receivablesAccount_fkey";
+            columns: ["receivablesAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_retainedEarningsAccount_fkey";
+            columns: ["retainedEarningsAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_retainedEarningsAccount_fkey";
+            columns: ["retainedEarningsAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_reverseChargeSalesTaxAccount_fkey";
+            columns: ["reverseChargeSalesTaxAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_reverseChargeSalesTaxAccount_fkey";
+            columns: ["reverseChargeSalesTaxAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_roundingAccount_fkey";
+            columns: ["roundingAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_roundingAccount_fkey";
+            columns: ["roundingAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_salesAccount_fkey";
+            columns: ["salesAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_salesAccount_fkey";
+            columns: ["salesAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_salesDiscountAccount_fkey";
+            columns: ["salesDiscountAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_salesDiscountAccount_fkey";
+            columns: ["salesDiscountAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_salesTaxAccount_fkey";
+            columns: ["salesTaxAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_salesTaxAccount_fkey";
+            columns: ["salesTaxAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_serviceChargeAccount_fkey";
+            columns: ["serviceChargeAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_serviceChargeAccount_fkey";
+            columns: ["serviceChargeAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_supplierPaymentDiscountAccount_fkey";
+            columns: ["supplierPaymentDiscountAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_supplierPaymentDiscountAccount_fkey";
+            columns: ["supplierPaymentDiscountAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "accountDefault_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user_default_view";
+            referencedColumns: ["userId"];
+          },
+          {
+            foreignKeyName: "accountDefault_workInProgressAccount_fkey";
+            columns: ["workInProgressAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_workInProgressAccount_fkey";
+            columns: ["workInProgressAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          }
+        ];
+      };
       accountSubcategory: {
         Row: {
           accountCategoryId: string;

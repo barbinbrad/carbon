@@ -8,8 +8,10 @@ import {
 import { useFetcher } from "@remix-run/react";
 import { useEffect, useMemo } from "react";
 import { useControlField, useField } from "remix-validated-form";
-import type { AccountCategory as AccountCategoryType } from "~/modules/accounting";
-import type { getAccountCategoriesList } from "~/modules/accounting";
+import type {
+  AccountCategory as AccountCategoryType,
+  getAccountCategoriesList,
+} from "~/modules/accounting";
 import { mapRowsToOptions } from "~/utils/form";
 import type { SelectProps } from "./Select";
 
@@ -100,6 +102,7 @@ const AccountCategory = ({
         placeholder={placeholder}
         // @ts-ignore
         w="full"
+        isClearable
         isReadOnly={isReadOnly}
         onChange={handleChange}
       />

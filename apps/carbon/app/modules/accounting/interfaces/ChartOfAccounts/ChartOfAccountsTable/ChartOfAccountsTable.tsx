@@ -74,17 +74,26 @@ const ChartOfAccountsTable = memo(({ data }: ChartOfAccountsTableProps) => {
       {
         accessorKey: "netChange",
         header: "Net Change",
-        cell: ({ row }) => (row.original.netChange ?? 0).toFixed(2),
+        cell: ({ row }) => {
+          const hasValue = ["Posting", "End Total"].includes(row.original.type);
+          return hasValue ? (row.original.netChange ?? 0).toFixed(2) : null;
+        },
       },
       {
         accessorKey: "balanceAtDate",
         header: "Balance at Date",
-        cell: ({ row }) => (row.original.balanceAtDate ?? 0).toFixed(2),
+        cell: ({ row }) => {
+          const hasValue = ["Posting", "End Total"].includes(row.original.type);
+          return hasValue ? (row.original.balanceAtDate ?? 0).toFixed(2) : null;
+        },
       },
       {
         accessorKey: "balance",
         header: "Balance",
-        cell: ({ row }) => (row.original.balance ?? 0).toFixed(2),
+        cell: ({ row }) => {
+          const hasValue = ["Posting", "End Total"].includes(row.original.type);
+          return hasValue ? (row.original.balance ?? 0).toFixed(2) : null;
+        },
       },
       {
         accessorKey: "incomeBalance",
@@ -119,7 +128,7 @@ const ChartOfAccountsTable = memo(({ data }: ChartOfAccountsTableProps) => {
     ];
   }, [navigate]);
 
-  return <DataTable data={data} columns={columns} />;
+  return <DataTable data={data} columns={columns} defaultPageSize={100} />;
 });
 
 ChartOfAccountsTable.displayName = "ChartOfAccountsTable";

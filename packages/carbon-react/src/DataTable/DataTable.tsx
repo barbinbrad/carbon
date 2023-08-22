@@ -33,11 +33,13 @@ import { DataTablePagination } from "./DataTablePagination";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  defaultPageSize?: number;
 }
 
 const DataTable = <TData, TValue>({
   columns,
   data,
+  defaultPageSize = 25,
 }: DataTableProps<TData, TValue>) => {
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -55,7 +57,7 @@ const DataTable = <TData, TValue>({
     },
     initialState: {
       pagination: {
-        pageSize: 25,
+        pageSize: defaultPageSize,
       },
     },
     enableRowSelection: true,

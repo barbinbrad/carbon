@@ -100,7 +100,7 @@ export const accountValidator = withZod(
     })
     .refine(
       (data) => {
-        if (data.type !== "Heading") {
+        if (!["Heading", "Begin Total", "End Total"].includes(data.type)) {
           return !!data.accountCategoryId;
         }
         return true;

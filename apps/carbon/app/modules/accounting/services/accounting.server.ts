@@ -12,6 +12,7 @@ import type {
   accountSubcategoryValidator,
   accountValidator,
   currencyValidator,
+  defaultAcountValidator,
   partLedgerValidator,
   paymentTermValidator,
   valueLedgerValidator,
@@ -136,14 +137,23 @@ export async function getAccounts(
 
 export async function getAccountsList(
   client: SupabaseClient<Database>,
-  type = "Posting"
+  args?: {
+    type?: string | null;
+    incomeBalance?: string | null;
+  }
 ) {
-  return client
-    .from("account")
-    .select("number, name")
-    .eq("active", true)
-    .eq("type", type)
-    .order("name", { ascending: true });
+  let query = client.from("account").select("number, name").eq("active", true);
+
+  if (args?.type) {
+    query = query.eq("type", args.type);
+  }
+
+  if (args?.incomeBalance) {
+    query = query.eq("incomeBalance", args.incomeBalance);
+  }
+
+  query = query.order("number", { ascending: true });
+  return query;
 }
 
 export async function getAccountCategories(
@@ -373,6 +383,10 @@ export async function getCurrenciesList(client: SupabaseClient<Database>) {
     .order("name", { ascending: true });
 }
 
+export async function getDefaultAccounts(client: SupabaseClient<Database>) {
+  return client.from("accountDefault").select("*").eq("id", true).single();
+}
+
 export async function getPaymentTerm(
   client: SupabaseClient<Database>,
   paymentTermId: string
@@ -461,6 +475,15 @@ export async function insertValueLedger(
   valueEntry: TypeOfValidator<typeof valueLedgerValidator>
 ) {
   return client.from("valueLedger").insert([valueEntry]).select("id").single();
+}
+
+export async function updateDefaultAccounts(
+  client: SupabaseClient<Database>,
+  defaultAccounts: TypeOfValidator<typeof defaultAcountValidator> & {
+    updatedBy: string;
+  }
+) {
+  return client.from("accountDefault").update(defaultAccounts).eq("id", true);
 }
 
 export async function upsertAccount(

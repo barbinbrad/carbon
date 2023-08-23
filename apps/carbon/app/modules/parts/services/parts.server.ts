@@ -35,13 +35,7 @@ export async function getPartCost(
   client: SupabaseClient<Database>,
   id: string
 ) {
-  return client
-    .from("partCost")
-    .select(
-      "partId, costingMethod, standardCost, unitCost, salesAccountId, discountAccountId, inventoryAccountId, costIsAdjusted"
-    )
-    .eq("partId", id)
-    .single();
+  return client.from("partCost").select("*").eq("partId", id).single();
 }
 
 export async function getPartGroup(

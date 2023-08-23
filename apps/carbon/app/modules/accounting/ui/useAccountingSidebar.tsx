@@ -36,6 +36,11 @@ const accountingRoutes: AuthenticatedRouteGroup[] = [
     name: "Configure",
     routes: [
       {
+        name: "Account Categories",
+        to: "/x/accounting/categories",
+        role: "employee",
+      },
+      {
         name: "Account Defaults",
         to: "/x/accounting/defaults",
         role: "employee",
@@ -43,11 +48,6 @@ const accountingRoutes: AuthenticatedRouteGroup[] = [
       {
         name: "Currencies",
         to: "/x/accounting/currencies",
-        role: "employee",
-      },
-      {
-        name: "G/L Categories",
-        to: "/x/accounting/categories",
         role: "employee",
       },
       {

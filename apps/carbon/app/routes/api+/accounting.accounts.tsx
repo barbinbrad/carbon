@@ -9,6 +9,12 @@ export async function loader({ request }: LoaderArgs) {
   const url = new URL(request.url);
   const searchParams = new URLSearchParams(url.search);
   const type = searchParams.get("type");
+  const incomeBalance = searchParams.get("incomeBalance");
 
-  return json(await getAccountsList(authorized.client, type));
+  return json(
+    await getAccountsList(authorized.client, {
+      type,
+      incomeBalance,
+    })
+  );
 }

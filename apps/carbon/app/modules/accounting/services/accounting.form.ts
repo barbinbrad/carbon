@@ -183,10 +183,10 @@ export const defaultAcountValidator = withZod(
     purchaseVarianceAccount: z.string().min(1, {
       message: "Purchase variance account is required",
     }),
-    inventoryAdjustmentVariannceAccount: z.string().min(1, {
+    inventoryAdjustmentVarianceAccount: z.string().min(1, {
       message: "Inventory adjustment variance account is required",
     }),
-    materialVariannceAccount: z.string().min(1, {
+    materialVarianceAccount: z.string().min(1, {
       message: "Material variance account is required",
     }),
     capacityVarianceAccount: z.string().min(1, {

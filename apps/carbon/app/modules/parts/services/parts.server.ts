@@ -21,7 +21,7 @@ export async function deletePartGroup(
   client: SupabaseClient<Database>,
   id: string
 ) {
-  return client.from("partGroup").update({ active: false }).eq("id", id);
+  return client.from("partGroup").delete().eq("id", id);
 }
 
 export async function deleteUnitOfMeasure(
@@ -409,7 +409,6 @@ export async function upsertPartGroup(
       })
 ) {
   if ("createdBy" in partGroup) {
-    console.log("inserting", partGroup);
     return client.from("partGroup").insert([partGroup]).select("id").single();
   }
   return (

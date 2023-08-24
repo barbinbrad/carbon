@@ -225,4 +225,33 @@ VALUES
     '94115',
     '95010',
     'system'
-  )
+  );
+
+
+-- INSERT INTO "postingGroupInventory" (
+--   "partGroupId",
+--   "costOfGoodsSoldAccount",
+--   "inventoryAccount",
+--   "inventoryInterimAccrualAccount",
+--   "workInProgressAccount",
+--   "directCostAppliedAccount",
+--   "overheadCostAppliedAccount",
+--   "purchaseVarianceAccount",
+--   "inventoryAdjustmentVarianceAccount",
+--   "materialVarianceAccount",
+--   "capacityVarianceAccount",
+--   "overheadAccount"
+-- ) SELECT 
+--   NULL,
+--   "costOfGoodsSoldAccount",
+--   "inventoryAccount",
+--   "inventoryInterimAccrualAccount",
+--   "workInProgressAccount",
+--   "directCostAppliedAccount",
+--   "overheadCostAppliedAccount",
+--   "purchaseVarianceAccount",
+--   "inventoryAdjustmentVarianceAccount",
+--   "materialVarianceAccount",
+--   "capacityVarianceAccount",
+--   "overheadAccount"
+-- FROM "accountDefault" WHERE "id" = true;

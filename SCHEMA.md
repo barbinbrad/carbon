@@ -5599,5 +5599,143 @@ CREATE TABLE "accountDefault" (
   CONSTRAINT "accountDefault_retainedEarningsAccount_fkey" FOREIGN KEY ("retainedEarningsAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "accountDefault_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
+
+CREATE TABLE "postingGroupInventory" (
+  "id" TEXT NOT NULL DEFAULT xid(),
+  "partGroupId" TEXT,
+  "locationId" TEXT NOT NULL,
+  "costOfGoodsSoldAccount" TEXT NOT NULL,
+  "inventoryAccount" TEXT NOT NULL,
+  "inventoryInterimAccrualAccount" TEXT NOT NULL,
+  "workInProgressAccount" TEXT NOT NULL,
+  "directCostAppliedAccount" TEXT NOT NULL,
+  "overheadCostAppliedAccount" TEXT NOT NULL,
+  "purchaseVarianceAccount" TEXT NOT NULL,
+  "inventoryAdjustmentVarianceAccount" TEXT NOT NULL,
+  "materialVarianceAccount" TEXT NOT NULL,
+  "capacityVarianceAccount" TEXT NOT NULL,
+  "overheadAccount" TEXT NOT NULL,
+  "updatedBy" TEXT,
+
+  CONSTRAINT "postingGroupInventory_pkey" PRIMARY KEY ("id", "partGroupId", "locationId"),
+  CONSTRAINT "postingGroupInventory_partGroupId_fkey" FOREIGN KEY ("partGroupId") REFERENCES "partGroup" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "postingGroupInventory_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "location" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "postingGroupInventory_costOfGoodsSoldAccount_fkey" FOREIGN KEY ("costOfGoodsSoldAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "postingGroupInventory_inventoryAccount_fkey" FOREIGN KEY ("inventoryAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "postingGroupInventory_inventoryInterimAccrualAccount_fkey" FOREIGN KEY ("inventoryInterimAccrualAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "postingGroupInventory_workInProgressAccount_fkey" FOREIGN KEY ("workInProgressAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "postingGroupInventory_directCostAppliedAccount_fkey" FOREIGN KEY ("directCostAppliedAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "postingGroupInventory_overheadCostAppliedAccount_fkey" FOREIGN KEY ("overheadCostAppliedAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "postingGroupInventory_purchaseVarianceAccount_fkey" FOREIGN KEY ("purchaseVarianceAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "postingGroupInventory_inventoryAdjustmentVarianceAccount_fkey" FOREIGN KEY ("inventoryAdjustmentVarianceAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "postingGroupInventory_materialVarianceAccount_fkey" FOREIGN KEY ("materialVarianceAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "postingGroupInventory_capacityVarianceAccount_fkey" FOREIGN KEY ("capacityVarianceAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "postingGroupInventory_overheadAccount_fkey" FOREIGN KEY ("overheadAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "postingGroupInventory_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+CREATE FUNCTION public.create_posting_groups_for_location()
+RETURNS TRIGGER AS $$
+DECLARE
+  part_group RECORD;
+  account_defaults RECORD;
+BEGIN
+  SELECT * INTO account_defaults FROM "accountDefault" WHERE "id" = TRUE;
+
+  FOR part_group IN SELECT "id" FROM "partGroup"
+  LOOP
+    INSERT INTO "postingGroupInventory" (
+      "partGroupId",
+      "locationId",
+      "costOfGoodsSoldAccount",
+      "inventoryAccount",
+      "inventoryInterimAccrualAccount",
+      "workInProgressAccount",
+      "directCostAppliedAccount",
+      "overheadCostAppliedAccount",
+      "purchaseVarianceAccount",
+      "inventoryAdjustmentVarianceAccount",
+      "materialVarianceAccount",
+      "capacityVarianceAccount",
+      "overheadAccount",
+      "updatedBy"
+    ) VALUES (
+      part_group."id",
+      new."id",
+      account_defaults."costOfGoodsSoldAccount",
+      account_defaults."inventoryAccount",
+      account_defaults."inventoryInterimAccrualAccount",
+      account_defaults."workInProgressAccount",
+      account_defaults."directCostAppliedAccount",
+      account_defaults."overheadCostAppliedAccount",
+      account_defaults."purchaseVarianceAccount",
+      account_defaults."inventoryAdjustmentVarianceAccount",
+      account_defaults."materialVarianceAccount",
+      account_defaults."capacityVarianceAccount",
+      account_defaults."overheadAccount",
+      new."createdBy"
+    );
+  END LOOP;
+
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER create_location
+  AFTER INSERT on public."location"
+  FOR EACH ROW EXECUTE PROCEDURE public.create_posting_groups_for_location();
+
+
+CREATE FUNCTION public.create_posting_groups_for_part_group()
+RETURNS TRIGGER AS $$
+DECLARE
+  loc RECORD;
+  account_defaults RECORD;
+BEGIN
+  SELECT * INTO account_defaults FROM "accountDefault" WHERE "id" = TRUE;
+
+  FOR loc IN SELECT "id" FROM "location"
+  LOOP
+    INSERT INTO "postingGroupInventory" (
+      "partGroupId",
+      "locationId",
+      "costOfGoodsSoldAccount",
+      "inventoryAccount",
+      "inventoryInterimAccrualAccount",
+      "workInProgressAccount",
+      "directCostAppliedAccount",
+      "overheadCostAppliedAccount",
+      "purchaseVarianceAccount",
+      "inventoryAdjustmentVarianceAccount",
+      "materialVarianceAccount",
+      "capacityVarianceAccount",
+      "overheadAccount",
+      "updatedBy"
+    ) VALUES (
+      new."id",
+      loc."id",
+      account_defaults."costOfGoodsSoldAccount",
+      account_defaults."inventoryAccount",
+      account_defaults."inventoryInterimAccrualAccount",
+      account_defaults."workInProgressAccount",
+      account_defaults."directCostAppliedAccount",
+      account_defaults."overheadCostAppliedAccount",
+      account_defaults."purchaseVarianceAccount",
+      account_defaults."inventoryAdjustmentVarianceAccount",
+      account_defaults."materialVarianceAccount",
+      account_defaults."capacityVarianceAccount",
+      account_defaults."overheadAccount",
+      new."createdBy"
+    );
+  END LOOP;
+
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+
+CREATE TRIGGER create_part_group
+  AFTER INSERT on public."partGroup"
+  FOR EACH ROW EXECUTE PROCEDURE public.create_posting_groups_for_part_group();
 ```
 

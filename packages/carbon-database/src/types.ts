@@ -1551,28 +1551,59 @@ export interface Database {
         Row: {
           color: string | null;
           createdAt: string;
+          createdBy: string;
           id: string;
           name: string;
           protected: boolean;
           updatedAt: string | null;
+          updatedBy: string | null;
         };
         Insert: {
           color?: string | null;
           createdAt?: string;
+          createdBy: string;
           id?: string;
           name: string;
           protected?: boolean;
           updatedAt?: string | null;
+          updatedBy?: string | null;
         };
         Update: {
           color?: string | null;
           createdAt?: string;
+          createdBy?: string;
           id?: string;
           name?: string;
           protected?: boolean;
           updatedAt?: string | null;
+          updatedBy?: string | null;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "customerType_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "customerType_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user_default_view";
+            referencedColumns: ["userId"];
+          },
+          {
+            foreignKeyName: "customerType_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "customerType_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user_default_view";
+            referencedColumns: ["userId"];
+          }
+        ];
       };
       department: {
         Row: {
@@ -3605,11 +3636,11 @@ export interface Database {
           inventoryAccount: string;
           inventoryAdjustmentVarianceAccount: string;
           inventoryInterimAccrualAccount: string;
-          locationId: string;
+          locationId: string | null;
           materialVarianceAccount: string;
           overheadAccount: string;
           overheadCostAppliedAccount: string;
-          partGroupId: string;
+          partGroupId: string | null;
           purchaseVarianceAccount: string;
           updatedBy: string | null;
           workInProgressAccount: string;
@@ -3622,11 +3653,11 @@ export interface Database {
           inventoryAccount: string;
           inventoryAdjustmentVarianceAccount: string;
           inventoryInterimAccrualAccount: string;
-          locationId: string;
+          locationId?: string | null;
           materialVarianceAccount: string;
           overheadAccount: string;
           overheadCostAppliedAccount: string;
-          partGroupId: string;
+          partGroupId?: string | null;
           purchaseVarianceAccount: string;
           updatedBy?: string | null;
           workInProgressAccount: string;
@@ -3639,11 +3670,11 @@ export interface Database {
           inventoryAccount?: string;
           inventoryAdjustmentVarianceAccount?: string;
           inventoryInterimAccrualAccount?: string;
-          locationId?: string;
+          locationId?: string | null;
           materialVarianceAccount?: string;
           overheadAccount?: string;
           overheadCostAppliedAccount?: string;
-          partGroupId?: string;
+          partGroupId?: string | null;
           purchaseVarianceAccount?: string;
           updatedBy?: string | null;
           workInProgressAccount?: string;
@@ -3810,6 +3841,248 @@ export interface Database {
             columns: ["workInProgressAccount"];
             referencedRelation: "accounts_view";
             referencedColumns: ["number"];
+          }
+        ];
+      };
+      postingGroupPurchasing: {
+        Row: {
+          id: string;
+          partGroupId: string | null;
+          purchaseAccount: string;
+          purchaseCreditAccount: string;
+          purchaseDiscountAccount: string;
+          purchasePrepaymentAccount: string;
+          purchaseTaxPayableAccount: string;
+          supplierTypeId: string | null;
+          updatedBy: string | null;
+        };
+        Insert: {
+          id?: string;
+          partGroupId?: string | null;
+          purchaseAccount: string;
+          purchaseCreditAccount: string;
+          purchaseDiscountAccount: string;
+          purchasePrepaymentAccount: string;
+          purchaseTaxPayableAccount: string;
+          supplierTypeId?: string | null;
+          updatedBy?: string | null;
+        };
+        Update: {
+          id?: string;
+          partGroupId?: string | null;
+          purchaseAccount?: string;
+          purchaseCreditAccount?: string;
+          purchaseDiscountAccount?: string;
+          purchasePrepaymentAccount?: string;
+          purchaseTaxPayableAccount?: string;
+          supplierTypeId?: string | null;
+          updatedBy?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "postingGroupPurchasing_partGroupId_fkey";
+            columns: ["partGroupId"];
+            referencedRelation: "partGroup";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "postingGroupPurchasing_purchaseAccount_fkey";
+            columns: ["purchaseAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "postingGroupPurchasing_purchaseAccount_fkey";
+            columns: ["purchaseAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "postingGroupPurchasing_purchaseCreditAccount_fkey";
+            columns: ["purchaseCreditAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "postingGroupPurchasing_purchaseCreditAccount_fkey";
+            columns: ["purchaseCreditAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "postingGroupPurchasing_purchaseDiscountAccount_fkey";
+            columns: ["purchaseDiscountAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "postingGroupPurchasing_purchaseDiscountAccount_fkey";
+            columns: ["purchaseDiscountAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "postingGroupPurchasing_purchasePrepaymentAccount_fkey";
+            columns: ["purchasePrepaymentAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "postingGroupPurchasing_purchasePrepaymentAccount_fkey";
+            columns: ["purchasePrepaymentAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "postingGroupPurchasing_purchaseTaxPayableAccount_fkey";
+            columns: ["purchaseTaxPayableAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "postingGroupPurchasing_purchaseTaxPayableAccount_fkey";
+            columns: ["purchaseTaxPayableAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "postingGroupPurchasing_supplierTypeId_fkey";
+            columns: ["supplierTypeId"];
+            referencedRelation: "supplierType";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "postingGroupPurchasing_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "postingGroupPurchasing_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user_default_view";
+            referencedColumns: ["userId"];
+          }
+        ];
+      };
+      postingGroupSales: {
+        Row: {
+          customerTypeId: string | null;
+          id: string;
+          partGroupId: string | null;
+          salesAccount: string;
+          salesCreditAccount: string;
+          salesDiscountAccount: string;
+          salesPrepaymentAccount: string;
+          salesTaxPayableAccount: string;
+          updatedBy: string | null;
+        };
+        Insert: {
+          customerTypeId?: string | null;
+          id?: string;
+          partGroupId?: string | null;
+          salesAccount: string;
+          salesCreditAccount: string;
+          salesDiscountAccount: string;
+          salesPrepaymentAccount: string;
+          salesTaxPayableAccount: string;
+          updatedBy?: string | null;
+        };
+        Update: {
+          customerTypeId?: string | null;
+          id?: string;
+          partGroupId?: string | null;
+          salesAccount?: string;
+          salesCreditAccount?: string;
+          salesDiscountAccount?: string;
+          salesPrepaymentAccount?: string;
+          salesTaxPayableAccount?: string;
+          updatedBy?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "postingGroupSales_customerTypeId_fkey";
+            columns: ["customerTypeId"];
+            referencedRelation: "customerType";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "postingGroupSales_partGroupId_fkey";
+            columns: ["partGroupId"];
+            referencedRelation: "partGroup";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "postingGroupSales_salesAccount_fkey";
+            columns: ["salesAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "postingGroupSales_salesAccount_fkey";
+            columns: ["salesAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "postingGroupSales_salesCreditAccount_fkey";
+            columns: ["salesCreditAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "postingGroupSales_salesCreditAccount_fkey";
+            columns: ["salesCreditAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "postingGroupSales_salesDiscountAccount_fkey";
+            columns: ["salesDiscountAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "postingGroupSales_salesDiscountAccount_fkey";
+            columns: ["salesDiscountAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "postingGroupSales_salesPrepaymentAccount_fkey";
+            columns: ["salesPrepaymentAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "postingGroupSales_salesPrepaymentAccount_fkey";
+            columns: ["salesPrepaymentAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "postingGroupSales_salesTaxPayableAccount_fkey";
+            columns: ["salesTaxPayableAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "postingGroupSales_salesTaxPayableAccount_fkey";
+            columns: ["salesTaxPayableAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "postingGroupSales_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "postingGroupSales_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user_default_view";
+            referencedColumns: ["userId"];
           }
         ];
       };
@@ -5316,28 +5589,59 @@ export interface Database {
         Row: {
           color: string | null;
           createdAt: string;
+          createdBy: string;
           id: string;
           name: string;
           protected: boolean;
           updatedAt: string | null;
+          updatedBy: string | null;
         };
         Insert: {
           color?: string | null;
           createdAt?: string;
+          createdBy: string;
           id?: string;
           name: string;
           protected?: boolean;
           updatedAt?: string | null;
+          updatedBy?: string | null;
         };
         Update: {
           color?: string | null;
           createdAt?: string;
+          createdBy?: string;
           id?: string;
           name?: string;
           protected?: boolean;
           updatedAt?: string | null;
+          updatedBy?: string | null;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "supplierType_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "supplierType_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user_default_view";
+            referencedColumns: ["userId"];
+          },
+          {
+            foreignKeyName: "supplierType_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "supplierType_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user_default_view";
+            referencedColumns: ["userId"];
+          }
+        ];
       };
       unitOfMeasure: {
         Row: {

@@ -1,15 +1,14 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
-import { CustomerTypeForm } from "~/modules/sales";
-import { requirePermissions } from "~/services/auth";
 import {
+  CustomerTypeForm,
   customerTypeValidator,
   getCustomerType,
   upsertCustomerType,
 } from "~/modules/sales";
+import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
 import { error, success } from "~/utils/result";
@@ -39,7 +38,7 @@ export async function loader({ request, params }: LoaderArgs) {
 
 export async function action({ request }: ActionArgs) {
   assertIsPost(request);
-  const { client } = await requirePermissions(request, {
+  const { client, userId } = await requirePermissions(request, {
     update: "sales",
   });
 
@@ -51,12 +50,13 @@ export async function action({ request }: ActionArgs) {
     return validationError(validation.error);
   }
 
-  const { id, name, color } = validation.data;
+  const { id, ...data } = validation.data;
+  if (!id) throw new Error("id is required");
 
   const updateCustomerType = await upsertCustomerType(client, {
     id,
-    name,
-    color: color || null,
+    ...data,
+    updatedBy: userId,
   });
 
   if (updateCustomerType.error) {

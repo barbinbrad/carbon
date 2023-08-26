@@ -49,7 +49,8 @@ CREATE TABLE "supplierStatus" (
     "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     "updatedAt" TIMESTAMP WITH TIME ZONE,
 
-    CONSTRAINT "supplierStatus_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "supplierStatus_pkey" PRIMARY KEY ("id"),
+    CONSTRAINT "supplierStatus_name_unique" UNIQUE ("name")
 );
 
 CREATE TABLE "supplierType" (
@@ -58,10 +59,15 @@ CREATE TABLE "supplierType" (
     "color" TEXT DEFAULT '#000000',
     "protected" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    "createdBy" TEXT NOT NULL,
+    "updatedBy" TEXT,
     "updatedAt" TIMESTAMP WITH TIME ZONE,
 
     CONSTRAINT "supplierType_pkey" PRIMARY KEY ("id"),
-    CONSTRAINT "supplierType_colorCheck" CHECK ("color" is null or "color" ~* '^#[a-f0-9]{6}$')
+    CONSTRAINT "supplierType_name_unique" UNIQUE ("name"),
+    CONSTRAINT "supplierType_colorCheck" CHECK ("color" is null or "color" ~* '^#[a-f0-9]{6}$'),
+    CONSTRAINT "supplierType_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id") ON UPDATE CASCADE ON DELETE RESTRICT,
+    CONSTRAINT "supplierType_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id") ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 CREATE TABLE "supplier" (
@@ -129,7 +135,8 @@ CREATE TABLE "customerStatus" (
     "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     "updatedAt" TIMESTAMP WITH TIME ZONE,
 
-    CONSTRAINT "customerStatus_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "customerStatus_pkey" PRIMARY KEY ("id"),
+    CONSTRAINT "customerStatus_name_unique" UNIQUE ("name")
 );
 
 CREATE TABLE "customerType" (
@@ -138,10 +145,15 @@ CREATE TABLE "customerType" (
     "color" TEXT DEFAULT '#000000',
     "protected" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    "createdBy" TEXT NOT NULL,
+    "updatedBy" TEXT,
     "updatedAt" TIMESTAMP WITH TIME ZONE,
 
     CONSTRAINT "customerType_pkey" PRIMARY KEY ("id"),
-    CONSTRAINT "customerType_colorCheck" CHECK ("color" is null or "color" ~* '^#[a-f0-9]{6}$')
+    CONSTRAINT "customerType_name_unique" UNIQUE ("name"),
+    CONSTRAINT "customerType_colorCheck" CHECK ("color" is null or "color" ~* '^#[a-f0-9]{6}$'),
+    CONSTRAINT "customerType_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id") ON UPDATE CASCADE ON DELETE RESTRICT,
+    CONSTRAINT "customerType_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id") ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 CREATE TABLE "customer" (

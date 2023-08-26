@@ -703,7 +703,8 @@ CREATE TABLE "supplierStatus" (
     "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     "updatedAt" TIMESTAMP WITH TIME ZONE,
 
-    CONSTRAINT "supplierStatus_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "supplierStatus_pkey" PRIMARY KEY ("id"),
+    CONSTRAINT "supplierStatus_name_unique" UNIQUE ("name")
 );
 
 CREATE TABLE "supplierType" (
@@ -712,10 +713,15 @@ CREATE TABLE "supplierType" (
     "color" TEXT DEFAULT '#000000',
     "protected" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    "createdBy" TEXT NOT NULL,
+    "updatedBy" TEXT,
     "updatedAt" TIMESTAMP WITH TIME ZONE,
 
     CONSTRAINT "supplierType_pkey" PRIMARY KEY ("id"),
-    CONSTRAINT "supplierType_colorCheck" CHECK ("color" is null or "color" ~* '^#[a-f0-9]{6}$')
+    CONSTRAINT "supplierType_name_unique" UNIQUE ("name"),
+    CONSTRAINT "supplierType_colorCheck" CHECK ("color" is null or "color" ~* '^#[a-f0-9]{6}$'),
+    CONSTRAINT "supplierType_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id") ON UPDATE CASCADE ON DELETE RESTRICT,
+    CONSTRAINT "supplierType_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id") ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 CREATE TABLE "supplier" (
@@ -783,7 +789,8 @@ CREATE TABLE "customerStatus" (
     "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     "updatedAt" TIMESTAMP WITH TIME ZONE,
 
-    CONSTRAINT "customerStatus_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "customerStatus_pkey" PRIMARY KEY ("id"),
+    CONSTRAINT "customerStatus_name_unique" UNIQUE ("name")
 );
 
 CREATE TABLE "customerType" (
@@ -792,10 +799,15 @@ CREATE TABLE "customerType" (
     "color" TEXT DEFAULT '#000000',
     "protected" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    "createdBy" TEXT NOT NULL,
+    "updatedBy" TEXT,
     "updatedAt" TIMESTAMP WITH TIME ZONE,
 
     CONSTRAINT "customerType_pkey" PRIMARY KEY ("id"),
-    CONSTRAINT "customerType_colorCheck" CHECK ("color" is null or "color" ~* '^#[a-f0-9]{6}$')
+    CONSTRAINT "customerType_name_unique" UNIQUE ("name"),
+    CONSTRAINT "customerType_colorCheck" CHECK ("color" is null or "color" ~* '^#[a-f0-9]{6}$'),
+    CONSTRAINT "customerType_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id") ON UPDATE CASCADE ON DELETE RESTRICT,
+    CONSTRAINT "customerType_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id") ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 CREATE TABLE "customer" (
@@ -5600,10 +5612,11 @@ CREATE TABLE "accountDefault" (
   CONSTRAINT "accountDefault_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
+
 CREATE TABLE "postingGroupInventory" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "partGroupId" TEXT,
-  "locationId" TEXT NOT NULL,
+  "locationId" TEXT,
   "costOfGoodsSoldAccount" TEXT NOT NULL,
   "inventoryAccount" TEXT NOT NULL,
   "inventoryInterimAccrualAccount" TEXT NOT NULL,
@@ -5617,7 +5630,8 @@ CREATE TABLE "postingGroupInventory" (
   "overheadAccount" TEXT NOT NULL,
   "updatedBy" TEXT,
 
-  CONSTRAINT "postingGroupInventory_pkey" PRIMARY KEY ("id", "partGroupId", "locationId"),
+  CONSTRAINT "postingGroupInventory_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "postingGroupInventory_id_partGroupId_locationId_key" UNIQUE ("partGroupId", "locationId"),
   CONSTRAINT "postingGroupInventory_partGroupId_fkey" FOREIGN KEY ("partGroupId") REFERENCES "partGroup" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "postingGroupInventory_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "location" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "postingGroupInventory_costOfGoodsSoldAccount_fkey" FOREIGN KEY ("costOfGoodsSoldAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
@@ -5633,6 +5647,58 @@ CREATE TABLE "postingGroupInventory" (
   CONSTRAINT "postingGroupInventory_overheadAccount_fkey" FOREIGN KEY ("overheadAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "postingGroupInventory_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 );
+
+CREATE INDEX "postingGroupInventory_partGroupId_locationId_idx" ON "postingGroupInventory" ("partGroupId", "locationId");
+
+CREATE TABLE "postingGroupPurchasing" (
+  "id" TEXT NOT NULL DEFAULT xid(),
+  "supplierTypeId" TEXT,
+  "partGroupId" TEXT,
+  "purchaseAccount" TEXT NOT NULL,
+  "purchaseDiscountAccount" TEXT NOT NULL,
+  "purchaseCreditAccount" TEXT NOT NULL,
+  "purchasePrepaymentAccount" TEXT NOT NULL,
+  "purchaseTaxPayableAccount" TEXT NOT NULL,
+  "updatedBy" TEXT,
+
+  CONSTRAINT "postingGroupPurchasing_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "postingGroupPurchasing_id_supplierTypeId_partGroupId_key" UNIQUE ("supplierTypeId", "partGroupId"),
+  CONSTRAINT "postingGroupPurchasing_partGroupId_fkey" FOREIGN KEY ("partGroupId") REFERENCES "partGroup" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "postingGroupPurchasing_supplierTypeId_fkey" FOREIGN KEY ("supplierTypeId") REFERENCES "supplierType" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "postingGroupPurchasing_purchaseAccount_fkey" FOREIGN KEY ("purchaseAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "postingGroupPurchasing_purchaseDiscountAccount_fkey" FOREIGN KEY ("purchaseDiscountAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "postingGroupPurchasing_purchaseCreditAccount_fkey" FOREIGN KEY ("purchaseCreditAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "postingGroupPurchasing_purchasePrepaymentAccount_fkey" FOREIGN KEY ("purchasePrepaymentAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "postingGroupPurchasing_purchaseTaxPayableAccount_fkey" FOREIGN KEY ("purchaseTaxPayableAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "postingGroupPurchasing_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+CREATE INDEX "postingGroupPurchasing_partGroupId_supplierTypeId_idx" ON "postingGroupPurchasing" ("partGroupId", "supplierTypeId");
+
+CREATE TABLE "postingGroupSales" (
+  "id" TEXT NOT NULL DEFAULT xid(),
+  "customerTypeId" TEXT,
+  "partGroupId" TEXT,
+  "salesAccount" TEXT NOT NULL,
+  "salesDiscountAccount" TEXT NOT NULL,
+  "salesCreditAccount" TEXT NOT NULL,
+  "salesPrepaymentAccount" TEXT NOT NULL,
+  "salesTaxPayableAccount" TEXT NOT NULL,
+  "updatedBy" TEXT,
+
+  CONSTRAINT "postingGroupSales_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "postingGroupSales_id_customerTypeId_partGroupId_key" UNIQUE ("customerTypeId", "partGroupId"),
+  CONSTRAINT "postingGroupSales_partGroupId_fkey" FOREIGN KEY ("partGroupId") REFERENCES "partGroup" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "postingGroupSales_customerTypeId_fkey" FOREIGN KEY ("customerTypeId") REFERENCES "customerType" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "postingGroupSales_salesAccount_fkey" FOREIGN KEY ("salesAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "postingGroupSales_salesDiscountAccount_fkey" FOREIGN KEY ("salesDiscountAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "postingGroupSales_salesCreditAccount_fkey" FOREIGN KEY ("salesCreditAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "postingGroupSales_salesPrepaymentAccount_fkey" FOREIGN KEY ("salesPrepaymentAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "postingGroupSales_salesTaxPayableAccount_fkey" FOREIGN KEY ("salesTaxPayableAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "postingGroupSales_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+CREATE INDEX "postingGroupSales_partGroupId_customerTypeId_idx" ON "postingGroupSales" ("partGroupId", "customerTypeId");
 
 CREATE FUNCTION public.create_posting_groups_for_location()
 RETURNS TRIGGER AS $$
@@ -5677,6 +5743,39 @@ BEGIN
     );
   END LOOP;
 
+  -- insert the null location
+  INSERT INTO "postingGroupInventory" (
+    "partGroupId",
+    "locationId",
+    "costOfGoodsSoldAccount",
+    "inventoryAccount",
+    "inventoryInterimAccrualAccount",
+    "workInProgressAccount",
+    "directCostAppliedAccount",
+    "overheadCostAppliedAccount",
+    "purchaseVarianceAccount",
+    "inventoryAdjustmentVarianceAccount",
+    "materialVarianceAccount",
+    "capacityVarianceAccount",
+    "overheadAccount",
+    "updatedBy"
+  ) VALUES (
+    part_group."id",
+    NULL,
+    account_defaults."costOfGoodsSoldAccount",
+    account_defaults."inventoryAccount",
+    account_defaults."inventoryInterimAccrualAccount",
+    account_defaults."workInProgressAccount",
+    account_defaults."directCostAppliedAccount",
+    account_defaults."overheadCostAppliedAccount",
+    account_defaults."purchaseVarianceAccount",
+    account_defaults."inventoryAdjustmentVarianceAccount",
+    account_defaults."materialVarianceAccount",
+    account_defaults."capacityVarianceAccount",
+    account_defaults."overheadAccount",
+    new."createdBy"
+  );
+
   RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -5689,12 +5788,100 @@ CREATE TRIGGER create_location
 CREATE FUNCTION public.create_posting_groups_for_part_group()
 RETURNS TRIGGER AS $$
 DECLARE
-  loc RECORD;
+  rec RECORD;
   account_defaults RECORD;
 BEGIN
   SELECT * INTO account_defaults FROM "accountDefault" WHERE "id" = TRUE;
 
-  FOR loc IN SELECT "id" FROM "location"
+  FOR rec IN SELECT "id" FROM "customerType"
+  LOOP
+    INSERT INTO "postingGroupSales" (
+      "partGroupId",
+      "customerTypeId",
+      "salesAccount",
+      "salesDiscountAccount",
+      "salesCreditAccount",
+      "salesPrepaymentAccount",
+      "salesTaxPayableAccount",
+      "updatedBy"
+    ) VALUES (
+      new."id",
+      rec."id",
+      account_defaults."salesAccount",
+      account_defaults."salesDiscountAccount",
+      account_defaults."salesAccount",
+      account_defaults."prepaymentAccount",
+      account_defaults."salesTaxPayableAccount",
+      new."createdBy"
+    );
+  END LOOP;
+
+  -- insert the null customer type
+  INSERT INTO "postingGroupSales" (
+    "partGroupId",
+    "customerTypeId",
+    "salesAccount",
+    "salesDiscountAccount",
+    "salesCreditAccount",
+    "salesPrepaymentAccount",
+    "salesTaxPayableAccount",
+    "updatedBy"
+  ) VALUES (
+    new."id",
+    NULL,
+    account_defaults."salesAccount",
+    account_defaults."salesDiscountAccount",
+    account_defaults."salesAccount",
+    account_defaults."prepaymentAccount",
+    account_defaults."salesTaxPayableAccount",
+    new."createdBy"
+  );
+
+  FOR rec IN SELECT "id" FROM "supplierType"
+  LOOP
+    INSERT INTO "postingGroupPurchasing" (
+      "partGroupId",
+      "supplierTypeId",
+      "purchaseAccount",
+      "purchaseDiscountAccount",
+      "purchaseCreditAccount",
+      "purchasePrepaymentAccount",
+      "purchaseTaxPayableAccount",
+      "updatedBy"
+    ) VALUES (
+      new."id",
+      rec."id",
+      account_defaults."purchaseAccount",
+      account_defaults."purchaseAccount",
+      account_defaults."purchaseAccount",
+      account_defaults."prepaymentAccount",
+      account_defaults."purchaseTaxPayableAccount",
+      new."createdBy"
+    );
+  END LOOP;
+
+  -- insert the null supplier type
+  INSERT INTO "postingGroupPurchasing" (
+    "partGroupId",
+    "supplierTypeId",
+    "purchaseAccount",
+    "purchaseDiscountAccount",
+    "purchaseCreditAccount",
+    "purchasePrepaymentAccount",
+    "purchaseTaxPayableAccount",
+    "updatedBy"
+  ) VALUES (
+    new."id",
+    NULL,
+    account_defaults."purchaseAccount",
+    account_defaults."purchaseAccount",
+    account_defaults."purchaseAccount",
+    account_defaults."prepaymentAccount",
+    account_defaults."purchaseTaxPayableAccount",
+    new."createdBy"
+  );
+
+  FOR rec IN SELECT "id" FROM "location"
   LOOP
     INSERT INTO "postingGroupInventory" (
       "partGroupId",
@@ -5713,7 +5900,7 @@ BEGIN
       "updatedBy"
     ) VALUES (
       new."id",
-      loc."id",
+      rec."id",
       account_defaults."costOfGoodsSoldAccount",
       account_defaults."inventoryAccount",
       account_defaults."inventoryInterimAccrualAccount",
@@ -5737,5 +5924,127 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE TRIGGER create_part_group
   AFTER INSERT on public."partGroup"
   FOR EACH ROW EXECUTE PROCEDURE public.create_posting_groups_for_part_group();
+
+CREATE FUNCTION public.create_posting_groups_for_customer_type()
+RETURNS TRIGGER AS $$
+DECLARE
+  rec RECORD;
+  account_defaults RECORD;
+BEGIN
+  SELECT * INTO account_defaults FROM "accountDefault" WHERE "id" = TRUE;
+
+  FOR rec IN SELECT "id" FROM "partGroup"
+  LOOP
+    INSERT INTO "postingGroupSales" (
+      "customerTypeId",
+      "partGroupId",
+      "salesAccount",
+      "salesDiscountAccount",
+      "salesCreditAccount",
+      "salesPrepaymentAccount",
+      "salesTaxPayableAccount",
+      "updatedBy"
+    ) VALUES (
+      new."id",
+      rec."id",
+      account_defaults."salesAccount",
+      account_defaults."salesDiscountAccount",
+      account_defaults."salesAccount",
+      account_defaults."prepaymentAccount",
+      account_defaults."salesTaxPayableAccount",
+      new."createdBy"
+    );
+  END LOOP;
+
+  -- insert the null part group
+  INSERT INTO "postingGroupSales" (
+    "customerTypeId",
+    "partGroupId",
+    "salesAccount",
+    "salesDiscountAccount",
+    "salesCreditAccount",
+    "salesPrepaymentAccount",
+    "salesTaxPayableAccount",
+    "updatedBy"
+  ) VALUES (
+    new."id",
+    NULL,
+    account_defaults."salesAccount",
+    account_defaults."salesDiscountAccount",
+    account_defaults."salesAccount",
+    account_defaults."prepaymentAccount",
+    account_defaults."salesTaxPayableAccount",
+    new."createdBy"
+  );
+
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER create_posting_groups_for_customer_type
+  AFTER INSERT on public."customerType"
+  FOR EACH ROW EXECUTE PROCEDURE public.create_posting_groups_for_customer_type();
+
+
+CREATE FUNCTION public.create_posting_groups_for_supplier_type()
+RETURNS TRIGGER AS $$
+DECLARE
+  rec RECORD;
+  account_defaults RECORD;
+BEGIN
+  SELECT * INTO account_defaults FROM "accountDefault" WHERE "id" = TRUE;
+
+  FOR rec IN SELECT "id" FROM "partGroup"
+  LOOP
+    INSERT INTO "postingGroupPurchasing" (
+      "supplierTypeId",
+      "partGroupId",
+      "purchaseAccount",
+      "purchaseDiscountAccount",
+      "purchaseCreditAccount",
+      "purchasePrepaymentAccount",
+      "purchaseTaxPayableAccount",
+      "updatedBy"
+    ) VALUES (
+      new."id",
+      rec."id",
+      account_defaults."purchaseAccount",
+      account_defaults."purchaseAccount",
+      account_defaults."purchaseAccount",
+      account_defaults."prepaymentAccount",
+      account_defaults."purchaseTaxPayableAccount",
+      new."createdBy"
+    );
+  END LOOP;
+
+  -- insert the null part group
+  INSERT INTO "postingGroupPurchasing" (
+    "supplierTypeId",
+    "partGroupId",
+    "purchaseAccount",
+    "purchaseDiscountAccount",
+    "purchaseCreditAccount",
+    "purchasePrepaymentAccount",
+    "purchaseTaxPayableAccount",
+    "updatedBy"
+  ) VALUES (
+    new."id",
+    NULL,
+    account_defaults."purchaseAccount",
+    account_defaults."purchaseAccount",
+    account_defaults."purchaseAccount",
+    account_defaults."prepaymentAccount",
+    account_defaults."purchaseTaxPayableAccount",
+    new."createdBy"
+  );
+
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER create_posting_groups_for_supplier_type
+  AFTER INSERT on public."supplierType"
+  FOR EACH ROW EXECUTE PROCEDURE public.create_posting_groups_for_supplier_type();
+
 ```
 

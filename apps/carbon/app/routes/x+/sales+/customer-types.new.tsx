@@ -1,6 +1,5 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
 import {
   CustomerTypeForm,
@@ -22,7 +21,7 @@ export async function loader({ request }: LoaderArgs) {
 
 export async function action({ request }: ActionArgs) {
   assertIsPost(request);
-  const { client } = await requirePermissions(request, {
+  const { client, userId } = await requirePermissions(request, {
     create: "sales",
   });
 
@@ -34,11 +33,11 @@ export async function action({ request }: ActionArgs) {
     return validationError(validation.error);
   }
 
-  const { name, color } = validation.data;
+  const { id, ...data } = validation.data;
 
   const insertCustomerType = await upsertCustomerType(client, {
-    name,
-    color: color || null,
+    ...data,
+    createdBy: userId,
   });
   if (insertCustomerType.error) {
     return json(
@@ -46,17 +45,6 @@ export async function action({ request }: ActionArgs) {
       await flash(
         request,
         error(insertCustomerType.error, "Failed to insert customer type")
-      )
-    );
-  }
-
-  const customerTypeId = insertCustomerType.data?.id;
-  if (!customerTypeId) {
-    return json(
-      {},
-      await flash(
-        request,
-        error(insertCustomerType, "Failed to insert customer type")
       )
     );
   }

@@ -228,30 +228,70 @@ VALUES
   );
 
 
--- INSERT INTO "postingGroupInventory" (
---   "partGroupId",
---   "costOfGoodsSoldAccount",
---   "inventoryAccount",
---   "inventoryInterimAccrualAccount",
---   "workInProgressAccount",
---   "directCostAppliedAccount",
---   "overheadCostAppliedAccount",
---   "purchaseVarianceAccount",
---   "inventoryAdjustmentVarianceAccount",
---   "materialVarianceAccount",
---   "capacityVarianceAccount",
---   "overheadAccount"
--- ) SELECT 
---   NULL,
---   "costOfGoodsSoldAccount",
---   "inventoryAccount",
---   "inventoryInterimAccrualAccount",
---   "workInProgressAccount",
---   "directCostAppliedAccount",
---   "overheadCostAppliedAccount",
---   "purchaseVarianceAccount",
---   "inventoryAdjustmentVarianceAccount",
---   "materialVarianceAccount",
---   "capacityVarianceAccount",
---   "overheadAccount"
--- FROM "accountDefault" WHERE "id" = true;
+INSERT INTO "postingGroupInventory" (
+  "partGroupId",
+  "costOfGoodsSoldAccount",
+  "inventoryAccount",
+  "inventoryInterimAccrualAccount",
+  "workInProgressAccount",
+  "directCostAppliedAccount",
+  "overheadCostAppliedAccount",
+  "purchaseVarianceAccount",
+  "inventoryAdjustmentVarianceAccount",
+  "materialVarianceAccount",
+  "capacityVarianceAccount",
+  "overheadAccount"
+) SELECT 
+  NULL,
+  "costOfGoodsSoldAccount",
+  "inventoryAccount",
+  "inventoryInterimAccrualAccount",
+  "workInProgressAccount",
+  "directCostAppliedAccount",
+  "overheadCostAppliedAccount",
+  "purchaseVarianceAccount",
+  "inventoryAdjustmentVarianceAccount",
+  "materialVarianceAccount",
+  "capacityVarianceAccount",
+  "overheadAccount"
+FROM "accountDefault" WHERE "id" = true;
+
+INSERT INTO "postingGroupPurchasing" (
+  "partGroupId",
+  "supplierTypeId",
+  "purchaseAccount",
+  "purchaseDiscountAccount",
+  "purchaseCreditAccount",
+  "purchasePrepaymentAccount",
+  "purchaseTaxPayableAccount",
+  "updatedBy"
+) SELECT 
+  NULL,
+  NULL,
+  "purchaseAccount",
+  "purchaseAccount",
+  "purchaseAccount",
+  "prepaymentAccount",
+  "purchaseTaxPayableAccount",
+  'system'
+FROM "accountDefault" WHERE "id" = true;
+
+INSERT INTO "postingGroupSales" (
+  "partGroupId",
+  "customerTypeId",
+  "salesAccount",
+  "salesDiscountAccount",
+  "salesCreditAccount",
+  "salesPrepaymentAccount",
+  "salesTaxPayableAccount",
+  "updatedBy"
+) SELECT 
+  NULL,
+  NULL,
+  "salesAccount",
+  "salesDiscountAccount",
+  "salesAccount",
+  "prepaymentAccount",
+  "salesTaxPayableAccount",
+  'system'
+FROM "accountDefault" WHERE "id" = true;

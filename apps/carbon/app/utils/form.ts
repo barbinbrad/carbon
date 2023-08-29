@@ -4,6 +4,9 @@ export const isValidEmail = (email: string) => {
   return emailRegex.test(email);
 };
 
+/**
+ * @deprecated Use regular map instead
+ */
 export const mapRowsToOptions = <T extends Record<string, any>>({
   data,
   value,

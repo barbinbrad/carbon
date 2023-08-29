@@ -10,24 +10,29 @@ const accountingRoutes: AuthenticatedRouteGroup[] = [
         to: "/x/accounting/charts",
         role: "employee",
       },
+      {
+        name: "Journal Entries",
+        to: "/x/accounting/journals",
+        role: "employee",
+      },
     ],
   },
   {
     name: "Posting Groups",
     routes: [
       {
-        name: "Customer Groups",
-        to: "/x/accounting/customer-groups",
+        name: "Inventory Groups",
+        to: "/x/accounting/groups/inventory",
         role: "employee",
       },
       {
-        name: "Part Groups",
-        to: "/x/accounting/part-groups",
+        name: "Purchasing Groups",
+        to: "/x/accounting/groups/purchasing",
         role: "employee",
       },
       {
-        name: "Supplier Groups",
-        to: "/x/accounting/supplier-groups",
+        name: "Sales Groups",
+        to: "/x/accounting/groups/sales",
         role: "employee",
       },
     ],

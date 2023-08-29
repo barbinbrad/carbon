@@ -5,4 +5,5 @@ export * from "./AccountDefaults";
 export * from "./ChartOfAccounts";
 export * from "./Currencies";
 export * from "./PaymentTerms";
+export * from "./PostingGroups";
 export { useAccountingSidebar };

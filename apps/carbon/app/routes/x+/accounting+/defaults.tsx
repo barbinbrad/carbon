@@ -1,7 +1,10 @@
+import { useColor } from "@carbon/react";
+import { VStack } from "@chakra-ui/react";
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
+import { PageTitle } from "~/components/Layout";
 import {
   AccountDefaultsForm,
   defaultAcountValidator,
@@ -114,10 +117,17 @@ export default function AccountDefaultsRoute() {
     useLoaderData<typeof loader>();
 
   return (
-    <AccountDefaultsForm
-      balanceSheetAccounts={balanceSheetAccounts}
-      incomeStatementAccounts={incomeStatementAccounts}
-      initialValues={defaultAccounts}
-    />
+    <VStack bg={useColor("white")} w="full" h="full" p={8} overflowY="auto">
+      <PageTitle
+        title="Account Defaults"
+        subtitle="These accounts will be used to prepopulate posting grous when a new customer type, supplier type, part group, or location is created."
+      />
+
+      <AccountDefaultsForm
+        balanceSheetAccounts={balanceSheetAccounts}
+        incomeStatementAccounts={incomeStatementAccounts}
+        initialValues={defaultAccounts}
+      />
+    </VStack>
   );
 }

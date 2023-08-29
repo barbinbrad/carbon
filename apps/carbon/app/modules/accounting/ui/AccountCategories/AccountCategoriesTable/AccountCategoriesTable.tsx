@@ -11,7 +11,7 @@ import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo, useState } from "react";
 import { BiAddToQueue } from "react-icons/bi";
-import { BsPencilSquare, BsListUl, BsPlus } from "react-icons/bs";
+import { BsListUl, BsPencilSquare, BsPlus } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { Table } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
@@ -68,7 +68,6 @@ const AccountCategoriesTable = memo(
             return (
               <Badge
                 size="sm"
-                variant="outline"
                 colorScheme={isDebit ? "green" : isCredit ? "red" : "gray"}
               >
                 {item.getValue<string>()}

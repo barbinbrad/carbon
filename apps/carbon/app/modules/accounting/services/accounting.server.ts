@@ -387,6 +387,30 @@ export async function getDefaultAccounts(client: SupabaseClient<Database>) {
   return client.from("accountDefault").select("*").eq("id", true).single();
 }
 
+export async function getInventoryPostingGroups(
+  client: SupabaseClient<Database>,
+  args: GenericQueryFilters & {
+    partGroup: string | null;
+    location: string | null;
+  }
+) {
+  let query = client.from("postingGroupInventory").select("*", {
+    count: "exact",
+  });
+
+  if (args.partGroup) {
+    query = query.eq("partGroupId", args.partGroup);
+  }
+
+  if (args.location) {
+    query = query.eq("locationId", args.location);
+  }
+
+  query.order("partGroupId", { ascending: false });
+
+  return query;
+}
+
 export async function getPaymentTerm(
   client: SupabaseClient<Database>,
   paymentTermId: string
@@ -425,6 +449,54 @@ export async function getPaymentTermsList(client: SupabaseClient<Database>) {
     .select("id, name")
     .eq("active", true)
     .order("name", { ascending: true });
+}
+
+export async function getPurchasingPostingGroups(
+  client: SupabaseClient<Database>,
+  args: GenericQueryFilters & {
+    partGroup: string | null;
+    supplierType: string | null;
+  }
+) {
+  let query = client.from("postingGroupPurchasing").select("*", {
+    count: "exact",
+  });
+
+  if (args.partGroup) {
+    query = query.eq("partGroupId", args.partGroup);
+  }
+
+  if (args.supplierType) {
+    query = query.eq("supplierTypeId", args.supplierType);
+  }
+
+  query.order("partGroupId", { ascending: false });
+
+  return query;
+}
+
+export async function getSalesPostingGroups(
+  client: SupabaseClient<Database>,
+  args: GenericQueryFilters & {
+    partGroup: string | null;
+    customerType: string | null;
+  }
+) {
+  let query = client.from("postingGroupSales").select("*", {
+    count: "exact",
+  });
+
+  if (args.partGroup) {
+    query = query.eq("partGroupId", args.partGroup);
+  }
+
+  if (args.customerType) {
+    query = query.eq("customerTypeId", args.customerType);
+  }
+
+  query.order("partGroupId", { ascending: false });
+
+  return query;
 }
 
 export async function insertAccountEntries(

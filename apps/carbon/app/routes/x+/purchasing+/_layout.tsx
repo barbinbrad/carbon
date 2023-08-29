@@ -12,7 +12,7 @@ export default function UsersRoute() {
   const { groups } = usePurchasingSidebar();
 
   return (
-    <Grid w="full" h="full" templateColumns="auto 1fr" overflow="auto">
+    <Grid w="full" h="full" templateColumns="auto 1fr">
       <GroupedContentSidebar groups={groups} />
       <VStack w="full" h="full" spacing={0}>
         <Outlet />

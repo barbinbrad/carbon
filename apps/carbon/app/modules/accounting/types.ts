@@ -4,7 +4,10 @@ import type {
   getAccountCategories,
   getAccountSubcategories,
   getCurrencies,
+  getInventoryPostingGroups,
   getPaymentTerms,
+  getPurchasingPostingGroups,
+  getSalesPostingGroups,
 } from "./services";
 
 export type Account = NonNullable<
@@ -40,11 +43,19 @@ export type Currency = NonNullable<
   Awaited<ReturnType<typeof getCurrencies>>["data"]
 >[number];
 
+export type InventoryPostingGroup = NonNullable<
+  Awaited<ReturnType<typeof getInventoryPostingGroups>>["data"]
+>[number];
+
 export type PaymentTermCalculationMethod =
   Database["public"]["Enums"]["paymentTermCalculationMethod"];
 
 export type PaymentTerm = NonNullable<
   Awaited<ReturnType<typeof getPaymentTerms>>["data"]
+>[number];
+
+export type PurchasingPostingGroup = NonNullable<
+  Awaited<ReturnType<typeof getPurchasingPostingGroups>>["data"]
 >[number];
 
 export type Transaction = {
@@ -53,3 +64,7 @@ export type Transaction = {
   balanceAtDate: number;
   balance: number;
 };
+
+export type SalesPostingGroup = NonNullable<
+  Awaited<ReturnType<typeof getSalesPostingGroups>>["data"]
+>[number];

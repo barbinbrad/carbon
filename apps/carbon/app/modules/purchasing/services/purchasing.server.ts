@@ -315,6 +315,10 @@ export async function getSupplierTypes(
   return query;
 }
 
+export async function getSupplierTypesList(client: SupabaseClient<Database>) {
+  return client.from("supplierType").select("id, name");
+}
+
 export async function insertSupplier(
   client: SupabaseClient<Database>,
   supplier:

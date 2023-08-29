@@ -29,8 +29,9 @@ export const CollapsibleSidebar = ({ children }: PropsWithChildren<{}>) => {
       borderRight={1}
       borderRightColor={useColor("gray.300")}
       borderRightStyle="solid"
-      position="relative"
       h="calc(100vh - 50px)"
+      position="sticky"
+      top={50}
     >
       <Tooltip label={sidebar.isOpen ? "Collapse" : "Expand"} placement="right">
         <IconButton

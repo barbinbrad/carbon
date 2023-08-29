@@ -5916,6 +5916,39 @@ BEGIN
     );
   END LOOP;
 
+  -- insert the null location
+  INSERT INTO "postingGroupInventory" (
+    "partGroupId",
+    "locationId",
+    "costOfGoodsSoldAccount",
+    "inventoryAccount",
+    "inventoryInterimAccrualAccount",
+    "workInProgressAccount",
+    "directCostAppliedAccount",
+    "overheadCostAppliedAccount",
+    "purchaseVarianceAccount",
+    "inventoryAdjustmentVarianceAccount",
+    "materialVarianceAccount",
+    "capacityVarianceAccount",
+    "overheadAccount",
+    "updatedBy"
+  ) VALUES (
+    new."id",
+    NULL,
+    account_defaults."costOfGoodsSoldAccount",
+    account_defaults."inventoryAccount",
+    account_defaults."inventoryInterimAccrualAccount",
+    account_defaults."workInProgressAccount",
+    account_defaults."directCostAppliedAccount",
+    account_defaults."overheadCostAppliedAccount",
+    account_defaults."purchaseVarianceAccount",
+    account_defaults."inventoryAdjustmentVarianceAccount",
+    account_defaults."materialVarianceAccount",
+    account_defaults."capacityVarianceAccount",
+    account_defaults."overheadAccount",
+    new."createdBy"
+  );
+
   RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;

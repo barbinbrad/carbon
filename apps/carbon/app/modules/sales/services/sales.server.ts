@@ -171,6 +171,10 @@ export async function getCustomerTypes(
   return query;
 }
 
+export async function getCustomerTypesList(client: SupabaseClient<Database>) {
+  return client.from("customerType").select("id, name");
+}
+
 export async function insertCustomer(
   client: SupabaseClient<Database>,
   customer: TypeOfValidator<typeof customerValidator> & {

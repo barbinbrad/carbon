@@ -1,15 +1,15 @@
 import InventoryPostingGroupsFilters from "./InventoryPostingGroupsFilters";
-import InventoryPostingGroupsGrid from "./InventoryPostingGroupsGrid";
+import InventoryPostingGroupsTable from "./InventoryPostingGroupsTable";
 import PurchasingPostingGroupsFilters from "./PurchasingPostingGroupsFilters";
-import PurchasingPostingGroupsGrid from "./PurchasingPostingGroupsGrid";
+import PurchasingPostingGroupsTable from "./PurchasingPostingGroupsTable";
 import SalesPostingGroupsFilters from "./SalesPostingGroupsFilters";
-import SalesPostingGroupsGrid from "./SalesPostingGroupsGrid";
+import SalesPostingGroupsTable from "./SalesPostingGroupsTable";
 
 export {
   InventoryPostingGroupsFilters,
-  InventoryPostingGroupsGrid,
+  InventoryPostingGroupsTable,
   PurchasingPostingGroupsFilters,
-  PurchasingPostingGroupsGrid,
+  PurchasingPostingGroupsTable,
   SalesPostingGroupsFilters,
-  SalesPostingGroupsGrid,
+  SalesPostingGroupsTable,
 };

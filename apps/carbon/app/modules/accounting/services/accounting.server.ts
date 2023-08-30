@@ -406,8 +406,7 @@ export async function getInventoryPostingGroups(
     query = query.eq("locationId", args.location);
   }
 
-  query.order("partGroupId", { ascending: false });
-
+  query = setGenericQueryFilters(query, args, "partGroupId", false);
   return query;
 }
 
@@ -470,8 +469,7 @@ export async function getPurchasingPostingGroups(
     query = query.eq("supplierTypeId", args.supplierType);
   }
 
-  query.order("partGroupId", { ascending: false });
-
+  query = setGenericQueryFilters(query, args, "partGroupId", false);
   return query;
 }
 
@@ -494,8 +492,7 @@ export async function getSalesPostingGroups(
     query = query.eq("customerTypeId", args.customerType);
   }
 
-  query.order("partGroupId", { ascending: false });
-
+  query = setGenericQueryFilters(query, args, "partGroupId", false);
   return query;
 }
 

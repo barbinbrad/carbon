@@ -2,10 +2,12 @@ import { VStack } from "@chakra-ui/react";
 import type { LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
+import { useRouteData } from "~/hooks";
+import type { AccountListItem } from "~/modules/accounting";
 import {
   getInventoryPostingGroups,
   InventoryPostingGroupsFilters,
-  InventoryPostingGroupsGrid,
+  InventoryPostingGroupsTable,
 } from "~/modules/accounting";
 import { getPartGroupsList } from "~/modules/parts";
 import { getLocationsList } from "~/modules/resources";
@@ -57,13 +59,25 @@ export async function loader({ request }: LoaderArgs) {
 export default function InventoryPostingGroupsRoute() {
   const { data, partGroups, locations, count } = useLoaderData<typeof loader>();
 
+  const routeData = useRouteData<{
+    balanceSheetAccounts: AccountListItem[];
+    incomeStatementAccounts: AccountListItem[];
+  }>("/x/accounting");
+
   return (
     <VStack w="full" h="full" spacing={0}>
       <InventoryPostingGroupsFilters
         partGroups={partGroups}
         locations={locations}
       />
-      <InventoryPostingGroupsGrid data={data} count={count} />
+      <InventoryPostingGroupsTable
+        data={data}
+        count={count}
+        partGroups={partGroups}
+        locations={locations}
+        balanceSheetAccounts={routeData?.balanceSheetAccounts ?? []}
+        incomeStatementAccounts={routeData?.incomeStatementAccounts ?? []}
+      />
       <Outlet />
     </VStack>
   );

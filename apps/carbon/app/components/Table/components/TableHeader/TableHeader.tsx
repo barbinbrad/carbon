@@ -77,7 +77,7 @@ const TableHeader = <T extends object>({
               variant="ghost"
               onClick={() => setEditMode(true)}
             >
-              Edit Mode
+              Edit
             </Button>
           ))}
       </HStack>

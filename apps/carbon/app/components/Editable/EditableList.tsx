@@ -41,6 +41,7 @@ const EditableList =
       <Select
         autoFocus
         borderRadius="none"
+        defaultValue={options.find((option) => option.value === value)}
         options={options}
         // @ts-ignore
         onChange={onChange}

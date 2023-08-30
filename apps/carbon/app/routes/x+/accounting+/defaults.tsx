@@ -5,10 +5,11 @@ import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
 import { PageTitle } from "~/components/Layout";
+import { useRouteData } from "~/hooks";
+import type { AccountListItem } from "~/modules/accounting";
 import {
   AccountDefaultsForm,
   defaultAcountValidator,
-  getAccountsList,
   getDefaultAccounts,
   updateDefaultAccounts,
 } from "~/modules/accounting";
@@ -22,18 +23,7 @@ export async function loader({ request }: LoaderArgs) {
     view: "accounting",
   });
 
-  const [defaultAccounts, balanceSheetAccounts, incomeStatementAccounts] =
-    await Promise.all([
-      getDefaultAccounts(client),
-      getAccountsList(client, {
-        type: "Posting",
-        incomeBalance: "Balance Sheet",
-      }),
-      getAccountsList(client, {
-        type: "Posting",
-        incomeBalance: "Income Statement",
-      }),
-    ]);
+  const [defaultAccounts] = await Promise.all([getDefaultAccounts(client)]);
 
   if (defaultAccounts.error || !defaultAccounts.data) {
     return redirect(
@@ -45,36 +35,8 @@ export async function loader({ request }: LoaderArgs) {
     );
   }
 
-  if (balanceSheetAccounts.error) {
-    return redirect(
-      "/x/accounting",
-      await flash(
-        request,
-        error(
-          balanceSheetAccounts.error,
-          "Failed to load balance sheet accounts"
-        )
-      )
-    );
-  }
-
-  if (incomeStatementAccounts.error) {
-    return redirect(
-      "/x/accounting",
-      await flash(
-        request,
-        error(
-          incomeStatementAccounts.error,
-          "Failed to load income statement accounts"
-        )
-      )
-    );
-  }
-
   return json({
-    balanceSheetAccounts: balanceSheetAccounts.data ?? [],
     defaultAccounts: defaultAccounts.data,
-    incomeStatementAccounts: incomeStatementAccounts.data ?? [],
   });
 }
 
@@ -113,8 +75,11 @@ export async function action({ request }: ActionArgs) {
 }
 
 export default function AccountDefaultsRoute() {
-  const { balanceSheetAccounts, incomeStatementAccounts, defaultAccounts } =
-    useLoaderData<typeof loader>();
+  const { defaultAccounts } = useLoaderData<typeof loader>();
+  const routeData = useRouteData<{
+    balanceSheetAccounts: AccountListItem[];
+    incomeStatementAccounts: AccountListItem[];
+  }>("/x/accounting");
 
   return (
     <VStack bg={useColor("white")} w="full" h="full" p={8} overflowY="auto">
@@ -124,8 +89,8 @@ export default function AccountDefaultsRoute() {
       />
 
       <AccountDefaultsForm
-        balanceSheetAccounts={balanceSheetAccounts}
-        incomeStatementAccounts={incomeStatementAccounts}
+        balanceSheetAccounts={routeData?.balanceSheetAccounts ?? []}
+        incomeStatementAccounts={routeData?.incomeStatementAccounts ?? []}
         initialValues={defaultAccounts}
       />
     </VStack>

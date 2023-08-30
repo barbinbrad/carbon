@@ -300,7 +300,7 @@ BEGIN
       rec."id",
       account_defaults."salesAccount",
       account_defaults."salesDiscountAccount",
-      account_defaults."salesAccount",
+      account_defaults."receivablesAccount",
       account_defaults."prepaymentAccount",
       account_defaults."salesTaxPayableAccount",
       new."createdBy"
@@ -322,7 +322,7 @@ BEGIN
     NULL,
     account_defaults."salesAccount",
     account_defaults."salesDiscountAccount",
-    account_defaults."salesAccount",
+    account_defaults."receivablesAccount",
     account_defaults."prepaymentAccount",
     account_defaults."salesTaxPayableAccount",
     new."createdBy"
@@ -344,7 +344,7 @@ BEGIN
       rec."id",
       account_defaults."purchaseAccount",
       account_defaults."purchaseAccount",
-      account_defaults."purchaseAccount",
+      account_defaults."payablesAccount",
       account_defaults."prepaymentAccount",
       account_defaults."purchaseTaxPayableAccount",
       new."createdBy"
@@ -366,7 +366,7 @@ BEGIN
     NULL,
     account_defaults."purchaseAccount",
     account_defaults."purchaseAccount",
-    account_defaults."purchaseAccount",
+    account_defaults."payablesAccount",
     account_defaults."prepaymentAccount",
     account_defaults."purchaseTaxPayableAccount",
     new."createdBy"

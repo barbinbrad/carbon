@@ -2,6 +2,7 @@ import type { Database } from "@carbon/database";
 import type {
   getAccount,
   getAccountCategories,
+  getAccountsList,
   getAccountSubcategories,
   getCurrencies,
   getInventoryPostingGroups,
@@ -20,6 +21,10 @@ export type AccountCategory = NonNullable<
 
 export type AccountConsolidatedRate =
   Database["public"]["Enums"]["glConsolidatedRate"];
+
+export type AccountListItem = NonNullable<
+  NonNullable<Awaited<ReturnType<typeof getAccountsList>>>["data"]
+>[number];
 
 export type AccountSubcategory = NonNullable<
   Awaited<ReturnType<typeof getAccountSubcategories>>["data"]

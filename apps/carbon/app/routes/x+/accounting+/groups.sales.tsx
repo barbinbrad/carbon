@@ -2,10 +2,12 @@ import { VStack } from "@chakra-ui/react";
 import type { LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
+import { useRouteData } from "~/hooks";
+import type { AccountListItem } from "~/modules/accounting";
 import {
   getSalesPostingGroups,
   SalesPostingGroupsFilters,
-  SalesPostingGroupsGrid,
+  SalesPostingGroupsTable,
 } from "~/modules/accounting";
 import { getPartGroupsList } from "~/modules/parts";
 import { getCustomerTypesList } from "~/modules/sales";
@@ -48,15 +50,20 @@ export async function loader({ request }: LoaderArgs) {
 
   return json({
     data: salesGroups.data ?? [],
+    count: salesGroups.count ?? 0,
     partGroups: partGroups.data ?? [],
     customerTypes: customerTypes.data ?? [],
-    count: salesGroups.count ?? 0,
   });
 }
 
 export default function SalesPostingGroupsRoute() {
-  const { data, partGroups, customerTypes, count } =
+  const { data, count, partGroups, customerTypes } =
     useLoaderData<typeof loader>();
+
+  const routeData = useRouteData<{
+    balanceSheetAccounts: AccountListItem[];
+    incomeStatementAccounts: AccountListItem[];
+  }>("/x/accounting");
 
   return (
     <VStack w="full" h="full" spacing={0}>
@@ -64,7 +71,14 @@ export default function SalesPostingGroupsRoute() {
         partGroups={partGroups}
         customerTypes={customerTypes}
       />
-      <SalesPostingGroupsGrid data={data} count={count} />
+      <SalesPostingGroupsTable
+        data={data}
+        count={count}
+        partGroups={partGroups}
+        customerTypes={customerTypes}
+        balanceSheetAccounts={routeData?.balanceSheetAccounts ?? []}
+        incomeStatementAccounts={routeData?.incomeStatementAccounts ?? []}
+      />
       <Outlet />
     </VStack>
   );

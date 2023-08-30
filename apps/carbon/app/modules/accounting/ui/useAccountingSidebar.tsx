@@ -10,11 +10,11 @@ const accountingRoutes: AuthenticatedRouteGroup[] = [
         to: "/x/accounting/charts",
         role: "employee",
       },
-      {
-        name: "Journal Entries",
-        to: "/x/accounting/journals",
-        role: "employee",
-      },
+      // {
+      //   name: "Journal Entries",
+      //   to: "/x/accounting/journals",
+      //   role: "employee",
+      // },
     ],
   },
   {

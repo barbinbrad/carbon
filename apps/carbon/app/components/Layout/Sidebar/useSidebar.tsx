@@ -1,18 +1,18 @@
-import type { Authenticated, NavItem } from "~/types";
-import { AiOutlinePartition, AiOutlineFieldTime } from "react-icons/ai";
+import { AiOutlineFieldTime, AiOutlinePartition } from "react-icons/ai";
 import { BiListCheck, BiMessage } from "react-icons/bi";
 import {
   BsCalendar2Week,
   BsCartDash,
   BsCartPlus,
+  BsCreditCard,
   BsPeopleFill,
   BsShieldLock,
 } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
 import { HiOutlineCube, HiOutlineDocumentDuplicate } from "react-icons/hi";
 import { LuSettings2 } from "react-icons/lu";
-import { TbPigMoney } from "react-icons/tb";
 import { usePermissions } from "~/hooks";
+import type { Authenticated, NavItem } from "~/types";
 
 export function useSidebar() {
   const permissions = usePermissions();
@@ -76,7 +76,7 @@ export function useSidebar() {
       permission: "accounting",
       name: "Accounting",
       to: "/x/accounting",
-      icon: <TbPigMoney />,
+      icon: <BsCreditCard />,
     },
     {
       permission: "resources",

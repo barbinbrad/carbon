@@ -14,13 +14,9 @@ import { useNavigate } from "@remix-run/react";
 import { ValidatedForm } from "remix-validated-form";
 import { Select, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
-import type { getAccountsList } from "~/modules/accounting";
+import type { AccountListItem } from "~/modules/accounting";
 import { defaultAcountValidator } from "~/modules/accounting";
 import type { TypeOfValidator } from "~/types/validators";
-
-type AccountListItem = NonNullable<
-  NonNullable<Awaited<ReturnType<typeof getAccountsList>>>["data"]
->[number];
 
 type AccountDefaultsFormProps = {
   balanceSheetAccounts: AccountListItem[];

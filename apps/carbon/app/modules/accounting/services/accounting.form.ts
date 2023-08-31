@@ -237,6 +237,12 @@ export const defaultAcountValidator = withZod(
     inventoryInterimAccrualAccount: z.string().min(1, {
       message: "Inventory interim accrual account is required",
     }),
+    inventoryReceivedNotInvoicedAccount: z.string().min(1, {
+      message: "Inventory received not invoiced account is required",
+    }),
+    inventoryShippedNotInvoicedAccount: z.string().min(1, {
+      message: "Inventory shipped not invoiced account is required",
+    }),
     workInProgressAccount: z.string().min(1, {
       message: "Work in progress account is required",
     }),

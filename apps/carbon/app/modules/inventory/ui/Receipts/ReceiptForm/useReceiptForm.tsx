@@ -350,7 +350,6 @@ export default function useReceiptForm({
   const receiptLineEditableComponents = useMemo(
     () => ({
       receivedQuantity: EditableNumber(handleCellEdit),
-      unitPrice: EditableNumber(handleCellEdit),
     }),
     [handleCellEdit]
   );

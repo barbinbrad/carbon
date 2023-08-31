@@ -36,6 +36,37 @@ CREATE INDEX "receipt_locationId_idx" ON "receipt" ("locationId");
 CREATE INDEX "receipt_sourceDocumentId_idx" ON "receipt" ("sourceDocumentId");
 CREATE INDEX "receipt_supplierId_idx" ON "receipt" ("supplierId");
 
+ALTER TABLE "receipt" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Employees with inventory_view can view receipts" ON "receipt"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('inventory_view')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+  
+
+CREATE POLICY "Employees with inventory_create can insert receipts" ON "receipt"
+  FOR INSERT
+  WITH CHECK (   
+    coalesce(get_my_claim('inventory_create')::boolean,false) 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+);
+
+CREATE POLICY "Employees with inventory_update can update receipts" ON "receipt"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('inventory_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Employees with inventory_delete can delete receipts" ON "receipt"
+  FOR DELETE
+  USING (
+    coalesce(get_my_claim('inventory_delete')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
 CREATE TABLE "receiptLine" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "receiptId" TEXT NOT NULL,
@@ -65,6 +96,37 @@ CREATE TABLE "receiptLine" (
 CREATE INDEX "receiptLine_receiptId_idx" ON "receiptLine" ("receiptId");
 CREATE INDEX "receiptLine_lineId_idx" ON "receiptLine" ("lineId");
 CREATE INDEX "receiptLine_receiptId_lineId_idx" ON "receiptLine" ("receiptId", "lineId");
+
+ALTER TABLE "receiptLine" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Employees with inventory_view can view receipt lines" ON "receiptLine"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('inventory_view')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+  
+
+CREATE POLICY "Employees with inventory_create can insert receipt lines" ON "receiptLine"
+  FOR INSERT
+  WITH CHECK (   
+    coalesce(get_my_claim('inventory_create')::boolean,false) 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+);
+
+CREATE POLICY "Employees with inventory_update can update receipt lines" ON "receiptLine"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('inventory_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Employees with inventory_delete can delete receipt lines" ON "receiptLine"
+  FOR DELETE
+  USING (
+    coalesce(get_my_claim('inventory_delete')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
 
 CREATE VIEW "receipt_quantity_received_by_line" AS 
   SELECT

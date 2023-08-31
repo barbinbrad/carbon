@@ -270,6 +270,8 @@ export interface Database {
           inventoryAccount: string;
           inventoryAdjustmentVarianceAccount: string;
           inventoryInterimAccrualAccount: string;
+          inventoryReceivedNotInvoicedAccount: string;
+          inventoryShippedNotInvoicedAccount: string;
           maintenanceAccount: string;
           materialVarianceAccount: string;
           overheadAccount: string;
@@ -310,6 +312,8 @@ export interface Database {
           inventoryAccount: string;
           inventoryAdjustmentVarianceAccount: string;
           inventoryInterimAccrualAccount: string;
+          inventoryReceivedNotInvoicedAccount: string;
+          inventoryShippedNotInvoicedAccount: string;
           maintenanceAccount: string;
           materialVarianceAccount: string;
           overheadAccount: string;
@@ -350,6 +354,8 @@ export interface Database {
           inventoryAccount?: string;
           inventoryAdjustmentVarianceAccount?: string;
           inventoryInterimAccrualAccount?: string;
+          inventoryReceivedNotInvoicedAccount?: string;
+          inventoryShippedNotInvoicedAccount?: string;
           maintenanceAccount?: string;
           materialVarianceAccount?: string;
           overheadAccount?: string;
@@ -573,6 +579,30 @@ export interface Database {
           {
             foreignKeyName: "accountDefault_inventoryInterimAccrualAccount_fkey";
             columns: ["inventoryInterimAccrualAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_inventoryReceivedNotInvoicedAccount_fkey";
+            columns: ["inventoryReceivedNotInvoicedAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_inventoryReceivedNotInvoicedAccount_fkey";
+            columns: ["inventoryReceivedNotInvoicedAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_inventoryShippedNotInvoicedAccount_fkey";
+            columns: ["inventoryShippedNotInvoicedAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "accountDefault_inventoryShippedNotInvoicedAccount_fkey";
+            columns: ["inventoryShippedNotInvoicedAccount"];
             referencedRelation: "accounts_view";
             referencedColumns: ["number"];
           },
@@ -3636,6 +3666,8 @@ export interface Database {
           inventoryAccount: string;
           inventoryAdjustmentVarianceAccount: string;
           inventoryInterimAccrualAccount: string;
+          inventoryReceivedNotInvoicedAccount: string;
+          inventoryShippedNotInvoicedAccount: string;
           locationId: string | null;
           materialVarianceAccount: string;
           overheadAccount: string;
@@ -3653,6 +3685,8 @@ export interface Database {
           inventoryAccount: string;
           inventoryAdjustmentVarianceAccount: string;
           inventoryInterimAccrualAccount: string;
+          inventoryReceivedNotInvoicedAccount: string;
+          inventoryShippedNotInvoicedAccount: string;
           locationId?: string | null;
           materialVarianceAccount: string;
           overheadAccount: string;
@@ -3670,6 +3704,8 @@ export interface Database {
           inventoryAccount?: string;
           inventoryAdjustmentVarianceAccount?: string;
           inventoryInterimAccrualAccount?: string;
+          inventoryReceivedNotInvoicedAccount?: string;
+          inventoryShippedNotInvoicedAccount?: string;
           locationId?: string | null;
           materialVarianceAccount?: string;
           overheadAccount?: string;
@@ -3749,6 +3785,30 @@ export interface Database {
           {
             foreignKeyName: "postingGroupInventory_inventoryInterimAccrualAccount_fkey";
             columns: ["inventoryInterimAccrualAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "postingGroupInventory_inventoryReceivedNotInvoicedAccount_fkey";
+            columns: ["inventoryReceivedNotInvoicedAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "postingGroupInventory_inventoryReceivedNotInvoicedAccount_fkey";
+            columns: ["inventoryReceivedNotInvoicedAccount"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "postingGroupInventory_inventoryShippedNotInvoicedAccount_fkey";
+            columns: ["inventoryShippedNotInvoicedAccount"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "postingGroupInventory_inventoryShippedNotInvoicedAccount_fkey";
+            columns: ["inventoryShippedNotInvoicedAccount"];
             referencedRelation: "accounts_view";
             referencedColumns: ["number"];
           },

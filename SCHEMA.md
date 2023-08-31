@@ -3896,7 +3896,7 @@ CREATE TABLE "partPlanning" (
 CREATE INDEX "partPlanning_partId_locationId_index" ON "partPlanning" ("partId", "locationId");
 ALTER TABLE "partPlanning" ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Employees with part_view can view part planning" ON "partPlanning"
+CREATE POLICY "Employees with parts_view can view part planning" ON "partPlanning"
   FOR SELECT
   USING (
     coalesce(get_my_claim('parts_view')::boolean,false) 
@@ -3904,7 +3904,7 @@ CREATE POLICY "Employees with part_view can view part planning" ON "partPlanning
   );
 
 -- these are records are created lazily when a user attempts to view them
-CREATE POLICY "Employees with part_view can insert part planning" ON "partPlanning"
+CREATE POLICY "Employees with parts_view can insert part planning" ON "partPlanning"
   FOR INSERT
   WITH CHECK (
     coalesce(get_my_claim('parts_view')::boolean,false) 
@@ -5447,6 +5447,37 @@ CREATE INDEX "receipt_locationId_idx" ON "receipt" ("locationId");
 CREATE INDEX "receipt_sourceDocumentId_idx" ON "receipt" ("sourceDocumentId");
 CREATE INDEX "receipt_supplierId_idx" ON "receipt" ("supplierId");
 
+ALTER TABLE "receipt" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Employees with inventory_view can view receipts" ON "receipt"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('inventory_view')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+  
+
+CREATE POLICY "Employees with inventory_create can insert receipts" ON "receipt"
+  FOR INSERT
+  WITH CHECK (   
+    coalesce(get_my_claim('inventory_create')::boolean,false) 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+);
+
+CREATE POLICY "Employees with inventory_update can update receipts" ON "receipt"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('inventory_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Employees with inventory_delete can delete receipts" ON "receipt"
+  FOR DELETE
+  USING (
+    coalesce(get_my_claim('inventory_delete')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
 CREATE TABLE "receiptLine" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "receiptId" TEXT NOT NULL,
@@ -5476,6 +5507,37 @@ CREATE TABLE "receiptLine" (
 CREATE INDEX "receiptLine_receiptId_idx" ON "receiptLine" ("receiptId");
 CREATE INDEX "receiptLine_lineId_idx" ON "receiptLine" ("lineId");
 CREATE INDEX "receiptLine_receiptId_lineId_idx" ON "receiptLine" ("receiptId", "lineId");
+
+ALTER TABLE "receiptLine" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Employees with inventory_view can view receipt lines" ON "receiptLine"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('inventory_view')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+  
+
+CREATE POLICY "Employees with inventory_create can insert receipt lines" ON "receiptLine"
+  FOR INSERT
+  WITH CHECK (   
+    coalesce(get_my_claim('inventory_create')::boolean,false) 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+);
+
+CREATE POLICY "Employees with inventory_update can update receipt lines" ON "receiptLine"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('inventory_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Employees with inventory_delete can delete receipt lines" ON "receiptLine"
+  FOR DELETE
+  USING (
+    coalesce(get_my_claim('inventory_delete')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
 
 CREATE VIEW "receipt_quantity_received_by_line" AS 
   SELECT
@@ -5551,6 +5613,7 @@ CREATE TABLE "accountDefault" (
     "inventoryInterimAccrualAccount" TEXT NOT NULL,
     "workInProgressAccount" TEXT NOT NULL,
     "receivablesAccount" TEXT NOT NULL,
+    "inventoryShippedNotInvoicedAccount" TEXT NOT NULL,
     "bankCashAccount" TEXT NOT NULL,
     "bankLocalCurrencyAccount" TEXT NOT NULL,
     "bankForeignCurrencyAccount" TEXT NOT NULL,
@@ -5558,6 +5621,7 @@ CREATE TABLE "accountDefault" (
     -- liabilities
     "prepaymentAccount" TEXT NOT NULL,
     "payablesAccount" TEXT NOT NULL,
+    "inventoryReceivedNotInvoicedAccount" TEXT NOT NULL,
     "salesTaxPayableAccount" TEXT NOT NULL,
     "purchaseTaxPayableAccount" TEXT NOT NULL,
     "reverseChargeSalesTaxPayableAccount" TEXT NOT NULL,
@@ -5600,17 +5664,37 @@ CREATE TABLE "accountDefault" (
   CONSTRAINT "accountDefault_inventoryInterimAccrualAccount_fkey" FOREIGN KEY ("inventoryInterimAccrualAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "accountDefault_workInProgressAccount_fkey" FOREIGN KEY ("workInProgressAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "accountDefault_receivablesAccount_fkey" FOREIGN KEY ("receivablesAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_inventoryShippedNotInvoicedAccount_fkey" FOREIGN KEY ("inventoryShippedNotInvoicedAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "accountDefault_bankCashAccount_fkey" FOREIGN KEY ("bankCashAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "accountDefault_bankLocalCurrencyAccount_fkey" FOREIGN KEY ("bankLocalCurrencyAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "accountDefault_bankForeignCurrencyAccount_fkey" FOREIGN KEY ("bankForeignCurrencyAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "accountDefault_prepaymentAccount_fkey" FOREIGN KEY ("prepaymentAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "accountDefault_payablesAccount_fkey" FOREIGN KEY ("payablesAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "accountDefault_inventoryReceivedNotInvoicedAccount_fkey" FOREIGN KEY ("inventoryReceivedNotInvoicedAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "accountDefault_salesTaxPayableAccount_fkey" FOREIGN KEY ("salesTaxPayableAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "accountDefault_reverseChargeSalesTaxPayableAccount_fkey" FOREIGN KEY ("reverseChargeSalesTaxPayableAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "accountDefault_purchaseTaxPayableAccount_fkey" FOREIGN KEY ("purchaseTaxPayableAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "accountDefault_retainedEarningsAccount_fkey" FOREIGN KEY ("retainedEarningsAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "accountDefault_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
+
+ALTER TABLE "accountDefault" ENABLE ROW LEVEL SECURITY;
+
+
+CREATE POLICY "Employees with accounting_view can view account defaults" ON "accountDefault"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('accounting_view')::boolean,false) 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Employees with accounting_update can update account defaults" ON "accountDefault"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('accounting_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
 
 
 CREATE TABLE "postingGroupInventory" (
@@ -5620,6 +5704,8 @@ CREATE TABLE "postingGroupInventory" (
   "costOfGoodsSoldAccount" TEXT NOT NULL,
   "inventoryAccount" TEXT NOT NULL,
   "inventoryInterimAccrualAccount" TEXT NOT NULL,
+  "inventoryReceivedNotInvoicedAccount" TEXT NOT NULL,
+  "inventoryShippedNotInvoicedAccount" TEXT NOT NULL,
   "workInProgressAccount" TEXT NOT NULL,
   "directCostAppliedAccount" TEXT NOT NULL,
   "overheadCostAppliedAccount" TEXT NOT NULL,
@@ -5637,6 +5723,8 @@ CREATE TABLE "postingGroupInventory" (
   CONSTRAINT "postingGroupInventory_costOfGoodsSoldAccount_fkey" FOREIGN KEY ("costOfGoodsSoldAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "postingGroupInventory_inventoryAccount_fkey" FOREIGN KEY ("inventoryAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "postingGroupInventory_inventoryInterimAccrualAccount_fkey" FOREIGN KEY ("inventoryInterimAccrualAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "postingGroupInventory_inventoryReceivedNotInvoicedAccount_fkey" FOREIGN KEY ("inventoryReceivedNotInvoicedAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "postingGroupInventory_inventoryShippedNotInvoicedAccount_fkey" FOREIGN KEY ("inventoryShippedNotInvoicedAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "postingGroupInventory_workInProgressAccount_fkey" FOREIGN KEY ("workInProgressAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "postingGroupInventory_directCostAppliedAccount_fkey" FOREIGN KEY ("directCostAppliedAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "postingGroupInventory_overheadCostAppliedAccount_fkey" FOREIGN KEY ("overheadCostAppliedAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
@@ -5649,6 +5737,23 @@ CREATE TABLE "postingGroupInventory" (
 );
 
 CREATE INDEX "postingGroupInventory_partGroupId_locationId_idx" ON "postingGroupInventory" ("partGroupId", "locationId");
+
+ALTER TABLE "postingGroupInventory" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Employees with accounting_view can view inventory posting groups" ON "postingGroupInventory"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('accounting_view')::boolean,false) 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Employees with accounting_update can update inventory posting groups" ON "postingGroupInventory"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('accounting_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
 
 CREATE TABLE "postingGroupPurchasing" (
   "id" TEXT NOT NULL DEFAULT xid(),
@@ -5675,6 +5780,22 @@ CREATE TABLE "postingGroupPurchasing" (
 
 CREATE INDEX "postingGroupPurchasing_partGroupId_supplierTypeId_idx" ON "postingGroupPurchasing" ("partGroupId", "supplierTypeId");
 
+ALTER TABLE "postingGroupPurchasing" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Employees with accounting_view can view purchasing posting groups" ON "postingGroupPurchasing"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('accounting_view')::boolean,false) 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Employees with accounting_update can update purchasing posting groups" ON "postingGroupPurchasing"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('accounting_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
 CREATE TABLE "postingGroupSales" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "customerTypeId" TEXT,
@@ -5700,6 +5821,20 @@ CREATE TABLE "postingGroupSales" (
 
 CREATE INDEX "postingGroupSales_partGroupId_customerTypeId_idx" ON "postingGroupSales" ("partGroupId", "customerTypeId");
 
+CREATE POLICY "Employees with accounting_view can view sales posting groups" ON "postingGroupSales"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('accounting_view')::boolean,false) 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE POLICY "Employees with accounting_update can update sales posting groups" ON "postingGroupSales"
+  FOR UPDATE
+  USING (
+    coalesce(get_my_claim('accounting_update')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
 CREATE FUNCTION public.create_posting_groups_for_location()
 RETURNS TRIGGER AS $$
 DECLARE
@@ -5716,6 +5851,8 @@ BEGIN
       "costOfGoodsSoldAccount",
       "inventoryAccount",
       "inventoryInterimAccrualAccount",
+      "inventoryReceivedNotInvoicedAccount",
+      "inventoryShippedNotInvoicedAccount",
       "workInProgressAccount",
       "directCostAppliedAccount",
       "overheadCostAppliedAccount",
@@ -5731,6 +5868,8 @@ BEGIN
       account_defaults."costOfGoodsSoldAccount",
       account_defaults."inventoryAccount",
       account_defaults."inventoryInterimAccrualAccount",
+      account_defaults."inventoryReceivedNotInvoicedAccount",
+      account_defaults."inventoryShippedNotInvoicedAccount",
       account_defaults."workInProgressAccount",
       account_defaults."directCostAppliedAccount",
       account_defaults."overheadCostAppliedAccount",
@@ -5743,13 +5882,15 @@ BEGIN
     );
   END LOOP;
 
-  -- insert the null location
+  -- insert the null part group
   INSERT INTO "postingGroupInventory" (
     "partGroupId",
     "locationId",
     "costOfGoodsSoldAccount",
     "inventoryAccount",
     "inventoryInterimAccrualAccount",
+    "inventoryReceivedNotInvoicedAccount",
+    "inventoryShippedNotInvoicedAccount",
     "workInProgressAccount",
     "directCostAppliedAccount",
     "overheadCostAppliedAccount",
@@ -5760,11 +5901,13 @@ BEGIN
     "overheadAccount",
     "updatedBy"
   ) VALUES (
-    part_group."id",
     NULL,
+    new."id",
     account_defaults."costOfGoodsSoldAccount",
     account_defaults."inventoryAccount",
     account_defaults."inventoryInterimAccrualAccount",
+    account_defaults."inventoryReceivedNotInvoicedAccount",
+    account_defaults."inventoryShippedNotInvoicedAccount",
     account_defaults."workInProgressAccount",
     account_defaults."directCostAppliedAccount",
     account_defaults."overheadCostAppliedAccount",
@@ -5809,7 +5952,7 @@ BEGIN
       rec."id",
       account_defaults."salesAccount",
       account_defaults."salesDiscountAccount",
-      account_defaults."salesAccount",
+      account_defaults."receivablesAccount",
       account_defaults."prepaymentAccount",
       account_defaults."salesTaxPayableAccount",
       new."createdBy"
@@ -5831,7 +5974,7 @@ BEGIN
     NULL,
     account_defaults."salesAccount",
     account_defaults."salesDiscountAccount",
-    account_defaults."salesAccount",
+    account_defaults."receivablesAccount",
     account_defaults."prepaymentAccount",
     account_defaults."salesTaxPayableAccount",
     new."createdBy"
@@ -5853,7 +5996,7 @@ BEGIN
       rec."id",
       account_defaults."purchaseAccount",
       account_defaults."purchaseAccount",
-      account_defaults."purchaseAccount",
+      account_defaults."payablesAccount",
       account_defaults."prepaymentAccount",
       account_defaults."purchaseTaxPayableAccount",
       new."createdBy"
@@ -5875,7 +6018,7 @@ BEGIN
     NULL,
     account_defaults."purchaseAccount",
     account_defaults."purchaseAccount",
-    account_defaults."purchaseAccount",
+    account_defaults."payablesAccount",
     account_defaults."prepaymentAccount",
     account_defaults."purchaseTaxPayableAccount",
     new."createdBy"
@@ -5889,6 +6032,8 @@ BEGIN
       "costOfGoodsSoldAccount",
       "inventoryAccount",
       "inventoryInterimAccrualAccount",
+      "inventoryReceivedNotInvoicedAccount",
+      "inventoryShippedNotInvoicedAccount",
       "workInProgressAccount",
       "directCostAppliedAccount",
       "overheadCostAppliedAccount",
@@ -5904,6 +6049,8 @@ BEGIN
       account_defaults."costOfGoodsSoldAccount",
       account_defaults."inventoryAccount",
       account_defaults."inventoryInterimAccrualAccount",
+      account_defaults."inventoryReceivedNotInvoicedAccount",
+      account_defaults."inventoryShippedNotInvoicedAccount",
       account_defaults."workInProgressAccount",
       account_defaults."directCostAppliedAccount",
       account_defaults."overheadCostAppliedAccount",
@@ -5923,6 +6070,8 @@ BEGIN
     "costOfGoodsSoldAccount",
     "inventoryAccount",
     "inventoryInterimAccrualAccount",
+    "inventoryReceivedNotInvoicedAccount",
+    "inventoryShippedNotInvoicedAccount",
     "workInProgressAccount",
     "directCostAppliedAccount",
     "overheadCostAppliedAccount",
@@ -5938,6 +6087,8 @@ BEGIN
     account_defaults."costOfGoodsSoldAccount",
     account_defaults."inventoryAccount",
     account_defaults."inventoryInterimAccrualAccount",
+    account_defaults."inventoryReceivedNotInvoicedAccount",
+    account_defaults."inventoryShippedNotInvoicedAccount",
     account_defaults."workInProgressAccount",
     account_defaults."directCostAppliedAccount",
     account_defaults."overheadCostAppliedAccount",

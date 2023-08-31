@@ -660,7 +660,7 @@ CREATE TABLE "partPlanning" (
 CREATE INDEX "partPlanning_partId_locationId_index" ON "partPlanning" ("partId", "locationId");
 ALTER TABLE "partPlanning" ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Employees with part_view can view part planning" ON "partPlanning"
+CREATE POLICY "Employees with parts_view can view part planning" ON "partPlanning"
   FOR SELECT
   USING (
     coalesce(get_my_claim('parts_view')::boolean,false) 
@@ -668,7 +668,7 @@ CREATE POLICY "Employees with part_view can view part planning" ON "partPlanning
   );
 
 -- these are records are created lazily when a user attempts to view them
-CREATE POLICY "Employees with part_view can insert part planning" ON "partPlanning"
+CREATE POLICY "Employees with parts_view can insert part planning" ON "partPlanning"
   FOR INSERT
   WITH CHECK (
     coalesce(get_my_claim('parts_view')::boolean,false) 

@@ -616,14 +616,26 @@ export async function upsertPurchaseOrderLine(
   if ("id" in purchaseOrderLine) {
     return client
       .from("purchaseOrderLine")
-      .update(sanitize(purchaseOrderLine))
+      .update(
+        sanitize({
+          ...purchaseOrderLine,
+          quantityToReceive: purchaseOrderLine.purchaseQuantity,
+          quantityToInvoice: purchaseOrderLine.purchaseQuantity,
+        })
+      )
       .eq("id", purchaseOrderLine.id)
       .select("id")
       .single();
   }
   return client
     .from("purchaseOrderLine")
-    .insert([purchaseOrderLine])
+    .insert([
+      {
+        ...purchaseOrderLine,
+        quantityToReceive: purchaseOrderLine.purchaseQuantity,
+        quantityToInvoice: purchaseOrderLine.purchaseQuantity,
+      },
+    ])
     .select("id")
     .single();
 }

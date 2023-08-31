@@ -261,6 +261,11 @@ const AccountDefaultsForm = ({
                       options={balanceSheetAccountOptions}
                     />
                     <Select
+                      name="inventoryShippedNotInvoicedAccount"
+                      label="Inventory Shipped Not Invoiced"
+                      options={balanceSheetAccountOptions}
+                    />
+                    <Select
                       name="bankCashAccount"
                       label="Bank - Cash"
                       options={balanceSheetAccountOptions}
@@ -329,6 +334,11 @@ const AccountDefaultsForm = ({
                     <Select
                       name="payablesAccount"
                       label="Payables"
+                      options={balanceSheetAccountOptions}
+                    />
+                    <Select
+                      name="inventoryReceivedNotInvoicedAccount"
+                      label="Inventory Received Not Invoiced"
                       options={balanceSheetAccountOptions}
                     />
                     <Select

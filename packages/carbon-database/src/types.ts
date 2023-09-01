@@ -2360,7 +2360,7 @@ export interface Database {
           description: string | null;
           documentNumber: string | null;
           documentType:
-            | Database["public"]["Enums"]["accountDocumentLedgerType"]
+            | Database["public"]["Enums"]["generalLedgerDocumentType"]
             | null;
           entryNumber: number;
           externalDocumentNumber: string | null;
@@ -2374,12 +2374,12 @@ export interface Database {
           description?: string | null;
           documentNumber?: string | null;
           documentType?:
-            | Database["public"]["Enums"]["accountDocumentLedgerType"]
+            | Database["public"]["Enums"]["generalLedgerDocumentType"]
             | null;
           entryNumber?: number;
           externalDocumentNumber?: string | null;
           id?: string;
-          postingDate: string;
+          postingDate?: string;
         };
         Update: {
           accountNumber?: string;
@@ -2388,7 +2388,7 @@ export interface Database {
           description?: string | null;
           documentNumber?: string | null;
           documentType?:
-            | Database["public"]["Enums"]["accountDocumentLedgerType"]
+            | Database["public"]["Enums"]["generalLedgerDocumentType"]
             | null;
           entryNumber?: number;
           externalDocumentNumber?: string | null;
@@ -2937,7 +2937,6 @@ export interface Database {
       };
       partLedger: {
         Row: {
-          costAmount: number;
           createdAt: string;
           documentNumber: string | null;
           documentType:
@@ -2946,18 +2945,13 @@ export interface Database {
           entryNumber: number;
           entryType: Database["public"]["Enums"]["partLedgerType"];
           id: string;
-          invoicedQuantity: number;
           locationId: string | null;
-          open: boolean;
           partId: string;
           postingDate: string;
           quantity: number;
-          remainingQuantity: number;
-          salesAmount: number;
           shelfId: string | null;
         };
         Insert: {
-          costAmount: number;
           createdAt?: string;
           documentNumber?: string | null;
           documentType?:
@@ -2966,18 +2960,13 @@ export interface Database {
           entryNumber?: number;
           entryType: Database["public"]["Enums"]["partLedgerType"];
           id?: string;
-          invoicedQuantity: number;
           locationId?: string | null;
-          open?: boolean;
           partId: string;
-          postingDate: string;
+          postingDate?: string;
           quantity: number;
-          remainingQuantity: number;
-          salesAmount: number;
           shelfId?: string | null;
         };
         Update: {
-          costAmount?: number;
           createdAt?: string;
           documentNumber?: string | null;
           documentType?:
@@ -2986,14 +2975,10 @@ export interface Database {
           entryNumber?: number;
           entryType?: Database["public"]["Enums"]["partLedgerType"];
           id?: string;
-          invoicedQuantity?: number;
           locationId?: string | null;
-          open?: boolean;
           partId?: string;
           postingDate?: string;
           quantity?: number;
-          remainingQuantity?: number;
-          salesAmount?: number;
           shelfId?: string | null;
         };
         Relationships: [
@@ -6137,7 +6122,7 @@ export interface Database {
           expectedCostPostedToGl?: number;
           id?: string;
           partLedgerType: Database["public"]["Enums"]["partLedgerType"];
-          postingDate: string;
+          postingDate?: string;
         };
         Update: {
           actualCostPostedToGl?: number;
@@ -7079,13 +7064,6 @@ export interface Database {
       };
     };
     Enums: {
-      accountDocumentLedgerType:
-        | "Quote"
-        | "Order"
-        | "Invoice"
-        | "Credit Memo"
-        | "Blanket Order"
-        | "Return Order";
       costLedgerType:
         | "Direct Cost"
         | "Revaluation"
@@ -7112,6 +7090,13 @@ export interface Database {
         | "Seconds/Piece"
         | "Total Hours"
         | "Total Minutes";
+      generalLedgerDocumentType:
+        | "Quote"
+        | "Order"
+        | "Invoice"
+        | "Credit Memo"
+        | "Blanket Order"
+        | "Return Order";
       glAccountCategory:
         | "Bank"
         | "Accounts Receivable"

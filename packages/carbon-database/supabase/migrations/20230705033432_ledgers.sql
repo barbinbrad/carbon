@@ -1,4 +1,4 @@
-CREATE TYPE "accountDocumentLedgerType" AS ENUM (
+CREATE TYPE "generalLedgerDocumentType" AS ENUM (
   'Quote',
   'Order',
   'Invoice',
@@ -10,11 +10,11 @@ CREATE TYPE "accountDocumentLedgerType" AS ENUM (
 CREATE TABLE "generalLedger" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "entryNumber" SERIAL,
-  "postingDate" DATE NOT NULL,
+  "postingDate" DATE NOT NULL DEFAULT CURRENT_DATE,
   "accountNumber" TEXT NOT NULL,
   "description" TEXT,
   "amount" NUMERIC(19, 4) NOT NULL,
-  "documentType" "accountDocumentLedgerType", 
+  "documentType" "generalLedgerDocumentType", 
   "documentNumber" TEXT,
   "externalDocumentNumber" TEXT,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
@@ -89,7 +89,7 @@ CREATE TYPE "partLedgerDocumentType" AS ENUM (
 CREATE TABLE "valueLedger" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "entryNumber" SERIAL,
-  "postingDate" DATE NOT NULL,
+  "postingDate" DATE NOT NULL DEFAULT CURRENT_DATE,
   "partLedgerType" "partLedgerType" NOT NULL,
   "costLedgerType" "costLedgerType" NOT NULL,
   "adjustment" BOOLEAN NOT NULL DEFAULT false,
@@ -134,7 +134,7 @@ CREATE POLICY "Employees with accounting_view can view the value ledger account 
 CREATE TABLE "partLedger" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "entryNumber" SERIAL,
-  "postingDate" DATE NOT NULL,
+  "postingDate" DATE NOT NULL DEFAULT CURRENT_DATE,
   "entryType" "partLedgerType" NOT NULL,
   "documentType" "partLedgerDocumentType",
   "documentNumber" TEXT,
@@ -142,11 +142,6 @@ CREATE TABLE "partLedger" (
   "locationId" TEXT,
   "shelfId" TEXT,
   "quantity" NUMERIC(12, 4) NOT NULL,
-  "invoicedQuantity" NUMERIC(12, 4) NOT NULL,
-  "remainingQuantity" NUMERIC(12, 4) NOT NULL,
-  "salesAmount" NUMERIC(12, 4) NOT NULL,
-  "costAmount" NUMERIC(12, 4) NOT NULL,
-  "open" BOOLEAN NOT NULL DEFAULT true,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
 
   CONSTRAINT "partLedger_pkey" PRIMARY KEY ("id"),

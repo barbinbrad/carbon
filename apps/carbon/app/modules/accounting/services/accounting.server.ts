@@ -1,20 +1,21 @@
 import type { Database } from "@carbon/database";
 import { getDateNYearsAgo } from "@carbon/utils";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import logger from "~/lib/logger";
 import { getSupabaseServiceRole } from "~/lib/supabase";
 import type { ReceiptLine } from "~/modules/inventory";
 import type { TypeOfValidator } from "~/types/validators";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
 import { sanitize } from "~/utils/supabase";
-import type { Account, Transaction } from "../types";
+import type { Account, InventoryPostingGroup, Transaction } from "../types";
 import type {
   accountCategoryValidator,
-  accountLedgerValidator,
   accountSubcategoryValidator,
   accountValidator,
   currencyValidator,
   defaultAcountValidator,
+  generalLedgerValidator,
   partLedgerValidator,
   paymentTermValidator,
   valueLedgerValidator,
@@ -389,6 +390,21 @@ export async function getDefaultAccounts(client: SupabaseClient<Database>) {
   return client.from("accountDefault").select("*").eq("id", true).single();
 }
 
+export async function getInventoryPostingGroup(
+  client: SupabaseClient<Database>,
+  args: {
+    partGroupId: string | null;
+    locationId: string | null;
+  }
+) {
+  return client
+    .from("postingGroupInventory")
+    .select("*")
+    .eq("partGroupId", args.partGroupId)
+    .eq("locationId", args.locationId)
+    .single();
+}
+
 export async function getInventoryPostingGroups(
   client: SupabaseClient<Database>,
   args: GenericQueryFilters & {
@@ -498,54 +514,46 @@ export async function getSalesPostingGroups(
   return query;
 }
 
-export async function insertAccountEntries(
+export async function insertGeneralLedgerEntries(
   client: SupabaseClient<Database>,
-  accountEntries: TypeOfValidator<typeof accountLedgerValidator>[]
+  generalEntries: TypeOfValidator<typeof generalLedgerValidator>[]
 ) {
-  return client
-    .from("accountLedger")
-    .insert(accountEntries)
-    .select("id")
-    .single();
+  return client.from("generalLedger").insert(generalEntries);
 }
 
-export async function insertAccountLedger(
+export async function insertGeneralLedgerEntry(
   client: SupabaseClient<Database>,
-  accountEntry: TypeOfValidator<typeof accountLedgerValidator>
+  generalEntry: TypeOfValidator<typeof generalLedgerValidator>
 ) {
-  return client
-    .from("accountLedger")
-    .insert([accountEntry])
-    .select("id")
-    .single();
+  return client.from("generalLedger").insert([generalEntry]);
 }
 
 export async function insertPartEntries(
   client: SupabaseClient<Database>,
   partEntries: TypeOfValidator<typeof partLedgerValidator>[]
 ) {
-  return client.from("partLedger").insert(partEntries).select("id").single();
+  return client.from("partLedger").insert(partEntries);
 }
 
 export async function insertPartLedger(
   client: SupabaseClient<Database>,
   partEntry: TypeOfValidator<typeof partLedgerValidator>
 ) {
-  return client.from("partLedger").insert([partEntry]).select("id").single();
+  return client.from("partLedger").insert([partEntry]);
 }
 
 export async function insertValueEntries(
   client: SupabaseClient<Database>,
   valueEntries: TypeOfValidator<typeof valueLedgerValidator>[]
 ) {
-  return client.from("valueLedger").insert(valueEntries).select("id").single();
+  return client.from("valueLedger").insert(valueEntries);
 }
 
 export async function insertValueLedger(
   client: SupabaseClient<Database>,
   valueEntry: TypeOfValidator<typeof valueLedgerValidator>
 ) {
-  return client.from("valueLedger").insert([valueEntry]).select("id").single();
+  return client.from("valueLedger").insert([valueEntry]);
 }
 
 export async function updateDefaultAccounts(
@@ -566,6 +574,20 @@ export async function postReceiptWithExpectedCost(receiptId: string) {
 
   if (receipt.error) return receipt;
   if (receiptLines.error) return receiptLines;
+
+  const partGroups = await client
+    .from("part")
+    .select("id, partGroupId")
+    .in(
+      "id",
+      receiptLines.data.reduce<string[]>((acc, receiptLine) => {
+        if (receiptLine.partId && !acc.includes(receiptLine.partId)) {
+          acc.push(receiptLine.partId);
+        }
+        return acc;
+      }, [])
+    );
+  if (partGroups.error) return partGroups;
 
   switch (receipt.data?.sourceDocument) {
     case "Purchase Order":
@@ -588,33 +610,38 @@ export async function postReceiptWithExpectedCost(receiptId: string) {
       // First, update the quantity received on the purchase order lines
       purchaseOrderLines.data.forEach(async (purchaseOrderLine) => {
         const receiptLine = receiptLinesByLineId[purchaseOrderLine.id];
-        if (!receiptLine) return;
+        if (
+          receiptLine &&
+          receiptLine.receivedQuantity &&
+          purchaseOrderLine.purchaseQuantity &&
+          purchaseOrderLine.purchaseQuantity > 0
+        ) {
+          const newQuantityReceived =
+            (purchaseOrderLine.quantityReceived ?? 0) +
+            receiptLine.receivedQuantity;
 
-        if (!purchaseOrderLine.purchaseQuantity) return;
+          const newQuantityToReceive =
+            (purchaseOrderLine.quantityToReceive ??
+              purchaseOrderLine.purchaseQuantity) -
+            receiptLine.receivedQuantity;
 
-        const newQuantityReceived =
-          (purchaseOrderLine.quantityReceived ?? 0) +
-          receiptLine.receivedQuantity;
+          const receivedComplete =
+            receiptLine.receivedQuantity >=
+            (purchaseOrderLine.quantityToReceive ??
+              purchaseOrderLine.purchaseQuantity);
 
-        const newQuantityToReceive =
-          (purchaseOrderLine.quantityToReceive ??
-            purchaseOrderLine.purchaseQuantity) - receiptLine.receivedQuantity;
+          const purchaseOrderLineUpdate = await client
+            .from("purchaseOrderLine")
+            .update({
+              quantityReceived: newQuantityReceived,
+              quantityToReceive: newQuantityToReceive,
+              receivedComplete,
+            })
+            .eq("id", purchaseOrderLine.id);
 
-        const receivedComplete =
-          receiptLine.receivedQuantity >=
-          (purchaseOrderLine.quantityToReceive ??
-            purchaseOrderLine.purchaseQuantity);
-
-        let purchaseOrderLineUpdate = await client
-          .from("purchaseOrderLine")
-          .update({
-            quantityReceived: newQuantityReceived,
-            quantityToReceive: newQuantityToReceive,
-            receivedComplete,
-          })
-          .eq("id", purchaseOrderLine.id);
-
-        if (purchaseOrderLineUpdate.error) return purchaseOrderLineUpdate;
+          if (purchaseOrderLineUpdate.error)
+            logger.error(purchaseOrderLineUpdate);
+        }
       });
 
       // Next, make the following entries for each line on the receipt:
@@ -622,9 +649,97 @@ export async function postReceiptWithExpectedCost(receiptId: string) {
       // - a part ledger entry for the quantity received
       // - a G/L entry to debit interim inventory accrual
       // - a G/L entry to credit inventory received not invoiced
+
+      const valueEntries: TypeOfValidator<typeof valueLedgerValidator>[] = [];
+      const partEntries: TypeOfValidator<typeof partLedgerValidator>[] = [];
+      const glEntries: TypeOfValidator<typeof generalLedgerValidator>[] = [];
+      const cachedInventoryPostingGroups: Record<
+        string,
+        InventoryPostingGroup | null
+      > = {};
+
       receiptLines.data.forEach(async (receiptLine) => {
-        // TODO:
+        const expectedValue =
+          receiptLine.receivedQuantity * receiptLine.unitPrice;
+
+        // value ledger entry
+        valueEntries.push({
+          partLedgerType: "Purchase",
+          costLedgerType: "Direct Cost",
+          adjustment: false,
+          documentType: "Purchase Receipt",
+          documentNumber: receipt.data?.sourceDocumentId ?? undefined,
+          costAmountActual: 0,
+          costAmountExpected: expectedValue,
+          actualCostPostedToGl: 0,
+          expectedCostPostedToGl: expectedValue,
+        });
+
+        // part ledger entry
+        partEntries.push({
+          entryType: "Positive Adjmt.",
+          documentType: "Purchase Receipt",
+          documentNumber: receipt.data?.sourceDocumentId ?? undefined,
+          partId: receiptLine.partId,
+          locationId: receiptLine.locationId ?? undefined,
+          shelfId: receiptLine.shelfId ?? undefined,
+          quantity: receiptLine.receivedQuantity,
+        });
+
+        // general ledger entries
+        let postingGroup: InventoryPostingGroup | null = null;
+        const partGroupId =
+          partGroups.data.find(
+            (partGroup) => partGroup.id === receiptLine.partId
+          )?.partGroupId ?? null;
+        const locationId = receiptLine.locationId ?? null;
+
+        if (`${partGroupId}-${locationId}` in cachedInventoryPostingGroups) {
+          postingGroup =
+            cachedInventoryPostingGroups[`${partGroupId}-${locationId}`];
+        } else {
+          const inventoryPostingGroup = await getInventoryPostingGroup(client, {
+            partGroupId,
+            locationId,
+          });
+
+          if (inventoryPostingGroup.error || !inventoryPostingGroup.data) {
+            logger.error(inventoryPostingGroup);
+          }
+
+          postingGroup = inventoryPostingGroup.data ?? null;
+          cachedInventoryPostingGroups[`${partGroupId}-${locationId}`] =
+            postingGroup;
+        }
+
+        if (postingGroup) {
+          glEntries.push({
+            accountNumber: postingGroup.inventoryInterimAccrualAccount,
+            description: "Interim Inventory Accrual",
+            amount: -expectedValue,
+            documentType: "Order",
+            documentNumber: receipt.data?.sourceDocumentId ?? undefined,
+          });
+          glEntries.push({
+            accountNumber: postingGroup.inventoryReceivedNotInvoicedAccount,
+            description: "Inventory Received Not Invoiced",
+            amount: expectedValue,
+            documentType: "Order",
+            documentNumber: receipt.data?.sourceDocumentId ?? undefined,
+          });
+        }
       });
+
+      const [valueEntriesResponse, partEntriesResponse, glEntriesResponse] =
+        await Promise.all([
+          insertValueEntries(client, valueEntries),
+          insertPartEntries(client, partEntries),
+          insertGeneralLedgerEntries(client, glEntries),
+        ]);
+
+      if (valueEntriesResponse.error) logger.error(valueEntriesResponse);
+      if (partEntriesResponse.error) logger.error(partEntriesResponse);
+      if (glEntriesResponse.error) logger.error(glEntriesResponse);
 
       break;
     default:

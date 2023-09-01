@@ -2,7 +2,7 @@ import { withZod } from "@remix-validated-form/with-zod";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
 
-export const accountDocumentLedgerType = [
+export const generalLedgerDocumentType = [
   "Quote",
   "Order",
   "Invoice",
@@ -126,13 +126,13 @@ export const accountCategoryValidator = withZod(
   })
 );
 
-export const accountLedgerValidator = withZod(
+export const generalLedgerValidator = withZod(
   z.object({
-    postingDate: z.string().min(1, { message: "Posting date is required" }),
+    postingDate: zfd.text(z.string().optional()),
     accountNumber: z.string().min(1, { message: "Account is required" }),
     description: z.string().optional(),
     amount: z.number(),
-    documentType: z.union([z.enum(accountDocumentLedgerType), z.undefined()]),
+    documentType: z.union([z.enum(generalLedgerDocumentType), z.undefined()]),
     documentNumber: z.string().optional(),
     externalDocumentNumber: z.string().optional(),
   })
@@ -281,7 +281,7 @@ export const defaultAcountValidator = withZod(
 
 export const partLedgerValidator = withZod(
   z.object({
-    postingDate: z.string().min(1, { message: "Posting date is required" }),
+    postingDate: zfd.text(z.string().optional()),
     entryType: z.enum(partLedgerTypes),
     documentType: z.union([z.enum(partLedgerDocumentTypes), z.undefined()]),
     documentNumber: z.string().optional(),
@@ -289,11 +289,6 @@ export const partLedgerValidator = withZod(
     locationId: z.string().optional(),
     shelfId: z.string().optional(),
     quantity: z.number(),
-    invoicedQuantity: z.number(),
-    remainingQuantity: z.number(),
-    salesAmount: z.number(),
-    costAmount: z.number(),
-    open: z.boolean(),
   })
 );
 
@@ -331,7 +326,7 @@ export const paymentTermValidator = withZod(
 
 export const valueLedgerValidator = withZod(
   z.object({
-    postingDate: z.string(),
+    postingDate: zfd.text(z.string().optional()),
     partLedgerType: z.enum(partLedgerTypes),
     costLedgerType: z.enum(costLedgerTypes),
     adjustment: z.boolean(),

@@ -132,18 +132,6 @@ const PurchaseOrdersTable = memo(
       ];
     }, [edit, onFavorite]);
 
-    const actions = useMemo(() => {
-      return [
-        {
-          label: "Add to Favorites",
-          icon: <BsStar />,
-          onClick: (selected: PurchaseOrder[]) => {
-            console.log("move to favorites", selected);
-          },
-        },
-      ];
-    }, []);
-
     const defaultColumnVisibility = {
       createdAt: false,
       updatedAt: false,
@@ -171,7 +159,8 @@ const PurchaseOrdersTable = memo(
           <MenuItem
             icon={<MdCallReceived />}
             isDisabled={
-              !row.released || !permissions.can("update", "inventory")
+              !["Open", "Approved"].includes(row.status ?? "") ||
+              !permissions.can("update", "inventory")
             }
             onClick={() => {
               receive(row);
@@ -196,7 +185,6 @@ const PurchaseOrdersTable = memo(
     return (
       <>
         <Table<PurchaseOrder>
-          actions={actions}
           count={count}
           columns={columns}
           data={rows}
@@ -205,7 +193,6 @@ const PurchaseOrdersTable = memo(
           withFilters
           withPagination
           withSimpleSorting
-          withSelectableRows
           renderContextMenu={renderContextMenu}
         />
 

@@ -2,7 +2,6 @@ import type { Database } from "@carbon/database";
 import { getDateNYearsAgo } from "@carbon/utils";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import logger from "~/lib/logger";
-import { getSupabaseServiceRole } from "~/lib/supabase";
 import type { ReceiptLine } from "~/modules/inventory";
 import type { TypeOfValidator } from "~/types/validators";
 import type { GenericQueryFilters } from "~/utils/query";
@@ -565,8 +564,10 @@ export async function updateDefaultAccounts(
   return client.from("accountDefault").update(defaultAccounts).eq("id", true);
 }
 
-export async function postReceiptWithExpectedCost(receiptId: string) {
-  const client = getSupabaseServiceRole();
+export async function postReceipt(
+  client: SupabaseClient<Database>,
+  receiptId: string
+) {
   const [receipt, receiptLines] = await Promise.all([
     client.from("receipt").select("*").eq("id", receiptId).single(),
     client.from("receiptLine").select("*").eq("receiptId", receiptId),

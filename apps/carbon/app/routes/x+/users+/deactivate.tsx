@@ -1,9 +1,9 @@
 import type { ActionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
-import type { DeactivateUserQueueData } from "~/queues";
 import { deactivateUser, deactivateUsersValidator } from "~/modules/users";
-import { deactivateUsersQueue } from "~/queues";
+import type { UserAdminQueueData } from "~/queues";
+import { userAdminQueue, UserAdminQueueType } from "~/queues";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { safeRedirect } from "~/utils/http";
@@ -30,17 +30,18 @@ export async function action({ request }: ActionArgs) {
 
     return redirect(safeRedirect(redirectTo), await flash(request, result));
   } else {
-    const jobs = users.map<{ name: string; data: DeactivateUserQueueData }>(
+    const jobs = users.map<{ name: string; data: UserAdminQueueData }>(
       (id) => ({
         name: `deactivate user ${id}`,
         data: {
           id,
+          type: UserAdminQueueType.Deactivate,
         },
       })
     );
 
     try {
-      await deactivateUsersQueue.addBulk(jobs);
+      await userAdminQueue.addBulk(jobs);
       return redirect(
         safeRedirect(redirectTo),
         await flash(

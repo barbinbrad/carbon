@@ -2,8 +2,8 @@ import type { ActionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
 import { resendInvite, resendInviteValidator } from "~/modules/users";
-import type { ResendInvitesQueueData } from "~/queues";
-import { resendInvitesQueue } from "~/queues";
+import type { UserAdminQueueData } from "~/queues";
+import { userAdminQueue, UserAdminQueueType } from "~/queues";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { error, success } from "~/utils/result";
@@ -29,17 +29,18 @@ export async function action({ request }: ActionArgs) {
 
     return json({}, await flash(request, result));
   } else {
-    const jobs = users.map<{ name: string; data: ResendInvitesQueueData }>(
+    const jobs = users.map<{ name: string; data: UserAdminQueueData }>(
       (id) => ({
         name: `reinvite user ${id}`,
         data: {
           id,
+          type: UserAdminQueueType.Resend,
         },
       })
     );
 
     try {
-      await resendInvitesQueue.addBulk(jobs);
+      await userAdminQueue.addBulk(jobs);
       return json(
         {},
         await flash(request, success("Successfully added invites to queue."))

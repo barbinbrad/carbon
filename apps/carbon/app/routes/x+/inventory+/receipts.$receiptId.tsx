@@ -2,7 +2,6 @@ import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
-import type { ReceiptSourceDocument } from "~/modules/inventory";
 import {
   getReceipt,
   getReceiptLines,
@@ -67,7 +66,7 @@ export async function action({ request }: ActionArgs) {
   }
 
   return redirect(
-    "/x/inventory/receipts",
+    `/x/inventory/receipts/${id}`,
     await flash(request, success("Updated receipt"))
   );
 }
@@ -81,13 +80,15 @@ export default function EditReceiptsRoute() {
     ...receipt,
     receiptId: receipt.receiptId ?? undefined,
     sourceDocument: (receipt.sourceDocument ??
-      "Purchase Order") as ReceiptSourceDocument,
+      "Purchase Order") as "Purchase Order",
     sourceDocumentId: receipt.sourceDocumentId ?? undefined,
+    sourceDocumentReadbleId: receipt.sourceDocumentReadableId ?? undefined,
     locationId: receipt.locationId ?? undefined,
   };
 
   return (
     <ReceiptForm
+      // @ts-ignore
       initialValues={initialValues}
       isPosted={!!receipt?.postingDate ?? false}
       receiptLines={receiptLines}

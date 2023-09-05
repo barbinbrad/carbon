@@ -1,9 +1,6 @@
-import { bulkPermissionsQueue } from "./bulk-permissions.queue.server";
-import { deactivateUsersQueue } from "./deactivate-users.queue.server";
-import { resendInvitesQueue } from "./resend-invites.queue.server";
+import { userAdminQueue, UserAdminQueueType } from "./user-admin.queue.server";
+import { userPermissionsQueue } from "./user-permissions.queue.server";
 
-export { bulkPermissionsQueue, deactivateUsersQueue, resendInvitesQueue };
-
-export type { BulkPermissionsQueueData } from "./bulk-permissions.queue.server";
-export type { DeactivateUserQueueData } from "./deactivate-users.queue.server";
-export type { ResendInvitesQueueData } from "./resend-invites.queue.server";
+export type { UserAdminQueueData } from "./user-admin.queue.server";
+export type { UserPermissionsQueueData } from "./user-permissions.queue.server";
+export { UserAdminQueueType, userPermissionsQueue, userAdminQueue };

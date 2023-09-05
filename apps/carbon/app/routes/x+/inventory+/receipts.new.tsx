@@ -86,7 +86,7 @@ export async function action({ request }: ActionArgs) {
   }
 
   return redirect(
-    "/x/inventory/receipts",
+    `/x/inventory/receipts/${id}`,
     await flash(request, success("Receipt created"))
   );
 }

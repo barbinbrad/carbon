@@ -8,7 +8,7 @@ export const Submit = ({
   children,
   ...props
 }: PropsWithChildren<ButtonProps & { formId?: string; text?: string }>) => {
-  const isSubmitting = useIsSubmitting();
+  const isSubmitting = useIsSubmitting(formId);
   return (
     <Button
       form={formId}

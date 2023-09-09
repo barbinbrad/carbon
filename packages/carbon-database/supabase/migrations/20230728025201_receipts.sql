@@ -9,6 +9,12 @@ CREATE TYPE "receiptSourceDocument" AS ENUM (
   'Manufacturing Output'
 );
 
+CREATE TYPE "receiptStatus" AS ENUM (
+  'Draft',
+  'Pending',
+  'Posted'
+);
+
 CREATE TABLE "receipt" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "receiptId" TEXT NOT NULL,
@@ -17,6 +23,7 @@ CREATE TABLE "receipt" (
   "sourceDocumentId" TEXT,
   "sourceDocumentReadableId" TEXT,
   "supplierId" TEXT,
+  "status" "receiptStatus" NOT NULL DEFAULT 'Draft',
   "postingDate" DATE,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   "createdBy" TEXT NOT NULL,
@@ -66,6 +73,8 @@ CREATE POLICY "Employees with inventory_delete can delete receipts" ON "receipt"
     coalesce(get_my_claim('inventory_delete')::boolean, false) = true 
     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
   );
+
+ALTER publication supabase_realtime ADD TABLE "receipt";
 
 CREATE TABLE "receiptLine" (
   "id" TEXT NOT NULL DEFAULT xid(),

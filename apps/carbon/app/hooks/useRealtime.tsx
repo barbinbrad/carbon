@@ -7,10 +7,10 @@ export function useRealtime(tables: string[]) {
   const revalidator = useRevalidator();
   useEffect(() => {
     if (!supabase) return;
-    const subscriptions = supabase.channel("changes");
+    const channel = supabase.channel(`${tables.join(",")}:*}`);
 
     tables.forEach((table) => {
-      subscriptions.on(
+      channel.on(
         "postgres_changes",
         {
           event: "*",
@@ -21,7 +21,7 @@ export function useRealtime(tables: string[]) {
       );
     });
 
-    const channel = subscriptions.subscribe();
+    channel.subscribe();
 
     return () => {
       if (channel) supabase?.removeChannel(channel);

@@ -1,5 +1,6 @@
 import type { Database } from "@carbon/database";
 import { getDateNYearsAgo } from "@carbon/utils";
+import { getLocalTimeZone, today } from "@internationalized/date";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import logger from "~/lib/logger";
 import type { ReceiptLine } from "~/modules/inventory";
@@ -396,12 +397,21 @@ export async function getInventoryPostingGroup(
     locationId: string | null;
   }
 ) {
-  return client
-    .from("postingGroupInventory")
-    .select("*")
-    .eq("partGroupId", args.partGroupId)
-    .eq("locationId", args.locationId)
-    .single();
+  let query = client.from("postingGroupInventory").select("*");
+
+  if (args.partGroupId === null) {
+    query = query.is("partGroupId", null);
+  } else {
+    query = query.eq("partGroupId", args.partGroupId);
+  }
+
+  if (args.locationId === null) {
+    query = query.is("locationId", null);
+  } else {
+    query = query.eq("locationId", args.locationId);
+  }
+
+  return query.single();
 }
 
 export async function getInventoryPostingGroups(
@@ -467,6 +477,30 @@ export async function getPaymentTermsList(client: SupabaseClient<Database>) {
     .order("name", { ascending: true });
 }
 
+export async function getPurchasingPostingGroup(
+  client: SupabaseClient<Database>,
+  args: {
+    partGroupId: string | null;
+    supplierTypeId: string | null;
+  }
+) {
+  let query = client.from("postingGroupInventory").select("*");
+
+  if (args.partGroupId === null) {
+    query = query.is("partGroupId", null);
+  } else {
+    query = query.eq("partGroupId", args.partGroupId);
+  }
+
+  if (args.supplierTypeId === null) {
+    query = query.is("supplierTypeId", null);
+  } else {
+    query = query.eq("supplierTypeId", args.supplierTypeId);
+  }
+
+  return query.single();
+}
+
 export async function getPurchasingPostingGroups(
   client: SupabaseClient<Database>,
   args: GenericQueryFilters & {
@@ -488,6 +522,30 @@ export async function getPurchasingPostingGroups(
 
   query = setGenericQueryFilters(query, args, "partGroupId", false);
   return query;
+}
+
+export async function getPurchasingSalesGroup(
+  client: SupabaseClient<Database>,
+  args: {
+    partGroupId: string | null;
+    customerTypeId: string | null;
+  }
+) {
+  let query = client.from("postingGroupInventory").select("*");
+
+  if (args.partGroupId === null) {
+    query = query.is("partGroupId", null);
+  } else {
+    query = query.eq("partGroupId", args.partGroupId);
+  }
+
+  if (args.customerTypeId === null) {
+    query = query.is("customerTypeId", null);
+  } else {
+    query = query.eq("customerTypeId", args.customerTypeId);
+  }
+
+  return query.single();
 }
 
 export async function getSalesPostingGroups(
@@ -568,12 +626,17 @@ export async function postReceipt(
   client: SupabaseClient<Database>,
   receiptId: string
 ) {
-  const [receipt, receiptLines] = await Promise.all([
-    client.from("receipt").select("*").eq("id", receiptId).single(),
-    client.from("receiptLine").select("*").eq("receiptId", receiptId),
-  ]);
-
+  const receipt = await client
+    .from("receipt")
+    .select("*")
+    .eq("id", receiptId)
+    .single();
   if (receipt.error) return receipt;
+
+  const receiptLines = await client
+    .from("receiptLine")
+    .select("*")
+    .eq("receiptId", receipt.data.receiptId);
   if (receiptLines.error) return receiptLines;
 
   const partGroups = await client
@@ -645,12 +708,6 @@ export async function postReceipt(
         }
       });
 
-      // Next, make the following entries for each line on the receipt:
-      // - a value ledger entry for the value of the receipt
-      // - a part ledger entry for the quantity received
-      // - a G/L entry to debit interim inventory accrual
-      // - a G/L entry to credit inventory received not invoiced
-
       const valueEntries: TypeOfValidator<typeof valueLedgerValidator>[] = [];
       const partEntries: TypeOfValidator<typeof partLedgerValidator>[] = [];
       const glEntries: TypeOfValidator<typeof generalLedgerValidator>[] = [];
@@ -659,7 +716,7 @@ export async function postReceipt(
         InventoryPostingGroup | null
       > = {};
 
-      receiptLines.data.forEach(async (receiptLine) => {
+      for await (const receiptLine of receiptLines.data) {
         const expectedValue =
           receiptLine.receivedQuantity * receiptLine.unitPrice;
 
@@ -689,7 +746,7 @@ export async function postReceipt(
 
         // general ledger entries
         let postingGroup: InventoryPostingGroup | null = null;
-        const partGroupId =
+        const partGroupId: string | null =
           partGroups.data.find(
             (partGroup) => partGroup.id === receiptLine.partId
           )?.partGroupId ?? null;
@@ -729,7 +786,7 @@ export async function postReceipt(
             documentNumber: receipt.data?.sourceDocumentId ?? undefined,
           });
         }
-      });
+      }
 
       const [valueEntriesResponse, partEntriesResponse, glEntriesResponse] =
         await Promise.all([
@@ -746,6 +803,13 @@ export async function postReceipt(
     default:
       break;
   }
+  return client
+    .from("receipt")
+    .update({
+      postingDate: today(getLocalTimeZone()).toString(),
+      status: "Posted",
+    })
+    .eq("id", receiptId);
 }
 
 export async function upsertAccount(

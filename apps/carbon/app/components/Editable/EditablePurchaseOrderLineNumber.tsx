@@ -110,12 +110,6 @@ const EditablePurchaseOrderLineNumber =
         return;
       }
 
-      console.log({
-        partId,
-        locationId: options.defaultLocationId,
-        shelfId: shelf.data?.defaultShelfId,
-      });
-
       onUpdate("partId", partId);
       onUpdate("description", part.data?.name);
       onUpdate("assetId", null);

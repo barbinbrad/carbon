@@ -57,10 +57,16 @@ export default function useReceiptForm({
   );
 
   const onClose = () => {
-    if (!sourceDocumentId && receipt.id) {
+    if (!isEditing && !sourceDocumentId && receipt.id) {
       deleteReceipt(receipt.id);
+      // TODO if the current sequence is the same as the receiptId decrement it
     }
-    navigate(-1);
+
+    if (isEditing) {
+      navigate(`/x/inventory/receipts`);
+    } else {
+      navigate(-1);
+    }
   };
 
   const onPost = () => {

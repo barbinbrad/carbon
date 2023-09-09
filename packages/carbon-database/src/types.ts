@@ -4729,6 +4729,7 @@ export interface Database {
             | null;
           sourceDocumentId: string | null;
           sourceDocumentReadableId: string | null;
+          status: Database["public"]["Enums"]["receiptStatus"];
           supplierId: string | null;
           updatedAt: string | null;
           updatedBy: string | null;
@@ -4745,6 +4746,7 @@ export interface Database {
             | null;
           sourceDocumentId?: string | null;
           sourceDocumentReadableId?: string | null;
+          status?: Database["public"]["Enums"]["receiptStatus"];
           supplierId?: string | null;
           updatedAt?: string | null;
           updatedBy?: string | null;
@@ -4761,6 +4763,7 @@ export interface Database {
             | null;
           sourceDocumentId?: string | null;
           sourceDocumentReadableId?: string | null;
+          status?: Database["public"]["Enums"]["receiptStatus"];
           supplierId?: string | null;
           updatedAt?: string | null;
           updatedBy?: string | null;
@@ -7184,6 +7187,7 @@ export interface Database {
         | "Outbound Transfer"
         | "Manufacturing Consumption"
         | "Manufacturing Output";
+      receiptStatus: "Draft" | "Pending" | "Posted";
       searchEntity:
         | "Resource"
         | "Person"

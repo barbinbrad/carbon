@@ -23,6 +23,7 @@
     "db:kill:supabase": "yarn workspace @carbon/database supabase stop --no-backup",
     "db:kill:redis": "yarn workspace @carbon/redis db:kill",
     "db:types": "yarn workspace @carbon/database db:types",
+    "db:function:new": "yarn workspace @carbon/database supabase function new",
     "db:migrate": "yarn workspace @carbon/database db:migrate",
     "db:migrate:new": "yarn workspace @carbon/database supabase migration new",
     "db:push": "turbo run db:push",
@@ -47,13 +48,13 @@
     "npm-run-all": "^4.1.5",
     "prettier": "^2.8.0",
     "rimraf": "^5.0.0",
-    "supabase": "1.77.9",
+    "supabase": "1.93.0",
     "tsx": "^3.12.1",
     "turbo": "^1.8.3"
   },
   "packageManager": "yarn@1.22.19",
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "lint-staged": {
     "(apps|packages|www)/**/*.{js,ts,jsx,tsx}": [

@@ -2,29 +2,27 @@ import { useRevalidator } from "@remix-run/react";
 import { useEffect } from "react";
 import { useSupabase } from "~/lib/supabase";
 
-export function useRealtime(tables: string[]) {
-  const { supabase } = useSupabase();
+export function useRealtime(table: string, filter?: string) {
+  const { accessToken, supabase } = useSupabase();
   const revalidator = useRevalidator();
   useEffect(() => {
-    if (!supabase) return;
-    const channel = supabase.channel(`${tables.join(",")}:*}`);
-
-    tables.forEach((table) => {
-      channel.on(
+    if (!supabase || !accessToken) return;
+    const channel = supabase
+      .channel(`postgres_changes:${table}}`)
+      .on(
         "postgres_changes",
         {
           event: "*",
           schema: "public",
           table: table,
+          filter: filter,
         },
         revalidator.revalidate
-      );
-    });
-
-    channel.subscribe();
+      )
+      .subscribe();
 
     return () => {
       if (channel) supabase?.removeChannel(channel);
     };
-  }, [revalidator.revalidate, supabase, tables]);
+  }, [revalidator.revalidate, supabase, table, filter, accessToken]);
 }

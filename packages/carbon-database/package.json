@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@carbon/tsconfig": "*",
-    "@supabase/supabase-js": "^2.31.0",
+    "@supabase/supabase-js": "^2.33.1",
     "@types/node": "^18.15.0",
     "@types/uuid": "^8.3.4",
     "dotenv": "16.3.1",
@@ -35,7 +35,7 @@
     "eslint-config-carbon": "*",
     "npm-run-all": "^4.1.5",
     "rimraf": "^4.4.0",
-    "supabase": "1.77.9",
+    "supabase": "1.93.0",
     "tsup": "^6.5.0",
     "tsx": "^3.12.1",
     "typescript": "^4.9.3",

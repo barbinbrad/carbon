@@ -32,6 +32,7 @@ export const CollapsibleSidebar = ({ children }: PropsWithChildren<{}>) => {
       h="calc(100vh - 50px)"
       position="sticky"
       top={50}
+      zIndex={3}
     >
       <Tooltip label={sidebar.isOpen ? "Collapse" : "Expand"} placement="right">
         <IconButton

@@ -2,8 +2,11 @@ import type { Database } from "@carbon/database";
 import { isBrowser } from "@carbon/utils";
 import { createClient } from "@supabase/supabase-js";
 
-import { SUPABASE_API_URL, SUPABASE_ANON_PUBLIC } from "~/config/env";
-import { SUPABASE_SERVICE_ROLE } from "~/config/env";
+import {
+  SUPABASE_ANON_PUBLIC,
+  SUPABASE_API_URL,
+  SUPABASE_SERVICE_ROLE,
+} from "~/config/env";
 
 const getSupabaseClient = (supabaseKey: string, accessToken?: string) => {
   const global = accessToken

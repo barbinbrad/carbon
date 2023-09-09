@@ -4,7 +4,7 @@ import { isBrowser } from "@carbon/utils";
 import { useFetcher } from "@remix-run/react";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { ReactElement } from "react";
-import { createContext, useContext, useState, useMemo, useRef } from "react";
+import { createContext, useContext, useMemo, useRef, useState } from "react";
 
 import type { AuthSession } from "~/services/auth";
 import { getSupabase } from "./client";

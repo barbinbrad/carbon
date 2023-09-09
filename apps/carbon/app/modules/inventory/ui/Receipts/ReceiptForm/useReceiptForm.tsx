@@ -10,6 +10,7 @@ import type {
   ReceiptLineItem,
   ReceiptSourceDocument,
 } from "~/modules/inventory/types";
+import type { PurchaseOrderLine } from "~/modules/purchasing";
 import type { ListItem } from "~/types";
 import type { TypeOfValidator } from "~/types/validators";
 
@@ -150,21 +151,16 @@ export default function useReceiptForm({
       case "Purchase Order":
         const [
           purchaseOrder,
-          purchaseOrderLines,
           receiptLines,
           previouslyReceivedLines,
+          purchaseOrderLines,
         ] = await Promise.all([
           supabase
             .from("purchase_order_view")
             .select("*")
             .eq("id", sourceDocumentId)
             .single(),
-          supabase
-            .from("purchaseOrderLine")
-            .select("*")
-            .eq("purchaseOrderId", sourceDocumentId)
-            .eq("purchaseOrderLineType", "Part")
-            .eq("locationId", locationId),
+
           supabase
             .from("receiptLine")
             .select("*")
@@ -173,6 +169,14 @@ export default function useReceiptForm({
             .from("receipt_quantity_received_by_line")
             .select("*")
             .eq("sourceDocumentId", sourceDocumentId),
+          locationId
+            ? supabase
+                .from("purchaseOrderLine")
+                .select("*")
+                .eq("purchaseOrderId", sourceDocumentId)
+                .eq("purchaseOrderLineType", "Part")
+                .eq("locationId", locationId)
+            : Promise.resolve({ data: [] as PurchaseOrderLine[], error: null }),
         ]);
 
         if (purchaseOrder.error) {

@@ -15,7 +15,7 @@ type ReceiptsTableProps = {
 };
 
 const ReceiptsTable = memo(({ data, count }: ReceiptsTableProps) => {
-  useRealtime(["receipts"]);
+  useRealtime("receipt");
 
   const [params] = useUrlParams();
   const navigate = useNavigate();

@@ -2680,7 +2680,7 @@ CREATE TRIGGER update_equipment_search_result
 
 
 
-## `realtime-users`
+## `realtime`
 
 ```sql
 BEGIN;
@@ -2691,8 +2691,6 @@ BEGIN;
   CREATE publication supabase_realtime;
 COMMIT;
 
--- add a table to the publication
-ALTER publication supabase_realtime ADD TABLE "user";
 ```
 
 
@@ -5415,6 +5413,12 @@ CREATE TYPE "receiptSourceDocument" AS ENUM (
   'Manufacturing Output'
 );
 
+CREATE TYPE "receiptStatus" AS ENUM (
+  'Draft',
+  'Pending',
+  'Posted'
+);
+
 CREATE TABLE "receipt" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "receiptId" TEXT NOT NULL,
@@ -5423,6 +5427,7 @@ CREATE TABLE "receipt" (
   "sourceDocumentId" TEXT,
   "sourceDocumentReadableId" TEXT,
   "supplierId" TEXT,
+  "status" "receiptStatus" NOT NULL DEFAULT 'Draft',
   "postingDate" DATE,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   "createdBy" TEXT NOT NULL,
@@ -5444,12 +5449,10 @@ CREATE INDEX "receipt_supplierId_idx" ON "receipt" ("supplierId");
 
 ALTER TABLE "receipt" ENABLE ROW LEVEL SECURITY;
 
+-- TODO: this is a workaround to get around a bug with realtime subscriptions not working with the standard RLS
 CREATE POLICY "Employees with inventory_view can view receipts" ON "receipt"
   FOR SELECT
-  USING (
-    coalesce(get_my_claim('inventory_view')::boolean, false) = true 
-    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
-  );
+  USING (true);
   
 
 CREATE POLICY "Employees with inventory_create can insert receipts" ON "receipt"
@@ -5472,6 +5475,8 @@ CREATE POLICY "Employees with inventory_delete can delete receipts" ON "receipt"
     coalesce(get_my_claim('inventory_delete')::boolean, false) = true 
     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
   );
+
+ALTER publication supabase_realtime ADD TABLE "receipt";
 
 CREATE TABLE "receiptLine" (
   "id" TEXT NOT NULL DEFAULT xid(),

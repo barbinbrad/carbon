@@ -23,7 +23,7 @@
     "db:kill:supabase": "yarn workspace @carbon/database supabase stop --no-backup",
     "db:kill:redis": "yarn workspace @carbon/redis db:kill",
     "db:types": "yarn workspace @carbon/database db:types",
-    "db:function:new": "yarn workspace @carbon/database supabase function new",
+    "db:function:new": "yarn workspace @carbon/database supabase functions new",
     "db:migrate": "yarn workspace @carbon/database db:migrate",
     "db:migrate:new": "yarn workspace @carbon/database supabase migration new",
     "db:push": "turbo run db:push",

@@ -1,6 +1,5 @@
 import { Queue } from "~/lib/bullmq";
 import { getSupabaseServiceRole } from "~/lib/supabase";
-import { postReceipt } from "~/modules/accounting";
 
 export enum PostingQueueType {
   Receipt = "receipt",
@@ -18,7 +17,11 @@ export const postingQueue = Queue<PostingQueueData>(
   async (job) => {
     switch (job.data.type) {
       case "receipt":
-        await postReceipt(client, job.data.documentId);
+        await client.functions.invoke("post-receipt", {
+          body: {
+            receiptId: job.data.documentId,
+          },
+        });
         break;
       default:
         break;

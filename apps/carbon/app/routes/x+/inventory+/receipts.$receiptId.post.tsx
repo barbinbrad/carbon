@@ -1,7 +1,6 @@
 import type { ActionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { getSupabaseServiceRole } from "~/lib/supabase";
-import { postReceipt } from "~/modules/accounting";
 import { ReceiptPostModal } from "~/modules/inventory";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
@@ -21,13 +20,19 @@ export async function action({ request, params }: ActionArgs) {
 
   switch (formData.get("intent")) {
     case "receive":
-      const post = await postReceipt(client, receiptId);
+      const post = await client.functions.invoke("post-receipt", {
+        body: {
+          receiptId,
+        },
+      });
+
       if (post.error) {
         return redirect(
           `/x/inventory/receipts`,
           await flash(request, error("Failed to post receipt"))
         );
       }
+
       return redirect(
         `/x/inventory/receipts`,
         await flash(request, success("Successfully posted receipt"))

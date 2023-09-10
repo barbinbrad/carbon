@@ -3,6 +3,8 @@ import { redis } from "@carbon/redis";
 import { redirect } from "@remix-run/node";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { getSupabaseServiceRole } from "~/lib/supabase";
+import { getSupplierContact } from "~/modules/purchasing";
+import { getCustomerContact } from "~/modules/sales";
 import type {
   EmployeeRow,
   EmployeeTypePermission,
@@ -10,14 +12,12 @@ import type {
   Permission,
   User,
 } from "~/modules/users";
-import { getSupplierContact } from "~/modules/purchasing";
 import {
   deleteAuthAccount,
   sendInviteByEmail,
   sendMagicLink,
 } from "~/services/auth";
-import { getCustomerContact } from "~/modules/sales";
-import { requireAuthSession, flash } from "~/services/session";
+import { flash, requireAuthSession } from "~/services/session";
 import type { Result } from "~/types";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";

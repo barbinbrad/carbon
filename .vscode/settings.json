@@ -1,0 +1,7 @@
+{
+  "deno.cacheOnSave": true,
+  "deno.enablePaths": ["./packages/carbon-database/supabase/functions"],
+  "deno.unstable": false,
+  "deno.lint": true,
+  "typescript.tsdk": "node_modules/typescript/lib"
+}

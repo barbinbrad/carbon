@@ -1,5 +1,3 @@
-/* eslint-disable require-yield */
-// deno-lint-ignore-file require-yield
 import type {
   Pool,
   PoolClient,
@@ -139,6 +137,7 @@ class PostgresConnection implements DatabaseConnection {
     }
   }
 
+  // deno-lint-ignore require-yield
   async *streamQuery<O>(
     _compiledQuery: CompiledQuery,
     chunkSize: number

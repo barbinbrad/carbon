@@ -12,8 +12,10 @@ interface DB {
   generalLedger: Database["public"]["Tables"]["generalLedger"]["Insert"];
   purchaseOrderLine: Database["public"]["Tables"]["purchaseOrderLine"]["Update"];
   partLedger: Database["public"]["Tables"]["partLedger"]["Insert"];
+  partLedgerValueLedgerRelation: Database["public"]["Tables"]["partLedgerValueLedgerRelation"]["Insert"];
   receipt: Database["public"]["Tables"]["receipt"]["Update"];
   valueLedger: Database["public"]["Tables"]["valueLedger"]["Insert"];
+  valueLedgerGeneralLedgerRelation: Database["public"]["Tables"]["valueLedgerGeneralLedgerRelation"]["Insert"];
 }
 
 const pool = getConnectionPool(1);
@@ -223,20 +225,65 @@ serve(async (req: Request) => {
               .execute();
           }
 
-          await trx
+          const partLedgerIds = await trx
             .insertInto("partLedger")
             .values(partLedgerInserts)
+            .returning(["id"])
             .execute();
 
-          await trx
+          const generalLedgerIds = await trx
             .insertInto("generalLedger")
             .values(generalLedgerInserts)
+            .returning(["id"])
             .execute();
 
-          await trx
+          const valueLedgerIds = await trx
             .insertInto("valueLedger")
             .values(valueLedgerInserts)
+            .returning(["id"])
             .execute();
+
+          const glEntriesPerValueEntry =
+            generalLedgerIds.length / valueLedgerIds.length;
+          if (
+            glEntriesPerValueEntry !== 2 ||
+            partLedgerIds.length !== valueLedgerIds.length
+          ) {
+            throw new Error("Failed to insert ledger entries");
+          }
+
+          for (let i = 0; i < valueLedgerIds.length; i++) {
+            const valueLedgerId = valueLedgerIds[i].id;
+            const partLedgerId = partLedgerIds[i].id;
+
+            if (!valueLedgerId || !partLedgerId) {
+              throw new Error("Failed to insert ledger entries");
+            }
+
+            await trx
+              .insertInto("partLedgerValueLedgerRelation")
+              .values({
+                partLedgerId,
+                valueLedgerId,
+              })
+              .execute();
+
+            for (let j = 0; j < glEntriesPerValueEntry; j++) {
+              const generalLedgerId =
+                generalLedgerIds[i * glEntriesPerValueEntry + j].id;
+              if (!generalLedgerId) {
+                throw new Error("Failed to insert ledger entries");
+              }
+
+              await trx
+                .insertInto("valueLedgerGeneralLedgerRelation")
+                .values({
+                  valueLedgerId,
+                  generalLedgerId,
+                })
+                .execute();
+            }
+          }
 
           await trx
             .updateTable("receipt")

@@ -59,8 +59,6 @@ The monorepo follows the Turborepo covention of grouping packages into one of tw
 
 ## Local Development
 
-<!-- TODO: requirements for Upstash, Supabase, Github -->
-
 Make sure that you have [Docker installed](https://docs.docker.com/desktop/install/mac-install/) and [yarn installed](https://yarnpkg.com/lang/en/docs/install/#debian-stable)
 on your system since this monorepo uses the yarn package manager.
 
@@ -73,6 +71,7 @@ After running the steps below you should be able to access the following apps/co
 | Supabase Studio | [http://localhost:54323/project/default](http://localhost:54323/project/default)                                   |
 | Inbucket        | [http://localhost:54324/monitor](http://localhost:54324/monitor)                                                   |
 | Redis           | [redis://localhost:6379](redis://localhost:6379)                                                                   |
+| Edge Functions  | [http://localhost:54321/functions/v1/<function-name>](http://localhost:54321/functions/v1/<function-name>)         |
 
 First download and initialize the repository dependencies.
 

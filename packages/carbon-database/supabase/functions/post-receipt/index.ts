@@ -109,21 +109,16 @@ serve(async (req: Request) => {
               (purchaseOrderLine.quantityReceived ?? 0) +
               receiptLine.receivedQuantity;
 
-            const newQuantityToReceive =
-              (purchaseOrderLine.quantityToReceive ??
-                purchaseOrderLine.purchaseQuantity) -
-              receiptLine.receivedQuantity;
-
             const receivedComplete =
+              purchaseOrderLine.receivedComplete ||
               receiptLine.receivedQuantity >=
-              (purchaseOrderLine.quantityToReceive ??
-                purchaseOrderLine.purchaseQuantity);
+                (purchaseOrderLine.quantityToReceive ??
+                  purchaseOrderLine.purchaseQuantity);
 
             return {
               ...acc,
               [purchaseOrderLine.id]: {
                 quantityReceived: newQuantityReceived,
-                quantityToReceive: newQuantityToReceive,
                 receivedComplete,
               },
             };

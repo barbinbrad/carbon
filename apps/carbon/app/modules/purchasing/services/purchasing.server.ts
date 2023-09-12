@@ -1,4 +1,5 @@
 import type { Database } from "@carbon/database";
+import { getLocalTimeZone, today } from "@internationalized/date";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { getSupabaseServiceRole } from "~/lib/supabase";
 import { getEmployeeJob } from "~/modules/resources";
@@ -24,7 +25,7 @@ export async function closePurchaseOrder(
     .from("purchaseOrder")
     .update({
       closed: true,
-      closedAt: new Date().toISOString(),
+      closedAt: today(getLocalTimeZone()).toString(),
       closedBy: userId,
     })
     .eq("id", purchaseOrderId)
@@ -331,6 +332,23 @@ export async function insertSupplier(
       })
 ) {
   return client.from("supplier").insert([supplier]).select("id").single();
+}
+
+export async function getUninvoicedReceipts(
+  client: SupabaseClient<Database>,
+  args?: GenericQueryFilters
+) {
+  let query = client
+    .from("receipt")
+    .select("*")
+    .eq("status", "Posted")
+    .eq("invoiced", false);
+
+  if (args) {
+    query = setGenericQueryFilters(query, args, "name");
+  }
+
+  return query;
 }
 
 export async function insertSupplierContact(

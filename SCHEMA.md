@@ -5475,6 +5475,7 @@ CREATE TABLE "receipt" (
   "supplierId" TEXT,
   "status" "receiptStatus" NOT NULL DEFAULT 'Draft',
   "postingDate" DATE,
+  "invoiced" BOOLEAN DEFAULT FALSE,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   "createdBy" TEXT NOT NULL,
   "updatedAt" TIMESTAMP WITH TIME ZONE,
@@ -5596,6 +5597,39 @@ CREATE VIEW "receipt_quantity_received_by_line" AS
     ON l."receiptId" = r."receiptId"
   GROUP BY r."sourceDocumentId", l."lineId";
 
+CREATE VIEW "receipts_posted_not_invoiced" AS 
+  SELECT 
+    r."id",
+    r."receiptId",
+    r."sourceDocument",
+    r."sourceDocumentId",
+    r."sourceDocumentReadableId",
+    r."postingDate",
+    r."supplierId",
+    s."name" AS "supplierName",
+    SUM(l."receivedQuantity" * l."unitPrice") AS "estimatedCost"
+  FROM "receipt" r
+  INNER JOIN "receiptLine" l
+    ON l."receiptId" = r."receiptId"
+  INNER JOIN "supplier" s
+    ON s."id" = r."supplierId"
+  WHERE r."status" = 'Posted'
+    AND r."invoiced" = FALSE
+    AND r."sourceDocument" != 'Manufacturing Consumption'
+    AND r."sourceDocument" != 'Manufacturing Output'
+    AND r."sourceDocument" != 'Inbound Transfer'
+    AND r."sourceDocument" != 'Outbound Transfer'
+
+  GROUP BY 
+    r."id",
+    r."receiptId",
+    r."sourceDocument",
+    r."sourceDocumentId",
+    r."sourceDocumentReadableId",
+    r."postingDate",
+    r."supplierId",
+    s."name";
+;
 ```
 
 

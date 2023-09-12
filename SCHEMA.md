@@ -5219,8 +5219,8 @@ CREATE TABLE "generalLedger" (
   "description" TEXT,
   "amount" NUMERIC(19, 4) NOT NULL,
   "documentType" "generalLedgerDocumentType", 
-  "documentNumber" TEXT,
-  "externalDocumentNumber" TEXT,
+  "documentId" TEXT,
+  "externalDocumentId" TEXT,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
 
   CONSTRAINT "generalLedger_pkey" PRIMARY KEY ("id"),
@@ -5298,7 +5298,8 @@ CREATE TABLE "valueLedger" (
   "costLedgerType" "costLedgerType" NOT NULL,
   "adjustment" BOOLEAN NOT NULL DEFAULT false,
   "documentType" "partLedgerDocumentType",
-  "documentNumber" TEXT,
+  "documentId" TEXT,
+  "externalDocumentId" TEXT,
   "costAmountActual" NUMERIC(19, 4) NOT NULL DEFAULT 0,
   "costAmountExpected" NUMERIC(19, 4) NOT NULL DEFAULT 0,
   "actualCostPostedToGl" NUMERIC(19, 4) NOT NULL DEFAULT 0,
@@ -5342,7 +5343,8 @@ CREATE TABLE "partLedger" (
   "postingDate" DATE NOT NULL DEFAULT CURRENT_DATE,
   "entryType" "partLedgerType" NOT NULL,
   "documentType" "partLedgerDocumentType",
-  "documentNumber" TEXT,
+  "documentId" TEXT,
+  "externalDocumentId" TEXT,
   "partId" TEXT NOT NULL,
   "locationId" TEXT,
   "shelfId" TEXT,
@@ -5385,6 +5387,30 @@ CREATE POLICY "Employees with accounting_view can view the part ledger/value led
     (get_my_claim('role'::text)) = '"employee"'::jsonb
   );
 
+CREATE TYPE "supplierLedgerDocumentType" AS ENUM (
+  'Payment',
+  'Invoice',
+  'Credit Memo',
+  'Finance Charge Memo',
+  'Reminder',
+  'Refund'
+);
+
+CREATE TABLE "supplierLedger" (
+  "id" TEXT NOT NULL DEFAULT xid(),
+  "entryNumber" SERIAL,
+  "postingDate" DATE NOT NULL DEFAULT CURRENT_DATE,
+  "documentType" "supplierLedgerDocumentType",
+  "documentId" TEXT,
+  "externalDocumentId" TEXT,
+  "supplierId" TEXT NOT NULL,
+  "amount" NUMERIC(19, 4) NOT NULL,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+
+  CONSTRAINT "supplierLedger_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "supplierLedger_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "supplier"("id") ON UPDATE CASCADE ON DELETE CASCADE
+);
+
 
 CREATE OR REPLACE FUNCTION gl_transactions_by_account_number(
   from_date DATE DEFAULT (now() - INTERVAL '100 year'),
@@ -5409,6 +5435,8 @@ AS $$
       GROUP BY a."number";
   END;
 $$;
+
+
 
 
 
@@ -5443,6 +5471,7 @@ CREATE TABLE "receipt" (
   "sourceDocument" "receiptSourceDocument",
   "sourceDocumentId" TEXT,
   "sourceDocumentReadableId" TEXT,
+  "externalDocumentId" TEXT,
   "supplierId" TEXT,
   "status" "receiptStatus" NOT NULL DEFAULT 'Draft',
   "postingDate" DATE,

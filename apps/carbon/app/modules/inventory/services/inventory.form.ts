@@ -22,6 +22,7 @@ export const receiptValidator = withZod(
     sourceDocumentId: zfd.text(
       z.string().min(1, { message: "Source Document ID is required" })
     ),
+    externalDocumentId: zfd.text(z.string().optional()),
     sourceDocumentReadableId: zfd.text(z.string().optional()),
     supplierId: zfd.text(z.string().optional()),
   })

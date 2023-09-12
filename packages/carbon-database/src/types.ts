@@ -2358,12 +2358,12 @@ export interface Database {
           amount: number
           createdAt: string
           description: string | null
-          documentNumber: string | null
+          documentId: string | null
           documentType:
             | Database["public"]["Enums"]["generalLedgerDocumentType"]
             | null
           entryNumber: number
-          externalDocumentNumber: string | null
+          externalDocumentId: string | null
           id: string
           postingDate: string
         }
@@ -2372,12 +2372,12 @@ export interface Database {
           amount: number
           createdAt?: string
           description?: string | null
-          documentNumber?: string | null
+          documentId?: string | null
           documentType?:
             | Database["public"]["Enums"]["generalLedgerDocumentType"]
             | null
           entryNumber?: number
-          externalDocumentNumber?: string | null
+          externalDocumentId?: string | null
           id?: string
           postingDate?: string
         }
@@ -2386,12 +2386,12 @@ export interface Database {
           amount?: number
           createdAt?: string
           description?: string | null
-          documentNumber?: string | null
+          documentId?: string | null
           documentType?:
             | Database["public"]["Enums"]["generalLedgerDocumentType"]
             | null
           entryNumber?: number
-          externalDocumentNumber?: string | null
+          externalDocumentId?: string | null
           id?: string
           postingDate?: string
         }
@@ -2938,12 +2938,13 @@ export interface Database {
       partLedger: {
         Row: {
           createdAt: string
-          documentNumber: string | null
+          documentId: string | null
           documentType:
             | Database["public"]["Enums"]["partLedgerDocumentType"]
             | null
           entryNumber: number
           entryType: Database["public"]["Enums"]["partLedgerType"]
+          externalDocumentId: string | null
           id: string
           locationId: string | null
           partId: string
@@ -2953,12 +2954,13 @@ export interface Database {
         }
         Insert: {
           createdAt?: string
-          documentNumber?: string | null
+          documentId?: string | null
           documentType?:
             | Database["public"]["Enums"]["partLedgerDocumentType"]
             | null
           entryNumber?: number
           entryType: Database["public"]["Enums"]["partLedgerType"]
+          externalDocumentId?: string | null
           id?: string
           locationId?: string | null
           partId: string
@@ -2968,12 +2970,13 @@ export interface Database {
         }
         Update: {
           createdAt?: string
-          documentNumber?: string | null
+          documentId?: string | null
           documentType?:
             | Database["public"]["Enums"]["partLedgerDocumentType"]
             | null
           entryNumber?: number
           entryType?: Database["public"]["Enums"]["partLedgerType"]
+          externalDocumentId?: string | null
           id?: string
           locationId?: string | null
           partId?: string
@@ -4748,6 +4751,7 @@ export interface Database {
         Row: {
           createdAt: string
           createdBy: string
+          externalDocumentId: string | null
           id: string
           locationId: string | null
           postingDate: string | null
@@ -4765,6 +4769,7 @@ export interface Database {
         Insert: {
           createdAt?: string
           createdBy: string
+          externalDocumentId?: string | null
           id?: string
           locationId?: string | null
           postingDate?: string | null
@@ -4782,6 +4787,7 @@ export interface Database {
         Update: {
           createdAt?: string
           createdBy?: string
+          externalDocumentId?: string | null
           id?: string
           locationId?: string | null
           postingDate?: string | null
@@ -5585,6 +5591,79 @@ export interface Database {
           }
         ]
       }
+      supplierLedger: {
+        Row: {
+          amount: number
+          createdAt: string
+          documentId: string | null
+          documentType:
+            | Database["public"]["Enums"]["supplierLedgerDocumentType"]
+            | null
+          entryNumber: number
+          externalDocumentId: string | null
+          id: string
+          postingDate: string
+          supplierId: string
+        }
+        Insert: {
+          amount: number
+          createdAt?: string
+          documentId?: string | null
+          documentType?:
+            | Database["public"]["Enums"]["supplierLedgerDocumentType"]
+            | null
+          entryNumber?: number
+          externalDocumentId?: string | null
+          id?: string
+          postingDate?: string
+          supplierId: string
+        }
+        Update: {
+          amount?: number
+          createdAt?: string
+          documentId?: string | null
+          documentType?:
+            | Database["public"]["Enums"]["supplierLedgerDocumentType"]
+            | null
+          entryNumber?: number
+          externalDocumentId?: string | null
+          id?: string
+          postingDate?: string
+          supplierId?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "supplierLedger_supplierId_fkey"
+            columns: ["supplierId"]
+            referencedRelation: "supplier"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "supplierLedger_supplierId_fkey"
+            columns: ["supplierId"]
+            referencedRelation: "contractors_view"
+            referencedColumns: ["supplierId"]
+          },
+          {
+            foreignKeyName: "supplierLedger_supplierId_fkey"
+            columns: ["supplierId"]
+            referencedRelation: "partners_view"
+            referencedColumns: ["supplierId"]
+          },
+          {
+            foreignKeyName: "supplierLedger_supplierId_fkey"
+            columns: ["supplierId"]
+            referencedRelation: "purchase_order_suppliers_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "supplierLedger_supplierId_fkey"
+            columns: ["supplierId"]
+            referencedRelation: "suppliers_view"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       supplierLocation: {
         Row: {
           addressId: string
@@ -6128,12 +6207,13 @@ export interface Database {
           costAmountExpected: number
           costLedgerType: Database["public"]["Enums"]["costLedgerType"]
           createdAt: string
-          documentNumber: string | null
+          documentId: string | null
           documentType:
             | Database["public"]["Enums"]["partLedgerDocumentType"]
             | null
           entryNumber: number
           expectedCostPostedToGl: number
+          externalDocumentId: string | null
           id: string
           partLedgerType: Database["public"]["Enums"]["partLedgerType"]
           postingDate: string
@@ -6145,12 +6225,13 @@ export interface Database {
           costAmountExpected?: number
           costLedgerType: Database["public"]["Enums"]["costLedgerType"]
           createdAt?: string
-          documentNumber?: string | null
+          documentId?: string | null
           documentType?:
             | Database["public"]["Enums"]["partLedgerDocumentType"]
             | null
           entryNumber?: number
           expectedCostPostedToGl?: number
+          externalDocumentId?: string | null
           id?: string
           partLedgerType: Database["public"]["Enums"]["partLedgerType"]
           postingDate?: string
@@ -6162,12 +6243,13 @@ export interface Database {
           costAmountExpected?: number
           costLedgerType?: Database["public"]["Enums"]["costLedgerType"]
           createdAt?: string
-          documentNumber?: string | null
+          documentId?: string | null
           documentType?:
             | Database["public"]["Enums"]["partLedgerDocumentType"]
             | null
           entryNumber?: number
           expectedCostPostedToGl?: number
+          externalDocumentId?: string | null
           id?: string
           partLedgerType?: Database["public"]["Enums"]["partLedgerType"]
           postingDate?: string
@@ -7227,6 +7309,13 @@ export interface Database {
         | "Sales Order"
         | "Document"
       shippingCarrier: "UPS" | "FedEx" | "USPS" | "DHL" | "Other"
+      supplierLedgerDocumentType:
+        | "Payment"
+        | "Invoice"
+        | "Credit Memo"
+        | "Finance Charge Memo"
+        | "Reminder"
+        | "Refund"
     }
     CompositeTypes: {
       [_ in never]: never

@@ -133,8 +133,8 @@ export const generalLedgerValidator = withZod(
     description: z.string().optional(),
     amount: z.number(),
     documentType: z.union([z.enum(generalLedgerDocumentType), z.undefined()]),
-    documentNumber: z.string().optional(),
-    externalDocumentNumber: z.string().optional(),
+    documentId: z.string().optional(),
+    externalDocumentId: z.string().optional(),
   })
 );
 
@@ -284,7 +284,7 @@ export const partLedgerValidator = withZod(
     postingDate: zfd.text(z.string().optional()),
     entryType: z.enum(partLedgerTypes),
     documentType: z.union([z.enum(partLedgerDocumentTypes), z.undefined()]),
-    documentNumber: z.string().optional(),
+    documentId: z.string().optional(),
     partId: z.string().min(1, { message: "Part is required" }),
     locationId: z.string().optional(),
     shelfId: z.string().optional(),
@@ -331,7 +331,7 @@ export const valueLedgerValidator = withZod(
     costLedgerType: z.enum(costLedgerTypes),
     adjustment: z.boolean(),
     documentType: z.union([z.enum(partLedgerDocumentTypes), z.undefined()]),
-    documentNumber: z.string().optional(),
+    documentId: z.string().optional(),
     costAmountActual: z.number(),
     costAmountExpected: z.number(),
     actualCostPostedToGl: z.number(),

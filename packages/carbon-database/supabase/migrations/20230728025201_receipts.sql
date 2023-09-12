@@ -22,6 +22,7 @@ CREATE TABLE "receipt" (
   "sourceDocument" "receiptSourceDocument",
   "sourceDocumentId" TEXT,
   "sourceDocumentReadableId" TEXT,
+  "externalDocumentId" TEXT,
   "supplierId" TEXT,
   "status" "receiptStatus" NOT NULL DEFAULT 'Draft',
   "postingDate" DATE,

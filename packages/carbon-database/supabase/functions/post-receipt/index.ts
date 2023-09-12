@@ -76,10 +76,19 @@ serve(async (req: Request) => {
         if (!receipt.data.sourceDocumentId)
           throw new Error("Receipt has no sourceDocumentId");
 
-        const purchaseOrderLines = await client
-          .from("purchaseOrderLine")
-          .select("*")
-          .eq("purchaseOrderId", receipt.data.sourceDocumentId);
+        const [purchaseOrder, purchaseOrderLines] = await Promise.all([
+          client
+            .from("purchaseOrder")
+            .select("*")
+            .eq("id", receipt.data.sourceDocumentId)
+            .single(),
+          client
+            .from("purchaseOrderLine")
+            .select("*")
+            .eq("purchaseOrderId", receipt.data.sourceDocumentId),
+        ]);
+        if (purchaseOrder.error)
+          throw new Error("Failed to fetch purchase order");
         if (purchaseOrderLines.error)
           throw new Error("Failed to fetch purchase order lines");
 
@@ -142,7 +151,8 @@ serve(async (req: Request) => {
             costLedgerType: "Direct Cost",
             adjustment: false,
             documentType: "Purchase Receipt",
-            documentNumber: receipt.data?.sourceDocumentId ?? undefined,
+            documentId: receipt.data?.receiptId ?? undefined,
+            externalDocumentId: receipt.data?.externalDocumentId ?? undefined,
             costAmountActual: 0,
             costAmountExpected: expectedValue,
             actualCostPostedToGl: 0,
@@ -153,7 +163,8 @@ serve(async (req: Request) => {
           partLedgerInserts.push({
             entryType: "Positive Adjmt.",
             documentType: "Purchase Receipt",
-            documentNumber: receipt.data?.sourceDocumentId ?? undefined,
+            documentId: receipt.data?.receiptId ?? undefined,
+            externalDocumentId: receipt.data?.externalDocumentId ?? undefined,
             partId: receiptLine.partId,
             locationId: receiptLine.locationId ?? undefined,
             shelfId: receiptLine.shelfId ?? undefined,
@@ -191,22 +202,26 @@ serve(async (req: Request) => {
               postingGroup;
           }
 
-          if (postingGroup) {
-            generalLedgerInserts.push({
-              accountNumber: postingGroup.inventoryInterimAccrualAccount,
-              description: "Interim Inventory Accrual",
-              amount: -expectedValue,
-              documentType: "Order",
-              documentNumber: receipt.data?.sourceDocumentId ?? undefined,
-            });
-            generalLedgerInserts.push({
-              accountNumber: postingGroup.inventoryReceivedNotInvoicedAccount,
-              description: "Inventory Received Not Invoiced",
-              amount: expectedValue,
-              documentType: "Order",
-              documentNumber: receipt.data?.sourceDocumentId ?? undefined,
-            });
+          if (!postingGroup) {
+            throw new Error("No inventory posting group found");
           }
+
+          generalLedgerInserts.push({
+            accountNumber: postingGroup.inventoryInterimAccrualAccount,
+            description: "Interim Inventory Accrual",
+            amount: -expectedValue,
+            documentType: "Order",
+            documentId: receipt.data?.sourceDocumentReadableId ?? undefined,
+            externalDocumentId:
+              purchaseOrder.data?.supplierReference ?? undefined,
+          });
+          generalLedgerInserts.push({
+            accountNumber: postingGroup.inventoryReceivedNotInvoicedAccount,
+            description: "Inventory Received Not Invoiced",
+            amount: expectedValue,
+            documentType: "Order",
+            documentId: receipt.data?.sourceDocumentReadableId ?? undefined,
+          });
         }
 
         await db.transaction().execute(async (trx) => {

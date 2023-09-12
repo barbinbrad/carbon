@@ -133,3 +133,78 @@ export async function createPerson(
   For more information on the service layer, see the [Supabase
   documentation](https://supabase.io/docs/reference/javascript/insert)
 </Callout>
+
+## Transactions
+
+When a database transaction is needed, use a deno-based edge function. The reason for this is that the supabase client currently does not support transactions.
+
+To create a new edge function run `yarn db:function:new <name-of-function>`
+
+This will create a new edge function in `packages/carbon-database/supabase/functions/<name-of-function>`.
+
+The pattern for the transaction looks like this:
+
+```ts
+import { serve } from "https://deno.land/std@0.175.0/http/server.ts";
+import { format } from "https://deno.land/std@0.91.0/datetime/mod.ts";
+import type { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2.33.1";
+
+import type { Database } from "../../../src/types.ts";
+import { getConnectionPool, getDatabaseClient } from "../lib/database.ts";
+import { corsHeaders } from "../lib/headers.ts";
+import { getSupabaseServiceRole } from "../lib/supabase.ts";
+
+// Use the supabase types to define a subset of the database we'll transact with
+interface DB {
+  generalLedger: Database["public"]["Tables"]["generalLedger"]["Update"];
+  partLedger: Database["public"]["Tables"]["partLedger"]["Insert"];
+  valueLedger: Database["public"]["Tables"]["valueLedger"]["Insert"];
+}
+
+const pool = getConnectionPool(1);
+const db = getDatabaseClient<DB>(pool);
+
+serve(async (req: Request) => {
+  try {
+    if (req.method === "OPTIONS") {
+      return new Response("ok", { headers: corsHeaders });
+    }
+
+    await db.transaction().execute(async (trx) => {
+      await trx
+        .updateTable("partLedger")
+        .set({
+          expectedCost: 0,
+        })
+        .where("id", "=", partLedgerId)
+        .execute();
+
+      const generalLedgerIds = await trx
+        .insertInto("generalLedger")
+        .values(generalLedgerInserts)
+        .execute();
+
+      const valueLedgerIds = await trx
+        .insertInto("valueLedger")
+        .values(valueLedgerInserts)
+        .execute();
+    });
+
+    return new Response(
+      JSON.stringify({
+        data: null,
+        error: null,
+      }),
+      {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      }
+    );
+  } catch (err) {
+    console.error(err);
+    return new Response(JSON.stringify(err), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 500,
+    });
+  }
+});
+```

@@ -336,17 +336,20 @@ export async function insertSupplier(
 
 export async function getUninvoicedReceipts(
   client: SupabaseClient<Database>,
-  args?: GenericQueryFilters
-) {
-  let query = client
-    .from("receipt")
-    .select("*")
-    .eq("status", "Posted")
-    .eq("invoiced", false);
-
-  if (args) {
-    query = setGenericQueryFilters(query, args, "name");
+  args?: GenericQueryFilters & {
+    supplier: string | null;
   }
+) {
+  let query = client.from("receipts_posted_not_invoiced").select("*");
+
+  if (args?.supplier) {
+    query = query.eq("supplierId", args.supplier);
+  }
+
+  if (args)
+    if (args) {
+      query = setGenericQueryFilters(query, args, "name");
+    }
 
   return query;
 }

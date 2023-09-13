@@ -160,6 +160,7 @@ CREATE INDEX "part_description_index" ON "part"("description");
 CREATE INDEX "part_partType_index" ON "part"("partType");
 CREATE INDEX "part_partGroupId_index" ON "part"("partGroupId");
 CREATE INDEX "part_replenishmentSystem_index" ON "part"("replenishmentSystem");
+CREATE INDEX "part_active_blocked_index" ON "part"("active", "blocked");
 
 ALTER TABLE "part" ENABLE ROW LEVEL SECURITY;
 

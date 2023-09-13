@@ -221,6 +221,8 @@ serve(async (req: Request) => {
             amount: expectedValue,
             documentType: "Order",
             documentId: receipt.data?.sourceDocumentReadableId ?? undefined,
+            externalDocumentId:
+              purchaseOrder.data?.supplierReference ?? undefined,
           });
         }
 

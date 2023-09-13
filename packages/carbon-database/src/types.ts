@@ -4753,6 +4753,7 @@ export interface Database {
           createdBy: string
           externalDocumentId: string | null
           id: string
+          invoiced: boolean | null
           locationId: string | null
           postingDate: string | null
           receiptId: string
@@ -4771,6 +4772,7 @@ export interface Database {
           createdBy: string
           externalDocumentId?: string | null
           id?: string
+          invoiced?: boolean | null
           locationId?: string | null
           postingDate?: string | null
           receiptId: string
@@ -4789,6 +4791,7 @@ export interface Database {
           createdBy?: string
           externalDocumentId?: string | null
           id?: string
+          invoiced?: boolean | null
           locationId?: string | null
           postingDate?: string | null
           receiptId?: string
@@ -4964,6 +4967,12 @@ export interface Database {
             foreignKeyName: "receiptLine_receiptId_fkey"
             columns: ["receiptId"]
             referencedRelation: "receipt"
+            referencedColumns: ["receiptId"]
+          },
+          {
+            foreignKeyName: "receiptLine_receiptId_fkey"
+            columns: ["receiptId"]
+            referencedRelation: "receipts_posted_not_invoiced"
             referencedColumns: ["receiptId"]
           },
           {
@@ -6998,6 +7007,53 @@ export interface Database {
         }
         Relationships: []
       }
+      receipts_posted_not_invoiced: {
+        Row: {
+          estimatedCost: number | null
+          id: string | null
+          postingDate: string | null
+          receiptId: string | null
+          sourceDocument:
+            | Database["public"]["Enums"]["receiptSourceDocument"]
+            | null
+          sourceDocumentId: string | null
+          sourceDocumentReadableId: string | null
+          supplierId: string | null
+          supplierName: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "receipt_supplierId_fkey"
+            columns: ["supplierId"]
+            referencedRelation: "supplier"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "receipt_supplierId_fkey"
+            columns: ["supplierId"]
+            referencedRelation: "contractors_view"
+            referencedColumns: ["supplierId"]
+          },
+          {
+            foreignKeyName: "receipt_supplierId_fkey"
+            columns: ["supplierId"]
+            referencedRelation: "partners_view"
+            referencedColumns: ["supplierId"]
+          },
+          {
+            foreignKeyName: "receipt_supplierId_fkey"
+            columns: ["supplierId"]
+            referencedRelation: "purchase_order_suppliers_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "receipt_supplierId_fkey"
+            columns: ["supplierId"]
+            referencedRelation: "suppliers_view"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       suppliers_view: {
         Row: {
           id: string | null
@@ -7023,6 +7079,12 @@ export interface Database {
             referencedColumns: ["id"]
           }
         ]
+      }
+      total_receipts_posted_not_invoiced: {
+        Row: {
+          total: number | null
+        }
+        Relationships: []
       }
       user_default_view: {
         Row: {

@@ -232,15 +232,17 @@ export default function useReceiptForm({
             return acc;
           }
 
+          const outstandingQuantity =
+            d.purchaseQuantity -
+            (previouslyReceivedQuantitiesByLine[d.id] ?? 0);
+
           acc.push({
             receiptId: receipt.receiptId,
             lineId: d.id,
             partId: d.partId,
             orderQuantity: d.purchaseQuantity,
-            outstandingQuantity:
-              d.purchaseQuantity -
-              (previouslyReceivedQuantitiesByLine[d.id] ?? 0),
-            receivedQuantity: 0,
+            outstandingQuantity,
+            receivedQuantity: outstandingQuantity,
             unitPrice: d.unitPrice,
             unitOfMeasure: d.unitOfMeasureCode ?? "EA",
             locationId: d.locationId,

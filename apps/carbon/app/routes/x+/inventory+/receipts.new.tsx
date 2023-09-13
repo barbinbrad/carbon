@@ -15,6 +15,11 @@ import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
 import { error, success } from "~/utils/result";
 
+// shouldRevalidate function
+export function shouldRevalidate() {
+  return false;
+}
+
 export async function loader({ request }: LoaderArgs) {
   const { client, userId } = await requirePermissions(request, {
     create: "inventory",

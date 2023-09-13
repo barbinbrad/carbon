@@ -42,7 +42,24 @@ const ReceiptsTable = memo(({ data, count }: ReceiptsTableProps) => {
       {
         accessorKey: "sourceDocumentReadableId",
         header: "Source Document ID",
-        cell: (item) => item.getValue() ?? null,
+        cell: ({ row }) => {
+          switch (row.original.sourceDocument) {
+            case "Purchase Order":
+              return (
+                <Link
+                  onClick={() =>
+                    navigate(
+                      `/x/purchase-order/${row.original.sourceDocumentId}`
+                    )
+                  }
+                >
+                  {row.original.sourceDocumentReadableId}
+                </Link>
+              );
+            default:
+              return null;
+          }
+        },
       },
       {
         accessorKey: "location.name",

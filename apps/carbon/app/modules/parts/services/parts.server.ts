@@ -160,7 +160,11 @@ export async function getPartsList(
   client: SupabaseClient<Database>,
   replenishmentSystem: PartReplenishmentSystem | null
 ) {
-  let query = client.from("part").select("id, name");
+  let query = client
+    .from("part")
+    .select("id, name")
+    .eq("blocked", false)
+    .eq("active", true);
   if (replenishmentSystem) {
     query = query.or(
       `replenishmentSystem.eq.${replenishmentSystem},replenishmentSystem.eq.Buy and Make`

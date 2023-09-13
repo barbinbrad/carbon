@@ -6,10 +6,25 @@ const accountingRoutes: AuthenticatedRouteGroup[] = [
     name: "Manage",
     routes: [
       {
+        name: "Accounts Payable",
+        to: "/x/accounting/payable",
+        role: "employee",
+      },
+      // {
+      //   name: "Accounts Receivable",
+      //   to: "/x/accounting/receivable",
+      //   role: "employee",
+      // },
+      {
         name: "Chart of Accounts",
         to: "/x/accounting/charts",
         role: "employee",
       },
+      // {
+      //   name: "Payments",
+      //   to: "/x/accounting/payments",
+      //   role: "employee",
+      // },
       // {
       //   name: "Journal Entries",
       //   to: "/x/accounting/journals",
@@ -20,6 +35,16 @@ const accountingRoutes: AuthenticatedRouteGroup[] = [
   {
     name: "Posting Groups",
     routes: [
+      // {
+      //   name: "Bank Account Groups",
+      //   to: "/x/accounting/groups/bank",
+      //   role: "employee",
+      // },
+      // {
+      //   name: "Fixed Asset Groups",
+      //   to: "/x/accounting/groups/fixed-asset",
+      //   role: "employee",
+      // },
       {
         name: "Inventory Groups",
         to: "/x/accounting/groups/inventory",

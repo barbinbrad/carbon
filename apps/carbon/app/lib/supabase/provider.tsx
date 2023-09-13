@@ -4,7 +4,14 @@ import { isBrowser } from "@carbon/utils";
 import { useFetcher } from "@remix-run/react";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { ReactElement } from "react";
-import { createContext, useContext, useMemo, useRef, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import type { AuthSession } from "~/services/auth";
 import { getSupabase } from "./client";
@@ -107,7 +114,7 @@ export const SupabaseProvider = ({
   session: Partial<AuthSession>;
 }) => {
   // what root loader data returns
-  const { accessToken, expiresIn, expiresAt } = session;
+  const { accessToken, refreshToken, expiresIn, expiresAt } = session;
   const [browserSessionExpiresAt, setBrowserSessionExpiresAt] = useState<
     number | undefined
   >();
@@ -142,6 +149,15 @@ export const SupabaseProvider = ({
     setSupabaseClient(getSupabase(accessToken));
     setBrowserSessionExpiresAt(expiresAt);
   }
+
+  useEffect(() => {
+    if (!supabase || !accessToken || !refreshToken) return;
+
+    supabase.auth.setSession({
+      access_token: accessToken,
+      refresh_token: refreshToken,
+    });
+  }, [accessToken, refreshToken, supabase]);
 
   const value = useMemo(
     () => ({ supabase, accessToken }),

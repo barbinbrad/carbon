@@ -361,7 +361,6 @@ export const Option = <
       isMulti,
       hideSelectedOptions,
       selectedOptionStyle,
-      // selectedOptionColor,
       chakraStyles,
     },
   } = props;
@@ -374,7 +373,7 @@ export const Option = <
     lg: "0.5rem 1rem",
   };
 
-  const selectedBg = useColor("gray.500");
+  const selectedBg = useColor("gray.900");
   const selectedColor = useColor("white");
 
   const showCheckIcon: boolean =

@@ -3,10 +3,14 @@ import { clip } from "@carbon/utils";
 import type { ButtonProps } from "@chakra-ui/react";
 import {
   Box,
+  Button,
+  Flex,
+  HStack,
   Icon,
   Input,
   InputGroup,
   InputLeftElement,
+  Kbd,
   List,
   ListItem,
   Modal,
@@ -14,10 +18,9 @@ import {
   ModalContent,
   ModalOverlay,
   Text,
-  VStack,
   useDisclosure,
+  VStack,
 } from "@chakra-ui/react";
-import { Button, Flex, HStack, Kbd } from "@chakra-ui/react";
 import { Link, useNavigate } from "@remix-run/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AiOutlinePartition } from "react-icons/ai";
@@ -225,9 +228,13 @@ const SearchModal = ({
                 <Result
                   key={result.uuid}
                   result={result}
-                  selected={selectedIndex === resultIndex}
+                  selected={
+                    selectedIndex === resultIndex + moduleResults.length
+                  }
                   onClick={onResultClick}
-                  onHover={() => setSelectedIndex(resultIndex)}
+                  onHover={() =>
+                    setSelectedIndex(resultIndex + moduleResults.length)
+                  }
                 />
               ))}
             </List>

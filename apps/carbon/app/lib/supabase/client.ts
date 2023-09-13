@@ -19,13 +19,22 @@ const getSupabaseClient = (supabaseKey: string, accessToken?: string) => {
       }
     : {};
 
-  return createClient<Database>(SUPABASE_API_URL, supabaseKey, {
+  const client = createClient<Database>(SUPABASE_API_URL, supabaseKey, {
     auth: {
       autoRefreshToken: false,
       persistSession: false,
     },
     ...global,
   });
+
+  if (accessToken) {
+    client.realtime.accessToken = accessToken;
+    client.realtime.headers = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+  }
+
+  return client;
 };
 
 /**

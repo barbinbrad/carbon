@@ -4,7 +4,7 @@ import { ReceiptPostModal } from "~/modules/inventory";
 import { postingQueue, PostingQueueType } from "~/queues";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
-import { error, success } from "~/utils/result";
+import { error } from "~/utils/result";
 
 export async function action({ request, params }: ActionArgs) {
   const { client } = await requirePermissions(request, {
@@ -40,10 +40,7 @@ export async function action({ request, params }: ActionArgs) {
         documentId: receiptId,
       });
 
-      return redirect(
-        `/x/inventory/receipts`,
-        await flash(request, success("Successfully posted receipt"))
-      );
+      return redirect(`/x/inventory/receipts`);
     default:
       break;
   }

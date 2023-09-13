@@ -5,8 +5,13 @@ import { useSupabase } from "~/lib/supabase";
 export function useRealtime(table: string, filter?: string) {
   const { accessToken, supabase } = useSupabase();
   const revalidator = useRevalidator();
+
   useEffect(() => {
     if (!supabase || !accessToken) return;
+    console.log("subscribing to realtime changes with access token", {
+      accessToken,
+      supabase,
+    });
     const channel = supabase
       .channel(`postgres_changes:${table}}`)
       .on(

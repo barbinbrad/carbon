@@ -3394,6 +3394,7 @@ CREATE INDEX "part_description_index" ON "part"("description");
 CREATE INDEX "part_partType_index" ON "part"("partType");
 CREATE INDEX "part_partGroupId_index" ON "part"("partGroupId");
 CREATE INDEX "part_replenishmentSystem_index" ON "part"("replenishmentSystem");
+CREATE INDEX "part_active_blocked_index" ON "part"("active", "blocked");
 
 ALTER TABLE "part" ENABLE ROW LEVEL SECURITY;
 
@@ -5500,7 +5501,8 @@ ALTER TABLE "receipt" ENABLE ROW LEVEL SECURITY;
 -- it seems the client is not sending the right JWT token when it subscribes to the realtime channel
 CREATE POLICY "Employees with inventory_view can view receipts" ON "receipt"
   FOR SELECT
-  USING (true);
+  USING (coalesce(get_my_claim('inventory_view')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
   
 
 CREATE POLICY "Employees with inventory_create can insert receipts" ON "receipt"

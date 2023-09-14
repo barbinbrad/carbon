@@ -10,7 +10,7 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 import { useMemo } from "react";
-import { MdPlaylistAdd, MdOutlineClear } from "react-icons/md";
+import { MdOutlineClear, MdPlaylistAdd } from "react-icons/md";
 import { Avatar } from "~/components";
 import useUserSelectContext from "../provider";
 import { isGroup } from "../useUserSelect";

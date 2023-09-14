@@ -2,8 +2,8 @@ import { Loading } from "@carbon/react";
 import type { IconProps } from "@chakra-ui/react";
 import { Box, HStack, Icon, List, ListItem, Text } from "@chakra-ui/react";
 import { FaCheck, FaChevronRight } from "react-icons/fa";
-import type { OptionGroup, IndividualOrGroup } from "../types";
 import useUserSelectContext from "../provider";
+import type { IndividualOrGroup, OptionGroup } from "../types";
 import { useGroupStyles, useOptionStyles } from "./useUserSelectStyles";
 
 const UserTreeSelect = () => {

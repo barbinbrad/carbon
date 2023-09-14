@@ -20,8 +20,8 @@ import { useState } from "react";
 import { BsPencilSquare } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { ConfirmDelete } from "~/components/Modals";
-import type { EquipmentTypeDetailType } from "~/modules/resources";
 import { useUrlParams } from "~/hooks";
+import type { EquipmentTypeDetailType } from "~/modules/resources";
 
 type Equipment = {
   id: string;

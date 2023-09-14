@@ -1,24 +1,23 @@
 import { useColor } from "@carbon/react";
 import {
   Box,
-  Image,
-  Text,
-  VStack,
-  useColorModeValue,
   Button,
   HStack,
+  Image,
+  Text,
+  useColorModeValue,
+  VStack,
 } from "@chakra-ui/react";
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { useNavigate } from "@remix-run/react";
 import { ValidatedForm, validationError } from "remix-validated-form";
 import { Password, Submit } from "~/components/Form";
-import { resetPasswordValidator } from "~/services/auth";
 import { resetPassword } from "~/modules/users";
-import { requireAuthSession, flash } from "~/services/session";
-import { error, success } from "~/utils/result";
+import { resetPasswordValidator } from "~/services/auth";
+import { flash, requireAuthSession } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { error, success } from "~/utils/result";
 
 export async function loader({ request }: LoaderArgs) {
   await requireAuthSession(request);

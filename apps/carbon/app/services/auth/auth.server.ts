@@ -4,11 +4,10 @@ import type {
   AuthSession as SupabaseAuthSession,
   SupabaseClient,
 } from "@supabase/supabase-js";
-import { VERCEL_URL } from "~/config/env";
-import { REFRESH_ACCESS_TOKEN_THRESHOLD } from "~/config/env";
+import { REFRESH_ACCESS_TOKEN_THRESHOLD, VERCEL_URL } from "~/config/env";
 import { getSupabase, getSupabaseServiceRole } from "~/lib/supabase";
-import { requireAuthSession, flash } from "~/services/session";
 import { getUserClaims } from "~/modules/users";
+import { flash, requireAuthSession } from "~/services/session";
 import { error } from "~/utils/result";
 import type { AuthSession } from "./types";
 

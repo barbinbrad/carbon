@@ -3,9 +3,9 @@ import {
   Box,
   IconButton,
   Tooltip,
-  VStack,
   useDisclosure,
   useOutsideClick,
+  VStack,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import type { ReactElement } from "react";

@@ -1,5 +1,5 @@
 import { useColor } from "@carbon/react";
-import { Button, Box, VStack } from "@chakra-ui/react";
+import { Box, Button, VStack } from "@chakra-ui/react";
 import { Link, useMatches, useParams } from "@remix-run/react";
 import { useRouteData } from "~/hooks";
 import type { PartSummary } from "~/modules/parts/types";

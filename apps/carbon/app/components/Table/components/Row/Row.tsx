@@ -3,11 +3,11 @@ import { Tr } from "@chakra-ui/react";
 import type { Row as RowType } from "@tanstack/react-table";
 import type { MutableRefObject } from "react";
 import { memo } from "react";
-import Cell from "../Cell";
 import type {
   EditableTableCellComponent,
   Position,
 } from "~/components/Editable";
+import Cell from "../Cell";
 
 type RowProps<T> = {
   borderColor: string;

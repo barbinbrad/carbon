@@ -27,13 +27,6 @@ const getSupabaseClient = (supabaseKey: string, accessToken?: string) => {
     ...global,
   });
 
-  if (accessToken) {
-    client.realtime.accessToken = accessToken;
-    client.realtime.headers = {
-      Authorization: `Bearer ${accessToken}`,
-    };
-  }
-
   return client;
 };
 

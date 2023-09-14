@@ -88,7 +88,10 @@ const ReceiptForm = ({
             <DrawerBody pb={8}>
               <VStack spacing={4} w="full" alignItems="start">
                 <Menubar mb={2} mt={-2}>
-                  <MenubarItem isDisabled={!isEditing} onClick={onPost}>
+                  <MenubarItem
+                    isDisabled={!isEditing || isPosted}
+                    onClick={onPost}
+                  >
                     Post Receipt
                   </MenubarItem>
                 </Menubar>

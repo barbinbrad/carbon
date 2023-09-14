@@ -1,4 +1,4 @@
-import type { OptionBase, GroupBase } from "@carbon/react";
+import type { GroupBase, OptionBase } from "@carbon/react";
 
 export interface TimeZoneSelection extends OptionBase {
   label: string;

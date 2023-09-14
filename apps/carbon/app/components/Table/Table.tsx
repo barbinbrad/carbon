@@ -3,17 +3,17 @@ import { clip } from "@carbon/utils";
 import type { ThemeTypings } from "@chakra-ui/react";
 import {
   Box,
+  chakra,
   Flex,
   Grid,
   MenuList,
   Table as ChakraTable,
   Tbody,
-  Thead,
   Th,
+  Thead,
   Tr,
   VisuallyHidden,
   VStack,
-  chakra,
 } from "@chakra-ui/react";
 import type {
   ColumnDef,
@@ -27,18 +27,18 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
+import { FaSort, FaSortDown, FaSortUp } from "react-icons/fa";
 import type {
   EditableTableCellComponent,
   Position,
 } from "~/components/Editable";
 import {
-  TableHeader,
   IndeterminateCheckbox,
   Pagination,
+  Row,
+  TableHeader,
   usePagination,
   useSort,
-  Row,
 } from "./components";
 import type { TableAction } from "./types";
 import { getAccessorKey, updateNestedProperty } from "./utils";

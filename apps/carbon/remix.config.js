@@ -33,10 +33,10 @@ module.exports = {
   ],
   watchPaths: async () => {
     return [
-      "../../packages/carbon-react/src/**/*",
-      "../../packages/carbon-database/src/**/*",
-      "../../packages/carbon-logger/src/**/*",
-      "../../packages/carbon-utils/src/**/*",
+      "../../packages/react/src/**/*",
+      "../../packages/database/src/**/*",
+      "../../packages/logger/src/**/*",
+      "../../packages/utils/src/**/*",
     ];
   },
 };

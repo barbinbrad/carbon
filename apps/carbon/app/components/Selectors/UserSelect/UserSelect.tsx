@@ -10,18 +10,18 @@
  * @see WAI-ARIA Tree View https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
  */
 
+import { Select } from "@carbon/react";
 import { FormLabel } from "@chakra-ui/react";
+import { usePermissions } from "~/hooks";
 import Combobox from "./components/Combobox";
 import Container from "./components/Container";
 import Input from "./components/Input";
 import Popover from "./components/Popover";
 import SelectionList from "./components/SelectionList";
 import TreeSelect from "./components/TreeSelect";
-import type { UserSelectProps } from "./types";
 import { UserSelectContext } from "./provider";
+import type { UserSelectProps } from "./types";
 import useUserSelect from "./useUserSelect";
-import { usePermissions } from "~/hooks";
-import { Select } from "@carbon/react";
 
 export default function Component(props: UserSelectProps) {
   const permissions = usePermissions();

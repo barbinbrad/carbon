@@ -1,7 +1,9 @@
 // root.tsx
 import { ThemeProvider } from "@carbon/react";
+import { Heading, VStack } from "@chakra-ui/react";
 import { SkipNavLink } from "@chakra-ui/skip-nav";
-import { VStack, Heading } from "@chakra-ui/react";
+import type { MetaFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -11,8 +13,6 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from "@remix-run/react";
-import { json } from "@remix-run/node";
-import type { MetaFunction } from "@remix-run/node";
 import React from "react";
 import { getBrowserEnv } from "~/config/env";
 import Background from "~/styles/background.css";

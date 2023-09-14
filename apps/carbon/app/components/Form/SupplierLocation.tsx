@@ -8,8 +8,10 @@ import {
 import { useFetcher } from "@remix-run/react";
 import { useEffect, useMemo, useRef } from "react";
 import { useControlField, useField } from "remix-validated-form";
-import type { SupplierLocation as SupplierLocationType } from "~/modules/purchasing";
-import type { getSupplierLocations } from "~/modules/purchasing";
+import type {
+  getSupplierLocations,
+  SupplierLocation as SupplierLocationType,
+} from "~/modules/purchasing";
 import type { SelectProps } from "./Select";
 
 type SupplierLocationSelectProps = Omit<SelectProps, "options" | "onChange"> & {

@@ -13,7 +13,7 @@ ERP Application built with:
 
 ### `app/components`
 
-Reusable react components that are specific to this project (and remix). Shared components should live in `packages/carbon-react` if they don't rely on some application-specific library. For example, the `Table` relies on some remix internals, so it lives in `app/components`, but the `Date` component is framework agnostic, so it lives in `packages/carbon-react`.
+Reusable react components that are specific to this project (and remix). Shared components should live in `packages/react` if they don't rely on some application-specific library. For example, the `Table` relies on some remix internals, so it lives in `app/components`, but the `Date` component is framework agnostic, so it lives in `packages/react`.
 
 ### `app/interfaces`
 

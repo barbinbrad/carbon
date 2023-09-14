@@ -1,17 +1,17 @@
 import { useColor } from "@carbon/react";
 import {
   Box,
+  Button,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   HStack,
   useDisclosure,
-  Button,
   useOutsideClick,
-  FormErrorMessage,
 } from "@chakra-ui/react";
 
-import { HexColorInput, HexColorPicker } from "react-colorful";
 import { useRef } from "react";
+import { HexColorInput, HexColorPicker } from "react-colorful";
 import { useControlField, useField } from "remix-validated-form";
 
 type ColorFieldProps = {

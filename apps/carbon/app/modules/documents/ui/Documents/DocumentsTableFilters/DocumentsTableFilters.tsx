@@ -4,8 +4,8 @@ import { DebouncedInput } from "~/components/Search";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { DocumentLabel } from "~/modules/documents/types";
 import { mapRowsToOptions } from "~/utils/form";
-import DocumentCreateForm from "../DocumentCreateForm";
 import { capitalize } from "~/utils/string";
+import DocumentCreateForm from "../DocumentCreateForm";
 
 type DocumentTableFiltersProps = {
   labels: DocumentLabel[];

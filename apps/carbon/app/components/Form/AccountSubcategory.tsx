@@ -1,15 +1,17 @@
 import { Select } from "@carbon/react";
 import {
   FormControl,
-  FormLabel,
   FormErrorMessage,
   FormHelperText,
+  FormLabel,
 } from "@chakra-ui/react";
 import { useFetcher } from "@remix-run/react";
 import { useEffect, useMemo } from "react";
-import { useField, useControlField } from "remix-validated-form";
-import type { AccountSubcategory as AccountSubcategoryType } from "~/modules/accounting";
-import type { getAccountSubcategoriesByCategory } from "~/modules/accounting";
+import { useControlField, useField } from "remix-validated-form";
+import type {
+  AccountSubcategory as AccountSubcategoryType,
+  getAccountSubcategoriesByCategory,
+} from "~/modules/accounting";
 import { mapRowsToOptions } from "~/utils/form";
 
 const AccountSubcategory = ({

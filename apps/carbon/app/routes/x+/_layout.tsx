@@ -1,4 +1,4 @@
-import { useNotification, useColor } from "@carbon/react";
+import { useColor, useNotification } from "@carbon/react";
 import { Flex, Grid, GridItem, VStack } from "@chakra-ui/react";
 import { SkipNavContent } from "@chakra-ui/skip-nav";
 import type { LoaderArgs } from "@remix-run/node";
@@ -9,8 +9,8 @@ import { useEffect } from "react";
 import { IconSidebar, Topbar } from "~/components/Layout";
 import { getSupabase, SupabaseProvider } from "~/lib/supabase";
 import {
-  getUserClaims,
   getUser,
+  getUserClaims,
   getUserDefaults,
   getUserGroups,
 } from "~/modules/users";

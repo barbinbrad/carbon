@@ -1,7 +1,7 @@
 import type { Database } from "@carbon/database";
 import type {
-  getReceipts,
   getReceiptLines,
+  getReceipts,
   getShippingMethods,
 } from "./services";
 

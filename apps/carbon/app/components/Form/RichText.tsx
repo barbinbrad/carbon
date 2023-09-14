@@ -1,7 +1,6 @@
 import { Editor, useEditor } from "@carbon/react";
 import type { BoxProps } from "@chakra-ui/react";
-import { Input } from "@chakra-ui/react";
-import { FormControl, FormErrorMessage } from "@chakra-ui/react";
+import { FormControl, FormErrorMessage, Input } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useControlField, useField } from "remix-validated-form";
 

@@ -14,8 +14,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { Link, Outlet, useLoaderData, useNavigate } from "@remix-run/react";
 import { ParentSize } from "@visx/responsive";
 import { useState } from "react";
@@ -23,15 +22,15 @@ import { IoMdAdd, IoMdClose } from "react-icons/io";
 import { MdEdit, MdOutlineArrowBackIos } from "react-icons/md";
 import { ValidatedForm, validationError } from "remix-validated-form";
 import { Hidden, Input, Submit } from "~/components/Form";
+import type { AbilityDatum } from "~/modules/resources";
 import {
   AbilityChart,
-  AbilityEmployeesTable,
   abilityCurveValidator,
+  AbilityEmployeesTable,
   abilityNameValidator,
   getAbility,
   updateAbility,
 } from "~/modules/resources";
-import type { AbilityDatum } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { error, success } from "~/utils/result";

@@ -7,11 +7,9 @@ export function useRealtime(table: string, filter?: string) {
   const revalidator = useRevalidator();
 
   useEffect(() => {
-    if (!supabase || !accessToken) return;
-    console.log("subscribing to realtime changes with access token", {
-      accessToken,
-      supabase,
-    });
+    if (!supabase || !accessToken || !table) return;
+    supabase.realtime.setAuth(accessToken);
+
     const channel = supabase
       .channel(`postgres_changes:${table}}`)
       .on(

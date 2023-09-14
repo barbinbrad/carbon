@@ -96,7 +96,7 @@ const EditablePurchaseOrderLineNumber =
           .from("partInventory")
           .select("defaultShelfId")
           .eq("partId", partId)
-          .eq("locationId", options.defaultLocationId)
+          .eq("locationId", options.defaultLocationId!)
           .single(),
         client
           .from("partCost")

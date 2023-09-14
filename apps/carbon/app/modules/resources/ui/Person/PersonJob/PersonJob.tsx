@@ -18,8 +18,7 @@ import {
   Submit,
 } from "~/components/Form";
 import { SectionTitle } from "~/components/Layout";
-import type { EmployeeJob } from "~/modules/resources";
-import type { getShiftsList } from "~/modules/resources";
+import type { EmployeeJob, getShiftsList } from "~/modules/resources";
 import { employeeJobValidator } from "~/modules/resources";
 import { mapRowsToOptions } from "~/utils/form";
 

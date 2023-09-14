@@ -20,8 +20,8 @@ import { useState } from "react";
 import { BsPencilSquare } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { ConfirmDelete } from "~/components/Modals";
-import type { WorkCellTypeDetailType } from "~/modules/resources";
 import { useUrlParams } from "~/hooks";
+import type { WorkCellTypeDetailType } from "~/modules/resources";
 
 type WorkCell = NonNullable<WorkCellTypeDetailType["workCell"]>;
 

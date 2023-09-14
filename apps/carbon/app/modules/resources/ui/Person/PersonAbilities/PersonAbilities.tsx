@@ -5,22 +5,21 @@ import {
   CardBody,
   CardHeader,
   Center,
-  Heading,
-  Grid,
-  Icon,
-  Text,
   Flex,
+  Grid,
+  Heading,
+  Icon,
   List,
   ListItem,
+  Text,
 } from "@chakra-ui/react";
 import { Link } from "@remix-run/react";
 import type { IconType } from "react-icons";
 
-import { BsCheckLg, BsBarChartFill } from "react-icons/bs";
+import { BsBarChartFill, BsCheckLg } from "react-icons/bs";
 import { FaThumbsUp } from "react-icons/fa";
 import type { EmployeeAbility } from "~/modules/resources";
-import { getTrainingStatus } from "~/modules/resources";
-import { AbilityEmployeeStatus } from "~/modules/resources";
+import { AbilityEmployeeStatus, getTrainingStatus } from "~/modules/resources";
 
 type PersonAbilitiesProps = {
   abilities: EmployeeAbility[];

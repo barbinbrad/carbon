@@ -728,7 +728,6 @@ CREATE POLICY "Employees with parts_update can update part planning" ON "partInv
     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
   );
 
-CREATE VIEW "part_inventory_view" AS 
-  SELECT
-    i.*
-  FROM "partInventory" i;
+
+
+

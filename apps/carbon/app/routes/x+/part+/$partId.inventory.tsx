@@ -4,10 +4,10 @@ import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
 import { useRouteData } from "~/hooks";
 import {
-  PartInventoryForm,
   getPartInventory,
   getShelvesList,
   insertShelf,
+  PartInventoryForm,
   partInventoryValidator,
   upsertPartInventory,
 } from "~/modules/parts";
@@ -172,7 +172,6 @@ export default function PartInventoryRoute() {
 
   const initialValues = {
     ...partInventory,
-    defaultShelfId: partInventory.defaultShelfId ?? undefined,
   };
   return (
     <PartInventoryForm

@@ -10,10 +10,10 @@ export const purchaseOrderLineType = [
   "Comment",
 ] as const;
 
-export const purchaseOrderTypeType = ["Draft", "Purchase", "Return"] as const;
+export const purchaseOrderTypeType = ["Purchase", "Return"] as const;
 
 export const purchaseOrderStatusType = [
-  "Open",
+  "Draft",
   "In Review",
   "In External Review",
   "Approved",

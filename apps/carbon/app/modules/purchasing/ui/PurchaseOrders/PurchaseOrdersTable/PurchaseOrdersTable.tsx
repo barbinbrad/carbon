@@ -159,7 +159,7 @@ const PurchaseOrdersTable = memo(
           <MenuItem
             icon={<MdCallReceived />}
             isDisabled={
-              !["Open", "Approved"].includes(row.status ?? "") ||
+              !["Draft", "Approved"].includes(row.status ?? "") ||
               !permissions.can("update", "inventory")
             }
             onClick={() => {

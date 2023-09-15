@@ -87,7 +87,7 @@ export async function getPartInventory(
   locationId: string
 ) {
   return client
-    .from("partInventory")
+    .from("part_inventory_view")
     .select("*")
     .eq("partId", partId)
     .eq("locationId", locationId)

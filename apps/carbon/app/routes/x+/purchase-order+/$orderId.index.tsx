@@ -72,7 +72,7 @@ export default function PurchaseOrderBasicRoute() {
     supplierReference: orderData?.purchaseOrder?.supplierReference ?? "",
     orderDate: orderData?.purchaseOrder?.orderDate ?? "",
     type: orderData?.purchaseOrder?.type ?? "Draft",
-    status: orderData?.purchaseOrder?.status ?? "Open",
+    status: orderData?.purchaseOrder?.status ?? "Draft",
     receiptRequestedDate: orderData?.purchaseOrder?.receiptRequestedDate ?? "",
     receiptPromisedDate: orderData?.purchaseOrder?.receiptPromisedDate ?? "",
     notes: orderData?.purchaseOrder?.notes ?? "",

@@ -14,15 +14,12 @@ import { useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import { CreatableSelect, Hidden, Number, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
+import type { PartInventory } from "~/modules/parts";
 import { partInventoryValidator } from "~/modules/parts";
 import type { ListItem } from "~/types";
-import type { TypeOfValidator } from "~/types/validators";
 
 type PartInventoryFormProps = {
-  initialValues: Omit<
-    TypeOfValidator<typeof partInventoryValidator>,
-    "hasNewShelf"
-  >;
+  initialValues: PartInventory;
   locations: ListItem[];
   shelves: string[];
 };
@@ -46,13 +43,9 @@ const PartInventoryForm = ({
       validator={partInventoryValidator}
       defaultValues={{
         ...initialValues,
-        // TODO: Remove these defaults once the API is ready
-        // @ts-expect-error
-        quantityOnHand: 0,
-        quantityAvailable: 0,
-        quantityOnPurchaseOrder: 0,
-        quantityOnProdOrder: 0,
-        quantityOnSalesOrder: 0,
+        partId: initialValues.partId ?? undefined,
+        defaultShelfId: initialValues.defaultShelfId ?? undefined,
+        locationId: initialValues.locationId ?? undefined,
       }}
     >
       <Card w="full">

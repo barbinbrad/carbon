@@ -3,6 +3,7 @@ import type {
   getPartCost,
   getPartGroups,
   getPartGroupsList,
+  getPartInventory,
   getParts,
   getPartSummary,
   getPartSuppliers,
@@ -24,6 +25,10 @@ export type PartGroup = NonNullable<
 export type PartGroupListItem = NonNullable<
   Awaited<ReturnType<typeof getPartGroupsList>>["data"]
 >[number];
+
+export type PartInventory = NonNullable<
+  Awaited<ReturnType<typeof getPartInventory>>["data"]
+>;
 
 export type PartReorderingPolicy =
   Database["public"]["Enums"]["partReorderingPolicy"];

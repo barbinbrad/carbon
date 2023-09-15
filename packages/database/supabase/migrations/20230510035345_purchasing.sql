@@ -149,7 +149,7 @@ CREATE TYPE "purchaseOrderType" AS ENUM (
 );
 
 CREATE TYPE "purchaseOrderStatus" AS ENUM (
-  'Open',
+  'Draft',
   'In Review',
   'In External Review',
   'Approved',
@@ -162,7 +162,7 @@ CREATE TABLE "purchaseOrder" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "purchaseOrderId" TEXT NOT NULL,
   "type" "purchaseOrderType" NOT NULL,
-  "status" "purchaseOrderStatus" NOT NULL DEFAULT 'Open',
+  "status" "purchaseOrderStatus" NOT NULL DEFAULT 'Draft',
   "orderDate" DATE NOT NULL DEFAULT CURRENT_DATE,
   "notes" TEXT,
   "supplierId" TEXT NOT NULL,
@@ -205,9 +205,9 @@ CREATE TABLE "purchaseOrderLine" (
   "assetId" TEXT,
   "description" TEXT,
   "purchaseQuantity" NUMERIC(9,2) DEFAULT 0,
-  "quantityToReceive" NUMERIC(9,2) GENERATED ALWAYS AS (CASE WHEN "purchaseOrderLineType" = 'Comment' THEN 0 ELSE "purchaseQuantity" - "quantityReceived" END) STORED,
+  "quantityToReceive" NUMERIC(9,2) GENERATED ALWAYS AS (CASE WHEN "purchaseOrderLineType" = 'Comment' THEN 0 ELSE GREATEST(("purchaseQuantity" - "quantityReceived"), 0) END) STORED,
   "quantityReceived" NUMERIC(9,2) DEFAULT 0,
-  "quantityToInvoice" NUMERIC(9,2) GENERATED ALWAYS AS (CASE WHEN "purchaseOrderLineType" = 'Comment' THEN 0 ELSE "purchaseQuantity" - "quantityInvoiced" END) STORED,
+  "quantityToInvoice" NUMERIC(9,2) GENERATED ALWAYS AS (CASE WHEN "purchaseOrderLineType" = 'Comment' THEN 0 ELSE GREATEST(("purchaseQuantity" - "quantityInvoiced"), 0) END) STORED,
   "quantityInvoiced" NUMERIC(9,2) DEFAULT 0,
   "unitPrice" NUMERIC(9,2),
   "unitOfMeasureCode" TEXT,

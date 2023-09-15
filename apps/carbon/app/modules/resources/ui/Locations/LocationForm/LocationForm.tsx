@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import { ValidatedForm } from "remix-validated-form";
-import { Hidden, Input, Number, Submit, Timezone } from "~/components/Form";
+import { Hidden, Input, Submit, Timezone } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { locationValidator } from "~/modules/resources";
 import type { TypeOfValidator } from "~/types/validators";
@@ -58,8 +58,8 @@ const LocationForm = ({ initialValues }: LocationFormProps) => {
               <Input name="postalCode" label="Postal Code" />
               {/* <Country name="country" label="Country" /> */}
               <Timezone name="timezone" label="Timezone" />
-              <Number name="latitude" label="Latitude" min={-90} max={90} />
-              <Number name="longitude" label="Longitude" min={-180} max={180} />
+              {/* <Number name="latitude" label="Latitude" min={-90} max={90} />
+              <Number name="longitude" label="Longitude" min={-180} max={180} /> */}
             </VStack>
           </DrawerBody>
           <DrawerFooter>

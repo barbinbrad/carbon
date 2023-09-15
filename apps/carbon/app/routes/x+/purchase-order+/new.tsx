@@ -81,7 +81,7 @@ export default function PurchaseOrderNewRoute() {
     purchaseOrderId: undefined,
     supplierId: supplierId ?? undefined,
     orderDate: today(getLocalTimeZone()).toString(),
-    status: "Open" as PurchaseOrderStatus,
+    status: "Draft" as PurchaseOrderStatus,
     type: "Purchase" as PurchaseOrderType,
   };
 

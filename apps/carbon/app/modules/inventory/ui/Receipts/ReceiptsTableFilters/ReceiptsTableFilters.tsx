@@ -3,7 +3,7 @@ import { Button, HStack } from "@chakra-ui/react";
 import { Link } from "@remix-run/react";
 import { IoMdAdd } from "react-icons/io";
 import { DebouncedInput } from "~/components/Search";
-import { usePermissions, useUrlParams } from "~/hooks";
+import { usePermissions, useUrlParams, useUser } from "~/hooks";
 import { receiptSourceDocumentType } from "~/modules/inventory";
 import type { ListItem } from "~/types";
 
@@ -15,6 +15,9 @@ const ReceiptsTableFilters = ({ locations }: ReceiptsTableFiltersProps) => {
   const [params, setParams] = useUrlParams();
   const permissions = usePermissions();
   const borderColor = useColor("gray.200");
+  const {
+    defaults: { locationId },
+  } = useUser();
 
   const sourceDocumentOptions = receiptSourceDocumentType.map((type) => ({
     label: type,
@@ -61,10 +64,15 @@ const ReceiptsTableFilters = ({ locations }: ReceiptsTableFiltersProps) => {
         <Select
           // @ts-ignore
           size="sm"
-          value={locationOptions.find(
-            (location) => location.value === params.get("location")
-          )}
-          isClearable
+          value={
+            params.get("location")
+              ? locationOptions.find(
+                  (location) => location.value === params.get("location")
+                )
+              : locationOptions.find(
+                  (location) => location.value === locationId
+                )
+          }
           options={locationOptions}
           onChange={(selected) => {
             setParams({ location: selected?.value });

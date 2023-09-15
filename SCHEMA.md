@@ -3962,10 +3962,10 @@ CREATE POLICY "Employees with parts_update can update part planning" ON "partInv
     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
   );
 
-CREATE VIEW "part_inventory_view" AS 
-  SELECT
-    i.*
-  FROM "partInventory" i;
+
+
+
+
 ```
 
 
@@ -4376,7 +4376,7 @@ CREATE TYPE "purchaseOrderType" AS ENUM (
 );
 
 CREATE TYPE "purchaseOrderStatus" AS ENUM (
-  'Open',
+  'Draft',
   'In Review',
   'In External Review',
   'Approved',
@@ -4389,7 +4389,7 @@ CREATE TABLE "purchaseOrder" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "purchaseOrderId" TEXT NOT NULL,
   "type" "purchaseOrderType" NOT NULL,
-  "status" "purchaseOrderStatus" NOT NULL DEFAULT 'Open',
+  "status" "purchaseOrderStatus" NOT NULL DEFAULT 'Draft',
   "orderDate" DATE NOT NULL DEFAULT CURRENT_DATE,
   "notes" TEXT,
   "supplierId" TEXT NOT NULL,
@@ -4432,9 +4432,9 @@ CREATE TABLE "purchaseOrderLine" (
   "assetId" TEXT,
   "description" TEXT,
   "purchaseQuantity" NUMERIC(9,2) DEFAULT 0,
-  "quantityToReceive" NUMERIC(9,2) GENERATED ALWAYS AS (CASE WHEN "purchaseOrderLineType" = 'Comment' THEN 0 ELSE "purchaseQuantity" - "quantityReceived" END) STORED,
+  "quantityToReceive" NUMERIC(9,2) GENERATED ALWAYS AS (CASE WHEN "purchaseOrderLineType" = 'Comment' THEN 0 ELSE GREATEST(("purchaseQuantity" - "quantityReceived"), 0) END) STORED,
   "quantityReceived" NUMERIC(9,2) DEFAULT 0,
-  "quantityToInvoice" NUMERIC(9,2) GENERATED ALWAYS AS (CASE WHEN "purchaseOrderLineType" = 'Comment' THEN 0 ELSE "purchaseQuantity" - "quantityInvoiced" END) STORED,
+  "quantityToInvoice" NUMERIC(9,2) GENERATED ALWAYS AS (CASE WHEN "purchaseOrderLineType" = 'Comment' THEN 0 ELSE GREATEST(("purchaseQuantity" - "quantityInvoiced"), 0) END) STORED,
   "quantityInvoiced" NUMERIC(9,2) DEFAULT 0,
   "unitPrice" NUMERIC(9,2),
   "unitOfMeasureCode" TEXT,
@@ -6311,5 +6311,45 @@ CREATE VIEW "total_receipts_posted_not_invoiced" AS
     AND r."sourceDocument" != 'Manufacturing Output'
     AND r."sourceDocument" != 'Inbound Transfer'
     AND r."sourceDocument" != 'Outbound Transfer';
+```
+
+
+
+## `quantity-on-hand`
+
+```sql
+CREATE VIEW "part_inventory_view" AS 
+  SELECT
+    pi."partId",
+    pi."locationId",
+    pi."defaultShelfId",
+    COALESCE(SUM(pl."quantity"), 0) AS "quantityOnHand",
+    COALESCE(pol."quantityToReceive", 0) AS "quantityOnPurchaseOrder",
+    0 AS "quantityOnSalesOrder",
+    0 AS "quantityOnProdOrder",
+    0 AS "quantityAvailable"
+  FROM "partInventory" pi
+  LEFT JOIN "partLedger" pl
+      ON pl."partId" = pi."partId" AND pl."locationId" = pi."locationId"
+  LEFT JOIN (
+    SELECT 
+        pol."partId",
+        pol."locationId",
+        COALESCE(SUM(GREATEST(pol."quantityToReceive", 0)), 0) AS "quantityToReceive"
+      FROM "purchaseOrderLine" pol 
+      INNER JOIN "purchaseOrder" po 
+        ON pol."purchaseOrderId" = po."id"
+      WHERE po."status" != 'Draft' 
+        AND po."status" != 'Rejected'
+        AND po."status" != 'Closed'
+      GROUP BY 
+        pol."partId",
+        pol."locationId"
+  ) pol ON pol."partId" = pi."partId" AND pol."locationId" = pi."locationId"
+  GROUP BY 
+    pi."partId",
+    pi."locationId",
+    pi."defaultShelfId",
+    pol."quantityToReceive";;
 ```
 

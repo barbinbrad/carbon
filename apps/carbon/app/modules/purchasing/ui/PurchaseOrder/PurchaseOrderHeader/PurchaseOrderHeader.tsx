@@ -35,7 +35,7 @@ const PartPreview = () => {
               if (routeData?.purchaseOrder) release(routeData.purchaseOrder);
             }}
             isDisabled={
-              !["Open", "Approved"].includes(
+              !["Draft", "Approved"].includes(
                 routeData?.purchaseOrder?.status ?? ""
               )
             }

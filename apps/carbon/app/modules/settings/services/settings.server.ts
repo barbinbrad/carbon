@@ -7,12 +7,32 @@ import { interpolateDate } from "~/utils/string";
 import { sanitize } from "~/utils/supabase";
 import type { sequenceValidator } from "./settings.form";
 
+export async function getCurrentSequence(
+  client: SupabaseClient<Database>,
+  table: string
+) {
+  const sequence = await getSequence(client, table);
+  if (sequence.error) {
+    return sequence;
+  }
+
+  const { prefix, suffix, next, size } = sequence.data;
+
+  const currentSequence = next.toString().padStart(size, "0");
+  const derivedPrefix = interpolateDate(prefix);
+  const derivedSuffix = interpolateDate(suffix);
+
+  return {
+    data: `${derivedPrefix}${currentSequence}${derivedSuffix}`,
+    error: null,
+  };
+}
+
 export async function getNextSequence(
   client: SupabaseClient<Database>,
   table: string,
   userId: string
 ) {
-  // TODO: add transaction through stored procedure: https://www.postgresql.org/docs/current/plpgsql-transactions.html
   const sequence = await getSequence(client, table);
   if (sequence.error) {
     return sequence;
@@ -68,7 +88,6 @@ export async function rollbackNextSequence(
   table: string,
   userId: string
 ) {
-  // TODO: add transaction through stored procedure: https://www.postgresql.org/docs/current/plpgsql-transactions.html
   const sequence = await getSequence(client, table);
   if (sequence.error) {
     return sequence;

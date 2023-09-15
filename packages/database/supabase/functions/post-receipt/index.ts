@@ -2,6 +2,7 @@ import { serve } from "https://deno.land/std@0.175.0/http/server.ts";
 import { format } from "https://deno.land/std@0.91.0/datetime/mod.ts";
 import type { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2.33.1";
 
+import { client } from "https://esm.sh/v132/websocket@1.0.34/denonext/websocket.mjs";
 import type { Database } from "../../../src/types.ts";
 import { getConnectionPool, getDatabaseClient } from "../lib/database.ts";
 import { corsHeaders } from "../lib/headers.ts";
@@ -10,6 +11,7 @@ import { getSupabaseServiceRole } from "../lib/supabase.ts";
 // Use the supabase types to define a subset of the database we'll transact with
 interface DB {
   generalLedger: Database["public"]["Tables"]["generalLedger"]["Insert"];
+  purchaseOrderDelivery: Database["public"]["Tables"]["purchaseOrderDelivery"]["Update"];
   purchaseOrderLine: Database["public"]["Tables"]["purchaseOrderLine"]["Update"];
   partLedger: Database["public"]["Tables"]["partLedger"]["Insert"];
   partLedgerValueLedgerRelation: Database["public"]["Tables"]["partLedgerValueLedgerRelation"]["Insert"];
@@ -22,12 +24,12 @@ const pool = getConnectionPool(1);
 const db = getDatabaseClient<DB>(pool);
 
 serve(async (req: Request) => {
-  try {
-    if (req.method === "OPTIONS") {
-      return new Response("ok", { headers: corsHeaders });
-    }
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: corsHeaders });
+  }
+  const { receiptId } = await req.json();
 
-    const { receiptId } = await req.json();
+  try {
     if (!receiptId) throw new Error("No receiptId provided");
 
     const client = getSupabaseServiceRole(req.headers.get("Authorization"));
@@ -237,6 +239,15 @@ serve(async (req: Request) => {
               .execute();
           }
 
+          await trx
+            .updateTable("purchaseOrderDelivery")
+            .set({
+              deliveryDate: format(new Date(), "yyyy-MM-dd"),
+              locationId: receipt.data.locationId,
+            })
+            .where("id", "=", receipt.data.sourceDocumentId)
+            .execute();
+
           const partLedgerIds = await trx
             .insertInto("partLedger")
             .values(partLedgerInserts)
@@ -324,6 +335,9 @@ serve(async (req: Request) => {
     );
   } catch (err) {
     console.error(err);
+    if (receiptId) {
+      client.from("receipt").update({ status: "Draft" }).eq("id", receiptId);
+    }
     return new Response(JSON.stringify(err), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 500,

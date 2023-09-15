@@ -113,7 +113,9 @@ const ReceiptsTable = memo(({ data, count }: ReceiptsTableProps) => {
           </MenuItem>
           <MenuItem
             isDisabled={
-              !permissions.can("delete", "inventory") || !!row.postingDate
+              !permissions.can("delete", "inventory") ||
+              !!row.postingDate ||
+              row.status === "Pending"
             }
             icon={<IoMdTrash />}
             onClick={() => {

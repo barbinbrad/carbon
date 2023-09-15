@@ -57,10 +57,12 @@ export default function useReceiptForm({
     receipt.sourceDocumentId ?? null
   );
 
-  const onClose = () => {
-    if (!isEditing && !sourceDocumentId && receipt.id) {
-      deleteReceipt(receipt.id);
-      // TODO if the current sequence is the same as the receiptId decrement it
+  const onClose = async () => {
+    if (
+      !isEditing &&
+      (!sourceDocumentId || !locationId || receiptLines.length === 0)
+    ) {
+      await deleteReceipt();
     }
 
     if (isEditing) {
@@ -89,24 +91,28 @@ export default function useReceiptForm({
     sourceDocumentIdFromParams,
   ]);
 
-  // TODO: this should call an API method that uses the service role to delete the receipt after
-  //      checking that it is not posted or received
-  const deleteReceipt = useCallback(
-    (id: string) => {
-      if (!supabase) return;
+  //  TODO: verify that it is not posted or received
+  const deleteReceipt = useCallback(async () => {
+    if (!supabase) return;
 
-      return supabase
+    try {
+      await fetch(
+        `/api/settings/sequence/rollback?table=receipt&currentSequence=${receipt.receiptId}`,
+        {
+          method: "DELETE",
+        }
+      )
+        .then(console.log)
+        .catch(console.error);
+
+      await supabase
         .from("receipt")
         .delete()
-        .eq("id", id)
-        .then((response) => {
-          if (response.error) {
-            setError(response.error.message);
-          }
-        });
-    },
-    [supabase]
-  );
+        .eq("receiptId", receipt.receiptId);
+    } catch {
+      setError("Failed to delete receipt");
+    }
+  }, [receipt.receiptId, supabase]);
 
   const deleteReceiptItems = useCallback(async () => {
     if (!supabase) throw new Error("supabase client is not defined");

@@ -78,7 +78,7 @@ First download and initialize the repository dependencies.
 ```bash
 $ nvm use          # use node v18
 $ yarn             # install dependencies
-$ yarn init        # pull and start the containers
+$ yarn db:start    # pull and run the containers
 ```
 
 Copy the environment variables from the initialization script to an `.env` file:
@@ -87,7 +87,7 @@ Copy the environment variables from the initialization script to an `.env` file:
 $ cp ./.env.example ./.env
 ```
 
-After you've set the enviroment variables to the output of `yarn init` you can run
+After you've set the enviroment variables to the output of `yarn db:start` you can run
 
 ```bash
 $ yarn db:build     # run db migrations and seed script

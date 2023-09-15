@@ -6855,6 +6855,91 @@ export interface Database {
         }
         Relationships: []
       }
+      part_inventory_view: {
+        Row: {
+          createdAt: string | null
+          createdBy: string | null
+          defaultShelfId: string | null
+          locationId: string | null
+          partId: string | null
+          updatedAt: string | null
+          updatedBy: string | null
+        }
+        Insert: {
+          createdAt?: string | null
+          createdBy?: string | null
+          defaultShelfId?: string | null
+          locationId?: string | null
+          partId?: string | null
+          updatedAt?: string | null
+          updatedBy?: string | null
+        }
+        Update: {
+          createdAt?: string | null
+          createdBy?: string | null
+          defaultShelfId?: string | null
+          locationId?: string | null
+          partId?: string | null
+          updatedAt?: string | null
+          updatedBy?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partInventory_createdBy_fkey"
+            columns: ["createdBy"]
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partInventory_createdBy_fkey"
+            columns: ["createdBy"]
+            referencedRelation: "user_default_view"
+            referencedColumns: ["userId"]
+          },
+          {
+            foreignKeyName: "partInventory_locationId_fkey"
+            columns: ["locationId"]
+            referencedRelation: "location"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partInventory_locationId_fkey"
+            columns: ["locationId"]
+            referencedRelation: "purchase_order_view"
+            referencedColumns: ["locationId"]
+          },
+          {
+            foreignKeyName: "partInventory_partId_fkey"
+            columns: ["partId"]
+            referencedRelation: "part"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partInventory_partId_fkey"
+            columns: ["partId"]
+            referencedRelation: "parts_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partInventory_shelfId_fkey"
+            columns: ["defaultShelfId", "locationId"]
+            referencedRelation: "shelf"
+            referencedColumns: ["id", "locationId"]
+          },
+          {
+            foreignKeyName: "partInventory_updatedBy_fkey"
+            columns: ["updatedBy"]
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partInventory_updatedBy_fkey"
+            columns: ["updatedBy"]
+            referencedRelation: "user_default_view"
+            referencedColumns: ["userId"]
+          }
+        ]
+      }
       partners_view: {
         Row: {
           abilityIds: string[] | null

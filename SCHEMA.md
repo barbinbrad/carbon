@@ -3962,33 +3962,10 @@ CREATE POLICY "Employees with parts_update can update part planning" ON "partInv
     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
   );
 
--- CREATE POLICY "Suppliers with parts_view can view part inventory they supply" ON "partInventory"
---   FOR SELECT
---   USING (
---     coalesce(get_my_claim('parts_view')::boolean, false) = true 
---     AND (get_my_claim('role'::text)) = '"supplier"'::jsonb 
---     AND (
---       "partId" IN (
---         SELECT "partId" FROM "partReplenishment" WHERE "supplierId" IN (
---             SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
---         )
---       )                 
---     )
---   );
-
--- CREATE POLICY "Suppliers with parts_update can update part inventory that they supply" ON "partInventory"
---   FOR UPDATE
---   USING (
---     coalesce(get_my_claim('parts_update')::boolean, false) = true 
---     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
---     AND (
---       "partId" IN (
---         SELECT "partId" FROM "partReplenishment" WHERE "supplierId" IN (
---             SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
---         )
---       )                 
---     )
---   );
+CREATE VIEW "part_inventory_view" AS 
+  SELECT
+    i.*
+  FROM "partInventory" i;
 ```
 
 

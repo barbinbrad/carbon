@@ -21,6 +21,7 @@ export function isPost(request: Request) {
 }
 
 export function isDelete(request: Request) {
+  console.log("METHOD", request.method.toLowerCase());
   return request.method.toLowerCase() === "delete";
 }
 

@@ -1,6 +1,7 @@
 version: "3.8"
+name: "carbon-redis"
 services:
-  carbon-redis:
+  redis:
     image: redis:7.0-alpine
     restart: always
     ports:

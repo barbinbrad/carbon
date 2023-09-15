@@ -161,7 +161,10 @@ const ReceiptForm = ({
                           }}
                           isReadOnly={isPosted}
                         />
-                        <Input name="externalDocumentId" label="External ID" />
+                        <Input
+                          name="externalDocumentId"
+                          label="External Reference"
+                        />
                       </Grid>
                     </VStack>
                   </Box>

@@ -8,7 +8,7 @@
     "dev": "run-p dev:*",
     "dev:remix": "remix dev",
     "start": "remix-serve build",
-    "clean": "rimraf .cache .turbo node_modules dist public build",
+    "clean": "rimraf .cache .turbo node_modules dist build",
     "lint": "TIMING=1 eslint \"app/**/*.ts*\"",
     "types": "tsc"
   },

@@ -11,6 +11,7 @@ import {
 import { ValidatedForm } from "remix-validated-form";
 import { Boolean, Input, Select, Submit, TextArea } from "~/components/Form";
 import { usePermissions } from "~/hooks";
+import { useSupabase } from "~/lib/supabase";
 import type {
   PartGroupListItem,
   PartReplenishmentSystem,
@@ -39,6 +40,18 @@ type PartFormProps = {
   unitOfMeasures: UnitOfMeasureListItem[];
 };
 
+const useNextPartIdShortcut = () => {
+  const { supabase } = useSupabase();
+
+  const onBlur = async (event: React.FocusEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+
+    console.log({ value });
+  };
+
+  return { onBlur };
+};
+
 const PartForm = ({
   initialValues,
   partGroups,
@@ -46,6 +59,7 @@ const PartForm = ({
   partReplenishmentSystems,
   unitOfMeasures,
 }: PartFormProps) => {
+  const { onBlur } = useNextPartIdShortcut();
   const permissions = usePermissions();
   const isEditing = initialValues.id !== undefined;
 
@@ -97,7 +111,12 @@ const PartForm = ({
             w="full"
           >
             <VStack alignItems="start" spacing={2} w="full">
-              <Input name="id" label="Part ID" isReadOnly={isEditing} />
+              <Input
+                name="id"
+                label="Part ID"
+                isReadOnly={isEditing}
+                onBlur={!isEditing ? onBlur : undefined}
+              />
               <Input name="name" label="Name" />
               <TextArea name="description" label="Description" />
             </VStack>

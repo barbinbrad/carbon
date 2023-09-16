@@ -77,7 +77,7 @@ function Document({
           }}
         />
         <Scripts />
-        <LiveReload port={8002} />
+        {process.env.NODE_ENV === "development" && <LiveReload />}
       </body>
     </html>
   );

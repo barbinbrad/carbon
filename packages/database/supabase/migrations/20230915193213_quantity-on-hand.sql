@@ -1,16 +1,16 @@
-CREATE VIEW "part_inventory_view" AS 
-  SELECT
-    pi."partId",
-    pi."locationId",
-    pi."defaultShelfId",
+CREATE VIEW "part_quantities_view" AS 
+  SELECT 
+    p."id" AS "partId", 
+    loc."id" AS "locationId",
     COALESCE(SUM(pl."quantity"), 0) AS "quantityOnHand",
     COALESCE(pol."quantityToReceive", 0) AS "quantityOnPurchaseOrder",
     0 AS "quantityOnSalesOrder",
     0 AS "quantityOnProdOrder",
     0 AS "quantityAvailable"
-  FROM "partInventory" pi
+  FROM "part" p 
+  CROSS JOIN "location" loc
   LEFT JOIN "partLedger" pl
-      ON pl."partId" = pi."partId" AND pl."locationId" = pi."locationId"
+    ON pl."partId" = p."id" AND pl."locationId" = loc."id"
   LEFT JOIN (
     SELECT 
         pol."partId",
@@ -25,9 +25,8 @@ CREATE VIEW "part_inventory_view" AS
       GROUP BY 
         pol."partId",
         pol."locationId"
-  ) pol ON pol."partId" = pi."partId" AND pol."locationId" = pi."locationId"
+  ) pol ON pol."partId" = p."id" AND pol."locationId" = loc."id"
   GROUP BY 
-    pi."partId",
-    pi."locationId",
-    pi."defaultShelfId",
-    pol."quantityToReceive";;
+    p."id", 
+    loc."id",
+    pol."quantityToReceive"

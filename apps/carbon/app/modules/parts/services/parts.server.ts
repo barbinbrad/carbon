@@ -87,7 +87,7 @@ export async function getPartInventory(
   locationId: string
 ) {
   return client
-    .from("part_inventory_view")
+    .from("partInventory")
     .select("*")
     .eq("partId", partId)
     .eq("locationId", locationId)
@@ -171,6 +171,19 @@ export async function getPartsList(
     );
   }
   return query;
+}
+
+export async function getPartQuantities(
+  client: SupabaseClient<Database>,
+  partId: string,
+  locationId: string
+) {
+  return client
+    .from("part_quantities_view")
+    .select("*")
+    .eq("partId", partId)
+    .eq("locationId", locationId)
+    .maybeSingle();
 }
 
 export async function getPartSummary(

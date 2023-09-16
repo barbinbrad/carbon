@@ -3,7 +3,7 @@ import type {
   getPartCost,
   getPartGroups,
   getPartGroupsList,
-  getPartInventory,
+  getPartQuantities,
   getParts,
   getPartSummary,
   getPartSuppliers,
@@ -26,8 +26,8 @@ export type PartGroupListItem = NonNullable<
   Awaited<ReturnType<typeof getPartGroupsList>>["data"]
 >[number];
 
-export type PartInventory = NonNullable<
-  Awaited<ReturnType<typeof getPartInventory>>["data"]
+export type PartQuantities = NonNullable<
+  Awaited<ReturnType<typeof getPartQuantities>>["data"]
 >;
 
 export type PartReorderingPolicy =

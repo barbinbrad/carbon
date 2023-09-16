@@ -2022,6 +2022,12 @@ export interface Database {
           {
             foreignKeyName: "employeeJob_locationId_fkey";
             columns: ["locationId"];
+            referencedRelation: "part_quantities_view";
+            referencedColumns: ["locationId"];
+          },
+          {
+            foreignKeyName: "employeeJob_locationId_fkey";
+            columns: ["locationId"];
             referencedRelation: "purchase_order_view";
             referencedColumns: ["locationId"];
           },
@@ -2234,6 +2240,12 @@ export interface Database {
             columns: ["locationId"];
             referencedRelation: "location";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "equipment_locationId_fkey";
+            columns: ["locationId"];
+            referencedRelation: "part_quantities_view";
+            referencedColumns: ["locationId"];
           },
           {
             foreignKeyName: "equipment_locationId_fkey";
@@ -2763,6 +2775,12 @@ export interface Database {
           {
             foreignKeyName: "partCost_partId_fkey";
             columns: ["partId"];
+            referencedRelation: "part_quantities_view";
+            referencedColumns: ["partId"];
+          },
+          {
+            foreignKeyName: "partCost_partId_fkey";
+            columns: ["partId"];
             referencedRelation: "parts_view";
             referencedColumns: ["id"];
           },
@@ -2900,6 +2918,12 @@ export interface Database {
           {
             foreignKeyName: "partInventory_locationId_fkey";
             columns: ["locationId"];
+            referencedRelation: "part_quantities_view";
+            referencedColumns: ["locationId"];
+          },
+          {
+            foreignKeyName: "partInventory_locationId_fkey";
+            columns: ["locationId"];
             referencedRelation: "purchase_order_view";
             referencedColumns: ["locationId"];
           },
@@ -2908,6 +2932,12 @@ export interface Database {
             columns: ["partId"];
             referencedRelation: "part";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partInventory_partId_fkey";
+            columns: ["partId"];
+            referencedRelation: "part_quantities_view";
+            referencedColumns: ["partId"];
           },
           {
             foreignKeyName: "partInventory_partId_fkey";
@@ -2994,6 +3024,12 @@ export interface Database {
           {
             foreignKeyName: "partLedger_locationId_fkey";
             columns: ["locationId"];
+            referencedRelation: "part_quantities_view";
+            referencedColumns: ["locationId"];
+          },
+          {
+            foreignKeyName: "partLedger_locationId_fkey";
+            columns: ["locationId"];
             referencedRelation: "purchase_order_view";
             referencedColumns: ["locationId"];
           },
@@ -3002,6 +3038,12 @@ export interface Database {
             columns: ["partId"];
             referencedRelation: "part";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partLedger_partId_fkey";
+            columns: ["partId"];
+            referencedRelation: "part_quantities_view";
+            referencedColumns: ["partId"];
           },
           {
             foreignKeyName: "partLedger_partId_fkey";
@@ -3244,6 +3286,12 @@ export interface Database {
           {
             foreignKeyName: "partPlanning_locationId_fkey";
             columns: ["locationId"];
+            referencedRelation: "part_quantities_view";
+            referencedColumns: ["locationId"];
+          },
+          {
+            foreignKeyName: "partPlanning_locationId_fkey";
+            columns: ["locationId"];
             referencedRelation: "purchase_order_view";
             referencedColumns: ["locationId"];
           },
@@ -3252,6 +3300,12 @@ export interface Database {
             columns: ["partId"];
             referencedRelation: "part";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partPlanning_partId_fkey";
+            columns: ["partId"];
+            referencedRelation: "part_quantities_view";
+            referencedColumns: ["partId"];
           },
           {
             foreignKeyName: "partPlanning_partId_fkey";
@@ -3346,6 +3400,12 @@ export interface Database {
             columns: ["partId"];
             referencedRelation: "part";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partReplenishment_partId_fkey";
+            columns: ["partId"];
+            referencedRelation: "part_quantities_view";
+            referencedColumns: ["partId"];
           },
           {
             foreignKeyName: "partReplenishment_partId_fkey";
@@ -3468,6 +3528,12 @@ export interface Database {
           {
             foreignKeyName: "partSupplier_partId_fkey";
             columns: ["partId"];
+            referencedRelation: "part_quantities_view";
+            referencedColumns: ["partId"];
+          },
+          {
+            foreignKeyName: "partSupplier_partId_fkey";
+            columns: ["partId"];
             referencedRelation: "parts_view";
             referencedColumns: ["id"];
           },
@@ -3579,6 +3645,12 @@ export interface Database {
             columns: ["partId"];
             referencedRelation: "part";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partUnitSalePrice_partId_fkey";
+            columns: ["partId"];
+            referencedRelation: "part_quantities_view";
+            referencedColumns: ["partId"];
           },
           {
             foreignKeyName: "partUnitSalePrice_partId_fkey";
@@ -3833,6 +3905,12 @@ export interface Database {
             columns: ["locationId"];
             referencedRelation: "location";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "postingGroupInventory_locationId_fkey";
+            columns: ["locationId"];
+            referencedRelation: "part_quantities_view";
+            referencedColumns: ["locationId"];
           },
           {
             foreignKeyName: "postingGroupInventory_locationId_fkey";
@@ -4372,6 +4450,12 @@ export interface Database {
           {
             foreignKeyName: "purchaseOrderDelivery_locationId_fkey";
             columns: ["locationId"];
+            referencedRelation: "part_quantities_view";
+            referencedColumns: ["locationId"];
+          },
+          {
+            foreignKeyName: "purchaseOrderDelivery_locationId_fkey";
+            columns: ["locationId"];
             referencedRelation: "purchase_order_view";
             referencedColumns: ["locationId"];
           },
@@ -4550,6 +4634,12 @@ export interface Database {
             columns: ["partId"];
             referencedRelation: "part";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrderLine_partId_fkey";
+            columns: ["partId"];
+            referencedRelation: "part_quantities_view";
+            referencedColumns: ["partId"];
           },
           {
             foreignKeyName: "purchaseOrderLine_partId_fkey";
@@ -4827,6 +4917,12 @@ export interface Database {
           {
             foreignKeyName: "receipt_locationId_fkey";
             columns: ["locationId"];
+            referencedRelation: "part_quantities_view";
+            referencedColumns: ["locationId"];
+          },
+          {
+            foreignKeyName: "receipt_locationId_fkey";
+            columns: ["locationId"];
             referencedRelation: "purchase_order_view";
             referencedColumns: ["locationId"];
           },
@@ -4948,6 +5044,12 @@ export interface Database {
           {
             foreignKeyName: "receiptLine_locationId_fkey";
             columns: ["locationId"];
+            referencedRelation: "part_quantities_view";
+            referencedColumns: ["locationId"];
+          },
+          {
+            foreignKeyName: "receiptLine_locationId_fkey";
+            columns: ["locationId"];
             referencedRelation: "purchase_order_view";
             referencedColumns: ["locationId"];
           },
@@ -4956,6 +5058,12 @@ export interface Database {
             columns: ["partId"];
             referencedRelation: "part";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "receiptLine_partId_fkey";
+            columns: ["partId"];
+            referencedRelation: "part_quantities_view";
+            referencedColumns: ["partId"];
           },
           {
             foreignKeyName: "receiptLine_partId_fkey";
@@ -5127,6 +5235,12 @@ export interface Database {
           {
             foreignKeyName: "shelf_locationId_fkey";
             columns: ["locationId"];
+            referencedRelation: "part_quantities_view";
+            referencedColumns: ["locationId"];
+          },
+          {
+            foreignKeyName: "shelf_locationId_fkey";
+            columns: ["locationId"];
             referencedRelation: "purchase_order_view";
             referencedColumns: ["locationId"];
           },
@@ -5202,6 +5316,12 @@ export interface Database {
             columns: ["locationId"];
             referencedRelation: "location";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "shifts_locationId_fkey";
+            columns: ["locationId"];
+            referencedRelation: "part_quantities_view";
+            referencedColumns: ["locationId"];
           },
           {
             foreignKeyName: "shifts_locationId_fkey";
@@ -6361,6 +6481,12 @@ export interface Database {
           {
             foreignKeyName: "warehouse_locationId_fkey";
             columns: ["locationId"];
+            referencedRelation: "part_quantities_view";
+            referencedColumns: ["locationId"];
+          },
+          {
+            foreignKeyName: "warehouse_locationId_fkey";
+            columns: ["locationId"];
             referencedRelation: "purchase_order_view";
             referencedColumns: ["locationId"];
           },
@@ -6436,6 +6562,12 @@ export interface Database {
             columns: ["locationId"];
             referencedRelation: "location";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "workCell_locationId_fkey";
+            columns: ["locationId"];
+            referencedRelation: "part_quantities_view";
+            referencedColumns: ["locationId"];
           },
           {
             foreignKeyName: "workCell_locationId_fkey";
@@ -6855,9 +6987,8 @@ export interface Database {
         };
         Relationships: [];
       };
-      part_inventory_view: {
+      part_quantities_view: {
         Row: {
-          defaultShelfId: string | null;
           locationId: string | null;
           partId: string | null;
           quantityAvailable: number | null;
@@ -6866,38 +6997,7 @@ export interface Database {
           quantityOnPurchaseOrder: number | null;
           quantityOnSalesOrder: number | null;
         };
-        Relationships: [
-          {
-            foreignKeyName: "partInventory_locationId_fkey";
-            columns: ["locationId"];
-            referencedRelation: "location";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "partInventory_locationId_fkey";
-            columns: ["locationId"];
-            referencedRelation: "purchase_order_view";
-            referencedColumns: ["locationId"];
-          },
-          {
-            foreignKeyName: "partInventory_partId_fkey";
-            columns: ["partId"];
-            referencedRelation: "part";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "partInventory_partId_fkey";
-            columns: ["partId"];
-            referencedRelation: "parts_view";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "partInventory_shelfId_fkey";
-            columns: ["defaultShelfId", "locationId"];
-            referencedRelation: "shelf";
-            referencedColumns: ["id", "locationId"];
-          }
-        ];
+        Relationships: [];
       };
       partners_view: {
         Row: {
@@ -7141,6 +7241,12 @@ export interface Database {
             columns: ["locationId"];
             referencedRelation: "location";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "employeeJob_locationId_fkey";
+            columns: ["locationId"];
+            referencedRelation: "part_quantities_view";
+            referencedColumns: ["locationId"];
           },
           {
             foreignKeyName: "employeeJob_locationId_fkey";

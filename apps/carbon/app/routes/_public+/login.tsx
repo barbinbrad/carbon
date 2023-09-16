@@ -8,7 +8,11 @@ import {
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
-import type { ActionArgs, LoaderArgs, MetaFunction } from "@remix-run/node";
+import type {
+  ActionArgs,
+  LoaderArgs,
+  V2_MetaFunction as MetaFunction,
+} from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Link, useActionData, useSearchParams } from "@remix-run/react";
 import { ValidatedForm, validationError } from "remix-validated-form";
@@ -24,9 +28,9 @@ import type { FormActionData, Result } from "~/types";
 import { assertIsPost } from "~/utils/http";
 import { error } from "~/utils/result";
 
-export const meta: MetaFunction = () => ({
-  title: "Carbon | Login",
-});
+export const meta: MetaFunction = () => {
+  return [{ title: "Carbon | Login" }];
+};
 
 export async function loader({ request }: LoaderArgs) {
   const authSession = await getAuthSession(request);

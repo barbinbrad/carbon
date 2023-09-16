@@ -1,5 +1,8 @@
 import { Grid, VStack } from "@chakra-ui/react";
-import type { LoaderArgs, MetaFunction } from "@remix-run/node";
+import type {
+  LoaderArgs,
+  V2_MetaFunction as MetaFunction,
+} from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 import { GroupedContentSidebar } from "~/components/Layout/Sidebar";
@@ -12,10 +15,9 @@ import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { error } from "~/utils/result";
 
-export const meta: MetaFunction = () => ({
-  title: "Carbon | Accounting",
-});
-
+export const meta: MetaFunction = () => {
+  return [{ title: "Carbon | Accounting" }];
+};
 export async function loader({ request }: LoaderArgs) {
   const { client } = await requirePermissions(request, {
     view: "accounting",

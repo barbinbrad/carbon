@@ -1,12 +1,12 @@
 import { Grid, VStack } from "@chakra-ui/react";
-import type { MetaFunction } from "@remix-run/node";
+import type { V2_MetaFunction as MetaFunction } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 import { GroupedContentSidebar } from "~/components/Layout/Sidebar";
 import { useSettingsSidebar } from "~/modules/settings";
 
-export const meta: MetaFunction = () => ({
-  title: "Carbon | Settings",
-});
+export const meta: MetaFunction = () => {
+  return [{ title: "Carbon | Settings" }];
+};
 
 export default function SettingsRoute() {
   const { groups } = useSettingsSidebar();

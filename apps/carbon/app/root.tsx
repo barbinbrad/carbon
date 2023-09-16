@@ -2,9 +2,10 @@
 import { ThemeProvider } from "@carbon/react";
 import { Heading, VStack } from "@chakra-ui/react";
 import { SkipNavLink } from "@chakra-ui/skip-nav";
-import type { MetaFunction } from "@remix-run/node";
+import type { V2_MetaFunction as MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
+  isRouteErrorResponse,
   Links,
   LiveReload,
   Meta,
@@ -12,6 +13,7 @@ import {
   Scripts,
   ScrollRestoration,
   useLoaderData,
+  useRouteError,
 } from "@remix-run/react";
 import React from "react";
 import { getBrowserEnv } from "~/config/env";
@@ -25,11 +27,19 @@ export function links() {
   ];
 }
 
-export const meta: MetaFunction = () => ({
-  charset: "utf-8",
-  title: "Carbon ERP",
-  viewport: "width=device-width",
-});
+export const meta: MetaFunction = () => {
+  return [
+    {
+      charset: "utf-8",
+    },
+    {
+      title: "Carbon ERP",
+    },
+    {
+      viewport: "width=device-width",
+    },
+  ];
+};
 
 export async function loader() {
   const { SUPABASE_API_URL, SUPABASE_ANON_PUBLIC } = getBrowserEnv();
@@ -84,7 +94,15 @@ export default function App() {
   );
 }
 
-export function ErrorBoundary({ error }: { error: Error }) {
+export function ErrorBoundary() {
+  const error = useRouteError();
+
+  const message = isRouteErrorResponse(error)
+    ? error.data.message ?? error.data
+    : error instanceof Error
+    ? error.message
+    : String(error);
+
   return (
     <Document title="Error!">
       <ThemeProvider>
@@ -98,7 +116,7 @@ export function ErrorBoundary({ error }: { error: Error }) {
           color="white"
         >
           <Heading as="h1">Something went wrong</Heading>
-          <p>{error.message}</p>
+          <p>{message}</p>
         </VStack>
       </ThemeProvider>
     </Document>

@@ -1,12 +1,12 @@
 import { Grid, VStack } from "@chakra-ui/react";
-import type { MetaFunction } from "@remix-run/node";
+import type { V2_MetaFunction as MetaFunction } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 import { GroupedContentSidebar } from "~/components/Layout/Sidebar";
 import { useUsersSidebar } from "~/modules/users";
 
-export const meta: MetaFunction = () => ({
-  title: "Carbon | Users",
-});
+export const meta: MetaFunction = () => {
+  return [{ title: "Carbon | Users" }];
+};
 
 export default function UsersRoute() {
   const { groups } = useUsersSidebar();

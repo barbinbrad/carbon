@@ -1,12 +1,12 @@
 import { Grid, VStack } from "@chakra-ui/react";
-import type { MetaFunction } from "@remix-run/node";
+import type { V2_MetaFunction as MetaFunction } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 import { GroupedContentSidebar } from "~/components/Layout/Sidebar";
 import { useInventorySidebar } from "~/modules/inventory";
 
-export const meta: MetaFunction = () => ({
-  title: "Carbon | Inventory",
-});
+export const meta: MetaFunction = () => {
+  return [{ title: "Carbon | Inventory" }];
+};
 
 export default function UsersRoute() {
   const { groups } = useInventorySidebar();

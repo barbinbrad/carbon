@@ -1,22 +1,25 @@
-import type { LoaderArgs, MetaFunction } from "@remix-run/node";
+import type {
+  LoaderArgs,
+  V2_MetaFunction as MetaFunction,
+} from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { useCallback } from "react";
-import type { Connection, Node, Edge } from "reactflow";
+import type { Connection, Edge, Node } from "reactflow";
 import ReactFlow, {
-  Controls,
+  addEdge,
   Background,
   BackgroundVariant,
-  addEdge,
-  useNodesState,
+  Controls,
   useEdgesState,
+  useNodesState,
 } from "reactflow";
 import reactFlowStyles from "reactflow/dist/style.css";
 import { requirePermissions } from "~/services/auth";
 
-export const meta: MetaFunction = () => ({
-  title: "Carbon | Parts",
-});
+export const meta: MetaFunction = () => {
+  return [{ title: "Carbon | Parts" }];
+};
 
 export function links() {
   return [{ rel: "stylesheet", href: reactFlowStyles }];

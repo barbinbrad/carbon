@@ -1,21 +1,24 @@
 import { VStack } from "@chakra-ui/react";
-import type { LoaderArgs, MetaFunction } from "@remix-run/node";
+import type {
+  LoaderArgs,
+  V2_MetaFunction as MetaFunction,
+} from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 import {
   getPartCostingMethods,
   getPartGroupsList,
   getPartManufacturingPolicies,
-  getPartRorderdingPolicies,
   getPartReplenishmentSystems,
+  getPartRorderdingPolicies,
   getPartTypes,
   getUnitOfMeasuresList,
 } from "~/modules/parts";
 import { getLocationsList } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 
-export const meta: MetaFunction = () => ({
-  title: "Carbon | Parts",
-});
+export const meta: MetaFunction = () => {
+  return [{ title: "Carbon | Login" }];
+};
 
 export async function loader({ request }: LoaderArgs) {
   const { client } = await requirePermissions(request, {

@@ -1,13 +1,13 @@
 import { useColor } from "@carbon/react";
 import { Grid, VStack } from "@chakra-ui/react";
-import type { MetaFunction } from "@remix-run/node";
+import type { V2_MetaFunction as MetaFunction } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 import { ContentSidebar } from "~/components/Layout/Sidebar";
 import { useAccountSidebar } from "~/modules/account";
 
-export const meta: MetaFunction = () => ({
-  title: "Carbon | My Account",
-});
+export const meta: MetaFunction = () => {
+  return [{ title: "Carbon | My Account" }];
+};
 
 export default function AccountRoute() {
   const { links } = useAccountSidebar();

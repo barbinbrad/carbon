@@ -8,8 +8,16 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
+import { useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
-import { Boolean, Input, Select, Submit, TextArea } from "~/components/Form";
+import {
+  Boolean,
+  Input,
+  InputControlled,
+  Select,
+  Submit,
+  TextArea,
+} from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { useSupabase } from "~/lib/supabase";
 import type {
@@ -42,14 +50,47 @@ type PartFormProps = {
 
 const useNextPartIdShortcut = () => {
   const { supabase } = useSupabase();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [partId, setPartId] = useState<string>("");
 
-  const onBlur = async (event: React.FocusEvent<HTMLInputElement>) => {
-    const { value } = event.target;
+  const onPartIdChange = async (newPartId: string) => {
+    if (newPartId.endsWith("...") && supabase) {
+      setLoading(true);
 
-    console.log({ value });
+      const prefix = newPartId.slice(0, -3);
+      try {
+        const { data } = await supabase
+          ?.from("part")
+          .select("id")
+          .ilike("id", `${prefix}%`)
+          .order("id", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+        if (data?.id) {
+          const sequence = data.id.slice(prefix.length);
+          const currentSequence = parseInt(sequence);
+          const nextSequence = currentSequence + 1;
+          const nextId = `${prefix}${nextSequence
+            .toString()
+            .padStart(
+              sequence.length -
+                (data.id.split(`${currentSequence}`)?.[1].length ?? 0),
+              "0"
+            )}`;
+          setPartId(nextId);
+        } else {
+          setPartId(`${prefix}${(1).toString().padStart(9, "0")}`);
+        }
+      } catch {
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      setPartId(newPartId);
+    }
   };
 
-  return { onBlur };
+  return { partId, onPartIdChange, loading };
 };
 
 const PartForm = ({
@@ -59,7 +100,7 @@ const PartForm = ({
   partReplenishmentSystems,
   unitOfMeasures,
 }: PartFormProps) => {
-  const { onBlur } = useNextPartIdShortcut();
+  const { partId, onPartIdChange, loading } = useNextPartIdShortcut();
   const permissions = usePermissions();
   const isEditing = initialValues.id !== undefined;
 
@@ -111,12 +152,18 @@ const PartForm = ({
             w="full"
           >
             <VStack alignItems="start" spacing={2} w="full">
-              <Input
-                name="id"
-                label="Part ID"
-                isReadOnly={isEditing}
-                onBlur={!isEditing ? onBlur : undefined}
-              />
+              {isEditing ? (
+                <Input name="id" label="Part ID" isReadOnly />
+              ) : (
+                <InputControlled
+                  name="id"
+                  label="Part ID"
+                  value={partId}
+                  onChange={onPartIdChange}
+                  isDisabled={loading}
+                />
+              )}
+
               <Input name="name" label="Name" />
               <TextArea name="description" label="Description" />
             </VStack>

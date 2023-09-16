@@ -8,16 +8,17 @@ import Boolean from "./Boolean";
 import Color from "./Color";
 import CreatableMultiSelect from "./CreatableMultiSelect";
 import CreatableSelect from "./CreatableSelect";
+import Currency from "./Currency";
 import Customer from "./Customer";
 import CustomerContact from "./CustomerContact";
 import CustomerLocation from "./CustomerLocation";
-import Currency from "./Currency";
 import DatePicker from "./DatePicker";
 import Department from "./Department";
 import Employee from "./Employee";
 import Employees from "./Employees";
 import Hidden from "./Hidden";
 import Input from "./Input";
+import InputControlled from "./InputControlled";
 import Location from "./Location";
 import Number from "./Number";
 import Part from "./Part";
@@ -59,6 +60,7 @@ export {
   Employees,
   Hidden,
   Input,
+  InputControlled,
   Location,
   Number,
   Part,

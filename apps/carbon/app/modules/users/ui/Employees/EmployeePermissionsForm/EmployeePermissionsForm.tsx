@@ -21,7 +21,6 @@ import type { EmployeeType, Permission } from "~/modules/users";
 import { employeeValidator } from "~/modules/users";
 import PermissionCheckboxes from "~/modules/users/ui/components/Permission";
 import type { TypeOfValidator } from "~/types/validators";
-import { mapRowsToOptions } from "~/utils/form";
 
 type EmployeePermissionsFormProps = {
   name: string;
@@ -40,16 +39,15 @@ const EmployeePermissionsForm = ({
   const employeeTypeFetcher = useFetcher<PostgrestResponse<EmployeeType>>();
 
   useEffect(() => {
-    if (employeeTypeFetcher.type === "init") {
-      employeeTypeFetcher.load("/api/users/employee-types");
-    }
-  }, [employeeTypeFetcher]);
+    employeeTypeFetcher.load("/api/users/employee-types");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const employeeTypeOptions = mapRowsToOptions({
-    data: employeeTypeFetcher.data?.data,
-    value: "id",
-    label: "name",
-  });
+  const employeeTypeOptions =
+    employeeTypeFetcher.data?.data?.map((et) => ({
+      value: et.id,
+      label: et.name,
+    })) ?? [];
 
   const [permissions, setPermissions] = useState(initialValues.permissions);
   const updatePermissions = (module: string, permission: Permission) => {

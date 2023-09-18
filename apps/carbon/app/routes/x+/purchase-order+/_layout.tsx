@@ -1,5 +1,5 @@
 import { VStack } from "@chakra-ui/react";
-import type { V2_MetaFunction as MetaFunction } from "@remix-run/node";
+import type { MetaFunction } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 
 export const meta: MetaFunction = () => {

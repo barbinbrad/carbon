@@ -1,5 +1,5 @@
 import { Grid, VStack } from "@chakra-ui/react";
-import type { V2_MetaFunction as MetaFunction } from "@remix-run/node";
+import type { MetaFunction } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 import { GroupedContentSidebar } from "~/components/Layout/Sidebar";
 import { usePurchasingSidebar } from "~/modules/purchasing";

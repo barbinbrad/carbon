@@ -17,7 +17,6 @@ import { Input, Select, Submit } from "~/components/Form";
 import type { EmployeeType } from "~/modules/users";
 import { createEmployeeValidator } from "~/modules/users";
 import type { Result } from "~/types";
-import { mapRowsToOptions } from "~/utils/form";
 
 const CreateEmployeeModal = () => {
   const initialFocusRef = useRef<HTMLInputElement>(null);
@@ -26,16 +25,14 @@ const CreateEmployeeModal = () => {
   const employeeTypeFetcher = useFetcher<PostgrestResponse<EmployeeType>>();
 
   useEffect(() => {
-    if (employeeTypeFetcher.type === "init") {
-      employeeTypeFetcher.load("/api/users/employee-types");
-    }
+    employeeTypeFetcher.load("/api/users/employee-types");
   }, [employeeTypeFetcher]);
 
-  const employeeTypeOptions = mapRowsToOptions({
-    data: employeeTypeFetcher.data?.data,
-    value: "id",
-    label: "name",
-  });
+  const employeeTypeOptions =
+    employeeTypeFetcher.data?.data?.map((et) => ({
+      value: et.id,
+      label: et.name,
+    })) ?? [];
 
   return (
     <Modal

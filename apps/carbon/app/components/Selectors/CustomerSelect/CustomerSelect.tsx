@@ -2,7 +2,6 @@ import { createFilter, Select } from "@carbon/react";
 import { useFetcher } from "@remix-run/react";
 import { useEffect } from "react";
 import type { getCustomersList } from "~/modules/sales";
-import { mapRowsToOptions } from "~/utils/form";
 
 type CustomerSelectProps = {
   value?: string;
@@ -16,16 +15,15 @@ const CustomerSelect = ({ value, onChange }: CustomerSelectProps) => {
     useFetcher<Awaited<ReturnType<typeof getCustomersList>>>();
 
   useEffect(() => {
-    if (customerFetcher.type === "init") {
-      customerFetcher.load("/api/sales/customers");
-    }
-  }, [customerFetcher]);
+    customerFetcher.load("/api/sales/customers");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const options = mapRowsToOptions({
-    data: customerFetcher.data?.data,
-    value: "id",
-    label: "name",
-  });
+  const options =
+    customerFetcher.data?.data?.map((customer) => ({
+      value: customer.id,
+      label: customer.name,
+    })) ?? [];
 
   return (
     <Select

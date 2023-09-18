@@ -12,7 +12,6 @@ import type {
   AccountCategory as AccountCategoryType,
   getAccountCategoriesList,
 } from "~/modules/accounting";
-import { mapRowsToOptions } from "~/utils/form";
 import type { SelectProps } from "./Select";
 
 type AccountCategorySelectProps = Omit<SelectProps, "options" | "onChange"> & {
@@ -36,20 +35,19 @@ const AccountCategory = ({
     useFetcher<Awaited<ReturnType<typeof getAccountCategoriesList>>>();
 
   useEffect(() => {
-    if (accountCategoryFetcher.type === "init") {
-      accountCategoryFetcher.load("/api/accounting/categories");
-    }
-  }, [accountCategoryFetcher]);
+    accountCategoryFetcher.load("/api/accounting/categories");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const options = useMemo(
-    () =>
-      mapRowsToOptions({
-        data: accountCategoryFetcher.data?.data,
-        value: "id",
-        label: "category",
-      }),
-    [accountCategoryFetcher.data]
-  );
+  const options = useMemo(() => {
+    return accountCategoryFetcher.data?.data?.map(
+      (c) =>
+        ({
+          value: c.id,
+          label: c.category,
+        } ?? [])
+    );
+  }, [accountCategoryFetcher.data]);
 
   const handleChange = (selection: {
     value: string | number;

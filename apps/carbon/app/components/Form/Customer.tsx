@@ -9,7 +9,6 @@ import { useFetcher } from "@remix-run/react";
 import { useEffect, useMemo } from "react";
 import { useControlField, useField } from "remix-validated-form";
 import type { getCustomersList } from "~/modules/sales";
-import { mapRowsToOptions } from "~/utils/form";
 import type { SelectProps } from "./Select";
 
 type CustomerSelectProps = Omit<SelectProps, "options">;
@@ -31,18 +30,16 @@ const Customer = ({
     useFetcher<Awaited<ReturnType<typeof getCustomersList>>>();
 
   useEffect(() => {
-    if (customerFetcher.type === "init") {
-      customerFetcher.load("/api/sales/customers");
-    }
-  }, [customerFetcher]);
+    customerFetcher.load("/api/sales/customers");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const options = useMemo(
     () =>
-      mapRowsToOptions({
-        data: customerFetcher.data?.data,
-        value: "id",
-        label: "name",
-      }),
+      customerFetcher.data?.data?.map((c) => ({
+        value: c.id,
+        label: c.name,
+      })) ?? [],
     [customerFetcher.data]
   );
 

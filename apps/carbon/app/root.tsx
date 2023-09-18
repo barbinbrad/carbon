@@ -2,7 +2,7 @@
 import { ThemeProvider } from "@carbon/react";
 import { Heading, VStack } from "@chakra-ui/react";
 import { SkipNavLink } from "@chakra-ui/skip-nav";
-import type { V2_MetaFunction as MetaFunction } from "@remix-run/node";
+import type { MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
   isRouteErrorResponse,

@@ -1,19 +1,19 @@
-import { useDisclosure, useOutsideClick, useId } from "@chakra-ui/react";
+import { useDisclosure, useId, useOutsideClick } from "@chakra-ui/react";
 import { useFetcher } from "@remix-run/react";
 import type { PostgrestError } from "@supabase/supabase-js";
 import debounce from "lodash/debounce";
 import words from "lodash/words";
 import type { AriaAttributes, ChangeEvent, KeyboardEvent } from "react";
-import { useEffect, useState, useMemo, useCallback, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Group } from "~/modules/users";
 
 import type {
   IndividualOrGroup,
   OptionGroup,
   SelectionItemsById,
+  TreeNode,
   UserSelectionGenericQueryFilters,
   UserSelectProps,
-  TreeNode,
 } from "./types";
 
 const defaultProps = {
@@ -54,10 +54,9 @@ export default function useUserSelect(props: UserSelectProps) {
   }>();
 
   useEffect(() => {
-    if (groupsFetcher.type === "init") {
-      groupsFetcher.load(`/api/users/groups?type=${innerProps.type}`);
-    }
-  }, [groupsFetcher, innerProps.type]);
+    groupsFetcher.load(`/api/users/groups?type=${innerProps.type}`);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [innerProps.type]);
 
   /* Refs */
   const containerRef = useRef<HTMLDivElement>(null);

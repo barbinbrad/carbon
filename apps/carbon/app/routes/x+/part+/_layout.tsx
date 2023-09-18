@@ -1,8 +1,5 @@
 import { VStack } from "@chakra-ui/react";
-import type {
-  LoaderArgs,
-  V2_MetaFunction as MetaFunction,
-} from "@remix-run/node";
+import type { LoaderArgs, MetaFunction } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 import {
   getPartCostingMethods,

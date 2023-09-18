@@ -53,10 +53,9 @@ const BulkEditPermissions = ({
   }>();
 
   useEffect(() => {
-    if (emptyPermissionsFetcher.type === "init") {
-      emptyPermissionsFetcher.load("/api/users/empty-permissions");
-    }
-  }, [emptyPermissionsFetcher]);
+    emptyPermissionsFetcher.load("/api/users/empty-permissions");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (emptyPermissionsFetcher.data) {

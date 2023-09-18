@@ -32,15 +32,14 @@ const Part = ({
   const partFetcher = useFetcher<Awaited<ReturnType<typeof getPartsList>>>();
 
   useEffect(() => {
-    if (partFetcher.type === "init") {
-      let url = "/api/parts/list?";
-      if (partReplenishmentSystem) {
-        url += `replenishmentSystem=${partReplenishmentSystem}`;
-      }
-
-      partFetcher.load(url);
+    let url = "/api/parts/list?";
+    if (partReplenishmentSystem) {
+      url += `replenishmentSystem=${partReplenishmentSystem}`;
     }
-  }, [partFetcher, partReplenishmentSystem]);
+
+    partFetcher.load(url);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [partReplenishmentSystem]);
 
   const options = useMemo(
     () =>

@@ -9,7 +9,6 @@ import { useFetcher } from "@remix-run/react";
 import { useEffect, useMemo } from "react";
 import { useControlField, useField } from "remix-validated-form";
 import type { getSuppliersList } from "~/modules/purchasing";
-import { mapRowsToOptions } from "~/utils/form";
 import type { SelectProps } from "./Select";
 
 type SupplierSelectProps = Omit<SelectProps, "options">;
@@ -31,18 +30,16 @@ const Supplier = ({
     useFetcher<Awaited<ReturnType<typeof getSuppliersList>>>();
 
   useEffect(() => {
-    if (supplierFetcher.type === "init") {
-      supplierFetcher.load("/api/purchasing/suppliers");
-    }
-  }, [supplierFetcher]);
+    supplierFetcher.load("/api/purchasing/suppliers");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const options = useMemo(
     () =>
-      mapRowsToOptions({
-        data: supplierFetcher.data?.data,
-        value: "id",
-        label: "name",
-      }),
+      supplierFetcher.data?.data?.map((c) => ({
+        value: c.id,
+        label: c.name,
+      })) ?? [],
     [supplierFetcher.data]
   );
 

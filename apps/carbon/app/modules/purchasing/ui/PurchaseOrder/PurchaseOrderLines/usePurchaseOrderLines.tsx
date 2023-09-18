@@ -18,16 +18,14 @@ export default function usePurchaseOrderLines() {
     useFetcher<Awaited<ReturnType<typeof getAccountsList>>>();
 
   useEffect(() => {
-    if (partsFetcher.type === "init") {
-      partsFetcher.load("/api/parts/list?replenishmentSystem=Buy");
-    }
-  }, [partsFetcher]);
+    partsFetcher.load("/api/parts/list?replenishmentSystem=Buy");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
-    if (accountsFetcher.type === "init") {
-      accountsFetcher.load("/api/accounting/accounts?type=Posting");
-    }
-  }, [accountsFetcher]);
+    accountsFetcher.load("/api/accounting/accounts?type=Posting");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const partOptions = useMemo(
     () =>

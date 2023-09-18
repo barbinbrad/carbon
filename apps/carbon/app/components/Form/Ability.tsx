@@ -1,5 +1,5 @@
 import type { SingleValue } from "@carbon/react";
-import { Select } from "@carbon/react";
+import { Select, useMount } from "@carbon/react";
 import {
   FormControl,
   FormErrorMessage,
@@ -39,10 +39,9 @@ const Ability = ({
   const abilityFetcher =
     useFetcher<Awaited<ReturnType<typeof getAbilitiesList>>>();
 
-  useEffect(() => {
+  useMount(() => {
     abilityFetcher.load(`/api/resources/abilities`);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  });
 
   const options = useMemo(
     () =>

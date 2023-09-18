@@ -1,6 +1,5 @@
-import { createFilter, Select } from "@carbon/react";
+import { createFilter, Select, useMount } from "@carbon/react";
 import { useFetcher } from "@remix-run/react";
-import { useEffect } from "react";
 import type { getCustomersList } from "~/modules/sales";
 
 type CustomerSelectProps = {
@@ -14,10 +13,9 @@ const CustomerSelect = ({ value, onChange }: CustomerSelectProps) => {
   const customerFetcher =
     useFetcher<Awaited<ReturnType<typeof getCustomersList>>>();
 
-  useEffect(() => {
+  useMount(() => {
     customerFetcher.load("/api/sales/customers");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  });
 
   const options =
     customerFetcher.data?.data?.map((customer) => ({

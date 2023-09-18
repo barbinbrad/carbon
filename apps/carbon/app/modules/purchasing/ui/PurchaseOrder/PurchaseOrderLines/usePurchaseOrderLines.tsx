@@ -1,5 +1,6 @@
+import { useMount } from "@carbon/react";
 import { useFetcher } from "@remix-run/react";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { usePermissions } from "~/hooks";
 import { useSupabase } from "~/lib/supabase";
 import type { getAccountsList } from "~/modules/accounting";
@@ -17,15 +18,10 @@ export default function usePurchaseOrderLines() {
   const accountsFetcher =
     useFetcher<Awaited<ReturnType<typeof getAccountsList>>>();
 
-  useEffect(() => {
+  useMount(() => {
     partsFetcher.load("/api/parts/list?replenishmentSystem=Buy");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
     accountsFetcher.load("/api/accounting/accounts?type=Posting");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  });
 
   const partOptions = useMemo(
     () =>

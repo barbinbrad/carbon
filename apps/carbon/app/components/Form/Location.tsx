@@ -1,4 +1,4 @@
-import { Select } from "@carbon/react";
+import { Select, useMount } from "@carbon/react";
 import {
   FormControl,
   FormErrorMessage,
@@ -39,10 +39,9 @@ const Location = ({
   const locationFetcher =
     useFetcher<Awaited<ReturnType<typeof getLocations>>>();
 
-  useEffect(() => {
+  useMount(() => {
     locationFetcher.load(`/api/resources/locations`);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  });
 
   const options = useMemo(
     () =>

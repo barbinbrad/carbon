@@ -1,5 +1,5 @@
 import type { MultiValue } from "@carbon/react";
-import { Select } from "@carbon/react";
+import { Select, useMount } from "@carbon/react";
 import {
   FormControl,
   FormErrorMessage,
@@ -7,7 +7,7 @@ import {
   FormLabel,
 } from "@chakra-ui/react";
 import { useFetcher } from "@remix-run/react";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { useControlField, useField } from "remix-validated-form";
 import type { getAbilitiesList } from "~/modules/resources";
 import type { SelectProps } from "./Select";
@@ -39,10 +39,9 @@ const Abilities = ({
   const abilityFetcher =
     useFetcher<Awaited<ReturnType<typeof getAbilitiesList>>>();
 
-  useEffect(() => {
+  useMount(() => {
     abilityFetcher.load(`/api/resources/abilities`);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  });
 
   const options = useMemo(
     () =>
@@ -66,7 +65,6 @@ const Abilities = ({
   };
 
   const controlledValue = useMemo(
-    // @ts-ignore
     () => options?.filter((option) => value?.includes(option.value)) ?? [],
     [value, options]
   );

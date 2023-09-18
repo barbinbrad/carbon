@@ -1,3 +1,4 @@
+import { useMount } from "@carbon/react";
 import {
   Box,
   Button,
@@ -14,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { useFetcher, useNavigate } from "@remix-run/react";
 import type { PostgrestResponse } from "@supabase/supabase-js";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import { Hidden, Select, Submit } from "~/components/Form";
 import type { EmployeeType, Permission } from "~/modules/users";
@@ -38,10 +39,9 @@ const EmployeePermissionsForm = ({
 
   const employeeTypeFetcher = useFetcher<PostgrestResponse<EmployeeType>>();
 
-  useEffect(() => {
+  useMount(() => {
     employeeTypeFetcher.load("/api/users/employee-types");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  });
 
   const employeeTypeOptions =
     employeeTypeFetcher.data?.data?.map((et) => ({

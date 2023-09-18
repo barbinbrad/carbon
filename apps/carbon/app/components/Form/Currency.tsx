@@ -1,4 +1,4 @@
-import { Select } from "@carbon/react";
+import { Select, useMount } from "@carbon/react";
 import {
   FormControl,
   FormErrorMessage,
@@ -32,10 +32,9 @@ const Currency = ({
   const currencyFetcher =
     useFetcher<Awaited<ReturnType<typeof getCurrenciesList>>>();
 
-  useEffect(() => {
+  useMount(() => {
     currencyFetcher.load(`/api/accounting/currencies`);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  });
 
   const options = useMemo(
     () =>

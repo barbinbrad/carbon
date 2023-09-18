@@ -1,4 +1,4 @@
-import { Select } from "@carbon/react";
+import { Select, useMount } from "@carbon/react";
 import {
   FormControl,
   FormErrorMessage,
@@ -32,10 +32,9 @@ const Department = ({
   const departmentFetcher =
     useFetcher<Awaited<ReturnType<typeof getDepartmentsList>>>();
 
-  useEffect(() => {
+  useMount(() => {
     departmentFetcher.load(`/api/resources/departments`);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  });
 
   const options = useMemo(
     () =>

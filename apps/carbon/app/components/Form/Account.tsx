@@ -1,4 +1,4 @@
-import { Select } from "@carbon/react";
+import { Select, useMount } from "@carbon/react";
 import {
   FormControl,
   FormErrorMessage,
@@ -32,10 +32,9 @@ const Account = ({
   const accountFetcher =
     useFetcher<Awaited<ReturnType<typeof getAccountsList>>>();
 
-  useEffect(() => {
+  useMount(() => {
     accountFetcher.load("/api/accounting/accounts?type=Posting");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  });
 
   const options = useMemo(
     () =>

@@ -1,4 +1,4 @@
-import { Select } from "@carbon/react";
+import { Select, useMount } from "@carbon/react";
 import {
   FormControl,
   FormErrorMessage,
@@ -29,10 +29,9 @@ const Supplier = ({
   const supplierFetcher =
     useFetcher<Awaited<ReturnType<typeof getSuppliersList>>>();
 
-  useEffect(() => {
+  useMount(() => {
     supplierFetcher.load("/api/purchasing/suppliers");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  });
 
   const options = useMemo(
     () =>

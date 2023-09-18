@@ -1,4 +1,4 @@
-import { Select } from "@carbon/react";
+import { Select, useMount } from "@carbon/react";
 import {
   FormControl,
   FormErrorMessage,
@@ -29,10 +29,9 @@ const Customer = ({
   const customerFetcher =
     useFetcher<Awaited<ReturnType<typeof getCustomersList>>>();
 
-  useEffect(() => {
+  useMount(() => {
     customerFetcher.load("/api/sales/customers");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  });
 
   const options = useMemo(
     () =>

@@ -1,4 +1,4 @@
-import { Select } from "@carbon/react";
+import { Select, useMount } from "@carbon/react";
 import {
   FormControl,
   FormErrorMessage,
@@ -34,10 +34,9 @@ const AccountCategory = ({
   const accountCategoryFetcher =
     useFetcher<Awaited<ReturnType<typeof getAccountCategoriesList>>>();
 
-  useEffect(() => {
+  useMount(() => {
     accountCategoryFetcher.load("/api/accounting/categories");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  });
 
   const options = useMemo(() => {
     return accountCategoryFetcher.data?.data?.map(

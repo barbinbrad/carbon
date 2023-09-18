@@ -1,6 +1,5 @@
-import { createFilter, Select } from "@carbon/react";
+import { createFilter, Select, useMount } from "@carbon/react";
 import { useFetcher } from "@remix-run/react";
-import { useEffect } from "react";
 import type { getSuppliersList } from "~/modules/purchasing";
 
 type SupplierSelectProps = {
@@ -14,10 +13,9 @@ const SupplierSelect = ({ value, onChange }: SupplierSelectProps) => {
   const supplierFetcher =
     useFetcher<Awaited<ReturnType<typeof getSuppliersList>>>();
 
-  useEffect(() => {
+  useMount(() => {
     supplierFetcher.load("/api/purchasing/suppliers");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  });
 
   const options =
     supplierFetcher.data?.data?.map((supplier) => ({

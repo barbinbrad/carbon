@@ -5,6 +5,7 @@ import useHydrated from "./useHydrated";
 import useInterval from "./useInterval";
 import useKeyboardShortcuts from "./useKeyboardShortcuts";
 import useLocalStorage from "./useLocalStorage";
+import useMount from "./useMount";
 
 export {
   useColor,
@@ -14,4 +15,5 @@ export {
   useInterval,
   useKeyboardShortcuts,
   useLocalStorage,
+  useMount,
 };

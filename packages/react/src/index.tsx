@@ -9,6 +9,7 @@ import {
   useHydrated,
   useInterval,
   useKeyboardShortcuts,
+  useMount,
 } from "./hooks";
 import HTML from "./HTML";
 import type {
@@ -70,5 +71,6 @@ export {
   useHydrated,
   useInterval,
   useKeyboardShortcuts,
+  useMount,
   useNotification,
 };

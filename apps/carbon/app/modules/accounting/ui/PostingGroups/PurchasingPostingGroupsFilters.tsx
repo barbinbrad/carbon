@@ -37,7 +37,6 @@ const PurchasingPostingGroupsFilters = ({
       w="full"
     >
       <Select
-        // @ts-ignore
         size="sm"
         isClearable
         value={partGroupOptions.find(
@@ -48,11 +47,9 @@ const PurchasingPostingGroupsFilters = ({
           setParams({ partGroup: selected?.value });
         }}
         aria-label="Part Group"
-        minW={180}
         placeholder="Part Group"
       />
       <Select
-        // @ts-ignore
         size="sm"
         isClearable
         value={supplierTypeOptions.find(
@@ -63,7 +60,6 @@ const PurchasingPostingGroupsFilters = ({
           setParams({ supplierType: selected?.value });
         }}
         aria-label="Supplier Type"
-        minW={180}
         placeholder="Supplier Type"
       />
     </HStack>

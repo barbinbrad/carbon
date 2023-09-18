@@ -29,9 +29,7 @@ const AttributeCategoriesTableFilters = () => {
           placeholder="Search"
         />
         <Select
-          // @ts-ignore
           size="sm"
-          minW={180}
           placeholder="Income Balance"
           value={incomeBalanceTypes
             .map((incomeBalance) => ({
@@ -49,9 +47,7 @@ const AttributeCategoriesTableFilters = () => {
           }}
         />
         <Select
-          // @ts-ignore
           size="sm"
-          minW={180}
           placeholder="Normal Balance"
           value={normalBalanceTypes
             .map((normalBalance) => ({

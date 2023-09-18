@@ -42,7 +42,6 @@ const EmployeesTableFilters = ({
           placeholder="Search"
         />
         <Select
-          // @ts-ignore
           size="sm"
           value={employeeTypeOptions.find(
             (type) => type.value === params.get("type")
@@ -53,11 +52,9 @@ const EmployeesTableFilters = ({
             setParams({ type: selected?.value });
           }}
           aria-label="Employee Type"
-          minW={180}
           placeholder="Employee Type"
         />
         <Select
-          // @ts-ignore
           size="sm"
           value={
             params.get("active") === "false"
@@ -78,7 +75,6 @@ const EmployeesTableFilters = ({
             setParams({ active: selected?.value });
           }}
           aria-label="Active"
-          minW={180}
         />
       </HStack>
       <HStack spacing={2}>

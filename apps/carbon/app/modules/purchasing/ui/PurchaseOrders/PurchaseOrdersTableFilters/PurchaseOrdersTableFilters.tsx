@@ -48,7 +48,6 @@ const PurchaseOrdersTableFilters = ({
           placeholder="Search"
         />
         <Select
-          // @ts-ignore
           size="sm"
           value={purchaseOrderStatusOptions.find(
             (type) => type.value === params.get("status")
@@ -59,11 +58,9 @@ const PurchaseOrdersTableFilters = ({
             setParams({ status: selected?.value });
           }}
           aria-label="Status"
-          minW={180}
           placeholder="Status"
         />
         <Select
-          // @ts-ignore
           size="sm"
           value={supplierOptions.find(
             (supplier) => supplier.value === params.get("supplierId")
@@ -74,7 +71,6 @@ const PurchaseOrdersTableFilters = ({
             setParams({ supplierId: selected?.value });
           }}
           aria-label="Supplier"
-          minW={180}
           placeholder="Supplier"
         />
       </HStack>

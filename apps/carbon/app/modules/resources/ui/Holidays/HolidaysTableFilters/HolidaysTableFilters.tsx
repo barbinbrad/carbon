@@ -37,7 +37,6 @@ const HolidaysTableFilters = ({ years }: HolidaysTableFiltersProps) => {
           placeholder="Search"
         />
         <Select
-          // @ts-ignore
           size="sm"
           value={
             params.get("year")
@@ -54,7 +53,6 @@ const HolidaysTableFilters = ({ years }: HolidaysTableFiltersProps) => {
             setParams({ year: selected?.value });
           }}
           aria-label="Year"
-          minW={180}
           placeholder="Year"
         />
       </HStack>

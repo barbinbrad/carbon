@@ -1,10 +1,9 @@
-/* eslint-disable react/display-name */
-import { forwardRef, useId } from "react";
 import type { MutableRefObject, ReactElement, RefAttributes } from "react";
+import { forwardRef } from "react";
 import type { GroupBase, SelectInstance } from "react-select";
-import CreatableReactSelect from "react-select/creatable";
 import type { CreatableProps } from "react-select/creatable";
-import useSelect from "./useSelect";
+import CreatableReactSelect from "react-select/creatable";
+import useChakraSelectProps from "../use-chakra-select-props";
 
 export type CreatableSelectComponent = <
   Option = unknown,
@@ -15,6 +14,7 @@ export type CreatableSelectComponent = <
     RefAttributes<SelectInstance<Option, IsMulti, Group>>
 ) => ReactElement;
 
+// eslint-disable-next-line react/display-name
 const CreatableSelect = forwardRef(
   <Option, IsMulti extends boolean, Group extends GroupBase<Option>>(
     props: CreatableProps<Option, IsMulti, Group>,
@@ -23,16 +23,9 @@ const CreatableSelect = forwardRef(
       | MutableRefObject<SelectInstance<Option, IsMulti, Group> | null>
       | null
   ) => {
-    const instanceId = useId();
-    const selectProps = useSelect(props);
+    const chakraSelectProps = useChakraSelectProps(props);
 
-    return (
-      <CreatableReactSelect
-        instanceId={instanceId}
-        ref={ref}
-        {...selectProps}
-      />
-    );
+    return <CreatableReactSelect ref={ref} {...chakraSelectProps} />;
   }
 ) as CreatableSelectComponent;
 

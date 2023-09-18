@@ -37,7 +37,6 @@ const InventoryPostingGroupsFilters = ({
       w="full"
     >
       <Select
-        // @ts-ignore
         size="sm"
         isClearable
         value={partGroupOptions.find(
@@ -48,11 +47,9 @@ const InventoryPostingGroupsFilters = ({
           setParams({ partGroup: selected?.value });
         }}
         aria-label="Part Group"
-        minW={180}
         placeholder="Part Group"
       />
       <Select
-        // @ts-ignore
         size="sm"
         isClearable
         value={locationOptions.find(
@@ -63,7 +60,6 @@ const InventoryPostingGroupsFilters = ({
           setParams({ location: selected?.value });
         }}
         aria-label="Location"
-        minW={180}
         placeholder="Location"
       />
     </HStack>

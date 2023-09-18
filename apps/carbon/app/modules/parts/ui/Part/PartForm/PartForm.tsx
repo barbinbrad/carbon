@@ -158,6 +158,7 @@ const PartForm = ({
                 <InputControlled
                   name="id"
                   label="Part ID"
+                  helperText="Use ... to get the next part ID"
                   value={partId}
                   onChange={onPartIdChange}
                   isDisabled={loading}

@@ -39,7 +39,6 @@ const PartnersTableFilters = ({ abilities }: PartnersTableFiltersProps) => {
           placeholder="Search"
         />
         <Select
-          // @ts-ignore
           size="sm"
           value={abilitiesOptions.find(
             (type) => type.value === params.get("ability")
@@ -50,7 +49,6 @@ const PartnersTableFilters = ({ abilities }: PartnersTableFiltersProps) => {
             setParams({ ability: selected?.value });
           }}
           aria-label="Ability"
-          minW={180}
           placeholder="Ability"
         />
       </HStack>

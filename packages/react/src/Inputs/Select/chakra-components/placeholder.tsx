@@ -1,5 +1,5 @@
-import { Box, useColorModeValue } from "@chakra-ui/react";
 import type { SystemStyleObject } from "@chakra-ui/react";
+import { Box, useColorModeValue } from "@chakra-ui/react";
 import type { GroupBase, PlaceholderProps } from "react-select";
 
 const Placeholder = <

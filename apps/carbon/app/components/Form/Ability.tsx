@@ -1,3 +1,4 @@
+import type { SingleValue } from "@carbon/react";
 import { Select } from "@carbon/react";
 import {
   FormControl,
@@ -11,8 +12,14 @@ import { useControlField, useField } from "remix-validated-form";
 import type { getAbilitiesList } from "~/modules/resources";
 import type { SelectProps } from "./Select";
 
-type AbilitySelectProps = Omit<SelectProps, "options"> & {
+type AbilitySelectProps = Omit<SelectProps, "options" | "onChange"> & {
   ability?: string;
+  onChange?: (
+    selection: SingleValue<{
+      value: string | number;
+      label: string;
+    }>
+  ) => void;
 };
 
 const Ability = ({
@@ -48,11 +55,13 @@ const Ability = ({
     [abilityFetcher.data]
   );
 
-  const handleChange = (selection: {
-    value: string | number;
-    label: string;
-  }) => {
-    const newValue = (selection.value as string) || undefined;
+  const handleChange = (
+    selection: SingleValue<{
+      value: string | number;
+      label: string;
+    }>
+  ) => {
+    const newValue = (selection?.value as string) || undefined;
     setValue(newValue);
     if (onChange && typeof onChange === "function") {
       onChange(selection);
@@ -60,7 +69,6 @@ const Ability = ({
   };
 
   const controlledValue = useMemo(
-    // @ts-ignore
     () => options.find((option) => option.value === value),
     [value, options]
   );
@@ -83,7 +91,6 @@ const Ability = ({
         isLoading={isLoading}
         options={options}
         placeholder={placeholder}
-        // @ts-ignore
         onChange={handleChange}
       />
       {error ? (

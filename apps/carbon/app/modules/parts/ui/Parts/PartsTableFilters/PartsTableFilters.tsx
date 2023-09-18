@@ -48,9 +48,8 @@ const PartsTableFilters = ({
           minW={180}
           placeholder="Search Parts"
         />
-        {partGroupsOptions && (
+        {partGroupsOptions.length > 0 && (
           <Select
-            // @ts-ignore
             size="sm"
             isClearable
             value={partGroupsOptions.find(
@@ -62,12 +61,10 @@ const PartsTableFilters = ({
             }}
             aria-label="Groups"
             placeholder="Part Groups"
-            minW={180}
           />
         )}
         {partTypeOptions.length > 0 && (
           <Select
-            // @ts-ignore
             size="sm"
             value={partTypeOptions.find(
               (type) => type.value === params.get("type")
@@ -79,7 +76,6 @@ const PartsTableFilters = ({
             }}
             aria-label="Part Type"
             placeholder="Part Type"
-            minW={180}
           />
         )}
       </HStack>

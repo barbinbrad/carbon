@@ -2,7 +2,6 @@ import { createFilter, Select } from "@carbon/react";
 import { useFetcher } from "@remix-run/react";
 import { useEffect } from "react";
 import type { getSuppliersList } from "~/modules/purchasing";
-import { mapRowsToOptions } from "~/utils/form";
 
 type SupplierSelectProps = {
   value?: string;
@@ -21,11 +20,11 @@ const SupplierSelect = ({ value, onChange }: SupplierSelectProps) => {
     }
   }, [supplierFetcher]);
 
-  const options = mapRowsToOptions({
-    data: supplierFetcher.data?.data,
-    value: "id",
-    label: "name",
-  });
+  const options =
+    supplierFetcher.data?.data?.map((supplier) => ({
+      value: supplier.id,
+      label: supplier.name,
+    })) ?? [];
 
   return (
     <Select
@@ -34,6 +33,7 @@ const SupplierSelect = ({ value, onChange }: SupplierSelectProps) => {
       filterOption={createFilter({
         matchFrom: "any",
         stringify: (option) => `${option.label}`,
+        ignoreAccents: false,
       })}
       isLoading={supplierFetcher.state === "loading"}
       isMulti={false}

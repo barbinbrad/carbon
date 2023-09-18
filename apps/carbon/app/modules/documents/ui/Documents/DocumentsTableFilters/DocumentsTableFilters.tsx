@@ -54,7 +54,6 @@ const DocumentsTableFilters = ({ labels }: DocumentTableFiltersProps) => {
           placeholder="Search"
         />
         <Select
-          // @ts-ignore
           size="sm"
           value={documentTypeOptions.find(
             (type) => type.value === params.get("type")
@@ -65,12 +64,10 @@ const DocumentsTableFilters = ({ labels }: DocumentTableFiltersProps) => {
             setParams({ type: selected?.value });
           }}
           aria-label="Document Type"
-          minW={180}
           placeholder="Document Type"
         />
         {labels.length > 0 && (
           <Select
-            // @ts-ignore
             size="sm"
             value={labelOptions.find(
               (label) =>
@@ -83,7 +80,6 @@ const DocumentsTableFilters = ({ labels }: DocumentTableFiltersProps) => {
               setParams({ label: selected?.label });
             }}
             aria-label="Label"
-            minW={180}
             placeholder="Label"
           />
         )}

@@ -42,7 +42,6 @@ const SupplierAccountsTableFilters = ({
           placeholder="Search"
         />
         <Select
-          // @ts-ignore
           size="sm"
           value={supplierTypeOptions.find(
             (type) => type.value === params.get("type")
@@ -53,11 +52,9 @@ const SupplierAccountsTableFilters = ({
             setParams({ type: selected?.value });
           }}
           aria-label="Supplier Type"
-          minW={180}
           placeholder="Supplier Type"
         />
         <Select
-          // @ts-ignore
           size="sm"
           value={
             params.get("active") === "false"
@@ -78,7 +75,6 @@ const SupplierAccountsTableFilters = ({
             setParams({ active: selected?.value });
           }}
           aria-label="Active"
-          minW={180}
         />
       </HStack>
       <HStack spacing={2}>

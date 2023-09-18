@@ -42,7 +42,6 @@ const CustomerAccountsTableFilters = ({
           placeholder="Search"
         />
         <Select
-          // @ts-ignore
           size="sm"
           value={customerTypeOptions.find(
             (type) => type.value === params.get("type")
@@ -53,11 +52,9 @@ const CustomerAccountsTableFilters = ({
             setParams({ type: selected?.value });
           }}
           aria-label="Customer Type"
-          minW={180}
           placeholder="Customer Type"
         />
         <Select
-          // @ts-ignore
           size="sm"
           value={
             params.get("active") === "false"
@@ -78,7 +75,6 @@ const CustomerAccountsTableFilters = ({
             setParams({ active: selected?.value });
           }}
           aria-label="Active"
-          minW={180}
         />
       </HStack>
       <HStack spacing={2}>

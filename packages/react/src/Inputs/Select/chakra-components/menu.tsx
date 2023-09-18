@@ -1,13 +1,10 @@
-import type { IconProps, SystemStyleObject } from "@chakra-ui/react";
-import {
-  Box,
-  Icon,
-  MenuIcon,
-  useMultiStyleConfig,
-  useTheme,
-} from "@chakra-ui/react";
-
+import { Box } from "@chakra-ui/layout";
+import { Menu as ChakraMenu, MenuIcon } from "@chakra-ui/menu";
+import type { PropsOf, SystemStyleObject } from "@chakra-ui/system";
+import { useColorModeValue, useMultiStyleConfig } from "@chakra-ui/system";
+import React from "react";
 import type {
+  CoercedMenuPlacement,
   GroupBase,
   GroupHeadingProps,
   GroupProps,
@@ -16,8 +13,14 @@ import type {
   NoticeProps,
   OptionProps,
 } from "react-select";
-import { useColor } from "../../../hooks";
+import { FixedSizeList as List } from "react-window";
 import type { SizeProps, ThemeObject } from "../types";
+import { useSize } from "../utils";
+
+const alignToControl = (placement: CoercedMenuPlacement) => {
+  const placementToCSSProp = { bottom: "top", top: "bottom" };
+  return placement ? placementToCSSProp[placement] : "top";
+};
 
 const Menu = <Option, IsMulti extends boolean, Group extends GroupBase<Option>>(
   props: MenuProps<Option, IsMulti, Group>
@@ -34,12 +37,10 @@ const Menu = <Option, IsMulti extends boolean, Group extends GroupBase<Option>>(
 
   const initialSx: SystemStyleObject = {
     position: "absolute",
-    ...(placement === "bottom" && { top: "100%" }),
-    ...(placement === "top" && { bottom: "100%" }),
+    [alignToControl(placement)]: "100%",
     marginY: "8px",
     width: "100%",
     zIndex: 1,
-    overflow: "hidden",
   };
 
   const sx = chakraStyles?.menu
@@ -47,18 +48,30 @@ const Menu = <Option, IsMulti extends boolean, Group extends GroupBase<Option>>(
     : initialSx;
 
   return (
-    <Box
-      {...innerProps}
-      ref={innerRef}
-      className={cx({ menu: true }, className)}
-      sx={sx}
-    >
-      {children}
-    </Box>
+    <ChakraMenu>
+      <Box
+        {...innerProps}
+        ref={innerRef}
+        className={cx({ menu: true }, className)}
+        sx={sx}
+      >
+        {children}
+      </Box>
+    </ChakraMenu>
   );
 };
 
 export default Menu;
+
+const MenuItemHeightBySize = {
+  sm: 31,
+  md: 37,
+  lg: 43,
+} as const;
+
+interface OptionTypeBase {
+  [key: string]: any;
+}
 
 export const MenuList = <
   Option,
@@ -71,27 +84,77 @@ export const MenuList = <
     className,
     cx,
     innerRef,
-    children,
     maxHeight,
     isMulti,
     innerProps,
-    selectProps: { size, chakraStyles },
+    selectProps: {
+      chakraStyles,
+      size: sizeProp,
+      variant,
+      focusBorderColor,
+      errorBorderColor,
+    },
   } = props;
 
+  const list = React.useRef<List>(null);
   const menuStyles = useMultiStyleConfig("Menu");
 
-  const borderRadii: SizeProps = useTheme().radii;
+  // We're pulling in the border radius from the theme for the input component
+  // so we can match the menu lists' border radius to it, but in 2.8.0 the value
+  // was changed to being pulled from a theme variable instead of being hardcoded
+  const size = useSize(sizeProp);
+  const inputStyles = useMultiStyleConfig("Input", {
+    size,
+    variant,
+    focusBorderColor,
+    errorBorderColor,
+  });
+  const fieldStyles = inputStyles.field as Record<string, string>;
 
   const initialSx: SystemStyleObject = {
     ...menuStyles.list,
+    minW: "100%",
     maxHeight: `${maxHeight}px`,
     overflowY: "auto",
-    borderRadius: borderRadii[size || "md"],
+    // This is hacky, but it works. May be removed in the future
+    "--input-border-radius": fieldStyles?.["--input-border-radius"],
+    borderRadius: fieldStyles?.borderRadius || menuStyles.list?.borderRadius,
+    position: "relative", // required for offset[Height, Top] > keyboard scroll
+    WebkitOverflowScrolling: "touch",
   };
 
   const sx = chakraStyles?.menuList
     ? chakraStyles.menuList(initialSx, props)
     : initialSx;
+
+  const children = React.useMemo<React.ReactElement[]>(() => {
+    const _children = React.Children.toArray(
+      props.children
+    ) as React.ReactElement[];
+
+    const head = _children[0] || {};
+
+    if (
+      React.isValidElement<
+        OptionProps<OptionTypeBase, boolean, GroupBase<OptionTypeBase>>
+      >(head)
+    ) {
+      const { props: { data: { options = [] } = {} } = {} } = head;
+      const groupedChildrenLength = options.length;
+      const isGrouped = groupedChildrenLength > 0;
+      const flattenedChildren = isGrouped
+        ? flattenGroupedChildren(_children as React.ReactElement[])
+        : [];
+
+      return isGrouped ? flattenedChildren : _children;
+    } else {
+      return [];
+    }
+  }, [props.children]);
+
+  const itemCount = Array.isArray(children) ? children.length : 0;
+  const itemHeight = MenuItemHeightBySize[size ?? "md"];
+  const initialOffset = itemHeight * getCurrentIndex(children);
 
   return (
     <Box
@@ -104,9 +167,30 @@ export const MenuList = <
         className
       )}
       sx={sx}
-      ref={innerRef}
     >
-      {children}
+      <List
+        width="100%"
+        ref={list}
+        outerRef={innerRef}
+        height={Math.min(maxHeight, itemHeight * itemCount + 4)}
+        itemCount={itemCount}
+        itemData={children}
+        itemSize={itemHeight}
+        initialScrollOffset={initialOffset}
+      >
+        {({ data, index, style }: any) => {
+          return (
+            <div
+              style={{
+                ...style,
+                top: `${parseFloat(style.top.toString())}px`,
+              }}
+            >
+              {data[index]}
+            </div>
+          );
+        }}
+      </List>
     </Box>
   );
 };
@@ -123,33 +207,22 @@ export const LoadingMessage = <
     className,
     cx,
     innerProps,
-    selectProps: { size, chakraStyles },
+    selectProps: { chakraStyles, size: sizeProp },
   } = props;
 
-  /**
-   * The chakra UI global placeholder color
-   *
-   * @see {@link https://github.com/chakra-ui/chakra-ui/blob/13c6d2e08b61e179773be4722bb81173dd599306/packages/theme/src/styles.ts#L13}
-   */
-  const color = useColor("gray.400");
+  const size = useSize(sizeProp);
 
-  const fontSizes: SizeProps = {
-    sm: "0.875rem",
-    md: "1rem",
-    lg: "1.125rem",
-  };
-
-  const paddings: SizeProps = {
-    sm: "6px 9px",
-    md: "8px 12px",
-    lg: "10px 15px",
+  const verticalPaddings: SizeProps = {
+    sm: "6px",
+    md: "8px",
+    lg: "10px",
   };
 
   const initialSx: SystemStyleObject = {
-    color,
+    color: "chakra-subtle-text",
     textAlign: "center",
-    padding: paddings[size || "md"],
-    fontSize: fontSizes[size || "md"],
+    paddingY: verticalPaddings[size],
+    fontSize: size,
   };
 
   const sx = chakraStyles?.loadingMessage
@@ -185,33 +258,22 @@ export const NoOptionsMessage = <
     className,
     cx,
     innerProps,
-    selectProps: { size, chakraStyles },
+    selectProps: { chakraStyles, size: sizeProp },
   } = props;
 
-  /**
-   * The chakra UI global placeholder color
-   *
-   * @see {@link https://github.com/chakra-ui/chakra-ui/blob/13c6d2e08b61e179773be4722bb81173dd599306/packages/theme/src/styles.ts#L13}
-   */
-  const color = useColor("gray.400");
+  const size = useSize(sizeProp);
 
-  const fontSizes: SizeProps = {
-    sm: "0.875rem",
-    md: "1rem",
-    lg: "1.125rem",
-  };
-
-  const paddings: SizeProps = {
-    sm: "6px 9px",
-    md: "8px 12px",
-    lg: "10px 15px",
+  const verticalPaddings: SizeProps = {
+    sm: "6px",
+    md: "8px",
+    lg: "10px",
   };
 
   const initialSx: SystemStyleObject = {
-    color,
+    color: "chakra-subtle-text",
     textAlign: "center",
-    padding: paddings[size || "md"],
-    fontSize: fontSizes[size || "md"],
+    paddingY: verticalPaddings[size],
+    fontSize: size,
   };
 
   const sx = chakraStyles?.noOptionsMessage
@@ -253,6 +315,7 @@ export const Group = <
     label,
     selectProps,
     innerProps,
+    getClassNames,
   } = props;
 
   const { chakraStyles } = selectProps;
@@ -267,6 +330,7 @@ export const Group = <
         cx={cx}
         theme={theme}
         getStyles={getStyles}
+        getClassNames={getClassNames}
       >
         {label}
       </Heading>
@@ -286,16 +350,17 @@ export const GroupHeading = <
     cx,
     className,
     children,
-    selectProps: { size, hasStickyGroupHeaders, chakraStyles },
+    selectProps: { chakraStyles, size: sizeProp, hasStickyGroupHeaders },
   } = props;
 
   const menuStyles = useMultiStyleConfig("Menu");
 
-  const chakraTheme = useTheme();
+  const size = useSize(sizeProp);
+
   const fontSizes: SizeProps = {
-    sm: chakraTheme.fontSizes.xs,
-    md: chakraTheme.fontSizes.sm,
-    lg: chakraTheme.fontSizes.md,
+    sm: "xs",
+    md: "sm",
+    lg: "md",
   };
   const paddings: SizeProps = {
     sm: "0.4rem 0.8rem",
@@ -305,8 +370,8 @@ export const GroupHeading = <
 
   const initialSx: SystemStyleObject = {
     ...menuStyles.groupTitle,
-    fontSize: fontSizes[size || "md"],
-    padding: paddings[size || "md"],
+    fontSize: fontSizes[size],
+    padding: paddings[size],
     margin: 0,
     borderBottomWidth: hasStickyGroupHeaders ? "1px" : 0,
     position: hasStickyGroupHeaders ? "sticky" : "static",
@@ -329,15 +394,15 @@ export const GroupHeading = <
 /**
  * The `CheckIcon` component from the Chakra UI Menu
  *
- * @see {@link https://github.com/chakra-ui/chakra-ui/blob/13c6d2e08b61e179773be4722bb81173dd599306/packages/menu/src/menu.tsx#L314}
+ * @see {@link https://github.com/chakra-ui/chakra-ui/blob/eb0316ddf96dd259433724062e923c33e6eee729/packages/components/menu/src/menu-item-option.tsx#L10-L17}
  */
-const CheckIcon = (props: IconProps) => (
-  <Icon viewBox="0 0 14 14" w="1em" h="1em" {...props}>
+const CheckIcon: React.FC<PropsOf<"svg">> = (props) => (
+  <svg viewBox="0 0 14 14" width="1em" height="1em" {...props}>
     <polygon
       fill="currentColor"
       points="5.5 11.9993304 14 3.49933039 12.5 2 5.5 8.99933039 1.5 4.9968652 0 6.49933039"
     />
-  </Icon>
+  </svg>
 );
 
 export const Option = <
@@ -357,15 +422,18 @@ export const Option = <
     isDisabled,
     isSelected,
     selectProps: {
-      size,
+      chakraStyles,
+      size: sizeProp,
       isMulti,
       hideSelectedOptions,
       selectedOptionStyle,
-      chakraStyles,
+      selectedOptionColorScheme,
     },
   } = props;
 
-  const menuItemStyles = useMultiStyleConfig("Menu").item as ThemeObject;
+  const size = useSize(sizeProp);
+
+  const menuItemStyles: ThemeObject = useMultiStyleConfig("Menu").item;
 
   const paddings: SizeProps = {
     sm: "0.3rem 0.6rem",
@@ -373,9 +441,19 @@ export const Option = <
     lg: "0.5rem 1rem",
   };
 
-  const selectedBg = useColor("gray.900");
-  const selectedColor = useColor("white");
+  /**
+   * Use the same selected color as the border of the select component
+   *
+   * @see {@link https://github.com/chakra-ui/chakra-ui/blob/13c6d2e08b61e179773be4722bb81173dd599306/packages/theme/src/components/input.ts#L73}
+   */
+  const selectedBg = useColorModeValue(
+    `${selectedOptionColorScheme}.500`,
+    `${selectedOptionColorScheme}.300`
+  );
+  const selectedColor = useColorModeValue("white", "black");
 
+  // Don't create exta space for the checkmark if using a multi select with
+  // options that dissapear when they're selected
   const showCheckIcon: boolean =
     selectedOptionStyle === "check" &&
     (!isMulti || hideSelectedOptions === false);
@@ -390,7 +468,7 @@ export const Option = <
     width: "100%",
     textAlign: "start",
     fontSize: size,
-    padding: paddings[size || "md"],
+    padding: paddings[size],
     ...(isFocused && menuItemStyles._focus),
     ...(shouldHighlight && {
       bg: selectedBg,
@@ -436,3 +514,25 @@ export const Option = <
     </Box>
   );
 };
+
+export function flattenGroupedChildren(children: React.ReactElement[]) {
+  return children.reduce<React.ReactElement[]>((result, child) => {
+    const {
+      props: { children: nestedChildren = [] },
+    } = child;
+
+    return [
+      ...result,
+      React.cloneElement(child, { type: "group" }, []),
+      ...nestedChildren,
+    ];
+  }, []);
+}
+
+export function isFocused({ props: { isFocused } }: React.ReactElement) {
+  return isFocused === true;
+}
+
+export function getCurrentIndex(children: React.ReactElement[]) {
+  return Math.max(children.findIndex(isFocused), 0);
+}

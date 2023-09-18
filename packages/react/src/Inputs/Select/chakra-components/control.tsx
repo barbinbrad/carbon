@@ -1,12 +1,9 @@
-import type { IconProps, SystemStyleObject } from "@chakra-ui/react";
-import {
-  Box,
-  Divider,
-  Icon,
-  Spinner,
-  useMultiStyleConfig,
-  useStyleConfig,
-} from "@chakra-ui/react";
+import type { IconProps } from "@chakra-ui/icon";
+import { Icon } from "@chakra-ui/icon";
+import { Box, Divider } from "@chakra-ui/layout";
+import { Spinner } from "@chakra-ui/spinner";
+import type { SystemStyleObject } from "@chakra-ui/system";
+import { useMultiStyleConfig, useStyleConfig } from "@chakra-ui/system";
 import type {
   ClearIndicatorProps,
   ControlProps,
@@ -15,7 +12,9 @@ import type {
   IndicatorSeparatorProps,
   LoadingIndicatorProps,
 } from "react-select";
+import { useColor } from "../../../hooks";
 import type { SizeProps } from "../types";
+import { useSize } from "../utils";
 
 const Control = <
   Option,
@@ -34,37 +33,50 @@ const Control = <
     isFocused,
     menuIsOpen,
     selectProps: {
-      size,
-      isInvalid,
-      isReadOnly,
       chakraStyles,
+      size: sizeProp,
+      variant,
       focusBorderColor,
       errorBorderColor,
-      variant,
+      isInvalid,
+      isReadOnly,
+      w,
     },
   } = props;
 
-  const inputStyles = useMultiStyleConfig("Input", {
-    focusBorderColor,
-    errorBorderColor,
+  const size = useSize(sizeProp);
+  const {
+    field: { height, h, ...fieldStyles },
+  } = useMultiStyleConfig("Input", {
     size,
     variant,
+    focusBorderColor,
+    errorBorderColor,
   });
 
-  const heights: SizeProps = {
-    sm: 8,
-    md: 10,
-    lg: 12,
-  };
+  /**
+   * `@chakra-ui/theme@3.2.0` introduced a breaking change that switched from using `h` to `height` for the Input sizing.
+   *
+   * We need to keep checking for either to maintain backwards compatibility.
+   *
+   * @see {@link https://github.com/chakra-ui/chakra-ui/releases/tag/%40chakra-ui%2Ftheme%403.2.0}
+   */
+  const minH = height || h;
 
   const initialSx: SystemStyleObject = {
-    ...inputStyles.field,
+    ...fieldStyles,
+    position: "relative",
     display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    flexWrap: "wrap",
     padding: 0,
     overflow: "hidden",
     height: "auto",
-    minHeight: heights[size || "md"],
+    minH,
+    minW: 180,
     ...(isDisabled ? { pointerEvents: "none" } : {}),
+    backgroundColor: useColor("white"),
   };
 
   const sx = chakraStyles?.control
@@ -90,6 +102,7 @@ const Control = <
       data-invalid={isInvalid ? true : undefined}
       data-disabled={isDisabled ? true : undefined}
       aria-readonly={isReadOnly ? true : undefined}
+      width={w}
     >
       {children}
     </Box>
@@ -106,11 +119,12 @@ export const IndicatorSeparator = <
   const {
     className,
     cx,
-    selectProps: { chakraStyles },
+    selectProps: { chakraStyles, useBasicStyles, variant },
   } = props;
 
   const initialSx: SystemStyleObject = {
-    display: "none",
+    opacity: 1,
+    ...(useBasicStyles || variant !== "outline" ? { display: "none" } : {}),
   };
 
   const sx = chakraStyles?.indicatorSeparator
@@ -152,13 +166,22 @@ export const DropdownIndicator = <
     className,
     cx,
     innerProps,
-    selectProps: { size, chakraStyles, focusBorderColor, errorBorderColor },
+    selectProps: {
+      chakraStyles,
+      useBasicStyles,
+      size: sizeProp,
+      focusBorderColor,
+      errorBorderColor,
+      variant,
+    },
   } = props;
 
+  const size = useSize(sizeProp);
   const inputStyles = useMultiStyleConfig("Input", {
+    size,
+    variant,
     focusBorderColor,
     errorBorderColor,
-    size,
   });
 
   const iconSizes: SizeProps = {
@@ -166,7 +189,7 @@ export const DropdownIndicator = <
     md: "20px",
     lg: "24px",
   };
-  const iconSize = iconSizes[size || "md"];
+  const iconSize = iconSizes[size];
 
   const initialSx: SystemStyleObject = {
     ...inputStyles.addon,
@@ -177,12 +200,14 @@ export const DropdownIndicator = <
     borderRadius: 0,
     borderWidth: 0,
     fontSize: iconSize,
-    background: "transparent",
-    padding: 0,
-    width: 6,
-    marginRight: 2,
-    marginLeft: 1,
-    cursor: "inherit",
+    ...(useBasicStyles && {
+      background: "transparent",
+      padding: 0,
+      width: 6,
+      marginRight: 2,
+      marginLeft: 1,
+      cursor: "inherit",
+    }),
   };
   const sx = chakraStyles?.dropdownIndicator
     ? chakraStyles.dropdownIndicator(initialSx, props)
@@ -239,9 +264,10 @@ export const ClearIndicator = <
     className,
     cx,
     innerProps,
-    selectProps: { size, chakraStyles },
+    selectProps: { chakraStyles, size: sizeProp },
   } = props;
 
+  const size = useSize(sizeProp);
   const closeButtonStyles = useStyleConfig("CloseButton", {
     size,
   });
@@ -297,7 +323,7 @@ export const LoadingIndicator = <
     className,
     cx,
     innerProps,
-    selectProps: { size, chakraStyles },
+    selectProps: { chakraStyles, size: sizeProp },
     color,
     emptyColor,
     speed,
@@ -305,13 +331,13 @@ export const LoadingIndicator = <
     spinnerSize: propsSpinnerSize,
   } = props;
 
+  const size = useSize(sizeProp);
   const spinnerSizes: SizeProps<string> = {
     sm: "xs",
     md: "sm",
     lg: "md",
   };
-
-  const spinnerSize = spinnerSizes[size || "md"];
+  const spinnerSize = spinnerSizes[size];
 
   const initialSx: SystemStyleObject = { marginRight: 3 };
 

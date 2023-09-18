@@ -1,9 +1,8 @@
-/* eslint-disable react/display-name */
-import { forwardRef, useId } from "react";
 import type { MutableRefObject, ReactElement, RefAttributes } from "react";
-import ReactSelect from "react-select";
+import { forwardRef } from "react";
 import type { GroupBase, Props, SelectInstance } from "react-select";
-import useSelectProps from "./useSelect";
+import ReactSelect from "react-select";
+import useChakraSelectProps from "../use-chakra-select-props";
 
 export type SelectComponent = <
   Option = unknown,
@@ -14,6 +13,7 @@ export type SelectComponent = <
     RefAttributes<SelectInstance<Option, IsMulti, Group>>
 ) => ReactElement;
 
+// eslint-disable-next-line react/display-name
 const Select = forwardRef(
   <Option, IsMulti extends boolean, Group extends GroupBase<Option>>(
     props: Props<Option, IsMulti, Group>,
@@ -22,10 +22,9 @@ const Select = forwardRef(
       | MutableRefObject<SelectInstance<Option, IsMulti, Group> | null>
       | null
   ) => {
-    const instanceId = useId();
-    const selectProps = useSelectProps(props);
+    const chakraSelectProps = useChakraSelectProps(props);
 
-    return <ReactSelect instanceId={instanceId} ref={ref} {...selectProps} />;
+    return <ReactSelect ref={ref} {...chakraSelectProps} />;
   }
 ) as SelectComponent;
 

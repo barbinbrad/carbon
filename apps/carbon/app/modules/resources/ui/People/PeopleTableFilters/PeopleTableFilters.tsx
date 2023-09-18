@@ -5,7 +5,6 @@ import { IoMdAdd } from "react-icons/io";
 import { DebouncedInput } from "~/components/Search";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { EmployeeType } from "~/modules/users";
-import { mapRowsToOptions } from "~/utils/form";
 
 type PeopleTableFiltersProps = {
   employeeTypes: Partial<EmployeeType>[];
@@ -14,11 +13,10 @@ type PeopleTableFiltersProps = {
 const PeopleTableFilters = ({ employeeTypes }: PeopleTableFiltersProps) => {
   const [params, setParams] = useUrlParams();
   const permissions = usePermissions();
-  const employeeTypeOptions = mapRowsToOptions({
-    data: employeeTypes,
-    value: "id",
-    label: "name",
-  });
+  const employeeTypeOptions = employeeTypes?.map((type) => ({
+    value: type.id,
+    label: type.name,
+  }));
 
   const borderColor = useColor("gray.200");
 
@@ -40,7 +38,6 @@ const PeopleTableFilters = ({ employeeTypes }: PeopleTableFiltersProps) => {
           placeholder="Search"
         />
         <Select
-          // @ts-ignore
           size="sm"
           value={employeeTypeOptions.find(
             (type) => type.value === params.get("type")
@@ -51,7 +48,6 @@ const PeopleTableFilters = ({ employeeTypes }: PeopleTableFiltersProps) => {
             setParams({ type: selected?.value });
           }}
           aria-label="Employee Type"
-          minW={180}
           placeholder="Employee Type"
         />
         <Select
@@ -76,7 +72,6 @@ const PeopleTableFilters = ({ employeeTypes }: PeopleTableFiltersProps) => {
             setParams({ active: selected?.value });
           }}
           aria-label="Active"
-          minW={180}
         />
       </HStack>
       <HStack spacing={2}>

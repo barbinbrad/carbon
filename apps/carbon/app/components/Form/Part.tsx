@@ -9,7 +9,6 @@ import { useFetcher } from "@remix-run/react";
 import { useEffect, useMemo } from "react";
 import { useControlField, useField } from "remix-validated-form";
 import type { getPartsList, PartReplenishmentSystem } from "~/modules/parts";
-import { mapRowsToOptions } from "~/utils/form";
 import type { SelectProps } from "./Select";
 
 type PartSelectProps = Omit<SelectProps, "options"> & {
@@ -45,11 +44,10 @@ const Part = ({
 
   const options = useMemo(
     () =>
-      mapRowsToOptions({
-        data: partFetcher.data?.data,
-        value: "id",
-        label: (part) => `${part.id} - ${part.name}`,
-      }),
+      partFetcher.data?.data?.map((part) => ({
+        value: part.id,
+        label: `${part.id} - ${part.name}`,
+      })) ?? [],
     [partFetcher.data]
   );
 
@@ -79,11 +77,10 @@ const Part = ({
           id: name,
         })}
         {...props}
+        options={options}
         value={controlledValue}
         isLoading={isLoading}
-        options={options}
         placeholder={placeholder}
-        // @ts-ignore
         w="full"
         isReadOnly={isReadOnly}
         onChange={handleChange}

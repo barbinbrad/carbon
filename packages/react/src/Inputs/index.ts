@@ -1,17 +1,19 @@
 import type { GroupBase, OptionProps } from "react-select";
 import {
   DatePicker,
-  DateTimePicker,
   DateRangePicker,
+  DateTimePicker,
   TimePicker,
 } from "./Date";
 import { Editor, useEditor } from "./Editor";
 import File from "./File";
-import { CreatableSelect, Select, createFilter } from "./Select";
+import type { MultiValue, SingleValue } from "./Select";
+import { AsyncSelect, CreatableSelect, createFilter, Select } from "./Select";
 import type { OptionBase } from "./Select/types";
 
-export type { OptionBase, OptionProps, GroupBase };
+export type { OptionBase, OptionProps, GroupBase, MultiValue, SingleValue };
 export {
+  AsyncSelect,
   CreatableSelect,
   DatePicker,
   DateTimePicker,

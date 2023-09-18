@@ -38,7 +38,6 @@ const ShiftsTableFilters = ({ locations }: ShiftsTableFiltersProps) => {
           placeholder="Search"
         />
         <Select
-          // @ts-ignore
           size="sm"
           value={locationOptions.find(
             (type) => type.value === params.get("location")
@@ -49,7 +48,6 @@ const ShiftsTableFilters = ({ locations }: ShiftsTableFiltersProps) => {
             setParams({ location: selected?.value });
           }}
           aria-label="Location"
-          minW={180}
           placeholder="Location"
         />
       </HStack>

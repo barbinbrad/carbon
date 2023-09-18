@@ -51,7 +51,6 @@ const SuppliersTableFilters = ({
         />
         {supplierTypeOptions.length > 0 && (
           <Select
-            // @ts-ignore
             size="sm"
             value={supplierTypeOptions.find(
               (type) => type.value === params.get("type")
@@ -63,12 +62,10 @@ const SuppliersTableFilters = ({
             }}
             aria-label="Supplier Type"
             placeholder="Supplier Type"
-            minW={180}
           />
         )}
         {supplierStatusOptions && (
           <Select
-            // @ts-ignore
             size="sm"
             isClearable
             value={supplierStatusOptions.find(
@@ -80,7 +77,6 @@ const SuppliersTableFilters = ({
             }}
             aria-label="Status"
             placeholder="Supplier Status"
-            minW={180}
           />
         )}
       </HStack>

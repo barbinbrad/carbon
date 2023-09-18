@@ -22,7 +22,6 @@ import { usePermissions } from "~/hooks";
 import type { getSupplierLocations } from "~/modules/purchasing";
 import { partnerValidator } from "~/modules/resources";
 import type { TypeOfValidator } from "~/types/validators";
-import { mapRowsToOptions } from "~/utils/form";
 
 type PartnerFormProps = {
   initialValues: TypeOfValidator<typeof partnerValidator>;
@@ -58,12 +57,10 @@ const PartnerForm = ({ initialValues }: PartnerFormProps) => {
 
   const supplierLocations = useMemo(
     () =>
-      mapRowsToOptions({
-        data: supplierLocationFetcher.data?.data ?? [],
-        value: "id",
-        // @ts-ignore
-        label: (row) => `${row.address.city}, ${row.address.state}`,
-      }),
+      supplierLocationFetcher.data?.data?.map((loc) => ({
+        value: loc.id,
+        label: `${loc.address?.city}, ${loc.address?.state}`,
+      })) ?? [],
     [supplierLocationFetcher.data]
   );
 
@@ -164,9 +161,7 @@ const SupplierLocationsBySupplier = ({
         options={supplierLocations}
         value={supplierLocation}
         onChange={setSupplierLocation}
-        // @ts-ignore
         isReadOnly={isReadOnly}
-        w="full"
       />
       {error && <FormErrorMessage>{error}</FormErrorMessage>}
     </FormControl>

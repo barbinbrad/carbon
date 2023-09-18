@@ -1,3 +1,4 @@
+import type { MultiValue } from "@carbon/react";
 import { Select } from "@carbon/react";
 import {
   FormControl,
@@ -14,10 +15,10 @@ import type { SelectProps } from "./Select";
 type AbilitiesSelectProps = Omit<SelectProps, "options" | "onChange"> & {
   ability?: string;
   onChange?: (
-    selections: {
+    selections: MultiValue<{
       value: string;
       label: string;
-    }[]
+    }>
   ) => void;
 };
 
@@ -55,10 +56,7 @@ const Abilities = ({
   );
 
   const handleChange = (
-    selections: {
-      value: string;
-      label: string;
-    }[]
+    selections: MultiValue<{ value: string; label: string }>
   ) => {
     const newValue = selections.map((s) => s.value as string) || [];
     setValue(newValue);
@@ -91,7 +89,6 @@ const Abilities = ({
         isLoading={isLoading}
         options={options}
         placeholder={placeholder}
-        // @ts-ignore
         onChange={handleChange}
       />
       {error ? (

@@ -5,7 +5,6 @@ import { IoMdAdd } from "react-icons/io";
 import { DebouncedInput } from "~/components/Search";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { CustomerStatus, CustomerType } from "~/modules/sales";
-import { mapRowsToOptions } from "~/utils/form";
 
 type CustomersTableFiltersProps = {
   customerTypes: Partial<CustomerType>[];
@@ -18,17 +17,17 @@ const CustomersTableFilters = ({
 }: CustomersTableFiltersProps) => {
   const [params, setParams] = useUrlParams();
   const permissions = usePermissions();
-  const customerTypeOptions = mapRowsToOptions({
-    data: customerTypes,
-    value: "id",
-    label: "name",
-  });
+  const customerTypeOptions =
+    customerTypes?.map((type) => ({
+      value: type.id,
+      label: type.name,
+    })) ?? [];
 
-  const customerStatusOptions = mapRowsToOptions({
-    data: customerStatuses,
-    value: (status) => status.id.toString(),
-    label: "name",
-  });
+  const customerStatusOptions =
+    customerStatuses?.map((status) => ({
+      value: status.id,
+      label: status.name,
+    })) ?? [];
 
   const borderColor = useColor("gray.200");
 
@@ -51,7 +50,6 @@ const CustomersTableFilters = ({
         />
         {customerTypeOptions.length > 0 && (
           <Select
-            // @ts-ignore
             size="sm"
             value={customerTypeOptions.find(
               (type) => type.value === params.get("type")
@@ -63,12 +61,10 @@ const CustomersTableFilters = ({
             }}
             aria-label="Customer Type"
             placeholder="Customer Type"
-            minW={180}
           />
         )}
         {customerStatusOptions && (
           <Select
-            // @ts-ignore
             size="sm"
             isClearable
             value={customerStatusOptions.find(
@@ -80,7 +76,6 @@ const CustomersTableFilters = ({
             }}
             aria-label="Status"
             placeholder="Customer Status"
-            minW={180}
           />
         )}
       </HStack>

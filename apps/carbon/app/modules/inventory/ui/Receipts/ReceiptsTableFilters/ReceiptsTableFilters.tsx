@@ -47,7 +47,6 @@ const ReceiptsTableFilters = ({ locations }: ReceiptsTableFiltersProps) => {
           placeholder="Search"
         />
         <Select
-          // @ts-ignore
           size="sm"
           value={sourceDocumentOptions.find(
             (document) => document.value === params.get("document")
@@ -59,10 +58,8 @@ const ReceiptsTableFilters = ({ locations }: ReceiptsTableFiltersProps) => {
           }}
           aria-label="Source Document"
           placeholder="Source Document"
-          minW={180}
         />
         <Select
-          // @ts-ignore
           size="sm"
           value={
             params.get("location")
@@ -79,7 +76,6 @@ const ReceiptsTableFilters = ({ locations }: ReceiptsTableFiltersProps) => {
           }}
           aria-label="Location"
           placeholder="Location"
-          minW={180}
         />
       </HStack>
       <HStack spacing={2}>

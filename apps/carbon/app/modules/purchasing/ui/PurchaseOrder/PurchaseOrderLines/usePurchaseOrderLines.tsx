@@ -4,8 +4,8 @@ import { useCallback, useMemo } from "react";
 import { usePermissions } from "~/hooks";
 import { useSupabase } from "~/lib/supabase";
 import type { getAccountsList } from "~/modules/accounting";
-import type { getPartsList } from "~/modules/parts";
 import type { PurchaseOrderLine } from "~/modules/purchasing";
+import { usePurchasedParts } from "~/stores/data";
 
 export default function usePurchaseOrderLines() {
   const { supabase } = useSupabase();
@@ -14,24 +14,21 @@ export default function usePurchaseOrderLines() {
   const canEdit = permissions.can("update", "purchasing");
   const canDelete = permissions.can("delete", "purchasing");
 
-  const partsFetcher = useFetcher<Awaited<ReturnType<typeof getPartsList>>>();
+  const parts = usePurchasedParts();
   const accountsFetcher =
     useFetcher<Awaited<ReturnType<typeof getAccountsList>>>();
 
   useMount(() => {
-    partsFetcher.load("/api/parts/list?replenishmentSystem=Buy");
     accountsFetcher.load("/api/accounting/accounts?type=Posting");
   });
 
   const partOptions = useMemo(
     () =>
-      partsFetcher.data?.data
-        ? partsFetcher.data?.data.map((p) => ({
-            value: p.id,
-            label: p.id,
-          }))
-        : [],
-    [partsFetcher.data]
+      parts.map((p) => ({
+        value: p.id,
+        label: p.id,
+      })),
+    [parts]
   );
 
   const accountOptions = useMemo(

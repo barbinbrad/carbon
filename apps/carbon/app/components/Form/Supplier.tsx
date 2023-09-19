@@ -1,14 +1,13 @@
-import { Select, useMount } from "@carbon/react";
+import { Select } from "@carbon/react";
 import {
   FormControl,
   FormErrorMessage,
   FormHelperText,
   FormLabel,
 } from "@chakra-ui/react";
-import { useFetcher } from "@remix-run/react";
 import { useEffect, useMemo } from "react";
 import { useControlField, useField } from "remix-validated-form";
-import type { getSuppliersList } from "~/modules/purchasing";
+import { useSuppliers } from "~/stores/data";
 import type { SelectProps } from "./Select";
 
 type SupplierSelectProps = Omit<SelectProps, "options">;
@@ -26,20 +25,15 @@ const Supplier = ({
   const { getInputProps, error, defaultValue } = useField(name);
   const [value, setValue] = useControlField<string | undefined>(name);
 
-  const supplierFetcher =
-    useFetcher<Awaited<ReturnType<typeof getSuppliersList>>>();
-
-  useMount(() => {
-    supplierFetcher.load("/api/purchasing/suppliers");
-  });
+  const [suppliers] = useSuppliers();
 
   const options = useMemo(
     () =>
-      supplierFetcher.data?.data?.map((c) => ({
+      suppliers.map((c) => ({
         value: c.id,
         label: c.name,
       })) ?? [],
-    [supplierFetcher.data]
+    [suppliers]
   );
 
   const handleChange = (selection: {

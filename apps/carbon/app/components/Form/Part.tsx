@@ -5,10 +5,10 @@ import {
   FormHelperText,
   FormLabel,
 } from "@chakra-ui/react";
-import { useFetcher } from "@remix-run/react";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { useControlField, useField } from "remix-validated-form";
-import type { getPartsList, PartReplenishmentSystem } from "~/modules/parts";
+import type { PartReplenishmentSystem } from "~/modules/parts";
+import { useParts } from "~/stores/data";
 import type { SelectProps } from "./Select";
 
 type PartSelectProps = Omit<SelectProps, "options"> & {
@@ -28,26 +28,25 @@ const Part = ({
 }: PartSelectProps) => {
   const { getInputProps, error } = useField(name);
   const [value, setValue] = useControlField<string | undefined>(name);
-
-  const partFetcher = useFetcher<Awaited<ReturnType<typeof getPartsList>>>();
-
-  useEffect(() => {
-    let url = "/api/parts/list?";
-    if (partReplenishmentSystem) {
-      url += `replenishmentSystem=${partReplenishmentSystem}`;
-    }
-
-    partFetcher.load(url);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [partReplenishmentSystem]);
+  const [parts] = useParts();
 
   const options = useMemo(
     () =>
-      partFetcher.data?.data?.map((part) => ({
-        value: part.id,
-        label: `${part.id} - ${part.name}`,
-      })) ?? [],
-    [partFetcher.data]
+      parts
+        .filter((part) => {
+          if (partReplenishmentSystem === "Buy") {
+            return part.replenishmentSystem === "Buy";
+          } else if (partReplenishmentSystem === "Make") {
+            return part.replenishmentSystem === "Make";
+          } else {
+            return true;
+          }
+        })
+        .map((part) => ({
+          value: part.id,
+          label: `${part.id} - ${part.name}`,
+        })) ?? [],
+    [partReplenishmentSystem, parts]
   );
 
   const handleChange = (selection: {

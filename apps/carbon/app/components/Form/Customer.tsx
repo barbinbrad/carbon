@@ -1,14 +1,13 @@
-import { Select, useMount } from "@carbon/react";
+import { Select } from "@carbon/react";
 import {
   FormControl,
   FormErrorMessage,
   FormHelperText,
   FormLabel,
 } from "@chakra-ui/react";
-import { useFetcher } from "@remix-run/react";
 import { useEffect, useMemo } from "react";
 import { useControlField, useField } from "remix-validated-form";
-import type { getCustomersList } from "~/modules/sales";
+import { useCustomers } from "~/stores/data";
 import type { SelectProps } from "./Select";
 
 type CustomerSelectProps = Omit<SelectProps, "options">;
@@ -26,20 +25,15 @@ const Customer = ({
   const { getInputProps, error, defaultValue } = useField(name);
   const [value, setValue] = useControlField<string | undefined>(name);
 
-  const customerFetcher =
-    useFetcher<Awaited<ReturnType<typeof getCustomersList>>>();
-
-  useMount(() => {
-    customerFetcher.load("/api/sales/customers");
-  });
+  const [customers] = useCustomers();
 
   const options = useMemo(
     () =>
-      customerFetcher.data?.data?.map((c) => ({
+      customers.map((c) => ({
         value: c.id,
         label: c.name,
       })) ?? [],
-    [customerFetcher.data]
+    [customers]
   );
 
   const handleChange = (selection: {

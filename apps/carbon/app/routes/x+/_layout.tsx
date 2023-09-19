@@ -19,6 +19,7 @@ import {
   getSessionFlash,
   requireAuthSession,
 } from "~/services/session";
+import { RealtimeDataProvider } from "~/stores/data";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const { accessToken, expiresAt, expiresIn, userId } =
@@ -86,20 +87,22 @@ export default function AuthenticatedRoute() {
 
   return (
     <SupabaseProvider session={session}>
-      <Grid h="100vh" w="100vw" templateColumns="auto 1fr">
-        <IconSidebar />
-        <GridItem w="full" h="full">
-          <Grid templateRows="auto 1fr" h="full" w="full">
-            <Topbar />
-            <Flex w="full" h="full">
-              <SkipNavContent />
-              <VStack spacing={0} w="full" bg={useColor("gray.50")}>
-                <Outlet />
-              </VStack>
-            </Flex>
-          </Grid>
-        </GridItem>
-      </Grid>
+      <RealtimeDataProvider>
+        <Grid h="100vh" w="100vw" templateColumns="auto 1fr">
+          <IconSidebar />
+          <GridItem w="full" h="full">
+            <Grid templateRows="auto 1fr" h="full" w="full">
+              <Topbar />
+              <Flex w="full" h="full">
+                <SkipNavContent />
+                <VStack spacing={0} w="full" bg={useColor("gray.50")}>
+                  <Outlet />
+                </VStack>
+              </Flex>
+            </Grid>
+          </GridItem>
+        </Grid>
+      </RealtimeDataProvider>
     </SupabaseProvider>
   );
 }

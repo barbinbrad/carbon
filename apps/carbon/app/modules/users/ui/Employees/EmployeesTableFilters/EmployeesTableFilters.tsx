@@ -5,7 +5,6 @@ import { IoMdAdd } from "react-icons/io";
 import { DebouncedInput } from "~/components/Search";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { EmployeeType } from "~/modules/users";
-import { mapRowsToOptions } from "~/utils/form";
 
 type EmployeesTableFiltersProps = {
   employeeTypes: Partial<EmployeeType>[];
@@ -16,11 +15,12 @@ const EmployeesTableFilters = ({
 }: EmployeesTableFiltersProps) => {
   const [params, setParams] = useUrlParams();
   const permissions = usePermissions();
-  const employeeTypeOptions = mapRowsToOptions({
-    data: employeeTypes,
-    value: "id",
-    label: "name",
-  });
+
+  const employeeTypeOptions =
+    employeeTypes?.map((type) => ({
+      value: type.id,
+      label: type.name,
+    })) ?? [];
 
   const borderColor = useColor("gray.200");
 

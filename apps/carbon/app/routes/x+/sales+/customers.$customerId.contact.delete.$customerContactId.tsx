@@ -1,11 +1,11 @@
-import type { ActionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { deleteCustomerContact } from "~/modules/sales";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { error, success } from "~/utils/result";
 
-export async function action({ request, params }: ActionArgs) {
+export async function action({ request, params }: ActionFunctionArgs) {
   const { client } = await requirePermissions(request, {
     delete: "sales",
   });

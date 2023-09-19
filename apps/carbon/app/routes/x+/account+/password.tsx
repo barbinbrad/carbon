@@ -1,15 +1,15 @@
-import type { ActionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/router";
 import { validationError } from "remix-validated-form";
 import { PageTitle } from "~/components/Layout";
 import { getSupabaseServiceRole } from "~/lib/supabase";
-import { PasswordForm, accountPasswordValidator } from "~/modules/account";
+import { accountPasswordValidator, PasswordForm } from "~/modules/account";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
 import { error, success } from "~/utils/result";
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   assertIsPost(request);
   const { email, userId } = await requirePermissions(request, {});
 

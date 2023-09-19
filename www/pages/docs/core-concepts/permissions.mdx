@@ -124,7 +124,7 @@ We provide a helper function called `requirePermissions` that can be used to che
 Here is an example of how to use it in a loader:
 
 ```tsx
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const { client } = requirePermissions(request, {
     view: "sales",
     role: "employee",
@@ -139,7 +139,7 @@ In this example, the user must have the `sales_view` permission and the `employe
 We can also required multiple permissions. In the next example, the user must have the `sales_update` permission and the `users_update` permission in order to invoke the action:
 
 ```tsx
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const { client } = requirePermissions(request, {
     update: ["sales", "users"],
   });

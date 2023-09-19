@@ -15,25 +15,24 @@ import {
 import { useNavigate } from "@remix-run/react";
 import { ValidatedForm } from "remix-validated-form";
 import {
+  Currency,
   Employee,
+  Hidden,
   Input,
   Select,
   Submit,
-  Hidden,
-  Currency,
 } from "~/components/Form";
 import { usePermissions, useRouteData } from "~/hooks";
-import { supplierValidator } from "~/modules/purchasing";
 import type {
   SupplierContact,
   SupplierLocation,
   SupplierStatus,
   SupplierType,
 } from "~/modules/purchasing";
-import { mapRowsToOptions } from "~/utils/form";
+import { supplierValidator } from "~/modules/purchasing";
+import type { ListItem } from "~/types";
 import type { TypeOfValidator } from "~/types/validators";
 import { SupplierContacts, SupplierLocations } from "./components";
-import type { ListItem } from "~/types";
 
 type SupplierFormProps = {
   initialValues: TypeOfValidator<typeof supplierValidator>;
@@ -58,45 +57,35 @@ const SupplierForm = ({
     shippingTerms: ListItem[];
   }>("/x/purchasing/suppliers");
 
-  const supplierTypeOptions = routeData?.supplierTypes
-    ? mapRowsToOptions({
-        data: routeData.supplierTypes,
-        value: "id",
-        label: "name",
-      })
-    : [];
+  const supplierTypeOptions =
+    routeData?.supplierTypes?.map((type) => ({
+      value: type.id,
+      label: type.name,
+    })) ?? [];
 
-  const supplierStatusOptions = routeData?.supplierStatuses
-    ? mapRowsToOptions({
-        data: routeData.supplierStatuses,
-        value: "id",
-        label: "name",
-      })
-    : [];
+  const supplierStatusOptions =
+    routeData?.supplierStatuses?.map((status) => ({
+      value: status.id,
+      label: status.name,
+    })) ?? [];
 
-  const paymentTermOptions = routeData?.paymentTerms
-    ? mapRowsToOptions({
-        data: routeData.paymentTerms,
-        value: "id",
-        label: "name",
-      })
-    : [];
+  const paymentTermOptions =
+    routeData?.paymentTerms?.map((term) => ({
+      value: term.id,
+      label: term.name,
+    })) ?? [];
 
-  const shippingMethodOptions = routeData?.shippingMethods
-    ? mapRowsToOptions({
-        data: routeData.shippingMethods,
-        value: "id",
-        label: "name",
-      })
-    : [];
+  const shippingMethodOptions =
+    routeData?.shippingMethods?.map((method) => ({
+      value: method.id,
+      label: method.name,
+    })) ?? [];
 
-  const shippingTermOptions = routeData?.shippingTerms
-    ? mapRowsToOptions({
-        data: routeData.shippingTerms,
-        value: "id",
-        label: "name",
-      })
-    : [];
+  const shippingTermOptions =
+    routeData?.shippingTerms?.map((term) => ({
+      value: term.id,
+      label: term.name,
+    })) ?? [];
 
   const isEditing = initialValues.id !== undefined;
   const isDisabled = isEditing

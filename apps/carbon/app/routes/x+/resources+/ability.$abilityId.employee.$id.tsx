@@ -1,4 +1,4 @@
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { useLoaderData, useNavigate, useParams } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
@@ -16,7 +16,7 @@ import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { error, success } from "~/utils/result";
 
-export async function loader({ request, params }: LoaderArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
   const { client } = await requirePermissions(request, {
     view: "resources",
   });
@@ -44,7 +44,7 @@ export async function loader({ request, params }: LoaderArgs) {
   return { employeeAbility: employeeAbility.data };
 }
 
-export async function action({ params, request }: ActionArgs) {
+export async function action({ params, request }: ActionFunctionArgs) {
   const { abilityId, id } = params;
   if (!abilityId) throw new Error("abilityId is not found");
   if (!id) throw new Error("id is not found");

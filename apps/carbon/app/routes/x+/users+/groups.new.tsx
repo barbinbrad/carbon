@@ -1,20 +1,19 @@
-import type { ActionArgs } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import type { ActionFunctionArgs } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
 import {
-  GroupForm,
-  insertGroup,
   deleteGroup,
+  GroupForm,
   groupValidator,
+  insertGroup,
   upsertGroupMembers,
 } from "~/modules/users";
+import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
 import { error, success } from "~/utils/result";
-import { requirePermissions } from "~/services/auth";
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   assertIsPost(request);
   const { client } = await requirePermissions(request, {
     create: "users",

@@ -1,16 +1,16 @@
-import type { ActionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
-import { requirePermissions } from "~/services/auth";
-import { flash } from "~/services/session";
 import {
-  CreateEmployeeModal,
   createEmployeeAccount,
+  CreateEmployeeModal,
   createEmployeeValidator,
 } from "~/modules/users";
+import { requirePermissions } from "~/services/auth";
+import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   assertIsPost(request);
   const { client } = await requirePermissions(request, {
     create: "users",

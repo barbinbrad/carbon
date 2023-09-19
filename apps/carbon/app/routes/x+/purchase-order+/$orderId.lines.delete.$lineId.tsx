@@ -1,4 +1,4 @@
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData, useNavigate, useParams } from "@remix-run/react";
 import { ConfirmDelete } from "~/components/Modals";
@@ -11,7 +11,7 @@ import { flash } from "~/services/session";
 import { notFound } from "~/utils/http";
 import { error, success } from "~/utils/result";
 
-export async function loader({ request, params }: LoaderArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
   const { client } = await requirePermissions(request, {
     delete: "purchasing",
   });
@@ -33,7 +33,7 @@ export async function loader({ request, params }: LoaderArgs) {
   return json({ purchaseOrderLine: purchaseOrderLine.data });
 }
 
-export async function action({ request, params }: ActionArgs) {
+export async function action({ request, params }: ActionFunctionArgs) {
   const { client } = await requirePermissions(request, {
     delete: "purchasing",
   });

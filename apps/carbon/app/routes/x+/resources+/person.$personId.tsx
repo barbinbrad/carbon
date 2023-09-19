@@ -1,11 +1,9 @@
 import { Box, Grid, VStack } from "@chakra-ui/react";
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
 import logger from "~/lib/logger";
-import type { EmployeeJob } from "~/modules/resources";
 import {
   accountProfileValidator,
   getAccount,
@@ -13,16 +11,17 @@ import {
   getPublicAttributes,
   updatePublicAccount,
 } from "~/modules/account";
+import type { EmployeeJob } from "~/modules/resources";
 import {
-  PersonAbilities,
-  PersonHeader,
-  PersonTabs,
-  PersonDaysOff,
-  PersonOvertime,
   employeeJobValidator,
   getEmployeeAbilities,
   getEmployeeJob,
   getNotes,
+  PersonAbilities,
+  PersonDaysOff,
+  PersonHeader,
+  PersonOvertime,
+  PersonTabs,
   upsertEmployeeJob,
 } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
@@ -30,7 +29,7 @@ import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
 import { error, success } from "~/utils/result";
 
-export async function loader({ request, params }: LoaderArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
   const { client } = await requirePermissions(request, {
     view: "resources",
   });
@@ -83,7 +82,7 @@ export async function loader({ request, params }: LoaderArgs) {
   });
 }
 
-export async function action({ request, params }: ActionArgs) {
+export async function action({ request, params }: ActionFunctionArgs) {
   assertIsPost(request);
   const { client } = await requirePermissions(request, {
     update: "resources",

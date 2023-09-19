@@ -1,16 +1,16 @@
-import type { ActionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
 import {
-  updateSupplierLocation,
   supplierLocationValidator,
+  updateSupplierLocation,
 } from "~/modules/purchasing";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, badRequest, notFound } from "~/utils/http";
 import { error, success } from "~/utils/result";
 
-export async function action({ request, params }: ActionArgs) {
+export async function action({ request, params }: ActionFunctionArgs) {
   assertIsPost(request);
   const { client } = await requirePermissions(request, {
     update: "purchasing",

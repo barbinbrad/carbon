@@ -1,6 +1,5 @@
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
 import {
@@ -17,7 +16,7 @@ import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
 import { error } from "~/utils/result";
 
-export async function loader({ request, params }: LoaderArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
   const { client } = await requirePermissions(request, {
     view: "users",
     role: "employee",
@@ -58,7 +57,7 @@ export async function loader({ request, params }: LoaderArgs) {
   });
 }
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   assertIsPost(request);
   const { client } = await requirePermissions(request, {
     update: "users",

@@ -1,5 +1,5 @@
 import { Grid } from "@chakra-ui/react";
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 import {
@@ -14,7 +14,7 @@ import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { error } from "~/utils/result";
 
-export async function loader({ request, params }: LoaderArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
   const { client } = await requirePermissions(request, {
     view: "parts",
   });
@@ -48,7 +48,7 @@ export async function loader({ request, params }: LoaderArgs) {
   });
 }
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   return redirect(request.headers.get("Referer") ?? request.url);
 }
 

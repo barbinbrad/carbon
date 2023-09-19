@@ -9,7 +9,6 @@ import { useFetcher } from "@remix-run/react";
 import { useEffect, useMemo } from "react";
 import { useControlField, useField } from "remix-validated-form";
 import type { getSupplierContacts } from "~/modules/purchasing";
-import { mapRowsToOptions } from "~/utils/form";
 
 const SupplierContact = ({
   name,
@@ -50,12 +49,11 @@ const SupplierContact = ({
 
   const supplierContacts = useMemo(
     () =>
-      mapRowsToOptions({
-        data: supplierContactsFetcher.data?.data ?? [],
-        value: "id",
+      supplierContactsFetcher.data?.data?.map((c) => ({
+        value: c.id,
         // @ts-ignore
-        label: (row) => `${row.contact.firstName} ${row.contact.lastName}`,
-      }),
+        label: `${c.contact.firstName} ${c.contact.lastName}`,
+      })) ?? [],
     [supplierContactsFetcher.data]
   );
 

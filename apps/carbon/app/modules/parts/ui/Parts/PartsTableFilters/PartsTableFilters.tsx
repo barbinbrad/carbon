@@ -5,7 +5,6 @@ import { IoMdAdd } from "react-icons/io";
 import { DebouncedInput } from "~/components/Search";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { PartType } from "~/modules/parts";
-import { mapRowsToOptions } from "~/utils/form";
 
 type PartsTableFiltersProps = {
   partTypes: PartType[];
@@ -23,11 +22,10 @@ const PartsTableFilters = ({
     label: type,
   }));
 
-  const partGroupsOptions = mapRowsToOptions({
-    data: partGroups,
-    value: "id",
-    label: "name",
-  });
+  const partGroupsOptions = partGroups.map((group) => ({
+    value: group.id,
+    label: group.name,
+  }));
 
   const borderColor = useColor("gray.200");
 

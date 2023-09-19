@@ -8,7 +8,7 @@ import {
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useNavigate } from "@remix-run/react";
 import { ValidatedForm, validationError } from "remix-validated-form";
@@ -19,12 +19,12 @@ import { flash, requireAuthSession } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
 import { error, success } from "~/utils/result";
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   await requireAuthSession(request);
   return null;
 }
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   assertIsPost(request);
   const validation = await resetPasswordValidator.validate(
     await request.formData()

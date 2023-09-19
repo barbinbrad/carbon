@@ -198,7 +198,8 @@ export async function upsertDocument(
         size: number;
         createdBy: string;
       })
-    | (TypeOfValidator<typeof documentValidator> & {
+    | (Omit<TypeOfValidator<typeof documentValidator>, "id"> & {
+        id: string;
         updatedBy: string;
       })
 ) {

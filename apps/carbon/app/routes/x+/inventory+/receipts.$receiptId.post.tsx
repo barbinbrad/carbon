@@ -1,4 +1,4 @@
-import type { ActionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { ReceiptPostModal } from "~/modules/inventory";
 import { postingQueue, PostingQueueType } from "~/queues";
@@ -6,7 +6,7 @@ import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { error } from "~/utils/result";
 
-export async function action({ request, params }: ActionArgs) {
+export async function action({ request, params }: ActionFunctionArgs) {
   const { client } = await requirePermissions(request, {
     update: "inventory",
   });

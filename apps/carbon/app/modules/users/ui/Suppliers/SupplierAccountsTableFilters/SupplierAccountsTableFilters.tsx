@@ -5,7 +5,6 @@ import { IoMdAdd } from "react-icons/io";
 import { DebouncedInput } from "~/components/Search";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { SupplierType } from "~/modules/purchasing";
-import { mapRowsToOptions } from "~/utils/form";
 
 type SupplierAccountsTableFiltersProps = {
   supplierTypes: Partial<SupplierType>[];
@@ -16,11 +15,12 @@ const SupplierAccountsTableFilters = ({
 }: SupplierAccountsTableFiltersProps) => {
   const [params, setParams] = useUrlParams();
   const permissions = usePermissions();
-  const supplierTypeOptions = mapRowsToOptions({
-    data: supplierTypes,
-    value: "id",
-    label: "name",
-  });
+
+  const supplierTypeOptions =
+    supplierTypes?.map((type) => ({
+      value: type.id,
+      label: type.name,
+    })) ?? [];
 
   const borderColor = useColor("gray.200");
 

@@ -1,16 +1,16 @@
 import { Box } from "@chakra-ui/react";
-import type { LoaderArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { json } from "@remix-run/router";
 import { PageTitle, SectionTitle } from "~/components/Layout";
 import type { PrivateAttributes } from "~/modules/account";
-import { UserAttributesForm, getPrivateAttributes } from "~/modules/account";
+import { getPrivateAttributes, UserAttributesForm } from "~/modules/account";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { error } from "~/utils/result";
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const { client, userId } = await requirePermissions(request, {});
 
   const [privateAttributes] = await Promise.all([

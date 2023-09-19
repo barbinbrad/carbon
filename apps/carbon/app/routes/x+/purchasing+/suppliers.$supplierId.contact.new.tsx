@@ -1,4 +1,4 @@
-import type { ActionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
 import {
@@ -10,7 +10,7 @@ import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
 import { error, success } from "~/utils/result";
 
-export async function action({ request, params }: ActionArgs) {
+export async function action({ request, params }: ActionFunctionArgs) {
   assertIsPost(request);
   const { client } = await requirePermissions(request, {
     create: "purchasing",

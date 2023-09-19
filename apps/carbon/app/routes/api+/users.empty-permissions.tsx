@@ -1,11 +1,11 @@
-import type { LoaderArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/router";
 import { getFeatures, makeEmptyPermissionsFromFeatures } from "~/modules/users";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { error } from "~/utils/result";
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const authorized = await requirePermissions(request, {
     view: "users",
     role: "employee",

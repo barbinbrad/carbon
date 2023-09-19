@@ -1,6 +1,5 @@
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
 import {
@@ -14,7 +13,7 @@ import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
 import { error, success } from "~/utils/result";
 
-export async function loader({ request, params }: LoaderArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
   const { client } = await requirePermissions(request, {
     view: "documents",
   });
@@ -36,7 +35,7 @@ export async function loader({ request, params }: LoaderArgs) {
   });
 }
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   assertIsPost(request);
   const { client, userId } = await requirePermissions(request, {
     update: "documents",
@@ -48,9 +47,11 @@ export async function action({ request }: ActionArgs) {
     return validationError(validation.error);
   }
 
-  const { type, ...document } = validation.data;
+  const { id, type, ...document } = validation.data;
+  if (!id) throw new Error("Could not find documentId");
 
   const updateDocument = await upsertDocument(client, {
+    id,
     ...document,
     name: `${document.name}.${type}`,
     updatedBy: userId,

@@ -1,4 +1,4 @@
-import type { ActionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { getCurrentSequence, rollbackNextSequence } from "~/modules/settings";
 import { requirePermissions } from "~/services/auth";
@@ -6,7 +6,7 @@ import { flash } from "~/services/session";
 import { assertIsDelete } from "~/utils/http";
 import { error } from "~/utils/result";
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   assertIsDelete(request);
   const { client, userId } = await requirePermissions(request, {});
 

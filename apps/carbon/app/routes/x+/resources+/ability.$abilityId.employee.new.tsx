@@ -1,4 +1,4 @@
-import type { ActionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { useNavigate, useParams } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
@@ -14,7 +14,7 @@ import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { error, success } from "~/utils/result";
 
-export async function action({ params, request }: ActionArgs) {
+export async function action({ params, request }: ActionFunctionArgs) {
   const { abilityId } = params;
   if (!abilityId) throw new Error("abilityId is not found");
 

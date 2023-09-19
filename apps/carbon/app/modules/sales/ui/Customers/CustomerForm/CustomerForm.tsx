@@ -14,18 +14,17 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import { ValidatedForm } from "remix-validated-form";
-import { Employee, Input, Select, Submit, Hidden } from "~/components/Form";
-import { customerValidator } from "~/modules/sales";
+import { Employee, Hidden, Input, Select, Submit } from "~/components/Form";
+import { usePermissions, useRouteData } from "~/hooks";
 import type {
   CustomerContact,
   CustomerLocation,
   CustomerStatus,
   CustomerType,
 } from "~/modules/sales";
-import { mapRowsToOptions } from "~/utils/form";
-import { usePermissions, useRouteData } from "~/hooks";
-import { CustomerContacts, CustomerLocations } from "./components";
+import { customerValidator } from "~/modules/sales";
 import type { TypeOfValidator } from "~/types/validators";
+import { CustomerContacts, CustomerLocations } from "./components";
 
 type CustomerFormProps = {
   initialValues: TypeOfValidator<typeof customerValidator>;
@@ -47,21 +46,17 @@ const CustomerForm = ({
     customerStatuses: CustomerStatus[];
   }>("/x/sales/customers");
 
-  const customerTypeOptions = routeData?.customerTypes
-    ? mapRowsToOptions({
-        data: routeData.customerTypes ?? [],
-        value: "id",
-        label: "name",
-      })
-    : [];
+  const customerTypeOptions =
+    routeData?.customerTypes?.map((type) => ({
+      value: type.id,
+      label: type.name,
+    })) ?? [];
 
-  const customerStatusOptions = routeData?.customerStatuses
-    ? mapRowsToOptions({
-        data: routeData.customerStatuses ?? [],
-        value: "id",
-        label: "name",
-      })
-    : [];
+  const customerStatusOptions =
+    routeData?.customerStatuses?.map((status) => ({
+      value: status.id,
+      label: status.name,
+    })) ?? [];
 
   const isEditing = initialValues.id !== undefined;
   const isDisabled = isEditing

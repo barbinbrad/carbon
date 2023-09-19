@@ -17,19 +17,18 @@ import { useFetcher } from "@remix-run/react";
 import { useEffect, useMemo, useState } from "react";
 import { useControlField, useField, ValidatedForm } from "remix-validated-form";
 import {
-  Input,
   Hidden,
+  Input,
   Location,
   Number,
-  Submit,
   Select,
+  Submit,
   TextArea,
 } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import type { getWorkCellList } from "~/modules/resources";
 import { equipmentValidator } from "~/modules/resources";
 import type { TypeOfValidator } from "~/types/validators";
-import { mapRowsToOptions } from "~/utils/form";
 
 type EquipmentFormProps = {
   initialValues: TypeOfValidator<typeof equipmentValidator>;
@@ -46,11 +45,13 @@ const EquipmentForm = ({
   onClose,
 }: EquipmentFormProps) => {
   const permissions = usePermissions();
-  const options = mapRowsToOptions({
-    data: equipmentTypes,
-    value: "id",
-    label: "name",
-  });
+
+  const options =
+    equipmentTypes?.map((et) => ({
+      value: et.id,
+      label: et.name,
+    })) ?? [];
+
   const isEditing = initialValues.id !== undefined;
   const isDisabled = isEditing
     ? !permissions.can("update", "resources")
@@ -75,11 +76,10 @@ const EquipmentForm = ({
 
   const workCells = useMemo(
     () =>
-      mapRowsToOptions({
-        data: workCellFetcher.data?.data ?? [],
-        value: "id",
-        label: "name",
-      }),
+      workCellFetcher.data?.data?.map((cell) => ({
+        value: cell.id,
+        label: cell.name,
+      })) ?? [],
     [workCellFetcher.data]
   );
 

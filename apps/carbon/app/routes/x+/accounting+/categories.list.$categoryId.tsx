@@ -1,4 +1,4 @@
-import type { LoaderArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Outlet, useLoaderData, useNavigate } from "@remix-run/react";
 import { useUrlParams } from "~/hooks";
@@ -12,7 +12,7 @@ import { flash } from "~/services/session";
 import { notFound } from "~/utils/http";
 import { error } from "~/utils/result";
 
-export async function loader({ request, params }: LoaderArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
   const { client } = await requirePermissions(request, {
     view: "accounting",
     role: "employee",

@@ -1,6 +1,5 @@
-import type { ActionArgs } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import type { ActionFunctionArgs } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
 import {
   AbilityForm,
@@ -37,7 +36,7 @@ function makeCurve(startingPoint: number, weeks: number) {
   };
 }
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   assertIsPost(request);
   const { client, userId } = await requirePermissions(request, {
     create: "resources",

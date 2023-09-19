@@ -62,6 +62,7 @@ export const usePurchaseOrder = () => {
 
   const release = useCallback(
     async (purchaseOrder: PurchaseOrder) => {
+      if (!purchaseOrder.id) throw new Error("Purchase order ID is undefined");
       if (!supabase) throw new Error("Supabase is undefined");
 
       const { error } = await supabase

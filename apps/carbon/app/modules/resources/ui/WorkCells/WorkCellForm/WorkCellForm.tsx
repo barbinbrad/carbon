@@ -12,19 +12,18 @@ import {
 } from "@chakra-ui/react";
 import { ValidatedForm } from "remix-validated-form";
 import {
-  Input,
-  Hidden,
-  Location,
-  Submit,
-  Select,
-  TextArea,
-  Department,
   DatePicker,
+  Department,
+  Hidden,
+  Input,
+  Location,
+  Select,
+  Submit,
+  TextArea,
 } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { workCellValidator } from "~/modules/resources";
 import type { TypeOfValidator } from "~/types/validators";
-import { mapRowsToOptions } from "~/utils/form";
 
 type WorkCellFormProps = {
   initialValues: TypeOfValidator<typeof workCellValidator>;
@@ -41,11 +40,13 @@ const WorkCellForm = ({
   onClose,
 }: WorkCellFormProps) => {
   const permissions = usePermissions();
-  const options = mapRowsToOptions({
-    data: workCellTypes,
-    value: "id",
-    label: "name",
-  });
+
+  const options =
+    workCellTypes?.map((cell) => ({
+      value: cell.id,
+      label: cell.name,
+    })) ?? [];
+
   const isEditing = initialValues.id !== undefined;
   const isDisabled = isEditing
     ? !permissions.can("update", "resources")

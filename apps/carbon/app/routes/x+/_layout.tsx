@@ -1,7 +1,7 @@
 import { useColor, useNotification } from "@carbon/react";
 import { Flex, Grid, GridItem, VStack } from "@chakra-ui/react";
 import { SkipNavContent } from "@chakra-ui/skip-nav";
-import type { LoaderArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Outlet, useLoaderData, useNavigation } from "@remix-run/react";
 import NProgress from "nprogress";
@@ -20,7 +20,7 @@ import {
   requireAuthSession,
 } from "~/services/session";
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const { accessToken, expiresAt, expiresIn, userId } =
     await requireAuthSession(request, { verify: true });
 

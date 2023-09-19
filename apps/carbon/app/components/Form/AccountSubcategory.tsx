@@ -12,7 +12,6 @@ import type {
   AccountSubcategory as AccountSubcategoryType,
   getAccountSubcategoriesByCategory,
 } from "~/modules/accounting";
-import { mapRowsToOptions } from "~/utils/form";
 
 const AccountSubcategory = ({
   name,
@@ -52,11 +51,11 @@ const AccountSubcategory = ({
 
   const accountSubcategories = useMemo(
     () =>
-      mapRowsToOptions({
-        data: accountSubcategoriesFetcher.data?.data ?? [],
-        value: "id",
-        label: "name",
-      }),
+      accountSubcategoriesFetcher.data?.data?.map((c) => ({
+        value: c.id,
+        label: c.name,
+      })) ?? [],
+
     [accountSubcategoriesFetcher.data]
   );
 

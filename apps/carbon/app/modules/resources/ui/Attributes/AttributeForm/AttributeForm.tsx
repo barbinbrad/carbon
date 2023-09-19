@@ -15,16 +15,15 @@ import { ValidatedForm } from "remix-validated-form";
 import {
   Array,
   Boolean,
-  Input,
   Hidden,
-  Submit,
+  Input,
   Select,
+  Submit,
 } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { attributeValidator } from "~/modules/resources";
 import { DataType } from "~/modules/users";
 import type { TypeOfValidator } from "~/types/validators";
-import { mapRowsToOptions } from "~/utils/form";
 
 type AttributeFormProps = {
   initialValues: TypeOfValidator<typeof attributeValidator>;
@@ -46,11 +45,13 @@ const AttributeForm = ({
   onClose,
 }: AttributeFormProps) => {
   const permissions = usePermissions();
-  const options = mapRowsToOptions({
-    data: dataTypes,
-    value: "id",
-    label: "label",
-  });
+
+  const options =
+    dataTypes?.map((dt) => ({
+      value: dt.id,
+      label: dt.label,
+    })) ?? [];
+
   const isEditing = initialValues.id !== undefined;
   const isDisabled = isEditing
     ? !permissions.can("update", "resources")

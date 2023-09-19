@@ -1,4 +1,4 @@
-import type { ActionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { deleteDocument } from "~/modules/documents";
 import { requirePermissions } from "~/services/auth";
@@ -6,7 +6,7 @@ import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
 import { error } from "~/utils/result";
 
-export async function action({ request, params }: ActionArgs) {
+export async function action({ request, params }: ActionFunctionArgs) {
   assertIsPost(request);
   const { client, userId } = await requirePermissions(request, {
     delete: "documents",

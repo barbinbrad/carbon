@@ -20,7 +20,6 @@ import {
 import { SectionTitle } from "~/components/Layout";
 import type { EmployeeJob, getShiftsList } from "~/modules/resources";
 import { employeeJobValidator } from "~/modules/resources";
-import { mapRowsToOptions } from "~/utils/form";
 
 type PersonJobProps = {
   job: EmployeeJob;
@@ -41,11 +40,10 @@ const PersonJob = ({ job }: PersonJobProps) => {
 
   const shifts = useMemo(
     () =>
-      mapRowsToOptions({
-        data: shiftFetcher.data?.data ?? [],
-        value: "id",
-        label: "name",
-      }),
+      shiftFetcher.data?.data?.map((shift) => ({
+        value: shift.id,
+        label: shift.name,
+      })) ?? [],
     [shiftFetcher.data]
   );
 

@@ -5,7 +5,6 @@ import { IoMdAdd } from "react-icons/io";
 import { DebouncedInput } from "~/components/Search";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { Ability } from "~/modules/resources/types";
-import { mapRowsToOptions } from "~/utils/form";
 
 type ContractorsTableFiltersProps = {
   abilities: Partial<Ability>[];
@@ -16,11 +15,13 @@ const ContractorsTableFilters = ({
 }: ContractorsTableFiltersProps) => {
   const [params, setParams] = useUrlParams();
   const permissions = usePermissions();
-  const abilitiesOptions = mapRowsToOptions({
-    data: abilities,
-    value: "id",
-    label: "name",
-  });
+
+  const abilitiesOptions =
+    abilities?.map((a) => ({
+      value: a.id,
+      label: a.name,
+    })) ?? [];
+
   const borderColor = useColor("gray.200");
 
   return (

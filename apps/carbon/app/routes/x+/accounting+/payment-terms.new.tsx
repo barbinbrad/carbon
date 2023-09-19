@@ -1,6 +1,5 @@
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
 import type { PaymentTermCalculationMethod } from "~/modules/accounting";
 import {
@@ -13,7 +12,7 @@ import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
 import { error, success } from "~/utils/result";
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   await requirePermissions(request, {
     create: "accounting",
   });
@@ -21,7 +20,7 @@ export async function loader({ request }: LoaderArgs) {
   return null;
 }
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   assertIsPost(request);
   const { client, userId } = await requirePermissions(request, {
     create: "accounting",

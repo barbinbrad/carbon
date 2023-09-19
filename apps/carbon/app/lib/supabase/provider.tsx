@@ -23,7 +23,7 @@ import { getSupabase } from "./client";
  *
  * import { SUPABASE_ANON_PUBLIC, SUPABASE_API_URL } from "./config/env";
  *
- * export async function loader({ request }: LoaderArgs) {
+ * export async function loader({ request }: LoaderFunctionArgs) {
  *  const { accessToken, expiresAt, expiresIn } = (await getAuthSession(request)) || {};
  *
  *  return json({

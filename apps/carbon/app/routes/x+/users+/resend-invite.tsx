@@ -1,4 +1,4 @@
-import type { ActionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
 import { resendInvite, resendInviteValidator } from "~/modules/users";
@@ -8,7 +8,7 @@ import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { error, success } from "~/utils/result";
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const { client } = await requirePermissions(request, {
     delete: "users",
   });

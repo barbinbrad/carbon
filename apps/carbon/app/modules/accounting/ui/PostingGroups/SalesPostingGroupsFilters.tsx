@@ -37,7 +37,6 @@ const SalesPostingGroupsFilters = ({
       w="full"
     >
       <Select
-        // @ts-ignore
         size="sm"
         isClearable
         value={partGroupOptions.find(
@@ -48,11 +47,9 @@ const SalesPostingGroupsFilters = ({
           setParams({ partGroup: selected?.value });
         }}
         aria-label="Part Group"
-        minW={180}
         placeholder="Part Group"
       />
       <Select
-        // @ts-ignore
         size="sm"
         isClearable
         value={customerTypeOptions.find(
@@ -63,7 +60,6 @@ const SalesPostingGroupsFilters = ({
           setParams({ customerType: selected?.value });
         }}
         aria-label="Customer Type"
-        minW={180}
         placeholder="Customer Type"
       />
     </HStack>

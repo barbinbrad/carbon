@@ -27,7 +27,7 @@ Here's an example of simple route that fetches data from a service and displays 
 // app/routes/x+/resources+/partners.tsx
 
 // loader is run on the server
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const { client } = await requirePermissions(request, {
     view: "resources",
     role: "employee",

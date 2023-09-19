@@ -1,4 +1,4 @@
-import type { ActionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { useParams } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
@@ -14,7 +14,7 @@ import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
 import { error, success } from "~/utils/result";
 
-export async function action({ request, params }: ActionArgs) {
+export async function action({ request, params }: ActionFunctionArgs) {
   assertIsPost(request);
   const { client, userId } = await requirePermissions(request, {
     update: "purchasing",
@@ -71,8 +71,8 @@ export default function PurchaseOrderBasicRoute() {
     supplierContactId: orderData?.purchaseOrder?.supplierContactId ?? "",
     supplierReference: orderData?.purchaseOrder?.supplierReference ?? "",
     orderDate: orderData?.purchaseOrder?.orderDate ?? "",
-    type: orderData?.purchaseOrder?.type ?? "Draft",
-    status: orderData?.purchaseOrder?.status ?? "Draft",
+    type: orderData?.purchaseOrder?.type ?? ("Purchase" as "Purchase"),
+    status: orderData?.purchaseOrder?.status ?? ("Draft" as "Draft"),
     receiptRequestedDate: orderData?.purchaseOrder?.receiptRequestedDate ?? "",
     receiptPromisedDate: orderData?.purchaseOrder?.receiptPromisedDate ?? "",
     notes: orderData?.purchaseOrder?.notes ?? "",

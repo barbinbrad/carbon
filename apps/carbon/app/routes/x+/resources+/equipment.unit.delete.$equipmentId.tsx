@@ -1,6 +1,5 @@
-import type { ActionArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
+import type { ActionFunctionArgs } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { useLoaderData, useNavigate, useParams } from "@remix-run/react";
 import { ConfirmDelete } from "~/components/Modals";
 import { deleteEquipment, getEquipment } from "~/modules/resources";
@@ -8,7 +7,7 @@ import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { error, success } from "~/utils/result";
 
-export async function loader({ request, params }: ActionArgs) {
+export async function loader({ request, params }: ActionFunctionArgs) {
   const { client } = await requirePermissions(request, {
     delete: "resources",
   });
@@ -29,7 +28,7 @@ export async function loader({ request, params }: ActionArgs) {
   });
 }
 
-export async function action({ request, params }: ActionArgs) {
+export async function action({ request, params }: ActionFunctionArgs) {
   const { client } = await requirePermissions(request, {
     delete: "resources",
   });

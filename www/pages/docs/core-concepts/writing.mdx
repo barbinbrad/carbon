@@ -87,7 +87,7 @@ On the server-side, we use the same validator in the `action` function to valida
 import { validationError } from "remix-validated-form";
 import { createPerson, personValidator } from "~/modules/people";
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const { client } = await requirePermissions(request);
 
   const validation = await personValidator.validate(await request.formData());

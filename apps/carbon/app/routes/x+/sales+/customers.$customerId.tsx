@@ -1,13 +1,13 @@
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
 import {
   CustomerForm,
+  customerValidator,
   getCustomer,
   getCustomerContacts,
   getCustomerLocations,
-  customerValidator,
   updateCustomer,
 } from "~/modules/sales";
 import { requirePermissions } from "~/services/auth";
@@ -15,7 +15,7 @@ import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
 import { error, success } from "~/utils/result";
 
-export async function loader({ request, params }: LoaderArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
   const { client } = await requirePermissions(request, {
     view: "sales",
   });
@@ -59,7 +59,7 @@ export async function loader({ request, params }: LoaderArgs) {
   });
 }
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   assertIsPost(request);
   const { client, userId } = await requirePermissions(request, {
     create: "sales",

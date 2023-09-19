@@ -1,20 +1,21 @@
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
 import { useRouteData } from "~/hooks";
 import type { UnitOfMeasureListItem } from "~/modules/parts";
 import {
+  getPartUnitSalePrice,
+  PartSalePriceForm,
   partUnitSalePriceValidator,
   upsertPartUnitSalePrice,
 } from "~/modules/parts";
-import { PartSalePriceForm, getPartUnitSalePrice } from "~/modules/parts";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
 import { error, success } from "~/utils/result";
 
-export async function loader({ request, params }: LoaderArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
   const { client } = await requirePermissions(request, {
     view: "parts",
   });
@@ -41,7 +42,7 @@ export async function loader({ request, params }: LoaderArgs) {
   });
 }
 
-export async function action({ request, params }: ActionArgs) {
+export async function action({ request, params }: ActionFunctionArgs) {
   assertIsPost(request);
   const { client, userId } = await requirePermissions(request, {
     update: "parts",

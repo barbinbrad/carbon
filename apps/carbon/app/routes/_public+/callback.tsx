@@ -1,23 +1,23 @@
 import { useEffect, useMemo } from "react";
 
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import type { LoaderArgs, ActionArgs } from "@remix-run/node";
 import { useFetcher } from "@remix-run/react";
-import { callbackValidator } from "~/services/auth/auth.form";
 import { getSupabase } from "~/lib/supabase";
-import { refreshAccessToken } from "~/services/auth";
 import { getUserByEmail } from "~/modules/users";
+import { refreshAccessToken } from "~/services/auth";
+import { callbackValidator } from "~/services/auth/auth.form";
 import {
   commitAuthSession,
   destroyAuthSession,
-  getAuthSession,
   flash,
+  getAuthSession,
 } from "~/services/session";
-import { assertIsPost } from "~/utils/http";
 import type { FormActionData } from "~/types";
+import { assertIsPost } from "~/utils/http";
 import { error } from "~/utils/result";
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const authSession = await getAuthSession(request);
 
   if (authSession) await destroyAuthSession(request);
@@ -25,7 +25,7 @@ export async function loader({ request }: LoaderArgs) {
   return json({});
 }
 
-export async function action({ request }: ActionArgs): FormActionData {
+export async function action({ request }: ActionFunctionArgs): FormActionData {
   assertIsPost(request);
 
   const validation = await callbackValidator.validate(await request.formData());
@@ -84,7 +84,7 @@ export default function AuthCallback() {
 
         const formData = new FormData();
         formData.append("refreshToken", refreshToken);
-        fetcher.submit(formData, { method: "post", replace: true });
+        fetcher.submit(formData, { method: "post" });
       }
     });
 

@@ -1,5 +1,5 @@
 import { VStack } from "@chakra-ui/react";
-import type { LoaderArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import { ChartOfAccountsTable, getChartOfAccounts } from "~/modules/accounting";
@@ -8,7 +8,7 @@ import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { error } from "~/utils/result";
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const { client } = await requirePermissions(request, {
     view: "accounting",
     role: "employee",

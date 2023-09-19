@@ -5,7 +5,6 @@ import { IoMdAdd } from "react-icons/io";
 import { DebouncedInput } from "~/components/Search";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { CustomerType } from "~/modules/sales";
-import { mapRowsToOptions } from "~/utils/form";
 
 type CustomerAccountsTableFiltersProps = {
   customerTypes: Partial<CustomerType>[];
@@ -16,11 +15,12 @@ const CustomerAccountsTableFilters = ({
 }: CustomerAccountsTableFiltersProps) => {
   const [params, setParams] = useUrlParams();
   const permissions = usePermissions();
-  const customerTypeOptions = mapRowsToOptions({
-    data: customerTypes,
-    value: "id",
-    label: "name",
-  });
+
+  const customerTypeOptions =
+    customerTypes?.map((type) => ({
+      value: type.id,
+      label: type.name,
+    })) ?? [];
 
   const borderColor = useColor("gray.200");
 

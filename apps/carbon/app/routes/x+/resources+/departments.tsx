@@ -1,7 +1,6 @@
 import { VStack } from "@chakra-ui/react";
-import type { LoaderArgs } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import {
   DepartmentsTable,
@@ -13,7 +12,7 @@ import { flash } from "~/services/session";
 import { getGenericQueryFilters } from "~/utils/query";
 import { error } from "~/utils/result";
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const { client } = await requirePermissions(request, {
     view: "resources",
     role: "employee",

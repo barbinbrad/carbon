@@ -13,7 +13,7 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Link, Outlet, useLoaderData, useNavigate } from "@remix-run/react";
 import { ParentSize } from "@visx/responsive";
@@ -35,7 +35,7 @@ import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { error, success } from "~/utils/result";
 
-export async function loader({ request, params }: LoaderArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
   const { client } = await requirePermissions(request, {
     view: "resources",
   });
@@ -64,7 +64,7 @@ export async function loader({ request, params }: LoaderArgs) {
   });
 }
 
-export async function action({ request, params }: ActionArgs) {
+export async function action({ request, params }: ActionFunctionArgs) {
   const { client } = await requirePermissions(request, {
     update: "resources",
   });

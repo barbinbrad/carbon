@@ -1,4 +1,4 @@
-import type { ActionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
 import {
@@ -8,14 +8,14 @@ import {
   attributeUserValidator,
   upsertUserAttributeValue,
 } from "~/modules/account";
-import { requirePermissions } from "~/services/auth";
-import { flash } from "~/services/session";
 import { getAttribute } from "~/modules/resources";
 import { getUserClaims } from "~/modules/users";
+import { requirePermissions } from "~/services/auth";
+import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
 import { error, success } from "~/utils/result";
 
-export async function action({ request, params }: ActionArgs) {
+export async function action({ request, params }: ActionFunctionArgs) {
   assertIsPost(request);
 
   const { client, userId } = await requirePermissions(request, {});

@@ -167,6 +167,21 @@ $$;
 
 
 
+## `realtime`
+
+```sql
+BEGIN;
+  -- remove the supabase_realtime publication
+  DROP publication IF EXISTS supabase_realtime;
+
+  -- re-create the supabase_realtime publication with no tables
+  CREATE publication supabase_realtime;
+COMMIT;
+
+```
+
+
+
 ## `claims`
 
 ```sql
@@ -746,6 +761,8 @@ CREATE TABLE "supplier" (
     CONSTRAINT "supplier_name_unique" UNIQUE ("name")
 );
 
+ALTER publication supabase_realtime ADD TABLE "supplier";
+
 CREATE TABLE "supplierLocation" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "supplierId" TEXT NOT NULL,
@@ -831,6 +848,8 @@ CREATE TABLE "customer" (
     CONSTRAINT "customer_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id") ON UPDATE CASCADE ON DELETE SET NULL,
     CONSTRAINT "customer_name_unique" UNIQUE ("name")
 );
+
+ALTER publication supabase_realtime ADD TABLE "customer";
 
 CREATE TABLE "customerLocation" (
   "id" TEXT NOT NULL DEFAULT xid(),
@@ -2680,21 +2699,6 @@ CREATE TRIGGER update_equipment_search_result
 
 
 
-## `realtime`
-
-```sql
-BEGIN;
-  -- remove the supabase_realtime publication
-  DROP publication IF EXISTS supabase_realtime;
-
-  -- re-create the supabase_realtime publication with no tables
-  CREATE publication supabase_realtime;
-COMMIT;
-
-```
-
-
-
 ## `holidays`
 
 ```sql
@@ -3396,6 +3400,7 @@ CREATE INDEX "part_partGroupId_index" ON "part"("partGroupId");
 CREATE INDEX "part_replenishmentSystem_index" ON "part"("replenishmentSystem");
 CREATE INDEX "part_active_blocked_index" ON "part"("active", "blocked");
 
+ALTER publication supabase_realtime ADD TABLE "part";
 ALTER TABLE "part" ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Employees can view parts" ON "part"
@@ -5474,8 +5479,6 @@ CREATE INDEX "receipt_supplierId_idx" ON "receipt" ("supplierId");
 
 ALTER TABLE "receipt" ENABLE ROW LEVEL SECURITY;
 
--- TODO: this is a workaround to get around a bug with realtime subscriptions not working with the standard RLS
--- it seems the client is not sending the right JWT token when it subscribes to the realtime channel
 CREATE POLICY "Employees with inventory_view can view receipts" ON "receipt"
   FOR SELECT
   USING (coalesce(get_my_claim('inventory_view')::boolean, false) = true 

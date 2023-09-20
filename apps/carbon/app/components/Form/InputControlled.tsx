@@ -43,7 +43,6 @@ const InputControlled = forwardRef<HTMLInputElement, FormInputControlledProps>(
     const [controlValue, setControlValue] = useControlField<string>(name);
 
     useEffect(() => {
-      console.log(`setting controlled value to ${value}`);
       setControlValue(value);
     }, [setControlValue, value]);
 

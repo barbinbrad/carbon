@@ -92,6 +92,8 @@ CREATE TABLE "supplier" (
     CONSTRAINT "supplier_name_unique" UNIQUE ("name")
 );
 
+ALTER publication supabase_realtime ADD TABLE "supplier";
+
 CREATE TABLE "supplierLocation" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "supplierId" TEXT NOT NULL,
@@ -177,6 +179,8 @@ CREATE TABLE "customer" (
     CONSTRAINT "customer_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id") ON UPDATE CASCADE ON DELETE SET NULL,
     CONSTRAINT "customer_name_unique" UNIQUE ("name")
 );
+
+ALTER publication supabase_realtime ADD TABLE "customer";
 
 CREATE TABLE "customerLocation" (
   "id" TEXT NOT NULL DEFAULT xid(),

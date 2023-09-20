@@ -96,13 +96,6 @@ export async function deleteLocation(
   return client.from("location").delete().eq("id", locationId);
 }
 
-export async function deleteNote(
-  client: SupabaseClient<Database>,
-  noteId: string
-) {
-  return client.from("userNote").update({ active: false }).eq("id", noteId);
-}
-
 export async function deletePartner(
   client: SupabaseClient<Database>,
   partnerId: string
@@ -496,22 +489,6 @@ export async function getLocationsList(client: SupabaseClient<Database>) {
   return client.from("location").select(`id, name`);
 }
 
-export async function getNotes(
-  client: SupabaseClient<Database>,
-  userId: string
-) {
-  return client
-    .from("userNote")
-    .select(
-      // need to use user!notes_createdBy_fkey instead of user because there
-      // are two possible users that could be joined on (the other is userId)
-      "id, note, createdAt, user!notes_createdBy_fkey(id, fullName, avatarUrl)"
-    )
-    .eq("userId", userId)
-    .eq("active", true)
-    .order("createdAt");
-}
-
 export async function getPartner(
   client: SupabaseClient<Database>,
   partnerId: string
@@ -637,7 +614,7 @@ export async function getPeople(
   const userIds = employees.data.map((employee) => {
     if (!employee.user || Array.isArray(employee.user))
       throw new Error("employee.user is an array");
-    return employee.user.id;
+    return employee.user?.id;
   });
 
   const attributeCategories = await getAttributes(client, userIds);
@@ -647,7 +624,7 @@ export async function getPeople(
     if (!employee.user || Array.isArray(employee.user))
       throw new Error("employee.user is an array");
 
-    const userId = employee.user.id;
+    const userId = employee.user?.id;
 
     const employeeAttributes =
       attributeCategories.data.reduce<PersonAttributes>((acc, category) => {
@@ -848,17 +825,6 @@ export async function insertAttributeCategory(
     .upsert([attributeCategory])
     .select("id")
     .single();
-}
-
-export async function insertNote(
-  client: SupabaseClient<Database>,
-  note: {
-    userId: string;
-    note: string;
-    createdBy: string;
-  }
-) {
-  return client.from("userNote").insert([note]).select("id").single();
 }
 
 export async function updateAbility(

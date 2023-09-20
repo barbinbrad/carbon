@@ -1,4 +1,4 @@
-import { useMatches, useNavigate } from "@remix-run/react";
+import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { EditableNumber } from "~/components/Editable";
@@ -29,17 +29,17 @@ export default function useReceiptForm({
   const { supabase } = useSupabase();
 
   const isDisabled = !permissions.can("update", "inventory");
-  const isEditing = !useMatches().some(({ pathname }) =>
-    pathname.includes("new")
-  );
 
   const routeData = useRouteData<{
     locations: ListItem[];
   }>("/x/inventory/receipts");
 
-  const [internalReceiptItems, setReceiptItems] = useState<ReceiptLine[]>(
+  const [internalReceiptLines, setReceiptLines] = useState<ReceiptLine[]>(
     receiptLines ?? []
   );
+  const canPost =
+    internalReceiptLines.length > 0 &&
+    internalReceiptLines.some((l) => l.receivedQuantity > 0);
 
   const [locationId, setLocationId] = useState<string | null>(
     receipt.locationId ?? user.defaults.locationId ?? null
@@ -58,18 +58,11 @@ export default function useReceiptForm({
   );
 
   const onClose = async () => {
-    if (
-      !isEditing &&
-      (!sourceDocumentId || !locationId || receiptLines.length === 0)
-    ) {
+    if (!sourceDocumentId || !locationId || internalReceiptLines.length === 0) {
       await deleteReceipt();
     }
 
-    if (isEditing) {
-      navigate(`/x/inventory/receipts`);
-    } else {
-      navigate(-1);
-    }
+    navigate("/x/inventory/receipts");
   };
 
   const onPost = () => {
@@ -102,7 +95,7 @@ export default function useReceiptForm({
           method: "DELETE",
         }
       )
-        .then(console.log)
+        .then(() => console.log("successfully rolled back receipt sequence"))
         .catch(console.error);
 
       await supabase
@@ -114,7 +107,7 @@ export default function useReceiptForm({
     }
   }, [receipt.receiptId, supabase]);
 
-  const deleteReceiptItems = useCallback(async () => {
+  const deleteReceiptLines = useCallback(async () => {
     if (!supabase) throw new Error("supabase client is not defined");
 
     return supabase
@@ -187,7 +180,7 @@ export default function useReceiptForm({
 
         if (purchaseOrder.error) {
           setError(purchaseOrder.error.message);
-          setReceiptItems([]);
+          setReceiptLines([]);
           break;
         } else {
           setSupplierId(purchaseOrder.data.supplierId);
@@ -195,7 +188,7 @@ export default function useReceiptForm({
 
         if (receiptLines.error) {
           setError(receiptLines.error.message);
-          setReceiptItems([]);
+          setReceiptLines([]);
           break;
         }
 
@@ -204,11 +197,11 @@ export default function useReceiptForm({
           receiptLines.data.length > 0
         ) {
           // no need to insert and fetch lines if they already exist
-          setReceiptItems(receiptLines.data);
+          setReceiptLines(receiptLines.data);
           break;
         }
 
-        const deleteExistingLines = await deleteReceiptItems();
+        const deleteExistingLines = await deleteReceiptLines();
         if (deleteExistingLines.error) {
           setError(deleteExistingLines.error.message);
           break;
@@ -265,7 +258,7 @@ export default function useReceiptForm({
 
         if (insertError) {
           setError(insertError.message);
-          setReceiptItems([]);
+          setReceiptLines([]);
           break;
         }
 
@@ -276,17 +269,17 @@ export default function useReceiptForm({
 
         if (selectError) {
           setError(selectError.message);
-          setReceiptItems([]);
+          setReceiptLines([]);
           break;
         }
 
-        setReceiptItems(receiptLinesData ?? []);
+        setReceiptLines(receiptLinesData ?? []);
         break;
       default:
         return;
     }
   }, [
-    deleteReceiptItems,
+    deleteReceiptLines,
     locationId,
     receipt.receiptId,
     receipt.sourceDocumentId,
@@ -381,8 +374,8 @@ export default function useReceiptForm({
     error,
     locationId,
     locations: routeData?.locations ?? [],
-    internalReceiptItems,
-    isEditing,
+    internalReceiptLines,
+    canPost,
     isDisabled,
     receiptLineColumns,
     sourceDocument,

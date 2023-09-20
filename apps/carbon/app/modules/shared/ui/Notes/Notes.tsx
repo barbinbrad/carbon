@@ -9,36 +9,34 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { Form, useParams } from "@remix-run/react";
+import { Form } from "@remix-run/react";
 import { Fragment } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import { Avatar } from "~/components";
-import { RichText, Submit } from "~/components/Form";
+import { Hidden, RichText, Submit } from "~/components/Form";
 import { SectionTitle } from "~/components/Layout";
 import { usePermissions, useUser } from "~/hooks";
-import type { Note } from "~/modules/resources";
-import { noteValidator } from "~/modules/resources";
+import type { Note } from "~/modules/shared";
+import { noteValidator } from "~/modules/shared";
 
-type PersonNoteProps = {
+type NotesProps = {
+  documentId: string;
   notes: Note[];
 };
 
-const PersonNotes = ({ notes }: PersonNoteProps) => {
+const Notes = ({ documentId, notes }: NotesProps) => {
   const user = useUser();
   const permissions = usePermissions();
-
-  const { personId } = useParams();
-  if (!personId) throw new Error("Missing personId");
-
-  const canCreate = permissions.can("create", "resources");
-  const canUpdate = permissions.can("update", "resources");
-  const canDelete = permissions.can("delete", "resources");
+  const isEmployee = permissions.is("employee");
 
   const borderColor = useColor("gray.200");
 
+  if (!isEmployee) return null;
+
   return (
     <Box w="full">
-      <SectionTitle title="Notes" />
+      <SectionTitle>Notes</SectionTitle>
+
       {notes.length > 0 ? (
         <Grid
           gridTemplateColumns="auto 1fr"
@@ -47,10 +45,11 @@ const PersonNotes = ({ notes }: PersonNoteProps) => {
           w="full"
         >
           {notes.map((note) => {
-            if (Array.isArray(note.user)) throw new Error("Invalid user");
+            if (!note.user || Array.isArray(note.user))
+              throw new Error("Invalid user");
             return (
               <Fragment key={note.id}>
-                <Avatar path={user.avatarUrl} />
+                <Avatar path={note.user.avatarUrl} />
                 <VStack spacing={1} w="full" alignItems="start">
                   <Text fontWeight="bold">{note.user?.fullName}</Text>
                   <HTML text={note.note} />
@@ -58,10 +57,10 @@ const PersonNotes = ({ notes }: PersonNoteProps) => {
                     <Text color="gray.500">
                       {formatTimeAgo(note.createdAt)}
                     </Text>
-                    {(canDelete || canUpdate) && user.id === note.user?.id && (
+                    {user.id === note.user.id && (
                       <Form
                         method="post"
-                        action={`/x/resources/person/${personId}/notes/delete/${note.id}`}
+                        action={`/x/shared/notes/${note.id}/delete`}
                       >
                         <Button
                           type="submit"
@@ -84,33 +83,33 @@ const PersonNotes = ({ notes }: PersonNoteProps) => {
           No notes
         </Box>
       )}
-      {canCreate && (
-        <Box pt={8} w="full">
-          <ValidatedForm
-            method="post"
-            action={`/x/resources/person/${personId}/notes/new`}
-            resetAfterSubmit
-            validator={noteValidator}
-          >
-            <VStack spacing={3} w="full">
-              <Box
-                w="full"
-                borderColor={borderColor}
-                borderWidth={1}
-                borderStyle="solid"
-                borderRadius="md"
-              >
-                <RichText name="note" minH={160} />
-              </Box>
-              <Flex justifyContent="flex-end" w="full">
-                <Submit>Comment</Submit>
-              </Flex>
-            </VStack>
-          </ValidatedForm>
-        </Box>
-      )}
+
+      <Box pt={8} w="full">
+        <ValidatedForm
+          method="post"
+          action={`/x/shared/notes/new`}
+          resetAfterSubmit
+          validator={noteValidator}
+        >
+          <Hidden name="documentId" value={documentId} />
+          <VStack spacing={3} w="full">
+            <Box
+              w="full"
+              borderColor={borderColor}
+              borderWidth={1}
+              borderStyle="solid"
+              borderRadius="md"
+            >
+              <RichText name="note" minH={160} />
+            </Box>
+            <Flex justifyContent="flex-end" w="full">
+              <Submit>Add Note</Submit>
+            </Flex>
+          </VStack>
+        </ValidatedForm>
+      </Box>
     </Box>
   );
 };
 
-export default PersonNotes;
+export default Notes;

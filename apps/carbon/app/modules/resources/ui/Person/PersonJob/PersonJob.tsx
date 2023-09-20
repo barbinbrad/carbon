@@ -59,7 +59,7 @@ const PersonJob = ({ job }: PersonJobProps) => {
           shiftId: job.shiftId ?? undefined,
         }}
       >
-        <SectionTitle title="Job" />
+        <SectionTitle>Job</SectionTitle>
         <VStack w="full" alignItems="start" spacing={4}>
           <Input name="title" label="Title" />
           <DatePicker name="startDate" label="Start Date" />

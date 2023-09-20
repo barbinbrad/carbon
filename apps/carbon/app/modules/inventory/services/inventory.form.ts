@@ -15,7 +15,7 @@ export const receiptSourceDocumentType = [
 
 export const receiptValidator = withZod(
   z.object({
-    id: zfd.text(z.string().optional()),
+    id: z.string().min(1),
     receiptId: z.string().min(1, { message: "Receipt ID is required" }),
     locationId: zfd.text(z.string().optional()),
     sourceDocument: z.enum(receiptSourceDocumentType).optional(),

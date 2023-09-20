@@ -2619,6 +2619,52 @@ export interface Database {
           }
         ];
       };
+      note: {
+        Row: {
+          active: boolean;
+          createdAt: string;
+          createdBy: string;
+          documentId: string;
+          id: string;
+          note: string;
+          noteRichText: Json;
+          updatedAt: string | null;
+        };
+        Insert: {
+          active?: boolean;
+          createdAt?: string;
+          createdBy: string;
+          documentId: string;
+          id?: string;
+          note: string;
+          noteRichText?: Json;
+          updatedAt?: string | null;
+        };
+        Update: {
+          active?: boolean;
+          createdAt?: string;
+          createdBy?: string;
+          documentId?: string;
+          id?: string;
+          note?: string;
+          noteRichText?: Json;
+          updatedAt?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "notes_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "notes_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user_default_view";
+            referencedColumns: ["userId"];
+          }
+        ];
+      };
       part: {
         Row: {
           active: boolean;
@@ -6265,64 +6311,6 @@ export interface Database {
           {
             foreignKeyName: "userAttributeValue_valueUser_fkey";
             columns: ["valueUser"];
-            referencedRelation: "user_default_view";
-            referencedColumns: ["userId"];
-          }
-        ];
-      };
-      userNote: {
-        Row: {
-          active: boolean;
-          createdAt: string;
-          createdBy: string;
-          id: string;
-          note: string;
-          noteRichText: Json;
-          updatedAt: string | null;
-          userId: string;
-        };
-        Insert: {
-          active?: boolean;
-          createdAt?: string;
-          createdBy: string;
-          id?: string;
-          note: string;
-          noteRichText?: Json;
-          updatedAt?: string | null;
-          userId: string;
-        };
-        Update: {
-          active?: boolean;
-          createdAt?: string;
-          createdBy?: string;
-          id?: string;
-          note?: string;
-          noteRichText?: Json;
-          updatedAt?: string | null;
-          userId?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "notes_createdBy_fkey";
-            columns: ["createdBy"];
-            referencedRelation: "user";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "notes_createdBy_fkey";
-            columns: ["createdBy"];
-            referencedRelation: "user_default_view";
-            referencedColumns: ["userId"];
-          },
-          {
-            foreignKeyName: "notes_userId_fkey";
-            columns: ["userId"];
-            referencedRelation: "user";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "notes_userId_fkey";
-            columns: ["userId"];
             referencedRelation: "user_default_view";
             referencedColumns: ["userId"];
           }

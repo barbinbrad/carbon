@@ -16,7 +16,6 @@ import {
   employeeJobValidator,
   getEmployeeAbilities,
   getEmployeeJob,
-  getNotes,
   PersonAbilities,
   PersonDaysOff,
   PersonHeader,
@@ -24,6 +23,7 @@ import {
   PersonTabs,
   upsertEmployeeJob,
 } from "~/modules/resources";
+import { getNotes } from "~/modules/shared";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
@@ -151,9 +151,9 @@ export async function action({ request, params }: ActionFunctionArgs) {
 export default function PersonRoute() {
   const {
     user,
+    notes,
     publicAttributes,
     privateAttributes,
-    notes,
     employeeAbilities,
     employeeJob,
   } = useLoaderData<typeof loader>();
@@ -166,9 +166,9 @@ export default function PersonRoute() {
           <PersonTabs
             user={user}
             job={employeeJob}
+            notes={notes}
             publicAttributes={publicAttributes}
             privateAttributes={privateAttributes}
-            notes={notes}
           />
         </VStack>
         <VStack spacing={4}>

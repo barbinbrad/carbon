@@ -41,7 +41,7 @@ export default function AccountPersonal() {
       {/* <PersonalDataForm personalData={{}} /> */}
       {attributes.map((category: PrivateAttributes) => (
         <Box key={category.id} mb={8} w="full">
-          <SectionTitle title={category.name} />
+          <SectionTitle>{category.name}</SectionTitle>
 
           <UserAttributesForm attributeCategory={category} />
         </Box>

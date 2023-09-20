@@ -1,24 +1,23 @@
 import type {
-  getAbility,
   getAbilities,
+  getAbility,
   getAttribute,
   getAttributeCategories,
   getAttributeCategory,
+  getContractors,
   getDepartments,
   getEmployeeAbilities,
   getEmployeeJob,
-  getEquipmentTypes,
-  getEquipmentType,
   getEquipment,
+  getEquipmentType,
+  getEquipmentTypes,
+  getHolidays,
   getLocations,
-  getNotes,
   getPartners,
   getPeople,
   getShifts,
-  getWorkCellTypes,
   getWorkCellType,
-  getHolidays,
-  getContractors,
+  getWorkCellTypes,
 } from "./services";
 
 export type Ability = NonNullable<
@@ -113,10 +112,6 @@ export type Holiday = NonNullable<
 
 export type Location = NonNullable<
   Awaited<ReturnType<typeof getLocations>>["data"]
->[number];
-
-export type Note = NonNullable<
-  Awaited<ReturnType<typeof getNotes>>["data"]
 >[number];
 
 export type Partner = NonNullable<

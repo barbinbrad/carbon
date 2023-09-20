@@ -16,7 +16,7 @@ const ProfileForm = ({ user }: ProfileFormProps) => {
 
   return (
     <Box w="full">
-      <SectionTitle title="Basic Information" />
+      <SectionTitle>Basic Information</SectionTitle>
       <ValidatedForm
         method="post"
         action={

@@ -171,13 +171,6 @@ export const locationValidator = withZod(
     })
 );
 
-export const noteValidator = withZod(
-  z.object({
-    id: zfd.text(z.string().optional()),
-    note: z.string().min(1, { message: "Note is required" }),
-  })
-);
-
 export const partnerValidator = withZod(
   z.object({
     id: z.string().min(20, { message: "Supplier Location is required" }),

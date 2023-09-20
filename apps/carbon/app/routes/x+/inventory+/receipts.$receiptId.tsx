@@ -9,6 +9,7 @@ import {
   receiptValidator,
   upsertReceipt,
 } from "~/modules/inventory";
+import { getNotes } from "~/modules/shared";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
@@ -23,14 +24,16 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const { receiptId } = params;
   if (!receiptId) throw notFound("receiptId not found");
 
-  const [receipt, receiptLines] = await Promise.all([
+  const [receipt, receiptLines, notes] = await Promise.all([
     getReceipt(client, receiptId),
     getReceiptLines(client, receiptId),
+    getNotes(client, receiptId),
   ]);
 
   return json({
     receipt: receipt?.data ?? null,
     receiptLines: receiptLines?.data ?? [],
+    notes: notes?.data ?? [],
   });
 }
 
@@ -72,13 +75,16 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function EditReceiptsRoute() {
-  const { receipt, receiptLines } = useLoaderData<typeof loader>();
-  if (!receipt?.receiptId) throw notFound("receiptId not found");
-  if (!receipt?.sourceDocumentId) throw notFound("sourceDocumentId not found");
+  const { receipt, receiptLines, notes } = useLoaderData<typeof loader>();
+
+  if (receipt === null) {
+    throw new Error("Receipt not found");
+  }
 
   const initialValues = {
     ...receipt,
     receiptId: receipt.receiptId ?? undefined,
+    externalDocumentId: receipt.externalDocumentId ?? undefined,
     sourceDocument: (receipt.sourceDocument ??
       "Purchase Order") as "Purchase Order",
     sourceDocumentId: receipt.sourceDocumentId ?? undefined,
@@ -91,6 +97,7 @@ export default function EditReceiptsRoute() {
       // @ts-ignore
       initialValues={initialValues}
       isPosted={!!receipt?.postingDate ?? false}
+      notes={notes}
       receiptLines={receiptLines}
     />
   );

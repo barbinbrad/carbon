@@ -1,37 +1,43 @@
 import {
+  Box,
   Card,
   CardBody,
+  Icon,
   Tab,
-  Tabs,
   TabList,
   TabPanel,
   TabPanels,
-  Box,
-  Icon,
+  Tabs,
 } from "@chakra-ui/react";
+import { useParams } from "@remix-run/react";
 import { BiLockAlt } from "react-icons/bi";
 import { SectionTitle } from "~/components/Layout";
+import type { PrivateAttributes, PublicAttributes } from "~/modules/account";
 import { ProfileForm, UserAttributesForm } from "~/modules/account";
-import type { PublicAttributes, PrivateAttributes } from "~/modules/account";
-import { PersonJob, PersonNotes } from "~/modules/resources";
-import type { EmployeeJob, Note } from "~/modules/resources";
+import type { EmployeeJob } from "~/modules/resources";
+import { PersonJob } from "~/modules/resources";
+import type { Note } from "~/modules/shared";
+import { Notes } from "~/modules/shared";
 import type { User } from "~/modules/users";
 
 type PersonTabsProps = {
   user: User;
   job: EmployeeJob;
+  notes: Note[];
   publicAttributes: PublicAttributes[];
   privateAttributes: PrivateAttributes[];
-  notes: Note[];
 };
 
 const PersonsTabs = ({
   user,
   job,
+  notes,
   publicAttributes,
   privateAttributes,
-  notes,
 }: PersonTabsProps) => {
+  const { personId } = useParams();
+  if (!personId) throw new Error("Missing personId");
+
   return (
     <Card w="full">
       <CardBody>
@@ -59,7 +65,7 @@ const PersonsTabs = ({
               {publicAttributes.length ? (
                 publicAttributes.map((category: PublicAttributes) => (
                   <Box key={category.id} mb={8} w="full">
-                    <SectionTitle title={category.name} />
+                    <SectionTitle>{category.name}</SectionTitle>
                     <UserAttributesForm attributeCategory={category} />
                   </Box>
                 ))
@@ -73,7 +79,7 @@ const PersonsTabs = ({
               {privateAttributes.length ? (
                 privateAttributes.map((category: PrivateAttributes) => (
                   <Box key={category.id} mb={8} w="full">
-                    <SectionTitle title={category.name} />
+                    <SectionTitle>{category.name}</SectionTitle>
                     <UserAttributesForm attributeCategory={category} />
                   </Box>
                 ))
@@ -84,7 +90,7 @@ const PersonsTabs = ({
               )}
             </TabPanel>
             <TabPanel>
-              <PersonNotes notes={notes} />
+              <Notes documentId={personId} notes={notes} />
             </TabPanel>
           </TabPanels>
         </Tabs>

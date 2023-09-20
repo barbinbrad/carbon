@@ -1,6 +1,5 @@
 import useResourcesSidebar from "./useResourcesSidebar";
 
-export { useResourcesSidebar };
 export * from "./Abilities";
 export * from "./Attributes";
 export * from "./Contractors";
@@ -13,3 +12,4 @@ export * from "./People";
 export * from "./Person";
 export * from "./Shifts";
 export * from "./WorkCells";
+export { useResourcesSidebar };

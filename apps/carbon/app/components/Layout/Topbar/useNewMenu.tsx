@@ -14,7 +14,7 @@ export default function useNewMenu(): Route[] {
     let links: Route[] = [];
     if (permissions.can("create", "parts")) {
       links.push({
-        name: "New Part",
+        name: "Part",
         to: "/x/part/new",
         icon: <AiOutlinePartition />,
       });
@@ -22,7 +22,7 @@ export default function useNewMenu(): Route[] {
 
     if (permissions.can("create", "purchasing")) {
       links.push({
-        name: "New Purchase Order",
+        name: "Purchase Order",
         to: "/x/purchase-order/new",
         icon: <BsCartDash />,
       });
@@ -30,23 +30,23 @@ export default function useNewMenu(): Route[] {
 
     if (permissions.can("create", "purchasing")) {
       links.push({
-        name: "New Supplier",
-        to: "/x/purchasing/suppliers/new",
+        name: "Supplier",
+        to: "/x/supplier/new",
         icon: <SiHandshake />,
       });
     }
 
     if (permissions.can("create", "sales")) {
       links.push({
-        name: "New Customer",
-        to: "/x/sales/customers/new",
+        name: "Customer",
+        to: "/x/customer/new",
         icon: <IoMdPeople />,
       });
     }
 
     if (permissions.can("create", "users")) {
       links.push({
-        name: "New Employee",
+        name: "Employee",
         to: "/x/users/employees/new",
         icon: <BsShieldLock />,
       });

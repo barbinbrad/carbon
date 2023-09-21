@@ -4,7 +4,6 @@ import { json, redirect } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import {
   getPurchaseOrders,
-  getPurchaseOrderSuppliers,
   PurchaseOrdersTable,
   PurchaseOrdersTableFilters,
 } from "~/modules/purchasing";
@@ -27,7 +26,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const { limit, offset, sorts, filters } =
     getGenericQueryFilters(searchParams);
 
-  const [purchasOrders, suppliers] = await Promise.all([
+  const [purchasOrders] = await Promise.all([
     getPurchaseOrders(client, {
       search,
       status,
@@ -37,7 +36,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
       sorts,
       filters,
     }),
-    getPurchaseOrderSuppliers(client),
   ]);
 
   if (purchasOrders.error) {
@@ -53,16 +51,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
   return json({
     count: purchasOrders.count ?? 0,
     purchasOrders: purchasOrders.data ?? [],
-    suppliers: suppliers.data ?? [],
   });
 }
 
 export default function PurchaseOrdersSearchRoute() {
-  const { count, purchasOrders, suppliers } = useLoaderData<typeof loader>();
+  const { count, purchasOrders } = useLoaderData<typeof loader>();
 
   return (
     <VStack w="full" h="full" spacing={0}>
-      <PurchaseOrdersTableFilters suppliers={suppliers} />
+      <PurchaseOrdersTableFilters />
       <PurchaseOrdersTable data={purchasOrders} count={count} />
       <Outlet />
     </VStack>

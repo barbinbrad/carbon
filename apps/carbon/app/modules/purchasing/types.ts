@@ -3,6 +3,7 @@ import type {
   getExternalDocuments,
   getPurchaseOrderLines,
   getPurchaseOrders,
+  getSupplier,
   getSupplierContacts,
   getSupplierLocations,
   getSuppliers,
@@ -38,6 +39,10 @@ export type PurchaseOrderTransactionType =
 export type Supplier = NonNullable<
   Awaited<ReturnType<typeof getSuppliers>>["data"]
 >[number];
+
+export type SupplierDetail = NonNullable<
+  Awaited<ReturnType<typeof getSupplier>>["data"]
+>;
 
 export type SupplierContact = NonNullable<
   Awaited<ReturnType<typeof getSupplierContacts>>["data"]

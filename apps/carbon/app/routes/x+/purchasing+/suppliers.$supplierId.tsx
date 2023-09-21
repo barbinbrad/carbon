@@ -96,7 +96,7 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function SupplierEditRoute() {
-  const { supplier, contacts, locations } = useLoaderData<typeof loader>();
+  const { supplier } = useLoaderData<typeof loader>();
 
   const initialValues = {
     id: supplier.id ?? undefined,
@@ -111,11 +111,5 @@ export default function SupplierEditRoute() {
     defaultShippingTermId: supplier.defaultShippingTermId ?? undefined,
   };
 
-  return (
-    <SupplierForm
-      initialValues={initialValues}
-      contacts={contacts ?? []}
-      locations={locations ?? []}
-    />
-  );
+  return <SupplierForm initialValues={initialValues} />;
 }

@@ -28,7 +28,7 @@ const SuppliersTable = memo(({ data, count }: SuppliersTableProps) => {
         accessorKey: "name",
         header: "Name",
         cell: ({ row }) => (
-          <Link onClick={() => navigate(row.original.id as string)}>
+          <Link onClick={() => navigate(`/x/supplier/${row.original.id}`)}>
             {row.original.name}
           </Link>
         ),

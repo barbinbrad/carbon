@@ -18,7 +18,7 @@ import {
   Submit,
   TextArea,
 } from "~/components/Form";
-import { usePermissions } from "~/hooks";
+import { usePermissions, useRouteData } from "~/hooks";
 import { useSupabase } from "~/lib/supabase";
 import type {
   PartGroupListItem,
@@ -42,10 +42,6 @@ type PartFormValues = {
 
 type PartFormProps = {
   initialValues: PartFormValues;
-  partGroups: PartGroupListItem[];
-  partTypes: PartType[];
-  partReplenishmentSystems: PartReplenishmentSystem[];
-  unitOfMeasures: UnitOfMeasureListItem[];
 };
 
 const useNextPartIdShortcut = () => {
@@ -93,38 +89,43 @@ const useNextPartIdShortcut = () => {
   return { partId, onPartIdChange, loading };
 };
 
-const PartForm = ({
-  initialValues,
-  partGroups,
-  partTypes,
-  partReplenishmentSystems,
-  unitOfMeasures,
-}: PartFormProps) => {
+const PartForm = ({ initialValues }: PartFormProps) => {
+  const sharedPartsData = useRouteData<{
+    partGroups: PartGroupListItem[];
+    partTypes: PartType[];
+    partReplenishmentSystems: PartReplenishmentSystem[];
+    unitOfMeasures: UnitOfMeasureListItem[];
+  }>("/x/part");
+
   const { partId, onPartIdChange, loading } = useNextPartIdShortcut();
   const permissions = usePermissions();
   const isEditing = initialValues.id !== undefined;
 
-  const partGroupOptions = partGroups.map((partGroup) => ({
-    label: partGroup.name,
-    value: partGroup.id,
-  }));
+  const partGroupOptions =
+    sharedPartsData?.partGroups.map((partGroup) => ({
+      label: partGroup.name,
+      value: partGroup.id,
+    })) ?? [];
 
-  const partTypeOptions = partTypes.map((partType) => ({
-    label: partType,
-    value: partType,
-  }));
+  const partTypeOptions =
+    sharedPartsData?.partTypes.map((partType) => ({
+      label: partType,
+      value: partType,
+    })) ?? [];
 
-  const partReplenishmentSystemOptions = partReplenishmentSystems.map(
-    (partReplenishmentSystem) => ({
-      label: partReplenishmentSystem,
-      value: partReplenishmentSystem,
-    })
-  );
+  const partReplenishmentSystemOptions =
+    sharedPartsData?.partReplenishmentSystems.map(
+      (partReplenishmentSystem) => ({
+        label: partReplenishmentSystem,
+        value: partReplenishmentSystem,
+      })
+    ) ?? [];
 
-  const unitOfMeasureOptions = unitOfMeasures.map((uom) => ({
-    label: uom.name,
-    value: uom.code,
-  }));
+  const unitOfMeasureOptions =
+    sharedPartsData?.unitOfMeasures.map((uom) => ({
+      label: uom.name,
+      value: uom.code,
+    })) ?? [];
 
   return (
     <ValidatedForm

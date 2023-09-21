@@ -3,13 +3,7 @@ import { redirect } from "@remix-run/node";
 import { useParams } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
 import { useRouteData } from "~/hooks";
-import type {
-  PartGroupListItem,
-  PartReplenishmentSystem,
-  PartSummary,
-  PartType,
-  UnitOfMeasureListItem,
-} from "~/modules/parts";
+import type { PartSummary } from "~/modules/parts";
 import { PartForm, partValidator, upsertPart } from "~/modules/parts";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
@@ -51,13 +45,6 @@ export async function action({ request, params }: ActionFunctionArgs) {
 }
 
 export default function PartBasicRoute() {
-  const sharedPartsData = useRouteData<{
-    partGroups: PartGroupListItem[];
-    partTypes: PartType[];
-    partReplenishmentSystems: PartReplenishmentSystem[];
-    unitOfMeasures: UnitOfMeasureListItem[];
-  }>("/x/part");
-
   const { partId } = useParams();
   const partData = useRouteData<{ partSummary: PartSummary }>(
     `/x/part/${partId}`
@@ -76,13 +63,5 @@ export default function PartBasicRoute() {
     active: partData.partSummary?.active,
   };
 
-  return (
-    <PartForm
-      initialValues={initialValues}
-      partGroups={sharedPartsData?.partGroups ?? []}
-      partTypes={sharedPartsData?.partTypes ?? []}
-      partReplenishmentSystems={sharedPartsData?.partReplenishmentSystems ?? []}
-      unitOfMeasures={sharedPartsData?.unitOfMeasures ?? []}
-    />
-  );
+  return <PartForm initialValues={initialValues} />;
 }

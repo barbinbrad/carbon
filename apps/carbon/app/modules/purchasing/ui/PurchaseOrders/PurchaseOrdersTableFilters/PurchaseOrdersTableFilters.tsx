@@ -5,14 +5,10 @@ import { IoMdAdd } from "react-icons/io";
 import { DebouncedInput } from "~/components/Search";
 import { usePermissions, useUrlParams } from "~/hooks";
 import { purchaseOrderStatusType } from "~/modules/purchasing";
+import { useSuppliers } from "~/stores";
 
-type PurchaseOrdersTableFiltersProps = {
-  suppliers: { id: string | null; name: string | null }[];
-};
-
-const PurchaseOrdersTableFilters = ({
-  suppliers,
-}: PurchaseOrdersTableFiltersProps) => {
+const PurchaseOrdersTableFilters = () => {
+  const [suppliers] = useSuppliers();
   const [params, setParams] = useUrlParams();
   const permissions = usePermissions();
 

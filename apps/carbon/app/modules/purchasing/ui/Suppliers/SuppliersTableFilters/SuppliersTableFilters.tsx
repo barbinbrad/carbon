@@ -84,7 +84,7 @@ const SuppliersTableFilters = ({
         {permissions.can("create", "purchasing") && (
           <Button
             as={Link}
-            to={`new?${params.toString()}`}
+            to={`/x/supplier/new`}
             colorScheme="brand"
             leftIcon={<IoMdAdd />}
           >

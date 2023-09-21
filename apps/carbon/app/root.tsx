@@ -15,6 +15,7 @@ import {
   useLoaderData,
   useRouteError,
 } from "@remix-run/react";
+import { Analytics } from "@vercel/analytics/react";
 import React from "react";
 import { getBrowserEnv } from "~/config/env";
 import Background from "~/styles/background.css";
@@ -68,8 +69,8 @@ function Document({
       <body>
         {children}
         <ScrollRestoration />
-
         <Scripts />
+        <Analytics />
         {process.env.NODE_ENV === "development" && <LiveReload />}
       </body>
     </html>

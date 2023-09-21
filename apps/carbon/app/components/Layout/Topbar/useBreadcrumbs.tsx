@@ -145,6 +145,7 @@ export default function useBreadcrumbs(): Route[] {
             to: "/x/purchasing/orders",
           }
         );
+
       case "routes/x+/purchasing+/_layout":
         return acc.concat({
           name: "Purchasing",
@@ -155,6 +156,17 @@ export default function useBreadcrumbs(): Route[] {
           name: "Orders",
           to: match.pathname,
         });
+      case "routes/x+/supplier+/_layout":
+        return acc.concat([
+          {
+            name: "Purchasing",
+            to: match.pathname,
+          },
+          {
+            name: "Suppliers",
+            to: "/x/purchasing/suppliers",
+          },
+        ]);
       case "routes/x+/purchasing+/suppliers":
         return acc.concat({
           name: "Suppliers",
@@ -241,6 +253,17 @@ export default function useBreadcrumbs(): Route[] {
           name: "Sales",
           to: match.pathname,
         });
+      case "routes/x+/customer+/_layout":
+        return acc.concat([
+          {
+            name: "Sales",
+            to: match.pathname,
+          },
+          {
+            name: "Customers",
+            to: "/x/sales/customers",
+          },
+        ]);
       case "routes/x+/sales+/customers":
         return acc.concat({
           name: "Customers",

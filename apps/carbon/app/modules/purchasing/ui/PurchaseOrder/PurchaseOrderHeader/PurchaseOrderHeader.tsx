@@ -16,7 +16,7 @@ import { usePermissions, useRouteData } from "~/hooks";
 import type { PurchaseOrder } from "~/modules/purchasing";
 import { usePurchaseOrder } from "../../PurchaseOrders/usePurchaseOrder";
 
-const PartPreview = () => {
+const PurchaseOrderHeader = () => {
   const permissions = usePermissions();
   const { orderId } = useParams();
   if (!orderId) throw new Error("Could not find orderId");
@@ -115,4 +115,4 @@ const PartPreview = () => {
   );
 };
 
-export default PartPreview;
+export default PurchaseOrderHeader;

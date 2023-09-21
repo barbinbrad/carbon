@@ -7,7 +7,7 @@ import {
 } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { useField } from "remix-validated-form";
-import { timezonesGroupedByCountry } from "~/lib/timezones";
+import { timezonesGroupedByCountry } from "~/config/timezones";
 
 export type TimezoneProps = {
   name: string;
@@ -16,7 +16,9 @@ export type TimezoneProps = {
   isReadOnly?: boolean;
   isLoading?: boolean;
   placeholder?: string;
-  onChange?: (newValue: { value: string | number; label: string }) => void;
+  onChange?: (
+    newValue: { value: string | number; label: string } | null
+  ) => void;
 };
 
 const Timezone = ({
@@ -57,7 +59,6 @@ const Timezone = ({
           stringify: (option) => `${option.label}`,
         })}
         placeholder={placeholder ?? "Select a timezone"}
-        // @ts-ignore
         onChange={onChange ?? undefined}
       />
       {error ? (

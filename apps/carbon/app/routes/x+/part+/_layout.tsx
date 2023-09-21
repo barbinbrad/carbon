@@ -14,7 +14,7 @@ import { getLocationsList } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 
 export const meta: MetaFunction = () => {
-  return [{ title: "Carbon | Login" }];
+  return [{ title: "Carbon | Part" }];
 };
 
 export async function loader({ request }: LoaderFunctionArgs) {

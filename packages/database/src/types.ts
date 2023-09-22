@@ -1457,6 +1457,12 @@ export interface Database {
             referencedColumns: ["id"];
           },
           {
+            foreignKeyName: "customerAccount_customerId_fkey";
+            columns: ["customerId"];
+            referencedRelation: "customers_view";
+            referencedColumns: ["id"];
+          },
+          {
             foreignKeyName: "customerAccount_id_fkey";
             columns: ["id"];
             referencedRelation: "user";
@@ -1506,6 +1512,12 @@ export interface Database {
             referencedColumns: ["id"];
           },
           {
+            foreignKeyName: "customerContact_customerId_fkey";
+            columns: ["customerId"];
+            referencedRelation: "customers_view";
+            referencedColumns: ["id"];
+          },
+          {
             foreignKeyName: "customerContact_customerLocationId_fkey";
             columns: ["customerLocationId"];
             referencedRelation: "customerLocation";
@@ -1552,6 +1564,12 @@ export interface Database {
             foreignKeyName: "customerLocation_customerId_fkey";
             columns: ["customerId"];
             referencedRelation: "customer";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "customerLocation_customerId_fkey";
+            columns: ["customerId"];
+            referencedRelation: "customers_view";
             referencedColumns: ["id"];
           }
         ];
@@ -4470,6 +4488,12 @@ export interface Database {
             referencedColumns: ["id"];
           },
           {
+            foreignKeyName: "purchaseOrderDelivery_customerId_fkey";
+            columns: ["customerId"];
+            referencedRelation: "customers_view";
+            referencedColumns: ["id"];
+          },
+          {
             foreignKeyName: "purchaseOrderDelivery_customerLocationId_fkey";
             columns: ["customerLocationId"];
             referencedRelation: "customerLocation";
@@ -6824,6 +6848,30 @@ export interface Database {
             foreignKeyName: "contractor_id_fkey";
             columns: ["supplierContactId"];
             referencedRelation: "supplierContact";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      customers_view: {
+        Row: {
+          customerStatusId: string | null;
+          customerTypeId: string | null;
+          id: string | null;
+          name: string | null;
+          status: string | null;
+          type: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "customer_customerStatusId_fkey";
+            columns: ["customerStatusId"];
+            referencedRelation: "customerStatus";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "customer_customerTypeId_fkey";
+            columns: ["customerTypeId"];
+            referencedRelation: "customerType";
             referencedColumns: ["id"];
           }
         ];

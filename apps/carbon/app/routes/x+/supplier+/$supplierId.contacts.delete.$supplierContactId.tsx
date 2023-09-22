@@ -25,7 +25,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   );
   if (deleteSupplierContactError) {
     return redirect(
-      `/x/purchasing/suppliers/${supplierId}`,
+      `/x/supplier/${supplierId}/contacts`,
       await flash(
         request,
         error(deleteSupplierContactError, "Failed to delete supplier contact")
@@ -34,7 +34,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    `/x/purchasing/suppliers/${supplierId}`,
+    `/x/supplier/${supplierId}/contacts`,
     await flash(request, success("Successfully deleted supplier contact"))
   );
 }

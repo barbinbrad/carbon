@@ -5,12 +5,9 @@ import { BsChatSquare } from "react-icons/bs";
 import { Search } from "~/components/Search";
 import AvatarMenu from "./AvatarMenu";
 import Breadcrumbs from "./Breadcrumbs";
-import NewMenu from "./NewMenu";
-import useBreadcrumbs from "./useBreadcrumbs";
+import Create from "./Create";
 
 const Topbar = () => {
-  const breadcrumbLinks = useBreadcrumbs();
-
   const borderColor = useColor("gray.200");
 
   return (
@@ -27,9 +24,10 @@ const Topbar = () => {
       top={0}
       zIndex={1}
     >
-      <Breadcrumbs links={breadcrumbLinks} />
+      <Breadcrumbs />
       <Search />
       <HStack py={2} justifyContent="end" spacing={1}>
+        <Create />
         <a
           target="_blank"
           href="https://github.com/barbinbrad/carbon/issues/new/choose"
@@ -38,7 +36,7 @@ const Topbar = () => {
           <Button
             colorScheme="gray"
             leftIcon={<BiHelpCircle />}
-            variant="ghost"
+            variant="outline"
           >
             Help
           </Button>
@@ -51,12 +49,11 @@ const Topbar = () => {
           <Button
             colorScheme="gray"
             leftIcon={<BsChatSquare />}
-            variant="ghost"
+            variant="outline"
           >
             Feedback
           </Button>
         </a>
-        <NewMenu />
         <AvatarMenu />
       </HStack>
     </GridItem>

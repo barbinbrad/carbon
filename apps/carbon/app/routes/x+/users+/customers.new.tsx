@@ -13,8 +13,7 @@ import { assertIsPost } from "~/utils/http";
 export async function action({ request }: ActionFunctionArgs) {
   assertIsPost(request);
   const { client } = await requirePermissions(request, {
-    view: "sales",
-    update: "users",
+    view: "users",
   });
 
   const validation = await createCustomerAccountValidator.validate(
@@ -25,11 +24,22 @@ export async function action({ request }: ActionFunctionArgs) {
     return validationError(validation.error);
   }
 
+  const url = new URL(request.url);
+  const searchParams = new URLSearchParams(url.search);
+  const customerRedirect = searchParams.get("customer");
+
   const { id, customer } = validation.data;
   const result = await createCustomerAccount(client, {
     id,
     customerId: customer,
   });
+
+  if (customerRedirect) {
+    return redirect(
+      `/x/customer/${customerRedirect}/contacts`,
+      await flash(request, result)
+    );
+  }
 
   return redirect("/x/users/customers", await flash(request, result));
 }

@@ -96,11 +96,9 @@ export async function getCustomers(
     status: string | null;
   }
 ) {
-  let query = client
-    .from("customer")
-    .select("id, name, customerType(name), customerStatus(name)", {
-      count: "exact",
-    });
+  let query = client.from("customers_view").select("*", {
+    count: "exact",
+  });
 
   if (args.name) {
     query = query.ilike("name", `%${args.name}%`);

@@ -7,7 +7,7 @@ import { IoMdTrash } from "react-icons/io";
 import { Avatar, Table } from "~/components";
 import { usePermissions } from "~/hooks";
 import type { Supplier } from "~/modules/users";
-import { ResendInviteModal, DeactivateUsersModal } from "~/modules/users";
+import { DeactivateUsersModal, ResendInviteModal } from "~/modules/users";
 
 type SupplierAccountsTableProps = {
   data: Supplier[];
@@ -94,8 +94,8 @@ const SupplierAccountsTable = memo(
         {
           header: "Supplier Type",
           cell: ({ row }) => {
-            // @ts-ignore
             const supplierType = row.original.supplier?.supplierType;
+            // @ts-ignore
             return supplierType ? supplierType.name : "";
           },
         },

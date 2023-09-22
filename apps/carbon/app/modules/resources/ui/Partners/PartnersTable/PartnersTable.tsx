@@ -71,7 +71,7 @@ const PartnersTable = memo(({ data, count }: PartnersTableProps) => {
               );
             }}
           >
-            View Partner
+            Edit Partner
           </MenuItem>
           <MenuItem
             isDisabled={!permissions.can("delete", "resources")}

@@ -15,10 +15,10 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo, useState } from "react";
 import { BiAddToQueue } from "react-icons/bi";
 import {
-  BsPencilSquare,
-  BsListUl,
-  BsPlus,
   BsFillCheckCircleFill,
+  BsListUl,
+  BsPencilSquare,
+  BsPlus,
 } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { Table } from "~/components";
@@ -150,7 +150,7 @@ const WorkCellTypesTable = memo(({ data, count }: WorkCellTypesTableProps) => {
             );
           }}
         >
-          View Work Cell
+          Edit Work Cell
         </MenuItem>
         <MenuItem
           icon={<BsPencilSquare />}

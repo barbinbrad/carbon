@@ -101,7 +101,7 @@ const SuppliersTable = memo(({ data, count }: SuppliersTableProps) => {
             navigate(`/x/purchasing/suppliers/${row.id}?${params.toString()}`)
           }
         >
-          View Supplier
+          Edit Supplier
         </MenuItem>
       ),
     [navigate, params]

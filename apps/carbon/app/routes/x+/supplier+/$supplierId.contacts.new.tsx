@@ -3,6 +3,7 @@ import { redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
 import {
   insertSupplierContact,
+  SupplierContactForm,
   supplierContactValidator,
 } from "~/modules/purchasing";
 import { requirePermissions } from "~/services/auth";
@@ -35,7 +36,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   });
   if (createSupplierContact.error) {
     return redirect(
-      `/x/purchasing/suppliers/${supplierId}`,
+      `/x/supplier/${supplierId}/contacts`,
       await flash(
         request,
         error(createSupplierContact.error, "Failed to create supplier contact")
@@ -44,7 +45,17 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    `/x/purchasing/suppliers/${supplierId}`,
+    `/x/supplier/${supplierId}/contacts`,
     await flash(request, success("Supplier contact created"))
   );
+}
+
+export default function SupplierContactsNewRoute() {
+  const initialValues = {
+    firstName: "",
+    lastName: "",
+    email: "",
+  };
+
+  return <SupplierContactForm initialValues={initialValues} />;
 }

@@ -6,14 +6,11 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import { Link } from "@remix-run/react";
-import type { Route } from "~/types";
+import useBreadcrumbs from "./useBreadcrumbs";
 
-type BreadcrumbProps = {
-  links: Route[];
-};
-
-const Breadcrumbs = ({ links = [] }: BreadcrumbProps) => {
+const Breadcrumbs = () => {
   const linkColor = useColor("gray.800");
+  const links = useBreadcrumbs() ?? [];
 
   return (
     <HStack>

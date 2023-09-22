@@ -7,7 +7,7 @@ import { IoMdTrash } from "react-icons/io";
 import { Avatar, Table } from "~/components";
 import { usePermissions } from "~/hooks";
 import type { Customer } from "~/modules/users";
-import { ResendInviteModal, DeactivateUsersModal } from "~/modules/users";
+import { DeactivateUsersModal, ResendInviteModal } from "~/modules/users";
 
 type CustomerAccountsTableProps = {
   data: Customer[];
@@ -94,8 +94,8 @@ const CustomerAccountsTable = memo(
         {
           header: "Customer Type",
           cell: ({ row }) => {
-            // @ts-ignore
             const customerType = row.original.customer?.customerType;
+            // @ts-ignore
             return customerType ? customerType.name : "";
           },
         },

@@ -53,7 +53,7 @@ const PartGroupsTable = memo(({ data, count }: PartGroupsTableProps) => {
               navigate(`/x/parts/groups/${row.id}?${params.toString()}`);
             }}
           >
-            View Part Group
+            Edit Part Group
           </MenuItem>
           <MenuItem
             isDisabled={!permissions.can("delete", "parts")}

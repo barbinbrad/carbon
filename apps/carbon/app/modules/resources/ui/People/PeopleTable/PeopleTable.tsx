@@ -193,7 +193,7 @@ const PeopleTable = memo(
                   )
                 }
               >
-                View Employee
+                Edit Employee
               </MenuItem>
             );
           }

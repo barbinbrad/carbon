@@ -36,7 +36,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (supplierRedirect) {
     return redirect(
-      `/x/purchasing/suppliers/${supplierRedirect}`,
+      `/x/supplier/${supplierRedirect}/contacts`,
       await flash(request, result)
     );
   }

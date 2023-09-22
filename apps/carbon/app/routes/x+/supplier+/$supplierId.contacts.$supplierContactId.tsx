@@ -41,7 +41,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
   if (update.error) {
     return redirect(
-      `/x/purchasing/suppliers/${supplierId}`,
+      `/x/supplier/${supplierId}/contacts`,
       await flash(
         request,
         error(update.error, "Failed to update supplier contact")
@@ -50,7 +50,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    `/x/purchasing/suppliers/${supplierId}`,
+    `/x/supplier/${supplierId}/contacts`,
     await flash(request, success("Supplier contact updated"))
   );
 }

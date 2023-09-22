@@ -2,23 +2,22 @@ import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
 import {
+  insertSupplierLocation,
   supplierLocationValidator,
-  updateSupplierLocation,
 } from "~/modules/purchasing";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
-import { assertIsPost, badRequest, notFound } from "~/utils/http";
+import { assertIsPost, notFound } from "~/utils/http";
 import { error, success } from "~/utils/result";
 
 export async function action({ request, params }: ActionFunctionArgs) {
   assertIsPost(request);
   const { client } = await requirePermissions(request, {
-    update: "purchasing",
+    create: "purchasing",
   });
 
-  const { supplierId, supplierLocationId } = params;
+  const { supplierId } = params;
   if (!supplierId) throw notFound("supplierId not found");
-  if (!supplierLocationId) throw notFound("supplierLocationId not found");
 
   const validation = await supplierLocationValidator.validate(
     await request.formData()
@@ -30,25 +29,25 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
   const { id, addressId, ...address } = validation.data;
 
-  if (addressId === undefined)
-    throw badRequest("addressId is undefined in form data");
-
-  const update = await updateSupplierLocation(client, {
-    addressId,
+  const createSupplierLocation = await insertSupplierLocation(client, {
+    supplierId,
     address,
   });
-  if (update.error) {
+  if (createSupplierLocation.error) {
     return redirect(
-      `/x/purchasing/suppliers/${supplierId}`,
+      `/x/supplier/${supplierId}/locations`,
       await flash(
         request,
-        error(update.error, "Failed to update supplier address")
+        error(
+          createSupplierLocation.error,
+          "Failed to create supplier location"
+        )
       )
     );
   }
 
   return redirect(
-    `/x/purchasing/suppliers/${supplierId}`,
-    await flash(request, success("Supplier address updated"))
+    `/x/supplier/${supplierId}/locations`,
+    await flash(request, success("Supplier location created"))
   );
 }

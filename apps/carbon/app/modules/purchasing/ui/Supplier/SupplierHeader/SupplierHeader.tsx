@@ -55,7 +55,7 @@ const SupplierHeader = () => {
               <Text fontWeight="bold">
                 {sharedSupplierData?.supplierTypes?.find(
                   (type) => type.id === routeData?.supplier?.supplierTypeId
-                )?.name ?? " "}
+                )?.name ?? "--"}
               </Text>
             </Stack>
             <Stack
@@ -68,7 +68,7 @@ const SupplierHeader = () => {
                 {sharedSupplierData?.supplierStatuses?.find(
                   (status) =>
                     status.id === routeData?.supplier?.supplierStatusId
-                )?.name ?? " "}
+                )?.name ?? "--"}
               </Text>
             </Stack>
             <Stack
@@ -81,7 +81,7 @@ const SupplierHeader = () => {
                 {sharedSupplierData?.paymentTerms?.find(
                   (term) =>
                     term.id === routeData?.supplier?.defaultPaymentTermId
-                )?.name ?? " "}
+                )?.name ?? "--"}
               </Text>
             </Stack>
           </Stack>

@@ -42,7 +42,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const customerId = createCustomer.data?.id;
 
   return redirect(
-    `/x/sales/customers/${customerId}`,
+    `/x/customer/${customerId}`,
     await flash(request, success("Created customer"))
   );
 }

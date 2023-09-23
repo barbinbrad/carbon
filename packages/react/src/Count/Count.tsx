@@ -1,5 +1,5 @@
-import { Flex } from "@chakra-ui/react";
 import type { BoxProps } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 
 export interface CountProps extends BoxProps {
   count: number;
@@ -12,7 +12,7 @@ const Count = ({ count, ...props }: CountProps) => {
       as="span"
       bg="gray.700"
       borderRadius="full"
-      fontSize="sm"
+      fontSize={12}
       h={5}
       minW={5}
       alignItems="center"

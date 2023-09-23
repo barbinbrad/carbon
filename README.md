@@ -4,14 +4,24 @@
 
 Carbon is a high permformance, open-source, single tenant (incomplete) ERP written in Typescript. It allows customers, suppliers, and employees to share a common platform for manufacturing.
 
-It includes:
+Some of the technical highlights/roadmap are:
 
-- Magic link authentication
-- Role-based access control (RBAC)
-- Row-level security (RLS)
-- Realtime database subscriptions
-- Composable user groups
-- Full-stack type safety (Datbase → UI)
+- [x] Full-stack type safety (Datbase → UI)
+- [x] Realtime database subscriptions
+- [x] Attribute-based access control (ABAC)
+- [x] Row-level security (RLS)
+- [x] Composable user groups
+- [x] Magic link authentication
+- [x] File-based routing
+- [ ] Third-party integrations for data
+- [ ] Easy-to-use plugin system
+
+Some of the product highlights/roadmap are:
+
+- [x] Search
+- [x] Customer and supplier access
+- [ ] Double-entry accrual accounting
+- [ ] Stochastic scheduling/planning
 
 ## Project Status
 

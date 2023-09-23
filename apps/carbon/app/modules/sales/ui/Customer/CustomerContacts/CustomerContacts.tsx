@@ -17,28 +17,29 @@ import { IoMdAdd, IoMdTrash } from "react-icons/io";
 import { Contact } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions } from "~/hooks";
-import type { SupplierContact } from "~/modules/purchasing/types";
+import type { CustomerContact } from "~/modules/sales/types";
 
-type SupplierContactsProps = {
-  contacts: SupplierContact[];
+type CustomerContactsProps = {
+  contacts: CustomerContact[];
 };
 
-const SupplierContacts = ({ contacts }: SupplierContactsProps) => {
+const CustomerContacts = ({ contacts }: CustomerContactsProps) => {
   const navigate = useNavigate();
-  const { supplierId } = useParams();
-  if (!supplierId) throw new Error("supplierId is required");
+  const { customerId } = useParams();
+  if (!customerId) throw new Error("customerId is required");
   const permissions = usePermissions();
-  const canEdit = permissions.can("create", "purchasing");
+  const canEdit = permissions.can("create", "sales");
   const isEmpty = contacts === undefined || contacts?.length === 0;
 
   const deleteContactModal = useDisclosure();
-  const [contact, setSelectedContact] = useState<SupplierContact>();
+  const [contact, setSelectedContact] = useState<CustomerContact>();
 
   const getActions = useCallback(
-    (contact: SupplierContact) => {
+    (contact: CustomerContact) => {
       const actions = [];
+
       actions.push({
-        label: permissions.can("update", "purchasing")
+        label: permissions.can("update", "sales")
           ? "Edit Contact"
           : "View Contact",
         icon: <BsPencilSquare />,
@@ -47,7 +48,7 @@ const SupplierContacts = ({ contacts }: SupplierContactsProps) => {
         },
       });
 
-      if (permissions.can("delete", "purchasing")) {
+      if (permissions.can("delete", "sales")) {
         actions.push({
           label: "Delete Contact",
           icon: <IoMdTrash />,
@@ -64,19 +65,7 @@ const SupplierContacts = ({ contacts }: SupplierContactsProps) => {
           icon: <IoMdAdd />,
           onClick: () => {
             navigate(
-              `/x/users/suppliers/new?id=${contact.id}&supplier=${supplierId}`
-            );
-          },
-        });
-      }
-
-      if (permissions.can("create", "resources")) {
-        actions.push({
-          label: "Add Contractor",
-          icon: <IoMdAdd />,
-          onClick: () => {
-            navigate(
-              `/x/resources/contractors/new?id=${contact.id}&supplierId=${supplierId}`
+              `/x/users/customers/new?id=${contact.id}&customer=${customerId}`
             );
           },
         });
@@ -84,7 +73,7 @@ const SupplierContacts = ({ contacts }: SupplierContactsProps) => {
 
       return actions;
     },
-    [permissions, deleteContactModal, navigate, supplierId]
+    [permissions, deleteContactModal, navigate, customerId]
   );
 
   return (
@@ -116,7 +105,7 @@ const SupplierContacts = ({ contacts }: SupplierContactsProps) => {
                   !Array.isArray(contact.user) ? (
                     <Contact
                       contact={contact.contact}
-                      url={`/x/supplier/${supplierId}/contacts/${contact.id}`}
+                      url={`/x/customer/${customerId}/contacts/${contact.id}`}
                       user={contact.user}
                       actions={getActions(contact)}
                     />
@@ -129,7 +118,7 @@ const SupplierContacts = ({ contacts }: SupplierContactsProps) => {
       </Card>
 
       <ConfirmDelete
-        action={`/x/supplier/${supplierId}/contacts/delete/${contact?.id}`}
+        action={`/x/customer/${customerId}/contacts/delete/${contact?.id}`}
         isOpen={deleteContactModal.isOpen}
         name={`${contact?.contact?.firstName} ${contact?.contact?.lastName}`}
         text="Are you sure you want to delete this contact?"
@@ -142,4 +131,4 @@ const SupplierContacts = ({ contacts }: SupplierContactsProps) => {
   );
 };
 
-export default SupplierContacts;
+export default CustomerContacts;

@@ -58,7 +58,7 @@ CREATE FUNCTION public.create_customer_search_result()
 RETURNS TRIGGER AS $$
 BEGIN
   INSERT INTO public.search(name, entity, uuid, link)
-  VALUES (new.name, 'Customer', new.id, '/x/sales/customers/' || new.id);
+  VALUES (new.name, 'Customer', new.id, '/x/customer/' || new.id);
   RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -86,7 +86,7 @@ CREATE FUNCTION public.create_supplier_search_result()
 RETURNS TRIGGER AS $$
 BEGIN
   INSERT INTO public.search(name, entity, uuid, link)
-  VALUES (new.name, 'Supplier', new.id, '/x/purchasing/suppliers/' || new.id);
+  VALUES (new.name, 'Supplier', new.id, '/x/supplier/' || new.id);
   RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;

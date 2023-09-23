@@ -83,7 +83,7 @@ const CustomersTableFilters = ({
         {permissions.can("create", "sales") && (
           <Button
             as={Link}
-            to={`new?${params.toString()}`}
+            to={`/x/customer/new?${params.toString()}`}
             colorScheme="brand"
             leftIcon={<IoMdAdd />}
           >

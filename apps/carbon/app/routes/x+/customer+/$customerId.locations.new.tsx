@@ -2,6 +2,7 @@ import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
 import {
+  CustomerLocationForm,
   customerLocationValidator,
   insertCustomerLocation,
 } from "~/modules/sales";
@@ -35,7 +36,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   });
   if (createCustomerLocation.error) {
     return redirect(
-      `/x/sales/customers/${customerId}`,
+      `/x/customer/${customerId}/locations`,
       await flash(
         request,
         error(
@@ -47,7 +48,13 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    `/x/sales/customers/${customerId}`,
+    `/x/customer/${customerId}/locations`,
     await flash(request, success("Customer location created"))
   );
+}
+
+export default function CustomerLocationsNewRoute() {
+  const initialValues = {};
+
+  return <CustomerLocationForm initialValues={initialValues} />;
 }

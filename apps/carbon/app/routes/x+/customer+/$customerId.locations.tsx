@@ -1,26 +1,26 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { getSupplierLocations, SupplierLocations } from "~/modules/purchasing";
+import { CustomerLocations, getCustomerLocations } from "~/modules/sales";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { error } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const { client } = await requirePermissions(request, {
-    view: "purchasing",
+    view: "sales",
   });
 
-  const { supplierId } = params;
-  if (!supplierId) throw new Error("Could not find supplierId");
+  const { customerId } = params;
+  if (!customerId) throw new Error("Could not find customerId");
 
-  const locations = await getSupplierLocations(client, supplierId);
+  const locations = await getCustomerLocations(client, customerId);
   if (locations.error) {
     return redirect(
-      `/x/supplier/${supplierId}`,
+      `/x/customer/${customerId}`,
       await flash(
         request,
-        error(locations.error, "Failed to fetch supplier locations")
+        error(locations.error, "Failed to fetch customer locations")
       )
     );
   }
@@ -30,8 +30,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   });
 }
 
-export default function SupplierLocationsRoute() {
+export default function CustomerLocationsRoute() {
   const { locations } = useLoaderData<typeof loader>();
 
-  return <SupplierLocations locations={locations} />;
+  return <CustomerLocations locations={locations} />;
 }

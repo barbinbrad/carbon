@@ -238,7 +238,7 @@ END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 CREATE TRIGGER update_part_search_result
-  AFTER UPDATE on public.customer
+  AFTER UPDATE on public.part
   FOR EACH ROW EXECUTE PROCEDURE public.update_part_search_result();
 
 

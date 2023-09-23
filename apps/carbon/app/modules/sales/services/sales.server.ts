@@ -42,25 +42,7 @@ export async function getCustomer(
   client: SupabaseClient<Database>,
   customerId: string
 ) {
-  return client
-    .from("customer")
-    .select(
-      "id, name, customerTypeId, customerStatusId, taxId, accountManagerId"
-    )
-    .eq("id", customerId)
-    .single();
-}
-
-export async function getCustomerLocations(
-  client: SupabaseClient<Database>,
-  customerId: string
-) {
-  return client
-    .from("customerLocation")
-    .select(
-      "id, address(id, addressLine1, addressLine2, city, state, country(id, name), postalCode)"
-    )
-    .eq("customerId", customerId);
+  return client.from("customer").select("*").eq("id", customerId).single();
 }
 
 export async function getCustomerContact(
@@ -84,6 +66,31 @@ export async function getCustomerContacts(
     .from("customerContact")
     .select(
       "id, contact(id, firstName, lastName, email, mobilePhone, homePhone, workPhone, fax, title, addressLine1, addressLine2, city, state, postalCode, country(id, name), birthday, notes), user(id, active)"
+    )
+    .eq("customerId", customerId);
+}
+
+export async function getCustomerLocation(
+  client: SupabaseClient<Database>,
+  customerContactId: string
+) {
+  return client
+    .from("customerLocation")
+    .select(
+      "id, address(id, addressLine1, addressLine2, city, state, country(id, name), postalCode)"
+    )
+    .eq("id", customerContactId)
+    .single();
+}
+
+export async function getCustomerLocations(
+  client: SupabaseClient<Database>,
+  customerId: string
+) {
+  return client
+    .from("customerLocation")
+    .select(
+      "id, address(id, addressLine1, addressLine2, city, state, country(id, name), postalCode)"
     )
     .eq("customerId", customerId);
 }
@@ -175,9 +182,14 @@ export async function getCustomerTypesList(client: SupabaseClient<Database>) {
 
 export async function insertCustomer(
   client: SupabaseClient<Database>,
-  customer: TypeOfValidator<typeof customerValidator> & {
-    createdBy: string;
-  }
+  customer:
+    | (Omit<TypeOfValidator<typeof customerValidator>, "id"> & {
+        createdBy: string;
+      })
+    | (Omit<TypeOfValidator<typeof customerValidator>, "id"> & {
+        id: string;
+        updatedBy: string;
+      })
 ) {
   return client.from("customer").insert([customer]).select("id").single();
 }
@@ -207,7 +219,7 @@ export async function insertCustomerContact(
   }
 ) {
   // Need to use service role here because it violates RLS
-  // to select a contact that does not belong to any supplier
+  // to select a contact that does not belong to any customer
   const insertContact = await getSupabaseServiceRole()
     .from("contact")
     .insert([customerContact.contact])

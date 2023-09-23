@@ -3,6 +3,7 @@ import { redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
 import {
   insertSupplierLocation,
+  SupplierLocationForm,
   supplierLocationValidator,
 } from "~/modules/purchasing";
 import { requirePermissions } from "~/services/auth";
@@ -50,4 +51,10 @@ export async function action({ request, params }: ActionFunctionArgs) {
     `/x/supplier/${supplierId}/locations`,
     await flash(request, success("Supplier location created"))
   );
+}
+
+export default function SupplierLocationsNewRoute() {
+  const initialValues = {};
+
+  return <SupplierLocationForm initialValues={initialValues} />;
 }

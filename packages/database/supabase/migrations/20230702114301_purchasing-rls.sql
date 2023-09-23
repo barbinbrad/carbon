@@ -64,7 +64,7 @@ END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 CREATE TRIGGER update_purchase_order_search_result
-  AFTER UPDATE on public.customer
+  AFTER UPDATE on public."purchaseOrder"
   FOR EACH ROW EXECUTE PROCEDURE public.update_purchase_order_search_result();
 
 

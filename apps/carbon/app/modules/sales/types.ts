@@ -1,4 +1,5 @@
 import type {
+  getCustomer,
   getCustomerContacts,
   getCustomerLocations,
   getCustomers,
@@ -13,6 +14,10 @@ export type Customer = NonNullable<
 export type CustomerContact = NonNullable<
   Awaited<ReturnType<typeof getCustomerContacts>>["data"]
 >[number];
+
+export type CustomerDetail = NonNullable<
+  Awaited<ReturnType<typeof getCustomer>>["data"]
+>;
 
 export type CustomerLocation = NonNullable<
   Awaited<ReturnType<typeof getCustomerLocations>>["data"]

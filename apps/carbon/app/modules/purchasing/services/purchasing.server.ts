@@ -198,18 +198,6 @@ export async function getSupplier(
   return client.from("supplier").select("*").eq("id", supplierId).single();
 }
 
-export async function getSupplierLocations(
-  client: SupabaseClient<Database>,
-  supplierId: string
-) {
-  return client
-    .from("supplierLocation")
-    .select(
-      "id, address(id, addressLine1, addressLine2, city, state, country(id, name), postalCode)"
-    )
-    .eq("supplierId", supplierId);
-}
-
 export async function getSupplierContact(
   client: SupabaseClient<Database>,
   supplierContactId: string
@@ -233,6 +221,31 @@ export async function getSupplierContacts(
       "id, contact(id, firstName, lastName, email, mobilePhone, homePhone, workPhone, fax, title, addressLine1, addressLine2, city, state, postalCode, country(id, name), birthday, notes), user(id, active)"
     )
     .eq("supplierId", supplierId);
+}
+
+export async function getSupplierLocations(
+  client: SupabaseClient<Database>,
+  supplierId: string
+) {
+  return client
+    .from("supplierLocation")
+    .select(
+      "id, address(id, addressLine1, addressLine2, city, state, country(id, name), postalCode)"
+    )
+    .eq("supplierId", supplierId);
+}
+
+export async function getSupplierLocation(
+  client: SupabaseClient<Database>,
+  supplierContactId: string
+) {
+  return client
+    .from("supplierLocation")
+    .select(
+      "id, address(id, addressLine1, addressLine2, city, state, country(id, name), postalCode)"
+    )
+    .eq("id", supplierContactId)
+    .single();
 }
 
 export async function getSuppliers(

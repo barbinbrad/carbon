@@ -28,7 +28,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   );
   if (deleteCustomerLocationError) {
     return redirect(
-      `/x/sales/customers/${customerId}`,
+      `/x/customer/${customerId}/locations`,
       await flash(
         request,
         error(deleteCustomerLocationError, "Failed to delete customer location")
@@ -37,7 +37,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    `/x/sales/customers/${customerId}`,
+    `/x/customer/${customerId}/locations`,
     await flash(request, success("Successfully deleted customer location"))
   );
 }

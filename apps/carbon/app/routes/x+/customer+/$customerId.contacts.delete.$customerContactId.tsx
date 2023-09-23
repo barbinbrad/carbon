@@ -18,6 +18,8 @@ export async function action({ request, params }: ActionFunctionArgs) {
     );
   }
 
+  // TODO: check whether this person has an account or is a partner first
+
   const { error: deleteCustomerContactError } = await deleteCustomerContact(
     client,
     customerId,
@@ -25,7 +27,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   );
   if (deleteCustomerContactError) {
     return redirect(
-      `/x/sales/customers/${customerId}`,
+      `/x/customer/${customerId}/contacts`,
       await flash(
         request,
         error(deleteCustomerContactError, "Failed to delete customer contact")
@@ -34,7 +36,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    `/x/sales/customers/${customerId}`,
+    `/x/customer/${customerId}/contacts`,
     await flash(request, success("Successfully deleted customer contact"))
   );
 }

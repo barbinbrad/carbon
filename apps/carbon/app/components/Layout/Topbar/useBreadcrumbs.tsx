@@ -160,7 +160,7 @@ export default function useBreadcrumbs(): Route[] {
         return acc.concat([
           {
             name: "Purchasing",
-            to: match.pathname,
+            to: "/x/purchasing",
           },
           {
             name: "Suppliers",

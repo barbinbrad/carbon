@@ -1,5 +1,5 @@
 import useSalesSidebar from "./useSalesSidebar";
-
-export { useSalesSidebar };
-export * from "./CustomerTypes";
+export * from "./Customer";
 export * from "./Customers";
+export * from "./CustomerTypes";
+export { useSalesSidebar };

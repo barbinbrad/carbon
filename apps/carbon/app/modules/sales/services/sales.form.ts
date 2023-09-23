@@ -11,6 +11,10 @@ export const customerValidator = withZod(
     customerStatusId: zfd.text(z.string().optional()),
     taxId: zfd.text(z.string().optional()),
     accountManagerId: zfd.text(z.string().optional()),
+    defaultCurrencyCode: zfd.text(z.string().optional()),
+    defaultPaymentTermId: zfd.text(z.string().optional()),
+    defaultShippingTermId: zfd.text(z.string().optional()),
+    defaultShippingMethodId: zfd.text(z.string().optional()),
   })
 );
 

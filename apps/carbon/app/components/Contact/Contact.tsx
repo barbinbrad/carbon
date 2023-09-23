@@ -1,5 +1,6 @@
 import { ActionMenu, Dot } from "@carbon/react";
-import { Avatar, Grid, MenuItem, Text, VStack } from "@chakra-ui/react";
+import { Avatar, Grid, HStack, MenuItem, Text, VStack } from "@chakra-ui/react";
+import { Link } from "@remix-run/react";
 import type { Action } from "~/types";
 
 type ContactProps = {
@@ -8,6 +9,7 @@ type ContactProps = {
     lastName: string | null;
     email: string | null;
   };
+  url?: string;
   user?: {
     id: string;
     active: boolean | null;
@@ -21,7 +23,7 @@ enum UserStatus {
   None,
 }
 
-const Contact = ({ contact, user, actions }: ContactProps) => {
+const Contact = ({ contact, url, user, actions }: ContactProps) => {
   const name = `${contact.firstName ?? ""} ${contact.lastName ?? ""}`;
   const userStatus = user
     ? user.active
@@ -33,15 +35,27 @@ const Contact = ({ contact, user, actions }: ContactProps) => {
     <Grid w="full" gridColumnGap={4} gridTemplateColumns="auto 1fr auto">
       <Avatar size="sm" name={`${name}`} />
       <VStack spacing={0} alignItems="start">
-        <Text fontWeight="bold" noOfLines={1}>
-          {name}
+        <HStack spacing={2}>
+          {url ? (
+            <Link to={url}>
+              <Text fontSize="sm" fontWeight="bold">
+                {name}
+              </Text>
+            </Link>
+          ) : (
+            <Text fontSize="sm" fontWeight="bold">
+              {name}
+            </Text>
+          )}
+
           {userStatus === UserStatus.Active && (
             <Dot color="green.400" title="Active" />
           )}
           {userStatus === UserStatus.Inactive && (
             <Dot color="red.400" title="Inactive" />
           )}
-        </Text>
+        </HStack>
+
         <Text fontSize="sm" color="gray.500" noOfLines={1}>
           {contact.email ?? ""}
         </Text>

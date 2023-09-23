@@ -10,7 +10,7 @@ import {
   HStack,
   VStack,
 } from "@chakra-ui/react";
-import { useParams } from "@remix-run/react";
+import { useNavigate, useParams } from "@remix-run/react";
 import { ValidatedForm } from "remix-validated-form";
 import {
   DatePicker,
@@ -21,28 +21,23 @@ import {
   TextArea,
 } from "~/components/Form";
 import { usePermissions } from "~/hooks";
-import type { CustomerContact, CustomerLocation } from "~/modules/sales";
 import { customerContactValidator } from "~/modules/sales";
+import type { TypeOfValidator } from "~/types/validators";
 
 type CustomerContactFormProps = {
-  contact?: CustomerContact;
-  locations?: CustomerLocation[];
-  onClose: () => void;
+  initialValues: TypeOfValidator<typeof customerContactValidator>;
 };
 
-const CustomerContactForm = ({
-  contact,
-  onClose,
-}: CustomerContactFormProps) => {
+const CustomerContactForm = ({ initialValues }: CustomerContactFormProps) => {
+  const navigate = useNavigate();
   const { customerId } = useParams();
   const permissions = usePermissions();
-  const isEditing = !!contact?.id;
+  const isEditing = !!initialValues?.id;
   const isDisabled = isEditing
-    ? !permissions.can("update", "purchasing")
-    : !permissions.can("create", "purchasing");
+    ? !permissions.can("update", "sales")
+    : !permissions.can("create", "sales");
 
-  if (Array.isArray(contact?.contact))
-    throw new Error("contact.contact is an array");
+  const onClose = () => navigate(`/x/customer/${customerId}/contacts`);
 
   return (
     <Drawer onClose={onClose} isOpen={true} size="sm">
@@ -51,27 +46,10 @@ const CustomerContactForm = ({
         method="post"
         action={
           isEditing
-            ? `/x/sales/customers/${customerId}/contact/${contact?.id}`
-            : `/x/sales/customers/${customerId}/contact/new`
+            ? `/x/customer/${customerId}/contacts/${initialValues?.id}`
+            : `/x/customer/${customerId}/contacts/new`
         }
-        defaultValues={{
-          id: contact?.id ?? undefined,
-          contactId: contact?.contact?.id ?? undefined,
-          firstName: contact?.contact?.firstName ?? "",
-          lastName: contact?.contact?.lastName ?? "",
-          email: contact?.contact?.email ?? "",
-          title: contact?.contact?.title ?? "",
-          mobilePhone: contact?.contact?.mobilePhone ?? "",
-          homePhone: contact?.contact?.homePhone ?? "",
-          workPhone: contact?.contact?.workPhone ?? "",
-          fax: contact?.contact?.fax ?? "",
-          addressLine1: contact?.contact?.addressLine1 ?? "",
-          addressLine2: contact?.contact?.addressLine2 ?? "",
-          city: contact?.contact?.city ?? "",
-          state: contact?.contact?.state ?? "",
-          postalCode: contact?.contact?.postalCode ?? "",
-          birthday: contact?.contact?.birthday ?? undefined,
-        }}
+        defaultValues={initialValues}
         onSubmit={onClose}
       >
         <DrawerOverlay />

@@ -3,11 +3,11 @@ import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
 import {
-  getSupplierContact,
-  SupplierContactForm,
-  supplierContactValidator,
-  updateSupplierContact,
-} from "~/modules/purchasing";
+  CustomerContactForm,
+  customerContactValidator,
+  getCustomerContact,
+  updateCustomerContact,
+} from "~/modules/sales";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, badRequest, notFound } from "~/utils/http";
@@ -15,20 +15,20 @@ import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const { client } = await requirePermissions(request, {
-    view: "purchasing",
+    view: "sales",
   });
 
-  const { supplierId, supplierContactId } = params;
-  if (!supplierId) throw notFound("supplierId not found");
-  if (!supplierContactId) throw notFound("supplierContactId not found");
+  const { customerId, customerContactId } = params;
+  if (!customerId) throw notFound("customerId not found");
+  if (!customerContactId) throw notFound("customerContactId not found");
 
-  const contact = await getSupplierContact(client, supplierContactId);
+  const contact = await getCustomerContact(client, customerContactId);
   if (contact.error) {
     return redirect(
-      `/x/supplier/${supplierId}/contacts`,
+      `/x/customer/${customerId}/contacts`,
       await flash(
         request,
-        error(contact.error, "Failed to get supplier contact")
+        error(contact.error, "Failed to get customer contact")
       )
     );
   }
@@ -41,14 +41,14 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 export async function action({ request, params }: ActionFunctionArgs) {
   assertIsPost(request);
   const { client } = await requirePermissions(request, {
-    update: "purchasing",
+    update: "sales",
   });
 
-  const { supplierId, supplierContactId } = params;
-  if (!supplierId) throw notFound("supplierId not found");
-  if (!supplierContactId) throw notFound("supplierContactId not found");
+  const { customerId, customerContactId } = params;
+  if (!customerId) throw notFound("customerId not found");
+  if (!customerContactId) throw notFound("customerContactId not found");
 
-  const validation = await supplierContactValidator.validate(
+  const validation = await customerContactValidator.validate(
     await request.formData()
   );
 
@@ -58,34 +58,34 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
   const { id, contactId, ...contact } = validation.data;
 
-  if (id !== supplierContactId)
-    throw badRequest("supplierContactId does not match id from form data");
+  if (id !== customerContactId)
+    throw badRequest("customerContactId does not match id from form data");
 
   if (contactId === undefined)
     throw badRequest("contactId is undefined from form data");
 
-  const update = await updateSupplierContact(client, {
+  const update = await updateCustomerContact(client, {
     contactId,
     contact,
   });
 
   if (update.error) {
     return redirect(
-      `/x/supplier/${supplierId}/contacts`,
+      `/x/customer/${customerId}/contacts`,
       await flash(
         request,
-        error(update.error, "Failed to update supplier contact")
+        error(update.error, "Failed to update customer contact")
       )
     );
   }
 
   return redirect(
-    `/x/supplier/${supplierId}/contacts`,
-    await flash(request, success("Supplier contact updated"))
+    `/x/customer/${customerId}/contacts`,
+    await flash(request, success("Customer contact updated"))
   );
 }
 
-export default function EditSupplierContactRoute() {
+export default function EditCustomerContactRoute() {
   const { contact } = useLoaderData<typeof loader>();
 
   const initialValues = {
@@ -107,5 +107,5 @@ export default function EditSupplierContactRoute() {
     birthday: contact?.contact?.birthday ?? undefined,
   };
 
-  return <SupplierContactForm initialValues={initialValues} />;
+  return <CustomerContactForm initialValues={initialValues} />;
 }

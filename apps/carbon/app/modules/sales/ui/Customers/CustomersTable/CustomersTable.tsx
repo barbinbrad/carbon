@@ -4,7 +4,6 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo } from "react";
 import { BsPencilSquare } from "react-icons/bs";
 import { Table } from "~/components";
-import { useUrlParams } from "~/hooks";
 import type { Customer } from "~/modules/sales";
 
 type CustomersTableProps = {
@@ -14,7 +13,6 @@ type CustomersTableProps = {
 
 const CustomersTable = memo(({ data, count }: CustomersTableProps) => {
   const navigate = useNavigate();
-  const [params] = useUrlParams();
 
   const columns = useMemo<ColumnDef<Customer>[]>(() => {
     return [
@@ -60,8 +58,7 @@ const CustomersTable = memo(({ data, count }: CustomersTableProps) => {
       //   ),
       // },
     ];
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params]);
+  }, [navigate]);
 
   const renderContextMenu = useMemo(
     // eslint-disable-next-line react/display-name
@@ -69,14 +66,12 @@ const CustomersTable = memo(({ data, count }: CustomersTableProps) => {
       (
         <MenuItem
           icon={<BsPencilSquare />}
-          onClick={() =>
-            navigate(`/x/sales/customers/${row.id}?${params.toString()}`)
-          }
+          onClick={() => navigate(`/x/sales/customers/${row.id}`)}
         >
           Edit Customer
         </MenuItem>
       ),
-    [navigate, params]
+    [navigate]
   );
 
   return (

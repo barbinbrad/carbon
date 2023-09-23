@@ -33,7 +33,7 @@ const PartnersTable = memo(({ data, count }: PartnersTableProps) => {
 
             <Link
               onClick={() => {
-                navigate(`/x/purchasing/suppliers/${row?.original.supplierId}`);
+                navigate(`/x/supplier/${row?.original.supplierId}`);
               }}
             >
               {row.original.supplierName}

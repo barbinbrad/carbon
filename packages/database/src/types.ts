@@ -1352,6 +1352,10 @@ export interface Database {
           createdBy: string | null;
           customerStatusId: string | null;
           customerTypeId: string | null;
+          defaultCurrencyCode: string | null;
+          defaultPaymentTermId: string | null;
+          defaultShippingMethodId: string | null;
+          defaultShippingTermId: string | null;
           id: string;
           logo: string | null;
           name: string;
@@ -1365,6 +1369,10 @@ export interface Database {
           createdBy?: string | null;
           customerStatusId?: string | null;
           customerTypeId?: string | null;
+          defaultCurrencyCode?: string | null;
+          defaultPaymentTermId?: string | null;
+          defaultShippingMethodId?: string | null;
+          defaultShippingTermId?: string | null;
           id?: string;
           logo?: string | null;
           name: string;
@@ -1378,6 +1386,10 @@ export interface Database {
           createdBy?: string | null;
           customerStatusId?: string | null;
           customerTypeId?: string | null;
+          defaultCurrencyCode?: string | null;
+          defaultPaymentTermId?: string | null;
+          defaultShippingMethodId?: string | null;
+          defaultShippingTermId?: string | null;
           id?: string;
           logo?: string | null;
           name?: string;
@@ -1420,6 +1432,24 @@ export interface Database {
             foreignKeyName: "customer_customerTypeId_fkey";
             columns: ["customerTypeId"];
             referencedRelation: "customerType";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "customer_defaultPaymentTermId_fkey";
+            columns: ["defaultPaymentTermId"];
+            referencedRelation: "paymentTerm";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "customer_defaultShippingMethodId_fkey";
+            columns: ["defaultShippingMethodId"];
+            referencedRelation: "shippingMethod";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "customer_defaultShippingTermId_fkey";
+            columns: ["defaultShippingTermId"];
+            referencedRelation: "shippingTerm";
             referencedColumns: ["id"];
           },
           {

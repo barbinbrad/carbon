@@ -1433,7 +1433,7 @@ CREATE FUNCTION public.create_customer_search_result()
 RETURNS TRIGGER AS $$
 BEGIN
   INSERT INTO public.search(name, entity, uuid, link)
-  VALUES (new.name, 'Customer', new.id, '/x/sales/customers/' || new.id);
+  VALUES (new.name, 'Customer', new.id, '/x/customer/' || new.id);
   RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -1461,7 +1461,7 @@ CREATE FUNCTION public.create_supplier_search_result()
 RETURNS TRIGGER AS $$
 BEGIN
   INSERT INTO public.search(name, entity, uuid, link)
-  VALUES (new.name, 'Supplier', new.id, '/x/purchasing/suppliers/' || new.id);
+  VALUES (new.name, 'Supplier', new.id, '/x/supplier/' || new.id);
   RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -3467,7 +3467,7 @@ END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 CREATE TRIGGER update_part_search_result
-  AFTER UPDATE on public.customer
+  AFTER UPDATE on public.part
   FOR EACH ROW EXECUTE PROCEDURE public.update_part_search_result();
 
 
@@ -4848,7 +4848,7 @@ END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 CREATE TRIGGER update_purchase_order_search_result
-  AFTER UPDATE on public.customer
+  AFTER UPDATE on public."purchaseOrder"
   FOR EACH ROW EXECUTE PROCEDURE public.update_purchase_order_search_result();
 
 
@@ -6366,5 +6366,23 @@ CREATE VIEW "part_quantities_view" AS
     p."id", 
     loc."id",
     pol."quantityToReceive"
+```
+
+
+
+## `customer-details`
+
+```sql
+ALTER TABLE "customer" 
+  ADD COLUMN "defaultCurrencyCode" TEXT,
+  ADD COLUMN "defaultPaymentTermId" TEXT,
+  ADD COLUMN "defaultShippingMethodId" TEXT,
+  ADD COLUMN "defaultShippingTermId" TEXT;
+
+ALTER TABLE "customer"
+  ADD CONSTRAINT "customer_defaultPaymentTermId_fkey" FOREIGN KEY ("defaultPaymentTermId") REFERENCES "paymentTerm" ("id") ON DELETE SET NULL,
+  ADD CONSTRAINT "customer_defaultShippingMethodId_fkey" FOREIGN KEY ("defaultShippingMethodId") REFERENCES "shippingMethod" ("id") ON DELETE SET NULL,
+  ADD CONSTRAINT "customer_defaultShippingTermId_fkey" FOREIGN KEY ("defaultShippingTermId") REFERENCES "shippingTerm" ("id") ON DELETE SET NULL;
+
 ```
 

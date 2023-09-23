@@ -18,6 +18,8 @@ export async function action({ request, params }: ActionFunctionArgs) {
     );
   }
 
+  // TODO: check whether this person has an account or is a partner first
+
   const { error: deleteSupplierContactError } = await deleteSupplierContact(
     client,
     supplierId,

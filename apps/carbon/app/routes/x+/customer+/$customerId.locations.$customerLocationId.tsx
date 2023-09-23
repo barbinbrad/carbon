@@ -3,11 +3,11 @@ import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
 import {
-  getSupplierLocation,
-  SupplierLocationForm,
-  supplierLocationValidator,
-  updateSupplierLocation,
-} from "~/modules/purchasing";
+  CustomerLocationForm,
+  customerLocationValidator,
+  getCustomerLocation,
+  updateCustomerLocation,
+} from "~/modules/sales";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, badRequest, notFound } from "~/utils/http";
@@ -15,20 +15,20 @@ import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const { client } = await requirePermissions(request, {
-    view: "purchasing",
+    view: "sales",
   });
 
-  const { supplierId, supplierLocationId } = params;
-  if (!supplierId) throw notFound("supplierId not found");
-  if (!supplierLocationId) throw notFound("supplierLocationId not found");
+  const { customerId, customerLocationId } = params;
+  if (!customerId) throw notFound("customerId not found");
+  if (!customerLocationId) throw notFound("customerLocationId not found");
 
-  const location = await getSupplierLocation(client, supplierLocationId);
+  const location = await getCustomerLocation(client, customerLocationId);
   if (location.error) {
     return redirect(
-      `/x/supplier/${supplierId}/locations`,
+      `/x/customer/${customerId}/locations`,
       await flash(
         request,
-        error(location.error, "Failed to get supplier location")
+        error(location.error, "Failed to get customer location")
       )
     );
   }
@@ -41,14 +41,14 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 export async function action({ request, params }: ActionFunctionArgs) {
   assertIsPost(request);
   const { client } = await requirePermissions(request, {
-    update: "purchasing",
+    update: "sales",
   });
 
-  const { supplierId, supplierLocationId } = params;
-  if (!supplierId) throw notFound("supplierId not found");
-  if (!supplierLocationId) throw notFound("supplierLocationId not found");
+  const { customerId, customerLocationId } = params;
+  if (!customerId) throw notFound("customerId not found");
+  if (!customerLocationId) throw notFound("customerLocationId not found");
 
-  const validation = await supplierLocationValidator.validate(
+  const validation = await customerLocationValidator.validate(
     await request.formData()
   );
 
@@ -61,27 +61,27 @@ export async function action({ request, params }: ActionFunctionArgs) {
   if (addressId === undefined)
     throw badRequest("addressId is undefined in form data");
 
-  const update = await updateSupplierLocation(client, {
+  const update = await updateCustomerLocation(client, {
     addressId,
     address,
   });
   if (update.error) {
     return redirect(
-      `/x/supplier/${supplierId}/locations`,
+      `/x/customer/${customerId}/locations`,
       await flash(
         request,
-        error(update.error, "Failed to update supplier address")
+        error(update.error, "Failed to update customer address")
       )
     );
   }
 
   return redirect(
-    `/x/supplier/${supplierId}/locations`,
-    await flash(request, success("Supplier address updated"))
+    `/x/customer/${customerId}/locations`,
+    await flash(request, success("Customer address updated"))
   );
 }
 
-export default function EditSupplierLocationRoute() {
+export default function EditCustomerLocationRoute() {
   const { location } = useLoaderData<typeof loader>();
 
   const initialValues = {
@@ -95,5 +95,5 @@ export default function EditSupplierLocationRoute() {
     postalCode: location?.address?.postalCode ?? "",
   };
 
-  return <SupplierLocationForm initialValues={initialValues} />;
+  return <CustomerLocationForm initialValues={initialValues} />;
 }

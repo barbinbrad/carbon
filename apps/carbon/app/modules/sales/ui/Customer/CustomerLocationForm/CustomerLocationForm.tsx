@@ -10,31 +10,27 @@ import {
   HStack,
   VStack,
 } from "@chakra-ui/react";
-import { useParams } from "@remix-run/react";
+import { useNavigate, useParams } from "@remix-run/react";
 import { ValidatedForm } from "remix-validated-form";
 import { Hidden, Input, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
-import type { CustomerLocation } from "~/modules/sales";
 import { customerLocationValidator } from "~/modules/sales";
+import type { TypeOfValidator } from "~/types/validators";
 
 type CustomerLocationFormProps = {
-  location?: CustomerLocation;
-  onClose: () => void;
+  initialValues: TypeOfValidator<typeof customerLocationValidator>;
 };
 
-const CustomerLocationForm = ({
-  location,
-  onClose,
-}: CustomerLocationFormProps) => {
+const CustomerLocationForm = ({ initialValues }: CustomerLocationFormProps) => {
+  const navigate = useNavigate();
   const { customerId } = useParams();
   const permissions = usePermissions();
-  const isEditing = !!location?.id;
+  const isEditing = !!initialValues?.id;
   const isDisabled = isEditing
     ? !permissions.can("update", "sales")
     : !permissions.can("create", "sales");
 
-  if (Array.isArray(location?.address))
-    throw new Error("location.address is an array");
+  const onClose = () => navigate(`/x/customer/${customerId}/locations`);
 
   return (
     <Drawer onClose={onClose} isOpen={true} size="sm">
@@ -43,19 +39,10 @@ const CustomerLocationForm = ({
         method="post"
         action={
           isEditing
-            ? `/x/sales/customers/${customerId}/location/${location?.id}`
-            : `/x/sales/customers/${customerId}/location/new`
+            ? `/x/customer/${customerId}/locations/${initialValues?.id}`
+            : `/x/customer/${customerId}/locations/new`
         }
-        defaultValues={{
-          id: location?.id ?? undefined,
-          addressId: location?.address?.id ?? undefined,
-
-          addressLine1: location?.address?.addressLine1 ?? "",
-          addressLine2: location?.address?.addressLine2 ?? "",
-          city: location?.address?.city ?? "",
-          state: location?.address?.state ?? "",
-          postalCode: location?.address?.postalCode ?? "",
-        }}
+        defaultValues={initialValues}
         onSubmit={onClose}
       >
         <DrawerOverlay />

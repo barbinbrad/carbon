@@ -13,6 +13,6 @@ CREATE TABLE "sequence" (
   CONSTRAINT "sequence_next_check" CHECK ("next" >= 0),
   CONSTRAINT "sequence_size_check" CHECK ("size" >= 1),
   CONSTRAINT "sequence_step_check" CHECK ("step" >= 1),
-  CONSTRAINT "sequence_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT "sequence_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 

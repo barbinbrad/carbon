@@ -389,8 +389,8 @@ CREATE TABLE "employee" (
     "employeeTypeId" TEXT NOT NULL,
 
     CONSTRAINT "employee_pkey" PRIMARY KEY ("id"),
-    CONSTRAINT "employee_employeeTypeId_fkey" FOREIGN KEY ("employeeTypeId") REFERENCES "employeeType"("id") ON DELETE NO ACTION ON UPDATE CASCADE,
-    CONSTRAINT "employee_id_fkey" FOREIGN KEY ("id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT "employee_employeeTypeId_fkey" FOREIGN KEY ("employeeTypeId") REFERENCES "employeeType"("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "employee_id_fkey" FOREIGN KEY ("id") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 ALTER TABLE "employee" ENABLE ROW LEVEL SECURITY;
@@ -4242,8 +4242,8 @@ CREATE TABLE "paymentTerm" (
 
   CONSTRAINT "paymentTerm_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "paymentTerm_name_key" UNIQUE ("name", "active"),
-  CONSTRAINT "paymentTerm_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE CASCADE,
-  CONSTRAINT "paymentTerm_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE CASCADE
+  CONSTRAINT "paymentTerm_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE RESTRICT,
+  CONSTRAINT "paymentTerm_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE RESTRICT
 );
 
 ALTER TABLE "paymentTerm" ENABLE ROW LEVEL SECURITY;
@@ -4307,8 +4307,8 @@ CREATE TABLE "shippingMethod" (
   CONSTRAINT "shippingMethod_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "shippingMethod_name_key" UNIQUE ("name"),
   CONSTRAINT "shippingMethod_carrierAccountId_fkey" FOREIGN KEY ("carrierAccountId") REFERENCES "account" ("number") ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT "shippingMethod_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE CASCADE,
-  CONSTRAINT "shippingMethod_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE CASCADE
+  CONSTRAINT "shippingMethod_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE RESTRICT,
+  CONSTRAINT "shippingMethod_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE RESTRICT
 );
 
 CREATE INDEX "shippingMethod_name_idx" ON "shippingMethod" ("name");
@@ -4360,8 +4360,8 @@ CREATE TABLE "shippingTerm" (
 
   CONSTRAINT "shippingTerm_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "shippingTerm_name_key" UNIQUE ("name"),
-  CONSTRAINT "shippingTerm_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE CASCADE,
-  CONSTRAINT "shippingTerm_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE CASCADE
+  CONSTRAINT "shippingTerm_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE RESTRICT,
+  CONSTRAINT "shippingTerm_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE RESTRICT
 );
 
 
@@ -4402,9 +4402,9 @@ CREATE TABLE "purchaseOrder" (
   CONSTRAINT "purchaseOrder_purchaseOrderId_key" UNIQUE ("purchaseOrderId"),
   CONSTRAINT "purchaseOrder_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "supplier" ("id") ON DELETE CASCADE,
   CONSTRAINT "purchaseOrder_supplierContactId_fkey" FOREIGN KEY ("supplierContactId") REFERENCES "supplierContact" ("id") ON DELETE CASCADE,
-  CONSTRAINT "purchaseOrder_closedBy_fkey" FOREIGN KEY ("closedBy") REFERENCES "user" ("id") ON DELETE CASCADE,
-  CONSTRAINT "purchaseOrder_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE CASCADE,
-  CONSTRAINT "purchaseOrder_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE CASCADE
+  CONSTRAINT "purchaseOrder_closedBy_fkey" FOREIGN KEY ("closedBy") REFERENCES "user" ("id") ON DELETE RESTRICT,
+  CONSTRAINT "purchaseOrder_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE RESTRICT,
+  CONSTRAINT "purchaseOrder_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE RESTRICT
 );
 
 CREATE INDEX "purchaseOrder_purchaseOrderId_idx" ON "purchaseOrder" ("purchaseOrderId");
@@ -4481,8 +4481,8 @@ CREATE TABLE "purchaseOrderLine" (
   -- TODO: Add assetId foreign key
   CONSTRAINT "purchaseOrderLine_shelfId_fkey" FOREIGN KEY ("shelfId", "locationId") REFERENCES "shelf" ("id", "locationId") ON DELETE CASCADE,
   CONSTRAINT "purchaseOrderLine_unitOfMeasureCode_fkey" FOREIGN KEY ("unitOfMeasureCode") REFERENCES "unitOfMeasure" ("code") ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT "purchaseOrderLine_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE CASCADE,
-  CONSTRAINT "purchaseOrderLine_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE CASCADE
+  CONSTRAINT "purchaseOrderLine_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE RESTRICT,
+  CONSTRAINT "purchaseOrderLine_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE RESTRICT
 );
 
 CREATE TABLE "purchaseOrderPayment" (
@@ -4532,7 +4532,7 @@ CREATE TABLE "purchaseOrderDelivery" (
   CONSTRAINT "purchaseOrderDelivery_shippingTermId_fkey" FOREIGN KEY ("shippingTermId") REFERENCES "shippingTerm" ("id") ON DELETE CASCADE,
   CONSTRAINT "purchaseOrderDelivery_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "customer" ("id") ON DELETE CASCADE,
   CONSTRAINT "purchaseOrderDelivery_customerLocationId_fkey" FOREIGN KEY ("customerLocationId") REFERENCES "customerLocation" ("id") ON DELETE CASCADE,
-  CONSTRAINT "purchaseOrderDelivery_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE CASCADE
+  CONSTRAINT "purchaseOrderDelivery_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE RESTRICT
 );
 
 CREATE TYPE "purchaseOrderTransactionType" AS ENUM (
@@ -4672,7 +4672,7 @@ CREATE TABLE "sequence" (
   CONSTRAINT "sequence_next_check" CHECK ("next" >= 0),
   CONSTRAINT "sequence_size_check" CHECK ("size" >= 1),
   CONSTRAINT "sequence_step_check" CHECK ("step" >= 1),
-  CONSTRAINT "sequence_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT "sequence_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 
@@ -5481,8 +5481,8 @@ CREATE TABLE "receipt" (
   CONSTRAINT "receipt_receiptId_key" UNIQUE ("receiptId"),
   CONSTRAINT "receipt_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "location" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT "receipt_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "supplier" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT "receipt_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT "receipt_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT "receipt_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "receipt_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 CREATE INDEX "receipt_receiptId_idx" ON "receipt" ("receiptId");
@@ -5543,8 +5543,8 @@ CREATE TABLE "receiptLine" (
   CONSTRAINT "receiptLine_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "receiptLine_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "location" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT "receiptLine_shelfId_fkey" FOREIGN KEY ("shelfId", "locationId") REFERENCES "shelf" ("id", "locationId") ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT "receiptLine_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT "receiptLine_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT "receiptLine_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "receiptLine_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 CREATE INDEX "receiptLine_receiptId_idx" ON "receiptLine" ("receiptId");
@@ -6279,7 +6279,7 @@ CREATE TRIGGER create_posting_groups_for_supplier_type
 
 
 
-## `accounts-payable`
+## `uninvoiced-receipts`
 
 ```sql
 CREATE VIEW "receipts_posted_not_invoiced" AS 
@@ -6384,5 +6384,110 @@ ALTER TABLE "customer"
   ADD CONSTRAINT "customer_defaultShippingMethodId_fkey" FOREIGN KEY ("defaultShippingMethodId") REFERENCES "shippingMethod" ("id") ON DELETE SET NULL,
   ADD CONSTRAINT "customer_defaultShippingTermId_fkey" FOREIGN KEY ("defaultShippingTermId") REFERENCES "shippingTerm" ("id") ON DELETE SET NULL;
 
+```
+
+
+
+## `accounts-payable`
+
+```sql
+CREATE TYPE "accountingPeriodStatus" AS ENUM (
+  'Inactive', 
+  'Active'
+);
+
+CREATE TABLE "fiscalYear" (
+  "year" INTEGER NOT NULL,
+  "startDate" DATE NOT NULL,
+  "endDate" DATE NOT NULL,
+  "status" "accountingPeriodStatus" NOT NULL DEFAULT 'Inactive',
+  "createdBy" TEXT NOT NULL,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+  "updatedBy" TEXT,
+  "updatedAt" TIMESTAMP WITH TIME ZONE,
+
+  CONSTRAINT "fiscalYear_pkey" PRIMARY KEY ("year"),
+  CONSTRAINT "fiscalYear_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE RESTRICT,
+  CONSTRAINT "fiscalYear_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE RESTRICT
+);
+
+CREATE TABLE "fiscalYearOpeningBalance" (
+  "id" TEXT NOT NULL DEFAULT xid(),
+  "fiscalYear" INTEGER NOT NULL,
+  "accountNumber" TEXT NOT NULL,
+  "balance" NUMERIC(10, 2) NOT NULL DEFAULT 0,
+  "createdBy" TEXT NOT NULL,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+
+  CONSTRAINT "fiscalYearOpeningBalance_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "fiscalYearOpeningBalance_fiscalYear_accountNumber_key" UNIQUE ("fiscalYear", "accountNumber"),
+  CONSTRAINT "fiscalYearOpeningBalance_fiscalYear_fkey" FOREIGN KEY ("fiscalYear") REFERENCES "fiscalYear" ("year") ON DELETE RESTRICT,
+  CONSTRAINT "fiscalYearOpeningBalance_accountNumber_fkey" FOREIGN KEY ("accountNumber") REFERENCES "account" ("number") ON DELETE RESTRICT,
+  CONSTRAINT "fiscalYearOpeningBalance_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE RESTRICT
+);
+
+-- TODO: on fiscal year or account creation, create an opening balance entry
+
+CREATE TABLE "accountingPeriod" (
+  "id" TEXT NOT NULL DEFAULT xid(),
+  "fiscalYear" INTEGER NOT NULL,
+  "startDate" DATE NOT NULL,
+  "endDate" DATE NOT NULL,
+  "status" "accountingPeriodStatus" NOT NULL DEFAULT 'Inactive',
+  "closedAt" TIMESTAMP WITH TIME ZONE,
+  "closedBy" TEXT,
+  "createdBy" TEXT NOT NULL,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+  "updatedBy" TEXT,
+  "updatedAt" TIMESTAMP WITH TIME ZONE,
+
+  CONSTRAINT "accountingPeriod_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "accountingPeriod_fiscalYear_fkey" FOREIGN KEY ("fiscalYear") REFERENCES "fiscalYear" ("year") ON DELETE RESTRICT,
+  CONSTRAINT "accountingPeriod_closedBy_fkey" FOREIGN KEY ("closedBy") REFERENCES "user" ("id") ON DELETE RESTRICT,
+  CONSTRAINT "accountingPeriod_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE RESTRICT,
+  CONSTRAINT "accountingPeriod_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE RESTRICT
+);
+
+-- -- TODO:
+-- CREATE TABLE "accountsPayablePayment" (
+-- );
+
+CREATE TYPE "accountsPayableInvoiceStatus" AS ENUM (
+  'Draft', 
+  'Issued', 
+  'Paid', 
+  'Partially Paid', 
+  'Voided'
+);
+
+CREATE TABLE "accountsPayableInvoice" (
+  "id" TEXT NOT NULL DEFAULT xid(),
+  "accountsPayableInvoiceId" TEXT NOT NULL,
+  "accountingPeriodId" TEXT NOT NULL,
+  "supplierId" TEXT,
+  "contactId" TEXT,
+  "dateIssued" DATE,
+  "dateDue" DATE,
+  "datePaid" DATE,
+  "currencyCode" TEXT NOT NULL,
+  "exchangeRate" NUMERIC(10, 4) NOT NULL DEFAULT 1,
+  "subtotal" NUMERIC(10, 2) NOT NULL DEFAULT 0,
+  "totalDiscount" NUMERIC(10, 2) NOT NULL DEFAULT 0,
+  "totalAmount" NUMERIC(10, 2) NOT NULL DEFAULT 0,
+  "totalTax" NUMERIC(10, 2) NOT NULL DEFAULT 0,
+  "balance" NUMERIC(10, 2) NOT NULL DEFAULT 0,
+  "createdBy" TEXT NOT NULL,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+  "updatedBy" TEXT,
+  "updatedAt" TIMESTAMP WITH TIME ZONE,
+
+  CONSTRAINT "accountsPayableInvoice_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "accountsPayableInvoice_accountingPeriodId_fkey" FOREIGN KEY ("accountingPeriodId") REFERENCES "accountingPeriod" ("id"),
+  CONSTRAINT "accountsPayableInvoice_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "supplier" ("id"),
+  CONSTRAINT "accountsPayableInvoice_contactId_fkey" FOREIGN KEY ("contactId") REFERENCES "contact" ("id"),
+  CONSTRAINT "accountsPayableInvoice_currencyCode_fkey" FOREIGN KEY ("currencyCode") REFERENCES "currency" ("code"),
+  CONSTRAINT "accountsPayableInvoice_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id"),
+  CONSTRAINT "accountsPayableInvoice_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id")
+);
 ```
 

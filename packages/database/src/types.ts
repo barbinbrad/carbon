@@ -848,6 +848,230 @@ export interface Database {
           }
         ];
       };
+      accountingPeriod: {
+        Row: {
+          closedAt: string | null;
+          closedBy: string | null;
+          createdAt: string;
+          createdBy: string;
+          endDate: string;
+          fiscalYear: number;
+          id: string;
+          startDate: string;
+          status: Database["public"]["Enums"]["accountingPeriodStatus"];
+          updatedAt: string | null;
+          updatedBy: string | null;
+        };
+        Insert: {
+          closedAt?: string | null;
+          closedBy?: string | null;
+          createdAt?: string;
+          createdBy: string;
+          endDate: string;
+          fiscalYear: number;
+          id?: string;
+          startDate: string;
+          status?: Database["public"]["Enums"]["accountingPeriodStatus"];
+          updatedAt?: string | null;
+          updatedBy?: string | null;
+        };
+        Update: {
+          closedAt?: string | null;
+          closedBy?: string | null;
+          createdAt?: string;
+          createdBy?: string;
+          endDate?: string;
+          fiscalYear?: number;
+          id?: string;
+          startDate?: string;
+          status?: Database["public"]["Enums"]["accountingPeriodStatus"];
+          updatedAt?: string | null;
+          updatedBy?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "accountingPeriod_closedBy_fkey";
+            columns: ["closedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "accountingPeriod_closedBy_fkey";
+            columns: ["closedBy"];
+            referencedRelation: "user_default_view";
+            referencedColumns: ["userId"];
+          },
+          {
+            foreignKeyName: "accountingPeriod_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "accountingPeriod_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user_default_view";
+            referencedColumns: ["userId"];
+          },
+          {
+            foreignKeyName: "accountingPeriod_fiscalYear_fkey";
+            columns: ["fiscalYear"];
+            referencedRelation: "fiscalYear";
+            referencedColumns: ["year"];
+          },
+          {
+            foreignKeyName: "accountingPeriod_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "accountingPeriod_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user_default_view";
+            referencedColumns: ["userId"];
+          }
+        ];
+      };
+      accountsPayableInvoice: {
+        Row: {
+          accountingPeriodId: string;
+          accountsPayableInvoiceId: string;
+          balance: number;
+          contactId: string | null;
+          createdAt: string;
+          createdBy: string;
+          currencyCode: string;
+          dateDue: string | null;
+          dateIssued: string | null;
+          datePaid: string | null;
+          exchangeRate: number;
+          id: string;
+          subtotal: number;
+          supplierId: string | null;
+          totalAmount: number;
+          totalDiscount: number;
+          totalTax: number;
+          updatedAt: string | null;
+          updatedBy: string | null;
+        };
+        Insert: {
+          accountingPeriodId: string;
+          accountsPayableInvoiceId: string;
+          balance?: number;
+          contactId?: string | null;
+          createdAt?: string;
+          createdBy: string;
+          currencyCode: string;
+          dateDue?: string | null;
+          dateIssued?: string | null;
+          datePaid?: string | null;
+          exchangeRate?: number;
+          id?: string;
+          subtotal?: number;
+          supplierId?: string | null;
+          totalAmount?: number;
+          totalDiscount?: number;
+          totalTax?: number;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
+        };
+        Update: {
+          accountingPeriodId?: string;
+          accountsPayableInvoiceId?: string;
+          balance?: number;
+          contactId?: string | null;
+          createdAt?: string;
+          createdBy?: string;
+          currencyCode?: string;
+          dateDue?: string | null;
+          dateIssued?: string | null;
+          datePaid?: string | null;
+          exchangeRate?: number;
+          id?: string;
+          subtotal?: number;
+          supplierId?: string | null;
+          totalAmount?: number;
+          totalDiscount?: number;
+          totalTax?: number;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "accountsPayableInvoice_accountingPeriodId_fkey";
+            columns: ["accountingPeriodId"];
+            referencedRelation: "accountingPeriod";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "accountsPayableInvoice_contactId_fkey";
+            columns: ["contactId"];
+            referencedRelation: "contact";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "accountsPayableInvoice_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "accountsPayableInvoice_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user_default_view";
+            referencedColumns: ["userId"];
+          },
+          {
+            foreignKeyName: "accountsPayableInvoice_currencyCode_fkey";
+            columns: ["currencyCode"];
+            referencedRelation: "currency";
+            referencedColumns: ["code"];
+          },
+          {
+            foreignKeyName: "accountsPayableInvoice_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "supplier";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "accountsPayableInvoice_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "contractors_view";
+            referencedColumns: ["supplierId"];
+          },
+          {
+            foreignKeyName: "accountsPayableInvoice_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "partners_view";
+            referencedColumns: ["supplierId"];
+          },
+          {
+            foreignKeyName: "accountsPayableInvoice_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "purchase_order_suppliers_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "accountsPayableInvoice_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "suppliers_view";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "accountsPayableInvoice_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "accountsPayableInvoice_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user_default_view";
+            referencedColumns: ["userId"];
+          }
+        ];
+      };
       accountSubcategory: {
         Row: {
           accountCategoryId: string;
@@ -2411,6 +2635,122 @@ export interface Database {
           updatedAt?: string | null;
         };
         Relationships: [];
+      };
+      fiscalYear: {
+        Row: {
+          createdAt: string;
+          createdBy: string;
+          endDate: string;
+          startDate: string;
+          status: Database["public"]["Enums"]["accountingPeriodStatus"];
+          updatedAt: string | null;
+          updatedBy: string | null;
+          year: number;
+        };
+        Insert: {
+          createdAt?: string;
+          createdBy: string;
+          endDate: string;
+          startDate: string;
+          status?: Database["public"]["Enums"]["accountingPeriodStatus"];
+          updatedAt?: string | null;
+          updatedBy?: string | null;
+          year: number;
+        };
+        Update: {
+          createdAt?: string;
+          createdBy?: string;
+          endDate?: string;
+          startDate?: string;
+          status?: Database["public"]["Enums"]["accountingPeriodStatus"];
+          updatedAt?: string | null;
+          updatedBy?: string | null;
+          year?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "fiscalYear_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "fiscalYear_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user_default_view";
+            referencedColumns: ["userId"];
+          },
+          {
+            foreignKeyName: "fiscalYear_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "fiscalYear_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user_default_view";
+            referencedColumns: ["userId"];
+          }
+        ];
+      };
+      fiscalYearOpeningBalance: {
+        Row: {
+          accountNumber: string;
+          balance: number;
+          createdAt: string;
+          createdBy: string;
+          fiscalYear: number;
+          id: string;
+        };
+        Insert: {
+          accountNumber: string;
+          balance?: number;
+          createdAt?: string;
+          createdBy: string;
+          fiscalYear: number;
+          id?: string;
+        };
+        Update: {
+          accountNumber?: string;
+          balance?: number;
+          createdAt?: string;
+          createdBy?: string;
+          fiscalYear?: number;
+          id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "fiscalYearOpeningBalance_accountNumber_fkey";
+            columns: ["accountNumber"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "fiscalYearOpeningBalance_accountNumber_fkey";
+            columns: ["accountNumber"];
+            referencedRelation: "accounts_view";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "fiscalYearOpeningBalance_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "fiscalYearOpeningBalance_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user_default_view";
+            referencedColumns: ["userId"];
+          },
+          {
+            foreignKeyName: "fiscalYearOpeningBalance_fiscalYear_fkey";
+            columns: ["fiscalYear"];
+            referencedRelation: "fiscalYear";
+            referencedColumns: ["year"];
+          }
+        ];
       };
       generalLedger: {
         Row: {
@@ -7455,6 +7795,13 @@ export interface Database {
       };
     };
     Enums: {
+      accountingPeriodStatus: "Inactive" | "Active";
+      accountsPayableInvoiceStatus:
+        | "Draft"
+        | "Issued"
+        | "Paid"
+        | "Partially Paid"
+        | "Voided";
       costLedgerType:
         | "Direct Cost"
         | "Revaluation"

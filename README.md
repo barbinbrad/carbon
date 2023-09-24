@@ -22,6 +22,7 @@ Product highlights/roadmap are:
 - [x] Customer and supplier access
 - [ ] Double-entry accrual accounting
 - [ ] Stochastic scheduling/planning
+- [ ] Graph-based routing for manufacturing
 
 ## Project Status
 

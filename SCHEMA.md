@@ -6448,6 +6448,8 @@ CREATE TABLE "accountingPeriod" (
   CONSTRAINT "accountingPeriod_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE RESTRICT
 );
 
+ALTER TABLE "generalLedger" ADD COLUMN "accountingPeriodId" TEXT REFERENCES "accountingPeriod"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
 -- -- TODO:
 -- CREATE TABLE "accountsPayablePayment" (
 -- );

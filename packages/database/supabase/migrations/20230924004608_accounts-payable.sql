@@ -4,7 +4,7 @@ CREATE TYPE "accountingPeriodStatus" AS ENUM (
 );
 
 CREATE TABLE "fiscalYear" (
-  "year" INTEGER NOT NULL,
+  "year" TEXT NOT NULL,
   "startDate" DATE NOT NULL,
   "endDate" DATE NOT NULL,
   "status" "accountingPeriodStatus" NOT NULL DEFAULT 'Inactive',
@@ -20,7 +20,7 @@ CREATE TABLE "fiscalYear" (
 
 CREATE TABLE "fiscalYearOpeningBalance" (
   "id" TEXT NOT NULL DEFAULT xid(),
-  "fiscalYear" INTEGER NOT NULL,
+  "fiscalYear" TEXT NOT NULL,
   "accountNumber" TEXT NOT NULL,
   "balance" NUMERIC(10, 2) NOT NULL DEFAULT 0,
   "createdBy" TEXT NOT NULL,
@@ -37,7 +37,7 @@ CREATE TABLE "fiscalYearOpeningBalance" (
 
 CREATE TABLE "accountingPeriod" (
   "id" TEXT NOT NULL DEFAULT xid(),
-  "fiscalYear" INTEGER NOT NULL,
+  "fiscalYear" TEXT NOT NULL,
   "startDate" DATE NOT NULL,
   "endDate" DATE NOT NULL,
   "status" "accountingPeriodStatus" NOT NULL DEFAULT 'Inactive',
@@ -54,6 +54,8 @@ CREATE TABLE "accountingPeriod" (
   CONSTRAINT "accountingPeriod_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE RESTRICT,
   CONSTRAINT "accountingPeriod_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE RESTRICT
 );
+
+ALTER TABLE "generalLedger" ADD COLUMN "accountingPeriodId" TEXT REFERENCES "accountingPeriod"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- -- TODO:
 -- CREATE TABLE "accountsPayablePayment" (

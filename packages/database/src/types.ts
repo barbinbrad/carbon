@@ -2754,6 +2754,7 @@ export interface Database {
       };
       generalLedger: {
         Row: {
+          accountingPeriodId: string | null;
           accountNumber: string;
           amount: number;
           createdAt: string;
@@ -2768,6 +2769,7 @@ export interface Database {
           postingDate: string;
         };
         Insert: {
+          accountingPeriodId?: string | null;
           accountNumber: string;
           amount: number;
           createdAt?: string;
@@ -2782,6 +2784,7 @@ export interface Database {
           postingDate?: string;
         };
         Update: {
+          accountingPeriodId?: string | null;
           accountNumber?: string;
           amount?: number;
           createdAt?: string;
@@ -2796,6 +2799,12 @@ export interface Database {
           postingDate?: string;
         };
         Relationships: [
+          {
+            foreignKeyName: "generalLedger_accountingPeriodId_fkey";
+            columns: ["accountingPeriodId"];
+            referencedRelation: "accountingPeriod";
+            referencedColumns: ["id"];
+          },
           {
             foreignKeyName: "generalLedger_accountNumber_fkey";
             columns: ["accountNumber"];

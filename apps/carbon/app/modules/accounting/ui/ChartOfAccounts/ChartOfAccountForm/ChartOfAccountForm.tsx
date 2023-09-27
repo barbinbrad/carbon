@@ -21,7 +21,6 @@ import {
   Boolean,
   Hidden,
   Input,
-  Number,
   Select,
   SelectControlled,
   Submit,
@@ -103,7 +102,7 @@ const ChartOfAccountForm = ({ initialValues }: ChartOfAccountFormProps) => {
               w="full"
             >
               <VStack spacing={4} alignItems="start">
-                <Number name="number" label="Number" />
+                <Input name="number" label="Account Number" />
                 <Input name="name" label="Name" />
                 <Select
                   name="type"

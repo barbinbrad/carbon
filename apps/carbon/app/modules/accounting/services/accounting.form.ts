@@ -107,6 +107,32 @@ export const accountValidator = withZod(
       },
       { message: "Account category is required", path: ["accountCategoryId"] }
     )
+    .refine(
+      (data) => {
+        if (data.number.startsWith(".") || data.number.endsWith(".")) {
+          return false;
+        }
+
+        return true;
+      },
+      {
+        message: "Account number cannot start or end with a dot",
+        path: ["number"],
+      }
+    )
+    .refine(
+      (data) => {
+        if (data.number.includes("..")) {
+          return false;
+        }
+
+        return true;
+      },
+      {
+        message: "Account number cannot include two consecutive dots",
+        path: ["number"],
+      }
+    )
 );
 
 export const accountCategoryValidator = withZod(

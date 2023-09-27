@@ -1,4 +1,93 @@
-CREATE TYPE "generalLedgerDocumentType" AS ENUM (
+CREATE TYPE "accountingPeriodStatus" AS ENUM (
+  'Inactive', 
+  'Active'
+);
+
+CREATE TABLE "fiscalYear" (
+  "year" TEXT NOT NULL,
+  "startDate" DATE NOT NULL,
+  "endDate" DATE NOT NULL,
+  "status" "accountingPeriodStatus" NOT NULL DEFAULT 'Inactive',
+  "createdBy" TEXT NOT NULL,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+  "updatedBy" TEXT,
+  "updatedAt" TIMESTAMP WITH TIME ZONE,
+
+  CONSTRAINT "fiscalYear_pkey" PRIMARY KEY ("year"),
+  CONSTRAINT "fiscalYear_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE RESTRICT,
+  CONSTRAINT "fiscalYear_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE RESTRICT
+);
+
+CREATE TABLE "fiscalYearOpeningBalance" (
+  "id" TEXT NOT NULL DEFAULT xid(),
+  "fiscalYear" TEXT NOT NULL,
+  "accountNumber" TEXT NOT NULL,
+  "balance" NUMERIC(10, 2) NOT NULL DEFAULT 0,
+  "createdBy" TEXT NOT NULL,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+
+  CONSTRAINT "fiscalYearOpeningBalance_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "fiscalYearOpeningBalance_fiscalYear_accountNumber_key" UNIQUE ("fiscalYear", "accountNumber"),
+  CONSTRAINT "fiscalYearOpeningBalance_fiscalYear_fkey" FOREIGN KEY ("fiscalYear") REFERENCES "fiscalYear" ("year") ON DELETE RESTRICT,
+  CONSTRAINT "fiscalYearOpeningBalance_accountNumber_fkey" FOREIGN KEY ("accountNumber") REFERENCES "account" ("number") ON DELETE RESTRICT,
+  CONSTRAINT "fiscalYearOpeningBalance_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE RESTRICT
+);
+
+-- TODO: on fiscal year or account creation, create an opening balance entry
+
+CREATE TABLE "accountingPeriod" (
+  "id" TEXT NOT NULL DEFAULT xid(),
+  "fiscalYear" TEXT NOT NULL,
+  "startDate" DATE NOT NULL,
+  "endDate" DATE NOT NULL,
+  "status" "accountingPeriodStatus" NOT NULL DEFAULT 'Inactive',
+  "closedAt" TIMESTAMP WITH TIME ZONE,
+  "closedBy" TEXT,
+  "createdBy" TEXT NOT NULL,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+  "updatedBy" TEXT,
+  "updatedAt" TIMESTAMP WITH TIME ZONE,
+
+  CONSTRAINT "accountingPeriod_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "accountingPeriod_fiscalYear_fkey" FOREIGN KEY ("fiscalYear") REFERENCES "fiscalYear" ("year") ON DELETE RESTRICT,
+  CONSTRAINT "accountingPeriod_closedBy_fkey" FOREIGN KEY ("closedBy") REFERENCES "user" ("id") ON DELETE RESTRICT,
+  CONSTRAINT "accountingPeriod_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE RESTRICT,
+  CONSTRAINT "accountingPeriod_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE RESTRICT
+);
+
+CREATE TABLE "journal" (
+  "id" SERIAL,
+  "description" TEXT,
+  "accountPeriodId" TEXT,
+  "postingDate" DATE NOT NULL DEFAULT CURRENT_DATE,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+
+  CONSTRAINT "journal_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "journal_accountPeriodId_fkey" FOREIGN KEY ("accountPeriodId") REFERENCES "accountingPeriod" ("id") ON DELETE RESTRICT
+);
+
+CREATE INDEX "journal_accountPeriodId_idx" ON "journal" ("accountPeriodId");
+CREATE INDEX "journal_postingDate_idx" ON "journal" ("postingDate");
+
+ALTER TABLE "journal" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Employees with accounting_view can view journals" ON "journal"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('accounting_view')::boolean, false) = true 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+  
+
+CREATE POLICY "Employees with accounting_create can insert journals" ON "journal"
+  FOR INSERT
+  WITH CHECK (   
+    coalesce(get_my_claim('accounting_create')::boolean,false) 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+);
+
+
+CREATE TYPE "journalLineDocumentType" AS ENUM (
   'Quote',
   'Order',
   'Invoice',
@@ -7,28 +96,26 @@ CREATE TYPE "generalLedgerDocumentType" AS ENUM (
   'Return Order'
 );
 
-CREATE TABLE "generalLedger" (
+CREATE TABLE "journalLine" (
   "id" TEXT NOT NULL DEFAULT xid(),
-  "entryNumber" SERIAL,
-  "postingDate" DATE NOT NULL DEFAULT CURRENT_DATE,
+  "journalId" INTEGER NOT NULL,
   "accountNumber" TEXT NOT NULL,
   "description" TEXT,
   "amount" NUMERIC(19, 4) NOT NULL,
-  "documentType" "generalLedgerDocumentType", 
+  "documentType" "journalLineDocumentType", 
   "documentId" TEXT,
   "externalDocumentId" TEXT,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
 
-  CONSTRAINT "generalLedger_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "generalLedger_accountNumber_fkey" FOREIGN KEY ("accountNumber") REFERENCES "account"("number") ON UPDATE CASCADE ON DELETE SET NULL
+  CONSTRAINT "journalLine_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "journalLine_accountNumber_fkey" FOREIGN KEY ("accountNumber") REFERENCES "account"("number") ON UPDATE CASCADE ON DELETE SET NULL
 );
 
-CREATE INDEX "generalLedger_accountNumber_idx" ON "generalLedger" ("accountNumber");
-CREATE INDEX "generalLedger_postingDate_idx" ON "generalLedger" ("postingDate");
+CREATE INDEX "journalLine_accountNumber_idx" ON "journalLine" ("accountNumber");
 
-ALTER TABLE "generalLedger" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "journalLine" ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Employees with accounting_view can view general ledger entries" ON "generalLedger"
+CREATE POLICY "Employees with accounting_view can view journal lines" ON "journalLine"
   FOR SELECT
   USING (
     coalesce(get_my_claim('accounting_view')::boolean, false) = true 
@@ -36,14 +123,14 @@ CREATE POLICY "Employees with accounting_view can view general ledger entries" O
   );
   
 
-CREATE POLICY "Employees with accounting_create can insert general ledger entries" ON "generalLedger"
+CREATE POLICY "Employees with accounting_create can insert journal lines" ON "journalLine"
   FOR INSERT
   WITH CHECK (   
     coalesce(get_my_claim('accounting_create')::boolean,false) 
     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
 );
 
--- delete and update are not availble for general ledger entries
+-- delete and update are not availble for journal lines
 
 CREATE TYPE "partLedgerType" AS ENUM (
   'Purchase',
@@ -114,18 +201,18 @@ CREATE POLICY "Employees with accounting_view can view the value ledger" ON "val
     (get_my_claim('role'::text)) = '"employee"'::jsonb
   );
 
-CREATE TABLE "valueLedgerGeneralLedgerRelation" (
+CREATE TABLE "valueLedgerJournalLineRelation" (
   "valueLedgerId" TEXT NOT NULL,
-  "generalLedgerId" TEXT NOT NULL,
+  "journalLineId" TEXT NOT NULL,
 
-  CONSTRAINT "valueLedgerGeneralLedgerRelation_pkey" PRIMARY KEY ("valueLedgerId", "generalLedgerId"),
-  CONSTRAINT "valueLedgerGeneralLedgerRelation_valueLedgerId_fkey" FOREIGN KEY ("valueLedgerId") REFERENCES "valueLedger"("id"),
-  CONSTRAINT "valueLedgerGeneralLedgerRelation_generalLedgerId_fkey" FOREIGN KEY ("generalLedgerId") REFERENCES "generalLedger"("id")
+  CONSTRAINT "valueLedgerJournalLineRelation_pkey" PRIMARY KEY ("valueLedgerId", "journalLineId"),
+  CONSTRAINT "valueLedgerJournalLineRelation_valueLedgerId_fkey" FOREIGN KEY ("valueLedgerId") REFERENCES "valueLedger"("id"),
+  CONSTRAINT "valueLedgerJournalLineRelation_journalLineId_fkey" FOREIGN KEY ("journalLineId") REFERENCES "journalLine"("id")
 );
 
-ALTER TABLE "valueLedgerGeneralLedgerRelation" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "valueLedgerJournalLineRelation" ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Employees with accounting_view can view the value ledger/general ledger relations" ON "valueLedgerGeneralLedgerRelation"
+CREATE POLICY "Employees with accounting_view can view the value ledger/general ledger relations" ON "valueLedgerJournalLineRelation"
   FOR SELECT
   USING (
     coalesce(get_my_claim('accounting_view')::boolean, false) = true AND
@@ -208,7 +295,7 @@ CREATE TABLE "supplierLedger" (
 );
 
 
-CREATE OR REPLACE FUNCTION gl_transactions_by_account_number(
+CREATE OR REPLACE FUNCTION transactions_by_account_number(
   from_date DATE DEFAULT (now() - INTERVAL '100 year'),
   to_date DATE DEFAULT now()
 ) 
@@ -223,11 +310,12 @@ AS $$
     RETURN QUERY
       SELECT 
         a."number",
-        SUM(g."amount") AS "balance",
-        SUM(CASE WHEN g."postingDate" <= to_date THEN g."amount" ELSE 0 END) AS "balanceAtDate",
-        SUM(CASE WHEN g."postingDate" >= from_date AND g."postingDate" <= to_date THEN g."amount" ELSE 0 END) AS "netChange"
+        SUM(jl."amount") AS "balance",
+        SUM(CASE WHEN j."postingDate" <= to_date THEN jl."amount" ELSE 0 END) AS "balanceAtDate",
+        SUM(CASE WHEN j."postingDate" >= from_date AND j."postingDate" <= to_date THEN jl."amount" ELSE 0 END) AS "netChange"
       FROM "account" a
-      LEFT JOIN "generalLedger" g ON g."accountNumber" = a."number"
+      LEFT JOIN "journalLine" jl ON jl."accountNumber" = a."number"
+      INNER JOIN "journal" j ON j."id" = jl."journalId"
       GROUP BY a."number";
   END;
 $$;

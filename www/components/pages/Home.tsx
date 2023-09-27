@@ -23,8 +23,7 @@ export default function Home() {
               </span>
             </h1>
             <p className="mt-6 nx-text-xl font-medium leading-tight text-gray-400 sm:nx-text-2xl md:nx-text-3xl lg:nx-text-4xl">
-              Carbon ERP is an open source high performance ERP for
-              manufacturers.
+              Carbon ERP is an open-source, high performance ERP
             </p>
           </div>
           <div className="flex fix-flex-col h-32 mt-4 md:mt-0 mb-6 md:mb-0 items-center justify-center gap-3 md:flex-row xl:flex-row">

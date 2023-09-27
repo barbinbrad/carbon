@@ -62,7 +62,7 @@ const AccountCategory = ({
         return;
       }
 
-      const category = categories.find(
+      const category = categories?.find(
         (category) => category.id === selection.value
       );
 
@@ -71,8 +71,7 @@ const AccountCategory = ({
   };
 
   const controlledValue = useMemo(
-    // @ts-ignore
-    () => options.find((option) => option.value === value),
+    () => options?.find((option) => option.value === value),
     [value, options]
   );
 

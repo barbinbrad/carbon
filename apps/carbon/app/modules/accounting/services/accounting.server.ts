@@ -253,8 +253,9 @@ function getAccountTotal(
   type: "netChange" | "balance" | "balanceAtDate",
   transactionsByAccount: Record<string, Transaction>
 ) {
-  if (!account.totaling)
-    return transactionsByAccount[account.number][type] ?? 0;
+  if (!account.totaling) {
+    return transactionsByAccount[account.number]?.[type] ?? 0;
+  }
 
   let total = 0;
   const [start, end] = account.totaling.split("..");
@@ -262,7 +263,7 @@ function getAccountTotal(
 
   accounts.forEach((account) => {
     if (account.number >= start && account.number <= end) {
-      total += transactionsByAccount[account.number][type] ?? 0;
+      total += transactionsByAccount[account.number]?.[type] ?? 0;
     }
   });
 
@@ -297,7 +298,7 @@ export async function getChartOfAccounts(
 
   accountsQuery = setGenericQueryFilters(accountsQuery, args, "number");
 
-  let transactionsQuery = client.rpc("gl_transactions_by_account_number", {
+  let transactionsQuery = client.rpc("transactions_by_account_number", {
     from_date:
       args.startDate ?? getDateNYearsAgo(50).toISOString().split("T")[0],
     to_date: args.endDate ?? new Date().toISOString().split("T")[0],

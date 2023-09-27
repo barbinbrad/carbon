@@ -1,5 +1,5 @@
-import React from "react";
 import Head from "next/head";
+import React from "react";
 import Features from "../features";
 
 export default function Home() {
@@ -9,7 +9,7 @@ export default function Home() {
         <title>Carbon ERP</title>
         <meta
           name="og:description"
-          content="Carbon ERP is an open source high performance ERP for manufacturing."
+          content="Carbon is an open-source, high-performance ERP"
         />
       </Head>
 

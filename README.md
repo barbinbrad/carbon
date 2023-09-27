@@ -2,7 +2,7 @@
 
 # Carbon ERP
 
-Carbon is a high permformance, open-source, single tenant (incomplete) ERP written in Typescript. It allows customers, suppliers, and employees to share a common platform for manufacturing that's easy to integrate with.
+Carbon is a high permformance, open-source, single tenant (incomplete) ERP written in Typescript. It allows customers, suppliers, and employees to share a common platform that's easy to integrate with.
 
 Technical highlights/roadmap:
 
@@ -57,16 +57,6 @@ The monorepo follows the Turborepo covention of grouping packages into one of tw
 | `@carbon/redis`        | Redis cache client                                                      |
 | `@carbon/tsconfig`     | Shared, extendable tsconfig configuration used across apps and packages |
 | `@carbon/utils`        | Shared utility functions used across apps and packages                  |
-
-## Tech Stack
-
-- [Remix](https://remix.run)
-- [Chakra UI](https://chakra-ui.com/)
-- [Supabase](https://supabase.com/)
-- [Postgres](https://postgresql.org/)
-- [Redis](https://redis.io)
-- [BullMQ](https://docs.bullmq.io)
-- [Turborepo](https://turbo.build)
 
 ## Local Development
 

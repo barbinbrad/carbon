@@ -1,3 +1,4 @@
+import type { Json } from "@carbon/database";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
@@ -7,6 +8,7 @@ import {
   employeeValidator,
   getClaims,
   getEmployee,
+  getEmployeeTypes,
   makePermissionsFromClaims,
   updateEmployee,
   userPermissionsValidator,
@@ -25,9 +27,10 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const { employeeId } = params;
   if (!employeeId) throw notFound("EmployeeId was not found");
 
-  const [rawClaims, employee] = await Promise.all([
+  const [rawClaims, employee, employeeTypes] = await Promise.all([
     getClaims(client, employeeId),
     getEmployee(client, employeeId),
+    getEmployeeTypes(client),
   ]);
 
   if (rawClaims.error || employee.error || rawClaims.data === null) {
@@ -42,8 +45,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       )
     );
   }
+  const claims = makePermissionsFromClaims(rawClaims.data as Json[]);
 
-  const claims = makePermissionsFromClaims(rawClaims?.data);
   if (claims === null) {
     redirect(
       "/x/users/employees",
@@ -54,6 +57,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   return json({
     permissions: claims?.permissions,
     employee: employee.data,
+    employeeTypes: employeeTypes.data ?? [],
   });
 }
 
@@ -92,7 +96,8 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function UsersEmployeeRoute() {
-  const { permissions, employee } = useLoaderData<typeof loader>();
+  const { permissions, employee, employeeTypes } =
+    useLoaderData<typeof loader>();
 
   if (Array.isArray(employee?.user) || Array.isArray(employee?.employeeType)) {
     throw new Error("Expected single user and employee type");
@@ -107,7 +112,8 @@ export default function UsersEmployeeRoute() {
   return (
     <EmployeePermissionsForm
       name={`${employee?.user?.firstName} ${employee?.user?.lastName}`}
-      // @ts-expect-error
+      employeeTypes={employeeTypes}
+      // @ts-ignore
       initialValues={initialValues}
     />
   );

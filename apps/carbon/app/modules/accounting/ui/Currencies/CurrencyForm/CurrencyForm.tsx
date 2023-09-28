@@ -29,13 +29,13 @@ const CurrencyForm = ({ initialValues }: CurrencyFormProps) => {
   const navigate = useNavigate();
   const onClose = () => navigate(-1);
 
-  const routeData = useRouteData<{ baseCurrency: Currency }>("/x/accounting");
+  const routeData = useRouteData<{ baseCurrency?: Currency }>("/x/accounting");
   const [name, setName] = useState(initialValues.name);
 
-  const isBaseCurrency = routeData?.baseCurrency.id === initialValues.id;
+  const isBaseCurrency = routeData?.baseCurrency?.id === initialValues.id;
   const exchnageRateHelperText = isBaseCurrency
     ? "This is the base currency. Exchange rate is always 1."
-    : `One ${name} is equal to how many ${routeData?.baseCurrency.name}?`;
+    : `One ${name} is equal to how many ${routeData?.baseCurrency?.name}?`;
 
   const isEditing = initialValues.id !== undefined;
   const isDisabled = isEditing

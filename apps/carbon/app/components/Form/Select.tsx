@@ -39,7 +39,7 @@ const Select = ({
   return (
     <FormControl isInvalid={!!error}>
       {label && <FormLabel htmlFor={name}>{label}</FormLabel>}
-      {options.length > 0 ? (
+      {options?.length > 0 ? (
         <CarbonSelect
           {...getInputProps({
             // @ts-ignore

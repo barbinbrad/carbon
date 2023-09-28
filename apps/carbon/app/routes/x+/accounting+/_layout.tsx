@@ -66,7 +66,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   });
 }
 
-export default function UsersRoute() {
+export default function AccountingRoute() {
   const { groups } = useAccountingSidebar();
 
   return (

@@ -1,3 +1,27 @@
+CREATE TYPE "month" AS ENUM (
+  'January', 
+  'February', 
+  'March', 
+  'April', 
+  'May', 
+  'June', 
+  'July', 
+  'August', 
+  'September', 
+  'October', 
+  'November', 
+  'December'
+);
+
+CREATE TABLE "fiscalYearSettings" (
+  "id" BOOLEAN NOT NULL DEFAULT TRUE,
+  "startMonth" "month" NOT NULL DEFAULT 'January',
+
+  CONSTRAINT "fiscalYearSettings_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "fiscalYear_id_check" CHECK (id = TRUE),
+  CONSTRAINT "fiscalYear_id_unique" UNIQUE ("id")
+);
+
 CREATE TYPE "accountingPeriodStatus" AS ENUM (
   'Inactive', 
   'Active'

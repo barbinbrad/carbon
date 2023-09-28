@@ -6,27 +6,12 @@ const accountingRoutes: AuthenticatedRouteGroup[] = [
     name: "Manage",
     routes: [
       {
-        name: "Accounts Payable",
-        to: "/x/accounting/payable",
-        role: "employee",
-      },
-      // {
-      //   name: "Accounts Receivable",
-      //   to: "/x/accounting/receivable",
-      //   role: "employee",
-      // },
-      {
         name: "Chart of Accounts",
         to: "/x/accounting/charts",
         role: "employee",
       },
       // {
-      //   name: "Payments",
-      //   to: "/x/accounting/payments",
-      //   role: "employee",
-      // },
-      // {
-      //   name: "Journal Entries",
+      //   name: "Journals",
       //   to: "/x/accounting/journals",
       //   role: "employee",
       // },
@@ -78,6 +63,11 @@ const accountingRoutes: AuthenticatedRouteGroup[] = [
       {
         name: "Currencies",
         to: "/x/accounting/currencies",
+        role: "employee",
+      },
+      {
+        name: "Fiscal Years",
+        to: "/x/accounting/years",
         role: "employee",
       },
       {

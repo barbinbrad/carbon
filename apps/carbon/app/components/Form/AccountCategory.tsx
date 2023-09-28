@@ -56,7 +56,7 @@ const AccountCategory = ({
     setValue(newValue);
 
     if (onChange && typeof onChange === "function") {
-      const categories = accountCategoryFetcher.data?.data;
+      const categories = accountCategoryFetcher.data?.data ?? [];
       if (!categories) {
         onChange(undefined);
         return;

@@ -305,3 +305,9 @@ INSERT INTO "postingGroupSales" (
   "salesTaxPayableAccount",
   'system'
 FROM "accountDefault" WHERE "id" = true;
+
+INSERT INTO "fiscalYearSettings" (
+  "startMonth"
+) VALUES (
+  'January'
+);

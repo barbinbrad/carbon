@@ -2752,6 +2752,21 @@ export interface Database {
           }
         ]
       }
+      fiscalYearSettings: {
+        Row: {
+          id: boolean
+          startMonth: Database["public"]["Enums"]["month"]
+        }
+        Insert: {
+          id?: boolean
+          startMonth?: Database["public"]["Enums"]["month"]
+        }
+        Update: {
+          id?: boolean
+          startMonth?: Database["public"]["Enums"]["month"]
+        }
+        Relationships: []
+      }
       group: {
         Row: {
           createdAt: string
@@ -7886,6 +7901,19 @@ export interface Database {
         | "Credit Memo"
         | "Blanket Order"
         | "Return Order"
+      month:
+        | "January"
+        | "February"
+        | "March"
+        | "April"
+        | "May"
+        | "June"
+        | "July"
+        | "August"
+        | "September"
+        | "October"
+        | "November"
+        | "December"
       partCostingMethod: "Standard" | "Average" | "LIFO" | "FIFO"
       partLedgerDocumentType:
         | "Sales Shipment"

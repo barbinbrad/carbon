@@ -2,7 +2,7 @@ import { withZod } from "@remix-validated-form/with-zod";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
 
-export const generalLedgerDocumentType = [
+export const journalLineDocumentType = [
   "Quote",
   "Order",
   "Invoice",
@@ -152,13 +152,13 @@ export const accountCategoryValidator = withZod(
   })
 );
 
-export const generalLedgerValidator = withZod(
+export const journalLineValidator = withZod(
   z.object({
     postingDate: zfd.text(z.string().optional()),
     accountNumber: z.string().min(1, { message: "Account is required" }),
     description: z.string().optional(),
     amount: z.number(),
-    documentType: z.union([z.enum(generalLedgerDocumentType), z.undefined()]),
+    documentType: z.union([z.enum(journalLineDocumentType), z.undefined()]),
     documentId: z.string().optional(),
     externalDocumentId: z.string().optional(),
   })

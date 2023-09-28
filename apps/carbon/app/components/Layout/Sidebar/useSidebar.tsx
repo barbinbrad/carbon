@@ -11,6 +11,7 @@ import {
 import { CgProfile } from "react-icons/cg";
 import { HiOutlineCube, HiOutlineDocumentDuplicate } from "react-icons/hi";
 import { LuSettings2 } from "react-icons/lu";
+import { TbPigMoney } from "react-icons/tb";
 import { usePermissions } from "~/hooks";
 import type { Authenticated, NavItem } from "~/types";
 
@@ -76,6 +77,12 @@ export function useSidebar() {
       permission: "accounting",
       name: "Accounting",
       to: "/x/accounting",
+      icon: <TbPigMoney />,
+    },
+    {
+      permission: "invoicing",
+      name: "Invoicing",
+      to: "/x/invoicing",
       icon: <BsCreditCard />,
     },
     {

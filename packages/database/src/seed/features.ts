@@ -4,6 +4,7 @@ const possibleFeatures = [
   "Accounting",
   "Documents",
   "Inventory",
+  "Invoicing",
   "Jobs",
   "Messaging",
   "Parts",
@@ -16,7 +17,7 @@ const possibleFeatures = [
   "Users",
 ] as const;
 
-export type Feature = typeof possibleFeatures[number];
+export type Feature = (typeof possibleFeatures)[number];
 
 const features = {} as Record<Feature, { id: string; name: string }>;
 

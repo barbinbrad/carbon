@@ -2756,16 +2756,32 @@ export interface Database {
         Row: {
           id: boolean
           startMonth: Database["public"]["Enums"]["month"]
+          updatedBy: string
         }
         Insert: {
           id?: boolean
           startMonth?: Database["public"]["Enums"]["month"]
+          updatedBy: string
         }
         Update: {
           id?: boolean
           startMonth?: Database["public"]["Enums"]["month"]
+          updatedBy?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "fiscalYearSettings_updatedBy_fkey"
+            columns: ["updatedBy"]
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fiscalYearSettings_updatedBy_fkey"
+            columns: ["updatedBy"]
+            referencedRelation: "user_default_view"
+            referencedColumns: ["userId"]
+          }
+        ]
       }
       group: {
         Row: {
@@ -2866,21 +2882,21 @@ export interface Database {
       }
       journal: {
         Row: {
-          accountPeriodId: string | null
+          accountingPeriodId: string | null
           createdAt: string
           description: string | null
           id: number
           postingDate: string
         }
         Insert: {
-          accountPeriodId?: string | null
+          accountingPeriodId?: string | null
           createdAt?: string
           description?: string | null
           id?: number
           postingDate?: string
         }
         Update: {
-          accountPeriodId?: string | null
+          accountingPeriodId?: string | null
           createdAt?: string
           description?: string | null
           id?: number
@@ -2889,7 +2905,7 @@ export interface Database {
         Relationships: [
           {
             foreignKeyName: "journal_accountPeriodId_fkey"
-            columns: ["accountPeriodId"]
+            columns: ["accountingPeriodId"]
             referencedRelation: "accountingPeriod"
             referencedColumns: ["id"]
           }

@@ -307,7 +307,9 @@ INSERT INTO "postingGroupSales" (
 FROM "accountDefault" WHERE "id" = true;
 
 INSERT INTO "fiscalYearSettings" (
-  "startMonth"
+  "startMonth",
+  "updatedBy"
 ) VALUES (
-  'January'
+  'January',
+  'system'
 );

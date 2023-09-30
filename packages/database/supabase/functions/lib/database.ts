@@ -5,7 +5,14 @@ import {
   PostgresIntrospector,
   PostgresQueryCompiler,
 } from "https://esm.sh/kysely@0.23.4";
+import { Database } from "../../../src/types.ts";
 import { PostgresDriver } from "../lib/driver.ts";
+
+type Tables = Database["public"]["Tables"];
+
+export type DB = {
+  [TableName in keyof Tables]: Tables[TableName]["Insert"];
+};
 
 export function getConnectionPool(connections: number) {
   return new Pool(Deno.env.get("SUPABASE_DB_URL")!, connections);

@@ -12,6 +12,7 @@ import type {
   accountValidator,
   currencyValidator,
   defaultAcountValidator,
+  fiscalYearSettingsValidator,
   journalLineValidator,
   partLedgerValidator,
   paymentTermValidator,
@@ -634,6 +635,18 @@ export async function updateDefaultAccounts(
   }
 ) {
   return client.from("accountDefault").update(defaultAccounts).eq("id", true);
+}
+
+export async function updateFiscalYearSettings(
+  client: SupabaseClient<Database>,
+  fiscalYearSettings: TypeOfValidator<typeof fiscalYearSettingsValidator> & {
+    updatedBy: string;
+  }
+) {
+  return client
+    .from("fiscalYearSettings")
+    .update(sanitize(fiscalYearSettings))
+    .eq("id", true);
 }
 
 export async function upsertAccount(

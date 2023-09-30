@@ -1,8 +1,7 @@
 import { Box, Grid } from "@chakra-ui/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { json } from "@remix-run/router";
 import { validationError } from "remix-validated-form";
 import { PageTitle, SectionTitle } from "~/components/Layout";
 import type { PublicAttributes } from "~/modules/account";

@@ -66,7 +66,7 @@ const accountingRoutes: AuthenticatedRouteGroup[] = [
         role: "employee",
       },
       {
-        name: "Fiscal Years",
+        name: "Fiscal Year",
         to: "/x/accounting/years",
         role: "employee",
       },

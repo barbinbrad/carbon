@@ -1,5 +1,5 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
-import { json, redirect } from "@remix-run/router";
+import { json, redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
 import { PageTitle } from "~/components/Layout";
 import { getSupabaseServiceRole } from "~/lib/supabase";

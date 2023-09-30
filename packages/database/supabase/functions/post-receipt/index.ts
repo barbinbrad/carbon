@@ -2,22 +2,10 @@ import { serve } from "https://deno.land/std@0.175.0/http/server.ts";
 import { format } from "https://deno.land/std@0.91.0/datetime/mod.ts";
 import type { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2.33.1";
 import type { Database } from "../../../src/types.ts";
-import { getConnectionPool, getDatabaseClient } from "../lib/database.ts";
+import { DB, getConnectionPool, getDatabaseClient } from "../lib/database.ts";
 import { corsHeaders } from "../lib/headers.ts";
 import { getSupabaseServiceRole } from "../lib/supabase.ts";
-
-// Use the supabase types to define a subset of the database we'll transact with
-interface DB {
-  journal: Database["public"]["Tables"]["journal"]["Insert"];
-  journalLine: Database["public"]["Tables"]["journalLine"]["Insert"];
-  purchaseOrderDelivery: Database["public"]["Tables"]["purchaseOrderDelivery"]["Update"];
-  purchaseOrderLine: Database["public"]["Tables"]["purchaseOrderLine"]["Update"];
-  partLedger: Database["public"]["Tables"]["partLedger"]["Insert"];
-  partLedgerValueLedgerRelation: Database["public"]["Tables"]["partLedgerValueLedgerRelation"]["Insert"];
-  receipt: Database["public"]["Tables"]["receipt"]["Update"];
-  valueLedger: Database["public"]["Tables"]["valueLedger"]["Insert"];
-  valueLedgerJournalLineRelation: Database["public"]["Tables"]["valueLedgerJournalLineRelation"]["Insert"];
-}
+import { getCurrentAccountingPeriod } from "../utils/get-accounting-period.ts";
 
 const pool = getConnectionPool(1);
 const db = getDatabaseClient<DB>(pool);
@@ -229,6 +217,8 @@ serve(async (req: Request) => {
           });
         }
 
+        const accountingPeriodId = await getCurrentAccountingPeriod(client, db);
+
         await db.transaction().execute(async (trx) => {
           for await (const [purchaseOrderLineId, update] of Object.entries(
             purchaseOrderLineUpdates
@@ -258,6 +248,7 @@ serve(async (req: Request) => {
           const journal = await trx
             .insertInto("journal")
             .values({
+              accountingPeriodId,
               description: `Purchase Receipt ${receipt.data.receiptId}`,
               postingDate: format(new Date(), "yyyy-MM-dd"),
             })

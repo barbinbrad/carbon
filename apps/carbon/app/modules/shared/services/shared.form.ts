@@ -9,3 +9,18 @@ export const noteValidator = withZod(
     note: z.string().min(1, { message: "Note is required" }),
   })
 );
+
+export const months = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+] as const;

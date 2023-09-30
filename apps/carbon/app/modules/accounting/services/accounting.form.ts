@@ -1,15 +1,7 @@
 import { withZod } from "@remix-validated-form/with-zod";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
-
-export const journalLineDocumentType = [
-  "Quote",
-  "Order",
-  "Invoice",
-  "Credit Memo",
-  "Blanket Order",
-  "Return Order",
-] as const;
+import { months } from "~/modules/shared";
 
 export const accountTypes = [
   "Posting",
@@ -32,6 +24,15 @@ const costLedgerTypes = [
   "Indirect Cost",
   "Variance",
   "Total",
+] as const;
+
+export const journalLineDocumentType = [
+  "Quote",
+  "Order",
+  "Invoice",
+  "Credit Memo",
+  "Blanket Order",
+  "Return Order",
 ] as const;
 
 const partLedgerTypes = [
@@ -147,6 +148,16 @@ export const accountCategoryValidator = withZod(
     normalBalance: z.enum(normalBalanceTypes, {
       errorMap: (issue, ctx) => ({
         message: "Normal balance is required",
+      }),
+    }),
+  })
+);
+
+export const fiscalYearSettingsValidator = withZod(
+  z.object({
+    startMonth: z.enum(months, {
+      errorMap: (issue, ctx) => ({
+        message: "Start month is required",
       }),
     }),
   })

@@ -5216,8 +5216,10 @@ CREATE TYPE "month" AS ENUM (
 CREATE TABLE "fiscalYearSettings" (
   "id" BOOLEAN NOT NULL DEFAULT TRUE,
   "startMonth" "month" NOT NULL DEFAULT 'January',
+  "updatedBy" TEXT NOT NULL,
 
   CONSTRAINT "fiscalYearSettings_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "fiscalYearSettings_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE RESTRICT,
   CONSTRAINT "fiscalYear_id_check" CHECK (id = TRUE),
   CONSTRAINT "fiscalYear_id_unique" UNIQUE ("id")
 );
@@ -5282,15 +5284,15 @@ CREATE TABLE "accountingPeriod" (
 CREATE TABLE "journal" (
   "id" SERIAL,
   "description" TEXT,
-  "accountPeriodId" TEXT,
+  "accountingPeriodId" TEXT,
   "postingDate" DATE NOT NULL DEFAULT CURRENT_DATE,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
 
   CONSTRAINT "journal_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "journal_accountPeriodId_fkey" FOREIGN KEY ("accountPeriodId") REFERENCES "accountingPeriod" ("id") ON DELETE RESTRICT
+  CONSTRAINT "journal_accountPeriodId_fkey" FOREIGN KEY ("accountingPeriodId") REFERENCES "accountingPeriod" ("id") ON DELETE RESTRICT
 );
 
-CREATE INDEX "journal_accountPeriodId_idx" ON "journal" ("accountPeriodId");
+CREATE INDEX "journal_accountPeriodId_idx" ON "journal" ("accountingPeriodId");
 CREATE INDEX "journal_postingDate_idx" ON "journal" ("postingDate");
 
 ALTER TABLE "journal" ENABLE ROW LEVEL SECURITY;

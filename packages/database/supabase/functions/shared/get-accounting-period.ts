@@ -21,6 +21,7 @@ const daysInMonths: Record<number, number> = {
   12: 31,
 };
 
+// TODO: refactor to import from shared package
 const months = [
   "January",
   "February",

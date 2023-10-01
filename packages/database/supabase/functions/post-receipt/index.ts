@@ -5,7 +5,7 @@ import type { Database } from "../../../src/types.ts";
 import { DB, getConnectionPool, getDatabaseClient } from "../lib/database.ts";
 import { corsHeaders } from "../lib/headers.ts";
 import { getSupabaseServiceRole } from "../lib/supabase.ts";
-import { getCurrentAccountingPeriod } from "../utils/get-accounting-period.ts";
+import { getCurrentAccountingPeriod } from "../shared/get-accounting-period.ts";
 
 const pool = getConnectionPool(1);
 const db = getDatabaseClient<DB>(pool);
@@ -335,8 +335,7 @@ serve(async (req: Request) => {
 
     return new Response(
       JSON.stringify({
-        data: null,
-        error: null,
+        success: true,
       }),
       {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -355,6 +354,7 @@ serve(async (req: Request) => {
   }
 });
 
+// TODO: should this be in a shared package?
 async function getInventoryPostingGroup(
   client: SupabaseClient<Database>,
   args: {

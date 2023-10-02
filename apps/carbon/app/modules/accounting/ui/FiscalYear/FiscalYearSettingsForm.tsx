@@ -25,8 +25,15 @@ const FiscalYearSettingsForm = ({
         <VStack spacing={4} my={4} w="full" alignItems="start" maxW={440}>
           <Select
             name="startMonth"
-            label="Start Month"
+            label="Start of Fiscal Year"
             options={months.map((month) => ({ label: month, value: month }))}
+            helperText="This is the month your fiscal year starts."
+          />
+          <Select
+            name="taxStartMonth"
+            label="Start of Tax Year"
+            options={months.map((month) => ({ label: month, value: month }))}
+            helperText="This is the month your tax year starts."
           />
           <Submit
             isDisabled={

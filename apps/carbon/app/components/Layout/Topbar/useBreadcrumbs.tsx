@@ -82,6 +82,11 @@ export default function useBreadcrumbs(): Route[] {
           name: "Payment Terms",
           to: match.pathname,
         });
+      case "routes/x+/accounting+/years":
+        return acc.concat({
+          name: "Fiscal Year",
+          to: match.pathname,
+        });
       case "routes/x+/documents+/_layout":
         return acc.concat({
           name: "Documents",

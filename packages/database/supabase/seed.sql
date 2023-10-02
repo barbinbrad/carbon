@@ -308,8 +308,10 @@ FROM "accountDefault" WHERE "id" = true;
 
 INSERT INTO "fiscalYearSettings" (
   "startMonth",
+  "taxStartMonth",
   "updatedBy"
 ) VALUES (
+  'January',
   'January',
   'system'
 );

@@ -160,6 +160,11 @@ export const fiscalYearSettingsValidator = withZod(
         message: "Start month is required",
       }),
     }),
+    taxStartMonth: z.enum(months, {
+      errorMap: (issue, ctx) => ({
+        message: "Tax start month is required",
+      }),
+    }),
   })
 );
 

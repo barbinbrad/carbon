@@ -5216,6 +5216,7 @@ CREATE TYPE "month" AS ENUM (
 CREATE TABLE "fiscalYearSettings" (
   "id" BOOLEAN NOT NULL DEFAULT TRUE,
   "startMonth" "month" NOT NULL DEFAULT 'January',
+  "taxStartMonth" "month" NOT NULL DEFAULT 'January',
   "updatedBy" TEXT NOT NULL,
 
   CONSTRAINT "fiscalYearSettings_pkey" PRIMARY KEY ("id"),
@@ -5229,41 +5230,8 @@ CREATE TYPE "accountingPeriodStatus" AS ENUM (
   'Active'
 );
 
-CREATE TABLE "fiscalYear" (
-  "year" TEXT NOT NULL,
-  "startDate" DATE NOT NULL,
-  "endDate" DATE NOT NULL,
-  "status" "accountingPeriodStatus" NOT NULL DEFAULT 'Inactive',
-  "createdBy" TEXT NOT NULL,
-  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
-  "updatedBy" TEXT,
-  "updatedAt" TIMESTAMP WITH TIME ZONE,
-
-  CONSTRAINT "fiscalYear_pkey" PRIMARY KEY ("year"),
-  CONSTRAINT "fiscalYear_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE RESTRICT,
-  CONSTRAINT "fiscalYear_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE RESTRICT
-);
-
-CREATE TABLE "fiscalYearOpeningBalance" (
-  "id" TEXT NOT NULL DEFAULT xid(),
-  "fiscalYear" TEXT NOT NULL,
-  "accountNumber" TEXT NOT NULL,
-  "balance" NUMERIC(10, 2) NOT NULL DEFAULT 0,
-  "createdBy" TEXT NOT NULL,
-  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
-
-  CONSTRAINT "fiscalYearOpeningBalance_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "fiscalYearOpeningBalance_fiscalYear_accountNumber_key" UNIQUE ("fiscalYear", "accountNumber"),
-  CONSTRAINT "fiscalYearOpeningBalance_fiscalYear_fkey" FOREIGN KEY ("fiscalYear") REFERENCES "fiscalYear" ("year") ON DELETE RESTRICT,
-  CONSTRAINT "fiscalYearOpeningBalance_accountNumber_fkey" FOREIGN KEY ("accountNumber") REFERENCES "account" ("number") ON DELETE RESTRICT,
-  CONSTRAINT "fiscalYearOpeningBalance_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE RESTRICT
-);
-
--- TODO: on fiscal year or account creation, create an opening balance entry
-
 CREATE TABLE "accountingPeriod" (
   "id" TEXT NOT NULL DEFAULT xid(),
-  "fiscalYear" TEXT NOT NULL,
   "startDate" DATE NOT NULL,
   "endDate" DATE NOT NULL,
   "status" "accountingPeriodStatus" NOT NULL DEFAULT 'Inactive',
@@ -5275,7 +5243,6 @@ CREATE TABLE "accountingPeriod" (
   "updatedAt" TIMESTAMP WITH TIME ZONE,
 
   CONSTRAINT "accountingPeriod_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "accountingPeriod_fiscalYear_fkey" FOREIGN KEY ("fiscalYear") REFERENCES "fiscalYear" ("year") ON DELETE RESTRICT,
   CONSTRAINT "accountingPeriod_closedBy_fkey" FOREIGN KEY ("closedBy") REFERENCES "user" ("id") ON DELETE RESTRICT,
   CONSTRAINT "accountingPeriod_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE RESTRICT,
   CONSTRAINT "accountingPeriod_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE RESTRICT

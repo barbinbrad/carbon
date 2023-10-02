@@ -48,9 +48,12 @@ export async function action({ request }: ActionFunctionArgs) {
   if (validation.error) {
     return validationError(validation.error);
   }
+  const { startMonth, taxStartMonth } = validation.data;
 
   const update = await updateFiscalYearSettings(client, {
-    ...validation.data,
+    startMonth,
+    // @ts-expect-error
+    taxStartMonth: taxStartMonth === "same" ? startMonth : taxStartMonth,
     updatedBy: userId,
   });
   if (update.error) {
@@ -74,6 +77,10 @@ export default function FiscalYearSettingsRoute() {
 
   const initialValues = {
     startMonth: settings?.startMonth || "January",
+    taxStartMonth:
+      settings?.startMonth === settings.taxStartMonth
+        ? "same"
+        : settings?.taxStartMonth || "January",
   };
 
   return (
@@ -82,7 +89,10 @@ export default function FiscalYearSettingsRoute() {
         title="Fiscal Year Settings"
         subtitle="Define the month when your fiscal year starts"
       />
-      <FiscalYearSettingsForm initialValues={initialValues} />
+      <FiscalYearSettingsForm
+        // @ts-expect-error
+        initialValues={initialValues}
+      />
     </VStack>
   );
 }

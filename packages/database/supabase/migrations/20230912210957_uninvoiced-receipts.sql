@@ -1,4 +1,4 @@
-CREATE VIEW "receipts_posted_not_invoiced" AS 
+CREATE OR REPLACE VIEW "receiptsPostedNotInvoiced" AS 
   SELECT 
     r."id",
     r."receiptId",
@@ -32,7 +32,7 @@ CREATE VIEW "receipts_posted_not_invoiced" AS
     s."name";
 ;
 
-CREATE VIEW "total_receipts_posted_not_invoiced" AS 
+CREATE OR REPLACE VIEW "totalReceiptsPostedNotInvoiced" AS 
   SELECT SUM(l."receivedQuantity" * l."unitPrice") AS "total"
   FROM "receipt" r
   INNER JOIN "receiptLine" l

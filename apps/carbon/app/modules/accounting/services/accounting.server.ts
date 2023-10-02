@@ -165,7 +165,7 @@ export async function getAccountCategories(
     incomeBalance: string | null;
   }
 ) {
-  let query = client.from("account_categories_view").select("*", {
+  let query = client.from("accountCategories").select("*", {
     count: "exact",
   });
 
@@ -288,10 +288,7 @@ export async function getChartOfAccounts(
     endDate: string | null;
   }
 ) {
-  let accountsQuery = client
-    .from("accounts_view")
-    .select("*")
-    .eq("active", true);
+  let accountsQuery = client.from("accounts").select("*").eq("active", true);
 
   if (args.incomeBalance) {
     accountsQuery = accountsQuery.eq("incomeBalance", args.incomeBalance);
@@ -299,7 +296,7 @@ export async function getChartOfAccounts(
 
   accountsQuery = setGenericQueryFilters(accountsQuery, args, "number");
 
-  let transactionsQuery = client.rpc("transactions_by_account_number", {
+  let transactionsQuery = client.rpc("journalLinesByAccountNumber", {
     from_date:
       args.startDate ?? getDateNYearsAgo(50).toISOString().split("T")[0],
     to_date: args.endDate ?? new Date().toISOString().split("T")[0],

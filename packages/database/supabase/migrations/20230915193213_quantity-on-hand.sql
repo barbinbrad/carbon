@@ -1,4 +1,4 @@
-CREATE VIEW "part_quantities_view" AS 
+CREATE OR REPLACE VIEW "partQuantities" AS 
   SELECT 
     p."id" AS "partId", 
     loc."id" AS "locationId",

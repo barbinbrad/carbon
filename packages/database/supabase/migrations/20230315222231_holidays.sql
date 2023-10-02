@@ -14,7 +14,7 @@ CREATE TABLE "holiday" (
   CONSTRAINT "holiday_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE VIEW "holiday_years" AS SELECT DISTINCT "year" FROM "holiday";
+CREATE OR REPLACE VIEW "holidayYears" AS SELECT DISTINCT "year" FROM "holiday";
 
 ALTER TABLE "holiday" ENABLE ROW LEVEL SECURITY;
 

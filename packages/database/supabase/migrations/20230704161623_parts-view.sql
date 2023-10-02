@@ -1,4 +1,4 @@
-CREATE VIEW "parts_view" AS 
+CREATE OR REPLACE VIEW "parts" AS 
   SELECT
     p.id,
     p.name,

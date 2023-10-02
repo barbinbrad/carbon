@@ -150,9 +150,9 @@ CREATE POLICY "Employees with document_view can search for documents" ON "search
   FOR SELECT
   USING (coalesce(get_my_claim('document_view')::boolean, false) = true AND entity = 'Document' AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
 
-CREATE POLICY "Employees with parts_view can search for parts" ON "search"
+CREATE POLICY "Employees with parts can search for parts" ON "search"
   FOR SELECT
-  USING (coalesce(get_my_claim('parts_view')::boolean, false) = true AND entity = 'Part' AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+  USING (coalesce(get_my_claim('parts')::boolean, false) = true AND entity = 'Part' AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
 
 -- TODO: suppliers should be able to search for parts that they supply
 

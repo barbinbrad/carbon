@@ -127,7 +127,7 @@ CREATE TRIGGER update_employee_type_group
   AFTER UPDATE on public."employeeType"
   FOR EACH ROW EXECUTE PROCEDURE public.update_employee_type_group();
 
-CREATE VIEW "group_member" AS 
+CREATE OR REPLACE VIEW "groupMembers" AS 
   SELECT
     gm.id,
     g.name,
@@ -173,7 +173,7 @@ CREATE RECURSIVE VIEW groups_recursive
     "isSupplierOrgGroup",
     "isSupplierTypeGroup",
     "user"
-  FROM group_member
+  FROM "groupMembers"
   UNION ALL 
   SELECT 
     g2."groupId", 
@@ -186,10 +186,10 @@ CREATE RECURSIVE VIEW groups_recursive
     g2."isSupplierOrgGroup",
     g2."isSupplierTypeGroup",
     g2."user"
-  FROM group_member g1 
-  INNER JOIN group_member g2 ON g1."memberGroupId" = g2."groupId";
+  FROM "groupMembers" g1 
+  INNER JOIN "groupMembers" g2 ON g1."memberGroupId" = g2."groupId";
 
-CREATE VIEW groups_view AS
+CREATE OR REPLACE VIEW "groups" AS
   SELECT 
     "groupId" as "id", 
     "isEmployeeTypeGroup",
@@ -248,7 +248,7 @@ AS $$
       g."isSupplierOrgGroup",
       g."isSupplierTypeGroup",
       g."users"
-      FROM groups_view g
+      FROM groups g
       WHERE g."id" IN (SELECT * FROM group_ids)
         OR g."parentId" IN (SELECT * FROM group_ids);
   END;

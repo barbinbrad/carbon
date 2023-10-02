@@ -62,11 +62,7 @@ export async function getDocument(
   client: SupabaseClient<Database>,
   documentId: string
 ) {
-  return client
-    .from("documents_view")
-    .select("*")
-    .eq("id", documentId)
-    .single();
+  return client.from("documents").select("*").eq("id", documentId).single();
 }
 
 export async function getDocuments(
@@ -82,7 +78,7 @@ export async function getDocuments(
   }
 ) {
   let query = client
-    .from("documents_view")
+    .from("documents")
     .select("*", {
       count: "exact",
     })
@@ -152,7 +148,7 @@ export async function getDocumentLabels(
   userId: string
 ) {
   return client
-    .from("documents_labels_view")
+    .from("documentLabels")
     .select("*")
     .eq("userId", userId)
     .eq("active", true);

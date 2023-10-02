@@ -1,4 +1,4 @@
-CREATE VIEW "user_default_view" AS
+CREATE OR REPLACE VIEW "userDefaults" AS
   SELECT
     u.id as "userId",
     ej."locationId"

@@ -25,7 +25,7 @@ CREATE TABLE "partnerAbility" (
   CONSTRAINT "partnerAbility_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id")
 );
 
-CREATE VIEW "partners_view" AS
+CREATE OR REPLACE VIEW "partners" AS
   SELECT 
     p.id AS "supplierLocationId", 
     p."active", 

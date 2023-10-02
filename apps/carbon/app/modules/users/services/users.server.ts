@@ -430,7 +430,7 @@ export async function getGroupMembers(
   groupId: string
 ) {
   return client
-    .from("group_member") // group_member is a view
+    .from("groupMembers")
     .select("name, groupId, memberGroupId, memberUserId")
     .eq("groupId", groupId);
 }
@@ -571,11 +571,7 @@ export async function getUserDefaults(
   client: SupabaseClient<Database>,
   userId: string
 ) {
-  return client
-    .from("user_default_view")
-    .select("*")
-    .eq("userId", userId)
-    .single();
+  return client.from("userDefaults").select("*").eq("userId", userId).single();
 }
 
 export async function getUsers(client: SupabaseClient<Database>) {
@@ -697,10 +693,10 @@ function isClaimPermission(key: string, value: unknown) {
 function makeCustomerClaims() {
   // TODO: this should be more dynamic
   const claims: Record<string, boolean> = {
-    documents_view: true,
+    documents: true,
     jobs_view: true,
     sales_view: true,
-    parts_view: true,
+    parts: true,
   };
 
   return claims;
@@ -799,10 +795,10 @@ export function makePermissionsFromEmployeeType(
 function makeSupplierClaims() {
   // TODO: this should be more dynamic
   const claims: Record<string, boolean> = {
-    documents_view: true,
+    documents: true,
     inventory_view: true,
     purchasing_view: true,
-    parts_view: true,
+    parts: true,
   };
 
   return claims;

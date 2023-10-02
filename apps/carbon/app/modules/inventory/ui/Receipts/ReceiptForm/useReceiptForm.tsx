@@ -158,7 +158,7 @@ export default function useReceiptForm({
           purchaseOrderLines,
         ] = await Promise.all([
           supabase
-            .from("purchase_order_view")
+            .from("purchaseOrders")
             .select("*")
             .eq("id", sourceDocumentId)
             .single(),
@@ -168,7 +168,7 @@ export default function useReceiptForm({
             .select("*")
             .eq("receiptId", receipt.receiptId),
           supabase
-            .from("receipt_quantity_received_by_line")
+            .from("receiptQuantityReceivedByLine")
             .select("*")
             .eq("sourceDocumentId", sourceDocumentId),
           locationId

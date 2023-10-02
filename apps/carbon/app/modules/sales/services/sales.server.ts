@@ -103,7 +103,7 @@ export async function getCustomers(
     status: string | null;
   }
 ) {
-  let query = client.from("customers_view").select("*", {
+  let query = client.from("customers").select("*", {
     count: "exact",
   });
 

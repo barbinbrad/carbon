@@ -1,4 +1,4 @@
-CREATE VIEW "suppliers_view" AS 
+CREATE OR REPLACE VIEW "suppliers" AS 
   SELECT 
     s.id,
     s.name,
@@ -26,7 +26,7 @@ CREATE VIEW "suppliers_view" AS
     GROUP BY "supplierId"
   ) p ON p."supplierId" = s.id;
 
-  CREATE VIEW "customers_view" AS 
+  CREATE OR REPLACE VIEW "customers" AS 
   SELECT 
     c.id,
     c.name,

@@ -30,7 +30,7 @@ CREATE POLICY "Certain employees can view payment terms" ON "paymentTerm"
   USING (
     (
       coalesce(get_my_claim('accounting_view')::boolean, false) = true OR
-      coalesce(get_my_claim('parts_view')::boolean, false) = true OR
+      coalesce(get_my_claim('parts')::boolean, false) = true OR
       coalesce(get_my_claim('resources_view')::boolean, false) = true OR
       coalesce(get_my_claim('sales_view')::boolean, false) = true OR
       coalesce(get_my_claim('purchasing_view')::boolean, false) = true
@@ -97,7 +97,7 @@ CREATE POLICY "Certain employees can view shipping methods" ON "shippingMethod"
     (
       coalesce(get_my_claim('accounting_view')::boolean, false) = true OR
       coalesce(get_my_claim('inventory_view')::boolean, false) = true OR
-      coalesce(get_my_claim('parts_view')::boolean, false) = true OR
+      coalesce(get_my_claim('parts')::boolean, false) = true OR
       coalesce(get_my_claim('purchasing_view')::boolean, false) = true OR
       coalesce(get_my_claim('sales_view')::boolean, false) = true
     )
@@ -365,7 +365,7 @@ CREATE POLICY "Users can delete their own purchase order favorites" ON "purchase
     auth.uid()::text = "userId"
   ); 
 
-CREATE VIEW "purchase_order_view" AS
+CREATE OR REPLACE VIEW "purchaseOrders" AS
   SELECT
     p."id",
     p."purchaseOrderId",
@@ -419,7 +419,7 @@ ALTER TABLE "supplier"
   ADD CONSTRAINT "supplier_defaultShippingMethodId_fkey" FOREIGN KEY ("defaultShippingMethodId") REFERENCES "shippingMethod" ("id") ON DELETE SET NULL,
   ADD CONSTRAINT "supplier_defaultShippingTermId_fkey" FOREIGN KEY ("defaultShippingTermId") REFERENCES "shippingTerm" ("id") ON DELETE SET NULL;
 
-CREATE VIEW "purchase_order_suppliers_view" AS
+CREATE OR REPLACE VIEW "purchaseOrderSuppliers" AS
   SELECT DISTINCT
     s."id",
     s."name"

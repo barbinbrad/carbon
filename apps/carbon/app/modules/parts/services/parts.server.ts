@@ -130,7 +130,7 @@ export async function getParts(
     supplierId: string | null;
   }
 ) {
-  let query = client.from("parts_view").select("*", {
+  let query = client.from("parts").select("*", {
     count: "exact",
   });
 
@@ -179,7 +179,7 @@ export async function getPartQuantities(
   locationId: string
 ) {
   return client
-    .from("part_quantities_view")
+    .from("partQuantities")
     .select("*")
     .eq("partId", partId)
     .eq("locationId", locationId)

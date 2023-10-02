@@ -137,7 +137,7 @@ CREATE POLICY "Employees with inventory_delete can delete receipt lines" ON "rec
     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
   );
 
-CREATE VIEW "receipt_quantity_received_by_line" AS 
+CREATE OR REPLACE VIEW "receiptQuantityReceivedByLine" AS 
   SELECT
     r."sourceDocumentId",
     l."lineId",

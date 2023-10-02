@@ -107,6 +107,21 @@ export default function useBreadcrumbs(): Route[] {
           name: "Shipping Methods",
           to: match.pathname,
         });
+      case "routes/x+/invoicing+/_layout":
+        return acc.concat({
+          name: "Invoicing",
+          to: match.pathname,
+        });
+      case "routes/x+/invoicing+/payable":
+        return acc.concat({
+          name: "Accounts Payable",
+          to: match.pathname,
+        });
+      case "routes/x+/invoicing+/receivable":
+        return acc.concat({
+          name: "Accounts Receivable",
+          to: match.pathname,
+        });
       case "routes/x+/parts+/index":
         return acc.concat({
           name: "Parts",
@@ -137,6 +152,11 @@ export default function useBreadcrumbs(): Route[] {
       case "routes/x+/parts+/groups":
         return acc.concat({
           name: "Groups",
+          to: match.pathname,
+        });
+      case "routes/x+/parts+/uom":
+        return acc.concat({
+          name: "Units",
           to: match.pathname,
         });
       case "routes/x+/purchase-order+/_layout":

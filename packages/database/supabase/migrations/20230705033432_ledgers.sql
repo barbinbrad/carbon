@@ -240,7 +240,7 @@ CREATE POLICY "Certain employees can view the parts ledger" ON "partLedger"
   USING (
     (
       coalesce(get_my_claim('accounting_view')::boolean, false) = true OR
-      coalesce(get_my_claim('parts_view')::boolean, false) = true
+      coalesce(get_my_claim('parts')::boolean, false) = true
     )
     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
   );
@@ -288,7 +288,7 @@ CREATE TABLE "supplierLedger" (
 );
 
 
-CREATE OR REPLACE FUNCTION transactions_by_account_number(
+CREATE OR REPLACE FUNCTION "journalLinesByAccountNumber" (
   from_date DATE DEFAULT (now() - INTERVAL '100 year'),
   to_date DATE DEFAULT now()
 ) 

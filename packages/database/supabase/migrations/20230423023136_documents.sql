@@ -23,9 +23,9 @@ CREATE INDEX "document_visibility_idx" ON "document" USING GIN ("readGroups", "w
 
 ALTER TABLE "document" ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Users with documents_view can view documents where they are in the readGroups" ON "document" 
+CREATE POLICY "Users with documents can view documents where they are in the readGroups" ON "document" 
   FOR SELECT USING (
-    coalesce(get_my_claim('documents_view')::boolean, false) = true 
+    coalesce(get_my_claim('documents')::boolean, false) = true 
     AND (groups_for_user(auth.uid()::text) && "readGroups") = true
   );
 
@@ -51,7 +51,7 @@ CREATE POLICY "Private buckets view requires ownership or document.readGroups" O
 FOR SELECT USING (
     bucket_id = 'private'
     AND (auth.role() = 'authenticated')
-    AND coalesce(get_my_claim('documents_view')::boolean, false) = true
+    AND coalesce(get_my_claim('documents')::boolean, false) = true
     AND (
         (storage.foldername(name))[1] = auth.uid()::text
         OR storage.filename(name) IN (
@@ -211,13 +211,13 @@ CREATE TRIGGER edit_document_transaction
   AFTER UPDATE on public."document"
   FOR EACH ROW EXECUTE PROCEDURE public.edit_document_transaction();
 
-CREATE VIEW "documents_labels_view" AS
+CREATE OR REPLACE VIEW "documentLabels" AS
   SELECT DISTINCT
     "label",
     "userId"
   FROM "documentLabel";
 
-CREATE VIEW "documents_view" AS 
+CREATE OR REPLACE VIEW "documents" AS 
   SELECT
     d.id,
     d.path,

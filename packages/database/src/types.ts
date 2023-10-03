@@ -924,145 +924,6 @@ export interface Database {
           }
         ];
       };
-      accountsPayableInvoice: {
-        Row: {
-          accountingPeriodId: string;
-          accountsPayableInvoiceId: string;
-          balance: number;
-          contactId: string | null;
-          createdAt: string;
-          createdBy: string;
-          currencyCode: string;
-          dateDue: string | null;
-          dateIssued: string | null;
-          datePaid: string | null;
-          exchangeRate: number;
-          id: string;
-          subtotal: number;
-          supplierId: string | null;
-          totalAmount: number;
-          totalDiscount: number;
-          totalTax: number;
-          updatedAt: string | null;
-          updatedBy: string | null;
-        };
-        Insert: {
-          accountingPeriodId: string;
-          accountsPayableInvoiceId: string;
-          balance?: number;
-          contactId?: string | null;
-          createdAt?: string;
-          createdBy: string;
-          currencyCode: string;
-          dateDue?: string | null;
-          dateIssued?: string | null;
-          datePaid?: string | null;
-          exchangeRate?: number;
-          id?: string;
-          subtotal?: number;
-          supplierId?: string | null;
-          totalAmount?: number;
-          totalDiscount?: number;
-          totalTax?: number;
-          updatedAt?: string | null;
-          updatedBy?: string | null;
-        };
-        Update: {
-          accountingPeriodId?: string;
-          accountsPayableInvoiceId?: string;
-          balance?: number;
-          contactId?: string | null;
-          createdAt?: string;
-          createdBy?: string;
-          currencyCode?: string;
-          dateDue?: string | null;
-          dateIssued?: string | null;
-          datePaid?: string | null;
-          exchangeRate?: number;
-          id?: string;
-          subtotal?: number;
-          supplierId?: string | null;
-          totalAmount?: number;
-          totalDiscount?: number;
-          totalTax?: number;
-          updatedAt?: string | null;
-          updatedBy?: string | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "accountsPayableInvoice_accountingPeriodId_fkey";
-            columns: ["accountingPeriodId"];
-            referencedRelation: "accountingPeriod";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "accountsPayableInvoice_contactId_fkey";
-            columns: ["contactId"];
-            referencedRelation: "contact";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "accountsPayableInvoice_createdBy_fkey";
-            columns: ["createdBy"];
-            referencedRelation: "user";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "accountsPayableInvoice_createdBy_fkey";
-            columns: ["createdBy"];
-            referencedRelation: "userDefaults";
-            referencedColumns: ["userId"];
-          },
-          {
-            foreignKeyName: "accountsPayableInvoice_currencyCode_fkey";
-            columns: ["currencyCode"];
-            referencedRelation: "currency";
-            referencedColumns: ["code"];
-          },
-          {
-            foreignKeyName: "accountsPayableInvoice_supplierId_fkey";
-            columns: ["supplierId"];
-            referencedRelation: "supplier";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "accountsPayableInvoice_supplierId_fkey";
-            columns: ["supplierId"];
-            referencedRelation: "contractors";
-            referencedColumns: ["supplierId"];
-          },
-          {
-            foreignKeyName: "accountsPayableInvoice_supplierId_fkey";
-            columns: ["supplierId"];
-            referencedRelation: "partners";
-            referencedColumns: ["supplierId"];
-          },
-          {
-            foreignKeyName: "accountsPayableInvoice_supplierId_fkey";
-            columns: ["supplierId"];
-            referencedRelation: "purchaseOrderSuppliers";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "accountsPayableInvoice_supplierId_fkey";
-            columns: ["supplierId"];
-            referencedRelation: "suppliers";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "accountsPayableInvoice_updatedBy_fkey";
-            columns: ["updatedBy"];
-            referencedRelation: "user";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "accountsPayableInvoice_updatedBy_fkey";
-            columns: ["updatedBy"];
-            referencedRelation: "userDefaults";
-            referencedColumns: ["userId"];
-          }
-        ];
-      };
       accountSubcategory: {
         Row: {
           accountCategoryId: string;
@@ -4043,6 +3904,431 @@ export interface Database {
           },
           {
             foreignKeyName: "partUnitSalePrice_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "userDefaults";
+            referencedColumns: ["userId"];
+          }
+        ];
+      };
+      payableInvoice: {
+        Row: {
+          accountingPeriodId: string;
+          balance: number;
+          contactId: string | null;
+          createdAt: string;
+          createdBy: string;
+          currencyCode: string;
+          dateDue: string | null;
+          dateIssued: string | null;
+          datePaid: string | null;
+          exchangeRate: number;
+          id: string;
+          invoiceId: string;
+          subtotal: number;
+          supplierId: string | null;
+          totalAmount: number;
+          totalDiscount: number;
+          totalTax: number;
+          updatedAt: string | null;
+          updatedBy: string | null;
+        };
+        Insert: {
+          accountingPeriodId: string;
+          balance?: number;
+          contactId?: string | null;
+          createdAt?: string;
+          createdBy: string;
+          currencyCode: string;
+          dateDue?: string | null;
+          dateIssued?: string | null;
+          datePaid?: string | null;
+          exchangeRate?: number;
+          id?: string;
+          invoiceId: string;
+          subtotal?: number;
+          supplierId?: string | null;
+          totalAmount?: number;
+          totalDiscount?: number;
+          totalTax?: number;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
+        };
+        Update: {
+          accountingPeriodId?: string;
+          balance?: number;
+          contactId?: string | null;
+          createdAt?: string;
+          createdBy?: string;
+          currencyCode?: string;
+          dateDue?: string | null;
+          dateIssued?: string | null;
+          datePaid?: string | null;
+          exchangeRate?: number;
+          id?: string;
+          invoiceId?: string;
+          subtotal?: number;
+          supplierId?: string | null;
+          totalAmount?: number;
+          totalDiscount?: number;
+          totalTax?: number;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "payableInvoice_accountingPeriodId_fkey";
+            columns: ["accountingPeriodId"];
+            referencedRelation: "accountingPeriod";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "payableInvoice_contactId_fkey";
+            columns: ["contactId"];
+            referencedRelation: "contact";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "payableInvoice_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "payableInvoice_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "userDefaults";
+            referencedColumns: ["userId"];
+          },
+          {
+            foreignKeyName: "payableInvoice_currencyCode_fkey";
+            columns: ["currencyCode"];
+            referencedRelation: "currency";
+            referencedColumns: ["code"];
+          },
+          {
+            foreignKeyName: "payableInvoice_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "supplier";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "payableInvoice_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "contractors";
+            referencedColumns: ["supplierId"];
+          },
+          {
+            foreignKeyName: "payableInvoice_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "partners";
+            referencedColumns: ["supplierId"];
+          },
+          {
+            foreignKeyName: "payableInvoice_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "purchaseOrderSuppliers";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "payableInvoice_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "suppliers";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "payableInvoice_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "payableInvoice_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "userDefaults";
+            referencedColumns: ["userId"];
+          }
+        ];
+      };
+      payableInvoiceLine: {
+        Row: {
+          accountNumber: string | null;
+          assetId: string | null;
+          createdAt: string;
+          createdBy: string;
+          currencyCode: string;
+          description: string | null;
+          exchangeRate: number;
+          id: string;
+          invoiceId: string;
+          invoiceLineType: Database["public"]["Enums"]["payableLineType"];
+          partId: string | null;
+          quantity: number;
+          totalAmount: number | null;
+          unitPrice: number;
+          updatedAt: string | null;
+          updatedBy: string | null;
+        };
+        Insert: {
+          accountNumber?: string | null;
+          assetId?: string | null;
+          createdAt?: string;
+          createdBy: string;
+          currencyCode: string;
+          description?: string | null;
+          exchangeRate?: number;
+          id?: string;
+          invoiceId: string;
+          invoiceLineType: Database["public"]["Enums"]["payableLineType"];
+          partId?: string | null;
+          quantity?: number;
+          totalAmount?: number | null;
+          unitPrice?: number;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
+        };
+        Update: {
+          accountNumber?: string | null;
+          assetId?: string | null;
+          createdAt?: string;
+          createdBy?: string;
+          currencyCode?: string;
+          description?: string | null;
+          exchangeRate?: number;
+          id?: string;
+          invoiceId?: string;
+          invoiceLineType?: Database["public"]["Enums"]["payableLineType"];
+          partId?: string | null;
+          quantity?: number;
+          totalAmount?: number | null;
+          unitPrice?: number;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "payableInvoiceLines_accountNumber_fkey";
+            columns: ["accountNumber"];
+            referencedRelation: "account";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "payableInvoiceLines_accountNumber_fkey";
+            columns: ["accountNumber"];
+            referencedRelation: "accounts";
+            referencedColumns: ["number"];
+          },
+          {
+            foreignKeyName: "payableInvoiceLines_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "payableInvoiceLines_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "userDefaults";
+            referencedColumns: ["userId"];
+          },
+          {
+            foreignKeyName: "payableInvoiceLines_currencyCode_fkey";
+            columns: ["currencyCode"];
+            referencedRelation: "currency";
+            referencedColumns: ["code"];
+          },
+          {
+            foreignKeyName: "payableInvoiceLines_invoiceId_fkey";
+            columns: ["invoiceId"];
+            referencedRelation: "payableInvoice";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "payableInvoiceLines_partId_fkey";
+            columns: ["partId"];
+            referencedRelation: "part";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "payableInvoiceLines_partId_fkey";
+            columns: ["partId"];
+            referencedRelation: "partQuantities";
+            referencedColumns: ["partId"];
+          },
+          {
+            foreignKeyName: "payableInvoiceLines_partId_fkey";
+            columns: ["partId"];
+            referencedRelation: "parts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "payableInvoiceLines_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "payableInvoiceLines_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "userDefaults";
+            referencedColumns: ["userId"];
+          }
+        ];
+      };
+      payableInvoicePaymentRelation: {
+        Row: {
+          id: string;
+          invoiceId: string;
+          paymentId: string;
+        };
+        Insert: {
+          id?: string;
+          invoiceId: string;
+          paymentId: string;
+        };
+        Update: {
+          id?: string;
+          invoiceId?: string;
+          paymentId?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "payablePayments_invoiceId_fkey";
+            columns: ["invoiceId"];
+            referencedRelation: "payableInvoice";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "payablePayments_paymentId_fkey";
+            columns: ["paymentId"];
+            referencedRelation: "payablePayment";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      payableInvoiceStatusHistory: {
+        Row: {
+          createdAt: string;
+          id: string;
+          invoiceId: string;
+          status: Database["public"]["Enums"]["payableInvoiceStatus"];
+        };
+        Insert: {
+          createdAt?: string;
+          id?: string;
+          invoiceId: string;
+          status: Database["public"]["Enums"]["payableInvoiceStatus"];
+        };
+        Update: {
+          createdAt?: string;
+          id?: string;
+          invoiceId?: string;
+          status?: Database["public"]["Enums"]["payableInvoiceStatus"];
+        };
+        Relationships: [
+          {
+            foreignKeyName: "payableInvoiceStatusHistory_invoiceId_fkey";
+            columns: ["invoiceId"];
+            referencedRelation: "payableInvoice";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      payablePayment: {
+        Row: {
+          createdAt: string;
+          createdBy: string;
+          currencyCode: string;
+          exchangeRate: number;
+          id: string;
+          paymentDate: string | null;
+          paymentId: string;
+          supplierId: string;
+          totalAmount: number;
+          updatedAt: string | null;
+          updatedBy: string | null;
+        };
+        Insert: {
+          createdAt?: string;
+          createdBy: string;
+          currencyCode: string;
+          exchangeRate?: number;
+          id?: string;
+          paymentDate?: string | null;
+          paymentId: string;
+          supplierId: string;
+          totalAmount?: number;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
+        };
+        Update: {
+          createdAt?: string;
+          createdBy?: string;
+          currencyCode?: string;
+          exchangeRate?: number;
+          id?: string;
+          paymentDate?: string | null;
+          paymentId?: string;
+          supplierId?: string;
+          totalAmount?: number;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "payablePayment_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "payablePayment_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "userDefaults";
+            referencedColumns: ["userId"];
+          },
+          {
+            foreignKeyName: "payablePayment_currencyCode_fkey";
+            columns: ["currencyCode"];
+            referencedRelation: "currency";
+            referencedColumns: ["code"];
+          },
+          {
+            foreignKeyName: "payablePayment_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "supplier";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "payablePayment_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "contractors";
+            referencedColumns: ["supplierId"];
+          },
+          {
+            foreignKeyName: "payablePayment_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "partners";
+            referencedColumns: ["supplierId"];
+          },
+          {
+            foreignKeyName: "payablePayment_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "purchaseOrderSuppliers";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "payablePayment_supplierId_fkey";
+            columns: ["supplierId"];
+            referencedRelation: "suppliers";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "payablePayment_updatedBy_fkey";
+            columns: ["updatedBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "payablePayment_updatedBy_fkey";
             columns: ["updatedBy"];
             referencedRelation: "userDefaults";
             referencedColumns: ["userId"];
@@ -7733,12 +8019,6 @@ export interface Database {
     };
     Enums: {
       accountingPeriodStatus: "Inactive" | "Active";
-      accountsPayableInvoiceStatus:
-        | "Draft"
-        | "Issued"
-        | "Paid"
-        | "Partially Paid"
-        | "Voided";
       costLedgerType:
         | "Direct Cost"
         | "Revaluation"
@@ -7845,6 +8125,13 @@ export interface Database {
         | "Maximum Quantity";
       partReplenishmentSystem: "Buy" | "Make" | "Buy and Make";
       partType: "Inventory" | "Non-Inventory" | "Service";
+      payableInvoiceStatus:
+        | "Draft"
+        | "Issued"
+        | "Paid"
+        | "Partially Paid"
+        | "Voided";
+      payableLineType: "G/L Account" | "Part" | "Fixed Asset";
       paymentTermCalculationMethod: "Net" | "End of Month" | "Day of Month";
       purchaseOrderLineType: "Comment" | "G/L Account" | "Part" | "Fixed Asset";
       purchaseOrderStatus:

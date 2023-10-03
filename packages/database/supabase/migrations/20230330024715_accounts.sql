@@ -231,7 +231,7 @@ CREATE POLICY "Certain employees can view accounts" ON "account"
   USING (
     (
       coalesce(get_my_claim('accounting_view')::boolean, false) = true OR
-      coalesce(get_my_claim('parts')::boolean, false) = true OR
+      coalesce(get_my_claim('parts_view')::boolean, false) = true OR
       coalesce(get_my_claim('resources_view')::boolean, false) = true OR
       coalesce(get_my_claim('sales_view')::boolean, false) = true OR
       coalesce(get_my_claim('purchasing_view')::boolean, false) = true

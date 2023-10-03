@@ -3,5 +3,6 @@
   "fetching": "Data Fetching",
   "writing": "Data Writes",
   "realtime": "Realtime",
-  "transactions": "Transactions"
+  "transactions": "Transactions",
+  "serverless": "Serverless"
 }

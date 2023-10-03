@@ -9,7 +9,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
-import { error, success } from "~/utils/result";
+import { error } from "~/utils/result";
 
 export async function action({ request }: ActionFunctionArgs) {
   assertIsPost(request);
@@ -41,10 +41,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const customerId = createCustomer.data?.id;
 
-  return redirect(
-    `/x/customer/${customerId}`,
-    await flash(request, success("Created customer"))
-  );
+  return redirect(`/x/customer/${customerId}`);
 }
 
 export default function CustomersNewRoute() {

@@ -17,7 +17,7 @@ import { getNextSequence, rollbackNextSequence } from "~/modules/settings";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
-import { error, success } from "~/utils/result";
+import { error } from "~/utils/result";
 
 export async function action({ request }: ActionFunctionArgs) {
   assertIsPost(request);
@@ -64,13 +64,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const order = createPurchaseOrder.data?.[0];
 
-  return redirect(
-    `/x/purchase-order/${order?.id}`,
-    await flash(
-      request,
-      success(`Created purchase order ${order?.purchaseOrderId}`)
-    )
-  );
+  return redirect(`/x/purchase-order/${order?.id}`);
 }
 
 export default function PurchaseOrderNewRoute() {

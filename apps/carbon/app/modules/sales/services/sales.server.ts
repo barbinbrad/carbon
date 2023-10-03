@@ -220,6 +220,7 @@ export async function insertCustomerContact(
 ) {
   // Need to use service role here because it violates RLS
   // to select a contact that does not belong to any customer
+  // TODO: replace this with a transaction
   const insertContact = await getSupabaseServiceRole()
     .from("contact")
     .insert([customerContact.contact])

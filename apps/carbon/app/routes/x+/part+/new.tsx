@@ -6,7 +6,7 @@ import { PartForm, partValidator, upsertPart } from "~/modules/parts";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
-import { error, success } from "~/utils/result";
+import { error } from "~/utils/result";
 
 export async function action({ request }: ActionFunctionArgs) {
   assertIsPost(request);
@@ -34,10 +34,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const partId = createPart.data?.id;
 
-  return redirect(
-    `/x/part/${partId}`,
-    await flash(request, success("Created part"))
-  );
+  return redirect(`/x/part/${partId}`);
 }
 
 export default function PartsNewRoute() {

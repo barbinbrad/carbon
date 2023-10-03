@@ -24,8 +24,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const { partId } = params;
   if (!partId) throw new Error("Could not find partId");
 
-  console.log({ partId });
-
   const [partCost, accounts] = await Promise.all([
     getPartCost(client, partId),
     getAccountsList(client),

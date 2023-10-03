@@ -5,7 +5,7 @@ import { attributeValidator, insertAttribute } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
-import { error, success } from "~/utils/result";
+import { error } from "~/utils/result";
 
 export async function action({ request }: ActionFunctionArgs) {
   assertIsPost(request);
@@ -47,8 +47,5 @@ export async function action({ request }: ActionFunctionArgs) {
     );
   }
 
-  return redirect(
-    `/x/resources/attributes`,
-    await flash(request, success("Created attribute"))
-  );
+  return redirect(`/x/resources/attributes`);
 }

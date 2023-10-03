@@ -1527,7 +1527,7 @@ CREATE POLICY "Employees with document_view can search for documents" ON "search
 
 CREATE POLICY "Employees with parts can search for parts" ON "search"
   FOR SELECT
-  USING (coalesce(get_my_claim('parts')::boolean, false) = true AND entity = 'Part' AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+  USING (coalesce(get_my_claim('parts_view')::boolean, false) = true AND entity = 'Part' AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
 
 -- TODO: suppliers should be able to search for parts that they supply
 
@@ -3155,7 +3155,7 @@ CREATE POLICY "Certain employees can view accounts" ON "account"
   USING (
     (
       coalesce(get_my_claim('accounting_view')::boolean, false) = true OR
-      coalesce(get_my_claim('parts')::boolean, false) = true OR
+      coalesce(get_my_claim('parts_view')::boolean, false) = true OR
       coalesce(get_my_claim('resources_view')::boolean, false) = true OR
       coalesce(get_my_claim('sales_view')::boolean, false) = true OR
       coalesce(get_my_claim('purchasing_view')::boolean, false) = true
@@ -3248,7 +3248,7 @@ ALTER TABLE "partGroup" ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Employees with parts can view part groups" ON "partGroup"
   FOR SELECT
   USING (
-    coalesce(get_my_claim('parts')::boolean, false) = true 
+    coalesce(get_my_claim('parts_view')::boolean, false) = true 
     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
   );
   
@@ -3494,7 +3494,7 @@ ALTER TABLE "partCost" ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Employees with part_view can view part costs" ON "partCost"
   FOR SELECT
   USING (
-    coalesce(get_my_claim('parts')::boolean,false) 
+    coalesce(get_my_claim('parts_view')::boolean,false) 
     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
   );
 
@@ -3532,7 +3532,7 @@ ALTER TABLE "partUnitSalePrice" ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Employees with part_view can view part sale prices" ON "partUnitSalePrice"
   FOR SELECT
   USING (
-    coalesce(get_my_claim('parts')::boolean,false) 
+    coalesce(get_my_claim('parts_view')::boolean,false) 
     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
   );
 
@@ -3572,7 +3572,7 @@ ALTER TABLE "partSupplier" ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Employees with part_view can view part suppliers" ON "partSupplier"
   FOR SELECT
   USING (
-    coalesce(get_my_claim('parts')::boolean,false) 
+    coalesce(get_my_claim('parts_view')::boolean,false) 
     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
   );
 
@@ -3600,7 +3600,7 @@ CREATE POLICY "Employees with parts_delete can delete part suppliers" ON "partSu
 CREATE POLICY "Suppliers with parts can view their own part suppliers" ON "partSupplier"
   FOR SELECT
   USING (
-    coalesce(get_my_claim('parts')::boolean,false) 
+    coalesce(get_my_claim('parts_view')::boolean,false) 
     AND (get_my_claim('role'::text)) = '"supplier"'::jsonb
     AND  "supplierId" IN (
       SELECT "supplierId" FROM "supplierAccount" WHERE id::uuid = auth.uid()
@@ -3660,7 +3660,7 @@ ALTER TABLE "partReplenishment" ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Employees with part_view can view part costs" ON "partReplenishment"
   FOR SELECT
   USING (
-    coalesce(get_my_claim('parts')::boolean,false) 
+    coalesce(get_my_claim('parts_view')::boolean,false) 
     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
   );
 
@@ -3675,7 +3675,7 @@ CREATE POLICY "Employees with parts_update can update part costs" ON "partReplen
 CREATE POLICY "Suppliers with parts can view parts they created or supply" ON "part"
   FOR SELECT
   USING (
-    coalesce(get_my_claim('parts')::boolean, false) = true 
+    coalesce(get_my_claim('parts_view')::boolean, false) = true 
     AND (get_my_claim('role'::text)) = '"supplier"'::jsonb 
     AND (
       "createdBy" = auth.uid()::text
@@ -3733,7 +3733,7 @@ CREATE POLICY "Suppliers with parts_delete can delete parts that they created or
 CREATE POLICY "Suppliers with parts can view part costs they supply" ON "partCost"
   FOR SELECT
   USING (
-    coalesce(get_my_claim('parts')::boolean, false) = true 
+    coalesce(get_my_claim('parts_view')::boolean, false) = true 
     AND (get_my_claim('role'::text)) = '"supplier"'::jsonb 
     AND (
       "partId" IN (
@@ -3761,7 +3761,7 @@ CREATE POLICY "Suppliers with parts_update can update parts costs that they supp
 CREATE POLICY "Suppliers with parts can view part replenishments they supply" ON "partReplenishment"
   FOR SELECT
   USING (
-    coalesce(get_my_claim('parts')::boolean, false) = true 
+    coalesce(get_my_claim('parts_view')::boolean, false) = true 
     AND (get_my_claim('role'::text)) = '"supplier"'::jsonb 
     AND (
       "partId" IN (
@@ -3894,7 +3894,7 @@ ALTER TABLE "partPlanning" ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Employees with parts can view part planning" ON "partPlanning"
   FOR SELECT
   USING (
-    coalesce(get_my_claim('parts')::boolean,false) 
+    coalesce(get_my_claim('parts_view')::boolean,false) 
     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
   );
 
@@ -3902,7 +3902,7 @@ CREATE POLICY "Employees with parts can view part planning" ON "partPlanning"
 CREATE POLICY "Employees with parts can insert part planning" ON "partPlanning"
   FOR INSERT
   WITH CHECK (
-    coalesce(get_my_claim('parts')::boolean,false) 
+    coalesce(get_my_claim('parts_view')::boolean,false) 
     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
   );
 
@@ -3939,7 +3939,7 @@ ALTER TABLE "partInventory" ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Employees with part_view can view part planning" ON "partInventory"
   FOR SELECT
   USING (
-    coalesce(get_my_claim('parts')::boolean,false) 
+    coalesce(get_my_claim('parts_view')::boolean,false) 
     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
   );
 
@@ -3947,7 +3947,7 @@ CREATE POLICY "Employees with part_view can view part planning" ON "partInventor
 CREATE POLICY "Employees with part_view can insert part planning" ON "partInventory"
   FOR INSERT
   WITH CHECK (
-    coalesce(get_my_claim('parts')::boolean,false) 
+    coalesce(get_my_claim('parts_view')::boolean,false) 
     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
   );
 
@@ -3996,7 +3996,7 @@ ALTER TABLE "document" ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Users with documents can view documents where they are in the readGroups" ON "document" 
   FOR SELECT USING (
-    coalesce(get_my_claim('documents')::boolean, false) = true 
+    coalesce(get_my_claim('documents_view')::boolean, false) = true 
     AND (groups_for_user(auth.uid()::text) && "readGroups") = true
   );
 
@@ -4022,7 +4022,7 @@ CREATE POLICY "Private buckets view requires ownership or document.readGroups" O
 FOR SELECT USING (
     bucket_id = 'private'
     AND (auth.role() = 'authenticated')
-    AND coalesce(get_my_claim('documents')::boolean, false) = true
+    AND coalesce(get_my_claim('documents_view')::boolean, false) = true
     AND (
         (storage.foldername(name))[1] = auth.uid()::text
         OR storage.filename(name) IN (
@@ -4253,7 +4253,7 @@ CREATE POLICY "Certain employees can view payment terms" ON "paymentTerm"
   USING (
     (
       coalesce(get_my_claim('accounting_view')::boolean, false) = true OR
-      coalesce(get_my_claim('parts')::boolean, false) = true OR
+      coalesce(get_my_claim('parts_view')::boolean, false) = true OR
       coalesce(get_my_claim('resources_view')::boolean, false) = true OR
       coalesce(get_my_claim('sales_view')::boolean, false) = true OR
       coalesce(get_my_claim('purchasing_view')::boolean, false) = true
@@ -4320,7 +4320,7 @@ CREATE POLICY "Certain employees can view shipping methods" ON "shippingMethod"
     (
       coalesce(get_my_claim('accounting_view')::boolean, false) = true OR
       coalesce(get_my_claim('inventory_view')::boolean, false) = true OR
-      coalesce(get_my_claim('parts')::boolean, false) = true OR
+      coalesce(get_my_claim('parts_view')::boolean, false) = true OR
       coalesce(get_my_claim('purchasing_view')::boolean, false) = true OR
       coalesce(get_my_claim('sales_view')::boolean, false) = true
     )
@@ -5440,7 +5440,7 @@ CREATE POLICY "Certain employees can view the parts ledger" ON "partLedger"
   USING (
     (
       coalesce(get_my_claim('accounting_view')::boolean, false) = true OR
-      coalesce(get_my_claim('parts')::boolean, false) = true
+      coalesce(get_my_claim('parts_view')::boolean, false) = true
     )
     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
   );

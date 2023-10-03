@@ -278,6 +278,7 @@ const DocumentsTable = memo(({ data, count, labels }: DocumentsTableProps) => {
   const defaultColumnVisibility = {
     createdAt: false,
     updatedAt: false,
+    updatedBy: false,
     description: false,
   };
 

@@ -25,7 +25,7 @@ ALTER TABLE "document" ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Users with documents can view documents where they are in the readGroups" ON "document" 
   FOR SELECT USING (
-    coalesce(get_my_claim('documents')::boolean, false) = true 
+    coalesce(get_my_claim('documents_view')::boolean, false) = true 
     AND (groups_for_user(auth.uid()::text) && "readGroups") = true
   );
 
@@ -51,7 +51,7 @@ CREATE POLICY "Private buckets view requires ownership or document.readGroups" O
 FOR SELECT USING (
     bucket_id = 'private'
     AND (auth.role() = 'authenticated')
-    AND coalesce(get_my_claim('documents')::boolean, false) = true
+    AND coalesce(get_my_claim('documents_view')::boolean, false) = true
     AND (
         (storage.foldername(name))[1] = auth.uid()::text
         OR storage.filename(name) IN (

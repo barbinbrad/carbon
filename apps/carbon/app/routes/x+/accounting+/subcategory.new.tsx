@@ -8,7 +8,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
-import { error, success } from "~/utils/result";
+import { error } from "~/utils/result";
 
 export async function action({ request }: ActionFunctionArgs) {
   assertIsPost(request);
@@ -43,8 +43,5 @@ export async function action({ request }: ActionFunctionArgs) {
     );
   }
 
-  return redirect(
-    `/x/accounting/categories`,
-    await flash(request, success("Created G/L account subcategory"))
-  );
+  return redirect(`/x/accounting/categories`);
 }

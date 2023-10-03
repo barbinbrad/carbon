@@ -15,7 +15,7 @@ type ReceiptsTableProps = {
 };
 
 const ReceiptsTable = memo(({ data, count }: ReceiptsTableProps) => {
-  useRealtime("receipt");
+  useRealtime("receipt", `id=in.(${data.map((d) => d.id).join(",")})`);
 
   const [params] = useUrlParams();
   const navigate = useNavigate();

@@ -6700,5 +6700,6 @@ CREATE POLICY "Employees with invoicing_view can view AP invoice/payment relatio
     coalesce(get_my_claim('invoicing_view')::boolean,false) 
     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
   );
+
 ```
 

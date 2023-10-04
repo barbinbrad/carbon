@@ -150,11 +150,12 @@ CREATE TYPE "purchaseOrderType" AS ENUM (
 
 CREATE TYPE "purchaseOrderStatus" AS ENUM (
   'Draft',
-  'In Review',
-  'In External Review',
-  'Approved',
+  'To Review',
   'Rejected',
-  'Released',
+  'To Receive',
+  'To Receive and Invoice',
+  'To Invoice',
+  'Completed',
   'Closed'
 );
 
@@ -195,6 +196,19 @@ CREATE TYPE "purchaseOrderLineType" AS ENUM (
   'Part',
   'Fixed Asset'
 );
+
+CREATE TABLE "purchaseOrderStatusHistory" (
+  "id" TEXT NOT NULL DEFAULT xid(),
+  "purchaseOrderId" TEXT NOT NULL,
+  "status" "purchaseOrderStatus" NOT NULL,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+  "createdBy" TEXT NOT NULL,
+
+  CONSTRAINT "purchaseOrderStatusHistory_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "purchaseOrderStatusHistory_purchaseOrderId_fkey" FOREIGN KEY ("purchaseOrderId") REFERENCES "purchaseOrder" ("id") ON DELETE CASCADE,
+  CONSTRAINT "purchaseOrderStatusHistory_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE RESTRICT
+);
+
 
 CREATE TABLE "purchaseOrderLine" (
   "id" TEXT NOT NULL DEFAULT xid(),
@@ -381,6 +395,7 @@ CREATE OR REPLACE VIEW "purchaseOrders" AS
     pd."receiptPromisedDate",
     pd."dropShipment",
     pol."lineCount",
+    pol."subtotal",
     l."id" AS "locationId",
     l."name" AS "locationName",
     s."name" AS "supplierName",
@@ -398,7 +413,7 @@ CREATE OR REPLACE VIEW "purchaseOrders" AS
   FROM "purchaseOrder" p
   LEFT JOIN "purchaseOrderDelivery" pd ON pd."id" = p."id"
   LEFT JOIN (
-    SELECT "purchaseOrderId", COUNT(*) AS "lineCount"
+    SELECT "purchaseOrderId", COUNT(*) AS "lineCount", SUM("unitPrice" * "purchaseQuantity") AS "subtotal"
     FROM "purchaseOrderLine"
     GROUP BY "purchaseOrderId"
   ) pol ON pol."purchaseOrderId" = p."id"

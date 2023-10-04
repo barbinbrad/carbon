@@ -13,6 +13,8 @@ export const receiptSourceDocumentType = [
   // "Manufacturing Output",
 ] as const;
 
+export const receiptStatusType = ["Draft", "Pending", "Posted"] as const;
+
 export const receiptValidator = withZod(
   z.object({
     id: z.string().min(1),

@@ -83,6 +83,14 @@ CREATE POLICY "Suppliers with purchasing_view can search for their own purchase 
       )
   );
 
+-- Purchase Order Status History
+
+ALTER TABLE "purchaseOrderStatusHistory" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Anyone with purchasing_view can view purchase order status history" ON "purchaseOrderStatusHistory"
+  FOR SELECT
+  USING (coalesce(get_my_claim('purchasing_view')::boolean, false) = true);
+
 -- Purchase Order Lines
 
 ALTER TABLE "purchaseOrderLine" ENABLE ROW LEVEL SECURITY;

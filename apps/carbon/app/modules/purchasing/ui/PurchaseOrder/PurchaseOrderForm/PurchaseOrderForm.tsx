@@ -110,7 +110,7 @@ const PurchaseOrderForm = ({ initialValues }: PurchaseOrderFormProps) => {
                 options={typeOptions}
                 isReadOnly={isSupplier}
               />
-              {isEditing && (
+              {isEditing && permissions.can("delete", "purchasing") && (
                 <SelectControlled
                   name="status"
                   label="Status"

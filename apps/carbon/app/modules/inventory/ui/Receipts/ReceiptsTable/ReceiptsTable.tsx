@@ -1,5 +1,5 @@
 import { formatDate } from "@carbon/utils";
-import { Link, MenuItem, Tag } from "@chakra-ui/react";
+import { Link, MenuItem } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
@@ -7,7 +7,8 @@ import { BsPencilSquare } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { Table } from "~/components";
 import { usePermissions, useRealtime, useUrlParams } from "~/hooks";
-import type { Receipt } from "~/modules/inventory";
+import type { Receipt, receiptStatusType } from "~/modules/inventory";
+import { ReceiptStatus } from "~/modules/inventory";
 
 type ReceiptsTableProps = {
   data: Receipt[];
@@ -67,25 +68,11 @@ const ReceiptsTable = memo(({ data, count }: ReceiptsTableProps) => {
         cell: (item) => item.getValue() ?? null,
       },
       {
-        accessorKey: "supplier.name",
-        header: "Supplier",
-        cell: (item) => item.getValue() ?? null,
-      },
-      {
         accessorKey: "status",
         header: "Status",
         cell: (item) => {
-          const status = item.getValue<"Draft" | "Pending" | "Posted">();
-          switch (status) {
-            case "Draft":
-              return <Tag>Draft</Tag>;
-            case "Pending":
-              return <Tag colorScheme="orange">Pending</Tag>;
-            case "Posted":
-              return <Tag colorScheme="green">Posted</Tag>;
-            default:
-              return null;
-          }
+          const status = item.getValue<(typeof receiptStatusType)[number]>();
+          return <ReceiptStatus status={status} />;
         },
       },
       {
@@ -132,11 +119,21 @@ const ReceiptsTable = memo(({ data, count }: ReceiptsTableProps) => {
     [navigate, params, permissions]
   );
 
+  const defaultColumnVisibility = {
+    location_name: false,
+    postingDate: false,
+  };
+
   return (
     <Table<(typeof data)[number]>
       data={data}
       columns={columns}
       count={count}
+      defaultColumnVisibility={defaultColumnVisibility}
+      withColumnOrdering
+      withFilters
+      withPagination
+      withSimpleSorting
       renderContextMenu={renderContextMenu}
     />
   );

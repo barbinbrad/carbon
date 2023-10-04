@@ -68,7 +68,7 @@ export const usePurchaseOrder = () => {
       const { error } = await supabase
         .from("purchaseOrder")
         .update({
-          status: "Released",
+          status: "To Receive and Invoice",
         })
         .eq("id", purchaseOrder.id);
 

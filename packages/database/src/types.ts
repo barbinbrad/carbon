@@ -5451,6 +5451,55 @@ export interface Database {
           }
         ];
       };
+      purchaseOrderStatusHistory: {
+        Row: {
+          createdAt: string;
+          createdBy: string;
+          id: string;
+          purchaseOrderId: string;
+          status: Database["public"]["Enums"]["purchaseOrderStatus"];
+        };
+        Insert: {
+          createdAt?: string;
+          createdBy: string;
+          id?: string;
+          purchaseOrderId: string;
+          status: Database["public"]["Enums"]["purchaseOrderStatus"];
+        };
+        Update: {
+          createdAt?: string;
+          createdBy?: string;
+          id?: string;
+          purchaseOrderId?: string;
+          status?: Database["public"]["Enums"]["purchaseOrderStatus"];
+        };
+        Relationships: [
+          {
+            foreignKeyName: "purchaseOrderStatusHistory_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "user";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrderStatusHistory_createdBy_fkey";
+            columns: ["createdBy"];
+            referencedRelation: "userDefaults";
+            referencedColumns: ["userId"];
+          },
+          {
+            foreignKeyName: "purchaseOrderStatusHistory_purchaseOrderId_fkey";
+            columns: ["purchaseOrderId"];
+            referencedRelation: "purchaseOrder";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchaseOrderStatusHistory_purchaseOrderId_fkey";
+            columns: ["purchaseOrderId"];
+            referencedRelation: "purchaseOrders";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
       purchaseOrderTransaction: {
         Row: {
           createdAt: string;
@@ -7692,6 +7741,7 @@ export interface Database {
           receiptPromisedDate: string | null;
           receiptRequestedDate: string | null;
           status: Database["public"]["Enums"]["purchaseOrderStatus"] | null;
+          subtotal: number | null;
           supplierContactId: string | null;
           supplierId: string | null;
           supplierName: string | null;
@@ -8136,11 +8186,12 @@ export interface Database {
       purchaseOrderLineType: "Comment" | "G/L Account" | "Part" | "Fixed Asset";
       purchaseOrderStatus:
         | "Draft"
-        | "In Review"
-        | "In External Review"
-        | "Approved"
+        | "To Review"
         | "Rejected"
-        | "Released"
+        | "To Receive"
+        | "To Receive and Invoice"
+        | "To Invoice"
+        | "Completed"
         | "Closed";
       purchaseOrderTransactionType:
         | "Edit"

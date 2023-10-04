@@ -13,9 +13,15 @@ import {
   MenuItem,
   MenuList,
 } from "@chakra-ui/react";
-import { Link, Outlet, useNavigate, useParams } from "@remix-run/react";
+import {
+  Link,
+  Outlet,
+  useNavigate,
+  useParams,
+  useRevalidator,
+} from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { BsPencilSquare } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { MdMoreHoriz } from "react-icons/md";
@@ -56,7 +62,7 @@ const PurchaseOrderLines = ({
     handleCellEdit,
   } = usePurchaseOrderLines();
 
-  const isEditable = ["Draft", "In Review", "In External Review"].includes(
+  const isEditable = ["Draft", "To Review"].includes(
     routeData?.purchaseOrder?.status ?? ""
   );
 
@@ -255,6 +261,16 @@ const PurchaseOrderLines = ({
     }),
     [handleCellEdit, supabase, partOptions, accountOptions, defaults.locationId]
   );
+
+  const revalidator = useRevalidator();
+  const initialLoad = useRef(true);
+  useEffect(() => {
+    if (!initialLoad.current) {
+      revalidator.revalidate();
+    } else {
+      initialLoad.current = false;
+    }
+  }, [purchaseOrderLines, revalidator]);
 
   return (
     <>

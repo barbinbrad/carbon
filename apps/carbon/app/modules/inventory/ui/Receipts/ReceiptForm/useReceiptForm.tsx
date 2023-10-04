@@ -127,7 +127,7 @@ export default function useReceiptForm({
         supabase
           ?.from("purchaseOrder")
           .select("id, purchaseOrderId")
-          .eq("status", "Released")
+          .or("status.eq.To Receive, status.eq.To Receive and Invoice")
           .then((response) => {
             if (response.error) {
               setError(response.error.message);

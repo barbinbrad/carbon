@@ -68,7 +68,7 @@ const PurchaseOrderLineForm = ({
     value: location.id,
   }));
 
-  const isEditable = ["Draft", "In Review", "In External Review"].includes(
+  const isEditable = ["Draft", "To Review"].includes(
     routeData?.purchaseOrder?.status ?? ""
   );
 

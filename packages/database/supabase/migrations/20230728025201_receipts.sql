@@ -41,6 +41,7 @@ CREATE TABLE "receipt" (
 );
 
 CREATE INDEX "receipt_receiptId_idx" ON "receipt" ("receiptId");
+CREATE INDEX "receipt_status_idx" ON "receipt" ("status");
 CREATE INDEX "receipt_locationId_idx" ON "receipt" ("locationId");
 CREATE INDEX "receipt_sourceDocumentId_idx" ON "receipt" ("sourceDocumentId");
 CREATE INDEX "receipt_supplierId_idx" ON "receipt" ("supplierId");

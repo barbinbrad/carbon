@@ -8,6 +8,7 @@ CREATE TABLE "contact" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "firstName" TEXT NOT NULL,
   "lastName" TEXT NOT NULL,
+  "fullName" TEXT GENERATED ALWAYS AS ("firstName" || ' ' || "lastName") STORED,
   "email" TEXT NOT NULL,
   "title" TEXT,
   "mobilePhone" TEXT,

@@ -6,13 +6,13 @@ const invoicingRoutes: AuthenticatedRouteGroup[] = [
     name: "Manage",
     routes: [
       {
-        name: "Accounts Payable",
-        to: "/x/invoicing/payable",
+        name: "Purchase Invoices",
+        to: "/x/invoicing/purchasing",
         role: "employee",
       },
       {
-        name: "Accounts Receivable",
-        to: "/x/invoicing/receivable",
+        name: "Sales Invoices",
+        to: "/x/invoicing/sales",
         role: "employee",
       },
     ],

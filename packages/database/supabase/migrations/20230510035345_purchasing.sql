@@ -381,16 +381,7 @@ CREATE POLICY "Users can delete their own purchase order favorites" ON "purchase
 
 CREATE OR REPLACE VIEW "purchaseOrders" AS
   SELECT
-    p."id",
-    p."purchaseOrderId",
-    p."status",
-    p."type",
-    p."orderDate",
-    p."notes",
-    p."supplierId",
-    p."supplierContactId",
-    p."supplierReference",
-    p."createdBy",
+    p.*,
     pd."receiptRequestedDate",
     pd."receiptPromisedDate",
     pd."dropShipment",
@@ -401,12 +392,8 @@ CREATE OR REPLACE VIEW "purchaseOrders" AS
     s."name" AS "supplierName",
     u."avatarUrl" AS "createdByAvatar",
     u."fullName" AS "createdByFullName",
-    p."createdAt",
-    p."updatedBy",
     u2."avatarUrl" AS "updatedByAvatar",
     u2."fullName" AS "updatedByFullName",
-    p."updatedAt",
-    p."closedAt",
     u3."avatarUrl" AS "closedByAvatar",
     u3."fullName" AS "closedByFullName",
     EXISTS(SELECT 1 FROM "purchaseOrderFavorite" pf WHERE pf."purchaseOrderId" = p.id AND pf."userId" = auth.uid()::text) AS favorite

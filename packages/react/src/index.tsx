@@ -36,6 +36,7 @@ import { Menubar, MenubarItem, MenubarTrigger } from "./Menu";
 import { useNotification } from "./Message";
 import { ActionMenu, ContextMenu } from "./Overlay";
 import { ClientOnly } from "./SSR";
+import Status from "./Status";
 import ThemeProvider, { theme } from "./Theme";
 
 export type { GroupBase, MultiValue, OptionBase, OptionProps, SingleValue };
@@ -60,6 +61,7 @@ export {
   MenubarItem,
   MenubarTrigger,
   Select,
+  Status,
   ThemeProvider,
   TimePicker,
   createFilter,

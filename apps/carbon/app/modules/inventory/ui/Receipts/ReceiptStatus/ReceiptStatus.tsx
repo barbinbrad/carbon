@@ -1,4 +1,4 @@
-import { Tag } from "@chakra-ui/react";
+import { Status } from "@carbon/react";
 import type { receiptStatusType } from "~/modules/inventory";
 
 type ReceiptStatusProps = {
@@ -8,11 +8,11 @@ type ReceiptStatusProps = {
 const ReceiptStatus = ({ status }: ReceiptStatusProps) => {
   switch (status) {
     case "Draft":
-      return <Tag>{status}</Tag>;
+      return <Status color="gray">{status}</Status>;
     case "Pending":
-      return <Tag colorScheme="orange">{status}</Tag>;
+      return <Status color="orange">{status}</Status>;
     case "Posted":
-      return <Tag colorScheme="green">{status}</Tag>;
+      return <Status color="green">{status}</Status>;
     default:
       return null;
   }

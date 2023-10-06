@@ -1,6 +1,6 @@
 CREATE TYPE "purchaseInvoiceStatus" AS ENUM (
   'Draft', 
-  'Issued',
+  'Submitted',
   'Return',
   'Debit Note Issued',
   'Paid', 
@@ -159,7 +159,7 @@ CREATE POLICY "Employees with invoicing_delete can delete AP invoice lines" ON "
     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
   );
 
-CREATE TABLE "payablePayment" (
+CREATE TABLE "purchasePayment" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "paymentId" TEXT NOT NULL,
   "supplierId" TEXT NOT NULL,
@@ -172,30 +172,30 @@ CREATE TABLE "payablePayment" (
   "updatedBy" TEXT,
   "updatedAt" TIMESTAMP WITH TIME ZONE,
 
-  CONSTRAINT "payablePayment_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "payablePayment_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "supplier" ("id") ON UPDATE CASCADE ON DELETE RESTRICT,
-  CONSTRAINT "payablePayment_currencyCode_fkey" FOREIGN KEY ("currencyCode") REFERENCES "currency" ("code") ON UPDATE CASCADE ON DELETE RESTRICT,
-  CONSTRAINT "payablePayment_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON UPDATE CASCADE ON DELETE RESTRICT,
-  CONSTRAINT "payablePayment_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON UPDATE CASCADE ON DELETE RESTRICT
+  CONSTRAINT "purchasePayment_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "purchasePayment_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "supplier" ("id") ON UPDATE CASCADE ON DELETE RESTRICT,
+  CONSTRAINT "purchasePayment_currencyCode_fkey" FOREIGN KEY ("currencyCode") REFERENCES "currency" ("code") ON UPDATE CASCADE ON DELETE RESTRICT,
+  CONSTRAINT "purchasePayment_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON UPDATE CASCADE ON DELETE RESTRICT,
+  CONSTRAINT "purchasePayment_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
-ALTER TABLE "payablePayment" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "purchasePayment" ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Employees with invoicing_view can view AP payments" ON "payablePayment"
+CREATE POLICY "Employees with invoicing_view can view AP payments" ON "purchasePayment"
   FOR SELECT
   USING (
     coalesce(get_my_claim('invoicing_view')::boolean,false) 
     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
   );
 
-CREATE POLICY "Employees with invoicing_create can insert AP payments" ON "payablePayment"
+CREATE POLICY "Employees with invoicing_create can insert AP payments" ON "purchasePayment"
   FOR INSERT
   WITH CHECK (   
     coalesce(get_my_claim('invoicing_create')::boolean,false) 
     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
 );
 
-CREATE POLICY "Employees with invoicing_update can update AP payments" ON "payablePayment"
+CREATE POLICY "Employees with invoicing_update can update AP payments" ON "purchasePayment"
   FOR UPDATE
   USING (
     "paymentDate" IS NULL
@@ -203,7 +203,7 @@ CREATE POLICY "Employees with invoicing_update can update AP payments" ON "payab
     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
   );
 
-CREATE POLICY "Employees with invoicing_delete can delete AP payments" ON "payablePayment"
+CREATE POLICY "Employees with invoicing_delete can delete AP payments" ON "purchasePayment"
   FOR DELETE
   USING (
     "paymentDate" IS NULL
@@ -216,9 +216,9 @@ CREATE TABLE "purchaseInvoicePaymentRelation" (
   "invoiceId" TEXT NOT NULL,
   "paymentId" TEXT NOT NULL,
 
-  CONSTRAINT "payablePayments_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "payablePayments_invoiceId_fkey" FOREIGN KEY ("invoiceId") REFERENCES "purchaseInvoice" ("id") ON UPDATE CASCADE ON DELETE RESTRICT,
-  CONSTRAINT "payablePayments_paymentId_fkey" FOREIGN KEY ("paymentId") REFERENCES "payablePayment" ("id") ON UPDATE CASCADE ON DELETE RESTRICT
+  CONSTRAINT "purchasePayments_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "purchasePayments_invoiceId_fkey" FOREIGN KEY ("invoiceId") REFERENCES "purchaseInvoice" ("id") ON UPDATE CASCADE ON DELETE RESTRICT,
+  CONSTRAINT "purchasePayments_paymentId_fkey" FOREIGN KEY ("paymentId") REFERENCES "purchasePayment" ("id") ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 ALTER TABLE "purchaseInvoicePaymentRelation" ENABLE ROW LEVEL SECURITY;

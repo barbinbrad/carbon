@@ -1,6 +1,6 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { deleteDocument } from "~/modules/documents";
+import { deletePurchaseOrder } from "~/modules/purchasing";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
@@ -8,21 +8,21 @@ import { error } from "~/utils/result";
 
 export async function action({ request, params }: ActionFunctionArgs) {
   assertIsPost(request);
-  const { client, userId } = await requirePermissions(request, {
-    delete: "documents",
+  const { client } = await requirePermissions(request, {
+    delete: "purchasing",
   });
 
-  const { documentId } = params;
-  if (!documentId) throw notFound("documentId not found");
+  const { orderId } = params;
+  if (!orderId) throw notFound("orderId not found");
 
-  const moveToTrash = await deleteDocument(client, documentId, userId);
+  const remove = await deletePurchaseOrder(client, orderId);
 
-  if (moveToTrash.error) {
+  if (remove.error) {
     return redirect(
       "/x/documents/search",
       await flash(
         request,
-        error(moveToTrash.error, "Failed to delete document")
+        error(remove.error, "Failed to delete purchase order")
       )
     );
   }

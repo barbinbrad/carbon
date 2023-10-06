@@ -214,7 +214,7 @@ const PurchaseOrdersTable = memo(
 
         {selectedPurchaseOrder && (
           <ConfirmDelete
-            action={`/x/documents/${selectedPurchaseOrder?.id}/close`}
+            action={`/x/purchase-order/${selectedPurchaseOrder?.id}/delete`}
             isOpen={closePurchaseOrderModal.isOpen}
             name={selectedPurchaseOrder.purchaseOrderId!}
             text={`Are you sure you want to move ${selectedPurchaseOrder.purchaseOrderId!} to the trash?`}

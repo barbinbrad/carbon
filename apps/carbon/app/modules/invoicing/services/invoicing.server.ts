@@ -11,10 +11,10 @@ export async function getPurchaseInvoices(
     supplierId: string | null;
   }
 ) {
-  let query = client.from("purchaseOrders").select("*", { count: "exact" });
+  let query = client.from("purchaseInvoices").select("*", { count: "exact" });
 
   if (args.search) {
-    query = query.ilike("purchaseOrderId", `%${args.search}%`);
+    query = query.ilike("invoiceId", `%${args.search}%`);
   }
 
   if (args.status) {
@@ -29,6 +29,6 @@ export async function getPurchaseInvoices(
     query = query.eq("supplierId", args.supplierId);
   }
 
-  query = setGenericQueryFilters(query, args, "purchaseOrderId", false);
+  query = setGenericQueryFilters(query, args, "invoiceId", false);
   return query;
 }

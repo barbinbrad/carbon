@@ -37,11 +37,7 @@ export async function deletePurchaseOrder(
   client: SupabaseClient<Database>,
   purchaseOrderId: string
 ) {
-  return Promise.all([
-    client.from("purchaseOrder").delete().eq("id", purchaseOrderId),
-    client.from("purchaseOrderDelivery").delete().eq("id", purchaseOrderId),
-    client.from("purchaseOrderPayment").delete().eq("id", purchaseOrderId),
-  ]);
+  return client.from("purchaseOrder").delete().eq("id", purchaseOrderId);
 }
 
 export async function deletePurchaseOrderLine(

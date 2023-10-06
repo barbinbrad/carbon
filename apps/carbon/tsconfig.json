@@ -16,6 +16,7 @@
     },
     "noEmit": true,
     "isolatedModules": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "noErrorTruncation": true
   }
 }

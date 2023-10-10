@@ -191,8 +191,8 @@ const PurchaseOrderLineForm = ({
         method="post"
         action={
           isEditing
-            ? `/x/purchase-order/${orderId}/lines/${initialValues.id}`
-            : `/x/purchase-order/${orderId}/lines/new`
+            ? `/x/purchase-order/${orderId}/summary/${initialValues.id}`
+            : `/x/purchase-order/${orderId}/summary/new`
         }
       >
         <DrawerOverlay />

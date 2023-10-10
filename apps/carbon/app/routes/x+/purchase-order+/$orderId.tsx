@@ -6,6 +6,7 @@ import {
   getExternalDocuments,
   getInternalDocuments,
   getPurchaseOrder,
+  getPurchaseOrderLines,
   PurchaseOrderHeader,
   PurchaseOrderSidebar,
 } from "~/modules/purchasing";
@@ -22,13 +23,19 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const { orderId } = params;
   if (!orderId) throw new Error("Could not find orderId");
 
-  const [purchaseOrder, externalDocuments, internalDocuments, locations] =
-    await Promise.all([
-      getPurchaseOrder(client, orderId),
-      getExternalDocuments(client, orderId),
-      getInternalDocuments(client, orderId),
-      getLocationsList(client),
-    ]);
+  const [
+    purchaseOrder,
+    purchaseOrderLines,
+    externalDocuments,
+    internalDocuments,
+    locations,
+  ] = await Promise.all([
+    getPurchaseOrder(client, orderId),
+    getPurchaseOrderLines(client, orderId),
+    getExternalDocuments(client, orderId),
+    getInternalDocuments(client, orderId),
+    getLocationsList(client),
+  ]);
 
   if (purchaseOrder.error) {
     return redirect(
@@ -42,6 +49,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   return json({
     purchaseOrder: purchaseOrder.data,
+    purchaseOrderLines: purchaseOrderLines.data ?? [],
     externalDocuments: externalDocuments.data ?? [],
     internalDocuments: internalDocuments.data ?? [],
     locations: locations.data ?? [],

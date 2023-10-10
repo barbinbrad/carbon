@@ -13,15 +13,9 @@ import {
   MenuItem,
   MenuList,
 } from "@chakra-ui/react";
-import {
-  Link,
-  Outlet,
-  useNavigate,
-  useParams,
-  useRevalidator,
-} from "@remix-run/react";
+import { Link, Outlet, useNavigate, useParams } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
-import { useEffect, useMemo, useRef } from "react";
+import { useMemo } from "react";
 import { BsPencilSquare } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { MdMoreHoriz } from "react-icons/md";
@@ -36,18 +30,13 @@ import type { PurchaseOrder, PurchaseOrderLine } from "~/modules/purchasing";
 import type { ListItem } from "~/types";
 import usePurchaseOrderLines from "./usePurchaseOrderLines";
 
-type PurchaseOrderLinesProps = {
-  purchaseOrderLines: PurchaseOrderLine[];
-};
-
-const PurchaseOrderLines = ({
-  purchaseOrderLines,
-}: PurchaseOrderLinesProps) => {
+const PurchaseOrderLines = () => {
   const { orderId } = useParams();
   if (!orderId) throw new Error("orderId not found");
 
   const navigate = useNavigate();
   const routeData = useRouteData<{
+    purchaseOrderLines: PurchaseOrderLine[];
     locations: ListItem[];
     purchaseOrder: PurchaseOrder;
   }>(`/x/purchase-order/${orderId}`);
@@ -262,16 +251,6 @@ const PurchaseOrderLines = ({
     [handleCellEdit, supabase, partOptions, accountOptions, defaults.locationId]
   );
 
-  const revalidator = useRevalidator();
-  const initialLoad = useRef(true);
-  useEffect(() => {
-    if (!initialLoad.current) {
-      revalidator.revalidate();
-    } else {
-      initialLoad.current = false;
-    }
-  }, [purchaseOrderLines, revalidator]);
-
   return (
     <>
       <Card w="full" minH={320}>
@@ -287,7 +266,7 @@ const PurchaseOrderLines = ({
         </CardHeader>
         <CardBody>
           <Grid<PurchaseOrderLine>
-            data={purchaseOrderLines}
+            data={routeData?.purchaseOrderLines ?? []}
             columns={columns}
             canEdit={canEdit && isEditable}
             editableComponents={editableComponents}

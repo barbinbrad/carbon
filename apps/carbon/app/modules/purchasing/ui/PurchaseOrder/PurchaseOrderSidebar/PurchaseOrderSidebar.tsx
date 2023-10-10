@@ -22,7 +22,6 @@ const PurchaseOrderSidebar = () => {
     externalDocuments: PurchaseOrderAttachment[];
   }>(`/x/purchase-order/${orderId}`);
   const links = usePurchaseOrderSidebar({
-    lines: routeData?.purchaseOrder?.lineCount ?? 0,
     internalDocuments: routeData?.internalDocuments.length ?? 0,
     externalDocuments: routeData?.externalDocuments.length ?? 0,
   });

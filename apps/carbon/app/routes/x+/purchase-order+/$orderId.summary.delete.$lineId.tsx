@@ -22,7 +22,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const purchaseOrderLine = await getPurchaseOrderLine(client, lineId);
   if (purchaseOrderLine.error) {
     return redirect(
-      `/x/purchase-order/${orderId}/lines`,
+      `/x/purchase-order/${orderId}/summary`,
       await flash(
         request,
         error(purchaseOrderLine.error, "Failed to get purchase order line")
@@ -48,7 +48,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   );
   if (deleteTypeError) {
     return redirect(
-      `/x/purchase-order/${orderId}/lines`,
+      `/x/purchase-order/${orderId}/summary`,
       await flash(
         request,
         error(deleteTypeError, "Failed to delete purchase order line")
@@ -57,7 +57,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    `/x/purchase-order/${orderId}/lines`,
+    `/x/purchase-order/${orderId}/summary`,
     await flash(request, success("Successfully deleted purchase order line"))
   );
 }
@@ -69,11 +69,11 @@ export default function DeletePurchaseOrderLineRoute() {
 
   if (!lineId || !orderId || !purchaseOrderLine) return null; // TODO - handle this better (404?)
 
-  const onCancel = () => navigate(`/x/purchase-order/${orderId}/lines`);
+  const onCancel = () => navigate(`/x/purchase-order/${orderId}/summary`);
 
   return (
     <ConfirmDelete
-      action={`/x/purchase-order/${orderId}/lines/delete/${lineId}`}
+      action={`/x/purchase-order/${orderId}/summary/delete/${lineId}`}
       name="Purchase Order Line"
       text={`Are you sure you want to delete the purchase order line for ${
         purchaseOrderLine.purchaseQuantity ?? 0

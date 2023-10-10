@@ -253,7 +253,7 @@ CREATE OR REPLACE VIEW "purchaseInvoices" AS
     pi."updatedBy",
     pi."updatedAt",
     CASE
-      WHEN pi."dateDue" < CURRENT_DATE AND pi."status" = 'Issued' THEN 'Overdue'
+      WHEN pi."dateDue" < CURRENT_DATE AND pi."status" = 'Submitted' THEN 'Overdue'
       ELSE pi."status"
     END AS status,
     s."name" AS "supplierName",

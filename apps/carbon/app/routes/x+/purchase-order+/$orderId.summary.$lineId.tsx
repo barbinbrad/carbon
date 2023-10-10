@@ -73,7 +73,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
   if (updatePurchaseOrderLine.error) {
     return redirect(
-      `/x/purchase-order/${orderId}/lines`,
+      `/x/purchase-order/${orderId}/summary`,
       await flash(
         request,
         error(
@@ -84,7 +84,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
     );
   }
 
-  return redirect(`/x/purchase-order/${orderId}/lines`);
+  return redirect(`/x/purchase-order/${orderId}/summary`);
 }
 
 export default function EditPurchaseOrderLineRoute() {

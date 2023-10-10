@@ -73,65 +73,70 @@ const PurchaseOrderForm = ({ initialValues }: PurchaseOrderFormProps) => {
         </CardHeader>
         <CardBody>
           <Hidden name="purchaseOrderId" />
-          <Grid
-            gridTemplateColumns={
-              isEditing ? ["1fr", "1fr", "1fr 1fr 1fr"] : "1fr"
-            }
-            gridColumnGap={8}
-            gridRowGap={2}
-            w="full"
-          >
-            <VStack alignItems="start" spacing={2} w="full">
-              <Supplier
-                name="supplierId"
-                label="Supplier"
-                onChange={(newValue) =>
-                  setSupplier(newValue?.value as string | undefined)
-                }
-              />
-              {isEditing && (
-                <SupplierContact
-                  name="supplierContactId"
-                  label="Supplier Contact"
-                  supplier={supplier}
+          <VStack spacing={2} w="full" alignItems="start">
+            <Grid
+              gridTemplateColumns={
+                isEditing ? ["1fr", "1fr", "1fr 1fr 1fr"] : "1fr"
+              }
+              gridColumnGap={8}
+              gridRowGap={2}
+              w="full"
+            >
+              <VStack alignItems="start" spacing={2} w="full">
+                <Supplier
+                  name="supplierId"
+                  label="Supplier"
+                  onChange={(newValue) =>
+                    setSupplier(newValue?.value as string | undefined)
+                  }
                 />
-              )}
-              <Input name="supplierReference" label="Supplier Invoice Number" />
-            </VStack>
-            <VStack alignItems="start" spacing={2} w="full">
-              <DatePicker
-                name="orderDate"
-                label="Order Date"
-                isDisabled={isSupplier}
-              />
-              <Select
-                name="type"
-                label="Type"
-                options={typeOptions}
-                isReadOnly={isSupplier}
-              />
-              {isEditing && permissions.can("delete", "purchasing") && (
-                <SelectControlled
-                  name="status"
-                  label="Status"
-                  value={initialValues.status}
-                  options={statusOptions}
+                {isEditing && (
+                  <SupplierContact
+                    name="supplierContactId"
+                    label="Supplier Contact"
+                    supplier={supplier}
+                  />
+                )}
+                <Input
+                  name="supplierReference"
+                  label="Supplier Invoice Number"
+                />
+              </VStack>
+              <VStack alignItems="start" spacing={2} w="full">
+                <DatePicker
+                  name="orderDate"
+                  label="Order Date"
+                  isDisabled={isSupplier}
+                />
+                <Select
+                  name="type"
+                  label="Type"
+                  options={typeOptions}
                   isReadOnly={isSupplier}
                 />
-              )}
-            </VStack>
-            <VStack alignItems="start" spacing={2} w="full">
-              {isEditing && (
-                <>
-                  <TextArea
-                    name="notes"
-                    label="Notes"
+                {isEditing && permissions.can("delete", "purchasing") && (
+                  <SelectControlled
+                    name="status"
+                    label="Status"
+                    value={initialValues.status}
+                    options={statusOptions}
                     isReadOnly={isSupplier}
                   />
-                </>
-              )}
-            </VStack>
-          </Grid>
+                )}
+              </VStack>
+              <VStack alignItems="start" spacing={2} w="full">
+                {isEditing && (
+                  <>
+                    <TextArea
+                      name="notes"
+                      label="Notes"
+                      isReadOnly={isSupplier}
+                    />
+                  </>
+                )}
+              </VStack>
+            </Grid>
+          </VStack>
         </CardBody>
         <CardFooter>
           <Submit

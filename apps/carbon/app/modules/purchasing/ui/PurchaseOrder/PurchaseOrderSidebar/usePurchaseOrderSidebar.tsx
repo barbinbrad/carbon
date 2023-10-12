@@ -13,8 +13,8 @@ export function usePurchaseOrderSidebar({
   const permissions = usePermissions();
   return [
     {
-      name: "Summary",
-      to: "summary",
+      name: "Details",
+      to: "details",
     },
     {
       name: "Delivery",

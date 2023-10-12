@@ -55,6 +55,7 @@ VALUES
 INSERT INTO "sequence" ("table", "name", "prefix", "suffix", "next", "size", "step")
 VALUES 
   ('purchaseOrder', 'Purchase Order', 'PO', NULL, 0, 6, 1),
+  ('purchaseInvoice', 'Purchase Invoice', 'AP', NULL, 0, 6, 1),
   ('receipt', 'Receipt', 'RE', NULL, 0, 6, 1);
 
 -- account categories

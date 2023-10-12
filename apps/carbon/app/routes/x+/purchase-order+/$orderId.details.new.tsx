@@ -39,7 +39,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
   if (createPurchaseOrderLine.error) {
     return redirect(
-      `/x/purchase-order/${orderId}/summary`,
+      `/x/purchase-order/${orderId}/details`,
       await flash(
         request,
         error(
@@ -50,7 +50,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
     );
   }
 
-  return redirect(`/x/purchase-order/${orderId}/summary`);
+  return redirect(`/x/purchase-order/${orderId}/details`);
 }
 
 export default function NewPurchaseOrderLineRoute() {

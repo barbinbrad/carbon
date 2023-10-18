@@ -4478,7 +4478,6 @@ export interface Database {
       purchaseInvoice: {
         Row: {
           balance: number;
-          contactId: string | null;
           createdAt: string;
           createdBy: string;
           currencyCode: string;
@@ -4490,6 +4489,7 @@ export interface Database {
           invoiceId: string;
           status: Database["public"]["Enums"]["purchaseInvoiceStatus"];
           subtotal: number;
+          supplierContactId: string | null;
           supplierId: string | null;
           supplierReference: string | null;
           totalAmount: number;
@@ -4500,7 +4500,6 @@ export interface Database {
         };
         Insert: {
           balance?: number;
-          contactId?: string | null;
           createdAt?: string;
           createdBy: string;
           currencyCode: string;
@@ -4512,6 +4511,7 @@ export interface Database {
           invoiceId: string;
           status?: Database["public"]["Enums"]["purchaseInvoiceStatus"];
           subtotal?: number;
+          supplierContactId?: string | null;
           supplierId?: string | null;
           supplierReference?: string | null;
           totalAmount?: number;
@@ -4522,7 +4522,6 @@ export interface Database {
         };
         Update: {
           balance?: number;
-          contactId?: string | null;
           createdAt?: string;
           createdBy?: string;
           currencyCode?: string;
@@ -4534,6 +4533,7 @@ export interface Database {
           invoiceId?: string;
           status?: Database["public"]["Enums"]["purchaseInvoiceStatus"];
           subtotal?: number;
+          supplierContactId?: string | null;
           supplierId?: string | null;
           supplierReference?: string | null;
           totalAmount?: number;
@@ -4543,12 +4543,6 @@ export interface Database {
           updatedBy?: string | null;
         };
         Relationships: [
-          {
-            foreignKeyName: "purchaseInvoice_contactId_fkey";
-            columns: ["contactId"];
-            referencedRelation: "contact";
-            referencedColumns: ["id"];
-          },
           {
             foreignKeyName: "purchaseInvoice_createdBy_fkey";
             columns: ["createdBy"];
@@ -4566,6 +4560,12 @@ export interface Database {
             columns: ["currencyCode"];
             referencedRelation: "currency";
             referencedColumns: ["code"];
+          },
+          {
+            foreignKeyName: "purchaseInvoice_supplierContactId_fkey";
+            columns: ["supplierContactId"];
+            referencedRelation: "supplierContact";
+            referencedColumns: ["id"];
           },
           {
             foreignKeyName: "purchaseInvoice_supplierId_fkey";
@@ -7741,7 +7741,6 @@ export interface Database {
       purchaseInvoices: {
         Row: {
           balance: number | null;
-          contactId: string | null;
           contactName: string | null;
           createdAt: string | null;
           createdBy: string | null;
@@ -7756,6 +7755,7 @@ export interface Database {
           invoiceId: string | null;
           status: Database["public"]["Enums"]["purchaseInvoiceStatus"] | null;
           subtotal: number | null;
+          supplierContactId: string | null;
           supplierId: string | null;
           supplierName: string | null;
           supplierReference: string | null;
@@ -7768,12 +7768,6 @@ export interface Database {
           updatedByFullName: string | null;
         };
         Relationships: [
-          {
-            foreignKeyName: "purchaseInvoice_contactId_fkey";
-            columns: ["contactId"];
-            referencedRelation: "contact";
-            referencedColumns: ["id"];
-          },
           {
             foreignKeyName: "purchaseInvoice_createdBy_fkey";
             columns: ["createdBy"];
@@ -7791,6 +7785,12 @@ export interface Database {
             columns: ["currencyCode"];
             referencedRelation: "currency";
             referencedColumns: ["code"];
+          },
+          {
+            foreignKeyName: "purchaseInvoice_supplierContactId_fkey";
+            columns: ["supplierContactId"];
+            referencedRelation: "supplierContact";
+            referencedColumns: ["id"];
           },
           {
             foreignKeyName: "purchaseInvoice_supplierId_fkey";

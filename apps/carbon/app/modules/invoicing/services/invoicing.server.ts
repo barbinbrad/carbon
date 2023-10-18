@@ -7,6 +7,17 @@ import { setGenericQueryFilters } from "~/utils/query";
 import { sanitize } from "~/utils/supabase";
 import type { purchaseInvoiceValidator } from "./invoicing.form";
 
+export async function getPurchaseInvoice(
+  client: SupabaseClient<Database>,
+  purchaseInvoiceId: string
+) {
+  return client
+    .from("purchaseInvoices")
+    .select("*")
+    .eq("id", purchaseInvoiceId)
+    .single();
+}
+
 export async function getPurchaseInvoices(
   client: SupabaseClient<Database>,
   args: GenericQueryFilters & {
@@ -35,6 +46,16 @@ export async function getPurchaseInvoices(
 
   query = setGenericQueryFilters(query, args, "invoiceId", false);
   return query;
+}
+
+export async function getPurchaseInvoiceLines(
+  client: SupabaseClient<Database>,
+  purchaseInvoiceId: string
+) {
+  return client
+    .from("purchaseInvoiceLine")
+    .select("*")
+    .eq("purchaseInvoiceId", purchaseInvoiceId);
 }
 
 export async function upsertPurchaseInvoice(

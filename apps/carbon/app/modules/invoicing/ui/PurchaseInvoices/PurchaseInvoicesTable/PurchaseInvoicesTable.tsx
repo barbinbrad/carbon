@@ -30,13 +30,13 @@ const PurchaseInvoicesTable = memo(
     const columns = useMemo<ColumnDef<PurchaseInvoice>[]>(() => {
       return [
         {
-          accessorKey: "purchaseInvoiceId",
+          accessorKey: "invoiceId",
           header: "Invoice Number",
           cell: ({ row }) => (
             <Link
               onClick={
                 row.original?.id !== null
-                  ? () => navigate(row.original.id!)
+                  ? () => navigate(`/x/purchase-invoice/${row.original.id}`)
                   : undefined
               }
             >

@@ -87,7 +87,7 @@ const SupplierForm = ({ initialValues }: SupplierFormProps) => {
       <Card w="full">
         <CardHeader>
           <Heading size="md">
-            {isEditing ? "Supplier Basics" : "New Supplier"}
+            {isEditing ? "Supplier Details" : "New Supplier"}
           </Heading>
           {!isEditing && (
             <Text color="gray.500">

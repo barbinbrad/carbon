@@ -135,7 +135,7 @@ const PartForm = ({ initialValues }: PartFormProps) => {
     >
       <Card w="full">
         <CardHeader>
-          <Heading size="md">{isEditing ? "Part Basics" : "New Part"}</Heading>
+          <Heading size="md">{isEditing ? "Part Details" : "New Part"}</Heading>
           {!isEditing && (
             <Text color="gray.500">
               A part contains the information about a specific item that can be

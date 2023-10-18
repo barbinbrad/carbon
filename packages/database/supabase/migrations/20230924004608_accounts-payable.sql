@@ -15,7 +15,7 @@ CREATE TABLE "purchaseInvoice" (
   "status" "purchaseInvoiceStatus" NOT NULL DEFAULT 'Draft',
   "supplierId" TEXT,
   "supplierReference" TEXT,
-  "contactId" TEXT,
+  "supplierContactId" TEXT,
   "dateIssued" DATE,
   "dateDue" DATE,
   "datePaid" DATE,
@@ -33,7 +33,7 @@ CREATE TABLE "purchaseInvoice" (
 
   CONSTRAINT "purchaseInvoice_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "purchaseInvoice_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "supplier" ("id"),
-  CONSTRAINT "purchaseInvoice_contactId_fkey" FOREIGN KEY ("contactId") REFERENCES "contact" ("id"),
+  CONSTRAINT "purchaseInvoice_supplierContactId_fkey" FOREIGN KEY ("supplierContactId") REFERENCES "supplierContact" ("id"),
   CONSTRAINT "purchaseInvoice_currencyCode_fkey" FOREIGN KEY ("currencyCode") REFERENCES "currency" ("code"),
   CONSTRAINT "purchaseInvoice_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id"),
   CONSTRAINT "purchaseInvoice_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id")
@@ -237,7 +237,7 @@ CREATE OR REPLACE VIEW "purchaseInvoices" AS
     pi."invoiceId",
     pi."supplierId",
     pi."supplierReference",
-    pi."contactId",
+    pi."supplierContactId",
     pi."dateIssued",
     pi."dateDue",
     pi."datePaid",
@@ -264,7 +264,7 @@ CREATE OR REPLACE VIEW "purchaseInvoices" AS
     u2."fullName" AS "updatedByFullName"
   FROM "purchaseInvoice" pi
     LEFT JOIN "supplier" s ON s.id = pi."supplierId"
-    LEFT JOIN "supplierContact" sc ON sc.id = pi."contactId"
+    LEFT JOIN "supplierContact" sc ON sc.id = pi."supplierContactId"
     LEFT JOIN "contact" c ON c.id = sc."contactId"
     LEFT JOIN "user" u ON u."id" = pi."createdBy"
     LEFT JOIN "user" u2 ON u2."id" = pi."updatedBy";

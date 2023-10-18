@@ -6,7 +6,7 @@ export function usePartSidebar(replenishment: PartReplenishmentSystem) {
   const permissions = usePermissions();
   return [
     {
-      name: "Part Basics",
+      name: "Details",
       to: "",
     },
     {

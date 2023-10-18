@@ -87,7 +87,7 @@ const CustomerForm = ({ initialValues }: CustomerFormProps) => {
       <Card w="full">
         <CardHeader>
           <Heading size="md">
-            {isEditing ? "Customer Basics" : "New Customer"}
+            {isEditing ? "Customer Details" : "New Customer"}
           </Heading>
           {!isEditing && (
             <Text color="gray.500">

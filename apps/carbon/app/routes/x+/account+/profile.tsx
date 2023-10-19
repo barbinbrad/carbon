@@ -18,6 +18,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -30,14 +31,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (user.error || !user.data) {
     return redirect(
-      "/x",
+      path.home,
       await flash(request, error(user.error, "Failed to get user"))
     );
   }
 
   if (publicAttributes.error) {
     return redirect(
-      "/x",
+      path.home,
       await flash(
         request,
         error(publicAttributes.error, "Failed to get user attributes")
@@ -81,12 +82,12 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   if (formData.get("intent") === "photo") {
-    const path = formData.get("path");
-    if (typeof path === "string") {
-      const avatarUpdate = await updateAvatar(client, userId, path);
+    const photoPath = formData.get("path");
+    if (typeof photoPath === "string") {
+      const avatarUpdate = await updateAvatar(client, userId, photoPath);
       if (avatarUpdate.error) {
         return redirect(
-          "/x/account/profile",
+          path.profile,
           await flash(
             request,
             error(avatarUpdate.error, "Failed to update avatar")
@@ -95,12 +96,12 @@ export async function action({ request }: ActionFunctionArgs) {
       }
 
       return redirect(
-        "/x/account/profile",
+        path.profile,
         await flash(request, success("Updated avatar"))
       );
     } else {
       return redirect(
-        "/x/account/profile",
+        path.profile,
         await flash(request, error(null, "Invalid avatar path"))
       );
     }

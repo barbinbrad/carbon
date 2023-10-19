@@ -17,6 +17,7 @@ import { resetPassword } from "~/modules/users";
 import { resetPasswordValidator } from "~/services/auth";
 import { flash, requireAuthSession } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -49,7 +50,7 @@ export async function action({ request }: ActionFunctionArgs) {
     );
   }
 
-  return redirect("/x", await flash(request, success("Password updated")));
+  return redirect(path.home, await flash(request, success("Password updated")));
 }
 
 export default function ResetPasswordRoute() {

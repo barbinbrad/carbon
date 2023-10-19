@@ -4,6 +4,7 @@ import { upsertDocument } from "~/modules/documents";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -11,16 +12,16 @@ export async function action({ request }: ActionFunctionArgs) {
   const { client, userId } = await requirePermissions(request, {});
   const formData = await request.formData();
 
-  const path = formData.get("path");
+  const documentPath = formData.get("path");
   const name = formData.get("name");
 
-  if (typeof path !== "string") throw new Error("Invalid path");
+  if (typeof documentPath !== "string") throw new Error("Invalid path");
   if (typeof name !== "string") throw new Error("Invalid name");
 
   const size = Number(formData.get("size"));
 
   const createDocument = await upsertDocument(client, {
-    path,
+    path: documentPath,
     name,
     size,
     readGroups: [userId],
@@ -29,7 +30,7 @@ export async function action({ request }: ActionFunctionArgs) {
   });
   if (createDocument.error) {
     return redirect(
-      "/x/documents/search",
+      path.documents,
       await flash(
         request,
         error(createDocument.error, "Failed to create document")
@@ -38,7 +39,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   return redirect(
-    "/x/documents/search",
+    path.documents,
     await flash(request, success(`Successfully uploaded ${name}`))
   );
 }

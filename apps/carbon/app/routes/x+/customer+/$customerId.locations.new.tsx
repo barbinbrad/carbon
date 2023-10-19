@@ -9,6 +9,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function action({ request, params }: ActionFunctionArgs) {
@@ -36,7 +37,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   });
   if (createCustomerLocation.error) {
     return redirect(
-      `/x/customer/${customerId}/locations`,
+      path.customerLocations(customerId),
       await flash(
         request,
         error(
@@ -48,7 +49,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    `/x/customer/${customerId}/locations`,
+    path.customerLocations(customerId),
     await flash(request, success("Customer location created"))
   );
 }

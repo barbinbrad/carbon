@@ -7,6 +7,7 @@ import type { PrivateAttributes } from "~/modules/account";
 import { getPrivateAttributes, UserAttributesForm } from "~/modules/account";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import { path } from "~/utils/path";
 import { error } from "~/utils/result";
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -18,7 +19,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (privateAttributes.error) {
     return redirect(
-      "/x",
+      path.home,
       await flash(
         request,
         error(privateAttributes.error, "Failed to get user attributes")

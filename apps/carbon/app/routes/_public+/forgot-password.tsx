@@ -25,6 +25,7 @@ import { forgotPasswordValidator, sendMagicLink } from "~/services/auth";
 import { getAuthSession } from "~/services/session";
 import type { FormActionData, Result } from "~/types";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export const meta: MetaFunction = () => {
@@ -37,7 +38,7 @@ export const meta: MetaFunction = () => {
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const authSession = await getAuthSession(request);
-  if (authSession) return redirect("/x");
+  if (authSession) return redirect(path.home);
   return null;
 }
 

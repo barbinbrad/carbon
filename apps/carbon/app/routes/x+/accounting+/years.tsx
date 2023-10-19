@@ -14,6 +14,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -24,7 +25,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const settings = await getFiscalYearSettings(client);
   if (settings.error) {
     return redirect(
-      "/x/accounting",
+      path.accounting,
       await flash(
         request,
         error(settings.error, "Failed to get fiscal year settings")
@@ -58,7 +59,7 @@ export async function action({ request }: ActionFunctionArgs) {
   });
   if (update.error) {
     return redirect(
-      "/x/accounting/years",
+      path.fiscalYears,
       await flash(
         request,
         error(update.error, "Failed to update fiscal year settings")
@@ -67,7 +68,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   return redirect(
-    "/x/accounting/years",
+    path.fiscalYears,
     await flash(request, success("Successfully updated fiscal year settings"))
   );
 }

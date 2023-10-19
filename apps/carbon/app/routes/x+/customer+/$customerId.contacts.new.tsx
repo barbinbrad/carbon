@@ -9,6 +9,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function action({ request, params }: ActionFunctionArgs) {
@@ -36,7 +37,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   });
   if (createCustomerContact.error) {
     return redirect(
-      `/x/customer/${customerId}/contacts`,
+      path.customerContacts(customerId),
       await flash(
         request,
         error(createCustomerContact.error, "Failed to create customer contact")
@@ -45,7 +46,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    `/x/customer/${customerId}/contacts`,
+    path.customerContacts(customerId),
     await flash(request, success("Customer contact created"))
   );
 }

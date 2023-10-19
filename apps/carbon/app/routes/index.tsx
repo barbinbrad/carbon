@@ -1,10 +1,11 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { requireAuthSession } from "~/services/session";
+import { path } from "~/utils/path";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await requireAuthSession(request);
-  return redirect("/x");
+  return redirect(path.home);
 }
 
 export default function IndexRoute() {

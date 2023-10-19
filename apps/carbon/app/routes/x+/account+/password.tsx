@@ -7,6 +7,7 @@ import { accountPasswordValidator, PasswordForm } from "~/modules/account";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -51,7 +52,7 @@ export async function action({ request }: ActionFunctionArgs) {
     );
   }
 
-  return redirect("/x", await flash(request, success("Updated password")));
+  return redirect(path.home, await flash(request, success("Updated password")));
 }
 
 export default function AccountPassword() {

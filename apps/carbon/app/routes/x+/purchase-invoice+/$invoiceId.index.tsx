@@ -4,5 +4,5 @@ import { redirect } from "@remix-run/node";
 export async function loader({ params }: LoaderFunctionArgs) {
   const { invoiceId } = params;
   if (!invoiceId) throw new Error("Could not find invoiceId");
-  return redirect(`/x/purchase-order/${invoiceId}/details`);
+  return redirect(`/x/purchase-invoice/${invoiceId}/details`);
 }

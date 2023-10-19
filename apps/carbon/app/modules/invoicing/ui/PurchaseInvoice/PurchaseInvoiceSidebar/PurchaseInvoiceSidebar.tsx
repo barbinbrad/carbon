@@ -4,11 +4,11 @@ import { Link, useMatches, useParams } from "@remix-run/react";
 import { usePurchaseInvoiceSidebar } from "./usePurchaseInvoiceSidebar";
 
 const PurchaseInvoiceSidebar = () => {
-  const { orderId } = useParams();
+  const { invoiceId } = useParams();
   const borderColor = useColor("gray.200");
-  if (!orderId)
+  if (!invoiceId)
     throw new Error(
-      "PurchaseInvoiceSidebar requires an orderId and could not find orderId in params"
+      "PurchaseInvoiceSidebar requires an invoiceId and could not find invoiceId in params"
     );
 
   const links = usePurchaseInvoiceSidebar();
@@ -35,6 +35,7 @@ const PurchaseInvoiceSidebar = () => {
                   border={isActive ? "1px solid" : "none"}
                   borderColor={borderColor}
                   fontWeight={isActive ? "bold" : "normal"}
+                  justifyContent="start"
                   size="md"
                   w="full"
                 >

@@ -8,6 +8,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error } from "~/utils/result";
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -33,7 +34,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (updateLabels.error) {
     return redirect(
-      "/x/documents/search",
+      path.documents,
       await flash(
         request,
         error(updateLabels.error, "Failed to update document labels")
@@ -41,5 +42,5 @@ export async function action({ request }: ActionFunctionArgs) {
     );
   }
 
-  return redirect("/x/documents/search");
+  return redirect(path.documents);
 }

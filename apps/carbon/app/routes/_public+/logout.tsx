@@ -3,6 +3,7 @@ import { redirect } from "@remix-run/node";
 
 import { destroyAuthSession } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 
 export async function action({ request }: ActionFunctionArgs) {
   assertIsPost(request);
@@ -11,5 +12,5 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export async function loader() {
-  return redirect("/");
+  return redirect(path.root);
 }

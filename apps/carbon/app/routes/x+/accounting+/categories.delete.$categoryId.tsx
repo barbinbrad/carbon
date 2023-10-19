@@ -3,6 +3,7 @@ import { redirect } from "@remix-run/node";
 import { deleteAccountCategory } from "~/modules/accounting";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function action({ request, params }: LoaderFunctionArgs) {
@@ -13,7 +14,7 @@ export async function action({ request, params }: LoaderFunctionArgs) {
   const { categoryId } = params;
   if (!categoryId) {
     return redirect(
-      "/x/accounting/categories",
+      path.accountingCategories,
       await flash(request, error(params, "Failed to get a category id"))
     );
   }
@@ -21,7 +22,7 @@ export async function action({ request, params }: LoaderFunctionArgs) {
   const deactivateAttribute = await deleteAccountCategory(client, categoryId);
   if (deactivateAttribute.error) {
     return redirect(
-      "/x/accounting/categories",
+      path.accountingCategories,
       await flash(
         request,
         error(
@@ -33,7 +34,7 @@ export async function action({ request, params }: LoaderFunctionArgs) {
   }
 
   return redirect(
-    "/x/accounting/categories",
+    path.accountingCategories,
     await flash(
       request,
       success("Successfully deactivated G/L account category")

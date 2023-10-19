@@ -6,6 +6,7 @@ import { deleteAccount, getAccount } from "~/modules/accounting";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -18,7 +19,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const account = await getAccount(client, accountId);
   if (account.error) {
     return redirect(
-      "/x/accounting/currencies",
+      path.chartOfAccounts,
       await flash(request, error(account.error, "Failed to get account"))
     );
   }
@@ -34,7 +35,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { accountId } = params;
   if (!accountId) {
     return redirect(
-      "/x/accounting/currencies",
+      path.chartOfAccounts,
       await flash(request, error(params, "Failed to get an account id"))
     );
   }
@@ -42,13 +43,13 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { error: deleteTypeError } = await deleteAccount(client, accountId);
   if (deleteTypeError) {
     return redirect(
-      "/x/accounting/currencies",
+      path.chartOfAccounts,
       await flash(request, error(deleteTypeError, "Failed to delete account"))
     );
   }
 
   return redirect(
-    "/x/accounting/currencies",
+    path.chartOfAccounts,
     await flash(request, success("Successfully deleted account"))
   );
 }
@@ -60,11 +61,11 @@ export default function DeleteAccountRoute() {
 
   if (!accountId || !account) return null; // TODO - handle this better (404?)
 
-  const onCancel = () => navigate("/x/accounting/currencies");
+  const onCancel = () => navigate(path.chartOfAccounts);
 
   return (
     <ConfirmDelete
-      action={`/x/accounting/currencies/delete/${accountId}`}
+      action={`/x/accounting/charts/delete/${accountId}`}
       name={account.name}
       text={`Are you sure you want to delete the account: ${account.name} (${account.number})? This cannot be undone.`}
       onCancel={onCancel}

@@ -4,6 +4,7 @@ import { useLoaderData } from "@remix-run/react";
 import { CustomerLocations, getCustomerLocations } from "~/modules/sales";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import { path } from "~/utils/path";
 import { error } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -17,7 +18,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const locations = await getCustomerLocations(client, customerId);
   if (locations.error) {
     return redirect(
-      `/x/customer/${customerId}`,
+      path.customer(customerId),
       await flash(
         request,
         error(locations.error, "Failed to fetch customer locations")

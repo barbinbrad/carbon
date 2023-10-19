@@ -12,6 +12,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -30,7 +31,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (!id) {
     return redirect(
-      "/x/sales/customers",
+      path.customers,
       await flash(request, error(null, "Failed to update customer"))
     );
   }
@@ -42,7 +43,7 @@ export async function action({ request }: ActionFunctionArgs) {
   });
   if (update.error) {
     return redirect(
-      "/x/sales/customers",
+      path.customers,
       await flash(request, error(update.error, "Failed to update customer"))
     );
   }
@@ -54,7 +55,7 @@ export default function CustomerEditRoute() {
   const { customerId } = useParams();
   if (!customerId) throw new Error("Could not find customerId");
   const routeData = useRouteData<{ customer: CustomerDetail }>(
-    `/x/customer/${customerId}`
+    path.customer(customerId)
   );
 
   if (!routeData?.customer) return null;

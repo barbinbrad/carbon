@@ -8,6 +8,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function action({ request, params }: ActionFunctionArgs) {
@@ -36,7 +37,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   });
   if (update.error)
     redirect(
-      "/x/accounting/categories",
+      path.accountingCategories,
       await flash(
         request,
         error(update.error, "Failed to update G/L subcategory")
@@ -44,7 +45,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
     );
 
   return redirect(
-    "/x/accounting/categories",
+    path.accountingCategories,
     await flash(request, success("Successfully updated G/L subcategory"))
   );
 }

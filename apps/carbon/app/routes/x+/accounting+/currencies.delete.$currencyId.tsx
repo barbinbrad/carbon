@@ -6,6 +6,7 @@ import { deleteCurrency, getCurrency } from "~/modules/accounting";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -18,7 +19,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const currency = await getCurrency(client, currencyId);
   if (currency.error) {
     return redirect(
-      "/x/accounting/currencies",
+      path.currencies,
       await flash(request, error(currency.error, "Failed to get currency"))
     );
   }
@@ -34,7 +35,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { currencyId } = params;
   if (!currencyId) {
     return redirect(
-      "/x/accounting/currencies",
+      path.currencies,
       await flash(request, error(params, "Failed to get an currency id"))
     );
   }
@@ -42,13 +43,13 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { error: deleteTypeError } = await deleteCurrency(client, currencyId);
   if (deleteTypeError) {
     return redirect(
-      "/x/accounting/currencies",
+      path.currencies,
       await flash(request, error(deleteTypeError, "Failed to delete currency"))
     );
   }
 
   return redirect(
-    "/x/accounting/currencies",
+    path.currencies,
     await flash(request, success("Successfully deleted currency"))
   );
 }
@@ -60,7 +61,7 @@ export default function DeleteCurrencyRoute() {
 
   if (!currencyId || !currency) return null; // TODO - handle this better (404?)
 
-  const onCancel = () => navigate("/x/accounting/currencies");
+  const onCancel = () => navigate(path.currencies);
 
   return (
     <ConfirmDelete

@@ -10,6 +10,7 @@ import {
 } from "~/modules/accounting";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import { path } from "~/utils/path";
 import { error } from "~/utils/result";
 
 export const meta: MetaFunction = () => {
@@ -35,7 +36,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (balanceSheetAccounts.error) {
     return redirect(
-      "/x",
+      path.home,
       await flash(
         request,
         error(
@@ -48,7 +49,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (incomeStatementAccounts.error) {
     return redirect(
-      "/x",
+      path.home,
       await flash(
         request,
         error(

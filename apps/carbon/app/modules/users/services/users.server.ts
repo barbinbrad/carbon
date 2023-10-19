@@ -19,6 +19,7 @@ import {
 } from "~/services/auth";
 import { flash, requireAuthSession } from "~/services/session";
 import type { Result } from "~/types";
+import { path } from "~/utils/path";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
 import { error, success } from "~/utils/result";
@@ -304,7 +305,7 @@ export async function getCurrentUser(
   const user = await getUser(client, userId);
   if (user?.error || user?.data === null) {
     throw redirect(
-      "/x",
+      path.home,
       await flash(request, error(user.error, "Failed to get user"))
     );
   }
@@ -536,7 +537,7 @@ export async function getUserClaims(
 
       if (rawClaims.error || rawClaims.data === null) {
         throw redirect(
-          "/x",
+          path.home,
           await flash(
             request,
             error(rawClaims.error, "Failed to get rawClaims")
@@ -551,7 +552,7 @@ export async function getUserClaims(
 
       if (!claims) {
         throw redirect(
-          "/x",
+          path.home,
           await flash(request, error(rawClaims, "Failed to parse claims"))
         );
       }

@@ -26,6 +26,7 @@ import {
 import { createAuthSession, getAuthSession } from "~/services/session";
 import type { FormActionData, Result } from "~/types";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error } from "~/utils/result";
 
 export const meta: MetaFunction = () => {
@@ -35,7 +36,7 @@ export const meta: MetaFunction = () => {
 export async function loader({ request }: LoaderFunctionArgs) {
   const authSession = await getAuthSession(request);
   if (authSession && (await verifyAuthSession(authSession))) {
-    if (authSession) return redirect("/x");
+    if (authSession) return redirect(path.home);
   }
 
   return null;
@@ -64,7 +65,7 @@ export async function action({ request }: ActionFunctionArgs): FormActionData {
   return createAuthSession({
     request,
     authSession,
-    redirectTo: redirectTo || "/x",
+    redirectTo: redirectTo || path.home,
   });
 }
 
@@ -102,7 +103,7 @@ export default function LoginRoute() {
             <Password name="password" label="Password" type="password" />
             <Input name="redirectTo" value={redirectTo} type="hidden" />
             <Submit w="full">Sign in</Submit>
-            <Link to="/forgot-password" color={useColor("black")}>
+            <Link to={path.forgotPassword} color={useColor("black")}>
               Forgot password?
             </Link>
           </VStack>

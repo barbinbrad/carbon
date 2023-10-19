@@ -11,6 +11,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -25,7 +26,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   if (document.error) {
     return redirect(
-      "/x/documents/search",
+      path.documents,
       await flash(request, error(document.error, "Failed to get document"))
     );
   }
@@ -59,7 +60,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (updateDocument.error) {
     return redirect(
-      "/x/documents/search",
+      path.documents,
       await flash(
         request,
         error(updateDocument.error, "Failed to update document")
@@ -68,7 +69,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   return redirect(
-    "/x/documents/search",
+    path.documents,
     await flash(request, success("Updated document"))
   );
 }

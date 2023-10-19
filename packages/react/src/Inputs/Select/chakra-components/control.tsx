@@ -45,6 +45,8 @@ const Control = <
   } = props;
 
   const size = useSize(sizeProp);
+  const white = useColor("white");
+  const gray100 = useColor("gray.100");
   const {
     field: { height, h, ...fieldStyles },
   } = useMultiStyleConfig("Input", {
@@ -76,7 +78,7 @@ const Control = <
     minH,
     minW: 180,
     ...(isDisabled ? { pointerEvents: "none" } : {}),
-    backgroundColor: useColor("white"),
+    backgroundColor: isReadOnly ? gray100 : white,
   };
 
   const sx = chakraStyles?.control

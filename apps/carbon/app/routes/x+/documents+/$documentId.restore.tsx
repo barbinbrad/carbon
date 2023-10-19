@@ -4,6 +4,7 @@ import { restoreDocument } from "~/modules/documents";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error } from "~/utils/result";
 
 export async function action({ request, params }: ActionFunctionArgs) {
@@ -19,7 +20,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
   if (removeFromTrash.error) {
     return redirect(
-      "/x/documents/search",
+      path.documents,
       await flash(
         request,
         error(removeFromTrash.error, "Failed to restore document")
@@ -27,5 +28,5 @@ export async function action({ request, params }: ActionFunctionArgs) {
     );
   }
 
-  return redirect("/x/documents/search?q=trash");
+  return redirect(path.documentsTrash);
 }

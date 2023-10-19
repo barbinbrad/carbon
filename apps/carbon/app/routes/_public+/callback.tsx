@@ -15,6 +15,7 @@ import {
 } from "~/services/session";
 import type { FormActionData } from "~/types";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error } from "~/utils/result";
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -40,14 +41,14 @@ export async function action({ request }: ActionFunctionArgs): FormActionData {
   const authSession = await refreshAccessToken(refreshToken);
   if (!authSession) {
     return redirect(
-      "/",
+      path.root,
       await flash(request, error(authSession, "Invalid refresh token"))
     );
   }
 
   const user = await getUserByEmail(authSession.email);
   if (user?.data) {
-    return redirect("/reset-password", {
+    return redirect(path.resetPassord, {
       headers: {
         "Set-Cookie": await commitAuthSession(request, {
           authSession,
@@ -56,7 +57,7 @@ export async function action({ request }: ActionFunctionArgs): FormActionData {
     });
   } else {
     return redirect(
-      "/",
+      path.root,
       await flash(request, error(user.error, "User not found"))
     );
   }

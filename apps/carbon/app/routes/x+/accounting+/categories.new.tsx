@@ -14,6 +14,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error } from "~/utils/result";
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -38,7 +39,7 @@ export async function action({ request }: ActionFunctionArgs) {
   });
   if (createAccountCategory.error) {
     return redirect(
-      "/x/accounting/categories",
+      path.accountingCategories,
       await flash(
         request,
         error(
@@ -49,12 +50,12 @@ export async function action({ request }: ActionFunctionArgs) {
     );
   }
 
-  return redirect("/x/accounting/categories");
+  return redirect(path.accountingCategories);
 }
 
 export default function NewAccountCategoryRoute() {
   const navigate = useNavigate();
-  const onClose = () => navigate("/x/accounting/categories");
+  const onClose = () => navigate(path.accountingCategories);
 
   const initialValues = {
     category: "",

@@ -8,6 +8,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error } from "~/utils/result";
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -43,5 +44,5 @@ export async function action({ request }: ActionFunctionArgs) {
     );
   }
 
-  return redirect(`/x/accounting/categories`);
+  return redirect(path.accountingCategories);
 }

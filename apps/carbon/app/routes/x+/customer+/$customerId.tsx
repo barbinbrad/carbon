@@ -11,6 +11,7 @@ import {
 } from "~/modules/sales";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import { path } from "~/utils/path";
 import { error } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -29,7 +30,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   if (customer.error) {
     return redirect(
-      "/x/sales/customers",
+      path.customers,
       await flash(
         request,
         error(customer.error, "Failed to load customer summary")

@@ -9,6 +9,7 @@ import {
 } from "~/modules/accounting";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import { path } from "~/utils/path";
 import { getGenericQueryFilters } from "~/utils/query";
 import { error } from "~/utils/result";
 
@@ -38,7 +39,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (categories.error) {
     redirect(
-      "/x",
+      path.home,
       await flash(
         request,
         error(categories.error, "Failed to fetch account categories")

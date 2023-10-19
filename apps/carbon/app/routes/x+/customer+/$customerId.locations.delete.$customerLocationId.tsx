@@ -3,6 +3,7 @@ import { redirect } from "@remix-run/node";
 import { deleteCustomerLocation } from "~/modules/sales";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function action({ request, params }: ActionFunctionArgs) {
@@ -13,7 +14,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { customerId, customerLocationId } = params;
   if (!customerId || !customerLocationId) {
     return redirect(
-      "/x/sales/customers",
+      path.customers,
       await flash(
         request,
         error(params, "Failed to get a customer location id")
@@ -28,7 +29,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   );
   if (deleteCustomerLocationError) {
     return redirect(
-      `/x/customer/${customerId}/locations`,
+      path.customerLocations(customerId),
       await flash(
         request,
         error(deleteCustomerLocationError, "Failed to delete customer location")
@@ -37,7 +38,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    `/x/customer/${customerId}/locations`,
+    path.customerLocations(customerId),
     await flash(request, success("Successfully deleted customer location"))
   );
 }

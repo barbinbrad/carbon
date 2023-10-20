@@ -11,6 +11,7 @@ import {
 import { getLocationsList } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import { path } from "~/utils/path";
 import { error } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -29,7 +30,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   if (purchaseInvoice.error) {
     return redirect(
-      "/x/invoicing/purchasing",
+      path.to.purchaseInvoices,
       await flash(
         request,
         error(purchaseInvoice.error, "Failed to load purchase invoice")

@@ -52,7 +52,10 @@ export async function action({ request }: ActionFunctionArgs) {
     );
   }
 
-  return redirect(path.home, await flash(request, success("Updated password")));
+  return redirect(
+    path.to.home,
+    await flash(request, success("Updated password"))
+  );
 }
 
 export default function AccountPassword() {

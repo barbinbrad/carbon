@@ -37,7 +37,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   });
   if (createCustomerLocation.error) {
     return redirect(
-      path.customerLocations(customerId),
+      path.to.customerLocations(customerId),
       await flash(
         request,
         error(
@@ -49,7 +49,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    path.customerLocations(customerId),
+    path.to.customerLocations(customerId),
     await flash(request, success("Customer location created"))
   );
 }

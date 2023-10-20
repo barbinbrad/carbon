@@ -5,7 +5,7 @@ import { path } from "~/utils/path";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await requireAuthSession(request);
-  return redirect(path.home);
+  return redirect(path.to.home);
 }
 
 export default function IndexRoute() {

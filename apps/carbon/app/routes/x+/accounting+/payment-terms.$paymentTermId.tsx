@@ -65,7 +65,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   return redirect(
-    path.paymentTerms,
+    path.to.paymentTerms,
     await flash(request, success("Updated payment term"))
   );
 }

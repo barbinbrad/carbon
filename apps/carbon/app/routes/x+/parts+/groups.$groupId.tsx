@@ -12,6 +12,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -64,7 +65,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    "/x/parts/groups",
+    path.to.partGroups,
     await flash(request, success("Updated part group"))
   );
 }
@@ -73,7 +74,7 @@ export default function EditPartGroupsRoute() {
   const { partGroup } = useLoaderData<typeof loader>();
   const routeData = useRouteData<{
     accounts: { name: string; number: string }[];
-  }>("/x/parts/groups");
+  }>(path.to.partGroups);
 
   const initialValues = {
     id: partGroup?.id ?? undefined,

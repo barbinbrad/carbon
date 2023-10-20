@@ -13,6 +13,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -29,7 +30,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   if (partUnitSalePrice.error) {
     return redirect(
-      "/x/parts",
+      path.to.parts,
       await flash(
         request,
         error(partUnitSalePrice.error, "Failed to load part unit sale price")
@@ -67,7 +68,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   });
   if (updatePartUnitSalePrice.error) {
     return redirect(
-      `/x/part/${partId}`,
+      path.to.part(partId),
       await flash(
         request,
         error(updatePartUnitSalePrice.error, "Failed to update part sale price")
@@ -76,7 +77,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    `/x/part/${partId}/sale-price`,
+    path.to.partSalePrice(partId),
     await flash(request, success("Updated part sale price"))
   );
 }

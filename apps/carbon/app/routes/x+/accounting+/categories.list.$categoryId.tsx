@@ -28,7 +28,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   ]);
   if (accountCategory.error) {
     return redirect(
-      path.accountingCategories,
+      path.to.accountingCategories,
       await flash(
         request,
         error(accountCategory.error, "Failed to fetch account category")
@@ -38,7 +38,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   if (accountSubcategories.error) {
     return redirect(
-      path.accountingCategories,
+      path.to.accountingCategories,
       await flash(
         request,
         error(

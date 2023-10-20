@@ -26,7 +26,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const location = await getCustomerLocation(client, customerLocationId);
   if (location.error) {
     return redirect(
-      path.customerLocations(customerId),
+      path.to.customerLocations(customerId),
       await flash(
         request,
         error(location.error, "Failed to get customer location")
@@ -68,7 +68,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   });
   if (update.error) {
     return redirect(
-      path.customerLocations(customerId),
+      path.to.customerLocations(customerId),
       await flash(
         request,
         error(update.error, "Failed to update customer address")
@@ -77,7 +77,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    path.customerLocations(customerId),
+    path.to.customerLocations(customerId),
     await flash(request, success("Customer address updated"))
   );
 }

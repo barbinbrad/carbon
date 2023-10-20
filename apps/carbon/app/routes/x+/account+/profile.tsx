@@ -31,14 +31,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (user.error || !user.data) {
     return redirect(
-      path.home,
+      path.to.home,
       await flash(request, error(user.error, "Failed to get user"))
     );
   }
 
   if (publicAttributes.error) {
     return redirect(
-      path.home,
+      path.to.home,
       await flash(
         request,
         error(publicAttributes.error, "Failed to get user attributes")
@@ -87,7 +87,7 @@ export async function action({ request }: ActionFunctionArgs) {
       const avatarUpdate = await updateAvatar(client, userId, photoPath);
       if (avatarUpdate.error) {
         return redirect(
-          path.profile,
+          path.to.profile,
           await flash(
             request,
             error(avatarUpdate.error, "Failed to update avatar")
@@ -96,12 +96,12 @@ export async function action({ request }: ActionFunctionArgs) {
       }
 
       return redirect(
-        path.profile,
+        path.to.profile,
         await flash(request, success("Updated avatar"))
       );
     } else {
       return redirect(
-        path.profile,
+        path.to.profile,
         await flash(request, error(null, "Invalid avatar path"))
       );
     }

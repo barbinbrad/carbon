@@ -37,7 +37,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   });
   if (createCustomerContact.error) {
     return redirect(
-      path.customerContacts(customerId),
+      path.to.customerContacts(customerId),
       await flash(
         request,
         error(createCustomerContact.error, "Failed to create customer contact")
@@ -46,7 +46,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    path.customerContacts(customerId),
+    path.to.customerContacts(customerId),
     await flash(request, success("Customer contact created"))
   );
 }

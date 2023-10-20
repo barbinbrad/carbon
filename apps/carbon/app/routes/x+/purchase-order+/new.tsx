@@ -17,6 +17,7 @@ import { getNextSequence, rollbackNextSequence } from "~/modules/settings";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error } from "~/utils/result";
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -36,7 +37,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const nextSequence = await getNextSequence(client, "purchaseOrder", userId);
   if (nextSequence.error) {
     return redirect(
-      "/x/purchase-order/new",
+      path.to.newPurchaseOrder,
       await flash(
         request,
         error(nextSequence.error, "Failed to get next sequence")
@@ -50,11 +51,11 @@ export async function action({ request }: ActionFunctionArgs) {
     createdBy: userId,
   });
 
-  if (createPurchaseOrder.error) {
+  if (createPurchaseOrder.error || !createPurchaseOrder.data?.[0]) {
     // TODO: this should be done as a transaction
     await rollbackNextSequence(client, "purchaseOrder", userId);
     return redirect(
-      "/x/purchasing/orders",
+      path.to.purchaseOrders,
       await flash(
         request,
         error(createPurchaseOrder.error, "Failed to insert purchase order")
@@ -64,7 +65,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const order = createPurchaseOrder.data?.[0];
 
-  return redirect(`/x/purchase-order/${order?.id}`);
+  return redirect(path.to.purchaseOrder(order.id!));
 }
 
 export default function PurchaseOrderNewRoute() {

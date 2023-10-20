@@ -12,5 +12,5 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export async function loader() {
-  return redirect(path.root);
+  return redirect(path.to.root);
 }

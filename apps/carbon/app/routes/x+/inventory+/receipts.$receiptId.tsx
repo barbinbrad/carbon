@@ -13,6 +13,7 @@ import { getNotes } from "~/modules/shared";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -69,7 +70,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   return redirect(
-    `/x/inventory/receipts/${id}`,
+    path.to.receipt(id),
     await flash(request, success("Updated receipt"))
   );
 }

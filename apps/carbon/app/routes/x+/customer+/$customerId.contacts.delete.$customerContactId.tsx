@@ -14,7 +14,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { customerId, customerContactId } = params;
   if (!customerId || !customerContactId) {
     return redirect(
-      path.customers,
+      path.to.customers,
       await flash(request, error(params, "Failed to get a customer contact id"))
     );
   }
@@ -28,7 +28,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   );
   if (deleteCustomerContactError) {
     return redirect(
-      path.customerContacts(customerId),
+      path.to.customerContacts(customerId),
       await flash(
         request,
         error(deleteCustomerContactError, "Failed to delete customer contact")
@@ -37,7 +37,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    path.customerContacts(customerId),
+    path.to.customerContacts(customerId),
     await flash(request, success("Successfully deleted customer contact"))
   );
 }

@@ -19,7 +19,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const paymentTerm = await getPaymentTerm(client, paymentTermId);
   if (paymentTerm.error) {
     return redirect(
-      path.paymentTerms,
+      path.to.paymentTerms,
       await flash(
         request,
         error(paymentTerm.error, "Failed to get payment term")
@@ -38,7 +38,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { paymentTermId } = params;
   if (!paymentTermId) {
     return redirect(
-      path.paymentTerms,
+      path.to.paymentTerms,
       await flash(request, error(params, "Failed to get an payment term id"))
     );
   }
@@ -49,7 +49,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   );
   if (deleteTypeError) {
     return redirect(
-      path.paymentTerms,
+      path.to.paymentTerms,
       await flash(
         request,
         error(deleteTypeError, "Failed to delete payment term")
@@ -58,7 +58,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    path.paymentTerms,
+    path.to.paymentTerms,
     await flash(request, success("Successfully deleted payment term"))
   );
 }
@@ -70,7 +70,7 @@ export default function DeletePaymentTermRoute() {
 
   if (!paymentTermId || !paymentTerm) return null; // TODO - handle this better (404?)
 
-  const onCancel = () => navigate(path.paymentTerms);
+  const onCancel = () => navigate(path.to.paymentTerms);
 
   return (
     <ConfirmDelete

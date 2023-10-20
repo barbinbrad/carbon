@@ -24,7 +24,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const subcategory = await getAccountSubcategory(client, subcategoryId);
   if (subcategory.error) {
     return redirect(
-      path.accountingCategoryList(categoryId),
+      path.to.accountingCategoryList(categoryId),
       await flash(
         request,
         error(subcategory.error, "Failed to fetch G/L account subcategory")

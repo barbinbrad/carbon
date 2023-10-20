@@ -41,7 +41,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   ]);
   if (purchasingGroups.error) {
     return redirect(
-      path.accounting,
+      path.to.accounting,
       await flash(
         request,
         error(
@@ -67,7 +67,7 @@ export default function PurchasingPostingGroupsRoute() {
   const routeData = useRouteData<{
     balanceSheetAccounts: AccountListItem[];
     incomeStatementAccounts: AccountListItem[];
-  }>(path.accounting);
+  }>(path.to.accounting);
 
   return (
     <VStack w="full" h="full" spacing={0}>

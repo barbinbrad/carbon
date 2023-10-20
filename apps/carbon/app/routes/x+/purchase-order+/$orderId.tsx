@@ -13,6 +13,7 @@ import {
 import { getLocationsList } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import { path } from "~/utils/path";
 import { error } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -39,7 +40,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   if (purchaseOrder.error) {
     return redirect(
-      "/x/purchasing/orders",
+      path.to.purchaseOrders,
       await flash(
         request,
         error(purchaseOrder.error, "Failed to load purchase order summary")

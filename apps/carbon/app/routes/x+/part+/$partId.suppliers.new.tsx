@@ -10,6 +10,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error } from "~/utils/result";
 
 export async function action({ request, params }: ActionFunctionArgs) {
@@ -38,7 +39,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
   if (createPartSupplier.error) {
     return redirect(
-      `/x/part/${partId}/suppliers`,
+      path.to.partSuppliers(partId),
       await flash(
         request,
         error(createPartSupplier.error, "Failed to create part supplier.")
@@ -46,7 +47,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
     );
   }
 
-  return redirect(`/x/part/${partId}/suppliers`);
+  return redirect(path.to.partSuppliers(partId));
 }
 
 export default function NewPartSupplierRoute() {

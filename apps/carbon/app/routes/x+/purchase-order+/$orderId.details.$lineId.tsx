@@ -12,6 +12,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -73,7 +74,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
   if (updatePurchaseOrderLine.error) {
     return redirect(
-      `/x/purchase-order/${orderId}/details`,
+      path.to.purchaseOrderDetails(orderId),
       await flash(
         request,
         error(
@@ -84,7 +85,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
     );
   }
 
-  return redirect(`/x/purchase-order/${orderId}/details`);
+  return redirect(path.to.purchaseOrderDetails(orderId));
 }
 
 export default function EditPurchaseOrderLineRoute() {

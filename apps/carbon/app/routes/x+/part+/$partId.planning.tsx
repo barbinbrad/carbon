@@ -16,6 +16,7 @@ import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import type { ListItem } from "~/types";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -34,7 +35,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     const userDefaults = await getUserDefaults(client, userId);
     if (userDefaults.error) {
       return redirect(
-        `/x/part/${partId}`,
+        path.to.part(partId),
         await flash(
           request,
           error(userDefaults.error, "Failed to load default location")
@@ -49,7 +50,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     const locations = await getLocationsList(client);
     if (locations.error || !locations.data?.length) {
       return redirect(
-        `/x/part/${partId}`,
+        path.to.part(partId),
         await flash(
           request,
           error(locations.error, "Failed to load any locations")
@@ -70,7 +71,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
     if (insertPartPlanning.error) {
       return redirect(
-        `/x/part/${partId}`,
+        path.to.part(partId),
         await flash(
           request,
           error(insertPartPlanning.error, "Failed to insert part planning")
@@ -81,7 +82,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     partPlanning = await getPartPlanning(client, partId, locationId);
     if (partPlanning.error || !partPlanning.data) {
       return redirect(
-        `/x/part/${partId}`,
+        path.to.part(partId),
         await flash(
           request,
           error(partPlanning.error, "Failed to load part planning")
@@ -120,7 +121,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   });
   if (updatePartPlanning.error) {
     return redirect(
-      `/x/part/${partId}`,
+      path.to.part(partId),
       await flash(
         request,
         error(updatePartPlanning.error, "Failed to update part planning")
@@ -129,7 +130,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    `/x/part/${partId}/planning?location=${validation.data.locationId}`,
+    path.to.partPlanningLocation(partId, validation.data.locationId),
     await flash(request, success("Updated part planning"))
   );
 }

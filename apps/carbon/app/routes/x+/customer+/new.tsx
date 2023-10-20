@@ -32,7 +32,7 @@ export async function action({ request }: ActionFunctionArgs) {
   });
   if (createCustomer.error) {
     return redirect(
-      path.customers,
+      path.to.customers,
       await flash(
         request,
         error(createCustomer.error, "Failed to insert customer")
@@ -42,7 +42,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const customerId = createCustomer.data?.id;
 
-  return redirect(path.customer(customerId));
+  return redirect(path.to.customer(customerId));
 }
 
 export default function CustomersNewRoute() {

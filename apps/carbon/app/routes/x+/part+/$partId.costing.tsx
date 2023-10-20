@@ -14,6 +14,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -31,13 +32,13 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   if (partCost.error) {
     return redirect(
-      "/x/parts",
+      path.to.parts,
       await flash(request, error(partCost.error, "Failed to load part costing"))
     );
   }
   if (accounts.error) {
     return redirect(
-      "/x/parts",
+      path.to.parts,
       await flash(request, error(accounts.error, "Failed to load accounts"))
     );
   }
@@ -71,7 +72,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   });
   if (updatePartCost.error) {
     return redirect(
-      `/x/part/${partId}`,
+      path.to.part(partId),
       await flash(
         request,
         error(updatePartCost.error, "Failed to update part costing")
@@ -80,7 +81,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    `/x/part/${partId}/costing`,
+    path.to.partCosting(partId),
     await flash(request, success("Updated part costing"))
   );
 }

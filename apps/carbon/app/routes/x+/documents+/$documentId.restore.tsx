@@ -20,7 +20,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
   if (removeFromTrash.error) {
     return redirect(
-      path.documents,
+      path.to.documents,
       await flash(
         request,
         error(removeFromTrash.error, "Failed to restore document")
@@ -28,5 +28,5 @@ export async function action({ request, params }: ActionFunctionArgs) {
     );
   }
 
-  return redirect(path.documentsTrash);
+  return redirect(path.to.documentsTrash);
 }

@@ -39,7 +39,7 @@ export async function action({ request }: ActionFunctionArgs) {
   });
   if (createAccountCategory.error) {
     return redirect(
-      path.accountingCategories,
+      path.to.accountingCategories,
       await flash(
         request,
         error(
@@ -50,12 +50,12 @@ export async function action({ request }: ActionFunctionArgs) {
     );
   }
 
-  return redirect(path.accountingCategories);
+  return redirect(path.to.accountingCategories);
 }
 
 export default function NewAccountCategoryRoute() {
   const navigate = useNavigate();
-  const onClose = () => navigate(path.accountingCategories);
+  const onClose = () => navigate(path.to.accountingCategories);
 
   const initialValues = {
     category: "",

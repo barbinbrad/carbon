@@ -63,7 +63,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   return redirect(
-    path.chartOfAccounts,
+    path.to.chartOfAccounts,
     await flash(request, success("Account created"))
   );
 }

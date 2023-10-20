@@ -30,7 +30,7 @@ export async function action({ request }: ActionFunctionArgs) {
   });
   if (createDocument.error) {
     return redirect(
-      path.documents,
+      path.to.documents,
       await flash(
         request,
         error(createDocument.error, "Failed to create document")
@@ -39,7 +39,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   return redirect(
-    path.documents,
+    path.to.documents,
     await flash(request, success(`Successfully uploaded ${name}`))
   );
 }

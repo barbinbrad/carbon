@@ -22,6 +22,7 @@ import { IoMdTrash } from "react-icons/io";
 import { ConfirmDelete } from "~/components/Modals";
 import { useUrlParams } from "~/hooks";
 import type { WorkCellTypeDetailType } from "~/modules/resources";
+import type { ListItem } from "~/types";
 
 type WorkCell = NonNullable<WorkCellTypeDetailType["workCell"]>;
 
@@ -38,7 +39,7 @@ const WorkCellTypeDetail = ({
 
   const deleteModal = useDisclosure();
   const [selectedWorkCell, setSelectedWorkCell] = useState<
-    { id: string; name: string } | undefined
+    ListItem | undefined
   >();
 
   const onDelete = (data?: WorkCell) => {

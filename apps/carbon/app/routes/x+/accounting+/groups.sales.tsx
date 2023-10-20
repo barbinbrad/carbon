@@ -41,7 +41,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   ]);
   if (salesGroups.error) {
     return redirect(
-      path.accounting,
+      path.to.accounting,
       await flash(
         request,
         error(salesGroups.error, "Failed to fetch sales posting groups")
@@ -64,7 +64,7 @@ export default function SalesPostingGroupsRoute() {
   const routeData = useRouteData<{
     balanceSheetAccounts: AccountListItem[];
     incomeStatementAccounts: AccountListItem[];
-  }>(path.accounting);
+  }>(path.to.accounting);
 
   return (
     <VStack w="full" h="full" spacing={0}>

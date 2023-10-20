@@ -9,6 +9,7 @@ import {
 } from "~/modules/invoicing";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import { path } from "~/utils/path";
 import { getGenericQueryFilters } from "~/utils/query";
 import { error } from "~/utils/result";
 
@@ -40,7 +41,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (purchaseInvoices.error) {
     redirect(
-      "/x/invoicing",
+      path.to.invoicing,
       await flash(
         request,
         error(purchaseInvoices.error, "Failed to fetch purchas orders")

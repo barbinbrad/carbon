@@ -4,6 +4,7 @@ import { ReceiptPostModal } from "~/modules/inventory";
 import { postingQueue, PostingQueueType } from "~/queues";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import { path } from "~/utils/path";
 import { error } from "~/utils/result";
 
 export async function action({ request, params }: ActionFunctionArgs) {
@@ -27,7 +28,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
       if (setPendingState.error) {
         return redirect(
-          `/x/inventory/receipts`,
+          path.to.receipts,
           await flash(
             request,
             error(setPendingState.error, "Failed to post receipt")
@@ -40,12 +41,12 @@ export async function action({ request, params }: ActionFunctionArgs) {
         documentId: receiptId,
       });
 
-      return redirect(`/x/inventory/receipts`);
+      return redirect(path.to.receipts);
     default:
       break;
   }
 
-  return redirect(`/x/inventory/receipts`);
+  return redirect(path.to.receipts);
 }
 
 export default function ReceiptPostRoute() {

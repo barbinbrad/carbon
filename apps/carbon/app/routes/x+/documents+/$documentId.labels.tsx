@@ -34,7 +34,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (updateLabels.error) {
     return redirect(
-      path.documents,
+      path.to.documents,
       await flash(
         request,
         error(updateLabels.error, "Failed to update document labels")
@@ -42,5 +42,5 @@ export async function action({ request }: ActionFunctionArgs) {
     );
   }
 
-  return redirect(path.documents);
+  return redirect(path.to.documents);
 }

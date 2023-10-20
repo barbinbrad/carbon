@@ -20,7 +20,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
   if (moveToTrash.error) {
     return redirect(
-      path.documents,
+      path.to.documents,
       await flash(
         request,
         error(moveToTrash.error, "Failed to delete document")

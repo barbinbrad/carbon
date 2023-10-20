@@ -31,7 +31,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (!id) {
     return redirect(
-      path.customers,
+      path.to.customers,
       await flash(request, error(null, "Failed to update customer"))
     );
   }
@@ -43,7 +43,7 @@ export async function action({ request }: ActionFunctionArgs) {
   });
   if (update.error) {
     return redirect(
-      path.customers,
+      path.to.customers,
       await flash(request, error(update.error, "Failed to update customer"))
     );
   }
@@ -55,7 +55,7 @@ export default function CustomerEditRoute() {
   const { customerId } = useParams();
   if (!customerId) throw new Error("Could not find customerId");
   const routeData = useRouteData<{ customer: CustomerDetail }>(
-    path.customer(customerId)
+    path.to.customer(customerId)
   );
 
   if (!routeData?.customer) return null;

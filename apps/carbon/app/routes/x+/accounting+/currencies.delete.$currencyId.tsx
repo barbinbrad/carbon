@@ -19,7 +19,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const currency = await getCurrency(client, currencyId);
   if (currency.error) {
     return redirect(
-      path.currencies,
+      path.to.currencies,
       await flash(request, error(currency.error, "Failed to get currency"))
     );
   }
@@ -35,7 +35,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { currencyId } = params;
   if (!currencyId) {
     return redirect(
-      path.currencies,
+      path.to.currencies,
       await flash(request, error(params, "Failed to get an currency id"))
     );
   }
@@ -43,13 +43,13 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { error: deleteTypeError } = await deleteCurrency(client, currencyId);
   if (deleteTypeError) {
     return redirect(
-      path.currencies,
+      path.to.currencies,
       await flash(request, error(deleteTypeError, "Failed to delete currency"))
     );
   }
 
   return redirect(
-    path.currencies,
+    path.to.currencies,
     await flash(request, success("Successfully deleted currency"))
   );
 }
@@ -61,7 +61,7 @@ export default function DeleteCurrencyRoute() {
 
   if (!currencyId || !currency) return null; // TODO - handle this better (404?)
 
-  const onCancel = () => navigate(path.currencies);
+  const onCancel = () => navigate(path.to.currencies);
 
   return (
     <ConfirmDelete

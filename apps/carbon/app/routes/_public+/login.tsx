@@ -36,7 +36,7 @@ export const meta: MetaFunction = () => {
 export async function loader({ request }: LoaderFunctionArgs) {
   const authSession = await getAuthSession(request);
   if (authSession && (await verifyAuthSession(authSession))) {
-    if (authSession) return redirect(path.home);
+    if (authSession) return redirect(path.to.home);
   }
 
   return null;
@@ -65,7 +65,7 @@ export async function action({ request }: ActionFunctionArgs): FormActionData {
   return createAuthSession({
     request,
     authSession,
-    redirectTo: redirectTo || path.home,
+    redirectTo: redirectTo || path.to.home,
   });
 }
 
@@ -103,7 +103,7 @@ export default function LoginRoute() {
             <Password name="password" label="Password" type="password" />
             <Input name="redirectTo" value={redirectTo} type="hidden" />
             <Submit w="full">Sign in</Submit>
-            <Link to={path.forgotPassword} color={useColor("black")}>
+            <Link to={path.to.forgotPassword} color={useColor("black")}>
               Forgot password?
             </Link>
           </VStack>

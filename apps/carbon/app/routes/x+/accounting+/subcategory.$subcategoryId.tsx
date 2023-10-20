@@ -37,7 +37,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   });
   if (update.error)
     redirect(
-      path.accountingCategories,
+      path.to.accountingCategories,
       await flash(
         request,
         error(update.error, "Failed to update G/L subcategory")
@@ -45,7 +45,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
     );
 
   return redirect(
-    path.accountingCategories,
+    path.to.accountingCategories,
     await flash(request, success("Successfully updated G/L subcategory"))
   );
 }

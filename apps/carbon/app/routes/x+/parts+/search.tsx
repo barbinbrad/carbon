@@ -11,6 +11,7 @@ import {
 } from "~/modules/parts";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import { path } from "~/utils/path";
 import { getGenericQueryFilters } from "~/utils/query";
 import { error } from "~/utils/result";
 
@@ -46,7 +47,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (parts.error) {
     redirect(
-      "/x",
+      path.to.home,
       await flash(request, error(parts.error, "Failed to fetch parts"))
     );
   }

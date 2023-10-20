@@ -6,6 +6,7 @@ import { PartForm, partValidator, upsertPart } from "~/modules/parts";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error } from "~/utils/result";
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -27,14 +28,14 @@ export async function action({ request }: ActionFunctionArgs) {
   });
   if (createPart.error) {
     return redirect(
-      "/x/parts/search",
+      path.to.partsSearch,
       await flash(request, error(createPart.error, "Failed to insert part"))
     );
   }
 
   const partId = createPart.data?.id;
 
-  return redirect(`/x/part/${partId}`);
+  return redirect(path.to.part(partId));
 }
 
 export default function PartsNewRoute() {

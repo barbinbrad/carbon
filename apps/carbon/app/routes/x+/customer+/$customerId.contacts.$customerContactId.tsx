@@ -26,7 +26,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const contact = await getCustomerContact(client, customerContactId);
   if (contact.error) {
     return redirect(
-      path.customerContacts(customerId),
+      path.to.customerContacts(customerId),
       await flash(
         request,
         error(contact.error, "Failed to get customer contact")
@@ -72,7 +72,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
   if (update.error) {
     return redirect(
-      path.customerContacts(customerId),
+      path.to.customerContacts(customerId),
       await flash(
         request,
         error(update.error, "Failed to update customer contact")
@@ -81,7 +81,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    path.customerContacts(customerId),
+    path.to.customerContacts(customerId),
     await flash(request, success("Customer contact updated"))
   );
 }

@@ -57,7 +57,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   return redirect(
-    path.currencies,
+    path.to.currencies,
     await flash(request, success("Currency created"))
   );
 }

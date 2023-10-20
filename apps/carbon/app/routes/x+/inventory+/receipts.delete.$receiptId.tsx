@@ -6,6 +6,7 @@ import { deleteReceipt, getReceipt } from "~/modules/inventory";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -18,7 +19,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const receipt = await getReceipt(client, receiptId);
   if (receipt.error) {
     return redirect(
-      "/x/inventory/receipts",
+      path.to.receipts,
       await flash(request, error(receipt.error, "Failed to get receipt"))
     );
   }
@@ -34,7 +35,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { receiptId } = params;
   if (!receiptId) {
     return redirect(
-      "/x/inventory/receipts",
+      path.to.receipts,
       await flash(request, error(params, "Failed to get an receipt id"))
     );
   }
@@ -46,14 +47,14 @@ export async function action({ request, params }: ActionFunctionArgs) {
   );
   if (getReceiptError) {
     return redirect(
-      "/x/inventory/receipts",
+      path.to.receipts,
       await flash(request, error(getReceiptError, "Failed to get receipt"))
     );
   }
 
   if (receipt?.postingDate) {
     return redirect(
-      "/x/inventory/receipts",
+      path.to.receipts,
       await flash(
         request,
         error(getReceiptError, "Cannot delete a posted receipt")
@@ -64,7 +65,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { error: deleteReceiptError } = await deleteReceipt(client, receiptId);
   if (deleteReceiptError) {
     return redirect(
-      "/x/inventory/receipts",
+      path.to.receipts,
       await flash(
         request,
         error(deleteReceiptError, "Failed to delete receipt")
@@ -73,7 +74,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    "/x/inventory/receipts",
+    path.to.receipts,
     await flash(request, success("Successfully deleted receipt"))
   );
 }
@@ -85,7 +86,7 @@ export default function DeleteShippingMethodRoute() {
 
   if (!receiptId || !receipt) return null; // TODO - handle this better (404?)
 
-  const onCancel = () => navigate("/x/inventory/receipts");
+  const onCancel = () => navigate(path.to.receipts);
 
   return (
     <ConfirmDelete

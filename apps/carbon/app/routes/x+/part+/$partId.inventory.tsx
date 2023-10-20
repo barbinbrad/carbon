@@ -18,6 +18,7 @@ import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import type { ListItem } from "~/types";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -36,7 +37,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     const userDefaults = await getUserDefaults(client, userId);
     if (userDefaults.error) {
       return redirect(
-        `/x/part/${partId}`,
+        path.to.part(partId),
         await flash(
           request,
           error(userDefaults.error, "Failed to load default location")
@@ -51,7 +52,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     const locations = await getLocationsList(client);
     if (locations.error || !locations.data?.length) {
       return redirect(
-        `/x/part/${partId}`,
+        path.to.part(partId),
         await flash(
           request,
           error(locations.error, "Failed to load any locations")
@@ -75,7 +76,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
     if (insertPartInventory.error) {
       return redirect(
-        `/x/part/${partId}`,
+        path.to.part(partId),
         await flash(
           request,
           error(insertPartInventory.error, "Failed to insert part inventory")
@@ -86,7 +87,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     partInventory = await getPartInventory(client, partId, locationId);
     if (partInventory.error || !partInventory.data) {
       return redirect(
-        `/x/part/${partId}`,
+        path.to.part(partId),
         await flash(
           request,
           error(partInventory.error, "Failed to load part inventory")
@@ -97,7 +98,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   if (shelves.error) {
     return redirect(
-      "/x/parts",
+      path.to.parts,
       await flash(request, error(shelves.error, "Failed to load shelves"))
     );
   }
@@ -105,7 +106,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const quantities = await getPartQuantities(client, partId, locationId);
   if (quantities.error || !quantities.data) {
     return redirect(
-      "/x/parts",
+      path.to.parts,
       await flash(request, error(quantities, "Failed to load part quantities"))
     );
   }
@@ -146,7 +147,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
     );
     if (createShelf.error) {
       return redirect(
-        `/x/part/${partId}/inventory`,
+        path.to.partInventory(partId),
         await flash(
           request,
           error(createShelf.error, "Failed to create new shelf")
@@ -162,7 +163,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   });
   if (updatePartInventory.error) {
     return redirect(
-      `/x/part/${partId}`,
+      path.to.part(partId),
       await flash(
         request,
         error(updatePartInventory.error, "Failed to update part inventory")
@@ -171,7 +172,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    `/x/part/${partId}/inventory?location=${update.locationId}`,
+    path.to.partInventoryLocation(partId, update.locationId),
     await flash(request, success("Updated part inventory"))
   );
 }

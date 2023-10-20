@@ -19,7 +19,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const account = await getAccount(client, accountId);
   if (account.error) {
     return redirect(
-      path.chartOfAccounts,
+      path.to.chartOfAccounts,
       await flash(request, error(account.error, "Failed to get account"))
     );
   }
@@ -35,7 +35,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { accountId } = params;
   if (!accountId) {
     return redirect(
-      path.chartOfAccounts,
+      path.to.chartOfAccounts,
       await flash(request, error(params, "Failed to get an account id"))
     );
   }
@@ -43,13 +43,13 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { error: deleteTypeError } = await deleteAccount(client, accountId);
   if (deleteTypeError) {
     return redirect(
-      path.chartOfAccounts,
+      path.to.chartOfAccounts,
       await flash(request, error(deleteTypeError, "Failed to delete account"))
     );
   }
 
   return redirect(
-    path.chartOfAccounts,
+    path.to.chartOfAccounts,
     await flash(request, success("Successfully deleted account"))
   );
 }
@@ -61,7 +61,7 @@ export default function DeleteAccountRoute() {
 
   if (!accountId || !account) return null; // TODO - handle this better (404?)
 
-  const onCancel = () => navigate(path.chartOfAccounts);
+  const onCancel = () => navigate(path.to.chartOfAccounts);
 
   return (
     <ConfirmDelete

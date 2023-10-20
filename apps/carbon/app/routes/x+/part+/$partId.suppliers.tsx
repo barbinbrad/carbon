@@ -4,6 +4,7 @@ import { useLoaderData } from "@remix-run/react";
 import { getPartSuppliers, PartSuppliers } from "~/modules/parts";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import { path } from "~/utils/path";
 import { error } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -18,7 +19,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   if (partSuppliers.error) {
     return redirect(
-      `/x/part/${partId}`,
+      path.to.part(partId),
       await flash(
         request,
         error(partSuppliers.error, "Failed to load part suppliers")

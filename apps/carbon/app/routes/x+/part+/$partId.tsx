@@ -5,6 +5,7 @@ import { Outlet } from "@remix-run/react";
 import { getPartSummary, PartPreview, PartSidebar } from "~/modules/parts";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import { path } from "~/utils/path";
 import { error } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -19,7 +20,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   if (partSummary.error) {
     return redirect(
-      "/x/parts",
+      path.to.parts,
       await flash(
         request,
         error(partSummary.error, "Failed to load part summary")

@@ -12,6 +12,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -29,7 +30,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   if (purchaseOrderPayment.error) {
     return redirect(
-      `/x/purchase-order/${orderId}`,
+      path.to.purchaseOrder(orderId),
       await flash(
         request,
         error(
@@ -42,7 +43,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   if (paymentTerms.error) {
     return redirect(
-      "/x/purchasing/orders",
+      path.to.purchaseOrders,
       await flash(
         request,
         error(paymentTerms.error, "Failed to load payment terms")
@@ -81,7 +82,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   });
   if (updatePurchaseOrderPayment.error) {
     return redirect(
-      `/x/purchase-order/${orderId}/payment`,
+      path.to.purchaseOrderPayment(orderId),
       await flash(
         request,
         error(
@@ -93,7 +94,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    `/x/purchase-order/${orderId}/payment`,
+    path.to.purchaseOrderPayment(orderId),
     await flash(request, success("Updated purchase order payment"))
   );
 }

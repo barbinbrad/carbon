@@ -18,7 +18,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const contacts = await getCustomerContacts(client, customerId);
   if (contacts.error) {
     return redirect(
-      path.customer(customerId),
+      path.to.customer(customerId),
       await flash(
         request,
         error(contacts.error, "Failed to fetch customer contacts")

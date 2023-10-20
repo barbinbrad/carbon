@@ -11,6 +11,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -44,7 +45,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   const { id, name, code } = validation.data;
-  if (!id) throw new Error("id not found");
+  if (!id) throw notFound("id not found");
 
   const updateUnitOfMeasure = await upsertUnitOfMeasure(client, {
     id,
@@ -64,7 +65,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   return redirect(
-    "/x/parts/uom",
+    path.to.uom,
     await flash(request, success("Updated unit of measure"))
   );
 }

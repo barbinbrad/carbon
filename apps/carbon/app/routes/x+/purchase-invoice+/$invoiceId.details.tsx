@@ -14,6 +14,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function action({ request, params }: ActionFunctionArgs) {
@@ -45,7 +46,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   });
   if (updatePurchaseInvoice.error) {
     return redirect(
-      `/x/purchase-invoice/${invoiceId}`,
+      path.to.purchaseInvoice(invoiceId),
       await flash(
         request,
         error(updatePurchaseInvoice.error, "Failed to update purchase invoice")
@@ -54,15 +55,16 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    `/x/purchase-invoice/${invoiceId}`,
+    path.to.purchaseInvoice(invoiceId),
     await flash(request, success("Updated purchase invoice"))
   );
 }
 
 export default function PurchaseInvoiceBasicRoute() {
   const { invoiceId } = useParams();
+  if (!invoiceId) throw new Error("Could not find invoiceId");
   const invoiceData = useRouteData<{ purchaseInvoice: PurchaseInvoice }>(
-    `/x/purchase-invoice/${invoiceId}`
+    path.to.purchaseInvoice(invoiceId)
   );
   if (!invoiceData) throw new Error("Could not find invoice data");
 

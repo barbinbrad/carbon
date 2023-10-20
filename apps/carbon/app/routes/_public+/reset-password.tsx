@@ -50,7 +50,10 @@ export async function action({ request }: ActionFunctionArgs) {
     );
   }
 
-  return redirect(path.home, await flash(request, success("Password updated")));
+  return redirect(
+    path.to.home,
+    await flash(request, success("Password updated"))
+  );
 }
 
 export default function ResetPasswordRoute() {

@@ -26,7 +26,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const accountCategory = await getAccountCategory(client, categoryId);
   if (accountCategory.error) {
     return redirect(
-      path.accountingCategories,
+      path.to.accountingCategories,
       await flash(
         request,
         error(accountCategory.error, "Failed to fetch G/L account category")
@@ -61,7 +61,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   });
   if (updateCategory.error) {
     return redirect(
-      path.accountingCategories,
+      path.to.accountingCategories,
       await flash(
         request,
         error(updateCategory.error, "Failed to update G/L account category")
@@ -70,7 +70,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    path.accountingCategories,
+    path.to.accountingCategories,
     await flash(request, success("Updated G/L account category "))
   );
 }
@@ -78,7 +78,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
 export default function EditAccountCategoryRoute() {
   const { accountCategory } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
-  const onClose = () => navigate(path.accountingCategories);
+  const onClose = () => navigate(path.to.accountingCategories);
 
   const initialValues = {
     ...accountCategory,

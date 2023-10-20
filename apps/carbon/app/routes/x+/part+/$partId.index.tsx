@@ -8,6 +8,7 @@ import { PartForm, partValidator, upsertPart } from "~/modules/parts";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function action({ request, params }: ActionFunctionArgs) {
@@ -33,21 +34,22 @@ export async function action({ request, params }: ActionFunctionArgs) {
   });
   if (updatePart.error) {
     return redirect(
-      `/x/part/${partId}`,
+      path.to.part(partId),
       await flash(request, error(updatePart.error, "Failed to update part"))
     );
   }
 
   return redirect(
-    `/x/part/${partId}`,
+    path.to.part(partId),
     await flash(request, success("Updated part"))
   );
 }
 
 export default function PartBasicRoute() {
   const { partId } = useParams();
+  if (!partId) throw new Error("Could not find partId");
   const partData = useRouteData<{ partSummary: PartSummary }>(
-    `/x/part/${partId}`
+    path.to.part(partId)
   );
   if (!partData) throw new Error("Could not find part data");
 

@@ -10,6 +10,7 @@ import {
 import { getLocationsList } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import { path } from "~/utils/path";
 import { getGenericQueryFilters } from "~/utils/query";
 import { error } from "~/utils/result";
 
@@ -40,7 +41,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (receipts.error) {
     return redirect(
-      "/x/inventory",
+      path.to.inventory,
       await flash(request, error(null, "Error loading receipts"))
     );
   }

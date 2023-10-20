@@ -31,7 +31,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (chartOfAccounts.error) {
     return redirect(
-      path.accounting,
+      path.to.accounting,
       await flash(
         request,
         error(chartOfAccounts.error, "Failed to get chart of accounts")

@@ -5,10 +5,11 @@ import { IoMdAdd } from "react-icons/io";
 import { DebouncedInput } from "~/components/Search";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { PartType } from "~/modules/parts";
+import type { ListItem } from "~/types";
 
 type PartsTableFiltersProps = {
   partTypes: PartType[];
-  partGroups: { id: string; name: string }[];
+  partGroups: ListItem[];
 };
 
 const PartsTableFilters = ({

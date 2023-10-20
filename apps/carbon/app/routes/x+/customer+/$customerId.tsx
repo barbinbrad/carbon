@@ -30,7 +30,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   if (customer.error) {
     return redirect(
-      path.customers,
+      path.to.customers,
       await flash(
         request,
         error(customer.error, "Failed to load customer summary")

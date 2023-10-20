@@ -14,7 +14,7 @@ export async function action({ request, params }: LoaderFunctionArgs) {
   const { subcategoryId } = params;
   if (!subcategoryId) {
     return redirect(
-      path.accountingCategories,
+      path.to.accountingCategories,
       await flash(
         request,
         error(params, "Failed to get a G/L account subcategory id")
@@ -28,7 +28,7 @@ export async function action({ request, params }: LoaderFunctionArgs) {
   );
   if (deactivateSubcategory.error) {
     return redirect(
-      path.accountingCategories,
+      path.to.accountingCategories,
       await flash(
         request,
         error(
@@ -40,7 +40,7 @@ export async function action({ request, params }: LoaderFunctionArgs) {
   }
 
   return redirect(
-    path.accountingCategories,
+    path.to.accountingCategories,
     await flash(
       request,
       success("Successfully deactivated G/L account subcategory")

@@ -14,6 +14,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function action({ request, params }: ActionFunctionArgs) {
@@ -45,7 +46,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   });
   if (updatePurchaseOrder.error) {
     return redirect(
-      `/x/purchase-order/${orderId}`,
+      path.to.purchaseOrder(orderId),
       await flash(
         request,
         error(updatePurchaseOrder.error, "Failed to update purchase order")
@@ -54,15 +55,16 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    `/x/purchase-order/${orderId}`,
+    path.to.purchaseOrder(orderId),
     await flash(request, success("Updated purchase order"))
   );
 }
 
 export default function PurchaseOrderBasicRoute() {
   const { orderId } = useParams();
+  if (!orderId) throw new Error("Could not find orderId");
   const orderData = useRouteData<{ purchaseOrder: PurchaseOrder }>(
-    `/x/purchase-order/${orderId}`
+    path.to.purchaseOrder(orderId)
   );
   if (!orderData) throw new Error("Could not find part data");
 

@@ -41,7 +41,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   ]);
   if (inventoryGroups.error) {
     return redirect(
-      path.accounting,
+      path.to.accounting,
       await flash(
         request,
         error(inventoryGroups.error, "Failed to fetch inventory posting groups")
@@ -63,7 +63,7 @@ export default function InventoryPostingGroupsRoute() {
   const routeData = useRouteData<{
     balanceSheetAccounts: AccountListItem[];
     incomeStatementAccounts: AccountListItem[];
-  }>(path.accounting);
+  }>(path.to.accounting);
 
   return (
     <VStack w="full" h="full" spacing={0}>

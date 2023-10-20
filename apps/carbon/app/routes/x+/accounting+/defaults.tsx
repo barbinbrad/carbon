@@ -28,7 +28,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (defaultAccounts.error || !defaultAccounts.data) {
     return redirect(
-      path.accounting,
+      path.to.accounting,
       await flash(
         request,
         error(defaultAccounts.error, "Failed to load default accounts")
@@ -70,7 +70,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   return redirect(
-    path.accountingDefaults,
+    path.to.accountingDefaults,
     await flash(request, success("Updated default accounts"))
   );
 }
@@ -80,7 +80,7 @@ export default function AccountDefaultsRoute() {
   const routeData = useRouteData<{
     balanceSheetAccounts: AccountListItem[];
     incomeStatementAccounts: AccountListItem[];
-  }>(path.accounting);
+  }>(path.to.accounting);
 
   return (
     <VStack bg={useColor("white")} w="full" h="full" p={8} overflowY="auto">

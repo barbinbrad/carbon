@@ -18,7 +18,7 @@ import {
   sendMagicLink,
 } from "~/services/auth";
 import { flash, requireAuthSession } from "~/services/session";
-import type { Result } from "~/types";
+import type { ListItem, Result } from "~/types";
 import { path } from "~/utils/path";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
@@ -305,7 +305,7 @@ export async function getCurrentUser(
   const user = await getUser(client, userId);
   if (user?.error || user?.data === null) {
     throw redirect(
-      path.home,
+      path.to.home,
       await flash(request, error(user.error, "Failed to get user"))
     );
   }
@@ -537,7 +537,7 @@ export async function getUserClaims(
 
       if (rawClaims.error || rawClaims.data === null) {
         throw redirect(
-          path.home,
+          path.to.home,
           await flash(
             request,
             error(rawClaims.error, "Failed to get rawClaims")
@@ -552,7 +552,7 @@ export async function getUserClaims(
 
       if (!claims) {
         throw redirect(
-          path.home,
+          path.to.home,
           await flash(request, error(rawClaims, "Failed to parse claims"))
         );
       }
@@ -653,10 +653,7 @@ function makeClaimsFromEmployeeType({
     create: boolean;
     update: boolean;
     delete: boolean;
-    feature:
-      | { id: string; name: string }
-      | { id: string; name: string }[]
-      | null;
+    feature: ListItem | ListItem[] | null;
   }[];
 }) {
   const claims: Record<string, boolean> = {};

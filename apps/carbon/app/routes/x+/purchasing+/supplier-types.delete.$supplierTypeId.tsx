@@ -6,6 +6,7 @@ import { deleteSupplierType, getSupplierType } from "~/modules/purchasing";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -19,7 +20,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const supplierType = await getSupplierType(client, supplierTypeId);
   if (supplierType.error) {
     return redirect(
-      "/x/purchasing/supplier-types",
+      path.to.supplierTypes,
       await flash(
         request,
         error(supplierType.error, "Failed to get supplier type")
@@ -38,7 +39,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { supplierTypeId } = params;
   if (!supplierTypeId) {
     return redirect(
-      "/x/purchasing/supplier-types",
+      path.to.supplierTypes,
       await flash(request, error(params, "Failed to get an supplier type id"))
     );
   }
@@ -49,7 +50,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   );
   if (deleteTypeError) {
     return redirect(
-      "/x/purchasing/supplier-types",
+      path.to.supplierTypes,
       await flash(
         request,
         error(deleteTypeError, "Failed to delete supplier type")
@@ -58,7 +59,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    "/x/purchasing/supplier-types",
+    path.to.supplierTypes,
     await flash(request, success("Successfully deleted supplier type"))
   );
 }
@@ -70,7 +71,7 @@ export default function DeleteSupplierTypeRoute() {
 
   if (!supplierTypeId || !supplierType) return null; // TODO - handle this better (404?)
 
-  const onCancel = () => navigate("/x/purchasing/supplier-types");
+  const onCancel = () => navigate(path.to.supplierTypes);
   return (
     <ConfirmDelete
       action={`/x/purchasing/supplier-types/delete/${supplierTypeId}`}

@@ -15,6 +15,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -34,7 +35,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   if (purchaseOrderDelivery.error) {
     return redirect(
-      `/x/purchase-order/${orderId}`,
+      path.to.purchaseOrder(orderId),
       await flash(
         request,
         error(
@@ -47,7 +48,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   if (shippingMethods.error) {
     return redirect(
-      "/x/purchasing/orders",
+      path.to.purchaseOrders,
       await flash(
         request,
         error(shippingMethods.error, "Failed to load shipping methods")
@@ -57,7 +58,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   if (shippingTerms.error) {
     return redirect(
-      "/x/purchasing/orders",
+      path.to.purchaseOrders,
       await flash(
         request,
         error(shippingTerms.error, "Failed to load shipping terms")
@@ -100,7 +101,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   );
   if (updatePurchaseOrderDelivery.error) {
     return redirect(
-      `/x/purchase-order/${orderId}/delivery`,
+      path.to.purchaseOrderDelivery(orderId),
       await flash(
         request,
         error(
@@ -112,7 +113,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    `/x/purchase-order/${orderId}/delivery`,
+    path.to.purchaseOrderDelivery(orderId),
     await flash(request, success("Updated purchase order delivery"))
   );
 }

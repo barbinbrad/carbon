@@ -10,6 +10,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -65,7 +66,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   return redirect(
-    "/x/inventory/shipping-methods",
+    path.to.shippingMethods,
     await flash(request, success("Shipping method created"))
   );
 }

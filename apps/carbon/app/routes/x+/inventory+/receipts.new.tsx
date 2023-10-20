@@ -8,6 +8,7 @@ import { getNextSequence, rollbackNextSequence } from "~/modules/settings";
 import { getUserDefaults } from "~/modules/users";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import { path } from "~/utils/path";
 import { error } from "~/utils/result";
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -27,7 +28,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   ]);
   if (nextSequence.error) {
     return redirect(
-      request.headers.get("Referer") ?? "/x/inventory/receipts",
+      request.headers.get("Referer") ?? path.to.receipts,
       await flash(
         request,
         error(nextSequence.error, "Failed to get next sequence")
@@ -66,7 +67,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   if (insertReceipt.error) {
     await rollbackNextSequence(client, "receipt", userId);
     return redirect(
-      request.headers.get("Referer") ?? "/x/inventory/receipts",
+      request.headers.get("Referer") ?? path.to.receipts,
       await flash(
         request,
         error(insertReceipt.error, "Failed to generate receipt")
@@ -74,5 +75,5 @@ export async function loader({ request }: LoaderFunctionArgs) {
     );
   }
 
-  return redirect(`/x/inventory/receipts/${insertReceipt.data.id}`);
+  return redirect(path.to.receipt(insertReceipt.data.id));
 }

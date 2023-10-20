@@ -6,6 +6,7 @@ import { deleteShippingMethod, getShippingMethod } from "~/modules/inventory";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -18,7 +19,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const shippingMethod = await getShippingMethod(client, shippingMethodId);
   if (shippingMethod.error) {
     return redirect(
-      "/x/inventory/shipping-methods",
+      path.to.shippingMethods,
       await flash(
         request,
         error(shippingMethod.error, "Failed to get shipping method")
@@ -37,7 +38,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { shippingMethodId } = params;
   if (!shippingMethodId) {
     return redirect(
-      "/x/inventory/shipping-methods",
+      path.to.shippingMethods,
       await flash(request, error(params, "Failed to get an shipping method id"))
     );
   }
@@ -48,7 +49,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   );
   if (deleteTypeError) {
     return redirect(
-      "/x/inventory/shipping-methods",
+      path.to.shippingMethods,
       await flash(
         request,
         error(deleteTypeError, "Failed to delete shipping method")
@@ -57,7 +58,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    "/x/inventory/shipping-methods",
+    path.to.shippingMethods,
     await flash(request, success("Successfully deleted shipping method"))
   );
 }
@@ -69,7 +70,7 @@ export default function DeleteShippingMethodRoute() {
 
   if (!shippingMethodId || !shippingMethod) return null; // TODO - handle this better (404?)
 
-  const onCancel = () => navigate("/x/inventory/shipping-methods");
+  const onCancel = () => navigate(path.to.shippingMethods);
 
   return (
     <ConfirmDelete

@@ -9,6 +9,7 @@ import {
 } from "~/modules/purchasing";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import { path } from "~/utils/path";
 import { getGenericQueryFilters } from "~/utils/query";
 import { error } from "~/utils/result";
 
@@ -40,10 +41,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (purchasOrders.error) {
     redirect(
-      "/x",
+      path.to.home,
       await flash(
         request,
-        error(purchasOrders.error, "Failed to fetch purchas orders")
+        error(purchasOrders.error, "Failed to fetch purchase orders")
       )
     );
   }

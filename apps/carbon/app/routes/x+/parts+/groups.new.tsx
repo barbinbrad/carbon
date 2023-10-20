@@ -10,6 +10,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -62,7 +63,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   return redirect(
-    "/x/parts/groups",
+    path.to.partGroups,
     await flash(request, success("Part group created"))
   );
 }
@@ -70,7 +71,7 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function NewPartGroupsRoute() {
   const routeData = useRouteData<{
     accounts: { name: string; number: string }[];
-  }>("/x/parts/groups");
+  }>(path.to.partGroups);
 
   const initialValues = {
     name: "",

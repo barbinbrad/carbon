@@ -4,6 +4,7 @@ import { deletePurchaseOrder } from "~/modules/purchasing";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error } from "~/utils/result";
 
 export async function action({ request, params }: ActionFunctionArgs) {
@@ -19,7 +20,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
   if (remove.error) {
     return redirect(
-      "/x/documents/search",
+      path.to.purchaseOrders,
       await flash(
         request,
         error(remove.error, "Failed to delete purchase order")

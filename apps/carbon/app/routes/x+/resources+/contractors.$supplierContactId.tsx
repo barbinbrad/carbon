@@ -11,6 +11,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -19,13 +20,13 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   });
 
   const { supplierContactId } = params;
-  if (!supplierContactId) throw notFound("Contractor ID was not found");
+  if (!supplierContactId) throw notFound("supplierContactId not found");
 
   const contractor = await getContractor(client, supplierContactId);
 
   if (contractor.error) {
     return redirect(
-      "/x/resources/contractors",
+      path.to.contractors,
       await flash(request, error(contractor.error, "Failed to get contractor"))
     );
   }
@@ -61,7 +62,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (updateContractor.error) {
     return redirect(
-      "/x/resources/contractors",
+      path.to.contractors,
       await flash(
         request,
         error(updateContractor.error, "Failed to create contractor.")
@@ -70,7 +71,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   return redirect(
-    "/x/resources/contractors",
+    path.to.contractors,
     await flash(request, success("Contractor updated."))
   );
 }

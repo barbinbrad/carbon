@@ -10,6 +10,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error } from "~/utils/result";
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -37,7 +38,7 @@ export async function action({ request }: ActionFunctionArgs) {
   });
   if (createEquipmentType.error) {
     return redirect(
-      "/x/resources/equipment",
+      path.to.equipment,
       await flash(
         request,
         error(createEquipmentType.error, "Failed to create equipment type")
@@ -45,12 +46,12 @@ export async function action({ request }: ActionFunctionArgs) {
     );
   }
 
-  return redirect("/x/resources/equipment");
+  return redirect(path.to.equipment);
 }
 
 export default function NewEquipmentTypeRoute() {
   const navigate = useNavigate();
-  const onClose = () => navigate("/x/resources/equipment");
+  const onClose = () => navigate(path.to.equipment);
 
   const initialValues = {
     name: "",

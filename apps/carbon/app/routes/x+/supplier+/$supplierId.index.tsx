@@ -12,6 +12,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -30,7 +31,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (!id) {
     return redirect(
-      "/x/purchasing/suppliers",
+      path.to.suppliers,
       await flash(request, error(null, "Failed to update supplier"))
     );
   }
@@ -42,7 +43,7 @@ export async function action({ request }: ActionFunctionArgs) {
   });
   if (update.error) {
     return redirect(
-      "/x/purchasing/suppliers",
+      path.to.suppliers,
       await flash(request, error(update.error, "Failed to update supplier"))
     );
   }
@@ -54,7 +55,7 @@ export default function SupplierEditRoute() {
   const { supplierId } = useParams();
   if (!supplierId) throw new Error("Could not find supplierId");
   const routeData = useRouteData<{ supplier: SupplierDetail }>(
-    `/x/supplier/${supplierId}`
+    path.to.supplier(supplierId)
   );
 
   if (!routeData?.supplier) return null;

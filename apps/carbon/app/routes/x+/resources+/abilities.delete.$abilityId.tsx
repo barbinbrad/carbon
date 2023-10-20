@@ -6,6 +6,7 @@ import { deleteAbility, getAbility } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -20,7 +21,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const ability = await getAbility(client, abilityId);
   if (ability.error) {
     return redirect(
-      "/x/resources/abilities",
+      path.to.abilities,
       await flash(request, error(ability.error, "Failed to get ability"))
     );
   }
@@ -38,7 +39,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { abilityId } = params;
   if (!abilityId) {
     return redirect(
-      "/x/resources/abilities",
+      path.to.abilities,
       await flash(request, error(params, "Failed to get ability id"))
     );
   }
@@ -46,7 +47,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { error: deleteAbilityError } = await deleteAbility(client, abilityId);
   if (deleteAbilityError) {
     return redirect(
-      "/x/resources/abilities",
+      path.to.abilities,
       await flash(
         request,
         error(deleteAbilityError, "Failed to delete ability")
@@ -55,7 +56,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    "/x/resources/abilities",
+    path.to.abilities,
     await flash(request, success("Successfully deleted employee type"))
   );
 }
@@ -67,7 +68,7 @@ export default function DeleteEmployeeTypeRoute() {
 
   if (!abilityId || !ability) return null; // TODO - handle this better (404?)
 
-  const onCancel = () => navigate("/x/resources/abilities");
+  const onCancel = () => navigate(path.to.abilities);
 
   return (
     <ConfirmDelete

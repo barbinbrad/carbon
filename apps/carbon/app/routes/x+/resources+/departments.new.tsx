@@ -9,6 +9,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -36,7 +37,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (createDepartment.error) {
     return redirect(
-      "/x/resources/departments",
+      path.to.departments,
       await flash(
         request,
         error(createDepartment.error, "Failed to create department.")
@@ -45,7 +46,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   return redirect(
-    "/x/resources/departments",
+    path.to.departments,
     await flash(request, success("Department created."))
   );
 }

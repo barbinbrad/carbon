@@ -7,6 +7,7 @@ import { getWorkCell, WorkCellForm } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -16,12 +17,13 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   });
 
   const { typeId, workCellId } = params;
+  if (!typeId) throw notFound("typeId not found");
   if (!workCellId) throw notFound("workCellId not found");
 
   const workCell = await getWorkCell(client, workCellId);
   if (workCell.error) {
     return redirect(
-      `/x/resources/work-cells/list/${typeId}`,
+      path.to.workCellTypeList(typeId),
       await flash(request, error(workCell.error, "Failed to fetch work cell"))
     );
   }
@@ -34,9 +36,10 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 export default function EditWorkCellRoute() {
   const { workCell } = useLoaderData<typeof loader>();
   const { typeId } = useParams();
+  if (!typeId) throw new Error("typeId not found");
 
   const navigate = useNavigate();
-  const onClose = () => navigate(`/x/resources/work-cells/list/${typeId}`);
+  const onClose = () => navigate(path.to.workCellTypeList(typeId));
   const workCellRouteData = useRouteData<{
     workCellTypes: WorkCellType[];
   }>("/x/resources/work-cells");

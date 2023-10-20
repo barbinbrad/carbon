@@ -12,6 +12,7 @@ import {
 import { EmployeeAbilityForm } from "~/modules/resources/ui/Abilities";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function action({ params, request }: ActionFunctionArgs) {
@@ -41,7 +42,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
 
   if (insertEmployeeAbility.error) {
     return redirect(
-      `/x/resources/ability/${abilityId}`,
+      path.to.ability(abilityId),
       await flash(
         request,
         error(
@@ -53,7 +54,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
   }
 
   return redirect(
-    `/x/resources/ability/${abilityId}`,
+    path.to.ability(abilityId),
     await flash(request, success("Employee ability created"))
   );
 }
@@ -67,7 +68,7 @@ export default function NewEmployeeAbilityRoute() {
   const abilitiesRouteData = useRouteData<{
     ability: Ability;
     weeks: number;
-  }>(`/x/resources/ability/${abilityId}`);
+  }>(path.to.ability(abilityId));
 
   if (!abilitiesRouteData?.ability) return null;
 

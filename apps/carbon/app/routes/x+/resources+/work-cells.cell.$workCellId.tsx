@@ -5,6 +5,7 @@ import { upsertWorkCell, workCellValidator } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function action({ request, params }: ActionFunctionArgs) {
@@ -22,7 +23,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { workCellId } = params;
   if (!workCellId) {
     return redirect(
-      "/x/resources/work-cells",
+      path.to.workCells,
       await flash(
         request,
         error("No work cell id provided", "Failed to update work cell")
@@ -37,7 +38,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   });
   if (updateWorkCell.error)
     redirect(
-      "/x/resources/work-cells/",
+      path.to.workCells,
       await flash(
         request,
         error(updateWorkCell.error, "Failed to update work cell")
@@ -45,7 +46,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
     );
 
   return redirect(
-    `/x/resources/work-cells/list/${validation.data.workCellTypeId}`,
+    path.to.workCellTypeList(validation.data.workCellTypeId),
     await flash(request, success("Successfully updated workCell"))
   );
 }

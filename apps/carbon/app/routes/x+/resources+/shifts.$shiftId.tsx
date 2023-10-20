@@ -11,6 +11,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -25,7 +26,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   if (shift.error) {
     return redirect(
-      "/x/resources/shifts",
+      path.to.shifts,
       await flash(request, error(shift.error, "Failed to get shift"))
     );
   }
@@ -53,13 +54,13 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (createShift.error) {
     return redirect(
-      "/x/resources/shifts",
+      path.to.shifts,
       await flash(request, error(createShift.error, "Failed to create shift."))
     );
   }
 
   return redirect(
-    "/x/resources/shifts",
+    path.to.shifts,
     await flash(request, success("Shift updated."))
   );
 }

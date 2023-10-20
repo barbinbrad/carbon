@@ -11,6 +11,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -26,7 +27,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   if (customerType?.data?.protected) {
     return redirect(
-      "/x/sales/customer-types",
+      path.to.customerTypes,
       await flash(request, error(null, "Cannot edit a protected customer type"))
     );
   }
@@ -70,7 +71,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   return redirect(
-    "/x/sales/customer-types",
+    path.to.customerTypes,
     await flash(request, success("Updated customer type"))
   );
 }

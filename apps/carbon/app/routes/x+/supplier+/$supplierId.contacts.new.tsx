@@ -9,6 +9,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function action({ request, params }: ActionFunctionArgs) {
@@ -36,7 +37,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   });
   if (createSupplierContact.error) {
     return redirect(
-      `/x/supplier/${supplierId}/contacts`,
+      path.to.supplierContacts(supplierId),
       await flash(
         request,
         error(createSupplierContact.error, "Failed to create supplier contact")
@@ -45,7 +46,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    `/x/supplier/${supplierId}/contacts`,
+    path.to.supplierContacts(supplierId),
     await flash(request, success("Supplier contact created"))
   );
 }

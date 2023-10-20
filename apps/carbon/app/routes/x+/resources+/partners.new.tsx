@@ -10,6 +10,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -35,7 +36,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (createPartner.error) {
     return redirect(
-      "/x/resources/partners",
+      path.to.partners,
       await flash(
         request,
         error(createPartner.error, "Failed to create partner.")
@@ -44,7 +45,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   return redirect(
-    "/x/resources/partners",
+    path.to.partners,
     await flash(request, success("Partner created."))
   );
 }

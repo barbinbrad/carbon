@@ -3,6 +3,7 @@ import { redirect } from "@remix-run/node";
 import { deleteSupplierLocation } from "~/modules/purchasing";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function action({ request, params }: ActionFunctionArgs) {
@@ -13,7 +14,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { supplierId, supplierLocationId } = params;
   if (!supplierId || !supplierLocationId) {
     return redirect(
-      "/x/purchasing/suppliers",
+      path.to.suppliers,
       await flash(
         request,
         error(params, "Failed to get a supplier location id")
@@ -28,7 +29,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   );
   if (deleteSupplierLocationError) {
     return redirect(
-      `/x/supplier/${supplierId}/locations`,
+      path.to.supplierLocations(supplierId),
       await flash(
         request,
         error(deleteSupplierLocationError, "Failed to delete supplier location")
@@ -37,7 +38,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    `/x/supplier/${supplierId}/locations`,
+    path.to.supplierLocations(supplierId),
     await flash(request, success("Successfully deleted supplier location"))
   );
 }

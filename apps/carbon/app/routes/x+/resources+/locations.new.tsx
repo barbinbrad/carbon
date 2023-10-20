@@ -10,6 +10,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -33,7 +34,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (createLocation.error) {
     return redirect(
-      "/x/resources/locations",
+      path.to.locations,
       await flash(
         request,
         error(createLocation.error, "Failed to create location.")
@@ -42,7 +43,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   return redirect(
-    "/x/resources/locations",
+    path.to.locations,
     await flash(request, success("Location created."))
   );
 }

@@ -10,6 +10,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -24,7 +25,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const attributeCategory = await getAttributeCategory(client, categoryId);
   if (attributeCategory.error) {
     return redirect(
-      "/x/resources/attributes",
+      path.to.attributes,
       await flash(
         request,
         error(attributeCategory.error, "Failed to fetch attribute category")
@@ -74,8 +75,7 @@ export default function AttributeCategoryListRoute() {
   const { attributeCategory } = useLoaderData<typeof loader>();
   const [params] = useUrlParams();
   const navigate = useNavigate();
-  const onClose = () =>
-    navigate(`/x/resources/attributes?${params.toString()}`);
+  const onClose = () => navigate(`${path.to.attributes}?${params.toString()}`);
 
   return (
     <>

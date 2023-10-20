@@ -6,6 +6,7 @@ import { deleteShift, getShift } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -20,7 +21,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const shift = await getShift(client, shiftId);
   if (shift.error) {
     return redirect(
-      "/x/resources/shifts",
+      path.to.shifts,
       await flash(request, error(shift.error, "Failed to get shift"))
     );
   }
@@ -38,7 +39,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { shiftId } = params;
   if (!shiftId) {
     return redirect(
-      "/x/resources/shifts",
+      path.to.shifts,
       await flash(request, error(params, "Failed to get shift id"))
     );
   }
@@ -46,13 +47,13 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { error: deleteShiftError } = await deleteShift(client, shiftId);
   if (deleteShiftError) {
     return redirect(
-      "/x/resources/shifts",
+      path.to.shifts,
       await flash(request, error(deleteShiftError, "Failed to delete shift"))
     );
   }
 
   return redirect(
-    "/x/resources/shifts",
+    path.to.shifts,
     await flash(request, success("Successfully deleted shift"))
   );
 }
@@ -64,7 +65,7 @@ export default function DeleteShiftRoute() {
 
   if (!shiftId || !shift) return null; // TODO - handle this better (404?)
 
-  const onCancel = () => navigate("/x/resources/shifts");
+  const onCancel = () => navigate(path.to.shifts);
   if (Array.isArray(shift.location))
     throw new Error("Shift location is an array");
 

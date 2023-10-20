@@ -9,6 +9,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 
 export async function action({ request }: ActionFunctionArgs) {
   assertIsPost(request);
@@ -32,7 +33,7 @@ export async function action({ request }: ActionFunctionArgs) {
     employeeType,
   });
 
-  return redirect("/x/users/employees", await flash(request, result));
+  return redirect(path.to.employeeAccounts, await flash(request, result));
 }
 
 export default function () {

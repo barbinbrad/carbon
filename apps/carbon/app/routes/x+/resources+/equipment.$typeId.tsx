@@ -11,6 +11,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -25,7 +26,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const equipmentType = await getEquipmentType(client, typeId);
   if (equipmentType.error) {
     return redirect(
-      "/x/resources/equipment",
+      path.to.equipment,
       await flash(
         request,
         error(equipmentType.error, "Failed to fetch equipment type")
@@ -63,7 +64,7 @@ export async function action({ request }: ActionFunctionArgs) {
   });
   if (updateCategory.error) {
     return redirect(
-      "/x/resources/equipment",
+      path.to.equipment,
       await flash(
         request,
         error(updateCategory.error, "Failed to update equipment type")
@@ -72,7 +73,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   return redirect(
-    "/x/resources/equipment",
+    path.to.equipment,
     await flash(request, success("Updated equipment type "))
   );
 }
@@ -80,7 +81,7 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function EditAttributeCategoryRoute() {
   const { equipmentType } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
-  const onClose = () => navigate("/x/resources/equipment/");
+  const onClose = () => navigate(path.to.equipment);
 
   const initialValues = {
     id: equipmentType?.id,

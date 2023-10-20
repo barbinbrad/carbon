@@ -11,6 +11,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -25,7 +26,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   if (holiday.error) {
     return redirect(
-      "/x/resources/holidays",
+      path.to.holidays,
       await flash(request, error(holiday.error, "Failed to get holiday"))
     );
   }
@@ -59,7 +60,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (updateHoliday.error) {
     return redirect(
-      "/x/resources/holidays",
+      path.to.holidays,
       await flash(
         request,
         error(updateHoliday.error, "Failed to create holiday.")
@@ -68,7 +69,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   return redirect(
-    "/x/resources/holidays",
+    path.to.holidays,
     await flash(request, success("Holiday updated."))
   );
 }

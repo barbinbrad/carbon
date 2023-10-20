@@ -11,6 +11,7 @@ import {
 } from "~/modules/users";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import { path } from "~/utils/path";
 import { getGenericQueryFilters } from "~/utils/query";
 import { error } from "~/utils/result";
 
@@ -35,7 +36,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (customers.error) {
     redirect(
-      "/x",
+      path.to.users,
       await flash(request, error(customers.error, "Failed to fetch customers"))
     );
   }

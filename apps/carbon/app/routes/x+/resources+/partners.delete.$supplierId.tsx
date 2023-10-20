@@ -6,6 +6,7 @@ import { deletePartner, getPartner } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -20,7 +21,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const partner = await getPartner(client, supplierId);
   if (partner.error) {
     return redirect(
-      "/x/resources/partners",
+      path.to.partners,
       await flash(request, error(partner.error, "Failed to get partner"))
     );
   }
@@ -38,7 +39,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { supplierId } = params;
   if (!supplierId) {
     return redirect(
-      "/x/resources/partners",
+      path.to.partners,
       await flash(request, error(params, "Failed to get partner id"))
     );
   }
@@ -46,7 +47,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { error: deletePartnerError } = await deletePartner(client, supplierId);
   if (deletePartnerError) {
     return redirect(
-      "/x/resources/partners",
+      path.to.partners,
       await flash(
         request,
         error(deletePartnerError, "Failed to delete partner")
@@ -55,7 +56,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    "/x/resources/partners",
+    path.to.partners,
     await flash(request, success("Successfully deleted partner"))
   );
 }
@@ -64,7 +65,7 @@ export default function DeletePartnerRoute() {
   const { partner } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
 
-  const onCancel = () => navigate("/x/resources/partners");
+  const onCancel = () => navigate(path.to.partners);
 
   return (
     <ConfirmDelete

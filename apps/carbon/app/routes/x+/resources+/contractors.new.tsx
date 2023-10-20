@@ -10,6 +10,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -37,7 +38,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (createContractor.error) {
     return redirect(
-      "/x/resources/contractors",
+      path.to.contractors,
       await flash(
         request,
         error(createContractor.error, "Failed to create contractor.")
@@ -46,7 +47,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   return redirect(
-    "/x/resources/contractors",
+    path.to.contractors,
     await flash(request, success("Contractor created."))
   );
 }

@@ -3,6 +3,7 @@ import { redirect } from "@remix-run/node";
 import { deleteEquipmentType } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function action({ request, params }: LoaderFunctionArgs) {
@@ -13,7 +14,7 @@ export async function action({ request, params }: LoaderFunctionArgs) {
   const { typeId } = params;
   if (!typeId) {
     return redirect(
-      "/x/resources/equipment",
+      path.to.equipment,
       await flash(request, error(params, "Failed to get a equipment type id"))
     );
   }
@@ -21,7 +22,7 @@ export async function action({ request, params }: LoaderFunctionArgs) {
   const deactivateEquipmentType = await deleteEquipmentType(client, typeId);
   if (deactivateEquipmentType.error) {
     return redirect(
-      "/x/resources/equipment",
+      path.to.equipment,
       await flash(
         request,
         error(
@@ -33,7 +34,7 @@ export async function action({ request, params }: LoaderFunctionArgs) {
   }
 
   return redirect(
-    "/x/resources/equipment",
+    path.to.equipment,
     await flash(request, success("Successfully deactivated equipment type"))
   );
 }

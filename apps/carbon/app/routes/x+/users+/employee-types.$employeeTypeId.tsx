@@ -15,6 +15,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -33,7 +34,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   if (employeeType?.data?.protected) {
     return redirect(
-      "/x/users/employee-types",
+      path.to.employeeTypes,
       await flash(request, error(null, "Cannot edit a protected employee type"))
     );
   }
@@ -112,7 +113,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   return redirect(
-    "/x/users/employee-types",
+    path.to.employeeTypes,
     await flash(request, success("Updated employee type"))
   );
 }

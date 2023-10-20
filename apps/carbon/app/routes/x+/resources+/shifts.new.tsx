@@ -5,6 +5,7 @@ import { ShiftForm, shiftValidator, upsertShift } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -25,13 +26,13 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (createShift.error) {
     return redirect(
-      "/x/resources/shifts",
+      path.to.shifts,
       await flash(request, error(createShift.error, "Failed to create shift."))
     );
   }
 
   return redirect(
-    "/x/resources/shifts",
+    path.to.shifts,
     await flash(request, success("Shift created."))
   );
 }

@@ -9,6 +9,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 
 export async function action({ request }: ActionFunctionArgs) {
   assertIsPost(request);
@@ -36,12 +37,12 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (customerRedirect) {
     return redirect(
-      `/x/customer/${customerRedirect}/contacts`,
+      path.to.customerContacts(customerRedirect),
       await flash(request, result)
     );
   }
 
-  return redirect("/x/users/customers", await flash(request, result));
+  return redirect(path.to.customerAccounts, await flash(request, result));
 }
 
 export default function () {

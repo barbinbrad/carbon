@@ -90,7 +90,7 @@ export default function AuthCallback() {
     });
 
     return () => {
-      // prevent memory leak. Listener stays alive 👨‍🎤
+      // to prevent a memory leak
       subscription.unsubscribe();
     };
   }, [fetcher, supabase.auth]);

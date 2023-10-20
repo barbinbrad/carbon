@@ -3,6 +3,7 @@ import { redirect } from "@remix-run/node";
 import { deleteSupplierContact } from "~/modules/purchasing";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function action({ request, params }: ActionFunctionArgs) {
@@ -13,7 +14,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { supplierId, supplierContactId } = params;
   if (!supplierId || !supplierContactId) {
     return redirect(
-      "/x/purchasing/suppliers",
+      path.to.suppliers,
       await flash(request, error(params, "Failed to get a supplier contact id"))
     );
   }
@@ -27,7 +28,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   );
   if (deleteSupplierContactError) {
     return redirect(
-      `/x/supplier/${supplierId}/contacts`,
+      path.to.supplierContacts(supplierId),
       await flash(
         request,
         error(deleteSupplierContactError, "Failed to delete supplier contact")
@@ -36,7 +37,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    `/x/supplier/${supplierId}/contacts`,
+    path.to.supplierContacts(supplierId),
     await flash(request, success("Successfully deleted supplier contact"))
   );
 }

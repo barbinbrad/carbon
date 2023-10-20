@@ -11,6 +11,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -25,7 +26,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const sequence = await getSequence(client, tableId);
   if (sequence.error) {
     return redirect(
-      "/x/settings/sequences",
+      path.to.sequences,
       await flash(request, error(sequence.error, "Failed to get sequence"))
     );
   }
@@ -62,7 +63,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   return redirect(
-    "/x/settings/sequences",
+    path.to.sequences,
     await flash(request, success("Updated sequence"))
   );
 }

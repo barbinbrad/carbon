@@ -11,6 +11,7 @@ import {
 } from "~/modules/purchasing";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import { path } from "~/utils/path";
 import { error } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -29,7 +30,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   if (supplier.error) {
     return redirect(
-      "/x/purchasing/suppliers",
+      path.to.suppliers,
       await flash(
         request,
         error(supplier.error, "Failed to load supplier summary")

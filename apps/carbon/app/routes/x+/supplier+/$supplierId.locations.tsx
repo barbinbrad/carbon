@@ -4,6 +4,7 @@ import { useLoaderData } from "@remix-run/react";
 import { getSupplierLocations, SupplierLocations } from "~/modules/purchasing";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import { path } from "~/utils/path";
 import { error } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -17,7 +18,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const locations = await getSupplierLocations(client, supplierId);
   if (locations.error) {
     return redirect(
-      `/x/supplier/${supplierId}`,
+      path.to.supplier(supplierId),
       await flash(
         request,
         error(locations.error, "Failed to fetch supplier locations")

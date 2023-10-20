@@ -12,6 +12,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -27,7 +28,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   if (groupWithMembers.error) {
     redirect(
-      "/x/users/groups",
+      path.to.groups,
       await flash(
         request,
         error(groupWithMembers.error, "Failed to load group")
@@ -38,7 +39,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const groupName = groupWithMembers.data?.[0].name;
   if (!groupName)
     return redirect(
-      "/x/users/groups",
+      path.to.groups,
       await flash(request, error(groupWithMembers, "Group not found"))
     );
 
@@ -77,13 +78,13 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (updateGroup.error)
     redirect(
-      "/x/users/groups",
+      path.to.groups,
       await flash(request, error(updateGroup.error, "Failed to update group"))
     );
 
   if (updateGroupMembers.error)
     redirect(
-      "/x/users/groups",
+      path.to.groups,
       await flash(
         request,
         error(updateGroupMembers.error, "Failed to update group members")
@@ -91,7 +92,7 @@ export async function action({ request }: ActionFunctionArgs) {
     );
 
   return redirect(
-    "/x/users/groups",
+    path.to.groups,
     await flash(request, success("Group updated successfully"))
   );
 }

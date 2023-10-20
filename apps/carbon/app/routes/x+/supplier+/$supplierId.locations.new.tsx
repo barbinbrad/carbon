@@ -9,6 +9,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function action({ request, params }: ActionFunctionArgs) {
@@ -36,7 +37,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   });
   if (createSupplierLocation.error) {
     return redirect(
-      `/x/supplier/${supplierId}/locations`,
+      path.to.supplierLocations(supplierId),
       await flash(
         request,
         error(
@@ -48,7 +49,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    `/x/supplier/${supplierId}/locations`,
+    path.to.supplierLocations(supplierId),
     await flash(request, success("Supplier location created"))
   );
 }

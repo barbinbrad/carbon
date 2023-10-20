@@ -4,6 +4,7 @@ import { useLoaderData } from "@remix-run/react";
 import { getSupplierContacts, SupplierContacts } from "~/modules/purchasing";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import { path } from "~/utils/path";
 import { error } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -17,7 +18,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const contacts = await getSupplierContacts(client, supplierId);
   if (contacts.error) {
     return redirect(
-      `/x/supplier/${supplierId}`,
+      path.to.supplier(supplierId),
       await flash(
         request,
         error(contacts.error, "Failed to fetch supplier contacts")

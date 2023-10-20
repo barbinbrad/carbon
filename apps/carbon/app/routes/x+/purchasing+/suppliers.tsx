@@ -11,6 +11,7 @@ import {
 } from "~/modules/purchasing";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import { path } from "~/utils/path";
 import { getGenericQueryFilters } from "~/utils/query";
 import { error } from "~/utils/result";
 
@@ -36,7 +37,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (suppliers.error) {
     redirect(
-      "/x",
+      path.to.purchasing,
       await flash(request, error(suppliers.error, "Failed to fetch suppliers"))
     );
   }

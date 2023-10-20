@@ -6,6 +6,7 @@ import { deleteCustomerType, getCustomerType } from "~/modules/sales";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -18,7 +19,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const customerType = await getCustomerType(client, customerTypeId);
   if (customerType.error) {
     return redirect(
-      "/x/sales/customer-types",
+      path.to.customerTypes,
       await flash(
         request,
         error(customerType.error, "Failed to get customer type")
@@ -37,7 +38,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { customerTypeId } = params;
   if (!customerTypeId) {
     return redirect(
-      "/x/sales/customer-types",
+      path.to.customerTypes,
       await flash(request, error(params, "Failed to get an customer type id"))
     );
   }
@@ -48,7 +49,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   );
   if (deleteTypeError) {
     return redirect(
-      "/x/sales/customer-types",
+      path.to.customerTypes,
       await flash(
         request,
         error(deleteTypeError, "Failed to delete customer type")
@@ -57,7 +58,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    "/x/sales/customer-types",
+    path.to.customerTypes,
     await flash(request, success("Successfully deleted customer type"))
   );
 }
@@ -67,9 +68,9 @@ export default function DeleteCustomerTypeRoute() {
   const { customerType } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
 
-  if (!customerTypeId || !customerType) return null; // TODO - handle this better (404?)
+  if (!customerTypeId) throw new Error("customerTypeId not found");
 
-  const onCancel = () => navigate("/x/sales/customer-types");
+  const onCancel = () => navigate(path.to.customerTypes);
 
   return (
     <ConfirmDelete

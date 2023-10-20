@@ -12,6 +12,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -26,7 +27,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   if (location.error) {
     return redirect(
-      "/x/resources/locations",
+      path.to.locations,
       await flash(request, error(location.error, "Failed to get location"))
     );
   }
@@ -59,7 +60,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (createLocation.error) {
     return redirect(
-      "/x/resources/locations",
+      path.to.locations,
       await flash(
         request,
         error(createLocation.error, "Failed to create location.")
@@ -68,7 +69,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   return redirect(
-    "/x/resources/locations",
+    path.to.locations,
     await flash(request, success("Location updated."))
   );
 }

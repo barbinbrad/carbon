@@ -6,6 +6,7 @@ import { deleteLocation, getLocation } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -20,7 +21,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const location = await getLocation(client, locationId);
   if (location.error) {
     return redirect(
-      "/x/resources/locations",
+      path.to.locations,
       await flash(request, error(location.error, "Failed to get location"))
     );
   }
@@ -38,7 +39,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { locationId } = params;
   if (!locationId) {
     return redirect(
-      "/x/resources/locations",
+      path.to.locations,
       await flash(request, error(params, "Failed to get location id"))
     );
   }
@@ -49,7 +50,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   );
   if (deleteLocationError) {
     return redirect(
-      "/x/resources/locations",
+      path.to.locations,
       await flash(
         request,
         error(deleteLocationError, "Failed to delete location")
@@ -58,7 +59,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    "/x/resources/locations",
+    path.to.locations,
     await flash(request, success("Successfully deleted location"))
   );
 }
@@ -70,7 +71,7 @@ export default function DeleteLocationRoute() {
 
   if (!locationId || !location) return null;
 
-  const onCancel = () => navigate("/x/resources/locations");
+  const onCancel = () => navigate(path.to.locations);
 
   return (
     <ConfirmDelete

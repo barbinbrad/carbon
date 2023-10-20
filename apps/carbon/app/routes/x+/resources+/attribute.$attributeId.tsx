@@ -5,6 +5,7 @@ import { attributeValidator, updateAttribute } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function action({ request, params }: ActionFunctionArgs) {
@@ -27,12 +28,12 @@ export async function action({ request, params }: ActionFunctionArgs) {
   });
   if (update.error)
     redirect(
-      "/x/resources/attributes",
+      path.to.attributes,
       await flash(request, error(update.error, "Failed to update attribute"))
     );
 
   return redirect(
-    "/x/resources/attributes",
+    path.to.attributes,
     await flash(request, success("Successfully updated attribtue"))
   );
 }

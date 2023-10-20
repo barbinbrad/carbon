@@ -6,6 +6,7 @@ import { getWorkCellType, WorkCellTypeDetail } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -20,7 +21,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const workCellType = await getWorkCellType(client, typeId);
   if (workCellType.error) {
     return redirect(
-      "/x/resources/work-cells",
+      path.to.workCells,
       await flash(
         request,
         error(workCellType.error, "Failed to fetch work cell")
@@ -35,8 +36,7 @@ export default function WorkCellTypeListRoute() {
   const { workCellType } = useLoaderData<typeof loader>();
   const [params] = useUrlParams();
   const navigate = useNavigate();
-  const onClose = () =>
-    navigate(`/x/resources/work-cells?${params.toString()}`);
+  const onClose = () => navigate(`${path.to.workCells}?${params.toString()}`);
 
   return (
     <>

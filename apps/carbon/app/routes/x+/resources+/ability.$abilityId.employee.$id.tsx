@@ -14,6 +14,7 @@ import {
 import { EmployeeAbilityForm } from "~/modules/resources/ui/Abilities";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -32,14 +33,15 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   }
 
   const employeeAbility = await getEmployeeAbility(client, abilityId, id);
-  if (employeeAbility.error)
+  if (employeeAbility.error) {
     redirect(
-      "/x/resources/abilities",
+      path.to.abilities,
       await flash(
         request,
         error(employeeAbility.error, "Failed to get employee ability")
       )
     );
+  }
 
   return { employeeAbility: employeeAbility.data };
 }
@@ -73,7 +75,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
 
   if (updateEmployeeAbility.error) {
     return redirect(
-      `/x/resources/ability/${abilityId}`,
+      path.to.ability(abilityId),
       await flash(
         request,
         error(
@@ -85,7 +87,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
   }
 
   return redirect(
-    `/x/resources/ability/${abilityId}`,
+    path.to.ability(abilityId),
     await flash(request, success("Employee ability updated"))
   );
 }
@@ -93,11 +95,12 @@ export async function action({ params, request }: ActionFunctionArgs) {
 export default function EmployeeAbilityRoute() {
   const navigate = useNavigate();
   const { abilityId } = useParams();
+  if (!abilityId) throw new Error("abilityId is not found");
   const { employeeAbility } = useLoaderData<typeof loader>();
   const routeData = useRouteData<{
     ability: Ability;
     weeks: number;
-  }>(`/x/resources/ability/${abilityId}`);
+  }>(path.to.ability(abilityId));
 
   if (Array.isArray(employeeAbility?.user)) {
     throw new Error("employeeAbility.user is an array");

@@ -11,6 +11,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -25,7 +26,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const workCellType = await getWorkCellType(client, typeId);
   if (workCellType.error) {
     return redirect(
-      "/x/resources/work-cells",
+      path.to.workCells,
       await flash(
         request,
         error(workCellType.error, "Failed to fetch work cell type")
@@ -63,7 +64,7 @@ export async function action({ request }: ActionFunctionArgs) {
   });
   if (updateCategory.error) {
     return redirect(
-      "/x/resources/work-cells",
+      path.to.workCells,
       await flash(
         request,
         error(updateCategory.error, "Failed to update work cell type")
@@ -72,7 +73,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   return redirect(
-    "/x/resources/work-cells",
+    path.to.workCells,
     await flash(request, success("Updated work cell type "))
   );
 }
@@ -80,7 +81,7 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function EditAttributeCategoryRoute() {
   const { workCellType } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
-  const onClose = () => navigate("/x/resources/work-cells");
+  const onClose = () => navigate(path.to.workCells);
 
   const initialValues = {
     id: workCellType?.id,

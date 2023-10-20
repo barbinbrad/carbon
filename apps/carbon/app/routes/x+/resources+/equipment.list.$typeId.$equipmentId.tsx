@@ -7,6 +7,7 @@ import { EquipmentForm, getEquipment } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -17,11 +18,12 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   const { typeId, equipmentId } = params;
   if (!equipmentId) throw notFound("equipmentId not found");
+  if (!typeId) throw notFound("typeId not found");
 
   const equipment = await getEquipment(client, equipmentId);
   if (equipment.error) {
     return redirect(
-      `/x/resources/equipment/list/${typeId}`,
+      path.to.equipmentTypeList(typeId),
       await flash(request, error(equipment.error, "Failed to fetch equipment"))
     );
   }
@@ -39,7 +41,7 @@ export default function EditEquipmentRoute() {
   const onClose = () => navigate(`/x/resources/equipment/list/${typeId}`);
   const equipmentRouteData = useRouteData<{
     equipmentTypes: EquipmentType[];
-  }>("/x/resources/equipment");
+  }>(path.to.equipment);
 
   if (
     !equipment ||

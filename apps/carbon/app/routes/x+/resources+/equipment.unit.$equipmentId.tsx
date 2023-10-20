@@ -5,6 +5,7 @@ import { equipmentValidator, upsertEquipment } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function action({ request, params }: ActionFunctionArgs) {
@@ -24,7 +25,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { equipmentId } = params;
   if (!equipmentId) {
     return redirect(
-      "/x/resources/equipment",
+      path.to.equipment,
       await flash(
         request,
         error("No equipment id provided", "Failed to update equipment")
@@ -39,7 +40,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   });
   if (updateEquipment.error)
     redirect(
-      "/x/resources/equipment/",
+      path.to.equipment,
       await flash(
         request,
         error(updateEquipment.error, "Failed to update equipment")
@@ -47,7 +48,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
     );
 
   return redirect(
-    `/x/resources/equipment/list/${validation.data.equipmentTypeId}`,
+    path.to.equipmentTypeList(validation.data.equipmentTypeId),
     await flash(request, success("Successfully updated equipment"))
   );
 }

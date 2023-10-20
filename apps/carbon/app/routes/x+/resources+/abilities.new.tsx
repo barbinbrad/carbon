@@ -11,6 +11,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 function makeCurve(startingPoint: number, weeks: number) {
@@ -98,7 +99,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   return redirect(
-    "/x/resources/abilities",
+    path.to.abilities,
     await flash(request, success(`Ability created`))
   );
 }

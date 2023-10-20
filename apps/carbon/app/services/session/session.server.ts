@@ -9,16 +9,17 @@ import {
 
 import {
   NODE_ENV,
-  SESSION_SECRET,
-  SESSION_KEY,
-  SESSION_ERROR_KEY,
-  SESSION_MAX_AGE,
   REFRESH_ACCESS_TOKEN_THRESHOLD,
+  SESSION_ERROR_KEY,
+  SESSION_KEY,
+  SESSION_MAX_AGE,
+  SESSION_SECRET,
 } from "~/config/env";
 
+import type { Result } from "~/types";
+import { path } from "~/utils/path";
 import { refreshAccessToken, verifyAuthSession } from "../auth/auth.server";
 import type { AuthSession } from "../auth/types";
-import type { Result } from "~/types";
 
 async function assertAuthSession(
   request: Request,
@@ -28,7 +29,7 @@ async function assertAuthSession(
 
   if (!authSession?.accessToken || !authSession?.refreshToken) {
     throw redirect(
-      `${onFailRedirectTo || "/login"}?${makeRedirectToFromHere(request)}`,
+      `${onFailRedirectTo || path.to.login}?${makeRedirectToFromHere(request)}`,
       {
         // TODO: convert this to await flash(request, error("No user session found"))
         headers: {
@@ -100,7 +101,7 @@ export async function commitAuthSession(
 export async function destroyAuthSession(request: Request) {
   const session = await getSession(request);
 
-  return redirect("/login", {
+  return redirect(path.to.login, {
     headers: {
       "Set-Cookie": await sessionStorage.destroySession(session),
     },

@@ -12,6 +12,7 @@ import {
 import { getEmployeeTypes } from "~/modules/users";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import { path } from "~/utils/path";
 import { getGenericQueryFilters } from "~/utils/query";
 import { error } from "~/utils/result";
 
@@ -37,7 +38,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   ]);
   if (attributeCategories.error) {
     return redirect(
-      "/x",
+      path.to.resources,
       await flash(
         request,
         error(attributeCategories.error, "Error loading attribute categories")
@@ -46,7 +47,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
   if (employeeTypes.error) {
     return redirect(
-      "/x",
+      path.to.resources,
       await flash(
         request,
         error(employeeTypes.error, "Error loading employee types")
@@ -55,7 +56,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
   if (people.error) {
     return redirect(
-      "/x",
+      path.to.resources,
       await flash(request, error(people.error, "Error loading people"))
     );
   }

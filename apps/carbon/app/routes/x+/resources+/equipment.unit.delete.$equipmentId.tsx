@@ -5,6 +5,7 @@ import { ConfirmDelete } from "~/components/Modals";
 import { deleteEquipment, getEquipment } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: ActionFunctionArgs) {
@@ -18,7 +19,7 @@ export async function loader({ request, params }: ActionFunctionArgs) {
   const equipment = await getEquipment(client, equipmentId);
   if (equipment.error) {
     return redirect(
-      `/x/resources/equipment`,
+      path.to.equipment,
       await flash(request, error(equipment.error, "Failed to get equipment"))
     );
   }
@@ -39,7 +40,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const deactivateEquipment = await deleteEquipment(client, equipmentId);
   if (deactivateEquipment.error) {
     return redirect(
-      `/x/resources/equipment`,
+      path.to.equipment,
       await flash(
         request,
         error(deactivateEquipment.error, "Failed to delete equipment")
@@ -48,7 +49,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    `/x/resources/equipment`,
+    path.to.equipment,
     await flash(request, success("Successfully deleted equipment"))
   );
 }
@@ -59,7 +60,7 @@ export default function DeleteEquipmentRoute() {
   const { equipmentId } = useParams();
   if (!equipmentId) return null;
 
-  const onCancel = () => navigate("/x/resources/equipment");
+  const onCancel = () => navigate(path.to.equipment);
 
   return (
     <ConfirmDelete

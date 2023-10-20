@@ -3,6 +3,7 @@ import { redirect } from "@remix-run/node";
 import { deleteWorkCellType } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function action({ request, params }: LoaderFunctionArgs) {
@@ -13,7 +14,7 @@ export async function action({ request, params }: LoaderFunctionArgs) {
   const { typeId } = params;
   if (!typeId) {
     return redirect(
-      "/x/resources/work-cells",
+      path.to.workCells,
       await flash(request, error(params, "Failed to get a work cell type id"))
     );
   }
@@ -21,7 +22,7 @@ export async function action({ request, params }: LoaderFunctionArgs) {
   const deactivateWorkCellType = await deleteWorkCellType(client, typeId);
   if (deactivateWorkCellType.error) {
     return redirect(
-      "/x/resources/work-cells",
+      path.to.workCells,
       await flash(
         request,
         error(
@@ -33,7 +34,7 @@ export async function action({ request, params }: LoaderFunctionArgs) {
   }
 
   return redirect(
-    "/x/resources/work-cells",
+    path.to.workCells,
     await flash(request, success("Successfully deactivated work cell type"))
   );
 }

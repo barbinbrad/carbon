@@ -33,6 +33,7 @@ import {
 } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -43,7 +44,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const { abilityId } = params;
   if (!abilityId) {
     return redirect(
-      "/x/resources/abilities",
+      path.to.abilities,
       await flash(request, error(null, "Ability ID is required"))
     );
   }
@@ -51,7 +52,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const ability = await getAbility(client, abilityId);
   if (ability.error || !ability.data) {
     return redirect(
-      "/x/resources/abilities",
+      path.to.abilities,
       await flash(request, error(ability.error, "Failed to load ability"))
     );
   }
@@ -88,7 +89,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
     });
     if (updateAbilityName.error) {
       return redirect(
-        `/x/resources/ability/${abilityId}`,
+        path.to.ability(abilityId),
         await flash(
           request,
           error(updateAbilityName.error, "Failed to update ability name")
@@ -112,7 +113,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
     });
     if (updateAbilityCurve.error) {
       return redirect(
-        `/x/resources/ability/${abilityId}`,
+        path.to.ability(abilityId),
         await flash(
           request,
           error(updateAbilityCurve.error, "Failed to update ability data")
@@ -122,7 +123,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    `/x/resources/ability/${abilityId}`,
+    path.to.ability(abilityId),
     await flash(request, success("Ability updated"))
   );
 }
@@ -163,7 +164,7 @@ export default function AbilitiesRoute() {
             <ValidatedForm
               validator={abilityNameValidator}
               method="post"
-              action={`/x/resources/ability/${ability.id}`}
+              action={path.to.ability(ability.id)}
               defaultValues={{
                 name: ability.name,
               }}
@@ -175,7 +176,7 @@ export default function AbilitiesRoute() {
                   aria-label="Back"
                   variant="ghost"
                   icon={<MdOutlineArrowBackIos />}
-                  onClick={() => navigate("/x/resources/abilities")}
+                  onClick={() => navigate(path.to.abilities)}
                 />
                 <Input
                   autoFocus
@@ -199,7 +200,7 @@ export default function AbilitiesRoute() {
                 aria-label="Back"
                 variant="ghost"
                 icon={<MdOutlineArrowBackIos />}
-                onClick={() => navigate("/x/resources/abilities")}
+                onClick={() => navigate(path.to.abilities)}
               />
               <Heading size="md">{ability.name}</Heading>
               <IconButton
@@ -244,7 +245,7 @@ export default function AbilitiesRoute() {
             <ValidatedForm
               validator={abilityCurveValidator}
               method="post"
-              action={`/x/resources/ability/${ability.id}`}
+              action={path.to.ability(ability.id)}
             >
               <Hidden name="intent" value="curve" />
               <Hidden name="data" value={JSON.stringify(data)} />

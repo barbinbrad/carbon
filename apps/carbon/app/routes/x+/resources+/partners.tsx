@@ -10,6 +10,7 @@ import {
 } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import { path } from "~/utils/path";
 import { getGenericQueryFilters } from "~/utils/query";
 import { error } from "~/utils/result";
 
@@ -38,7 +39,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (partners.error) {
     return redirect(
-      "/x/resources",
+      path.to.resources,
       await flash(request, error(partners.error, "Failed to load partners"))
     );
   }

@@ -14,6 +14,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -24,7 +25,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const features = await getFeatures(client);
   if (features.error || features.data === null) {
     return redirect(
-      "/x/users/employee-types",
+      path.to.employeeTypes,
       await flash(request, error(features.error, "Failed to get features"))
     );
   }
@@ -107,7 +108,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   return redirect(
-    "/x/users/employee-types",
+    path.to.employeeTypes,
     await flash(request, success("Employee type created"))
   );
 }

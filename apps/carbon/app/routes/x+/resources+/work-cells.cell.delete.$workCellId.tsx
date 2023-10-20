@@ -5,6 +5,7 @@ import { ConfirmDelete } from "~/components/Modals";
 import { deleteWorkCell, getWorkCell } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: ActionFunctionArgs) {
@@ -18,7 +19,7 @@ export async function loader({ request, params }: ActionFunctionArgs) {
   const workCell = await getWorkCell(client, workCellId);
   if (workCell.error) {
     return redirect(
-      `/x/resources/work-cells`,
+      path.to.workCells,
       await flash(request, error(workCell.error, "Failed to get work cell"))
     );
   }
@@ -39,7 +40,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const deactivateWorkCell = await deleteWorkCell(client, workCellId);
   if (deactivateWorkCell.error) {
     return redirect(
-      `/x/resources/work-cells`,
+      path.to.workCells,
       await flash(
         request,
         error(deactivateWorkCell.error, "Failed to delete work cell")
@@ -48,7 +49,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    `/x/resources/work-cells`,
+    path.to.workCells,
     await flash(request, success("Successfully deleted work cell"))
   );
 }
@@ -59,7 +60,7 @@ export default function DeleteWorkCellRoute() {
   const { workCellId } = useParams();
   if (!workCellId) return null;
 
-  const onCancel = () => navigate("/x/resources/work-cells");
+  const onCancel = () => navigate(path.to.workCells);
 
   return (
     <ConfirmDelete

@@ -11,6 +11,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, badRequest, notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -25,7 +26,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const contact = await getSupplierContact(client, supplierContactId);
   if (contact.error) {
     return redirect(
-      `/x/supplier/${supplierId}/contacts`,
+      path.to.supplierContacts(supplierId),
       await flash(
         request,
         error(contact.error, "Failed to get supplier contact")
@@ -71,7 +72,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
   if (update.error) {
     return redirect(
-      `/x/supplier/${supplierId}/contacts`,
+      path.to.supplierContacts(supplierId),
       await flash(
         request,
         error(update.error, "Failed to update supplier contact")
@@ -80,7 +81,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    `/x/supplier/${supplierId}/contacts`,
+    path.to.supplierContacts(supplierId),
     await flash(request, success("Supplier contact updated"))
   );
 }

@@ -11,6 +11,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -25,7 +26,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const attributeCategory = await getAttributeCategory(client, categoryId);
   if (attributeCategory.error) {
     return redirect(
-      "/x/resources/attributes",
+      path.to.attributes,
       await flash(
         request,
         error(attributeCategory.error, "Failed to fetch attribute category")
@@ -61,7 +62,7 @@ export async function action({ request }: ActionFunctionArgs) {
   });
   if (updateCategory.error) {
     return redirect(
-      "/x/resources/attributes",
+      path.to.attributes,
       await flash(
         request,
         error(updateCategory.error, "Failed to update attribute category")
@@ -70,7 +71,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   return redirect(
-    "/x/resources/attributes",
+    path.to.attributes,
     await flash(request, success("Updated attribute category "))
   );
 }
@@ -78,7 +79,7 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function EditAttributeCategoryRoute() {
   const { attributeCategory } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
-  const onClose = () => navigate("/x/resources/attributes/");
+  const onClose = () => navigate(path.to.attributes);
 
   const initialValues = {
     id: attributeCategory?.id,

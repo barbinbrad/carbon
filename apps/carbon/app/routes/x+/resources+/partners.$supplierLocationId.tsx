@@ -11,6 +11,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -25,7 +26,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   if (partner.error) {
     return redirect(
-      "/x/resources/partners",
+      path.to.partners,
       await flash(request, error(partner.error, "Failed to get partner"))
     );
   }
@@ -59,7 +60,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (updatePartner.error) {
     return redirect(
-      "/x/resources/partners",
+      path.to.partners,
       await flash(
         request,
         error(updatePartner.error, "Failed to create partner.")
@@ -68,7 +69,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   return redirect(
-    "/x/resources/partners",
+    path.to.partners,
     await flash(request, success("Partner updated."))
   );
 }

@@ -9,6 +9,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -33,7 +34,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (createHoliday.error) {
     return redirect(
-      "/x/resources/holidays",
+      path.to.holidays,
       await flash(
         request,
         error(createHoliday.error, "Failed to create holiday.")
@@ -42,7 +43,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   return redirect(
-    "/x/resources/holidays",
+    path.to.holidays,
     await flash(request, success("Holiday created."))
   );
 }

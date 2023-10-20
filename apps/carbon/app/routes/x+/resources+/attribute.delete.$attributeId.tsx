@@ -3,6 +3,7 @@ import { redirect } from "@remix-run/node";
 import { deleteAttribute } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function action({ request, params }: LoaderFunctionArgs) {
@@ -13,7 +14,7 @@ export async function action({ request, params }: LoaderFunctionArgs) {
   const { attributeId } = params;
   if (!attributeId) {
     return redirect(
-      "/x/resources/attributes",
+      path.to.attributes,
       await flash(request, error(params, "Failed to get an attribute id"))
     );
   }
@@ -21,7 +22,7 @@ export async function action({ request, params }: LoaderFunctionArgs) {
   const deactivateAttribute = await deleteAttribute(client, attributeId);
   if (deactivateAttribute.error) {
     return redirect(
-      "/x/resources/attributes",
+      path.to.attributes,
       await flash(
         request,
         error(deactivateAttribute.error, "Failed to deactivate attribute")
@@ -30,7 +31,7 @@ export async function action({ request, params }: LoaderFunctionArgs) {
   }
 
   return redirect(
-    "/x/resources/attributes",
+    path.to.attributes,
     await flash(request, success("Successfully deactivated attribute"))
   );
 }

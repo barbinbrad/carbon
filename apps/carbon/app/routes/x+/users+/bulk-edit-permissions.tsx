@@ -11,6 +11,7 @@ import { userPermissionsQueue } from "~/queues";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -37,7 +38,7 @@ export async function action({ request }: ActionFunctionArgs) {
     )
   ) {
     return redirect(
-      "/x/users/employees",
+      path.to.employeeAccounts,
       await flash(request, error(permissions, "Failed to parse permissions"))
     );
   }
@@ -56,7 +57,7 @@ export async function action({ request }: ActionFunctionArgs) {
   await userPermissionsQueue.addBulk(jobs);
 
   return redirect(
-    "/x/users/employees",
+    path.to.employeeAccounts,
     await flash(request, success("Updating user permissions"))
   );
 }

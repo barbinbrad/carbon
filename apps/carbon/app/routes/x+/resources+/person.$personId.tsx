@@ -27,6 +27,7 @@ import { getNotes } from "~/modules/shared";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -38,7 +39,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   if (!personId) {
     throw redirect(
-      "/app/x/resources/people",
+      path.to.people,
       await flash(request, error(null, "No person ID provided"))
     );
   }
@@ -61,7 +62,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   if (user.error || !user.data) {
     return redirect(
-      "/x/resources/people",
+      path.to.people,
       await flash(request, error(user.error, "Failed to get user"))
     );
   }

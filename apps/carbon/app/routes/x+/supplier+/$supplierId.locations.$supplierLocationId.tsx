@@ -11,6 +11,7 @@ import {
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, badRequest, notFound } from "~/utils/http";
+import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -25,7 +26,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const location = await getSupplierLocation(client, supplierLocationId);
   if (location.error) {
     return redirect(
-      `/x/supplier/${supplierId}/locations`,
+      path.to.supplierLocations(supplierId),
       await flash(
         request,
         error(location.error, "Failed to get supplier location")
@@ -67,7 +68,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   });
   if (update.error) {
     return redirect(
-      `/x/supplier/${supplierId}/locations`,
+      path.to.supplierLocations(supplierId),
       await flash(
         request,
         error(update.error, "Failed to update supplier address")
@@ -76,7 +77,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    `/x/supplier/${supplierId}/locations`,
+    path.to.supplierLocations(supplierId),
     await flash(request, success("Supplier address updated"))
   );
 }

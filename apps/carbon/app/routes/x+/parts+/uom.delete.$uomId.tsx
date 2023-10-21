@@ -65,13 +65,14 @@ export default function DeleteUnitOfMeasureRoute() {
   const { unitOfMeasure } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
 
-  if (!uomId || !unitOfMeasure) return null; // TODO - handle this better (404?)
+  if (!unitOfMeasure) return null;
+  if (!uomId) throw notFound("uomId not found");
 
   const onCancel = () => navigate(path.to.uom);
 
   return (
     <ConfirmDelete
-      action={`/x/parts/uom/delete/${uomId}`}
+      action={path.to.deleteUom(uomId)}
       name={unitOfMeasure.name}
       text={`Are you sure you want to delete the unit of measure: ${unitOfMeasure.name}? This cannot be undone.`}
       onCancel={onCancel}

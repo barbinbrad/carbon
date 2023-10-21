@@ -4,6 +4,7 @@ import { useNavigate } from "@remix-run/react";
 
 import { commitAuthSession, refreshAuthSession } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
+import { path } from "~/utils/path";
 
 // this is just for supabase provider refresh
 export async function action({ request }: ActionFunctionArgs) {
@@ -25,6 +26,6 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export function ErrorBoundary() {
   const navigate = useNavigate();
-  navigate("/x");
+  navigate(path.to.authenticatedRoot);
   return null;
 }

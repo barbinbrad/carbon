@@ -120,7 +120,7 @@ export async function requirePermissions(
 
   if (!hasRequiredPermissions) {
     throw redirect(
-      path.to.home,
+      path.to.authenticatedRoot,
       await flash(
         request,
         error({ myClaims, requiredPermissions }, "Access Denied")

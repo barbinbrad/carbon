@@ -69,13 +69,14 @@ export default function DeleteDepartmentRoute() {
   const { department } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
 
-  if (!departmentId || !department) return null;
+  if (!department) return null;
+  if (!departmentId) throw new Error("departmentId is not found");
 
   const onCancel = () => navigate(path.to.departments);
 
   return (
     <ConfirmDelete
-      action={`/x/resources/departments/delete/${departmentId}`}
+      action={path.to.deleteDepartment(departmentId)}
       name={department.name}
       text={`Are you sure you want to delete the department: ${department.name}? This cannot be undone.`}
       onCancel={onCancel}

@@ -74,7 +74,7 @@ export default function DeleteCustomerTypeRoute() {
 
   return (
     <ConfirmDelete
-      action={`/x/sales/customer-types/delete/${customerTypeId}`}
+      action={path.to.deleteCustomerType(customerTypeId)}
       name={customerType.name}
       text={`Are you sure you want to delete the customer type: ${customerType.name}? This cannot be undone.`}
       onCancel={onCancel}

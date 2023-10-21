@@ -3,6 +3,7 @@ import { ValidatedForm } from "remix-validated-form";
 import { Submit } from "~/components/Form";
 import type { PersonalData } from "~/modules/account";
 import { accountPersonalDataValidator } from "~/modules/account";
+import { path } from "~/utils/path";
 
 type PersonalDataFormProps = {
   personalData: PersonalData;
@@ -13,7 +14,7 @@ const PersonalDataForm = ({ personalData }: PersonalDataFormProps) => {
     <Box w="full">
       <ValidatedForm
         method="post"
-        action="/x/account/personal"
+        action={path.to.accountPersonal}
         validator={accountPersonalDataValidator}
         defaultValues={personalData}
       >

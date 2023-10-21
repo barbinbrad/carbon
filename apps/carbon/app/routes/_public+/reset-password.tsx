@@ -51,7 +51,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   return redirect(
-    path.to.home,
+    path.to.authenticatedRoot,
     await flash(request, success("Password updated"))
   );
 }
@@ -75,7 +75,7 @@ export default function ResetPasswordRoute() {
       <Box rounded="lg" bg={boxBackground} boxShadow="lg" w={380} p={8}>
         <ValidatedForm
           method="post"
-          action="/reset-password"
+          action={path.to.resetPassord}
           validator={resetPasswordValidator}
         >
           <VStack spacing={4} alignItems="start">
@@ -84,7 +84,10 @@ export default function ResetPasswordRoute() {
             <Password name="password" label="New Password" />
             <HStack spacing={4}>
               <Submit w="full">Reset Password</Submit>
-              <Button size="md" onClick={() => navigate("/x")}>
+              <Button
+                size="md"
+                onClick={() => navigate(path.to.authenticatedRoot)}
+              >
                 Skip
               </Button>
             </HStack>

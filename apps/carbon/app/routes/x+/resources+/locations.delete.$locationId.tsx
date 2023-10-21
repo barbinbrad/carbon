@@ -69,13 +69,14 @@ export default function DeleteLocationRoute() {
   const { location } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
 
-  if (!locationId || !location) return null;
+  if (!location) return null;
+  if (!locationId) throw new Error("locationId is not found");
 
   const onCancel = () => navigate(path.to.locations);
 
   return (
     <ConfirmDelete
-      action={`/x/resources/locations/delete/${locationId}`}
+      action={path.to.deleteLocation(locationId)}
       name={location.name}
       text={`Are you sure you want to delete the location: ${location.name}? This cannot be undone.`}
       onCancel={onCancel}

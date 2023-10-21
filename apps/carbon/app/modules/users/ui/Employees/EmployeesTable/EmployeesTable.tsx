@@ -13,6 +13,7 @@ import {
   DeactivateUsersModal,
   ResendInviteModal,
 } from "~/modules/users";
+import { path } from "~/utils/path";
 
 type EmployeesTableProps = {
   data: Employee[];
@@ -72,9 +73,9 @@ const EmployeesTable = memo(
               <Link
                 onClick={() =>
                   navigate(
-                    `/x/users/employees/${
-                      row.original.user?.id
-                    }?${params.toString()}`
+                    `${path.to.employeeAccount(
+                      row.original.user?.id!
+                    )}?${params.toString()}`
                   )
                 }
               >

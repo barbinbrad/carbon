@@ -39,12 +39,16 @@ export async function action({ request, params }: ActionFunctionArgs) {
 export default function DeleteEmployeeAbilityRoute() {
   const navigate = useNavigate();
   const { abilityId, id } = useParams();
+
+  if (!id) throw new Error("id is not found");
   if (!abilityId) throw new Error("abilityId is not found");
+
   const routeData = useRouteData<{
     ability: Ability;
   }>(path.to.ability(abilityId));
 
-  if (!abilityId || !routeData?.ability) return null;
+  if (!routeData?.ability) return null;
+  if (!abilityId) throw new Error("abilityId is not found");
 
   const employee = Array.isArray(routeData?.ability.employeeAbility)
     ? routeData.ability.employeeAbility.find((ea) => ea.id === id)
@@ -59,7 +63,7 @@ export default function DeleteEmployeeAbilityRoute() {
 
   return (
     <ConfirmDelete
-      action={`/x/resources/ability/${abilityId}/employee/delete/${id}`}
+      action={path.to.deleteEmployeeAbility(abilityId, id)}
       name={name}
       text={`Are you sure you want remove delete ${name}? This cannot be undone.`}
       onCancel={onCancel}

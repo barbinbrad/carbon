@@ -84,13 +84,14 @@ export default function DeleteShippingMethodRoute() {
   const { receipt } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
 
-  if (!receiptId || !receipt) return null; // TODO - handle this better (404?)
+  if (!receipt) return null;
+  if (!receiptId) throw new Error("receiptId not found");
 
   const onCancel = () => navigate(path.to.receipts);
 
   return (
     <ConfirmDelete
-      action={`/x/inventory/receipts/delete/${receiptId}`}
+      action={path.to.deleteReceipt(receiptId)}
       name={receipt.receiptId}
       text={`Are you sure you want to delete the receipt: ${receipt.receiptId}? This cannot be undone.`}
       onCancel={onCancel}

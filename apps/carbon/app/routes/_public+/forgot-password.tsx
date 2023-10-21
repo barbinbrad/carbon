@@ -38,7 +38,7 @@ export const meta: MetaFunction = () => {
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const authSession = await getAuthSession(request);
-  if (authSession) return redirect(path.to.home);
+  if (authSession) return redirect(path.to.authenticatedRoot);
   return null;
 }
 

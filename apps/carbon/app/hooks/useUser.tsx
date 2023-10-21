@@ -1,3 +1,4 @@
+import { path } from "~/utils/path";
 import { useRouteData } from "./useRouteData";
 
 type PersonalData = {
@@ -24,7 +25,7 @@ export function useUser(): User {
     user: unknown;
     groups: unknown;
     defaults: unknown;
-  }>("/x");
+  }>(path.to.authenticatedRoot);
   if (
     data?.user &&
     isUser(data.user) &&

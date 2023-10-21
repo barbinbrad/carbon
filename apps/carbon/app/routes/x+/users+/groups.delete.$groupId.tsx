@@ -61,13 +61,14 @@ export default function DeleteEmployeeTypeRoute() {
   const { group } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
 
-  if (!groupId || !group) return null; // TODO - handle this better (404?)
+  if (!group) return null;
+  if (!groupId) throw new Error("groupId not found");
 
   const onCancel = () => navigate(path.to.groups);
 
   return (
     <ConfirmDelete
-      action={`/x/users/groups/delete/${groupId}`}
+      action={path.to.deleteGroup(groupId)}
       name={group.name}
       text={`Are you sure you want to delete the group: ${group.name}? This cannot be undone.`}
       onCancel={onCancel}

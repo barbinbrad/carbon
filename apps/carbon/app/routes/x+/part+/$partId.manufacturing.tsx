@@ -89,7 +89,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
 export default function PartManufacturingRoute() {
   const sharedPartsData = useRouteData<{
     partManufacturingPolicies: PartManufacturingPolicy[];
-  }>("/x/part");
+  }>(path.to.partRoot);
 
   const { partManufacturing } = useLoaderData<typeof loader>();
 

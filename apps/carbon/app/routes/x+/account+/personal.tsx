@@ -19,7 +19,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (privateAttributes.error) {
     return redirect(
-      path.to.home,
+      path.to.authenticatedRoot,
       await flash(
         request,
         error(privateAttributes.error, "Failed to get user attributes")

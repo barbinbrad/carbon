@@ -14,6 +14,7 @@ import { useFetcher } from "@remix-run/react";
 import { ValidatedForm } from "remix-validated-form";
 import { UserSelect } from "~/components/Selectors";
 import { resendInviteValidator } from "~/modules/users";
+import { path } from "~/utils/path";
 
 type ResendInviteModalProps = {
   userIds: string[];
@@ -51,7 +52,7 @@ const ResendInviteModal = ({
             </Button>
             <ValidatedForm
               method="post"
-              action="/x/users/resend-invite"
+              action={path.to.resendInvite}
               validator={resendInviteValidator}
               onSubmit={onClose}
               fetcher={fetcher}

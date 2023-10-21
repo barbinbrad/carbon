@@ -89,7 +89,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
 export default function PartCostingRoute() {
   const sharedPartsData = useRouteData<{
     partCostingMethods: PartCostingMethod[];
-  }>("/x/part");
+  }>(path.to.partRoot);
 
   const { partCost } = useLoaderData<typeof loader>();
   return (

@@ -65,7 +65,7 @@ export default function DeleteCurrencyRoute() {
 
   return (
     <ConfirmDelete
-      action={`/x/accounting/currencies/delete/${currencyId}`}
+      action={path.to.deleteCurrency(currencyId)}
       name={currency.name}
       text={`Are you sure you want to delete the currency: ${currency.name}? This cannot be undone.`}
       onCancel={onCancel}

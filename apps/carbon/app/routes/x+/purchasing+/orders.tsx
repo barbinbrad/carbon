@@ -41,7 +41,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (purchasOrders.error) {
     redirect(
-      path.to.home,
+      path.to.authenticatedRoot,
       await flash(
         request,
         error(purchasOrders.error, "Failed to fetch purchase orders")

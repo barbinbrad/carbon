@@ -73,13 +73,14 @@ export default function DeleteEmployeeTypeRoute() {
   const { employeeType } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
 
-  if (!employeeTypeId || !employeeType) return null; // TODO - handle this better (404?)
+  if (!employeeType) return null;
+  if (!employeeTypeId) throw new Error("employeeTypeId is not found");
 
   const onCancel = () => navigate(path.to.employeeTypes);
 
   return (
     <ConfirmDelete
-      action={`/x/users/employee-types/delete/${employeeTypeId}`}
+      action={path.to.deleteEmployeeType(employeeTypeId)}
       name={employeeType.name}
       text={`Are you sure you want to delete the employee type: ${employeeType.name}? This cannot be undone.`}
       onCancel={onCancel}

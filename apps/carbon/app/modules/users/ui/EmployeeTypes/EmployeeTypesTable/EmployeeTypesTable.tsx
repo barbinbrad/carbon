@@ -7,6 +7,7 @@ import { IoMdTrash } from "react-icons/io";
 import { Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { EmployeeType } from "~/modules/users";
+import { path } from "~/utils/path";
 
 type EmployeeTypesTableProps = {
   data: EmployeeType[];
@@ -56,7 +57,7 @@ const EmployeeTypesTable = memo(({ data, count }: EmployeeTypesTableProps) => {
           <MenuItem
             icon={<BsPeopleFill />}
             onClick={() => {
-              navigate(`/x/users/employees?type=${row.id}`);
+              navigate(`${path.to.employeeAccounts}?type=${row.id}`);
             }}
           >
             View Employees
@@ -65,9 +66,7 @@ const EmployeeTypesTable = memo(({ data, count }: EmployeeTypesTableProps) => {
             isDisabled={row.protected || !permissions.can("update", "users")}
             icon={<BsPencilSquare />}
             onClick={() => {
-              navigate(
-                `/x/users/employee-types/${row.id}?${params.toString()}`
-              );
+              navigate(`${path.to.employeeType(row.id)}?${params.toString()}`);
             }}
           >
             Edit Employee Type
@@ -77,7 +76,7 @@ const EmployeeTypesTable = memo(({ data, count }: EmployeeTypesTableProps) => {
             icon={<IoMdTrash />}
             onClick={() => {
               navigate(
-                `/x/users/employee-types/delete/${row.id}?${params.toString()}`
+                `${path.to.deleteEmployeeType(row.id)}?${params.toString()}`
               );
             }}
           >

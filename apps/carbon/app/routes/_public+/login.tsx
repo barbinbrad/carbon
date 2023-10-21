@@ -36,7 +36,7 @@ export const meta: MetaFunction = () => {
 export async function loader({ request }: LoaderFunctionArgs) {
   const authSession = await getAuthSession(request);
   if (authSession && (await verifyAuthSession(authSession))) {
-    if (authSession) return redirect(path.to.home);
+    if (authSession) return redirect(path.to.authenticatedRoot);
   }
 
   return null;
@@ -65,7 +65,7 @@ export async function action({ request }: ActionFunctionArgs): FormActionData {
   return createAuthSession({
     request,
     authSession,
-    redirectTo: redirectTo || path.to.home,
+    redirectTo: redirectTo || path.to.authenticatedRoot,
   });
 }
 

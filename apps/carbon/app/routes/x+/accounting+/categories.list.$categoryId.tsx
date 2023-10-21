@@ -61,7 +61,7 @@ export default function AccountCategoryListRoute() {
   const [params] = useUrlParams();
   const navigate = useNavigate();
   const onClose = () =>
-    navigate(`/x/accounting/categories?${params.toString()}`);
+    navigate(`${path.to.accountingCategories}?${params.toString()}`);
 
   return (
     <>

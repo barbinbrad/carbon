@@ -1,9 +1,9 @@
 import {
+  FormControl,
+  FormLabel,
   Grid,
   HStack,
   Input,
-  FormControl,
-  FormLabel,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -15,10 +15,11 @@ import {
 import { useFetcher, useNavigate } from "@remix-run/react";
 import { useRef, useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
-import { Supplier, Submit, SupplierContact } from "~/components/Form";
+import { Submit, Supplier, SupplierContact } from "~/components/Form";
 import { useUrlParams } from "~/hooks";
 import { createSupplierAccountValidator } from "~/modules/users";
 import type { Result } from "~/types";
+import { path } from "~/utils/path";
 
 const CreateSupplierModal = () => {
   const navigate = useNavigate();
@@ -50,7 +51,7 @@ const CreateSupplierModal = () => {
         <ModalBody pb={6}>
           <ValidatedForm
             method="post"
-            action={`/x/users/suppliers/new${
+            action={`${path.to.newSupplierAccount}${
               params.get("supplier")
                 ? `?supplier=${params.get("supplier")}`
                 : ""

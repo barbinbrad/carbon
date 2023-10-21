@@ -5,6 +5,7 @@ import type { ChangeEvent } from "react";
 import { Avatar } from "~/components";
 import { useSupabase } from "~/lib/supabase";
 import type { Account } from "~/modules/account";
+import { path } from "~/utils/path";
 
 type ProfilePhotoFormProps = {
   user: Account;
@@ -53,13 +54,13 @@ const ProfilePhotoForm = ({ user }: ProfilePhotoFormProps) => {
     }
   };
 
-  const submitAvatarUrl = (path: string | null) => {
+  const submitAvatarUrl = (avatarPath: string | null) => {
     const formData = new FormData();
     formData.append("intent", "photo");
-    if (path) formData.append("path", path);
+    if (avatarPath) formData.append("path", avatarPath);
     submit(formData, {
       method: "post",
-      action: "/x/account/profile",
+      action: path.to.profile,
     });
   };
 

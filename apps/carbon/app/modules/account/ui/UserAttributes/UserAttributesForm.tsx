@@ -34,6 +34,7 @@ import {
   deleteUserAttributeValueValidator,
 } from "~/modules/account";
 import { DataType } from "~/modules/users";
+import { path } from "~/utils/path";
 
 type UserAttributesFormProps = {
   attributeCategory?: PublicAttributes;
@@ -152,7 +153,7 @@ function renderTypedForm({
       return (
         <ValidatedForm
           method="post"
-          action={`/x/account/${userId}/attribute`}
+          action={path.to.userAttribute(userId)}
           validator={attributeBooleanValidator}
           defaultValues={{
             userAttributeId,
@@ -194,7 +195,7 @@ function renderTypedForm({
       return (
         <ValidatedForm
           method="post"
-          action={`/x/account/${userId}/attribute`}
+          action={path.to.userAttribute(userId)}
           validator={attributeTextValidator}
           defaultValues={{
             userAttributeId,
@@ -236,7 +237,7 @@ function renderTypedForm({
       return (
         <ValidatedForm
           method="post"
-          action={`/x/account/${userId}/attribute`}
+          action={path.to.userAttribute(userId)}
           validator={attributeTextValidator}
           defaultValues={{
             userAttributeId,
@@ -286,7 +287,7 @@ function renderTypedForm({
       return (
         <ValidatedForm
           method="post"
-          action={`/x/account/${userId}/attribute`}
+          action={path.to.userAttribute(userId)}
           validator={attributeNumericValidator}
           defaultValues={{
             userAttributeId,
@@ -328,7 +329,7 @@ function renderTypedForm({
       return (
         <ValidatedForm
           method="post"
-          action={`/x/account/${userId}/attribute`}
+          action={path.to.userAttribute(userId)}
           validator={attributeTextValidator}
           defaultValues={{
             userAttributeId,
@@ -370,7 +371,7 @@ function renderTypedForm({
       return (
         <ValidatedForm
           method="post"
-          action={`/x/account/${userId}/attribute`}
+          action={path.to.userAttribute(userId)}
           validator={attributeUserValidator}
           defaultValues={{
             userAttributeId,
@@ -661,7 +662,7 @@ function UpdateRemoveButtons({
       {userAttributeValueId && (
         <ValidatedForm
           method="post"
-          action={`/x/account/${userId}/delete/attribute`}
+          action={path.to.deleteUserAttribute(userId)}
           validator={deleteUserAttributeValueValidator}
           defaultValues={{
             userAttributeId,

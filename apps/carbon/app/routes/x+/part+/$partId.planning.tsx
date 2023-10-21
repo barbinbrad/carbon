@@ -139,7 +139,7 @@ export default function PartPlanningRoute() {
   const sharedPartsData = useRouteData<{
     partReorderingPolicies: PartReorderingPolicy[];
     locations: ListItem[];
-  }>("/x/part");
+  }>(path.to.partRoot);
 
   const { partPlanning } = useLoaderData<typeof loader>();
 

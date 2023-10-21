@@ -21,6 +21,7 @@ import type { Permission } from "~/modules/users";
 import { employeeTypeValidator } from "~/modules/users";
 import PermissionCheckboxes from "~/modules/users/ui/components/Permission";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type EmployeeTypeFormProps = {
   initialValues: TypeOfValidator<typeof employeeTypeValidator> & {
@@ -62,8 +63,8 @@ const EmployeeTypeForm = ({ initialValues }: EmployeeTypeFormProps) => {
         method="post"
         action={
           isEditing
-            ? `/x/users/employee-types/${initialValues.id}`
-            : "/x/users/employee-types/new"
+            ? path.to.employeeType(initialValues.id!)
+            : path.to.newEmployeeType
         }
         defaultValues={initialValues}
       >

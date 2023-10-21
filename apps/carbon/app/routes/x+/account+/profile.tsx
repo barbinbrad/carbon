@@ -31,14 +31,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (user.error || !user.data) {
     return redirect(
-      path.to.home,
+      path.to.authenticatedRoot,
       await flash(request, error(user.error, "Failed to get user"))
     );
   }
 
   if (publicAttributes.error) {
     return redirect(
-      path.to.home,
+      path.to.authenticatedRoot,
       await flash(
         request,
         error(publicAttributes.error, "Failed to get user attributes")

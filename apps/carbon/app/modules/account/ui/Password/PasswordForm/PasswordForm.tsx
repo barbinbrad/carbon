@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import { Password, Submit } from "~/components/Form";
 import { accountPasswordValidator } from "~/modules/account";
+import { path } from "~/utils/path";
 
 const PasswordForm = () => {
   const [passwordsMatch, setPasswordsMatch] = useState(false);
@@ -23,7 +24,7 @@ const PasswordForm = () => {
     <Box w="full">
       <ValidatedForm
         method="post"
-        action="/x/account/password"
+        action={path.to.accountPassword}
         validator={accountPasswordValidator}
       >
         <VStack spacing={4} my={4} w="full" alignItems="start" maxW={440}>

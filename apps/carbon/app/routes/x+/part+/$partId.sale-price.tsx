@@ -85,7 +85,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
 export default function PartSalePriceRoute() {
   const sharedPartData = useRouteData<{
     unitOfMeasures: UnitOfMeasureListItem[];
-  }>("/x/part");
+  }>(path.to.partRoot);
 
   const { partUnitSalePrice } = useLoaderData<typeof loader>();
 

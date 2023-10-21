@@ -39,7 +39,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (categories.error) {
     redirect(
-      path.to.home,
+      path.to.authenticatedRoot,
       await flash(
         request,
         error(categories.error, "Failed to fetch account categories")

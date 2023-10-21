@@ -47,7 +47,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (parts.error) {
     redirect(
-      path.to.home,
+      path.to.authenticatedRoot,
       await flash(request, error(parts.error, "Failed to fetch parts"))
     );
   }

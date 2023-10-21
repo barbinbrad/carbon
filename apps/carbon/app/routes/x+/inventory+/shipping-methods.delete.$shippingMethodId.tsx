@@ -65,16 +65,18 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
 export default function DeleteShippingMethodRoute() {
   const { shippingMethodId } = useParams();
+  if (!shippingMethodId) throw notFound("shippingMethodId not found");
+
   const { shippingMethod } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
 
-  if (!shippingMethodId || !shippingMethod) return null; // TODO - handle this better (404?)
+  if (!shippingMethodId) return null;
 
   const onCancel = () => navigate(path.to.shippingMethods);
 
   return (
     <ConfirmDelete
-      action={`/x/inventory/shipping-methods/delete/${shippingMethodId}`}
+      action={path.to.deleteShippingMethod(shippingMethodId)}
       name={shippingMethod.name}
       text={`Are you sure you want to delete the shipping method: ${shippingMethod.name}? This cannot be undone.`}
       onCancel={onCancel}

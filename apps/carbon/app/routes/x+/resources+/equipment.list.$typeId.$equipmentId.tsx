@@ -37,12 +37,15 @@ export default function EditEquipmentRoute() {
   const { equipment } = useLoaderData<typeof loader>();
   const { typeId } = useParams();
 
+  if (!typeId) throw notFound("typeId not found");
+
   const navigate = useNavigate();
-  const onClose = () => navigate(`/x/resources/equipment/list/${typeId}`);
+  const onClose = () => navigate(path.to.equipmentTypeList(typeId));
   const equipmentRouteData = useRouteData<{
     equipmentTypes: EquipmentType[];
   }>(path.to.equipment);
 
+  // TODO: convert this to a view
   if (
     !equipment ||
     !typeId ||

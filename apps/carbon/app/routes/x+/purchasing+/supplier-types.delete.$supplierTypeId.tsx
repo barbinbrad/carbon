@@ -69,12 +69,13 @@ export default function DeleteSupplierTypeRoute() {
   const { supplierType } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
 
-  if (!supplierTypeId || !supplierType) return null; // TODO - handle this better (404?)
+  if (!supplierType) return null;
+  if (!supplierTypeId) throw notFound("supplierTypeId not found");
 
   const onCancel = () => navigate(path.to.supplierTypes);
   return (
     <ConfirmDelete
-      action={`/x/purchasing/supplier-types/delete/${supplierTypeId}`}
+      action={path.to.deleteSupplierType(supplierTypeId)}
       name={supplierType.name}
       text={`Are you sure you want to delete the supplier type: ${supplierType.name}? This cannot be undone.`}
       onCancel={onCancel}

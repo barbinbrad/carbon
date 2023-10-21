@@ -36,7 +36,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (balanceSheetAccounts.error) {
     return redirect(
-      path.to.home,
+      path.to.authenticatedRoot,
       await flash(
         request,
         error(
@@ -49,7 +49,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (incomeStatementAccounts.error) {
     return redirect(
-      path.to.home,
+      path.to.authenticatedRoot,
       await flash(
         request,
         error(

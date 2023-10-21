@@ -1,8 +1,9 @@
 import { useNavigate, useParams } from "@remix-run/react";
 import { useRouteData } from "~/hooks";
-import { AttributeForm } from "~/modules/resources";
 import type { AttributeDataType } from "~/modules/resources";
+import { AttributeForm } from "~/modules/resources";
 import { DataType } from "~/modules/users";
+import { path } from "~/utils/path";
 
 export default function NewAttributeRoute() {
   const { categoryId } = useParams();
@@ -12,7 +13,7 @@ export default function NewAttributeRoute() {
   const onClose = () => navigate(-1);
   const attributesRouteData = useRouteData<{
     dataTypes: AttributeDataType[];
-  }>("/x/resources/attributes");
+  }>(path.to.attributes);
 
   return (
     <AttributeForm

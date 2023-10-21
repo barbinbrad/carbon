@@ -43,7 +43,7 @@ export default function EditAccountSubcategoryRoute() {
   if (!categoryId) throw notFound("categoryId not found");
 
   const navigate = useNavigate();
-  const onClose = () => navigate(`/x/accounting/categories/list/${categoryId}`);
+  const onClose = () => navigate(path.to.accountingCategoryList(categoryId));
 
   const initialValues = {
     ...subcategory,

@@ -74,7 +74,7 @@ export default function DeletePaymentTermRoute() {
 
   return (
     <ConfirmDelete
-      action={`/x/accounting/payment-terms/delete/${paymentTermId}`}
+      action={path.to.deletePaymentTerm(paymentTermId)}
       name={paymentTerm.name}
       text={`Are you sure you want to delete the payment term: ${paymentTerm.name}? This cannot be undone.`}
       onCancel={onCancel}

@@ -68,13 +68,15 @@ export default function DeletePurchaseOrderLineRoute() {
   const { purchaseOrderLine } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
 
-  if (!lineId || !orderId || !purchaseOrderLine) return null; // TODO - handle this better (404?)
+  if (!purchaseOrderLine) return null;
+  if (!lineId) throw notFound("Could not find lineId");
+  if (!orderId) throw notFound("Could not find orderId");
 
   const onCancel = () => navigate(path.to.purchaseOrderDetails(orderId));
 
   return (
     <ConfirmDelete
-      action={`/x/purchase-order/${orderId}/details/delete/${lineId}`}
+      action={path.to.deletePurchaseOrderLine(orderId, lineId)}
       name="Purchase Order Line"
       text={`Are you sure you want to delete the purchase order line for ${
         purchaseOrderLine.purchaseQuantity ?? 0

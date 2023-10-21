@@ -54,7 +54,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (documents.error) {
     redirect(
-      path.to.home,
+      path.to.authenticatedRoot,
       await flash(request, error(documents.error, "Failed to fetch documents"))
     );
   }

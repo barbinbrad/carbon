@@ -305,7 +305,7 @@ export async function getCurrentUser(
   const user = await getUser(client, userId);
   if (user?.error || user?.data === null) {
     throw redirect(
-      path.to.home,
+      path.to.authenticatedRoot,
       await flash(request, error(user.error, "Failed to get user"))
     );
   }
@@ -537,7 +537,7 @@ export async function getUserClaims(
 
       if (rawClaims.error || rawClaims.data === null) {
         throw redirect(
-          path.to.home,
+          path.to.authenticatedRoot,
           await flash(
             request,
             error(rawClaims.error, "Failed to get rawClaims")
@@ -552,7 +552,7 @@ export async function getUserClaims(
 
       if (!claims) {
         throw redirect(
-          path.to.home,
+          path.to.authenticatedRoot,
           await flash(request, error(rawClaims, "Failed to parse claims"))
         );
       }

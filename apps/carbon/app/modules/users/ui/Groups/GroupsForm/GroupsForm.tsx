@@ -16,6 +16,7 @@ import { Hidden, Input, Submit, Users } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { groupValidator } from "~/modules/users";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type GroupFormProps = {
   initialValues: TypeOfValidator<typeof groupValidator>;
@@ -37,11 +38,7 @@ const GroupForm = ({ initialValues }: GroupFormProps) => {
       <ValidatedForm
         validator={groupValidator}
         method="post"
-        action={
-          isEditing
-            ? `/x/users/groups/${initialValues.id}`
-            : "/x/users/groups/new"
-        }
+        action={isEditing ? path.to.group(initialValues.id) : path.to.newGroup}
         defaultValues={initialValues}
       >
         <DrawerOverlay />

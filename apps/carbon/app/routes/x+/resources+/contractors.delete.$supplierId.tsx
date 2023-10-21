@@ -68,11 +68,14 @@ export default function DeleteContractorRoute() {
   const { contractor } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
 
+  if (!contractor.supplierContactId)
+    throw notFound("supplierContactId not found");
+
   const onCancel = () => navigate(path.to.contractors);
 
   return (
     <ConfirmDelete
-      action={`/x/resources/contractors/delete/${contractor.supplierContactId}`}
+      action={path.to.deleteContractor(contractor.supplierContactId)}
       name={`${contractor.firstName} ${contractor.lastName}`}
       text={`Are you sure you want to delete the contractor: 
         ${contractor.firstName} ${contractor.lastName}? This cannot be undone.`}

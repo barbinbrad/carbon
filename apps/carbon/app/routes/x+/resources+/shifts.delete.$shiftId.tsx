@@ -63,7 +63,8 @@ export default function DeleteShiftRoute() {
   const { shift } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
 
-  if (!shiftId || !shift) return null; // TODO - handle this better (404?)
+  if (!shift) return null;
+  if (!shiftId) throw notFound("shiftId not found");
 
   const onCancel = () => navigate(path.to.shifts);
   if (Array.isArray(shift.location))
@@ -71,7 +72,7 @@ export default function DeleteShiftRoute() {
 
   return (
     <ConfirmDelete
-      action={`/x/resources/shifts/delete/${shiftId}`}
+      action={path.to.deleteShift(shiftId)}
       name={shift.name}
       text={`Are you sure you want to delete the shift: ${shift.name} from ${
         shift.location?.name ?? "unknown location"

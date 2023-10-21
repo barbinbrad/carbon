@@ -66,13 +66,14 @@ export default function DeleteHolidayRoute() {
   const { holiday } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
 
-  if (!holidayId || !holiday) return null;
+  if (!holiday) return null;
+  if (!holidayId) throw new Error("holidayId is not found");
 
   const onCancel = () => navigate(path.to.holidays);
 
   return (
     <ConfirmDelete
-      action={`/x/resources/holidays/delete/${holidayId}`}
+      action={path.to.deleteHoliday(holidayId)}
       name={holiday.name}
       text={`Are you sure you want to delete the holiday: ${holiday.name}? This cannot be undone.`}
       onCancel={onCancel}

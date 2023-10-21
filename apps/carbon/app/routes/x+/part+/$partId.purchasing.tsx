@@ -83,7 +83,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
 export default function PartPurchasingRoute() {
   const sharedPartData = useRouteData<{
     unitOfMeasures: UnitOfMeasureListItem[];
-  }>("/x/part");
+  }>(path.to.partRoot);
   const { partPurchasing } = useLoaderData<typeof loader>();
 
   const initialValues = {

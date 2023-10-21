@@ -178,7 +178,9 @@ export async function action({ request, params }: ActionFunctionArgs) {
 }
 
 export default function PartInventoryRoute() {
-  const sharedPartsData = useRouteData<{ locations: ListItem[] }>("/x/part");
+  const sharedPartsData = useRouteData<{ locations: ListItem[] }>(
+    path.to.partRoot
+  );
   const { partInventory, quantities, shelves } = useLoaderData<typeof loader>();
 
   const initialValues = {

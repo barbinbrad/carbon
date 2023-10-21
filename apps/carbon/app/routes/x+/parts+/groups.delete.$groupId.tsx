@@ -59,16 +59,18 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
 export default function DeletePartGroupRoute() {
   const { groupId } = useParams();
+  if (!groupId) throw new Error("groupId not found");
+
   const { partGroup } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
 
-  if (!groupId || !partGroup) return null; // TODO - handle this better (404?)
+  if (!partGroup) return null;
 
   const onCancel = () => navigate(path.to.partGroups);
 
   return (
     <ConfirmDelete
-      action={`/x/parts/groups/delete/${groupId}`}
+      action={path.to.deletePartGroup(groupId)}
       name={partGroup.name}
       text={`Are you sure you want to delete the part group: ${partGroup.name}? This cannot be undone.`}
       onCancel={onCancel}

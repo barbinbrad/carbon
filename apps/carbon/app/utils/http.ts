@@ -1,3 +1,5 @@
+import { path } from "./path";
+
 export function getCurrentPath(request: Request) {
   return new URL(request.url).pathname;
 }
@@ -7,7 +9,10 @@ export function makeRedirectToFromHere(request: Request) {
   return new URLSearchParams([["redirectTo", currentPath]]);
 }
 
-export function getRedirectTo(request: Request, defaultRedirectTo = "/x") {
+export function getRedirectTo(
+  request: Request,
+  defaultRedirectTo = path.to.authenticatedRoot
+) {
   const url = new URL(request.url);
   return safeRedirect(url.searchParams.get("redirectTo"), defaultRedirectTo);
 }
@@ -21,8 +26,11 @@ export function isPost(request: Request) {
 }
 
 export function isDelete(request: Request) {
-  console.log("METHOD", request.method.toLowerCase());
   return request.method.toLowerCase() === "delete";
+}
+
+export function notAuthorized(message: string) {
+  return new Response(message, { status: 401 });
 }
 
 export function notFound(message: string) {
@@ -74,7 +82,7 @@ export function assertIsDelete(
  */
 export function safeRedirect(
   to: FormDataEntryValue | string | null | undefined,
-  defaultRedirect = "/x"
+  defaultRedirect = path.to.authenticatedRoot
 ) {
   if (
     !to ||

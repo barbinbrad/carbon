@@ -1,30 +1,19 @@
 import type { Route } from "~/types";
+import { path } from "~/utils/path";
 
 const accountRoutes: Route[] = [
   {
     name: "Profile",
-    to: "/x/account/profile",
+    to: path.to.profile,
   },
   {
     name: "Personal",
-    to: "/x/account/personal",
+    to: path.to.accountPersonal,
   },
   {
     name: "Password",
-    to: "/x/account/password",
+    to: path.to.accountPassword,
   },
-  // {
-  //   name: "Notifications",
-  //   to: "/x/account/notifications",
-  // },
-  // {
-  //   name: "Security",
-  //   to: "/x/account/security",
-  // },
-  // {
-  //   name: "Settings",
-  //   to: "/x/account/settings",
-  // },
 ];
 
 export default function useAccountSidebar() {

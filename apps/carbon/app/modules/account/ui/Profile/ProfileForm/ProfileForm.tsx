@@ -5,6 +5,7 @@ import { Hidden, Input, Submit, TextArea } from "~/components/Form";
 import { SectionTitle } from "~/components/Layout";
 import { accountProfileValidator } from "~/modules/account";
 import type { User } from "~/modules/users";
+import { path } from "~/utils/path";
 
 type ProfileFormProps = {
   user: User;
@@ -19,9 +20,7 @@ const ProfileForm = ({ user }: ProfileFormProps) => {
       <SectionTitle>Basic Information</SectionTitle>
       <ValidatedForm
         method="post"
-        action={
-          isSelf ? "/x/account/profile" : `/x/resources/person/${user.id}`
-        }
+        action={isSelf ? path.to.profile : path.to.person(personId)}
         validator={accountProfileValidator}
         defaultValues={user}
       >

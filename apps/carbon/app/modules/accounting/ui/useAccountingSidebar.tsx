@@ -1,5 +1,6 @@
 import { usePermissions } from "~/hooks";
 import type { AuthenticatedRouteGroup } from "~/types";
+import { path } from "~/utils/path";
 
 const accountingRoutes: AuthenticatedRouteGroup[] = [
   {
@@ -7,12 +8,12 @@ const accountingRoutes: AuthenticatedRouteGroup[] = [
     routes: [
       {
         name: "Chart of Accounts",
-        to: "/x/accounting/charts",
+        to: path.to.chartOfAccounts,
         role: "employee",
       },
       // {
       //   name: "Journals",
-      //   to: "/x/accounting/journals",
+      //   to: path.to.accountingJournals,
       //   role: "employee",
       // },
     ],
@@ -22,27 +23,27 @@ const accountingRoutes: AuthenticatedRouteGroup[] = [
     routes: [
       // {
       //   name: "Bank Account Groups",
-      //   to: "/x/accounting/groups/bank",
+      //   to: path.to.accountingGroupsBankAccount,
       //   role: "employee",
       // },
       // {
       //   name: "Fixed Asset Groups",
-      //   to: "/x/accounting/groups/fixed-asset",
+      //   to: path.to.accountingGroupsFixedAsset,
       //   role: "employee",
       // },
       {
         name: "Inventory Groups",
-        to: "/x/accounting/groups/inventory",
+        to: path.to.accountingGroupsInventory,
         role: "employee",
       },
       {
         name: "Purchasing Groups",
-        to: "/x/accounting/groups/purchasing",
+        to: path.to.accountingGroupsPurchasing,
         role: "employee",
       },
       {
         name: "Sales Groups",
-        to: "/x/accounting/groups/sales",
+        to: path.to.accountingGroupsSales,
         role: "employee",
       },
     ],
@@ -52,27 +53,27 @@ const accountingRoutes: AuthenticatedRouteGroup[] = [
     routes: [
       {
         name: "Account Categories",
-        to: "/x/accounting/categories",
+        to: path.to.accountingCategories,
         role: "employee",
       },
       {
         name: "Account Defaults",
-        to: "/x/accounting/defaults",
+        to: path.to.accountingDefaults,
         role: "employee",
       },
       {
         name: "Currencies",
-        to: "/x/accounting/currencies",
+        to: path.to.currencies,
         role: "employee",
       },
       {
         name: "Fiscal Year",
-        to: "/x/accounting/years",
+        to: path.to.fiscalYears,
         role: "employee",
       },
       {
         name: "Payment Terms",
-        to: "/x/accounting/payment-terms",
+        to: path.to.paymentTerms,
         role: "employee",
       },
     ],

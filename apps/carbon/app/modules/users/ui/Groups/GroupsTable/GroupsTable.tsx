@@ -4,10 +4,10 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsPencilSquare } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Avatar } from "~/components";
-import { Table } from "~/components";
+import { Avatar, Table } from "~/components";
 import { usePermissions } from "~/hooks";
 import type { Group } from "~/modules/users";
+import { path } from "~/utils/path";
 
 type GroupsTableProps = {
   data: Group[];
@@ -78,7 +78,7 @@ const GroupsTable = memo(({ data, count }: GroupsTableProps) => {
             }
             icon={<BsPencilSquare />}
             onClick={() => {
-              navigate(`/x/users/groups/${row.id}`);
+              navigate(path.to.group(row.id));
             }}
           >
             Edit Group
@@ -92,7 +92,7 @@ const GroupsTable = memo(({ data, count }: GroupsTableProps) => {
             }
             icon={<IoMdTrash />}
             onClick={() => {
-              navigate(`/x/users/groups/delete/${row.id}`);
+              navigate(path.to.deleteGroup(row.id));
             }}
           >
             Delete Group

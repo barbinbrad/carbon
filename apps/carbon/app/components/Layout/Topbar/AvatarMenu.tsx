@@ -5,11 +5,12 @@ import {
   MenuItem,
   MenuList,
 } from "@chakra-ui/react";
-import { Avatar } from "~/components";
 import { Form, Link } from "@remix-run/react";
 import { BiLogOut } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
+import { Avatar } from "~/components";
 import { useUser } from "~/hooks";
+import { path } from "~/utils/path";
 
 const AvatarMenu = () => {
   const user = useUser();
@@ -29,10 +30,10 @@ const AvatarMenu = () => {
       <MenuList fontSize="sm" boxShadow="xl" minW={48}>
         <MenuItem>Signed in as {name}</MenuItem>
         <MenuDivider />
-        <MenuItem as={Link} to="/x/account/profile" icon={<CgProfile />}>
+        <MenuItem as={Link} to={path.to.profile} icon={<CgProfile />}>
           My Profile
         </MenuItem>
-        <Form method="post" action="/logout">
+        <Form method="post" action={path.to.logout}>
           <MenuItem type="submit" icon={<BiLogOut />}>
             Sign Out
           </MenuItem>

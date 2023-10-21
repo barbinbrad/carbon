@@ -42,7 +42,7 @@ export default function EditWorkCellRoute() {
   const onClose = () => navigate(path.to.workCellTypeList(typeId));
   const workCellRouteData = useRouteData<{
     workCellTypes: WorkCellType[];
-  }>("/x/resources/work-cells");
+  }>(path.to.workCells);
 
   if (
     !workCell ||

@@ -110,7 +110,7 @@ export default function useBreadcrumbs(): Route[] {
       case "routes/x+/invoicing+/_layout":
         return acc.concat({
           name: "Invoicing",
-          to: match.pathname,
+          to: "/x/invoicing",
         });
       case "routes/x+/invoicing+/purchasing":
         return acc.concat({
@@ -121,7 +121,7 @@ export default function useBreadcrumbs(): Route[] {
         return acc.concat(
           {
             name: "Invoicing",
-            to: match.pathname,
+            to: "/x/invoicing",
           },
           {
             name: "Purchase Invoice",
@@ -288,7 +288,7 @@ export default function useBreadcrumbs(): Route[] {
         return acc.concat([
           {
             name: "Sales",
-            to: match.pathname,
+            to: "/x/sales",
           },
           {
             name: "Customers",

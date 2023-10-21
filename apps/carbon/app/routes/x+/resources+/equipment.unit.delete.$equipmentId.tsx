@@ -58,13 +58,14 @@ export default function DeleteEquipmentRoute() {
   const { equipment } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
   const { equipmentId } = useParams();
-  if (!equipmentId) return null;
+
+  if (!equipmentId) throw new Error("equipmentId is not found");
 
   const onCancel = () => navigate(path.to.equipment);
 
   return (
     <ConfirmDelete
-      action={`/x/resources/equipment/unit/delete/${equipmentId}`}
+      action={path.to.deleteEquipment(equipmentId)}
       name={equipment.name}
       text={`Are you sure you want remove delete ${equipment.name}? This cannot be undone.`}
       onCancel={onCancel}

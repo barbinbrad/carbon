@@ -2,6 +2,7 @@ import { useColor } from "@carbon/react";
 import { Box, IconButton } from "@chakra-ui/react";
 import { Link } from "@remix-run/react";
 import { AiOutlineCodeSandbox } from "react-icons/ai";
+import { path } from "~/utils/path";
 
 const Logo = () => {
   return (
@@ -19,7 +20,7 @@ const Logo = () => {
         border="none"
         aria-label="Carbon"
         icon={<AiOutlineCodeSandbox />}
-        to="/x"
+        to={path.to.authenticatedRoot}
       />
     </Box>
   );

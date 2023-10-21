@@ -66,13 +66,14 @@ export default function DeleteEmployeeTypeRoute() {
   const { ability } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
 
-  if (!abilityId || !ability) return null; // TODO - handle this better (404?)
+  if (!ability) return null;
+  if (!abilityId) throw notFound("abilityId not found");
 
   const onCancel = () => navigate(path.to.abilities);
 
   return (
     <ConfirmDelete
-      action={`/x/resources/abilities/delete/${abilityId}`}
+      action={path.to.deleteAbility(abilityId)}
       name={ability.name}
       text={`Are you sure you want to delete the ability: ${ability.name}? This cannot be undone.`}
       onCancel={onCancel}

@@ -1,7 +1,8 @@
 import { useNavigate, useParams } from "@remix-run/react";
 import { useRouteData } from "~/hooks";
-import { EquipmentForm } from "~/modules/resources";
 import type { EquipmentType } from "~/modules/resources";
+import { EquipmentForm } from "~/modules/resources";
+import { path } from "~/utils/path";
 
 export default function NewEquipmentRoute() {
   const { typeId } = useParams();
@@ -11,7 +12,7 @@ export default function NewEquipmentRoute() {
   const onClose = () => navigate(-1);
   const equipmentRouteData = useRouteData<{
     equipmentTypes: EquipmentType[];
-  }>("/x/resources/equipment");
+  }>(path.to.equipment);
 
   return (
     <EquipmentForm

@@ -67,9 +67,13 @@ export default function DeletePartnerRoute() {
 
   const onCancel = () => navigate(path.to.partners);
 
+  if (!partner) return null;
+  if (!partner.supplierLocationId)
+    throw new Error("supplierLocationId is not found");
+
   return (
     <ConfirmDelete
-      action={`/x/resources/partners/delete/${partner.supplierLocationId}`}
+      action={path.to.deletePartner(partner.supplierLocationId)}
       name={partner.supplierName ?? ""}
       text={`Are you sure you want to delete the partner: ${
         partner.supplierName ?? ""

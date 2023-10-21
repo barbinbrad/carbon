@@ -58,13 +58,15 @@ export default function DeleteWorkCellRoute() {
   const { workCell } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
   const { workCellId } = useParams();
-  if (!workCellId) return null;
+
+  if (!workCell) return null;
+  if (!workCellId) throw new Error("workCellId not found");
 
   const onCancel = () => navigate(path.to.workCells);
 
   return (
     <ConfirmDelete
-      action={`/x/resources/work-cells/cell/delete/${workCellId}`}
+      action={path.to.deleteWorkCell(workCellId)}
       name={workCell.name}
       text={`Are you sure you want remove delete ${workCell.name}? This cannot be undone.`}
       onCancel={onCancel}

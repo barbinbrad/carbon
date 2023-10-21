@@ -6,6 +6,7 @@ import { SiHandshake } from "react-icons/si";
 import { usePermissions } from "~/hooks";
 
 import type { Route } from "~/types";
+import { path } from "~/utils/path";
 
 export default function useNewMenu(): Route[] {
   const permissions = usePermissions();
@@ -15,7 +16,7 @@ export default function useNewMenu(): Route[] {
     if (permissions.can("create", "parts")) {
       links.push({
         name: "Part",
-        to: "/x/part/new",
+        to: path.to.newPart,
         icon: <AiOutlinePartition />,
       });
     }
@@ -23,7 +24,7 @@ export default function useNewMenu(): Route[] {
     if (permissions.can("create", "purchasing")) {
       links.push({
         name: "Purchase Order",
-        to: "/x/purchase-order/new",
+        to: path.to.newPurchaseOrder,
         icon: <BsCartDash />,
       });
     }
@@ -31,7 +32,7 @@ export default function useNewMenu(): Route[] {
     if (permissions.can("create", "purchasing")) {
       links.push({
         name: "Supplier",
-        to: "/x/supplier/new",
+        to: path.to.newSupplier,
         icon: <SiHandshake />,
       });
     }
@@ -39,7 +40,7 @@ export default function useNewMenu(): Route[] {
     if (permissions.can("create", "sales")) {
       links.push({
         name: "Customer",
-        to: "/x/customer/new",
+        to: path.to.newCustomer,
         icon: <IoMdPeople />,
       });
     }
@@ -47,7 +48,7 @@ export default function useNewMenu(): Route[] {
     if (permissions.can("create", "users")) {
       links.push({
         name: "Employee",
-        to: "/x/users/employees/new",
+        to: path.to.newEmployee,
         icon: <BsShieldLock />,
       });
     }

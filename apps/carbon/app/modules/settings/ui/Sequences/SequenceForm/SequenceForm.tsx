@@ -19,6 +19,7 @@ import { Hidden, Input, Number, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { sequenceValidator } from "~/modules/settings";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 import { interpolateDate } from "~/utils/string";
 
 type SequenceFormProps = {
@@ -51,7 +52,7 @@ const SequenceForm = ({ initialValues }: SequenceFormProps) => {
       <ValidatedForm
         validator={sequenceValidator}
         method="post"
-        action={`/x/settings/sequences/${initialValues.table}`}
+        action={path.to.tableSequence(initialValues.table)}
         defaultValues={initialValues}
       >
         <DrawerOverlay />

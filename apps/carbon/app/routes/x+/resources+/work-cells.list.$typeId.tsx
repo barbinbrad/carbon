@@ -24,7 +24,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       path.to.workCells,
       await flash(
         request,
-        error(workCellType.error, "Failed to fetch work cell")
+        error(workCellType.error, "Failed to fetch work cell type")
       )
     );
   }

@@ -4,10 +4,10 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsPencilSquare } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Avatar } from "~/components";
-import { Table } from "~/components";
+import { Avatar, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { Shift } from "~/modules/resources";
+import { path } from "~/utils/path";
 
 type ShiftsTableProps = {
   data: Shift[];
@@ -36,7 +36,7 @@ const ShiftsTable = memo(({ data, count }: ShiftsTableProps) => {
         ? row.location[0].name
         : row.location?.name,
     },
-    // TODO: extract this to a utils function - also used by AblitiesTable
+    // TODO: move this to a view so the code isn't garbage
     employees: Array.isArray(row.employeeShift)
       ? row.employeeShift.reduce<{ name: string; avatarUrl: string | null }[]>(
           (acc, curr) => {
@@ -141,7 +141,7 @@ const ShiftsTable = memo(({ data, count }: ShiftsTableProps) => {
           <MenuItem
             icon={<BsPencilSquare />}
             onClick={() => {
-              navigate(`/x/resources/shifts/${row.id}?${params.toString()}}`);
+              navigate(`${path.to.shift(row.id)}?${params.toString()}}`);
             }}
           >
             Edit Shift
@@ -150,9 +150,7 @@ const ShiftsTable = memo(({ data, count }: ShiftsTableProps) => {
             isDisabled={!permissions.can("delete", "resources")}
             icon={<IoMdTrash />}
             onClick={() => {
-              navigate(
-                `/x/resources/shifts/delete/${row.id}?${params.toString()}`
-              );
+              navigate(`${path.to.deleteShift(row.id)}?${params.toString()}`);
             }}
           >
             Delete Shift

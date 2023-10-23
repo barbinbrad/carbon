@@ -12,16 +12,17 @@ import {
 } from "@chakra-ui/react";
 import { ValidatedForm } from "remix-validated-form";
 import {
-  Input,
+  Ability,
+  Color,
   Hidden,
+  Input,
   Submit,
   TextArea,
-  Color,
-  Ability,
 } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { workCellTypeValidator } from "~/modules/resources";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type WorkCellTypeFormProps = {
   initialValues: TypeOfValidator<typeof workCellTypeValidator>;
@@ -45,8 +46,8 @@ const WorkCellTypeForm = ({
         method="post"
         action={
           isEditing
-            ? `/x/resources/work-cells/${initialValues.id}`
-            : "/x/resources/work-cells/new"
+            ? path.to.workCellType(initialValues.id!)
+            : path.to.newWorkCellType
         }
         defaultValues={initialValues}
       >

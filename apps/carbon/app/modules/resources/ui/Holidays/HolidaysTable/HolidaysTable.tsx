@@ -7,6 +7,7 @@ import { IoMdTrash } from "react-icons/io";
 import { Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { Holiday } from "~/modules/resources";
+import { path } from "~/utils/path";
 
 type HolidaysTableProps = {
   data: Holiday[];
@@ -46,7 +47,7 @@ const HolidaysTable = memo(({ data, count }: HolidaysTableProps) => {
           <MenuItem
             icon={<BsPencilSquare />}
             onClick={() => {
-              navigate(`/x/resources/holidays/${row.id}?${params.toString()}`);
+              navigate(`${path.to.holiday(row.id)}?${params.toString()}`);
             }}
           >
             Edit Holiday
@@ -55,9 +56,7 @@ const HolidaysTable = memo(({ data, count }: HolidaysTableProps) => {
             isDisabled={!permissions.can("delete", "resources")}
             icon={<IoMdTrash />}
             onClick={() => {
-              navigate(
-                `/x/resources/holidays/delete/${row.id}?${params.toString()}`
-              );
+              navigate(`${path.to.deleteHoliday(row.id)}?${params.toString()}`);
             }}
           >
             Delete Holiday

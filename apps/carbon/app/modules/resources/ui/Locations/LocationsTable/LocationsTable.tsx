@@ -7,6 +7,7 @@ import { IoMdTrash } from "react-icons/io";
 import { Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { ShiftLocation } from "~/modules/resources";
+import { path } from "~/utils/path";
 
 type LocationsTableProps = {
   data: ShiftLocation[];
@@ -64,7 +65,7 @@ const LocationsTable = memo(({ data, count }: LocationsTableProps) => {
           <MenuItem
             icon={<BsPencilSquare />}
             onClick={() => {
-              navigate(`/x/resources/locations/${row.id}?${params.toString()}`);
+              navigate(`${path.to.location(row.id)}?${params.toString()}`);
             }}
           >
             Edit Location
@@ -74,7 +75,7 @@ const LocationsTable = memo(({ data, count }: LocationsTableProps) => {
             icon={<IoMdTrash />}
             onClick={() => {
               navigate(
-                `/x/resources/locations/delete/${row.id}?${params.toString()}`
+                `${path.to.deleteLocation(row.id)}?${params.toString()}`
               );
             }}
           >

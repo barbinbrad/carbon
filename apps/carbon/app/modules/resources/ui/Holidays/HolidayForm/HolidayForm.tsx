@@ -16,6 +16,7 @@ import { DatePicker, Hidden, Input, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { holidayValidator } from "~/modules/resources";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type HolidayFormProps = {
   initialValues: TypeOfValidator<typeof holidayValidator>;
@@ -37,9 +38,7 @@ const HolidayForm = ({ initialValues }: HolidayFormProps) => {
         validator={holidayValidator}
         method="post"
         action={
-          isEditing
-            ? `/x/resources/holidays/${initialValues.id}`
-            : "/x/resources/holidays/new"
+          isEditing ? path.to.holiday(initialValues.id!) : path.to.newHoliday
         }
         defaultValues={initialValues}
       >

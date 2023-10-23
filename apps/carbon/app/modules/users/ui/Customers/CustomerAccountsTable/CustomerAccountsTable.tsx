@@ -8,6 +8,7 @@ import { Avatar, Table } from "~/components";
 import { usePermissions } from "~/hooks";
 import type { Customer } from "~/modules/users";
 import { DeactivateUsersModal, ResendInviteModal } from "~/modules/users";
+import { path } from "~/utils/path";
 
 type CustomerAccountsTableProps = {
   data: Customer[];
@@ -201,7 +202,7 @@ const CustomerAccountsTable = memo(
           <DeactivateUsersModal
             userIds={selectedUserIds}
             isOpen={deactivateCustomerModal.isOpen}
-            redirectTo="/x/users/suppliers"
+            redirectTo={path.to.supplierAccounts}
             onClose={deactivateCustomerModal.onClose}
           />
         )}

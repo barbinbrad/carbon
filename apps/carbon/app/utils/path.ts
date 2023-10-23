@@ -24,17 +24,26 @@ export const path = {
     attributes: `${app}/resources/attributes`,
     attributeCategoryList: (id: string) =>
       generatePath(`${app}/resources/attributes/list/${id}`),
+    bulkEditPermissions: `${app}/users/bulk-edit-permissions`,
     chartOfAccounts: `${app}/accounting/charts`,
     contractors: `${app}/resources/contractors`,
     currencies: `${app}/accounting/currencies`,
     customer: (id: string) => generatePath(`${app}/customer/${id}`),
+    customerRoot: `${app}/customer`,
     customers: `${app}/sales/customers`,
     customerAccounts: `${app}/users/customers`,
+    customerContact: (customerId: string, id: string) =>
+      generatePath(`${app}/customer/${customerId}/contacts/${id}`),
     customerContacts: (id: string) =>
       generatePath(`${app}/customer/${id}/contacts`),
+    customerLocation: (customerId: string, id: string) =>
+      generatePath(`${app}/customer/${customerId}/locations/${id}`),
     customerLocations: (id: string) =>
       generatePath(`${app}/customer/${id}/locations`),
+    customerType: (id: string) =>
+      generatePath(`${app}/sales/customer-types/delete/${id}`),
     customerTypes: `${app}/sales/customer-types`,
+    deactivateUsers: `${app}/users/deactivate`,
     deleteAbility: (id: string) =>
       generatePath(`${app}/resources/abilities/delete/${id}`),
     deleteAccountingCharts: (id: string) =>
@@ -43,6 +52,10 @@ export const path = {
       generatePath(`${app}/resources/contractors/delete/${id}`),
     deleteCurrency: (id: string) =>
       generatePath(`${app}/accounting/currencies/delete/${id}`),
+    deleteCustomerContact: (customerId: string, id: string) =>
+      generatePath(`${app}/customer/${customerId}/contacts/delete/${id}`),
+    deleteCustomerLocation: (customerId: string, id: string) =>
+      generatePath(`${app}/customer/${customerId}/locations/delete/${id}`),
     deleteCustomerType: (id: string) =>
       generatePath(`${app}/sales/customer-types/delete/${id}`),
     deleteDepartment: (id: string) =>
@@ -55,12 +68,16 @@ export const path = {
       generatePath(`${app}/users/employee-types/delete/${id}`),
     deleteEquipment: (id: string) =>
       generatePath(`${app}/resources/equipment/unit/delete/${id}`),
+    deleteEquipmentType: (id: string) =>
+      generatePath(`${app}/resources/equipment/delete/${id}`),
     deleteGroup: (id: string) =>
       generatePath(`${app}/users/groups/delete/${id}`),
     deleteHoliday: (id: string) =>
       generatePath(`${app}/resources/holidays/delete/${id}`),
     deleteLocation: (id: string) =>
       generatePath(`${app}/resources/locations/delete/${id}`),
+    deleteNote: (id: string) =>
+      generatePath(`${app}/shared/notes/${id}/delete`),
     deletePartGroup: (id: string) =>
       generatePath(`${app}/parts/groups/delete/${id}`),
     deletePartner: (id: string) =>
@@ -82,39 +99,75 @@ export const path = {
       generatePath(`${app}/account/${id}/delete/attribute`),
     deleteWorkCell: (id: string) =>
       generatePath(`${app}/resources/work-cells/cell/delete/${id}`),
+    deleteWorkCellType: (id: string) =>
+      generatePath(`${app}/resources/work-cells/delete/${id}`),
+    department: (id: string) =>
+      generatePath(`${app}/resources/departments/${id}`),
     departments: `${app}/resources/departments`,
     documents: `${app}/documents/search`,
     documentsTrash: `${app}/documents/search?q=trash`,
+    employeeAbility: (abilityId: string, id: string) =>
+      generatePath(`${app}/resources/ability/${abilityId}/employee/${id}`),
     employeeAccount: (id: string) =>
       generatePath(`${app}/users/employees/${id}`),
     employeeAccounts: `${app}/users/employees`,
     employeeType: (id: string) => `${app}/users/employee-types/${id}`,
     employeeTypes: `${app}/users/employee-types`,
     equipment: `${app}/resources/equipment`,
+    equipmentType: (id: string) =>
+      generatePath(`${app}/resources/equipment/${id}`),
     equipmentTypeList: (id: string) =>
       generatePath(`${app}/resources/equipment/list/${id}`),
+    equipmentUnit: (id: string) => `${app}/resources/equipment/unit/${id}`,
     fiscalYears: `${app}/accounting/years`,
     forgotPassword: "/forgot-password",
     group: (id: string) => generatePath(`${app}/users/groups/${id}`),
     groups: `${app}/users/groups`,
+    holiday: (id: string) => generatePath(`${app}/resources/holidays/${id}`),
     holidays: `${app}/resources/holidays`,
     inventory: `${app}/inventory`,
     invoicing: `${app}/invoicing`,
     jobs: `${app}/jobs`,
+    location: (id: string) => `${app}/resources/locations/${id}`,
     locations: `${app}/resources/locations`,
     login: "/login",
     logout: "/logout",
     messaging: `${app}/messaging`,
     newCustomer: `${app}/customer/new`,
+    newCustomerAccount: `${app}/users/customers/new`,
+    newCustomerContact: (id: string) =>
+      generatePath(`${app}/customer/${id}/contacts/new`),
+    newCustomerLocation: (id: string) =>
+      generatePath(`${app}/customer/${id}/locations/new`),
+    newCustomerType: `${app}/sales/customer-types/new`,
+    newDepartment: `${app}/resources/departments/new`,
     newEmployee: `${app}/users/employees/new`,
     newEmployeeType: `${app}/users/employee-types/new`,
+    newEquipment: (id: string) =>
+      generatePath(`${app}/resources/equipment/list/${id}/new`),
+    newEquipmentUnit: `${app}/resources/equipment/unit/new`,
+    newEquipmentType: `${app}/resources/equipment/new`,
     newGroup: `${app}/users/groups/new`,
+    newHoliday: `${app}/resources/holidays/new`,
+    newLocation: `${app}/resources/locations/new`,
+    newNote: `${app}/shared/notes/new`,
     newPart: `${app}/part/new`,
+    newPartner: `${app}/resources/partners/new`,
     newPurchaseInvoice: `${app}/purchase-invoice/new`,
     newPurchaseOrder: `${app}/purchase-order/new`,
     newReceipt: `${app}/inventory/receipts/new`,
+    newShift: `${app}/resources/shifts/new`,
     newSupplier: `${app}/supplier/new`,
     newSupplierAccount: `${app}/users/suppliers/new`,
+    newSupplierContact: (id: string) =>
+      generatePath(`${app}/supplier/${id}/contacts/new`),
+    newSupplierLocation: (id: string) =>
+      generatePath(`${app}/supplier/${id}/locations/new`),
+    newSupplierType: `${app}/purchasing/supplier-types/new`,
+    newWorkCell: `${app}/resources/work-cells/cell/new`,
+    newWorkCellUnit: (id: string) =>
+      generatePath(`${app}/resources/work-cells/list/${id}/new`),
+    newWorkCellType: `${app}/resources/work-cells/new`,
     part: (id: string) => generatePath(`${app}/part/${id}`),
     partCosting: (id: string) => generatePath(`${app}/part/${id}/costing`),
     partGroups: `${app}/parts/groups`,
@@ -134,6 +187,7 @@ export const path = {
     partSuppliers: (id: string) => generatePath(`${app}/part/${id}/suppliers`),
     parts: `${app}/parts`,
     partsSearch: `${app}/parts/search`,
+    partner: (id: string) => generatePath(`${app}/resources/partners/${id}`),
     partners: `${app}/resources/partners`,
     paymentTerms: `${app}/accounting/payment-terms`,
     people: `${app}/resources/people`,
@@ -163,6 +217,7 @@ export const path = {
     scheduling: `${app}/scheduling`,
     settings: `${app}/settings`,
     sequences: `${app}/settings/sequences`,
+    shift: (id: string) => generatePath(`${app}/resources/shifts/${id}`),
     shifts: `${app}/resources/shifts`,
     shippingMethods: `${app}/inventory/shipping-methods`,
     supplier: (id: string) => generatePath(`${app}/supplier/${id}`),
@@ -173,12 +228,18 @@ export const path = {
     supplierLocations: (id: string) =>
       generatePath(`${app}/supplier/${id}/locations`),
     supplierTypes: `${app}/purchasing/supplier-types`,
+    tableSequence: (id: string) =>
+      generatePath(`${app}/settings/sequences/${id}`),
     timecards: `${app}/timecards`,
     uom: `${app}/parts/uom`,
     userAttribute: (id: string) =>
       generatePath(`${app}/account/${id}/attribute`),
     users: `${app}/users`,
+    workCell: (id: string) =>
+      generatePath(`${app}/resources/work-cells/cell/${id}`),
     workCells: `${app}/resources/work-cells`,
+    workCellType: (id: string) =>
+      generatePath(`${app}/resources/work-cells/${id}`),
     workCellTypeList: (id: string) =>
       generatePath(`/${app}/resources/work-cells/list/${id}`),
   },

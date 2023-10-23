@@ -5,6 +5,7 @@ import { IoMdAdd } from "react-icons/io";
 import { DebouncedInput } from "~/components/Search";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { CustomerStatus, CustomerType } from "~/modules/sales";
+import { path } from "~/utils/path";
 
 type CustomersTableFiltersProps = {
   customerTypes: Partial<CustomerType>[];
@@ -83,7 +84,7 @@ const CustomersTableFilters = ({
         {permissions.can("create", "sales") && (
           <Button
             as={Link}
-            to={`/x/customer/new?${params.toString()}`}
+            to={`${path.to.newCustomer}?${params.toString()}`}
             colorScheme="brand"
             leftIcon={<IoMdAdd />}
           >

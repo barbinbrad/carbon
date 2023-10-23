@@ -16,6 +16,7 @@ import { Color, Department, Hidden, Input, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { departmentValidator } from "~/modules/resources";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type DepartmentFormProps = {
   initialValues: TypeOfValidator<typeof departmentValidator>;
@@ -38,8 +39,8 @@ const DepartmentForm = ({ initialValues }: DepartmentFormProps) => {
         method="post"
         action={
           isEditing
-            ? `/x/resources/departments/${initialValues.id}`
-            : "/x/resources/departments/new"
+            ? path.to.department(initialValues.id!)
+            : path.to.newDepartment
         }
         defaultValues={initialValues}
       >

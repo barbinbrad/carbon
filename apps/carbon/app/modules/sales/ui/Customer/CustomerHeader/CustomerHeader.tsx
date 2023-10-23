@@ -18,18 +18,19 @@ import type {
   CustomerType,
 } from "~/modules/sales";
 import type { ListItem } from "~/types";
+import { path } from "~/utils/path";
 
 const CustomerHeader = () => {
   const { customerId } = useParams();
   if (!customerId) throw new Error("Could not find customerId");
   const routeData = useRouteData<{ customer: CustomerDetail }>(
-    `/x/customer/${customerId}`
+    path.to.customer(customerId)
   );
   const sharedCustomerData = useRouteData<{
     customerTypes: CustomerType[];
     customerStatuses: CustomerStatus[];
     paymentTerms: ListItem[];
-  }>("/x/customer");
+  }>(path.to.customerRoot);
 
   return (
     <VStack w="full" alignItems="start" spacing={2}>

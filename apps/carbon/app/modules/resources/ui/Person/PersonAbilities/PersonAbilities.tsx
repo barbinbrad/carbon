@@ -20,6 +20,7 @@ import { BsBarChartFill, BsCheckLg } from "react-icons/bs";
 import { FaThumbsUp } from "react-icons/fa";
 import type { EmployeeAbility } from "~/modules/resources";
 import { AbilityEmployeeStatus, getTrainingStatus } from "~/modules/resources";
+import { path } from "~/utils/path";
 
 type PersonAbilitiesProps = {
   abilities: EmployeeAbility[];
@@ -100,7 +101,10 @@ const PersonAbilities = ({ abilities }: PersonAbilitiesProps) => {
                         <Text
                           as={Link}
                           fontWeight="bold"
-                          to={`/x/resources/ability/${employeeAbility.ability.id}/employee/${employeeAbility.id}`}
+                          to={path.to.employeeAbility(
+                            employeeAbility.ability.id,
+                            employeeAbility.id
+                          )}
                         >
                           {employeeAbility.ability.name}
                         </Text>

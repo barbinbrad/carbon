@@ -74,7 +74,7 @@ const EmployeesTable = memo(
                 onClick={() =>
                   navigate(
                     `${path.to.employeeAccount(
-                      row.original.user?.id!
+                      row.original.user?.id
                     )}?${params.toString()}`
                   )
                 }
@@ -174,7 +174,9 @@ const EmployeesTable = memo(
             <MenuItem
               icon={<BsPencilSquare />}
               onClick={() =>
-                navigate(`/x/users/employees/${user.id}?${params.toString()}`)
+                navigate(
+                  `${path.to.employeeAccount(user.id)}?${params.toString()}`
+                )
               }
             >
               Edit Employee

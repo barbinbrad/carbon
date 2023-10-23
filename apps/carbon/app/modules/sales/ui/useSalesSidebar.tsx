@@ -1,5 +1,6 @@
 import { usePermissions } from "~/hooks";
 import type { AuthenticatedRouteGroup } from "~/types";
+import { path } from "~/utils/path";
 
 const salesRoutes: AuthenticatedRouteGroup[] = [
   {
@@ -7,7 +8,7 @@ const salesRoutes: AuthenticatedRouteGroup[] = [
     routes: [
       {
         name: "Customers",
-        to: "/x/sales/customers",
+        to: path.to.customers,
       },
     ],
   },
@@ -16,7 +17,7 @@ const salesRoutes: AuthenticatedRouteGroup[] = [
     routes: [
       {
         name: "Customer Types",
-        to: "/x/sales/customer-types",
+        to: path.to.customerTypes,
         role: "employee",
       },
     ],

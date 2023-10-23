@@ -16,6 +16,7 @@ import { Hidden, Input, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { customerLocationValidator } from "~/modules/sales";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type CustomerLocationFormProps = {
   initialValues: TypeOfValidator<typeof customerLocationValidator>;
@@ -24,13 +25,16 @@ type CustomerLocationFormProps = {
 const CustomerLocationForm = ({ initialValues }: CustomerLocationFormProps) => {
   const navigate = useNavigate();
   const { customerId } = useParams();
+
+  if (!customerId) throw new Error("customerId not found");
+
   const permissions = usePermissions();
   const isEditing = !!initialValues?.id;
   const isDisabled = isEditing
     ? !permissions.can("update", "sales")
     : !permissions.can("create", "sales");
 
-  const onClose = () => navigate(`/x/customer/${customerId}/locations`);
+  const onClose = () => navigate(path.to.customerLocations(customerId));
 
   return (
     <Drawer onClose={onClose} isOpen={true} size="sm">
@@ -39,8 +43,8 @@ const CustomerLocationForm = ({ initialValues }: CustomerLocationFormProps) => {
         method="post"
         action={
           isEditing
-            ? `/x/customer/${customerId}/locations/${initialValues?.id}`
-            : `/x/customer/${customerId}/locations/new`
+            ? path.to.customerLocation(customerId, initialValues.id!)
+            : path.to.newCustomerLocation(customerId)
         }
         defaultValues={initialValues}
         onSubmit={onClose}

@@ -21,6 +21,7 @@ import { employeeValidator } from "~/modules/users";
 import PermissionCheckboxes from "~/modules/users/ui/components/Permission";
 import type { ListItem } from "~/types";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type EmployeePermissionsFormProps = {
   name: string;
@@ -57,7 +58,7 @@ const EmployeePermissionsForm = ({
       <ValidatedForm
         validator={employeeValidator}
         method="post"
-        action={`/x/users/employees/${initialValues.id}`}
+        action={path.to.employeeAccount(initialValues.id)}
         defaultValues={initialValues}
       >
         <DrawerOverlay />

@@ -1,5 +1,6 @@
 import { usePermissions } from "~/hooks";
 import type { AuthenticatedRouteGroup } from "~/types";
+import { path } from "~/utils/path";
 
 const settingsRoutes: AuthenticatedRouteGroup[] = [
   {
@@ -7,7 +8,7 @@ const settingsRoutes: AuthenticatedRouteGroup[] = [
     routes: [
       {
         name: "Sequences",
-        to: "/x/settings/sequences",
+        to: path.to.sequences,
         role: "employee",
       },
     ],

@@ -25,6 +25,7 @@ import type { CustomerStatus, CustomerType } from "~/modules/sales";
 import { customerValidator } from "~/modules/sales";
 import type { ListItem } from "~/types";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type CustomerFormProps = {
   initialValues: TypeOfValidator<typeof customerValidator>;
@@ -33,7 +34,7 @@ type CustomerFormProps = {
 const CustomerForm = ({ initialValues }: CustomerFormProps) => {
   const permissions = usePermissions();
   const navigate = useNavigate();
-  const onClose = () => navigate("/x/sales/customers");
+  const onClose = () => navigate(path.to.customers);
 
   const routeData = useRouteData<{
     customerTypes: CustomerType[];
@@ -41,7 +42,7 @@ const CustomerForm = ({ initialValues }: CustomerFormProps) => {
     paymentTerms: ListItem[];
     shippingMethods: ListItem[];
     shippingTerms: ListItem[];
-  }>("/x/customer");
+  }>(path.to.customerRoot);
 
   const customerTypeOptions =
     routeData?.customerTypes?.map((type) => ({

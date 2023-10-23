@@ -12,16 +12,17 @@ import {
 } from "@chakra-ui/react";
 import { ValidatedForm } from "remix-validated-form";
 import {
-  Input,
+  Ability,
+  Color,
   Hidden,
+  Input,
   Submit,
   TextArea,
-  Color,
-  Ability,
 } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { equipmentTypeValidator } from "~/modules/resources";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type EquipmentTypeFormProps = {
   initialValues: TypeOfValidator<typeof equipmentTypeValidator>;
@@ -45,8 +46,8 @@ const EquipmentTypeForm = ({
         method="post"
         action={
           isEditing
-            ? `/x/resources/equipment/${initialValues.id}`
-            : "/x/resources/equipment/new"
+            ? path.to.equipmentType(initialValues.id!)
+            : path.to.newEquipmentType
         }
         defaultValues={initialValues}
       >

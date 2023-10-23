@@ -29,6 +29,7 @@ import { usePermissions } from "~/hooks";
 import type { getWorkCellList } from "~/modules/resources";
 import { equipmentValidator } from "~/modules/resources";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type EquipmentFormProps = {
   initialValues: TypeOfValidator<typeof equipmentValidator>;
@@ -90,8 +91,8 @@ const EquipmentForm = ({
         method="post"
         action={
           isEditing
-            ? `/x/resources/equipment/unit/${initialValues.id}`
-            : "/x/resources/equipment/unit/new"
+            ? path.to.equipmentUnit(initialValues.id!)
+            : path.to.newEquipmentUnit
         }
         defaultValues={initialValues}
       >

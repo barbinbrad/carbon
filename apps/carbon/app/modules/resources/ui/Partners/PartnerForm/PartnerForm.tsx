@@ -22,6 +22,7 @@ import { usePermissions } from "~/hooks";
 import type { getSupplierLocations } from "~/modules/purchasing";
 import { partnerValidator } from "~/modules/resources";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type PartnerFormProps = {
   initialValues: TypeOfValidator<typeof partnerValidator>;
@@ -70,9 +71,7 @@ const PartnerForm = ({ initialValues }: PartnerFormProps) => {
         validator={partnerValidator}
         method="post"
         action={
-          isEditing
-            ? `/x/resources/partners/${initialValues.id}`
-            : "/x/resources/partners/new"
+          isEditing ? path.to.partner(initialValues.id) : path.to.newPartner
         }
         defaultValues={initialValues}
       >

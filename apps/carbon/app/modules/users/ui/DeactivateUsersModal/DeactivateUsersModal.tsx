@@ -13,6 +13,7 @@ import {
 import { ValidatedForm } from "remix-validated-form";
 import { UserSelect } from "~/components/Selectors";
 import { deactivateUsersValidator } from "~/modules/users";
+import { path } from "~/utils/path";
 
 type DeactivateUsersModalProps = {
   userIds: string[];
@@ -24,7 +25,7 @@ type DeactivateUsersModalProps = {
 const DeactivateUsersModal = ({
   userIds,
   isOpen,
-  redirectTo = "/x/users/employees",
+  redirectTo = path.to.employeeAccounts,
   onClose,
 }: DeactivateUsersModalProps) => {
   const isSingleUser = userIds.length === 1;
@@ -51,7 +52,7 @@ const DeactivateUsersModal = ({
             </Button>
             <ValidatedForm
               method="post"
-              action="/x/users/deactivate"
+              action={path.to.deactivateUsers}
               validator={deactivateUsersValidator}
               onSubmit={onClose}
             >

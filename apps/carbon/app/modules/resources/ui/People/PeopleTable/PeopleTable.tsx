@@ -7,6 +7,7 @@ import { Avatar, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { AttributeCategory, Person } from "~/modules/resources";
 import { DataType } from "~/modules/users";
+import { path } from "~/utils/path";
 
 type PeopleTableProps = {
   attributeCategories: AttributeCategory[];
@@ -99,24 +100,16 @@ const PeopleTable = memo(
             <HStack spacing={2}>
               <Avatar
                 size="sm"
-                // @ts-ignore
-                name={row.original.user?.fullName}
-                // @ts-ignore
-                path={row.original.user?.avatarUrl}
+                name={row.original.user?.fullName!}
+                path={row.original.user?.avatarUrl!}
               />
 
               <Link
                 onClick={() => {
-                  navigate(
-                    // @ts-ignore
-                    `/x/resources/person/${row?.original.user.id}`
-                  );
+                  navigate(path.to.person(row?.original.user?.id!));
                 }}
               >
-                {
-                  // @ts-ignore
-                  row.original.user?.fullName
-                }
+                {row.original.user?.fullName}
               </Link>
             </HStack>
           ),
@@ -188,8 +181,7 @@ const PeopleTable = memo(
                 icon={<BsPencilSquare />}
                 onClick={() =>
                   navigate(
-                    // @ts-ignore
-                    `/x/resources/person/${row.user?.id}?${params.toString()}`
+                    `${path.to.person(row.user?.id!)}?${params.toString()}`
                   )
                 }
               >

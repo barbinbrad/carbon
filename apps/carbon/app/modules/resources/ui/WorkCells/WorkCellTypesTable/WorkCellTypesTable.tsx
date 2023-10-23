@@ -25,6 +25,7 @@ import { Table } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { WorkCellType } from "~/modules/resources";
+import { path } from "~/utils/path";
 
 type WorkCellTypesTableProps = {
   data: WorkCellType[];
@@ -84,9 +85,9 @@ const WorkCellTypesTable = memo(({ data, count }: WorkCellTypesTableProps) => {
             <Button
               onClick={() => {
                 navigate(
-                  `/x/resources/work-cells/list/${
+                  `${path.to.workCellTypeList(
                     row.original.id
-                  }?${params?.toString()}`
+                  )}?${params?.toString()}`
                 );
               }}
             >
@@ -100,9 +101,9 @@ const WorkCellTypesTable = memo(({ data, count }: WorkCellTypesTableProps) => {
               icon={<BsPlus />}
               onClick={() => {
                 navigate(
-                  `/x/resources/work-cells/list/${
+                  `${path.to.newWorkCellUnit(
                     row.original.id
-                  }/new?${params?.toString()}`
+                  )}?${params?.toString()}`
                 );
               }}
             />
@@ -136,7 +137,7 @@ const WorkCellTypesTable = memo(({ data, count }: WorkCellTypesTableProps) => {
           icon={<BiAddToQueue />}
           onClick={() => {
             navigate(
-              `/x/resources/work-cells/list/${row.id}/new?${params?.toString()}`
+              `${path.to.newWorkCellUnit(row.id)}?${params?.toString()}`
             );
           }}
         >
@@ -146,16 +147,16 @@ const WorkCellTypesTable = memo(({ data, count }: WorkCellTypesTableProps) => {
           icon={<BsListUl />}
           onClick={() => {
             navigate(
-              `/x/resources/work-cells/list/${row.id}?${params?.toString()}`
+              `${path.to.workCellTypeList(row.id)}?${params?.toString()}`
             );
           }}
         >
-          Edit Work Cell
+          Edit Work Cells
         </MenuItem>
         <MenuItem
           icon={<BsPencilSquare />}
           onClick={() => {
-            navigate(`/x/resources/work-cells/${row.id}`);
+            navigate(path.to.workCellType(row.id));
           }}
         >
           Edit Work Cell Type
@@ -182,14 +183,16 @@ const WorkCellTypesTable = memo(({ data, count }: WorkCellTypesTableProps) => {
         renderContextMenu={renderContextMenu}
       />
 
-      <ConfirmDelete
-        action={`/x/resources/work-cells/delete/${selectedType?.id}`}
-        name={selectedType?.name ?? ""}
-        text={`Are you sure you want to deactivate the ${selectedType?.name} work cell type?`}
-        isOpen={deleteModal.isOpen}
-        onCancel={onDeleteCancel}
-        onSubmit={onDeleteCancel}
-      />
+      {selectedType && selectedType.id && (
+        <ConfirmDelete
+          action={path.to.deleteWorkCellType(selectedType.id)}
+          name={selectedType?.name ?? ""}
+          text={`Are you sure you want to deactivate the ${selectedType?.name} work cell type?`}
+          isOpen={deleteModal.isOpen}
+          onCancel={onDeleteCancel}
+          onSubmit={onDeleteCancel}
+        />
+      )}
     </>
   );
 });

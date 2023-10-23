@@ -22,6 +22,7 @@ import { IoMdTrash } from "react-icons/io";
 import { ConfirmDelete } from "~/components/Modals";
 import { useUrlParams } from "~/hooks";
 import type { EquipmentTypeDetailType } from "~/modules/resources";
+import { path } from "~/utils/path";
 
 type Equipment = {
   id: string;
@@ -111,13 +112,15 @@ const EquipmentTypeDetail = ({
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
-      <ConfirmDelete
-        isOpen={deleteModal.isOpen}
-        action={`/x/resources/equipment/unit/delete/${selectedEquipment?.id}`}
-        name={selectedEquipment?.name ?? ""}
-        text={`Are you sure you want to deactivate ${selectedEquipment?.name}?`}
-        onCancel={onDeleteCancel}
-      />
+      {selectedEquipment && selectedEquipment.id && (
+        <ConfirmDelete
+          isOpen={deleteModal.isOpen}
+          action={path.to.deleteEquipment(selectedEquipment.id)}
+          name={selectedEquipment?.name ?? ""}
+          text={`Are you sure you want to deactivate ${selectedEquipment?.name}?`}
+          onCancel={onDeleteCancel}
+        />
+      )}
     </>
   );
 };

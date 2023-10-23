@@ -7,6 +7,7 @@ import { IoMdTrash } from "react-icons/io";
 import { Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { CustomerType } from "~/modules/sales";
+import { path } from "~/utils/path";
 
 type CustomerTypesTableProps = {
   data: CustomerType[];
@@ -53,7 +54,7 @@ const CustomerTypesTable = memo(({ data, count }: CustomerTypesTableProps) => {
           <MenuItem
             icon={<BsPeopleFill />}
             onClick={() => {
-              navigate(`/x/sales/customers?type=${row.id}`);
+              navigate(`${path.to.customers}?type=${row.id}`);
             }}
           >
             View Customers
@@ -62,9 +63,7 @@ const CustomerTypesTable = memo(({ data, count }: CustomerTypesTableProps) => {
             isDisabled={row.protected || !permissions.can("update", "sales")}
             icon={<BsPencilSquare />}
             onClick={() => {
-              navigate(
-                `/x/sales/customer-types/${row.id}?${params.toString()}`
-              );
+              navigate(`${path.to.customerType(row.id)}?${params.toString()}`);
             }}
           >
             Edit Customer Type
@@ -74,7 +73,7 @@ const CustomerTypesTable = memo(({ data, count }: CustomerTypesTableProps) => {
             icon={<IoMdTrash />}
             onClick={() => {
               navigate(
-                `/x/sales/customer-types/delete/${row.id}?${params.toString()}`
+                `${path.to.deleteCustomerType(row.id)}?${params.toString()}`
               );
             }}
           >

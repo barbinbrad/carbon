@@ -18,6 +18,7 @@ import { SectionTitle } from "~/components/Layout";
 import { usePermissions, useUser } from "~/hooks";
 import type { Note } from "~/modules/shared";
 import { noteValidator } from "~/modules/shared";
+import { path } from "~/utils/path";
 
 type NotesProps = {
   documentId: string;
@@ -61,10 +62,7 @@ const Notes = ({ documentId, notes }: NotesProps) => {
                     </Text>
                     {/* @ts-ignore */}
                     {user.id === note.user.id && (
-                      <Form
-                        method="post"
-                        action={`/x/shared/notes/${note.id}/delete`}
-                      >
+                      <Form method="post" action={path.to.deleteNote(note.id)}>
                         <Button
                           type="submit"
                           variant="link"
@@ -90,7 +88,7 @@ const Notes = ({ documentId, notes }: NotesProps) => {
       <Box pt={8} w="full">
         <ValidatedForm
           method="post"
-          action={`/x/shared/notes/new`}
+          action={path.to.newNote}
           resetAfterSubmit
           validator={noteValidator}
         >

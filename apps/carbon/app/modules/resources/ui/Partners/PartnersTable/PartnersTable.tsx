@@ -7,6 +7,7 @@ import { IoMdTrash } from "react-icons/io";
 import { Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { Partner } from "~/modules/resources";
+import { path } from "~/utils/path";
 
 type PartnersTableProps = {
   data: Partner[];
@@ -33,7 +34,7 @@ const PartnersTable = memo(({ data, count }: PartnersTableProps) => {
 
             <Link
               onClick={() => {
-                navigate(`/x/supplier/${row?.original.supplierId}`);
+                navigate(path.to.supplier(row?.original.supplierId!));
               }}
             >
               {row.original.supplierName}
@@ -65,9 +66,9 @@ const PartnersTable = memo(({ data, count }: PartnersTableProps) => {
             icon={<BsPencilSquare />}
             onClick={() => {
               navigate(
-                `/x/resources/partners/${
-                  row.supplierLocationId
-                }?${params.toString()}`
+                `${path.to.partner(
+                  row.supplierLocationId!
+                )}?${params.toString()}`
               );
             }}
           >
@@ -78,9 +79,9 @@ const PartnersTable = memo(({ data, count }: PartnersTableProps) => {
             icon={<IoMdTrash />}
             onClick={() => {
               navigate(
-                `/x/resources/partners/delete/${
-                  row.supplierLocationId
-                }?${params.toString()}`
+                `${path.to.deletePartner(
+                  row.supplierLocationId!
+                )}?${params.toString()}`
               );
             }}
           >
@@ -93,7 +94,7 @@ const PartnersTable = memo(({ data, count }: PartnersTableProps) => {
   );
 
   return (
-    <Table<(typeof rows)[number]>
+    <Table<Partner>
       data={rows}
       count={count}
       columns={columns}

@@ -1,9 +1,9 @@
 import {
+  FormControl,
+  FormLabel,
   Grid,
   HStack,
   Input,
-  FormControl,
-  FormLabel,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -15,10 +15,11 @@ import {
 import { useFetcher, useNavigate } from "@remix-run/react";
 import { useRef, useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
-import { Customer, Submit, CustomerContact } from "~/components/Form";
+import { Customer, CustomerContact, Submit } from "~/components/Form";
 import { useUrlParams } from "~/hooks";
 import { createCustomerAccountValidator } from "~/modules/users";
 import type { Result } from "~/types";
+import { path } from "~/utils/path";
 
 const CreateCustomerModal = () => {
   const navigate = useNavigate();
@@ -50,7 +51,7 @@ const CreateCustomerModal = () => {
         <ModalBody pb={6}>
           <ValidatedForm
             method="post"
-            action={`/x/users/customers/new${
+            action={`${path.to.newCustomerAccount}${
               params.get("customer")
                 ? `?customer=${params.get("customer")}`
                 : ""

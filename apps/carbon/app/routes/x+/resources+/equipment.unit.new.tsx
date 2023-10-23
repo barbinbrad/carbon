@@ -22,24 +22,12 @@ export async function action({ request }: ActionFunctionArgs) {
     return validationError(validation.error);
   }
 
-  const {
-    name,
-    description,
-    equipmentTypeId,
-    locationId,
-    operatorsRequired,
-    setupHours,
-    workCellId,
-  } = validation.data;
+  const { id, ...data } = validation.data;
+
+  console.log(data);
 
   const insertEquipment = await upsertEquipment(client, {
-    name,
-    description,
-    equipmentTypeId,
-    locationId,
-    operatorsRequired,
-    setupHours,
-    workCellId,
+    ...data,
     createdBy: userId,
   });
   if (insertEquipment.error) {

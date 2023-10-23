@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import { Employees, Hidden, Radios, Submit } from "~/components/Form";
 import { bulkPermissionsValidator } from "~/modules/users";
+import { path } from "~/utils/path";
 import type { Permission } from "../../../types";
 import PermissionCheckboxes from "../../components/Permission";
 
@@ -78,7 +79,7 @@ const BulkEditPermissions = ({
           <ValidatedForm
             validator={bulkPermissionsValidator}
             method="post"
-            action="/x/users/bulk-edit-permissions"
+            action={path.to.bulkEditPermissions}
             onSubmit={onClose}
             defaultValues={{ userIds }}
           >

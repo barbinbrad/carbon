@@ -7,6 +7,7 @@ import { IoMdTrash } from "react-icons/io";
 import { Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { Department } from "~/modules/resources";
+import { path } from "~/utils/path";
 
 type DepartmentsTableProps = {
   data: Department[];
@@ -65,9 +66,7 @@ const DepartmentsTable = memo(({ data, count }: DepartmentsTableProps) => {
           <MenuItem
             icon={<BsPencilSquare />}
             onClick={() => {
-              navigate(
-                `/x/resources/departments/${row.id}?${params.toString()}`
-              );
+              navigate(`${path.to.department(row.id)}?${params.toString()}`);
             }}
           >
             Edit Department
@@ -77,7 +76,7 @@ const DepartmentsTable = memo(({ data, count }: DepartmentsTableProps) => {
             icon={<IoMdTrash />}
             onClick={() => {
               navigate(
-                `/x/resources/departments/delete/${row.id}?${params.toString()}`
+                `${path.to.deleteDepartment(row.id)}?${params.toString()}`
               );
             }}
           >

@@ -25,6 +25,7 @@ import {
 import { usePermissions } from "~/hooks";
 import { shiftValidator } from "~/modules/resources";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type ShiftFormProps = {
   initialValues: TypeOfValidator<typeof shiftValidator>;
@@ -45,11 +46,7 @@ const ShiftForm = ({ initialValues }: ShiftFormProps) => {
       <ValidatedForm
         validator={shiftValidator}
         method="post"
-        action={
-          isEditing
-            ? `/x/resources/shifts/${initialValues.id}`
-            : "/x/resources/shifts/new"
-        }
+        action={isEditing ? path.to.shift(initialValues.id!) : path.to.newShift}
         defaultValues={initialValues}
       >
         <DrawerOverlay />

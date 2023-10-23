@@ -18,6 +18,7 @@ import { Contact } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions } from "~/hooks";
 import type { CustomerContact } from "~/modules/sales/types";
+import { path } from "~/utils/path";
 
 type CustomerContactsProps = {
   contacts: CustomerContact[];
@@ -26,13 +27,13 @@ type CustomerContactsProps = {
 const CustomerContacts = ({ contacts }: CustomerContactsProps) => {
   const navigate = useNavigate();
   const { customerId } = useParams();
-  if (!customerId) throw new Error("customerId is required");
+  if (!customerId) throw new Error("customerId not found");
   const permissions = usePermissions();
   const canEdit = permissions.can("create", "sales");
   const isEmpty = contacts === undefined || contacts?.length === 0;
 
   const deleteContactModal = useDisclosure();
-  const [contact, setSelectedContact] = useState<CustomerContact>();
+  const [contact, setSelectedContact] = useState<CustomerContact | null>(null);
 
   const getActions = useCallback(
     (contact: CustomerContact) => {
@@ -65,7 +66,7 @@ const CustomerContacts = ({ contacts }: CustomerContactsProps) => {
           icon: <IoMdAdd />,
           onClick: () => {
             navigate(
-              `/x/users/customers/new?id=${contact.id}&customer=${customerId}`
+              `${path.to.newCustomerAccount}?id=${contact.id}&customer=${customerId}`
             );
           },
         });
@@ -105,7 +106,7 @@ const CustomerContacts = ({ contacts }: CustomerContactsProps) => {
                   !Array.isArray(contact.user) ? (
                     <Contact
                       contact={contact.contact}
-                      url={`/x/customer/${customerId}/contacts/${contact.id}`}
+                      url={path.to.customerContact(customerId, contact.id!)}
                       user={contact.user}
                       actions={getActions(contact)}
                     />
@@ -117,14 +118,16 @@ const CustomerContacts = ({ contacts }: CustomerContactsProps) => {
         </CardBody>
       </Card>
 
-      <ConfirmDelete
-        action={`/x/customer/${customerId}/contacts/delete/${contact?.id}`}
-        isOpen={deleteContactModal.isOpen}
-        name={`${contact?.contact?.firstName} ${contact?.contact?.lastName}`}
-        text="Are you sure you want to delete this contact?"
-        onCancel={deleteContactModal.onClose}
-        onSubmit={deleteContactModal.onClose}
-      />
+      {contact && contact.id && (
+        <ConfirmDelete
+          action={path.to.deleteCustomerContact(customerId, contact.id)}
+          isOpen={deleteContactModal.isOpen}
+          name={`${contact?.contact?.firstName} ${contact?.contact?.lastName}`}
+          text="Are you sure you want to delete this contact?"
+          onCancel={deleteContactModal.onClose}
+          onSubmit={deleteContactModal.onClose}
+        />
+      )}
 
       <Outlet />
     </>

@@ -5,6 +5,7 @@ import { memo, useMemo } from "react";
 import { BsPencilSquare } from "react-icons/bs";
 import { Table } from "~/components";
 import type { Customer } from "~/modules/sales";
+import { path } from "~/utils/path";
 
 type CustomersTableProps = {
   data: Customer[];
@@ -20,7 +21,7 @@ const CustomersTable = memo(({ data, count }: CustomersTableProps) => {
         accessorKey: "name",
         header: "Name",
         cell: ({ row }) => (
-          <Link onClick={() => navigate(`/x/customer/${row.original.id}`)}>
+          <Link onClick={() => navigate(path.to.customer(row.original.id!))}>
             {row.original.name}
           </Link>
         ),
@@ -42,7 +43,7 @@ const CustomersTable = memo(({ data, count }: CustomersTableProps) => {
       //     <ButtonGroup size="sm" isAttached variant="outline">
       //       <Button
       //         onClick={() =>
-      //           navigate(`/x/sales/orders?customerId=${row.original.id}`)
+      //           navigate(`${path.to.salesOrders}?customerId=${row.original.id}`)
       //         }
       //       >
       //         {row.original.orderCount ?? 0} Orders
@@ -51,7 +52,7 @@ const CustomersTable = memo(({ data, count }: CustomersTableProps) => {
       //         aria-label="New Order"
       //         icon={<BsPlus />}
       //         onClick={() =>
-      //           navigate(`/x/purchase-order/new?customerId=${row.original.id}`)
+      //           navigate(`${path.to.newPurchaseOrder}?customerId=${row.original.id}`)
       //         }
       //       />
       //     </ButtonGroup>
@@ -66,7 +67,7 @@ const CustomersTable = memo(({ data, count }: CustomersTableProps) => {
       (
         <MenuItem
           icon={<BsPencilSquare />}
-          onClick={() => navigate(`/x/sales/customers/${row.id}`)}
+          onClick={() => navigate(path.to.customer(row.id!))}
         >
           Edit Customer
         </MenuItem>

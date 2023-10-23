@@ -24,6 +24,7 @@ import {
 import { usePermissions } from "~/hooks";
 import { workCellValidator } from "~/modules/resources";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type WorkCellFormProps = {
   initialValues: TypeOfValidator<typeof workCellValidator>;
@@ -58,9 +59,7 @@ const WorkCellForm = ({
         validator={workCellValidator}
         method="post"
         action={
-          isEditing
-            ? `/x/resources/work-cells/cell/${initialValues.id}`
-            : "/x/resources/work-cells/cell/new"
+          isEditing ? path.to.workCell(initialValues.id!) : path.to.newWorkCell
         }
         defaultValues={initialValues}
       >

@@ -1,4 +1,5 @@
 import type { RouteGroup } from "~/types";
+import { path } from "~/utils/path";
 
 const usersRoutes: RouteGroup[] = [
   {
@@ -6,19 +7,19 @@ const usersRoutes: RouteGroup[] = [
     routes: [
       {
         name: "Employees",
-        to: "/x/users/employees",
+        to: path.to.employeeAccounts,
       },
       {
         name: "Customers",
-        to: "/x/users/customers",
+        to: path.to.customerAccounts,
       },
       {
         name: "Suppliers",
-        to: "/x/users/suppliers",
+        to: path.to.supplierAccounts,
       },
       {
         name: "Groups",
-        to: "/x/users/groups",
+        to: path.to.groups,
       },
     ],
   },
@@ -27,7 +28,7 @@ const usersRoutes: RouteGroup[] = [
     routes: [
       {
         name: "Employee Types",
-        to: "/x/users/employee-types",
+        to: path.to.employeeTypes,
       },
     ],
   },

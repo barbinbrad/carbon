@@ -16,6 +16,7 @@ import { Color, Hidden, Input, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { customerTypeValidator } from "~/modules/sales";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type CustomerTypeFormProps = {
   initialValues: TypeOfValidator<typeof customerTypeValidator>;
@@ -38,8 +39,8 @@ const CustomerTypeForm = ({ initialValues }: CustomerTypeFormProps) => {
         method="post"
         action={
           isEditing
-            ? `/x/sales/customer-types/${initialValues.id}`
-            : "/x/sales/customer-types/new"
+            ? path.to.customerType(initialValues.id!)
+            : path.to.newCustomerType
         }
         defaultValues={initialValues}
       >

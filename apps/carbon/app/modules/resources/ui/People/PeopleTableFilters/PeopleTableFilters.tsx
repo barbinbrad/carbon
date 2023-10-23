@@ -5,6 +5,7 @@ import { IoMdAdd } from "react-icons/io";
 import { DebouncedInput } from "~/components/Search";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { EmployeeType } from "~/modules/users";
+import { path } from "~/utils/path";
 
 type PeopleTableFiltersProps = {
   employeeTypes: Partial<EmployeeType>[];
@@ -78,7 +79,7 @@ const PeopleTableFilters = ({ employeeTypes }: PeopleTableFiltersProps) => {
         {permissions.can("create", "users") && (
           <Button
             as={Link}
-            to={`/x/users/employees/new?${params.toString()}`}
+            to={`${path.to.newEmployee}?${params.toString()}`}
             colorScheme="brand"
             leftIcon={<IoMdAdd />}
           >

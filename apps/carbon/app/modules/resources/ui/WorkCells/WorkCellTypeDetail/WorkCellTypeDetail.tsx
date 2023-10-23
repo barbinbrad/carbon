@@ -23,6 +23,7 @@ import { ConfirmDelete } from "~/components/Modals";
 import { useUrlParams } from "~/hooks";
 import type { WorkCellTypeDetailType } from "~/modules/resources";
 import type { ListItem } from "~/types";
+import { path } from "~/utils/path";
 
 type WorkCell = NonNullable<WorkCellTypeDetailType["workCell"]>;
 
@@ -118,13 +119,15 @@ const WorkCellTypeDetail = ({
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
-      <ConfirmDelete
-        isOpen={deleteModal.isOpen}
-        action={`/x/resources/work-cells/cell/delete/${selectedWorkCell?.id}`}
-        name={selectedWorkCell?.name ?? ""}
-        text={`Are you sure you want to deactivate ${selectedWorkCell?.name}?`}
-        onCancel={onDeleteCancel}
-      />
+      {selectedWorkCell && selectedWorkCell.id && (
+        <ConfirmDelete
+          isOpen={deleteModal.isOpen}
+          action={path.to.deleteWorkCell(selectedWorkCell?.id)}
+          name={selectedWorkCell?.name ?? ""}
+          text={`Are you sure you want to deactivate ${selectedWorkCell?.name}?`}
+          onCancel={onDeleteCancel}
+        />
+      )}
     </>
   );
 };

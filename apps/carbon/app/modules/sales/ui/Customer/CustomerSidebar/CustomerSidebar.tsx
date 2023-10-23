@@ -7,26 +7,24 @@ import type {
   CustomerDetail,
   CustomerLocation,
 } from "~/modules/sales";
+import { path } from "~/utils/path";
 import { useCustomerSidebar } from "./useCustomerSidebar";
 
 const CustomerSidebar = () => {
   const { customerId } = useParams();
-  const borderColor = useColor("gray.200");
-  if (!customerId)
-    throw new Error(
-      "CustomerSidebar requires an customerId and could not find customerId in params"
-    );
+  if (!customerId) throw new Error("customerId not found");
 
   const routeData = useRouteData<{
     purchaseOrder: CustomerDetail;
     contacts: CustomerContact[];
     locations: CustomerLocation[];
-  }>(`/x/customer/${customerId}`);
+  }>(path.to.customer(customerId));
   const links = useCustomerSidebar({
     contacts: routeData?.contacts.length ?? 0,
     locations: routeData?.locations.length ?? 0,
   });
   const matches = useMatches();
+  const borderColor = useColor("gray.200");
 
   return (
     <VStack h="full" alignItems="start">

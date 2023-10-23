@@ -23,6 +23,7 @@ import {
 import { usePermissions } from "~/hooks";
 import { customerContactValidator } from "~/modules/sales";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type CustomerContactFormProps = {
   initialValues: TypeOfValidator<typeof customerContactValidator>;
@@ -31,13 +32,16 @@ type CustomerContactFormProps = {
 const CustomerContactForm = ({ initialValues }: CustomerContactFormProps) => {
   const navigate = useNavigate();
   const { customerId } = useParams();
+
+  if (!customerId) throw new Error("customerId not found");
+
   const permissions = usePermissions();
   const isEditing = !!initialValues?.id;
   const isDisabled = isEditing
     ? !permissions.can("update", "sales")
     : !permissions.can("create", "sales");
 
-  const onClose = () => navigate(`/x/customer/${customerId}/contacts`);
+  const onClose = () => navigate(path.to.customerContacts(customerId));
 
   return (
     <Drawer onClose={onClose} isOpen={true} size="sm">
@@ -46,8 +50,8 @@ const CustomerContactForm = ({ initialValues }: CustomerContactFormProps) => {
         method="post"
         action={
           isEditing
-            ? `/x/customer/${customerId}/contacts/${initialValues?.id}`
-            : `/x/customer/${customerId}/contacts/new`
+            ? path.to.customerContact(customerId, initialValues.id!)
+            : path.to.newCustomerContact(customerId)
         }
         defaultValues={initialValues}
         onSubmit={onClose}

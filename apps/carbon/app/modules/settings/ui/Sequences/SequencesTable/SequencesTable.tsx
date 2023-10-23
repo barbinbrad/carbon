@@ -6,6 +6,7 @@ import { BsPencilSquare } from "react-icons/bs";
 import { Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { Sequence } from "~/modules/settings";
+import { path } from "~/utils/path";
 
 type SequencesTableProps = {
   data: Sequence[];
@@ -65,7 +66,7 @@ const SequencesTable = memo(({ data, count }: SequencesTableProps) => {
             icon={<BsPencilSquare />}
             onClick={() => {
               navigate(
-                `/x/settings/sequences/${row.table}?${params.toString()}`
+                `${path.to.tableSequence(row.table)}?${params.toString()}`
               );
             }}
           >

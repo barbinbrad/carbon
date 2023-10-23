@@ -16,6 +16,7 @@ import { Hidden, Input, Submit, Timezone } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { locationValidator } from "~/modules/resources";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type LocationFormProps = {
   initialValues: TypeOfValidator<typeof locationValidator>;
@@ -37,9 +38,7 @@ const LocationForm = ({ initialValues }: LocationFormProps) => {
         validator={locationValidator}
         method="post"
         action={
-          isEditing
-            ? `/x/resources/locations/${initialValues.id}`
-            : "/x/resources/locations/new"
+          isEditing ? path.to.location(initialValues.id!) : path.to.newLocation
         }
         defaultValues={initialValues}
       >

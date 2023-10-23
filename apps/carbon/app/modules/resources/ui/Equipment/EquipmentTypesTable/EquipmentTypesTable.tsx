@@ -15,16 +15,17 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo, useState } from "react";
 import { BiAddToQueue } from "react-icons/bi";
 import {
-  BsPencilSquare,
-  BsListUl,
-  BsPlus,
   BsFillCheckCircleFill,
+  BsListUl,
+  BsPencilSquare,
+  BsPlus,
 } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { Table } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { EquipmentType } from "~/modules/resources";
+import { path } from "~/utils/path";
 
 type EquipmentTypesTableProps = {
   data: EquipmentType[];
@@ -87,9 +88,9 @@ const EquipmentTypesTable = memo(
               <Button
                 onClick={() => {
                   navigate(
-                    `/x/resources/equipment/list/${
+                    `${path.to.equipmentTypeList(
                       row.original.id
-                    }?${params?.toString()}`
+                    )}?${params?.toString()}`
                   );
                 }}
               >
@@ -103,9 +104,9 @@ const EquipmentTypesTable = memo(
                 icon={<BsPlus />}
                 onClick={() => {
                   navigate(
-                    `/x/resources/equipment/list/${
+                    `${path.to.newEquipment(
                       row.original.id
-                    }/new?${params?.toString()}`
+                    )}?${params?.toString()}`
                   );
                 }}
               />
@@ -138,11 +139,7 @@ const EquipmentTypesTable = memo(
           <MenuItem
             icon={<BiAddToQueue />}
             onClick={() => {
-              navigate(
-                `/x/resources/equipment/list/${
-                  row.id
-                }/new?${params?.toString()}`
-              );
+              navigate(`${path.to.newEquipment(row.id)}?${params?.toString()}`);
             }}
           >
             New Unit
@@ -151,7 +148,7 @@ const EquipmentTypesTable = memo(
             icon={<BsListUl />}
             onClick={() => {
               navigate(
-                `/x/resources/equipment/list/${row.id}?${params?.toString()}`
+                `${path.to.equipmentTypeList(row.id)}?${params?.toString()}`
               );
             }}
           >
@@ -160,7 +157,7 @@ const EquipmentTypesTable = memo(
           <MenuItem
             icon={<BsPencilSquare />}
             onClick={() => {
-              navigate(`/x/resources/equipment/${row.id}`);
+              navigate(path.to.equipmentType(row.id));
             }}
           >
             Edit Equipment Type
@@ -186,15 +183,16 @@ const EquipmentTypesTable = memo(
           count={count ?? 0}
           renderContextMenu={renderContextMenu}
         />
-
-        <ConfirmDelete
-          action={`/x/resources/equipment/delete/${selectedType?.id}`}
-          name={selectedType?.name ?? ""}
-          text={`Are you sure you want to deactivate the ${selectedType?.name} equipment type?`}
-          isOpen={deleteModal.isOpen}
-          onCancel={onDeleteCancel}
-          onSubmit={onDeleteCancel}
-        />
+        {selectedType && selectedType.id && (
+          <ConfirmDelete
+            action={path.to.deleteEquipmentType(selectedType.id)}
+            name={selectedType?.name ?? ""}
+            text={`Are you sure you want to deactivate the ${selectedType?.name} equipment type?`}
+            isOpen={deleteModal.isOpen}
+            onCancel={onDeleteCancel}
+            onSubmit={onDeleteCancel}
+          />
+        )}
       </>
     );
   }

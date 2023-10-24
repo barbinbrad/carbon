@@ -26,11 +26,12 @@ import { CgProfile } from "react-icons/cg";
 import { IoMdTrash } from "react-icons/io";
 import { MdOutlineDragIndicator } from "react-icons/md";
 import { ConfirmDelete } from "~/components/Modals";
+import { useUrlParams } from "~/hooks";
 import type {
   Attribute,
-  AttributeCategoryDetail as AttributeCategoryDetailType,
+  AttributeCategoryDetailType,
 } from "~/modules/resources";
-import { useUrlParams } from "~/hooks";
+import { path } from "~/utils/path";
 
 type AttributeCategoryDetailProps = {
   attributeCategory: AttributeCategoryDetailType;
@@ -59,7 +60,7 @@ const AttributeCategoryDetail = ({
     [attributeCategory]
   );
 
-  const [sortOrder, setSortOrder] = useState(
+  const [sortOrder, setSortOrder] = useState<string[]>(
     Array.isArray(attributeCategory.userAttribute)
       ? attributeCategory.userAttribute
           .sort((a, b) => a.sortOrder - b.sortOrder)
@@ -200,13 +201,15 @@ const AttributeCategoryDetail = ({
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
-      <ConfirmDelete
-        isOpen={deleteModal.isOpen}
-        action={`/x/resources/attribute/delete/${selectedAttribute?.id}`}
-        name={selectedAttribute?.name ?? ""}
-        text={`Are you sure you want to deactivate the ${selectedAttribute?.name} attribute?`}
-        onCancel={onDeleteCancel}
-      />
+      {selectedAttribute && selectedAttribute.id && (
+        <ConfirmDelete
+          isOpen={deleteModal.isOpen}
+          action={path.to.deleteAttribute(selectedAttribute.id)}
+          name={selectedAttribute?.name ?? ""}
+          text={`Are you sure you want to deactivate the ${selectedAttribute?.name} attribute?`}
+          onCancel={onDeleteCancel}
+        />
+      )}
     </>
   );
 };

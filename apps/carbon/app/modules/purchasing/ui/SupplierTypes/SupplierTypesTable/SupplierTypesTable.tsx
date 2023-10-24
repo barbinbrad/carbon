@@ -7,6 +7,7 @@ import { IoMdTrash } from "react-icons/io";
 import { Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { SupplierType } from "~/modules/purchasing";
+import { path } from "~/utils/path";
 
 type SupplierTypesTableProps = {
   data: SupplierType[];
@@ -18,7 +19,7 @@ const SupplierTypesTable = memo(({ data, count }: SupplierTypesTableProps) => {
   const navigate = useNavigate();
   const permissions = usePermissions();
 
-  const columns = useMemo<ColumnDef<(typeof data)[number]>[]>(() => {
+  const columns = useMemo<ColumnDef<SupplierType>[]>(() => {
     return [
       {
         accessorKey: "name",
@@ -47,13 +48,13 @@ const SupplierTypesTable = memo(({ data, count }: SupplierTypesTableProps) => {
   }, [navigate]);
 
   const renderContextMenu = useCallback(
-    (row: (typeof data)[number]) => {
+    (row: SupplierType) => {
       return (
         <>
           <MenuItem
             icon={<BsPeopleFill />}
             onClick={() => {
-              navigate(`/x/purchasing/suppliers?type=${row.id}`);
+              navigate(`${path.to.suppliers}?type=${row.id}`);
             }}
           >
             View Suppliers
@@ -64,9 +65,7 @@ const SupplierTypesTable = memo(({ data, count }: SupplierTypesTableProps) => {
             }
             icon={<BsPencilSquare />}
             onClick={() => {
-              navigate(
-                `/x/purchasing/supplier-types/${row.id}?${params.toString()}`
-              );
+              navigate(`${path.to.supplierType(row.id)}?${params.toString()}`);
             }}
           >
             Edit Supplier Type
@@ -78,9 +77,7 @@ const SupplierTypesTable = memo(({ data, count }: SupplierTypesTableProps) => {
             icon={<IoMdTrash />}
             onClick={() => {
               navigate(
-                `/x/purchasing/supplier-types/delete/${
-                  row.id
-                }?${params.toString()}`
+                `${path.to.deleteSupplierType(row.id)}?${params.toString()}`
               );
             }}
           >
@@ -93,7 +90,7 @@ const SupplierTypesTable = memo(({ data, count }: SupplierTypesTableProps) => {
   );
 
   return (
-    <Table<(typeof data)[number]>
+    <Table<SupplierType>
       data={data}
       columns={columns}
       count={count}

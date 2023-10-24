@@ -23,6 +23,7 @@ import {
 import { usePermissions } from "~/hooks";
 import { contractorValidator } from "~/modules/resources";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type ContractorFormProps = {
   initialValues: TypeOfValidator<typeof contractorValidator>;
@@ -50,8 +51,8 @@ const ContractorForm = ({ initialValues }: ContractorFormProps) => {
         method="post"
         action={
           isEditing
-            ? `/x/resources/contractors/${initialValues.id}`
-            : "/x/resources/contractors/new"
+            ? path.to.contractor(initialValues.id!)
+            : path.to.newContractor
         }
         defaultValues={initialValues}
       >

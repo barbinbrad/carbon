@@ -16,6 +16,7 @@ import { Color, Hidden, Input, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { supplierTypeValidator } from "~/modules/purchasing";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type SupplierTypeFormProps = {
   initialValues: TypeOfValidator<typeof supplierTypeValidator>;
@@ -38,8 +39,8 @@ const SupplierTypeForm = ({ initialValues }: SupplierTypeFormProps) => {
         method="post"
         action={
           isEditing
-            ? `/x/purchasing/supplier-types/${initialValues.id}`
-            : "/x/purchasing/supplier-types/new"
+            ? path.to.supplierType(initialValues.id!)
+            : path.to.newSupplierType
         }
         defaultValues={initialValues}
       >

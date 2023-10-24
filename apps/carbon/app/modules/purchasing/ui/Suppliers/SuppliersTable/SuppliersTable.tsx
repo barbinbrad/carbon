@@ -11,6 +11,7 @@ import { memo, useMemo } from "react";
 import { BsPencilSquare, BsPlus } from "react-icons/bs";
 import { Table } from "~/components";
 import type { Supplier } from "~/modules/purchasing";
+import { path } from "~/utils/path";
 
 type SuppliersTableProps = {
   data: Supplier[];
@@ -26,7 +27,7 @@ const SuppliersTable = memo(({ data, count }: SuppliersTableProps) => {
         accessorKey: "name",
         header: "Name",
         cell: ({ row }) => (
-          <Link onClick={() => navigate(`/x/supplier/${row.original.id}`)}>
+          <Link onClick={() => navigate(path.to.supplier(row.original.id!))}>
             {row.original.name}
           </Link>
         ),
@@ -48,7 +49,9 @@ const SuppliersTable = memo(({ data, count }: SuppliersTableProps) => {
           <ButtonGroup size="sm" isAttached variant="outline">
             <Button
               onClick={() =>
-                navigate(`/x/purchasing/orders?supplierId=${row.original.id}`)
+                navigate(
+                  `${path.to.purchaseOrders}?supplierId=${row.original.id}`
+                )
               }
             >
               {row.original.orderCount ?? 0} Orders
@@ -57,7 +60,9 @@ const SuppliersTable = memo(({ data, count }: SuppliersTableProps) => {
               aria-label="New Order"
               icon={<BsPlus />}
               onClick={() =>
-                navigate(`/x/purchase-order/new?supplierId=${row.original.id}`)
+                navigate(
+                  `${path.to.newPurchaseOrder}?supplierId=${row.original.id}`
+                )
               }
             />
           </ButtonGroup>
@@ -70,7 +75,7 @@ const SuppliersTable = memo(({ data, count }: SuppliersTableProps) => {
           <ButtonGroup size="sm" isAttached variant="outline">
             <Button
               onClick={() =>
-                navigate(`/x/parts/search?supplierId=${row.original.id}`)
+                navigate(`${path.to.partsSearch}?supplierId=${row.original.id}`)
               }
             >
               {row.original.partCount ?? 0} Parts
@@ -79,7 +84,7 @@ const SuppliersTable = memo(({ data, count }: SuppliersTableProps) => {
               aria-label="New Part"
               icon={<BsPlus />}
               onClick={() =>
-                navigate(`/x/part/new?supplierId=${row.original.id}`)
+                navigate(`${path.to.newPart}?supplierId=${row.original.id}`)
               }
             />
           </ButtonGroup>
@@ -94,7 +99,7 @@ const SuppliersTable = memo(({ data, count }: SuppliersTableProps) => {
       (
         <MenuItem
           icon={<BsPencilSquare />}
-          onClick={() => navigate(`/x/supplier/${row.id}`)}
+          onClick={() => navigate(path.to.supplier(row.id!))}
         >
           Edit Supplier
         </MenuItem>

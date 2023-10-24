@@ -21,12 +21,19 @@ export const path = {
     accountingGroupsInventory: `${app}/accounting/groups/inventory`,
     accountingGroupsPurchasing: `${app}/accounting/groups/purchasing`,
     accountingGroupsSales: `${app}/accounting/groups/sales`,
+    attribute: (id: string) => generatePath(`/x/resources/attribute/${id}`),
     attributes: `${app}/resources/attributes`,
+    attributeCategory: (id: string) =>
+      generatePath(`${app}/resources/attributes/${id}`),
     attributeCategoryList: (id: string) =>
       generatePath(`${app}/resources/attributes/list/${id}`),
     bulkEditPermissions: `${app}/users/bulk-edit-permissions`,
     chartOfAccounts: `${app}/accounting/charts`,
+    contractor: (id: string) =>
+      generatePath(`${app}/resources/contractors/${id}`),
     contractors: `${app}/resources/contractors`,
+    currency: (id: string) =>
+      generatePath(`${app}/accounting/currencies/${id}`),
     currencies: `${app}/accounting/currencies`,
     customer: (id: string) => generatePath(`${app}/customer/${id}`),
     customerRoot: `${app}/customer`,
@@ -48,6 +55,10 @@ export const path = {
       generatePath(`${app}/resources/abilities/delete/${id}`),
     deleteAccountingCharts: (id: string) =>
       generatePath(`${app}/accounting/charts/delete/${id}`),
+    deleteAttribute: (id: string) =>
+      generatePath(`/x/resources/attribute/delete/${id}`),
+    deleteAttributeCategory: (id: string) =>
+      generatePath(`${app}/resources/attributes/delete/${id}`),
     deleteContractor: (id: string) =>
       generatePath(`${app}/resources/contractors/delete/${id}`),
     deleteCurrency: (id: string) =>
@@ -92,6 +103,8 @@ export const path = {
       generatePath(`${app}/resources/shifts/delete/${id}`),
     deleteShippingMethod: (id: string) =>
       generatePath(`${app}/inventory/shipping-methods/delete/${id}`),
+    deleteSupplierLocation: (supplierId: string, id: string) =>
+      generatePath(`${app}/supplier/${supplierId}/locations/delete/${id}`),
     deleteSupplierType: (id: string) =>
       generatePath(`${app}/purchasing/supplier-types/delete/${id}`),
     deleteUom: (id: string) => generatePath(`${app}/parts/uom/delete/${id}`),
@@ -111,14 +124,16 @@ export const path = {
     employeeAccount: (id: string) =>
       generatePath(`${app}/users/employees/${id}`),
     employeeAccounts: `${app}/users/employees`,
-    employeeType: (id: string) => `${app}/users/employee-types/${id}`,
+    employeeType: (id: string) =>
+      generatePath(`${app}/users/employee-types/${id}`),
     employeeTypes: `${app}/users/employee-types`,
     equipment: `${app}/resources/equipment`,
     equipmentType: (id: string) =>
       generatePath(`${app}/resources/equipment/${id}`),
     equipmentTypeList: (id: string) =>
       generatePath(`${app}/resources/equipment/list/${id}`),
-    equipmentUnit: (id: string) => `${app}/resources/equipment/unit/${id}`,
+    equipmentUnit: (id: string) =>
+      generatePath(`${app}/resources/equipment/unit/${id}`),
     fiscalYears: `${app}/accounting/years`,
     forgotPassword: "/forgot-password",
     group: (id: string) => generatePath(`${app}/users/groups/${id}`),
@@ -128,11 +143,17 @@ export const path = {
     inventory: `${app}/inventory`,
     invoicing: `${app}/invoicing`,
     jobs: `${app}/jobs`,
-    location: (id: string) => `${app}/resources/locations/${id}`,
+    location: (id: string) => generatePath(`${app}/resources/locations/${id}`),
     locations: `${app}/resources/locations`,
     login: "/login",
     logout: "/logout",
     messaging: `${app}/messaging`,
+    newAbility: `${app}/resources/abilities/new`,
+    newAttribute: `${app}/resources/attribute/new`,
+    newAttributeCategory: `${app}/resources/attributes/new`,
+    newAttributeForCategory: (id: string) =>
+      generatePath(`/x/resources/attributes/list/${id}/new`),
+    newContractor: `${app}/resources/contractors/new`,
     newCustomer: `${app}/customer/new`,
     newCustomerAccount: `${app}/users/customers/new`,
     newCustomerContact: (id: string) =>
@@ -142,6 +163,8 @@ export const path = {
     newCustomerType: `${app}/sales/customer-types/new`,
     newDepartment: `${app}/resources/departments/new`,
     newEmployee: `${app}/users/employees/new`,
+    newEmployeeAbility: (id: string) =>
+      generatePath(`/x/resources/ability/${id}/employee/new`),
     newEmployeeType: `${app}/users/employee-types/new`,
     newEquipment: (id: string) =>
       generatePath(`${app}/resources/equipment/list/${id}/new`),
@@ -225,8 +248,13 @@ export const path = {
     supplierAccounts: `${app}/users/suppliers`,
     supplierContacts: (id: string) =>
       generatePath(`${app}/supplier/${id}/contacts`),
+    supplierLocation: (supplierId: string, id: string) =>
+      generatePath(`${app}/supplier/${supplierId}/locations/${id}`),
     supplierLocations: (id: string) =>
       generatePath(`${app}/supplier/${id}/locations`),
+    supplierRoot: `${app}/supplier`,
+    supplierType: (id: string) =>
+      generatePath(`/x/purchasing/supplier-types/delete/${id}`),
     supplierTypes: `${app}/purchasing/supplier-types`,
     tableSequence: (id: string) =>
       generatePath(`${app}/settings/sequences/${id}`),

@@ -24,6 +24,7 @@ import {
 import { usePermissions } from "~/hooks";
 import { abilityValidator } from "~/modules/resources";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type AbilityFormProps = {
   initialValues: TypeOfValidator<typeof abilityValidator>;
@@ -47,7 +48,7 @@ const AbilityForm = ({ initialValues }: AbilityFormProps) => {
       <ValidatedForm
         validator={abilityValidator}
         method="post"
-        action={"/x/resources/abilities/new"}
+        action={path.to.newAbility}
         defaultValues={initialValues}
       >
         <DrawerOverlay />

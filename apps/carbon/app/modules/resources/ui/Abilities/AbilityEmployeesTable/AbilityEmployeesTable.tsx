@@ -6,8 +6,9 @@ import { BsPencilSquare } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { Avatar, Table } from "~/components";
 import { usePermissions } from "~/hooks";
-import { AbilityEmployeeStatus } from "~/modules/resources";
 import type { AbilityEmployees } from "~/modules/resources";
+import { AbilityEmployeeStatus } from "~/modules/resources";
+import { path } from "~/utils/path";
 
 type AbilityEmployeeTableProps = {
   employees: AbilityEmployees;
@@ -20,6 +21,9 @@ const AbilityEmployeesTable = ({
   weeks,
 }: AbilityEmployeeTableProps) => {
   const { abilityId } = useParams();
+
+  if (!abilityId) throw new Error("abilityId not found");
+
   const navigate = useNavigate();
   const permissions = usePermissions();
 
@@ -55,15 +59,13 @@ const AbilityEmployeesTable = ({
   const columns = useMemo<ColumnDef<(typeof rows)[number]>[]>(() => {
     return [
       {
-        // accessorKey: "name",
+        accessorKey: "name",
         header: "Name",
         cell: ({ row }) => (
           <HStack spacing={2}>
             <Avatar
               size="sm"
-              // @ts-ignore
               name={row.original.name}
-              // @ts-ignore
               path={row.original.avatarUrl}
             />
 
@@ -127,7 +129,7 @@ const AbilityEmployeesTable = ({
             isDisabled={!permissions.can("update", "resources")}
             icon={<BsPencilSquare />}
             onClick={() => {
-              navigate(`/x/resources/ability/${abilityId}/employee/${row.id}`);
+              navigate(path.to.employeeAbility(abilityId, row.id));
             }}
           >
             Edit Employee Ability
@@ -136,9 +138,7 @@ const AbilityEmployeesTable = ({
             isDisabled={!permissions.can("delete", "resources")}
             icon={<IoMdTrash />}
             onClick={() => {
-              navigate(
-                `/x/resources/ability/${abilityId}/employee/delete/${row.id}`
-              );
+              navigate(path.to.deleteEmployeeAbility(abilityId, row.id));
             }}
           >
             Delete Employee Ability

@@ -11,12 +11,13 @@ import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo, useState } from "react";
 import { BiAddToQueue } from "react-icons/bi";
-import { BsPencilSquare, BsListUl, BsPlus } from "react-icons/bs";
+import { BsListUl, BsPencilSquare, BsPlus } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { Table } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { AttributeCategory } from "~/modules/resources";
+import { path } from "~/utils/path";
 
 type AttributeCategoriesTableProps = {
   data: AttributeCategory[];
@@ -61,9 +62,9 @@ const AttributeCategoriesTable = memo(
               <Button
                 onClick={() => {
                   navigate(
-                    `/x/resources/attributes/list/${
+                    `${path.to.attributeCategoryList(
                       row.original.id
-                    }?${params?.toString()}`
+                    )}?${params?.toString()}`
                   );
                 }}
               >
@@ -77,9 +78,9 @@ const AttributeCategoriesTable = memo(
                 icon={<BsPlus />}
                 onClick={() => {
                   navigate(
-                    `/x/resources/attributes/list/${
+                    `${path.to.newAttributeForCategory(
                       row.original.id
-                    }/new?${params?.toString()}`
+                    )}?${params?.toString()}`
                   );
                 }}
               />
@@ -113,9 +114,9 @@ const AttributeCategoriesTable = memo(
               icon={<BiAddToQueue />}
               onClick={() => {
                 navigate(
-                  `/x/resources/attributes/list/${
+                  `${path.to.newAttributeForCategory(
                     row.id
-                  }/new?${params?.toString()}`
+                  )}?${params?.toString()}`
                 );
               }}
             >
@@ -125,7 +126,9 @@ const AttributeCategoriesTable = memo(
               icon={<BsListUl />}
               onClick={() => {
                 navigate(
-                  `/x/resources/attributes/list/${row.id}?${params?.toString()}`
+                  `${path.to.attributeCategoryList(
+                    row.id
+                  )}?${params?.toString()}`
                 );
               }}
             >
@@ -134,7 +137,7 @@ const AttributeCategoriesTable = memo(
             <MenuItem
               icon={<BsPencilSquare />}
               onClick={() => {
-                navigate(`/x/resources/attributes/${row.id}`);
+                navigate(path.to.attributeCategory(row.id));
               }}
             >
               Edit Attribute Category
@@ -161,15 +164,16 @@ const AttributeCategoriesTable = memo(
           count={count ?? 0}
           renderContextMenu={renderContextMenu}
         />
-
-        <ConfirmDelete
-          action={`/x/resources/attributes/delete/${selectedCategory?.id}`}
-          name={selectedCategory?.name ?? ""}
-          text={`Are you sure you want to deactivate the ${selectedCategory?.name} attribute category?`}
-          isOpen={deleteModal.isOpen}
-          onCancel={onDeleteCancel}
-          onSubmit={onDeleteCancel}
-        />
+        {selectedCategory && selectedCategory.id && (
+          <ConfirmDelete
+            action={path.to.deleteAttributeCategory(selectedCategory.id)}
+            name={selectedCategory?.name ?? ""}
+            text={`Are you sure you want to deactivate the ${selectedCategory?.name} attribute category?`}
+            isOpen={deleteModal.isOpen}
+            onCancel={onDeleteCancel}
+            onSubmit={onDeleteCancel}
+          />
+        )}
       </>
     );
   }

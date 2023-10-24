@@ -5,6 +5,7 @@ import { IoMdAdd } from "react-icons/io";
 import { DebouncedInput } from "~/components/Search";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { SupplierStatus, SupplierType } from "~/modules/purchasing";
+import { path } from "~/utils/path";
 
 type SuppliersTableFiltersProps = {
   supplierTypes: Partial<SupplierType>[];
@@ -84,7 +85,7 @@ const SuppliersTableFilters = ({
         {permissions.can("create", "purchasing") && (
           <Button
             as={Link}
-            to={`/x/supplier/new`}
+            to={path.to.newSupplier}
             colorScheme="brand"
             leftIcon={<IoMdAdd />}
           >

@@ -1,13 +1,13 @@
-import { AvatarGroup, MenuItem, Link } from "@chakra-ui/react";
+import { AvatarGroup, Link, MenuItem } from "@chakra-ui/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsPencilSquare } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Avatar } from "~/components";
-import { Table } from "~/components";
+import { Avatar, Table } from "~/components";
 import { usePermissions } from "~/hooks";
 import type { Abilities, AbilityDatum } from "~/modules/resources";
+import { path } from "~/utils/path";
 import AbilityChart from "../AbilityChart";
 
 type AbilitiesTableProps = {
@@ -61,9 +61,7 @@ const AbilitiesTable = memo(({ data, count }: AbilitiesTableProps) => {
         accessorKey: "name",
         header: "Ability",
         cell: ({ row }) => (
-          <Link
-            onClick={() => navigate(`/x/resources/ability/${row.original.id}`)}
-          >
+          <Link onClick={() => navigate(path.to.ability(row.original.id))}>
             {row.original.name}
           </Link>
         ),
@@ -111,7 +109,7 @@ const AbilitiesTable = memo(({ data, count }: AbilitiesTableProps) => {
           <MenuItem
             icon={<BsPencilSquare />}
             onClick={() => {
-              navigate(`/x/resources/ability/${row.id}`);
+              navigate(path.to.ability(row.id));
             }}
           >
             Edit Ability
@@ -120,7 +118,7 @@ const AbilitiesTable = memo(({ data, count }: AbilitiesTableProps) => {
             isDisabled={!permissions.can("delete", "resources")}
             icon={<IoMdTrash />}
             onClick={() => {
-              navigate(`/x/resources/abilities/delete/${row.id}`);
+              navigate(path.to.deleteAbility(row.id));
             }}
           >
             Delete Ability

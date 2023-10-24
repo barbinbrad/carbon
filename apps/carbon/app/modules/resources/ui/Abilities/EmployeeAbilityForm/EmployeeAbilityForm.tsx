@@ -16,9 +16,12 @@ import { ValidatedForm } from "remix-validated-form";
 import { Employee, Hidden, Select, Slider, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import type { Ability } from "~/modules/resources";
-import { AbilityEmployeeStatus } from "~/modules/resources";
-import { employeeAbilityValidator } from "~/modules/resources";
+import {
+  AbilityEmployeeStatus,
+  employeeAbilityValidator,
+} from "~/modules/resources";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type EmployeeAbilityFormProps = {
   ability?: Ability;
@@ -63,8 +66,8 @@ const EmployeeAbilityForm = ({
         method="post"
         action={
           isEditing
-            ? `/x/resources/ability/${ability.id}/employee/${id}`
-            : `/x/resources/ability/${ability.id}/employee/new`
+            ? path.to.employeeAbility(ability.id, id!)
+            : path.to.newEmployeeAbility(ability.id)
         }
         defaultValues={initialValues}
       >

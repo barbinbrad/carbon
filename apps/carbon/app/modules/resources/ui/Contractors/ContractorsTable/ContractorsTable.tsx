@@ -7,6 +7,7 @@ import { IoMdTrash } from "react-icons/io";
 import { Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { Contractor } from "~/modules/resources";
+import { path } from "~/utils/path";
 
 type ContractorsTableProps = {
   data: Contractor[];
@@ -18,11 +19,7 @@ const ContractorsTable = memo(({ data, count }: ContractorsTableProps) => {
   const permissions = usePermissions();
   const [params] = useUrlParams();
 
-  const rows = data.map((row) => ({
-    ...row,
-  }));
-
-  const columns = useMemo<ColumnDef<(typeof rows)[number]>[]>(() => {
+  const columns = useMemo<ColumnDef<Contractor>[]>(() => {
     return [
       {
         accessorKey: "supplier",
@@ -33,7 +30,7 @@ const ContractorsTable = memo(({ data, count }: ContractorsTableProps) => {
 
             <Link
               onClick={() => {
-                navigate(`/x/supplier/${row?.original.supplierId}`);
+                navigate(path.to.supplier(row.original.supplierId!));
               }}
             >
               {row.original.supplierName}
@@ -56,16 +53,16 @@ const ContractorsTable = memo(({ data, count }: ContractorsTableProps) => {
   }, [navigate]);
 
   const renderContextMenu = useCallback(
-    (row: (typeof rows)[number]) => {
+    (row: Contractor) => {
       return (
         <>
           <MenuItem
             icon={<BsPencilSquare />}
             onClick={() => {
               navigate(
-                `/x/resources/contractors/${
-                  row.supplierContactId
-                }?${params.toString()}`
+                `${path.to.contractor(
+                  row.supplierContactId!
+                )}?${params.toString()}`
               );
             }}
           >
@@ -76,9 +73,9 @@ const ContractorsTable = memo(({ data, count }: ContractorsTableProps) => {
             icon={<IoMdTrash />}
             onClick={() => {
               navigate(
-                `/x/resources/contractors/delete/${
-                  row.supplierContactId
-                }?${params.toString()}`
+                `${path.to.deleteContractor(
+                  row.supplierContactId!
+                )}?${params.toString()}`
               );
             }}
           >
@@ -91,8 +88,8 @@ const ContractorsTable = memo(({ data, count }: ContractorsTableProps) => {
   );
 
   return (
-    <Table<(typeof rows)[number]>
-      data={rows}
+    <Table<Contractor>
+      data={data}
       count={count}
       columns={columns}
       renderContextMenu={renderContextMenu}

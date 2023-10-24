@@ -16,6 +16,7 @@ import { Hidden, Input, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { supplierLocationValidator } from "~/modules/purchasing";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type SupplierLocationFormProps = {
   initialValues: TypeOfValidator<typeof supplierLocationValidator>;
@@ -24,13 +25,16 @@ type SupplierLocationFormProps = {
 const SupplierLocationForm = ({ initialValues }: SupplierLocationFormProps) => {
   const navigate = useNavigate();
   const { supplierId } = useParams();
+
+  if (!supplierId) throw new Error("supplierId not found");
+
   const permissions = usePermissions();
   const isEditing = !!initialValues?.id;
   const isDisabled = isEditing
     ? !permissions.can("update", "purchasing")
     : !permissions.can("create", "purchasing");
 
-  const onClose = () => navigate(`/x/supplier/${supplierId}/locations`);
+  const onClose = () => navigate(path.to.supplierLocations(supplierId));
 
   return (
     <Drawer onClose={onClose} isOpen={true} size="sm">
@@ -39,8 +43,8 @@ const SupplierLocationForm = ({ initialValues }: SupplierLocationFormProps) => {
         method="post"
         action={
           isEditing
-            ? `/x/supplier/${supplierId}/locations/${initialValues?.id}`
-            : `/x/supplier/${supplierId}/locations/new`
+            ? path.to.supplierLocation(supplierId, initialValues.id!)
+            : path.to.newSupplierLocation(supplierId)
         }
         defaultValues={initialValues}
         onSubmit={onClose}

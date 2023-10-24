@@ -7,6 +7,7 @@ import type {
   SupplierDetail,
   SupplierLocation,
 } from "~/modules/purchasing";
+import { path } from "~/utils/path";
 import { useSupplierSidebar } from "./useSupplierSidebar";
 
 const SupplierSidebar = () => {
@@ -21,7 +22,8 @@ const SupplierSidebar = () => {
     purchaseOrder: SupplierDetail;
     contacts: SupplierContact[];
     locations: SupplierLocation[];
-  }>(`/x/supplier/${supplierId}`);
+  }>(path.to.supplier(supplierId));
+
   const links = useSupplierSidebar({
     contacts: routeData?.contacts.length ?? 0,
     locations: routeData?.locations.length ?? 0,

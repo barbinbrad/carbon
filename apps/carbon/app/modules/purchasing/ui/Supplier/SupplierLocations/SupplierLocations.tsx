@@ -18,6 +18,7 @@ import { Address } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions } from "~/hooks";
 import type { SupplierLocation } from "~/modules/purchasing/types";
+import { path } from "~/utils/path";
 
 type SupplierLocationsProps = {
   locations: SupplierLocation[];
@@ -32,7 +33,7 @@ const SupplierLocations = ({ locations }: SupplierLocationsProps) => {
   const isEmpty = locations === undefined || locations?.length === 0;
 
   const deleteLocationModal = useDisclosure();
-  const [location, setSelectedLocation] = useState<SupplierLocation>();
+  const [selectedLocation, setSelectedLocation] = useState<SupplierLocation>();
 
   const getActions = useCallback(
     (location: SupplierLocation) => {
@@ -63,7 +64,7 @@ const SupplierLocations = ({ locations }: SupplierLocationsProps) => {
           icon: <IoMdAdd />,
           onClick: () => {
             navigate(
-              `/x/resources/partners/new?id=${location.id}&supplierId=${supplierId}`
+              `${path.to.newPartner}?id=${location.id}&supplierId=${supplierId}`
             );
           },
         });
@@ -111,12 +112,15 @@ const SupplierLocations = ({ locations }: SupplierLocationsProps) => {
         </CardBody>
       </Card>
 
-      {deleteLocationModal.isOpen && (
+      {selectedLocation && selectedLocation.id && (
         <ConfirmDelete
-          action={`/x/supplier/${supplierId}/locations/delete/${location?.id}`}
-          // @ts-ignore
-          name={location?.address?.city ?? ""}
+          action={path.to.deleteSupplierLocation(
+            supplierId,
+            selectedLocation.id
+          )}
+          name={selectedLocation.address?.city ?? ""}
           text="Are you sure you want to delete this location?"
+          isOpen={deleteLocationModal.isOpen}
           onCancel={deleteLocationModal.onClose}
           onSubmit={deleteLocationModal.onClose}
         />

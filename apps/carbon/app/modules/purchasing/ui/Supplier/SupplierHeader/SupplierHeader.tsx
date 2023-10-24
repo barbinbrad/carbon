@@ -18,18 +18,20 @@ import type {
   SupplierType,
 } from "~/modules/purchasing";
 import type { ListItem } from "~/types";
+import { path } from "~/utils/path";
 
 const SupplierHeader = () => {
   const { supplierId } = useParams();
   if (!supplierId) throw new Error("Could not find supplierId");
   const routeData = useRouteData<{ supplier: SupplierDetail }>(
-    `/x/supplier/${supplierId}`
+    path.to.supplier(supplierId)
   );
+
   const sharedSupplierData = useRouteData<{
     supplierTypes: SupplierType[];
     supplierStatuses: SupplierStatus[];
     paymentTerms: ListItem[];
-  }>("/x/supplier");
+  }>(path.to.supplierRoot);
 
   return (
     <VStack w="full" alignItems="start" spacing={2}>

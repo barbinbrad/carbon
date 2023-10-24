@@ -11,10 +11,11 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { ValidatedForm } from "remix-validated-form";
-import { Boolean, Input, Hidden, Submit } from "~/components/Form";
+import { Boolean, Hidden, Input, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { attributeCategoryValidator } from "~/modules/resources";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type AttributeCategoryFormProps = {
   initialValues: TypeOfValidator<typeof attributeCategoryValidator>;
@@ -38,8 +39,8 @@ const AttributeCategoryForm = ({
         method="post"
         action={
           isEditing
-            ? `/x/resources/attributes/${initialValues.id}`
-            : "/x/resources/attributes/new"
+            ? path.to.attributeCategory(initialValues.id!)
+            : path.to.newAttributeCategory
         }
         defaultValues={initialValues}
       >

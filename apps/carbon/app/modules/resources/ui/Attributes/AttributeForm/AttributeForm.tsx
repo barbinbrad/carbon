@@ -24,6 +24,7 @@ import { usePermissions } from "~/hooks";
 import { attributeValidator } from "~/modules/resources";
 import { DataType } from "~/modules/users";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type AttributeFormProps = {
   initialValues: TypeOfValidator<typeof attributeValidator>;
@@ -75,8 +76,8 @@ const AttributeForm = ({
         method="post"
         action={
           isEditing
-            ? `/x/resources/attribute/${initialValues.id}`
-            : "/x/resources/attribute/new"
+            ? path.to.attribute(initialValues.id!)
+            : path.to.newAttribute
         }
         defaultValues={initialValues}
       >

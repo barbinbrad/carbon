@@ -24,8 +24,8 @@
   "devDependencies": {
     "@carbon/logger": "*",
     "@carbon/tsconfig": "*",
-    "@types/node": "^16.17.1",
     "@types/ioredis": "^5.0.0",
+    "@types/node": "^18.15.1",
     "dotenv": "16.0.3",
     "eslint": "^8.4.1",
     "eslint-config-carbon": "*",

@@ -1,4 +1,5 @@
 import type { RouteGroup } from "~/types";
+import { path } from "~/utils/path";
 
 const resourcesRoutes: RouteGroup[] = [
   {
@@ -6,23 +7,23 @@ const resourcesRoutes: RouteGroup[] = [
     routes: [
       {
         name: "People",
-        to: "/x/resources/people",
+        to: path.to.people,
       },
       {
         name: "Contractors",
-        to: "/x/resources/contractors",
+        to: path.to.contractors,
       },
       {
         name: "Equipment",
-        to: "/x/resources/equipment",
+        to: path.to.equipment,
       },
       {
         name: "Partners",
-        to: "/x/resources/partners",
+        to: path.to.partners,
       },
       {
         name: "Work Cells",
-        to: "/x/resources/work-cells",
+        to: path.to.workCells,
       },
     ],
   },
@@ -31,27 +32,27 @@ const resourcesRoutes: RouteGroup[] = [
     routes: [
       {
         name: "Abilities",
-        to: "/x/resources/abilities",
+        to: path.to.abilities,
       },
       {
         name: "Attributes",
-        to: "/x/resources/attributes",
+        to: path.to.attributes,
       },
       {
         name: "Departments",
-        to: "/x/resources/departments",
+        to: path.to.departments,
       },
       {
         name: "Holidays",
-        to: "/x/resources/holidays",
+        to: path.to.holidays,
       },
       {
         name: "Locations",
-        to: "/x/resources/locations",
+        to: path.to.locations,
       },
       {
         name: "Shifts",
-        to: "/x/resources/shifts",
+        to: path.to.shifts,
       },
     ],
   },

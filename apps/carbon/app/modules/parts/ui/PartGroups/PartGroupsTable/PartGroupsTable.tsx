@@ -7,6 +7,7 @@ import { IoMdTrash } from "react-icons/io";
 import { Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { PartGroup } from "~/modules/parts";
+import { path } from "~/utils/path";
 
 type PartGroupsTableProps = {
   data: PartGroup[];
@@ -50,7 +51,7 @@ const PartGroupsTable = memo(({ data, count }: PartGroupsTableProps) => {
             isDisabled={!permissions.can("update", "parts")}
             icon={<BsPencilSquare />}
             onClick={() => {
-              navigate(`/x/parts/groups/${row.id}?${params.toString()}`);
+              navigate(`${path.to.partGroup(row.id)}?${params.toString()}`);
             }}
           >
             Edit Part Group
@@ -59,7 +60,9 @@ const PartGroupsTable = memo(({ data, count }: PartGroupsTableProps) => {
             isDisabled={!permissions.can("delete", "parts")}
             icon={<IoMdTrash />}
             onClick={() => {
-              navigate(`/x/parts/groups/delete/${row.id}?${params.toString()}`);
+              navigate(
+                `${path.to.deletePartGroup(row.id)}?${params.toString()}`
+              );
             }}
           >
             Delete Part Group

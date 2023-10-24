@@ -28,6 +28,7 @@ import Grid from "~/components/Grid";
 import { useRouteData, useUser } from "~/hooks";
 import type { PurchaseOrder, PurchaseOrderLine } from "~/modules/purchasing";
 import type { ListItem } from "~/types";
+import { path } from "~/utils/path";
 import usePurchaseOrderLines from "./usePurchaseOrderLines";
 
 const PurchaseOrderLines = () => {
@@ -35,11 +36,13 @@ const PurchaseOrderLines = () => {
   if (!orderId) throw new Error("orderId not found");
 
   const navigate = useNavigate();
+
   const routeData = useRouteData<{
     purchaseOrderLines: PurchaseOrderLine[];
     locations: ListItem[];
     purchaseOrder: PurchaseOrder;
-  }>(`/x/purchase-order/${orderId}`);
+  }>(path.to.purchaseOrder(orderId));
+
   const locations = routeData?.locations ?? [];
   const { defaults } = useUser();
   const {

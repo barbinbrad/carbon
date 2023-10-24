@@ -11,16 +11,17 @@ import {
 import { Link, Outlet, useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useMemo } from "react";
-import Grid from "~/components/Grid";
+import { MdMoreHoriz } from "react-icons/md";
 import {
   EditableList,
   EditableNumber,
   EditableText,
 } from "~/components/Editable";
-import type { PartSupplier, UnitOfMeasureListItem } from "~/modules/parts";
-import usePartSuppliers from "./usePartSuppliers";
+import Grid from "~/components/Grid";
 import { useRouteData } from "~/hooks";
-import { MdMoreHoriz } from "react-icons/md";
+import type { PartSupplier, UnitOfMeasureListItem } from "~/modules/parts";
+import { path } from "~/utils/path";
+import usePartSuppliers from "./usePartSuppliers";
 
 type PartSuppliersProps = {
   partSuppliers: PartSupplier[];
@@ -31,7 +32,7 @@ const PartSuppliers = ({ partSuppliers }: PartSuppliersProps) => {
   const { canEdit, handleCellEdit } = usePartSuppliers();
   const sharedPartData = useRouteData<{
     unitOfMeasures: UnitOfMeasureListItem[];
-  }>("/x/part");
+  }>(path.to.partRoot);
 
   const unitOfMeasureOptions = useMemo(() => {
     return (

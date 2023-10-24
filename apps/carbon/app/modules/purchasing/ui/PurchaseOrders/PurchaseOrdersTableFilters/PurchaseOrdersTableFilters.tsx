@@ -6,6 +6,7 @@ import { DebouncedInput } from "~/components/Search";
 import { usePermissions, useUrlParams } from "~/hooks";
 import { purchaseOrderStatusType } from "~/modules/purchasing";
 import { useSuppliers } from "~/stores";
+import { path } from "~/utils/path";
 
 const PurchaseOrdersTableFilters = () => {
   const [suppliers] = useSuppliers();
@@ -74,7 +75,7 @@ const PurchaseOrdersTableFilters = () => {
         {permissions.can("create", "purchasing") && (
           <Button
             as={Link}
-            to="/x/purchase-order/new"
+            to={path.to.newPurchaseOrder}
             colorScheme="brand"
             leftIcon={<IoMdAdd />}
           >

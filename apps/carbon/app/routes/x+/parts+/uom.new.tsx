@@ -63,7 +63,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   return redirect(
-    path.to.uom,
+    path.to.uoms,
     await flash(request, success("Unit of measure created"))
   );
 }

@@ -52,7 +52,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   const { id, ...data } = validation.data;
-  if (!id) throw new Error("id is required");
+  if (!id) throw new Error("id not found");
 
   const updateCustomerType = await upsertCustomerType(client, {
     id,

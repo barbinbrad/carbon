@@ -1,7 +1,6 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
-import { useRouteData } from "~/hooks";
 import {
   PartGroupForm,
   partGroupValidator,
@@ -69,19 +68,10 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function NewPartGroupsRoute() {
-  const routeData = useRouteData<{
-    accounts: { name: string; number: string }[];
-  }>(path.to.partGroups);
-
   const initialValues = {
     name: "",
     description: "",
   };
 
-  return (
-    <PartGroupForm
-      accounts={routeData?.accounts ?? []}
-      initialValues={initialValues}
-    />
-  );
+  return <PartGroupForm initialValues={initialValues} />;
 }

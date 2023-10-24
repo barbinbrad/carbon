@@ -17,6 +17,7 @@ import { Table } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { AccountCategory } from "~/modules/accounting";
+import { path } from "~/utils/path";
 
 type AccountCategoriesTableProps = {
   data: AccountCategory[];
@@ -83,9 +84,9 @@ const AccountCategoriesTable = memo(
               <Button
                 onClick={() => {
                   navigate(
-                    `/x/accounting/categories/list/${
-                      row.original.id
-                    }?${params?.toString()}`
+                    `${path.to.accountingCategoryList(
+                      row.original.id!
+                    )}?${params?.toString()}`
                   );
                 }}
               >
@@ -96,9 +97,9 @@ const AccountCategoriesTable = memo(
                 icon={<BsPlus />}
                 onClick={() => {
                   navigate(
-                    `/x/accounting/categories/list/${
-                      row.original.id
-                    }/new?${params?.toString()}`
+                    `${path.to.newAccountingSubcategory(
+                      row.original.id!
+                    )}?${params?.toString()}`
                   );
                 }}
               />

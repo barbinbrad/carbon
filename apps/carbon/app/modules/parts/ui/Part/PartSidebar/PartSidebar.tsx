@@ -3,18 +3,16 @@ import { Box, Button, VStack } from "@chakra-ui/react";
 import { Link, useMatches, useParams } from "@remix-run/react";
 import { useRouteData } from "~/hooks";
 import type { PartSummary } from "~/modules/parts/types";
+import { path } from "~/utils/path";
 import { usePartSidebar } from "./usePartSidebar";
 
 const PartSidebar = () => {
   const { partId } = useParams();
   const borderColor = useColor("gray.200");
-  if (!partId)
-    throw new Error(
-      "PartSidebar requires a partId and could not find partId in params"
-    );
+  if (!partId) throw new Error("partId not found");
 
   const routeData = useRouteData<{ partSummary: PartSummary }>(
-    `/x/part/${partId}`
+    path.to.part(partId)
   );
   if (!routeData?.partSummary?.replenishmentSystem)
     throw new Error("Could not find replenishmentSystem in routeData");

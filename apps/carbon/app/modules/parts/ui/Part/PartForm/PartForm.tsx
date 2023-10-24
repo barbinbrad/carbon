@@ -27,6 +27,7 @@ import type {
   UnitOfMeasureListItem,
 } from "~/modules/parts";
 import { partValidator } from "~/modules/parts";
+import { path } from "~/utils/path";
 
 type PartFormValues = {
   id?: string;
@@ -95,7 +96,7 @@ const PartForm = ({ initialValues }: PartFormProps) => {
     partTypes: PartType[];
     partReplenishmentSystems: PartReplenishmentSystem[];
     unitOfMeasures: UnitOfMeasureListItem[];
-  }>("/x/part");
+  }>(path.to.partRoot);
 
   const { partId, onPartIdChange, loading } = useNextPartIdShortcut();
   const permissions = usePermissions();

@@ -16,6 +16,7 @@ import { Hidden, Input, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { unitOfMeasureValidator } from "~/modules/parts";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type UnitOfMeasureFormProps = {
   initialValues: TypeOfValidator<typeof unitOfMeasureValidator>;
@@ -36,9 +37,7 @@ const UnitOfMeasureForm = ({ initialValues }: UnitOfMeasureFormProps) => {
       <ValidatedForm
         validator={unitOfMeasureValidator}
         method="post"
-        action={
-          isEditing ? `/x/parts/uom/${initialValues.id}` : "/x/parts/uom/new"
-        }
+        action={isEditing ? path.to.uom(initialValues.id!) : path.to.newUom}
         defaultValues={initialValues}
       >
         <DrawerOverlay />

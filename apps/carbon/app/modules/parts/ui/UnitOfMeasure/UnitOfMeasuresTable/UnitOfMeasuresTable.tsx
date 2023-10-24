@@ -7,6 +7,7 @@ import { IoMdTrash } from "react-icons/io";
 import { Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { UnitOfMeasure } from "~/modules/parts";
+import { path } from "~/utils/path";
 
 type UnitOfMeasuresTableProps = {
   data: UnitOfMeasure[];
@@ -46,7 +47,7 @@ const UnitOfMeasuresTable = memo(
               isDisabled={!permissions.can("update", "parts")}
               icon={<BsPencilSquare />}
               onClick={() => {
-                navigate(`/x/parts/uom/${row.id}?${params.toString()}`);
+                navigate(`${path.to.uom(row.id)}?${params.toString()}`);
               }}
             >
               Edit Unit of Measure
@@ -55,7 +56,7 @@ const UnitOfMeasuresTable = memo(
               isDisabled={!permissions.can("delete", "parts")}
               icon={<IoMdTrash />}
               onClick={() => {
-                navigate(`/x/parts/uom/delete/${row.id}?${params.toString()}`);
+                navigate(`${path.to.deleteUom(row.id)}?${params.toString()}`);
               }}
             >
               Delete Unit of Measure

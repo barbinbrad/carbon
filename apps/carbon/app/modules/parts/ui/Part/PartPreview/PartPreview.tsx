@@ -12,12 +12,14 @@ import { useParams } from "@remix-run/react";
 import { FaHistory } from "react-icons/fa";
 import { useRouteData } from "~/hooks";
 import type { PartSummary } from "~/modules/parts";
+import { path } from "~/utils/path";
 
 const PartPreview = () => {
   const { partId } = useParams();
-  if (!partId) throw new Error("Could not find partId");
+  if (!partId) throw new Error("partId not found");
+
   const routeData = useRouteData<{ partSummary: PartSummary }>(
-    `/x/part/${partId}`
+    path.to.part(partId)
   );
 
   return (

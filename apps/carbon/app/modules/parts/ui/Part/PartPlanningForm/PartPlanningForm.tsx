@@ -23,6 +23,7 @@ import type { PartReorderingPolicy } from "~/modules/parts";
 import { partPlanningValidator } from "~/modules/parts";
 import type { ListItem } from "~/types";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type PartPlanningFormProps = {
   initialValues: TypeOfValidator<typeof partPlanningValidator>;
@@ -62,7 +63,9 @@ const PartPlanningForm = ({
                 options={locationOptions}
                 onChange={(selected) => {
                   // hard refresh because initialValues update has no effect otherwise
-                  window.location.href = `/x/part/${initialValues.partId}/planning?location=${selected?.value}`;
+                  window.location.href = `${path.to.partPlanning(
+                    initialValues.partId
+                  )}?location=${selected?.value}`;
                 }}
               />
             </Box>

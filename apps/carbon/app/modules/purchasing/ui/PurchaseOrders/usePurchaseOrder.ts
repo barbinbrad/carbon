@@ -6,6 +6,7 @@ import type {
   PurchaseOrder,
   PurchaseOrderTransactionType,
 } from "~/modules/purchasing";
+import { path } from "~/utils/path";
 
 export const usePurchaseOrder = () => {
   const submit = useSubmit();
@@ -28,7 +29,7 @@ export const usePurchaseOrder = () => {
 
   const edit = useCallback(
     (purchaseOrder: PurchaseOrder) =>
-      navigate(`/x/purchase-order/${purchaseOrder.id}`),
+      navigate(path.to.purchaseOrder(purchaseOrder.id!)),
     [navigate]
   );
 
@@ -55,7 +56,7 @@ export const usePurchaseOrder = () => {
   const receive = useCallback(
     (purchaseOrder: PurchaseOrder) =>
       navigate(
-        `/x/inventory/receipts/new?sourceDocument=Purchase Order&sourceDocumentId=${purchaseOrder.id}`
+        `${path.to.newReceipt}?sourceDocument=Purchase Order&sourceDocumentId=${purchaseOrder.id}`
       ),
     [navigate]
   );
@@ -73,7 +74,7 @@ export const usePurchaseOrder = () => {
         .eq("id", purchaseOrder.id);
 
       if (!error) {
-        submit(`/x/purchase-order/${purchaseOrder.id}`, {
+        submit(path.to.purchaseOrder(purchaseOrder.id), {
           method: "post",
         });
       }

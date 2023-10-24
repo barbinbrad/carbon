@@ -23,6 +23,7 @@ import {
 import { usePermissions } from "~/hooks";
 import { supplierContactValidator } from "~/modules/purchasing";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type SupplierContactFormProps = {
   initialValues: TypeOfValidator<typeof supplierContactValidator>;
@@ -31,13 +32,16 @@ type SupplierContactFormProps = {
 const SupplierContactForm = ({ initialValues }: SupplierContactFormProps) => {
   const navigate = useNavigate();
   const { supplierId } = useParams();
+
+  if (!supplierId) throw new Error("supplierId not found");
+
   const permissions = usePermissions();
   const isEditing = !!initialValues?.id;
   const isDisabled = isEditing
     ? !permissions.can("update", "purchasing")
     : !permissions.can("create", "purchasing");
 
-  const onClose = () => navigate(`/x/supplier/${supplierId}/contacts`);
+  const onClose = () => navigate(path.to.supplierContacts(supplierId));
 
   return (
     <Drawer onClose={onClose} isOpen={true} size="sm">
@@ -46,8 +50,8 @@ const SupplierContactForm = ({ initialValues }: SupplierContactFormProps) => {
         method="post"
         action={
           isEditing
-            ? `/x/supplier/${supplierId}/contacts/${initialValues?.id}`
-            : `/x/supplier/${supplierId}/contacts/new`
+            ? path.to.supplierContact(supplierId, initialValues.id!)
+            : path.to.newSupplierContact(supplierId)
         }
         defaultValues={initialValues}
         onSubmit={onClose}

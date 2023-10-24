@@ -16,16 +16,13 @@ import { Hidden, Input, Submit, TextArea } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { partGroupValidator } from "~/modules/parts";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type PartGroupFormProps = {
   initialValues: TypeOfValidator<typeof partGroupValidator>;
-  accounts: {
-    number: string;
-    name: string;
-  }[];
 };
 
-const PartGroupForm = ({ accounts, initialValues }: PartGroupFormProps) => {
+const PartGroupForm = ({ initialValues }: PartGroupFormProps) => {
   const permissions = usePermissions();
   const navigate = useNavigate();
   const onClose = () => navigate(-1);
@@ -42,8 +39,8 @@ const PartGroupForm = ({ accounts, initialValues }: PartGroupFormProps) => {
         method="post"
         action={
           isEditing
-            ? `/x/parts/groups/${initialValues.id}`
-            : "/x/parts/groups/new"
+            ? path.to.partGroup(initialValues.id!)
+            : path.to.newPartGroup
         }
         defaultValues={initialValues}
       >

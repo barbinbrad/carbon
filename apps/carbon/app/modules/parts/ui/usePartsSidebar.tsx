@@ -1,5 +1,6 @@
 import { usePermissions } from "~/hooks";
 import type { AuthenticatedRouteGroup } from "~/types";
+import { path } from "~/utils/path";
 
 const partsRoutes: AuthenticatedRouteGroup[] = [
   {
@@ -7,11 +8,11 @@ const partsRoutes: AuthenticatedRouteGroup[] = [
     routes: [
       {
         name: "Parts",
-        to: "/x/parts/search",
+        to: path.to.partsSearch,
       },
       {
         name: "Routing",
-        to: "/x/parts/routing",
+        to: path.to.routings,
         role: "employee",
       },
     ],
@@ -21,12 +22,12 @@ const partsRoutes: AuthenticatedRouteGroup[] = [
     routes: [
       {
         name: "Part Groups",
-        to: "/x/parts/groups",
+        to: path.to.partGroups,
         role: "employee",
       },
       {
         name: "Units of Measure",
-        to: "/x/parts/uom",
+        to: path.to.uoms,
         role: "employee",
       },
     ],

@@ -25,6 +25,7 @@ import type { SupplierStatus, SupplierType } from "~/modules/purchasing";
 import { supplierValidator } from "~/modules/purchasing";
 import type { ListItem } from "~/types";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type SupplierFormProps = {
   initialValues: TypeOfValidator<typeof supplierValidator>;
@@ -33,7 +34,7 @@ type SupplierFormProps = {
 const SupplierForm = ({ initialValues }: SupplierFormProps) => {
   const permissions = usePermissions();
   const navigate = useNavigate();
-  const onClose = () => navigate("/x/purchasing/suppliers");
+  const onClose = () => navigate(path.to.suppliers);
 
   const routeData = useRouteData<{
     supplierTypes: SupplierType[];
@@ -41,7 +42,7 @@ const SupplierForm = ({ initialValues }: SupplierFormProps) => {
     paymentTerms: ListItem[];
     shippingMethods: ListItem[];
     shippingTerms: ListItem[];
-  }>("/x/supplier");
+  }>(path.to.supplierRoot);
 
   const supplierTypeOptions =
     routeData?.supplierTypes?.map((type) => ({
@@ -154,16 +155,6 @@ const SupplierForm = ({ initialValues }: SupplierFormProps) => {
                 </VStack>
               </>
             )}
-
-            {/* <SupplierLocations
-                  locations={locations}
-                  isEditing={isEditing}
-                />
-                <SupplierContacts
-                  contacts={contacts}
-                  locations={locations}
-                  isEditing={isEditing}
-                /> */}
           </Grid>
         </CardBody>
         <CardFooter>

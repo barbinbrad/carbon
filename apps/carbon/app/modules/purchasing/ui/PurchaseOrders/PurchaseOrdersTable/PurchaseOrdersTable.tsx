@@ -19,6 +19,7 @@ import type {
   purchaseOrderStatusType,
 } from "~/modules/purchasing";
 import { PurchasingStatus } from "~/modules/purchasing";
+import { path } from "~/utils/path";
 import { usePurchaseOrder } from "../usePurchaseOrder";
 
 type PurchaseOrdersTableProps = {
@@ -212,9 +213,9 @@ const PurchaseOrdersTable = memo(
           renderContextMenu={renderContextMenu}
         />
 
-        {selectedPurchaseOrder && (
+        {selectedPurchaseOrder && selectedPurchaseOrder.id && (
           <ConfirmDelete
-            action={`/x/purchase-order/${selectedPurchaseOrder?.id}/delete`}
+            action={path.to.deletePurchaseOrder(selectedPurchaseOrder.id)}
             isOpen={closePurchaseOrderModal.isOpen}
             name={selectedPurchaseOrder.purchaseOrderId!}
             text={`Are you sure you want to move ${selectedPurchaseOrder.purchaseOrderId!} to the trash?`}

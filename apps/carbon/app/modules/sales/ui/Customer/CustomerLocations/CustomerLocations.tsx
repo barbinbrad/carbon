@@ -27,7 +27,7 @@ type CustomerLocationsProps = {
 const CustomerLocations = ({ locations }: CustomerLocationsProps) => {
   const navigate = useNavigate();
   const { customerId } = useParams();
-  if (!customerId) throw new Error("customerId is required");
+  if (!customerId) throw new Error("customerId not found");
   const permissions = usePermissions();
   const canEdit = permissions.can("create", "sales");
   const isEmpty = locations === undefined || locations?.length === 0;

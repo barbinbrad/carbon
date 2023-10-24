@@ -6,6 +6,7 @@ import type {
   PurchaseOrder,
   PurchaseOrderAttachment,
 } from "~/modules/purchasing";
+import { path } from "~/utils/path";
 import { usePurchaseOrderSidebar } from "./usePurchaseOrderSidebar";
 
 const PurchaseOrderSidebar = () => {
@@ -20,7 +21,8 @@ const PurchaseOrderSidebar = () => {
     purchaseOrder: PurchaseOrder;
     internalDocuments: PurchaseOrderAttachment[];
     externalDocuments: PurchaseOrderAttachment[];
-  }>(`/x/purchase-order/${orderId}`);
+  }>(path.to.purchaseOrder(orderId));
+
   const links = usePurchaseOrderSidebar({
     internalDocuments: routeData?.internalDocuments.length ?? 0,
     externalDocuments: routeData?.externalDocuments.length ?? 0,

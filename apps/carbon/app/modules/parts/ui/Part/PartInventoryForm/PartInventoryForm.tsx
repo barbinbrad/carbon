@@ -18,6 +18,7 @@ import type { PartQuantities } from "~/modules/parts";
 import { partInventoryValidator } from "~/modules/parts";
 import type { ListItem } from "~/types";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type PartInventoryFormProps = {
   initialValues: Omit<
@@ -63,7 +64,9 @@ const PartInventoryForm = ({
                 options={locationOptions}
                 onChange={(selected) => {
                   // hard refresh because initialValues update has no effect otherwise
-                  window.location.href = `/x/part/${initialValues.partId}/inventory?location=${selected?.value}`;
+                  window.location.href = `${path.to.partInventory(
+                    initialValues.partId
+                  )}?location=${selected?.value}`;
                 }}
               />
             </Box>

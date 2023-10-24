@@ -18,6 +18,7 @@ import { Contact } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions } from "~/hooks";
 import type { SupplierContact } from "~/modules/purchasing/types";
+import { path } from "~/utils/path";
 
 type SupplierContactsProps = {
   contacts: SupplierContact[];
@@ -26,13 +27,13 @@ type SupplierContactsProps = {
 const SupplierContacts = ({ contacts }: SupplierContactsProps) => {
   const navigate = useNavigate();
   const { supplierId } = useParams();
-  if (!supplierId) throw new Error("supplierId is required");
+  if (!supplierId) throw new Error("supplierId not found");
   const permissions = usePermissions();
   const canEdit = permissions.can("create", "purchasing");
   const isEmpty = contacts === undefined || contacts?.length === 0;
 
   const deleteContactModal = useDisclosure();
-  const [contact, setSelectedContact] = useState<SupplierContact>();
+  const [selectedContact, setSelectedContact] = useState<SupplierContact>();
 
   const getActions = useCallback(
     (contact: SupplierContact) => {
@@ -64,7 +65,7 @@ const SupplierContacts = ({ contacts }: SupplierContactsProps) => {
           icon: <IoMdAdd />,
           onClick: () => {
             navigate(
-              `/x/users/suppliers/new?id=${contact.id}&supplier=${supplierId}`
+              `${path.to.newSupplierAccount}?id=${contact.id}&supplier=${supplierId}`
             );
           },
         });
@@ -76,7 +77,7 @@ const SupplierContacts = ({ contacts }: SupplierContactsProps) => {
           icon: <IoMdAdd />,
           onClick: () => {
             navigate(
-              `/x/resources/contractors/new?id=${contact.id}&supplierId=${supplierId}`
+              `${path.to.newContractor}?id=${contact.id}&supplierId=${supplierId}`
             );
           },
         });
@@ -104,7 +105,7 @@ const SupplierContacts = ({ contacts }: SupplierContactsProps) => {
           {isEmpty ? (
             <Box w="full" my={8} textAlign="center">
               <Text color="gray.500" fontSize="sm">
-                You haven’t created any contacts yet.
+                You haven't created any contacts yet.
               </Text>
             </Box>
           ) : (
@@ -116,7 +117,7 @@ const SupplierContacts = ({ contacts }: SupplierContactsProps) => {
                   !Array.isArray(contact.user) ? (
                     <Contact
                       contact={contact.contact}
-                      url={`/x/supplier/${supplierId}/contacts/${contact.id}`}
+                      url={path.to.supplierContact(supplierId, contact.id)}
                       user={contact.user}
                       actions={getActions(contact)}
                     />
@@ -128,14 +129,16 @@ const SupplierContacts = ({ contacts }: SupplierContactsProps) => {
         </CardBody>
       </Card>
 
-      <ConfirmDelete
-        action={`/x/supplier/${supplierId}/contacts/delete/${contact?.id}`}
-        isOpen={deleteContactModal.isOpen}
-        name={`${contact?.contact?.firstName} ${contact?.contact?.lastName}`}
-        text="Are you sure you want to delete this contact?"
-        onCancel={deleteContactModal.onClose}
-        onSubmit={deleteContactModal.onClose}
-      />
+      {selectedContact && selectedContact.id && (
+        <ConfirmDelete
+          action={path.to.deleteSupplierContact(supplierId, selectedContact.id)}
+          isOpen={deleteContactModal.isOpen}
+          name={`${selectedContact.contact?.firstName} ${selectedContact.contact?.lastName}`}
+          text="Are you sure you want to delete this contact?"
+          onCancel={deleteContactModal.onClose}
+          onSubmit={deleteContactModal.onClose}
+        />
+      )}
 
       <Outlet />
     </>

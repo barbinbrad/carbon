@@ -19,7 +19,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const unitOfMeasure = await getUnitOfMeasure(client, uomId);
   if (unitOfMeasure.error) {
     return redirect(
-      path.to.uom,
+      path.to.uoms,
       await flash(
         request,
         error(unitOfMeasure.error, "Failed to get unit of measure")
@@ -38,7 +38,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { uomId } = params;
   if (!uomId) {
     return redirect(
-      path.to.uom,
+      path.to.uoms,
       await flash(request, error(params, "Failed to get an unit of measure id"))
     );
   }
@@ -46,7 +46,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { error: deleteTypeError } = await deleteUnitOfMeasure(client, uomId);
   if (deleteTypeError) {
     return redirect(
-      path.to.uom,
+      path.to.uoms,
       await flash(
         request,
         error(deleteTypeError, "Failed to delete unit of measure")
@@ -55,7 +55,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    path.to.uom,
+    path.to.uoms,
     await flash(request, success("Successfully deleted unit of measure"))
   );
 }
@@ -68,7 +68,7 @@ export default function DeleteUnitOfMeasureRoute() {
   if (!unitOfMeasure) return null;
   if (!uomId) throw notFound("uomId not found");
 
-  const onCancel = () => navigate(path.to.uom);
+  const onCancel = () => navigate(path.to.uoms);
 
   return (
     <ConfirmDelete

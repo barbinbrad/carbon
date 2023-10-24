@@ -15,14 +15,16 @@ import { FaHistory } from "react-icons/fa";
 import { usePermissions, useRouteData } from "~/hooks";
 import type { PurchaseOrder } from "~/modules/purchasing";
 import { PurchasingStatus } from "~/modules/purchasing";
+import { path } from "~/utils/path";
 import { usePurchaseOrder } from "../../PurchaseOrders/usePurchaseOrder";
 
 const PurchaseOrderHeader = () => {
   const permissions = usePermissions();
   const { orderId } = useParams();
   if (!orderId) throw new Error("Could not find orderId");
+
   const routeData = useRouteData<{ purchaseOrder: PurchaseOrder }>(
-    `/x/purchase-order/${orderId}`
+    path.to.purchaseOrder(orderId)
   );
 
   // TODO: factor in default currency, po currency and exchange rate

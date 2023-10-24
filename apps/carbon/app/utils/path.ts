@@ -21,7 +21,7 @@ export const path = {
     accountingGroupsInventory: `${app}/accounting/groups/inventory`,
     accountingGroupsPurchasing: `${app}/accounting/groups/purchasing`,
     accountingGroupsSales: `${app}/accounting/groups/sales`,
-    attribute: (id: string) => generatePath(`/x/resources/attribute/${id}`),
+    attribute: (id: string) => generatePath(`${app}/resources/attribute/${id}`),
     attributes: `${app}/resources/attributes`,
     attributeCategory: (id: string) =>
       generatePath(`${app}/resources/attributes/${id}`),
@@ -56,7 +56,7 @@ export const path = {
     deleteAccountingCharts: (id: string) =>
       generatePath(`${app}/accounting/charts/delete/${id}`),
     deleteAttribute: (id: string) =>
-      generatePath(`/x/resources/attribute/delete/${id}`),
+      generatePath(`${app}/resources/attribute/delete/${id}`),
     deleteAttributeCategory: (id: string) =>
       generatePath(`${app}/resources/attributes/delete/${id}`),
     deleteContractor: (id: string) =>
@@ -95,6 +95,8 @@ export const path = {
       generatePath(`${app}/resources/partners/delete/${id}`),
     deletePaymentTerm: (id: string) =>
       generatePath(`${app}/accounting/payment-terms/delete/${id}`),
+    deletePurchaseOrder: (id: string) =>
+      generatePath(`${app}/purchase-order/${id}/delete`),
     deletePurchaseOrderLine: (orderId: string, lineId: string) =>
       generatePath(`${app}/purchase-order/${orderId}/details/delete/${lineId}`),
     deleteReceipt: (id: string) =>
@@ -103,6 +105,8 @@ export const path = {
       generatePath(`${app}/resources/shifts/delete/${id}`),
     deleteShippingMethod: (id: string) =>
       generatePath(`${app}/inventory/shipping-methods/delete/${id}`),
+    deleteSupplierContact: (supplierId: string, id: string) =>
+      generatePath(`${app}/supplier/${supplierId}/contacts/delete/${id}`),
     deleteSupplierLocation: (supplierId: string, id: string) =>
       generatePath(`${app}/supplier/${supplierId}/locations/delete/${id}`),
     deleteSupplierType: (id: string) =>
@@ -149,10 +153,12 @@ export const path = {
     logout: "/logout",
     messaging: `${app}/messaging`,
     newAbility: `${app}/resources/abilities/new`,
+    newAccountingSubcategory: (id: string) =>
+      generatePath(`${app}/accounting/categories/list/${id}/new`),
     newAttribute: `${app}/resources/attribute/new`,
     newAttributeCategory: `${app}/resources/attributes/new`,
     newAttributeForCategory: (id: string) =>
-      generatePath(`/x/resources/attributes/list/${id}/new`),
+      generatePath(`${app}/resources/attributes/list/${id}/new`),
     newContractor: `${app}/resources/contractors/new`,
     newCustomer: `${app}/customer/new`,
     newCustomerAccount: `${app}/users/customers/new`,
@@ -164,7 +170,7 @@ export const path = {
     newDepartment: `${app}/resources/departments/new`,
     newEmployee: `${app}/users/employees/new`,
     newEmployeeAbility: (id: string) =>
-      generatePath(`/x/resources/ability/${id}/employee/new`),
+      generatePath(`${app}/resources/ability/${id}/employee/new`),
     newEmployeeType: `${app}/users/employee-types/new`,
     newEquipment: (id: string) =>
       generatePath(`${app}/resources/equipment/list/${id}/new`),
@@ -175,9 +181,14 @@ export const path = {
     newLocation: `${app}/resources/locations/new`,
     newNote: `${app}/shared/notes/new`,
     newPart: `${app}/part/new`,
+    newPartGroup: `${app}/parts/groups/new`,
+    newPartSupplier: (id: string) =>
+      generatePath(`${app}/part/${id}/suppliers/new`),
     newPartner: `${app}/resources/partners/new`,
     newPurchaseInvoice: `${app}/purchase-invoice/new`,
     newPurchaseOrder: `${app}/purchase-order/new`,
+    newPurchaseOrderLine: (id: string) =>
+      generatePath(`${app}/purchase-order/${id}/details/new`),
     newReceipt: `${app}/inventory/receipts/new`,
     newShift: `${app}/resources/shifts/new`,
     newSupplier: `${app}/supplier/new`,
@@ -187,12 +198,14 @@ export const path = {
     newSupplierLocation: (id: string) =>
       generatePath(`${app}/supplier/${id}/locations/new`),
     newSupplierType: `${app}/purchasing/supplier-types/new`,
+    newUom: `${app}/parts/uom/new`,
     newWorkCell: `${app}/resources/work-cells/cell/new`,
     newWorkCellUnit: (id: string) =>
       generatePath(`${app}/resources/work-cells/list/${id}/new`),
     newWorkCellType: `${app}/resources/work-cells/new`,
     part: (id: string) => generatePath(`${app}/part/${id}`),
     partCosting: (id: string) => generatePath(`${app}/part/${id}/costing`),
+    partGroup: (id: string) => generatePath(`${app}/parts/groups/delete/${id}`),
     partGroups: `${app}/parts/groups`,
     partInventory: (id: string) => generatePath(`${app}/part/${id}/inventory`),
     partInventoryLocation: (id: string, locationId: string) =>
@@ -207,6 +220,8 @@ export const path = {
       generatePath(`${app}/part/${id}/purchasing`),
     partRoot: `${app}/part`,
     partSalePrice: (id: string) => generatePath(`${app}/part/${id}/sale-price`),
+    partSupplier: (partId: string, id: string) =>
+      generatePath(`/x/part/${partId}/suppliers/${id}`),
     partSuppliers: (id: string) => generatePath(`${app}/part/${id}/suppliers`),
     parts: `${app}/parts`,
     partsSearch: `${app}/parts/search`,
@@ -226,6 +241,8 @@ export const path = {
       generatePath(`${app}/purchase-order/${id}/delivery`),
     purchaseOrderDetails: (id: string) =>
       generatePath(`${app}/purchase-order/${id}/details`),
+    purchaseOrderLine: (orderId: string, id: string) =>
+      generatePath(`${app}/purchase-order/${orderId}/details/${id}`),
     purchaseOrderPayment: (id: string) =>
       generatePath(`${app}/purchase-order/${id}/payment`),
     purchaseOrders: `${app}/purchasing/orders`,
@@ -236,6 +253,7 @@ export const path = {
     resetPassord: "/reset-password",
     resources: `${app}/resources`,
     root: "/",
+    routings: `${app}/parts/routing`,
     sales: `${app}/sales`,
     scheduling: `${app}/scheduling`,
     settings: `${app}/settings`,
@@ -246,6 +264,8 @@ export const path = {
     supplier: (id: string) => generatePath(`${app}/supplier/${id}`),
     suppliers: `${app}/purchasing/suppliers`,
     supplierAccounts: `${app}/users/suppliers`,
+    supplierContact: (supplierId: string, id: string) =>
+      generatePath(`${app}/supplier/${supplierId}/contacts/${id}`),
     supplierContacts: (id: string) =>
       generatePath(`${app}/supplier/${id}/contacts`),
     supplierLocation: (supplierId: string, id: string) =>
@@ -254,12 +274,13 @@ export const path = {
       generatePath(`${app}/supplier/${id}/locations`),
     supplierRoot: `${app}/supplier`,
     supplierType: (id: string) =>
-      generatePath(`/x/purchasing/supplier-types/delete/${id}`),
+      generatePath(`${app}/purchasing/supplier-types/delete/${id}`),
     supplierTypes: `${app}/purchasing/supplier-types`,
     tableSequence: (id: string) =>
       generatePath(`${app}/settings/sequences/${id}`),
     timecards: `${app}/timecards`,
-    uom: `${app}/parts/uom`,
+    uom: (id: string) => generatePath(`${app}/parts/uom/${id}`),
+    uoms: `${app}/parts/uom`,
     userAttribute: (id: string) =>
       generatePath(`${app}/account/${id}/attribute`),
     users: `${app}/users`,

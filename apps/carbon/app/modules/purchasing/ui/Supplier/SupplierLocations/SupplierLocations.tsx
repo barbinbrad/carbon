@@ -27,7 +27,7 @@ type SupplierLocationsProps = {
 const SupplierLocations = ({ locations }: SupplierLocationsProps) => {
   const navigate = useNavigate();
   const { supplierId } = useParams();
-  if (!supplierId) throw new Error("supplierId is required");
+  if (!supplierId) throw new Error("supplierId not found");
   const permissions = usePermissions();
   const canEdit = permissions.can("create", "purchasing");
   const isEmpty = locations === undefined || locations?.length === 0;

@@ -6,6 +6,7 @@ import { BsPencilSquare } from "react-icons/bs";
 import { Table } from "~/components";
 import { useUrlParams } from "~/hooks";
 import type { PartsTableRow } from "~/modules/parts";
+import { path } from "~/utils/path";
 
 type PartsTableProps = {
   data: PartsTableRow[];
@@ -22,7 +23,7 @@ const PartsTable = memo(({ data, count }: PartsTableProps) => {
         accessorKey: "id",
         header: "Part ID",
         cell: ({ row }) => (
-          <Link onClick={() => navigate(`/x/part/${row.original.id}`)}>
+          <Link onClick={() => navigate(path.to.part(row.original.id))}>
             {row.original.id}
           </Link>
         ),
@@ -62,7 +63,7 @@ const PartsTable = memo(({ data, count }: PartsTableProps) => {
     return (row: PartsTableRow) => (
       <MenuItem
         icon={<BsPencilSquare />}
-        onClick={() => navigate(`/x/part/${row.id}`)}
+        onClick={() => navigate(path.to.part(row.id))}
       >
         Edit Part
       </MenuItem>

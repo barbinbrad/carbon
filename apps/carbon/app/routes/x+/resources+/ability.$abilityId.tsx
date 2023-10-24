@@ -45,7 +45,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   if (!abilityId) {
     return redirect(
       path.to.abilities,
-      await flash(request, error(null, "Ability ID is required"))
+      await flash(request, error(null, "Ability ID not found"))
     );
   }
 

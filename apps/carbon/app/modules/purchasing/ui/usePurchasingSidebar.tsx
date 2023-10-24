@@ -1,5 +1,6 @@
 import { usePermissions } from "~/hooks";
 import type { AuthenticatedRouteGroup } from "~/types";
+import { path } from "~/utils/path";
 
 const purchasingRoutes: AuthenticatedRouteGroup[] = [
   {
@@ -7,11 +8,11 @@ const purchasingRoutes: AuthenticatedRouteGroup[] = [
     routes: [
       {
         name: "Purchase Orders",
-        to: "/x/purchasing/orders",
+        to: path.to.purchaseOrders,
       },
       {
         name: "Suppliers",
-        to: "/x/purchasing/suppliers",
+        to: path.to.suppliers,
       },
     ],
   },
@@ -20,7 +21,7 @@ const purchasingRoutes: AuthenticatedRouteGroup[] = [
     routes: [
       {
         name: "Supplier Types",
-        to: "/x/purchasing/supplier-types",
+        to: path.to.supplierTypes,
         role: "employee",
       },
     ],

@@ -25,6 +25,7 @@ import { usePermissions, useRouteData } from "~/hooks";
 import type { UnitOfMeasureListItem } from "~/modules/parts";
 import { partSupplierValidator } from "~/modules/parts";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type PartSupplierFormProps = {
   initialValues: TypeOfValidator<typeof partSupplierValidator>;
@@ -35,9 +36,11 @@ const PartSupplierForm = ({ initialValues }: PartSupplierFormProps) => {
   const navigate = useNavigate();
   const { partId } = useParams();
 
+  if (!partId) throw new Error("partId not found");
+
   const sharedPartData = useRouteData<{
     unitOfMeasures: UnitOfMeasureListItem[];
-  }>("/x/part");
+  }>(path.to.partRoot);
 
   const unitOfMeasureOptions = useMemo(() => {
     return (
@@ -63,8 +66,8 @@ const PartSupplierForm = ({ initialValues }: PartSupplierFormProps) => {
         method="post"
         action={
           isEditing
-            ? `/x/part/${partId}/suppliers/${initialValues.id}`
-            : `/x/part/${partId}/suppliers/new`
+            ? path.to.partSupplier(partId, initialValues.id!)
+            : path.to.newPartSupplier(partId)
         }
       >
         <DrawerOverlay />

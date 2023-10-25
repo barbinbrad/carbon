@@ -4,6 +4,7 @@ import { useCallback } from "react";
 import { usePermissions, useUrlParams, useUser } from "~/hooks";
 import { useSupabase } from "~/lib/supabase";
 import type { Document, DocumentTransactionType } from "~/modules/documents";
+import { path } from "~/utils/path";
 
 export const useDocument = () => {
   const navigate = useNavigate();
@@ -85,7 +86,7 @@ export const useDocument = () => {
 
   const edit = useCallback(
     (document: Document) =>
-      navigate(`/x/documents/search/${document.id}?${params}`),
+      navigate(`${path.to.document(document.id)}?${params}`),
     [navigate, params]
   );
 

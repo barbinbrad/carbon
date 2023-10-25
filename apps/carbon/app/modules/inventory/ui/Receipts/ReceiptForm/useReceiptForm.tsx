@@ -13,6 +13,7 @@ import type {
 import type { PurchaseOrderLine } from "~/modules/purchasing";
 import type { ListItem } from "~/types";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 export default function useReceiptForm({
   receipt,
@@ -32,7 +33,7 @@ export default function useReceiptForm({
 
   const routeData = useRouteData<{
     locations: ListItem[];
-  }>("/x/inventory/receipts");
+  }>(path.to.receipts);
 
   const [internalReceiptLines, setReceiptLines] = useState<ReceiptLine[]>(
     receiptLines ?? []
@@ -65,11 +66,11 @@ export default function useReceiptForm({
       await deleteReceipt();
     }
 
-    navigate("/x/inventory/receipts");
+    navigate(path.to.receipts);
   };
 
   const onPost = () => {
-    navigate(`/x/inventory/receipts/${receipt.id}/post`);
+    navigate(path.to.receiptPost(receipt.id));
   };
 
   const sourceDocumentIdFromParams = params.get("sourceDocumentId");

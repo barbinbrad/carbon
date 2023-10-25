@@ -16,6 +16,7 @@ import { Hidden, Input, Submit, TextArea, Users } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { documentValidator } from "~/modules/documents";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type DocumentFormProps = {
   initialValues: TypeOfValidator<typeof documentValidator>;
@@ -34,7 +35,7 @@ const DocumentForm = ({ initialValues, ownerId }: DocumentFormProps) => {
       <ValidatedForm
         validator={documentValidator}
         method="post"
-        action={`/x/documents/search/${initialValues.id}`}
+        action={path.to.document(initialValues.id)}
         defaultValues={initialValues}
       >
         <DrawerOverlay />

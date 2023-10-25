@@ -12,6 +12,7 @@ import type {
   purchaseInvoiceStatusType,
 } from "~/modules/invoicing";
 import { PurchaseInvoicingStatus } from "~/modules/invoicing";
+import { path } from "~/utils/path";
 
 type PurchaseInvoicesTableProps = {
   data: PurchaseInvoice[];
@@ -36,7 +37,7 @@ const PurchaseInvoicesTable = memo(
             <Link
               onClick={
                 row.original?.id !== null
-                  ? () => navigate(`/x/purchase-invoice/${row.original.id}`)
+                  ? () => navigate(path.to.purchaseInvoice(row.original.id!))
                   : undefined
               }
             >
@@ -154,9 +155,9 @@ const PurchaseInvoicesTable = memo(
           renderContextMenu={renderContextMenu}
         />
 
-        {selectedPurchaseInvoice && (
+        {selectedPurchaseInvoice && selectedPurchaseInvoice.id && (
           <ConfirmDelete
-            action={`/x/purchase-invoice/${selectedPurchaseInvoice?.id}/delete`}
+            action={path.to.deletePurchaseInvoice(selectedPurchaseInvoice.id)}
             isOpen={closePurchaseInvoiceModal.isOpen}
             name={selectedPurchaseInvoice.invoiceId!}
             text={`Are you sure you want to permanently delete ${selectedPurchaseInvoice.invoiceId!}?`}

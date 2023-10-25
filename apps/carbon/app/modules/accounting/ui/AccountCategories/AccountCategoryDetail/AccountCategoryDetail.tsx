@@ -14,8 +14,8 @@ import {
   Tag,
   TagLabel,
   Text,
-  VStack,
   useDisclosure,
+  VStack,
 } from "@chakra-ui/react";
 import { Link } from "@remix-run/react";
 import { useState } from "react";
@@ -25,6 +25,7 @@ import { ConfirmDelete } from "~/components/Modals";
 
 import { useUrlParams } from "~/hooks";
 import type { AccountCategory, AccountSubcategory } from "~/modules/accounting";
+import { path } from "~/utils/path";
 
 type AccountCategoryDetailProps = {
   accountCategory: AccountCategory;
@@ -121,13 +122,17 @@ const AccountCategoryDetail = ({
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
-      <ConfirmDelete
-        isOpen={deleteModal.isOpen}
-        action={`/x/accounting/subcategory/delete/${selectedAccountSubcategory?.id}`}
-        name={selectedAccountSubcategory?.name ?? ""}
-        text={`Are you sure you want to deactivate the ${selectedAccountSubcategory?.name} subcategory?`}
-        onCancel={onDeleteCancel}
-      />
+      {selectedAccountSubcategory && selectedAccountSubcategory.id && (
+        <ConfirmDelete
+          isOpen={deleteModal.isOpen}
+          action={path.to.deleteAccountingSubcategory(
+            selectedAccountSubcategory.id
+          )}
+          name={selectedAccountSubcategory?.name ?? ""}
+          text={`Are you sure you want to deactivate the ${selectedAccountSubcategory?.name} subcategory?`}
+          onCancel={onDeleteCancel}
+        />
+      )}
     </>
   );
 };

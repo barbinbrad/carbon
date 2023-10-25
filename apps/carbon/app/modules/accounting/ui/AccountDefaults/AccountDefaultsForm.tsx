@@ -17,6 +17,7 @@ import { usePermissions } from "~/hooks";
 import type { AccountListItem } from "~/modules/accounting";
 import { defaultAcountValidator } from "~/modules/accounting";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type AccountDefaultsFormProps = {
   balanceSheetAccounts: AccountListItem[];
@@ -50,7 +51,7 @@ const AccountDefaultsForm = ({
       <ValidatedForm
         validator={defaultAcountValidator}
         method="post"
-        action="/x/accounting/defaults"
+        action={path.to.accountingDefaults}
         defaultValues={initialValues}
         style={{
           width: "100%",

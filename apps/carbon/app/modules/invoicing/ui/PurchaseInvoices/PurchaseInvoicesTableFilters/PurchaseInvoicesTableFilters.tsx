@@ -6,6 +6,7 @@ import { DebouncedInput } from "~/components/Search";
 import { usePermissions, useUrlParams } from "~/hooks";
 import { purchaseInvoiceStatusType } from "~/modules/invoicing";
 import { useSuppliers } from "~/stores";
+import { path } from "~/utils/path";
 
 const PurchaseInvoicesTableFilters = () => {
   const [suppliers] = useSuppliers();
@@ -76,7 +77,7 @@ const PurchaseInvoicesTableFilters = () => {
         {permissions.can("create", "invoicing") && (
           <Button
             as={Link}
-            to="/x/purchase-invoice/new"
+            to={path.to.newPurchaseInvoice}
             colorScheme="brand"
             leftIcon={<IoMdAdd />}
           >

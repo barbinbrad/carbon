@@ -16,6 +16,7 @@ import { Account, Hidden, Input, Select, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { shippingMethodValidator } from "~/modules/inventory";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type ShippingMethodFormProps = {
   initialValues: TypeOfValidator<typeof shippingMethodValidator>;
@@ -45,8 +46,8 @@ const ShippingMethodForm = ({ initialValues }: ShippingMethodFormProps) => {
         method="post"
         action={
           isEditing
-            ? `/x/inventory/shipping-methods/${initialValues.id}`
-            : "/x/inventory/shipping-methods/new"
+            ? path.to.shippingMethod(initialValues.id!)
+            : path.to.newShippingMethod
         }
         defaultValues={initialValues}
       >

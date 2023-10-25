@@ -39,6 +39,7 @@ import {
   normalBalanceTypes,
 } from "~/modules/accounting";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type ChartOfAccountFormProps = {
   initialValues: TypeOfValidator<typeof accountValidator>;
@@ -79,8 +80,8 @@ const ChartOfAccountForm = ({ initialValues }: ChartOfAccountFormProps) => {
         method="post"
         action={
           isEditing
-            ? `/x/accounting/charts/${initialValues.id}`
-            : "/x/accounting/charts/new"
+            ? path.to.chartOfAccount(initialValues.id!)
+            : path.to.newChartOfAccount
         }
         defaultValues={initialValues}
       >

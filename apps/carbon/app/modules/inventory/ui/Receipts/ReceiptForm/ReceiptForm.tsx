@@ -32,6 +32,7 @@ import {
 import type { Note } from "~/modules/shared";
 import { Notes } from "~/modules/shared";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 import useReceiptForm from "./useReceiptForm";
 
 type ReceiptFormProps = {
@@ -90,7 +91,7 @@ const ReceiptForm = ({
                   id={formId}
                   validator={receiptValidator}
                   method="post"
-                  action={`/x/inventory/receipts/${initialValues.id}`}
+                  action={path.to.receipt(initialValues.id)}
                   defaultValues={initialValues}
                   style={{ width: "100%" }}
                 >

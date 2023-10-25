@@ -4,6 +4,7 @@ import type { ChangeEvent } from "react";
 import { IoMdAdd } from "react-icons/io";
 import { useUser } from "~/hooks";
 import { useSupabase } from "~/lib/supabase";
+import { path } from "~/utils/path";
 
 const DocumentCreateForm = () => {
   const notification = useNotification();
@@ -42,7 +43,7 @@ const DocumentCreateForm = () => {
   };
 
   const submitFileData = ({
-    path,
+    path: filePath,
     name,
     size,
   }: {
@@ -51,12 +52,12 @@ const DocumentCreateForm = () => {
     size: number;
   }) => {
     const formData = new FormData();
-    formData.append("path", path);
+    formData.append("path", filePath);
     formData.append("name", name);
     formData.append("size", Math.round(size / 1024).toString());
     submit(formData, {
       method: "post",
-      action: "/x/documents/new",
+      action: path.to.newDocument,
     });
   };
 

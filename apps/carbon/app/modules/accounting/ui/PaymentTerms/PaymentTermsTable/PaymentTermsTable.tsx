@@ -7,6 +7,7 @@ import { IoMdTrash } from "react-icons/io";
 import { Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { PaymentTerm } from "~/modules/accounting";
+import { path } from "~/utils/path";
 
 type PaymentTermsTableProps = {
   data: PaymentTerm[];
@@ -60,9 +61,7 @@ const PaymentTermsTable = memo(({ data, count }: PaymentTermsTableProps) => {
             isDisabled={!permissions.can("update", "accounting")}
             icon={<BsPencilSquare />}
             onClick={() => {
-              navigate(
-                `/x/accounting/payment-terms/${row.id}?${params.toString()}`
-              );
+              navigate(`${path.to.paymentTerm(row.id)}?${params.toString()}`);
             }}
           >
             Edit Payment Term
@@ -72,9 +71,7 @@ const PaymentTermsTable = memo(({ data, count }: PaymentTermsTableProps) => {
             icon={<IoMdTrash />}
             onClick={() => {
               navigate(
-                `/x/accounting/payment-terms/delete/${
-                  row.id
-                }?${params.toString()}`
+                `${path.to.deletePaymentTerm(row.id)}?${params.toString()}`
               );
             }}
           >

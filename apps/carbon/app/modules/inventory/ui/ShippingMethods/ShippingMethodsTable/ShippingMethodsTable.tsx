@@ -7,6 +7,7 @@ import { IoMdTrash } from "react-icons/io";
 import { Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { ShippingMethod } from "~/modules/inventory";
+import { path } from "~/utils/path";
 
 type ShippingMethodsTableProps = {
   data: ShippingMethod[];
@@ -67,7 +68,7 @@ const ShippingMethodsTable = memo(
               icon={<BsPencilSquare />}
               onClick={() => {
                 navigate(
-                  `/x/inventory/shipping-methods/${row.id}?${params.toString()}`
+                  `${path.to.shippingMethod(row.id)}?${params.toString()}`
                 );
               }}
             >
@@ -78,9 +79,7 @@ const ShippingMethodsTable = memo(
               icon={<IoMdTrash />}
               onClick={() => {
                 navigate(
-                  `/x/inventory/shipping-methods/delete/${
-                    row.id
-                  }?${params.toString()}`
+                  `${path.to.deleteShippingMethod(row.id)}?${params.toString()}`
                 );
               }}
             >

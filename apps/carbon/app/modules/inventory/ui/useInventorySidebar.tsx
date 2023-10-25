@@ -1,5 +1,6 @@
 import { usePermissions } from "~/hooks";
 import type { AuthenticatedRouteGroup } from "~/types";
+import { path } from "~/utils/path";
 
 const inventoryRoutes: AuthenticatedRouteGroup[] = [
   {
@@ -7,11 +8,11 @@ const inventoryRoutes: AuthenticatedRouteGroup[] = [
     routes: [
       {
         name: "Receipts",
-        to: "/x/inventory/receipts",
+        to: path.to.receipts,
       },
       {
         name: "Shipments",
-        to: "/x/inventory/shipments",
+        to: path.to.shipments,
       },
     ],
   },
@@ -20,7 +21,7 @@ const inventoryRoutes: AuthenticatedRouteGroup[] = [
     routes: [
       {
         name: "Shipping Methods",
-        to: "/x/inventory/shipping-methods",
+        to: path.to.shippingMethods,
         role: "employee",
       },
     ],

@@ -15,11 +15,12 @@ import {
 } from "@chakra-ui/react";
 import { useParams } from "@remix-run/react";
 import { ValidatedForm } from "remix-validated-form";
-import { Input, Hidden, Submit } from "~/components/Form";
+import { Hidden, Input, Submit } from "~/components/Form";
 import { usePermissions, useRouteData } from "~/hooks";
 import type { AccountCategory } from "~/modules/accounting";
 import { accountSubcategoryValidator } from "~/modules/accounting";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type AccountSubcategoryFormProps = {
   initialValues: TypeOfValidator<typeof accountSubcategoryValidator>;
@@ -38,7 +39,7 @@ const AccountSubcategoryForm = ({
 
   const routeData = useRouteData<{
     accountCategory: AccountCategory;
-  }>(`/x/accounting/categories/list/${categoryId}`);
+  }>(path.to.accountingCategoryList(categoryId));
 
   const category = routeData?.accountCategory.category ?? "";
 
@@ -54,8 +55,8 @@ const AccountSubcategoryForm = ({
         method="post"
         action={
           isEditing
-            ? `/x/accounting/subcategory/${initialValues.id}`
-            : "/x/accounting/subcategory/new"
+            ? path.to.accountingSubcategory(initialValues.id!)
+            : path.to.newAccountingSubcategory(categoryId)
         }
         defaultValues={initialValues}
       >

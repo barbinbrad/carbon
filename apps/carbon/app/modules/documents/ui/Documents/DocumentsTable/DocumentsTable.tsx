@@ -34,6 +34,7 @@ import { Confirm, ConfirmDelete } from "~/components/Modals";
 import { useUrlParams } from "~/hooks";
 import type { Document, DocumentLabel } from "~/modules/documents";
 import { DocumentIcon } from "~/modules/documents";
+import { path } from "~/utils/path";
 import { useDocument } from "../useDocument";
 
 type DocumentsTableProps = {
@@ -401,9 +402,10 @@ const DocumentsTable = memo(({ data, count, labels }: DocumentsTableProps) => {
       )}
 
       {selectedDocument &&
+        selectedDocument.id &&
         (filter !== "trash" ? (
           <ConfirmDelete
-            action={`/x/documents/${selectedDocument?.id}/delete`}
+            action={path.to.deleteDocument(selectedDocument.id)}
             isOpen={deleteDocumentModal.isOpen}
             name={selectedDocument.name}
             text={`Are you sure you want to move ${selectedDocument.name} to the trash?`}
@@ -418,7 +420,7 @@ const DocumentsTable = memo(({ data, count, labels }: DocumentsTableProps) => {
           />
         ) : (
           <Confirm
-            action={`/x/documents/${selectedDocument?.id}/restore`}
+            action={path.to.documentRestore(selectedDocument.id)}
             isOpen={deleteDocumentModal.isOpen}
             name={`Restore ${selectedDocument.name}`}
             text={`Are you sure you want to restore ${selectedDocument.name} from the trash?`}

@@ -11,7 +11,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { ValidatedForm } from "remix-validated-form";
-import { Input, Hidden, Submit, Select } from "~/components/Form";
+import { Hidden, Input, Select, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import {
   accountCategoryValidator,
@@ -19,6 +19,7 @@ import {
   normalBalanceTypes,
 } from "~/modules/accounting";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type AccountCategoryFormProps = {
   initialValues: TypeOfValidator<typeof accountCategoryValidator>;
@@ -43,8 +44,8 @@ const AccountCategoryForm = ({
         method="post"
         action={
           isEditing
-            ? `/x/accounting/categories/${initialValues.id}`
-            : "/x/accounting/categories/new"
+            ? path.to.accountingCategory(initialValues.id!)
+            : path.to.newAccountingCategory
         }
         defaultValues={initialValues}
       >

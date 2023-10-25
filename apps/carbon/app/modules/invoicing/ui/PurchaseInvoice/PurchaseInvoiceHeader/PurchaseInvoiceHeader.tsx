@@ -15,13 +15,16 @@ import { FaHistory } from "react-icons/fa";
 import { usePermissions, useRouteData } from "~/hooks";
 import type { PurchaseInvoice } from "~/modules/invoicing";
 import { PurchaseInvoicingStatus } from "~/modules/invoicing";
+import { path } from "~/utils/path";
 
 const PurchaseInvoiceHeader = () => {
   const permissions = usePermissions();
   const { invoiceId } = useParams();
+
   if (!invoiceId) throw new Error("Could not find invoiceId");
+
   const routeData = useRouteData<{ purchaseInvoice: PurchaseInvoice }>(
-    `/x/purchase-invoice/${invoiceId}`
+    path.to.purchaseInvoice(invoiceId)
   );
 
   // TODO: factor in default currency, po currency and exchange rate

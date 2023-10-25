@@ -19,6 +19,7 @@ import { usePermissions, useRouteData } from "~/hooks";
 import type { Currency } from "~/modules/accounting";
 import { currencyValidator } from "~/modules/accounting";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type CurrencyFormProps = {
   initialValues: TypeOfValidator<typeof currencyValidator>;
@@ -29,7 +30,9 @@ const CurrencyForm = ({ initialValues }: CurrencyFormProps) => {
   const navigate = useNavigate();
   const onClose = () => navigate(-1);
 
-  const routeData = useRouteData<{ baseCurrency?: Currency }>("/x/accounting");
+  const routeData = useRouteData<{ baseCurrency?: Currency }>(
+    path.to.accountingRoot
+  );
   const [name, setName] = useState(initialValues.name);
 
   const isBaseCurrency = routeData?.baseCurrency?.id === initialValues.id;
@@ -47,9 +50,7 @@ const CurrencyForm = ({ initialValues }: CurrencyFormProps) => {
         validator={currencyValidator}
         method="post"
         action={
-          isEditing
-            ? `/x/accounting/currencies/${initialValues.id}`
-            : "/x/accounting/currencies/new"
+          isEditing ? path.to.currency(initialValues.id!) : path.to.newCurrency
         }
         defaultValues={initialValues}
       >

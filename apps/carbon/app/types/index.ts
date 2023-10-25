@@ -45,7 +45,7 @@ export type Route = {
   name: string;
   to: string;
   icon?: any;
-  q?: string;
+  q?: string; // TODO: this is dumb
 };
 
 export type RouteGroup = {

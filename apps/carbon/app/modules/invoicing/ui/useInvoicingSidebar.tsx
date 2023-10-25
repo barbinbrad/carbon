@@ -1,5 +1,6 @@
 import { usePermissions } from "~/hooks";
 import type { AuthenticatedRouteGroup } from "~/types";
+import { path } from "~/utils/path";
 
 const invoicingRoutes: AuthenticatedRouteGroup[] = [
   {
@@ -7,12 +8,12 @@ const invoicingRoutes: AuthenticatedRouteGroup[] = [
     routes: [
       {
         name: "Purchase Invoices",
-        to: "/x/invoicing/purchasing",
+        to: path.to.purchaseInvoices,
         role: "employee",
       },
       {
         name: "Sales Invoices",
-        to: "/x/invoicing/sales",
+        to: path.to.salesInvoices,
         role: "employee",
       },
     ],

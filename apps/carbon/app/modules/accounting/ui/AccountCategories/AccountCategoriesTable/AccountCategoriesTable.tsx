@@ -111,15 +111,16 @@ const AccountCategoriesTable = memo(
 
     const renderContextMenu = useCallback(
       (row: (typeof data)[number]) => {
+        if (!row.id) return null;
         return (
           <>
             <MenuItem
               icon={<BiAddToQueue />}
               onClick={() => {
                 navigate(
-                  `/x/accounting/categories/list/${
-                    row.id
-                  }/new?${params?.toString()}`
+                  `${path.to.newAccountingSubcategory(
+                    row.id!
+                  )}${params?.toString()}`
                 );
               }}
             >
@@ -129,9 +130,9 @@ const AccountCategoriesTable = memo(
               icon={<BsListUl />}
               onClick={() => {
                 navigate(
-                  `/x/accounting/categories/list/${
-                    row.id
-                  }?${params?.toString()}`
+                  `${path.to.accountingCategoryList(
+                    row.id!
+                  )}?${params?.toString()}`
                 );
               }}
             >
@@ -140,7 +141,7 @@ const AccountCategoriesTable = memo(
             <MenuItem
               icon={<BsPencilSquare />}
               onClick={() => {
-                navigate(`/x/accounting/categories/${row.id}`);
+                navigate(path.to.accountingCategory(row.id!));
               }}
             >
               Edit Account Category
@@ -168,14 +169,16 @@ const AccountCategoriesTable = memo(
           renderContextMenu={renderContextMenu}
         />
 
-        <ConfirmDelete
-          action={`/x/accounting/categories/delete/${selectedCategory?.id}`}
-          name={selectedCategory?.category ?? ""}
-          text={`Are you sure you want to deactivate the ${selectedCategory?.category} account category?`}
-          isOpen={deleteModal.isOpen}
-          onCancel={onDeleteCancel}
-          onSubmit={onDeleteCancel}
-        />
+        {selectedCategory && selectedCategory.id && (
+          <ConfirmDelete
+            action={path.to.deleteAccountingCategory(selectedCategory.id)}
+            name={selectedCategory?.category ?? ""}
+            text={`Are you sure you want to deactivate the ${selectedCategory?.category} account category?`}
+            isOpen={deleteModal.isOpen}
+            onCancel={onDeleteCancel}
+            onSubmit={onDeleteCancel}
+          />
+        )}
       </>
     );
   }

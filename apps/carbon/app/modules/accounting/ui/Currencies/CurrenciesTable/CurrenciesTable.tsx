@@ -7,6 +7,7 @@ import { IoMdTrash } from "react-icons/io";
 import { Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { Currency } from "~/modules/accounting";
+import { path } from "~/utils/path";
 
 type CurrenciesTableProps = {
   data: Currency[];
@@ -62,9 +63,7 @@ const CurrenciesTable = memo(({ data, count }: CurrenciesTableProps) => {
             isDisabled={!permissions.can("update", "accounting")}
             icon={<BsPencilSquare />}
             onClick={() => {
-              navigate(
-                `/x/accounting/currencies/${row.id}?${params.toString()}`
-              );
+              navigate(`${path.to.currency(row.id)}?${params.toString()}`);
             }}
           >
             Edit Currency
@@ -74,7 +73,7 @@ const CurrenciesTable = memo(({ data, count }: CurrenciesTableProps) => {
             icon={<IoMdTrash />}
             onClick={() => {
               navigate(
-                `/x/accounting/currencies/delete/${row.id}?${params.toString()}`
+                `${path.to.deleteCurrency(row.id)}?${params.toString()}`
               );
             }}
           >

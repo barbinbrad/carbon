@@ -9,6 +9,7 @@ import { Table } from "~/components";
 import { usePermissions, useRealtime, useUrlParams } from "~/hooks";
 import type { Receipt, receiptStatusType } from "~/modules/inventory";
 import { ReceiptStatus } from "~/modules/inventory";
+import { path } from "~/utils/path";
 
 type ReceiptsTableProps = {
   data: Receipt[];
@@ -44,13 +45,14 @@ const ReceiptsTable = memo(({ data, count }: ReceiptsTableProps) => {
         accessorKey: "sourceDocumentReadableId",
         header: "Source Document ID",
         cell: ({ row }) => {
+          if (!row.original.sourceDocumentId) return null;
           switch (row.original.sourceDocument) {
             case "Purchase Order":
               return (
                 <Link
                   onClick={() =>
                     navigate(
-                      `/x/purchase-order/${row.original.sourceDocumentId}`
+                      path.to.purchaseOrder(row.original.sourceDocumentId!)
                     )
                   }
                 >
@@ -93,7 +95,7 @@ const ReceiptsTable = memo(({ data, count }: ReceiptsTableProps) => {
             isDisabled={!permissions.can("update", "inventory")}
             icon={<BsPencilSquare />}
             onClick={() => {
-              navigate(`/x/inventory/receipts/${row.id}?${params.toString()}`);
+              navigate(`${path.to.receipt(row.id)}?${params.toString()}`);
             }}
           >
             Edit Receipt
@@ -106,9 +108,7 @@ const ReceiptsTable = memo(({ data, count }: ReceiptsTableProps) => {
             }
             icon={<IoMdTrash />}
             onClick={() => {
-              navigate(
-                `/x/inventory/receipts/delete/${row.id}?${params.toString()}`
-              );
+              navigate(`${path.to.deleteReceipt(row.id)}?${params.toString()}`);
             }}
           >
             Delete Receipt

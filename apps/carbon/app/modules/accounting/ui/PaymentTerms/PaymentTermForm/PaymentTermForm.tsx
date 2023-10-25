@@ -18,6 +18,7 @@ import { usePermissions } from "~/hooks";
 import type { PaymentTermCalculationMethod } from "~/modules/accounting";
 import { paymentTermValidator } from "~/modules/accounting";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type PaymentTermFormProps = {
   initialValues: TypeOfValidator<typeof paymentTermValidator>;
@@ -51,8 +52,8 @@ const PaymentTermForm = ({ initialValues }: PaymentTermFormProps) => {
         method="post"
         action={
           isEditing
-            ? `/x/accounting/payment-terms/${initialValues.id}`
-            : "/x/accounting/payment-terms/new"
+            ? path.to.paymentTerm(initialValues.id!)
+            : path.to.newPaymentTerm
         }
         defaultValues={initialValues}
       >

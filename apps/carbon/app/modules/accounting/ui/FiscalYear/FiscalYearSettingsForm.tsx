@@ -5,6 +5,7 @@ import { usePermissions } from "~/hooks";
 import { fiscalYearSettingsValidator } from "~/modules/accounting";
 import { months } from "~/modules/shared";
 import type { TypeOfValidator } from "~/types/validators";
+import { path } from "~/utils/path";
 
 type FiscalYearSettingsFormProps = {
   initialValues: TypeOfValidator<typeof fiscalYearSettingsValidator>;
@@ -18,7 +19,7 @@ const FiscalYearSettingsForm = ({
     <Box w="full">
       <ValidatedForm
         method="post"
-        action="/x/accounting/years"
+        action={path.to.fiscalYears}
         defaultValues={initialValues}
         validator={fiscalYearSettingsValidator}
       >

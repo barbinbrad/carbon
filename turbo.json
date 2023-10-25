@@ -2,7 +2,14 @@
   "$schema": "https://turborepo.org/schema.json",
   "pipeline": {
     "build": {
-      "outputs": ["dist/**", "build/**", "api/**", "public/build/**"],
+      "outputs": [
+        "dist/**",
+        "build/**",
+        "api/**",
+        "public/build/**",
+        ".next/**",
+        "!.next/cache/**"
+      ],
       "dependsOn": ["^build"]
     },
     "carbon#build": {

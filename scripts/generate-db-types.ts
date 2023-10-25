@@ -9,7 +9,7 @@ if (!SUPABASE_API_URL) {
 }
 
 if (SUPABASE_API_URL.includes("localhost")) {
-  exec("yarn db:types", (error, stdout, stderr) => {
+  exec("npm run db:types", (error, stdout, stderr) => {
     if (error) {
       console.error(`error: ${error.message}`);
       return;

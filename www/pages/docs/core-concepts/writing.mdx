@@ -138,7 +138,7 @@ export async function createPerson(
 
 When a database transaction is needed, use a deno-based edge function. The reason for this is that the supabase client currently does not support transactions.
 
-To create a new edge function run `yarn db:function:new <name-of-function>`
+To create a new edge function run `npm run db:function:new <name-of-function>`
 
 This will create a new edge function in `packages/database/supabase/functions/<name-of-function>`.
 

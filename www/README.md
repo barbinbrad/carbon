@@ -9,5 +9,5 @@ After reading the documentation, you should have enough knowledge to modify a mo
 From the root repo run:
 
 ```bash
-$ yarn dev:www
+$ npm run dev:www
 ```

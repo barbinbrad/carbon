@@ -15,9 +15,12 @@
     "clean": "rimraf .turbo node_modules dist",
     "db:init": "supabase init",
     "db:start": "supabase start",
-    "db:kill": "supabase stop",
+    "db:stop": "supabase stop",
+    "db:kill": "supabase stop --no-backup",
     "db:types": "supabase gen types typescript --local > src/types.ts",
     "db:migrate": "supabase db reset",
+    "db:migrate:new": "supabase migration new",
+    "db:function:new": "supabase functions new",
     "db:seed": "tsx src/seed.ts",
     "db:setup": "supabase db reset",
     "dev": "tsup --watch",
@@ -38,7 +41,7 @@
     "supabase": "1.93.0",
     "tsup": "^6.5.0",
     "tsx": "^3.12.1",
-    "typescript": "^4.9.3",
+    "typescript": "^5.2.2",
     "uuid": "9.0.0"
   }
 }

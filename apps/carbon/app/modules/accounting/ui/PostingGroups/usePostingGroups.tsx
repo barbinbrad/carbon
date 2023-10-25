@@ -14,7 +14,7 @@ export default function usePostingGroups(table: string) {
   const canEdit = permissions.can("update", "accounting");
   const canDelete = permissions.can("delete", "accounting");
 
-  const handleCellEdit = useCallback(
+  const onCellEdit = useCallback(
     async (
       id: string,
       value: unknown,
@@ -35,6 +35,6 @@ export default function usePostingGroups(table: string) {
     canDelete,
     canEdit,
     supabase,
-    handleCellEdit,
+    onCellEdit,
   };
 }

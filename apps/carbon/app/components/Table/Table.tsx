@@ -1,4 +1,10 @@
-import { ActionMenu, ContextMenu, useColor, useEscape } from "@carbon/react";
+import {
+  ActionMenu,
+  ContextMenu,
+  useColor,
+  useEscape,
+  useMount,
+} from "@carbon/react";
 import { clip } from "@carbon/utils";
 import type { ThemeTypings } from "@chakra-ui/react";
 import {
@@ -410,10 +416,9 @@ const Table = <T extends object>({
     columnVisibility,
   ]);
 
-  useEffect(() => {
+  useMount(() => {
     setColumnOrder(table.getAllLeafColumns().map((column) => column.id));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  });
 
   const rows = table.getRowModel().rows;
   const rowsAreClickable = !editMode && typeof onRowClick === "function";

@@ -5,9 +5,10 @@ import { path } from "~/utils/path";
 import { useRouteData } from "./useRouteData";
 
 export function usePermissions() {
-  const data = useRouteData<{ permissions: unknown; role: unknown }>(
-    path.to.authenticatedRoot
-  );
+  const data = useRouteData<{
+    permissions: Record<string, Permission>;
+    role: "employee" | "supplier" | "customer";
+  }>(path.to.authenticatedRoot);
 
   if (!isPermissions(data?.permissions) || !isRole(data?.role)) {
     // TODO: force logout -- the likely cause is development changes
@@ -18,18 +19,14 @@ export function usePermissions() {
 
   const can = useCallback(
     (action: "view" | "create" | "update" | "delete", feature: string) => {
-      return (
-        // not sure why we have to type cast here
-        (data?.permissions as Record<string, Permission>)[feature]?.[action] ??
-        false
-      );
+      return data?.permissions[feature]?.[action] ?? false;
     },
     [data?.permissions]
   );
 
   const has = useCallback(
     (feature: string) => {
-      return feature in (data?.permissions as Record<string, Permission>);
+      return !!data?.permissions && feature in data.permissions;
     },
     [data?.permissions]
   );

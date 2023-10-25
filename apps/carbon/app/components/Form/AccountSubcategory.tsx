@@ -12,6 +12,7 @@ import type {
   AccountSubcategory as AccountSubcategoryType,
   getAccountSubcategoriesByCategory,
 } from "~/modules/accounting";
+import { path } from "~/utils/path";
 
 const AccountSubcategory = ({
   name,
@@ -43,7 +44,7 @@ const AccountSubcategory = ({
   useEffect(() => {
     if (accountCategoryId) {
       accountSubcategoriesFetcher.load(
-        `/api/accounting/subcategories?accountCategoryId=${accountCategoryId}`
+        path.to.api.accountingSubcategories(accountCategoryId)
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

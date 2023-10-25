@@ -14,6 +14,7 @@ import {
 } from "react";
 
 import type { AuthSession } from "~/services/auth";
+import { path } from "~/utils/path";
 import { getSupabase } from "./client";
 /**
  * This is how to use Supabase in the browser
@@ -135,7 +136,7 @@ export const SupabaseProvider = ({
     if (!initialLoad.current && expiresIn) {
       refresh.submit(null, {
         method: "post",
-        action: "/refresh-session",
+        action: path.to.refreshSession,
       });
     }
 

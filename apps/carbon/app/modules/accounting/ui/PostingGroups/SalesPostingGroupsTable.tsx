@@ -23,7 +23,7 @@ const SalesPostingGroupsTable = ({
   balanceSheetAccounts,
   incomeStatementAccounts,
 }: SalesPostingGroupsTableProps) => {
-  const { canEdit, handleCellEdit } = usePostingGroups("postingGroupSales");
+  const { canEdit, onCellEdit } = usePostingGroups("postingGroupSales");
 
   const balanceSheetAccountOptions = useMemo(() => {
     return balanceSheetAccounts.map((account) => ({
@@ -85,25 +85,22 @@ const SalesPostingGroupsTable = ({
 
   const editableComponents = useMemo(
     () => ({
-      salesAccount: EditableList(handleCellEdit, incomeStatementAccountOptions),
+      salesAccount: EditableList(onCellEdit, incomeStatementAccountOptions),
       salesDiscountAccount: EditableList(
-        handleCellEdit,
+        onCellEdit,
         incomeStatementAccountOptions
       ),
-      salesCreditAccount: EditableList(
-        handleCellEdit,
-        balanceSheetAccountOptions
-      ),
+      salesCreditAccount: EditableList(onCellEdit, balanceSheetAccountOptions),
       salesPrepaymentAccount: EditableList(
-        handleCellEdit,
+        onCellEdit,
         balanceSheetAccountOptions
       ),
       salesTaxPayableAccount: EditableList(
-        handleCellEdit,
+        onCellEdit,
         balanceSheetAccountOptions
       ),
     }),
-    [handleCellEdit, balanceSheetAccountOptions, incomeStatementAccountOptions]
+    [onCellEdit, balanceSheetAccountOptions, incomeStatementAccountOptions]
   );
 
   return (

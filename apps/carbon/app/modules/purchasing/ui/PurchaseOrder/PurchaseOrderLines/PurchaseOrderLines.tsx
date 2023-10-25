@@ -51,7 +51,7 @@ const PurchaseOrderLines = () => {
     supabase,
     partOptions,
     accountOptions,
-    handleCellEdit,
+    onCellEdit,
   } = usePurchaseOrderLines();
 
   const isEditable = ["Draft", "To Review"].includes(
@@ -241,17 +241,17 @@ const PurchaseOrderLines = () => {
 
   const editableComponents = useMemo(
     () => ({
-      description: EditableText(handleCellEdit),
-      purchaseQuantity: EditableNumber(handleCellEdit),
-      unitPrice: EditableNumber(handleCellEdit),
-      partId: EditablePurchaseOrderLineNumber(handleCellEdit, {
+      description: EditableText(onCellEdit),
+      purchaseQuantity: EditableNumber(onCellEdit),
+      unitPrice: EditableNumber(onCellEdit),
+      partId: EditablePurchaseOrderLineNumber(onCellEdit, {
         client: supabase,
         parts: partOptions,
         accounts: accountOptions,
         defaultLocationId: defaults.locationId,
       }),
     }),
-    [handleCellEdit, supabase, partOptions, accountOptions, defaults.locationId]
+    [onCellEdit, supabase, partOptions, accountOptions, defaults.locationId]
   );
 
   return (

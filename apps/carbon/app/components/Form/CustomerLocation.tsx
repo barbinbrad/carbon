@@ -12,6 +12,7 @@ import type {
   CustomerLocation as CustomerLocationType,
   getCustomerLocations,
 } from "~/modules/sales";
+import { path } from "~/utils/path";
 import type { SelectProps } from "./Select";
 
 type CustomerLocationSelectProps = Omit<SelectProps, "options" | "onChange"> & {
@@ -38,9 +39,9 @@ const CustomerLocation = ({
     useFetcher<Awaited<ReturnType<typeof getCustomerLocations>>>();
 
   useEffect(() => {
-    customerLocationFetcher.load(
-      `/api/sales/customer-locations?customerId=${customer}`
-    );
+    if (customer) {
+      customerLocationFetcher.load(path.to.api.customerLocations(customer));
+    }
     if (initialLoad.current) {
       initialLoad.current = false;
     } else {

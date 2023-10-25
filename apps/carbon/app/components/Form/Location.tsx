@@ -9,6 +9,7 @@ import { useFetcher } from "@remix-run/react";
 import { useEffect, useMemo } from "react";
 import { useControlField, useField } from "remix-validated-form";
 import type { getLocations } from "~/modules/resources";
+import { path } from "~/utils/path";
 import type { SelectProps } from "./Select";
 
 type LocationSelectProps = Omit<SelectProps, "options" | "onChange"> & {
@@ -40,7 +41,7 @@ const Location = ({
     useFetcher<Awaited<ReturnType<typeof getLocations>>>();
 
   useMount(() => {
-    locationFetcher.load(`/api/resources/locations`);
+    locationFetcher.load(path.to.api.locations);
   });
 
   const options = useMemo(

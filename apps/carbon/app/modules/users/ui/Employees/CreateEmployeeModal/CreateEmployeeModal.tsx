@@ -27,7 +27,7 @@ const CreateEmployeeModal = () => {
   const employeeTypeFetcher = useFetcher<PostgrestResponse<EmployeeType>>();
 
   useMount(() => {
-    employeeTypeFetcher.load("/api/users/employee-types");
+    employeeTypeFetcher.load(path.to.api.employeeTypes);
   });
 
   const employeeTypeOptions =

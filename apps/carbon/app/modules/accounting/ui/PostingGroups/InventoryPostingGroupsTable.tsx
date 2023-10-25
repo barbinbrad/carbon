@@ -26,7 +26,7 @@ const InventoryPostingGroupsTable = ({
   balanceSheetAccounts,
   incomeStatementAccounts,
 }: InventoryPostingGroupsTableProps) => {
-  const { canEdit, handleCellEdit } = usePostingGroups("postingGroupInventory");
+  const { canEdit, onCellEdit } = usePostingGroups("postingGroupInventory");
 
   const balanceSheetAccountOptions = useMemo(() => {
     return balanceSheetAccounts.map((account) => ({
@@ -128,59 +128,53 @@ const InventoryPostingGroupsTable = ({
   const editableComponents = useMemo(
     () => ({
       costOfGoodsSoldAccount: EditableList(
-        handleCellEdit,
+        onCellEdit,
         incomeStatementAccountOptions
       ),
-      inventoryAccount: EditableList(
-        handleCellEdit,
-        balanceSheetAccountOptions
-      ),
+      inventoryAccount: EditableList(onCellEdit, balanceSheetAccountOptions),
       inventoryInterimAccrualAccount: EditableList(
-        handleCellEdit,
+        onCellEdit,
         balanceSheetAccountOptions
       ),
       inventoryReceivedNotInvoicedAccount: EditableList(
-        handleCellEdit,
+        onCellEdit,
         balanceSheetAccountOptions
       ),
       inventoryShippedNotInvoicedAccount: EditableList(
-        handleCellEdit,
+        onCellEdit,
         balanceSheetAccountOptions
       ),
       workInProgressAccount: EditableList(
-        handleCellEdit,
+        onCellEdit,
         balanceSheetAccountOptions
       ),
       directCostAppliedAccount: EditableList(
-        handleCellEdit,
+        onCellEdit,
         incomeStatementAccountOptions
       ),
       overheadCostAppliedAccount: EditableList(
-        handleCellEdit,
+        onCellEdit,
         incomeStatementAccountOptions
       ),
       purchaseVarianceAccount: EditableList(
-        handleCellEdit,
+        onCellEdit,
         incomeStatementAccountOptions
       ),
       inventoryAdjustmentVarianceAccount: EditableList(
-        handleCellEdit,
+        onCellEdit,
         incomeStatementAccountOptions
       ),
       materialVarianceAccount: EditableList(
-        handleCellEdit,
+        onCellEdit,
         incomeStatementAccountOptions
       ),
       capacityVarianceAccount: EditableList(
-        handleCellEdit,
+        onCellEdit,
         incomeStatementAccountOptions
       ),
-      overheadAccount: EditableList(
-        handleCellEdit,
-        incomeStatementAccountOptions
-      ),
+      overheadAccount: EditableList(onCellEdit, incomeStatementAccountOptions),
     }),
-    [handleCellEdit, balanceSheetAccountOptions, incomeStatementAccountOptions]
+    [onCellEdit, balanceSheetAccountOptions, incomeStatementAccountOptions]
   );
 
   return (

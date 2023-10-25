@@ -93,12 +93,9 @@ export default function useReceiptForm({
     if (!supabase) return;
 
     try {
-      await fetch(
-        `/api/settings/sequence/rollback?table=receipt&currentSequence=${receipt.receiptId}`,
-        {
-          method: "DELETE",
-        }
-      )
+      await fetch(path.to.api.rollback("receipt", receipt.receiptId), {
+        method: "DELETE",
+      })
         .then(() => console.log("successfully rolled back receipt sequence"))
         .catch(console.error);
 
@@ -353,7 +350,7 @@ export default function useReceiptForm({
     ];
   }, [routeData?.locations]);
 
-  const handleCellEdit = useCallback(
+  const onCellEdit = useCallback(
     async (id: string, value: unknown, row: ReceiptLine) => {
       if (!supabase) throw new Error("Supabase client not found");
       return await supabase
@@ -368,9 +365,9 @@ export default function useReceiptForm({
 
   const receiptLineEditableComponents = useMemo(
     () => ({
-      receivedQuantity: EditableNumber(handleCellEdit),
+      receivedQuantity: EditableNumber(onCellEdit),
     }),
-    [handleCellEdit]
+    [onCellEdit]
   );
 
   return {

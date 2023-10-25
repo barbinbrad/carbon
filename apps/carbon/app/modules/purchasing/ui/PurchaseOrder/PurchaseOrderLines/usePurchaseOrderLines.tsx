@@ -6,6 +6,7 @@ import { useSupabase } from "~/lib/supabase";
 import type { getAccountsList } from "~/modules/accounting";
 import type { PurchaseOrderLine } from "~/modules/purchasing";
 import { usePurchasedParts } from "~/stores/parts";
+import { path } from "~/utils/path";
 
 export default function usePurchaseOrderLines() {
   const { supabase } = useSupabase();
@@ -19,7 +20,7 @@ export default function usePurchaseOrderLines() {
     useFetcher<Awaited<ReturnType<typeof getAccountsList>>>();
 
   useMount(() => {
-    accountsFetcher.load("/api/accounting/accounts?type=Posting");
+    accountsFetcher.load(`${path.to.api.accounts}?type=Posting`);
   });
 
   const partOptions = useMemo(
@@ -42,7 +43,7 @@ export default function usePurchaseOrderLines() {
     [accountsFetcher.data]
   );
 
-  const handleCellEdit = useCallback(
+  const onCellEdit = useCallback(
     async (id: string, value: unknown, row: PurchaseOrderLine) => {
       if (!supabase) throw new Error("Supabase client not found");
       return await supabase
@@ -61,6 +62,6 @@ export default function usePurchaseOrderLines() {
     canEdit,
     partOptions,
     supabase,
-    handleCellEdit,
+    onCellEdit,
   };
 }

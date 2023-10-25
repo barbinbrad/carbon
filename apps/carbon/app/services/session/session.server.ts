@@ -184,7 +184,7 @@ export async function refreshAuthSession(
   );
 
   if (!refreshedAuthSession) {
-    const redirectUrl = `/login?${makeRedirectToFromHere(request)}`;
+    const redirectUrl = `${path.to.login}?${makeRedirectToFromHere(request)}`;
 
     // here we throw instead of return because this function promise a AuthSession and not a response object
     // https://remix.run/docs/en/v1/guides/constraints#higher-order-functions

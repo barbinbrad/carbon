@@ -1,5 +1,6 @@
+import { useMount } from "@carbon/react";
 import { Box, Button, HStack, Icon } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AiOutlineCodeSandbox } from "react-icons/ai";
 import { BsCaretDownFill } from "react-icons/bs";
 
@@ -31,7 +32,7 @@ const PartsTreeExplorer = () => {
     {}
   );
 
-  useEffect(() => {
+  useMount(() => {
     const map: Record<string, boolean> = {};
     const traverse = (node: PartsTreeNode[]) => {
       node.forEach((n) => {
@@ -44,7 +45,7 @@ const PartsTreeExplorer = () => {
 
     traverse(data);
     setExpandedNodes(map);
-  }, []);
+  });
 
   const toggleNode = (id: string) => {
     setExpandedNodes((prev) => ({

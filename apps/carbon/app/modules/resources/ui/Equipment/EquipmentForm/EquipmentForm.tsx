@@ -70,7 +70,7 @@ const EquipmentForm = ({
 
   useEffect(() => {
     if (location) {
-      workCellFetcher.load(`/api/resources/work-cells?location=${location}`);
+      workCellFetcher.load(path.to.api.workCells(location));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);

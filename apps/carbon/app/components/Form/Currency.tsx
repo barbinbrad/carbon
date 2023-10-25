@@ -9,6 +9,7 @@ import { useFetcher } from "@remix-run/react";
 import { useEffect, useMemo } from "react";
 import { useControlField, useField } from "remix-validated-form";
 import type { getCurrenciesList } from "~/modules/accounting";
+import { path } from "~/utils/path";
 import type { SelectProps } from "./Select";
 
 type CurrencySelectProps = Omit<SelectProps, "options"> & {
@@ -33,7 +34,7 @@ const Currency = ({
     useFetcher<Awaited<ReturnType<typeof getCurrenciesList>>>();
 
   useMount(() => {
-    currencyFetcher.load(`/api/accounting/currencies`);
+    currencyFetcher.load(path.to.api.currencies);
   });
 
   const options = useMemo(

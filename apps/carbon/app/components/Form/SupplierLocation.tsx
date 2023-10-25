@@ -12,6 +12,7 @@ import type {
   getSupplierLocations,
   SupplierLocation as SupplierLocationType,
 } from "~/modules/purchasing";
+import { path } from "~/utils/path";
 import type { SelectProps } from "./Select";
 
 type SupplierLocationSelectProps = Omit<SelectProps, "options" | "onChange"> & {
@@ -38,9 +39,9 @@ const SupplierLocation = ({
     useFetcher<Awaited<ReturnType<typeof getSupplierLocations>>>();
 
   useEffect(() => {
-    supplierLocationFetcher.load(
-      `/api/purchasing/supplier-locations?supplierId=${supplier}`
-    );
+    if (supplier) {
+      supplierLocationFetcher.load(path.to.api.supplierLocations(supplier));
+    }
     if (initialLoad.current) {
       initialLoad.current = false;
     } else {

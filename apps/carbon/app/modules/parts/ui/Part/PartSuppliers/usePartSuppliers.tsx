@@ -10,7 +10,7 @@ export default function usePartSuppliers() {
   const canEdit = permissions.can("update", "parts");
   const canDelete = permissions.can("delete", "parts");
 
-  const handleCellEdit = useCallback(
+  const onCellEdit = useCallback(
     async (id: string, value: unknown, row: PartSupplier) => {
       if (!supabase) throw new Error("Supabase client not found");
       return await supabase
@@ -27,6 +27,6 @@ export default function usePartSuppliers() {
     canDelete,
     canEdit,
     supabase,
-    handleCellEdit,
+    onCellEdit,
   };
 }

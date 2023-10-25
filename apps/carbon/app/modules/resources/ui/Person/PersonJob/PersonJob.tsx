@@ -20,6 +20,7 @@ import {
 import { SectionTitle } from "~/components/Layout";
 import type { EmployeeJob, getShiftsList } from "~/modules/resources";
 import { employeeJobValidator } from "~/modules/resources";
+import { path } from "~/utils/path";
 
 type PersonJobProps = {
   job: EmployeeJob;
@@ -30,12 +31,11 @@ const PersonJob = ({ job }: PersonJobProps) => {
 
   const onLocationChange = (selected: { value: string | number } | null) => {
     if (selected?.value)
-      shiftFetcher.load(`/api/resources/shifts?location=${selected.value}`);
+      shiftFetcher.load(path.to.api.shifts(`${selected.value}`));
   };
 
   useMount(() => {
-    if (job.locationId)
-      shiftFetcher.load(`/api/resources/shifts?location=${job.locationId}`);
+    if (job.locationId) shiftFetcher.load(path.to.api.shifts(job.locationId));
   });
 
   const shifts = useMemo(

@@ -9,6 +9,7 @@ import { useFetcher } from "@remix-run/react";
 import { useEffect, useMemo } from "react";
 import { useControlField, useField } from "remix-validated-form";
 import type { getDepartmentsList } from "~/modules/resources";
+import { path } from "~/utils/path";
 import type { SelectProps } from "./Select";
 
 type DepartmentSelectProps = Omit<SelectProps, "options"> & {
@@ -33,7 +34,7 @@ const Department = ({
     useFetcher<Awaited<ReturnType<typeof getDepartmentsList>>>();
 
   useMount(() => {
-    departmentFetcher.load(`/api/resources/departments`);
+    departmentFetcher.load(path.to.api.departments);
   });
 
   const options = useMemo(

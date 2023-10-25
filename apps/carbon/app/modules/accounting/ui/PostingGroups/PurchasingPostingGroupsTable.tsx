@@ -26,9 +26,7 @@ const PurchasingPostingGroupsTable = ({
   balanceSheetAccounts,
   incomeStatementAccounts,
 }: PurchasingPostingGroupsTableProps) => {
-  const { canEdit, handleCellEdit } = usePostingGroups(
-    "postingGroupPurchasing"
-  );
+  const { canEdit, onCellEdit } = usePostingGroups("postingGroupPurchasing");
 
   const balanceSheetAccountOptions = useMemo(() => {
     return balanceSheetAccounts.map((account) => ({
@@ -90,28 +88,25 @@ const PurchasingPostingGroupsTable = ({
 
   const editableComponents = useMemo(
     () => ({
-      purchaseAccount: EditableList(
-        handleCellEdit,
-        incomeStatementAccountOptions
-      ),
+      purchaseAccount: EditableList(onCellEdit, incomeStatementAccountOptions),
       purchaseDiscountAccount: EditableList(
-        handleCellEdit,
+        onCellEdit,
         incomeStatementAccountOptions
       ),
       purchaseCreditAccount: EditableList(
-        handleCellEdit,
+        onCellEdit,
         balanceSheetAccountOptions
       ),
       purchasePrepaymentAccount: EditableList(
-        handleCellEdit,
+        onCellEdit,
         balanceSheetAccountOptions
       ),
       purchaseTaxPayableAccount: EditableList(
-        handleCellEdit,
+        onCellEdit,
         balanceSheetAccountOptions
       ),
     }),
-    [handleCellEdit, balanceSheetAccountOptions, incomeStatementAccountOptions]
+    [onCellEdit, balanceSheetAccountOptions, incomeStatementAccountOptions]
   );
 
   return (

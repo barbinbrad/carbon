@@ -12,6 +12,7 @@ import type {
   CustomerContact as CustomerContactType,
   getCustomerContacts,
 } from "~/modules/sales";
+import { path } from "~/utils/path";
 import type { SelectProps } from "./Select";
 
 type CustomerContactSelectProps = Omit<SelectProps, "options" | "onChange"> & {
@@ -38,9 +39,10 @@ const CustomerContact = ({
     useFetcher<Awaited<ReturnType<typeof getCustomerContacts>>>();
 
   useEffect(() => {
-    customerContactFetcher.load(
-      `/api/sales/customer-contacts?customerId=${customer}`
-    );
+    if (customer) {
+      customerContactFetcher.load(path.to.api.customerContacts(customer));
+    }
+
     if (initialLoad.current) {
       initialLoad.current = false;
     } else {

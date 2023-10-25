@@ -9,6 +9,7 @@ import { useFetcher } from "@remix-run/react";
 import { useEffect, useMemo } from "react";
 import { useControlField, useField } from "remix-validated-form";
 import type { getAccountsList } from "~/modules/accounting";
+import { path } from "~/utils/path";
 import type { SelectProps } from "./Select";
 
 type AccountSelectProps = Omit<SelectProps, "options"> & {
@@ -33,7 +34,7 @@ const Account = ({
     useFetcher<Awaited<ReturnType<typeof getAccountsList>>>();
 
   useMount(() => {
-    accountFetcher.load("/api/accounting/accounts?type=Posting");
+    accountFetcher.load(`${path.to.api.accounts}?type=Posting`);
   });
 
   const options = useMemo(

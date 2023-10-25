@@ -95,7 +95,7 @@ const PurchaseOrderLineForm = ({
 
   useEffect(() => {
     if (locationId) {
-      shelfFetcher.load(`/api/parts/shelf?locationId=${locationId}`);
+      shelfFetcher.load(path.to.api.shelves(locationId));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [locationId]);

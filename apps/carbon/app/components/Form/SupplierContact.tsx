@@ -9,6 +9,7 @@ import { useFetcher } from "@remix-run/react";
 import { useEffect, useMemo } from "react";
 import { useControlField, useField } from "remix-validated-form";
 import type { getSupplierContacts } from "~/modules/purchasing";
+import { path } from "~/utils/path";
 
 const SupplierContact = ({
   name,
@@ -41,9 +42,7 @@ const SupplierContact = ({
 
   useEffect(() => {
     if (supplier)
-      supplierContactsFetcher.load(
-        `/api/purchasing/supplier-contacts?supplierId=${supplier}`
-      );
+      supplierContactsFetcher.load(path.to.api.supplierContacts(supplier));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [supplier]);
 

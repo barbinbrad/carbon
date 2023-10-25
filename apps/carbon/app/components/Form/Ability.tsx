@@ -10,6 +10,7 @@ import { useFetcher } from "@remix-run/react";
 import { useEffect, useMemo } from "react";
 import { useControlField, useField } from "remix-validated-form";
 import type { getAbilitiesList } from "~/modules/resources";
+import { path } from "~/utils/path";
 import type { SelectProps } from "./Select";
 
 type AbilitySelectProps = Omit<SelectProps, "options" | "onChange"> & {
@@ -40,7 +41,7 @@ const Ability = ({
     useFetcher<Awaited<ReturnType<typeof getAbilitiesList>>>();
 
   useMount(() => {
-    abilityFetcher.load(`/api/resources/abilities`);
+    abilityFetcher.load(path.to.api.abilities);
   });
 
   const options = useMemo(

@@ -12,6 +12,7 @@ import type {
   AccountCategory as AccountCategoryType,
   getAccountCategoriesList,
 } from "~/modules/accounting";
+import { path } from "~/utils/path";
 import type { SelectProps } from "./Select";
 
 type AccountCategorySelectProps = Omit<SelectProps, "options" | "onChange"> & {
@@ -35,7 +36,7 @@ const AccountCategory = ({
     useFetcher<Awaited<ReturnType<typeof getAccountCategoriesList>>>();
 
   useMount(() => {
-    accountCategoryFetcher.load("/api/accounting/categories");
+    accountCategoryFetcher.load(path.to.api.accountingCategories);
   });
 
   const options = useMemo(() => {

@@ -1,4 +1,4 @@
-import { useColor, useEscape } from "@carbon/react";
+import { useColor, useEscape, useMount } from "@carbon/react";
 import { clip } from "@carbon/utils";
 import {
   Box,
@@ -328,10 +328,9 @@ const Grid = <T extends object>({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [columnOrder, columnVisibility]);
 
-  useEffect(() => {
+  useMount(() => {
     setColumnOrder(table.getAllLeafColumns().map((column) => column.id));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  });
 
   const rows = table.getRowModel().rows;
 

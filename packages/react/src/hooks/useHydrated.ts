@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import useMount from "./useMount";
 
 let hydrating = true;
 
@@ -22,10 +23,10 @@ let hydrating = true;
 export default function useHydrated() {
   let [hydrated, setHydrated] = useState(() => !hydrating);
 
-  useEffect(() => {
+  useMount(() => {
     hydrating = false;
     setHydrated(true);
-  }, []);
+  });
 
   return hydrated;
 }

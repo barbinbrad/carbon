@@ -1,9 +1,42 @@
 import { generatePath } from "@remix-run/react";
 
-const x = "/x";
+const x = "/x"; // from ~/routes/x+ folder
+const api = "/api"; // from ~/routes/api+ folder
 
 export const path = {
   to: {
+    api: {
+      abilities: `${api}/resources/abilities`,
+      accounts: `${api}/accounting/accounts`,
+      accountingCategories: `${api}/accounting/categories`,
+      accountingSubcategories: (id: string) =>
+        generatePath(`${api}/accounting/subcategories?accountCategoryId=${id}`),
+      currencies: `${api}/accounting/currencies`,
+      customerContacts: (id: string) =>
+        generatePath(`${api}/sales/customer-contacts?customerId=${id}`),
+      customerLocations: (id: string) =>
+        generatePath(`${api}/sales/customer-locations?customerId=${id}`),
+      departments: `${api}/resources/departments`,
+      employeeTypes: `${api}/users/employee-types`,
+      emptyPermissions: `${api}/users/empty-permissions`,
+      groupsByType: (type?: string) =>
+        generatePath(`${api}/users/groups?type=${type}`),
+      locations: `${api}/resources/locations`,
+      rollback: (table: string, id: string) =>
+        generatePath(
+          `${api}/settings/sequence/rollback?table=${table}&currentSequence=${id}`
+        ),
+      shifts: (id: string) =>
+        generatePath(`${api}/resources/shifts?location=${id}`),
+      shelves: (id: string) =>
+        generatePath(`${api}/parts/shelf?locationId=${id}`),
+      supplierContacts: (id: string) =>
+        generatePath(`${api}/purchasing/supplier-contacts?supplierId=${id}`),
+      supplierLocations: (id: string) =>
+        generatePath(`${api}/purchasing/supplier-locations?supplierId=${id}`),
+      workCells: (id: string) =>
+        generatePath(`${api}/resources/work-cells?location=${id}`),
+    },
     authenticatedRoot: x,
     abilities: `${x}/resources/abilities`,
     ability: (id: string) => generatePath(`${x}/resources/ability/${id}`),
@@ -269,6 +302,7 @@ export const path = {
     receipts: `${x}/inventory/receipts`,
     receiptPost: (id: string) =>
       generatePath(`${x}/inventory/receipts/${id}/post`),
+    refreshSession: "/refresh-session",
     resendInvite: `${x}/users/resend-invite`,
     resetPassord: "/reset-password",
     resources: `${x}/resources`,

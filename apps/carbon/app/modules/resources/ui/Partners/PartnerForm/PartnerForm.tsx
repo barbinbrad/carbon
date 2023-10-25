@@ -1,4 +1,4 @@
-import { Select } from "@carbon/react";
+import { Select, useMount } from "@carbon/react";
 import {
   Button,
   Drawer,
@@ -43,18 +43,15 @@ const PartnerForm = ({ initialValues }: PartnerFormProps) => {
 
   const onSupplierChange = ({ value }: { value: string | number }) => {
     if (value)
-      supplierLocationFetcher.load(
-        `/api/purchasing/supplier-locations?supplierId=${value}`
-      );
+      supplierLocationFetcher.load(path.to.api.supplierLocations(`${value}`));
   };
 
-  useEffect(() => {
+  useMount(() => {
     if (initialValues.supplierId)
       supplierLocationFetcher.load(
-        `/api/purchasing/supplier-locations?supplierId=${initialValues.supplierId}`
+        path.to.api.supplierLocations(initialValues.supplierId)
       );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  });
 
   const supplierLocations = useMemo(
     () =>

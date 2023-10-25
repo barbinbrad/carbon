@@ -6,6 +6,7 @@ import words from "lodash/words";
 import type { AriaAttributes, ChangeEvent, KeyboardEvent } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Group } from "~/modules/users";
+import { path } from "~/utils/path";
 
 import type {
   IndividualOrGroup,
@@ -54,7 +55,7 @@ export default function useUserSelect(props: UserSelectProps) {
   }>();
 
   useEffect(() => {
-    groupsFetcher.load(`/api/users/groups?type=${innerProps.type}`);
+    groupsFetcher.load(path.to.api.groupsByType(innerProps.type));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [innerProps.type]);
 

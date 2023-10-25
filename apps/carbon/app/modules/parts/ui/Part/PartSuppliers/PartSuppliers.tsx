@@ -29,7 +29,7 @@ type PartSuppliersProps = {
 
 const PartSuppliers = ({ partSuppliers }: PartSuppliersProps) => {
   const navigate = useNavigate();
-  const { canEdit, handleCellEdit } = usePartSuppliers();
+  const { canEdit, onCellEdit } = usePartSuppliers();
   const sharedPartData = useRouteData<{
     unitOfMeasures: UnitOfMeasureListItem[];
   }>(path.to.partRoot);
@@ -96,15 +96,12 @@ const PartSuppliers = ({ partSuppliers }: PartSuppliersProps) => {
 
   const editableComponents = useMemo(
     () => ({
-      supplierPartId: EditableText(handleCellEdit),
-      supplierUnitOfMeasureCode: EditableList(
-        handleCellEdit,
-        unitOfMeasureOptions
-      ),
-      minimumOrderQuantity: EditableNumber(handleCellEdit),
-      conversionFactor: EditableNumber(handleCellEdit),
+      supplierPartId: EditableText(onCellEdit),
+      supplierUnitOfMeasureCode: EditableList(onCellEdit, unitOfMeasureOptions),
+      minimumOrderQuantity: EditableNumber(onCellEdit),
+      conversionFactor: EditableNumber(onCellEdit),
     }),
-    [handleCellEdit, unitOfMeasureOptions]
+    [onCellEdit, unitOfMeasureOptions]
   );
 
   return (

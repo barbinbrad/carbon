@@ -49,7 +49,7 @@ function App() {
 }
 ```
 
-There are a lot of other component libraries out there, but we chose Chakra UI because it gives us a lot of flexibility while providing great user and developer experience.
+There are a lot of other component libraries out there, but we chose Chakra UI because it gives us a lot of flexibility while providing great user and developer experience. We're hopeful that Chakra will implement Panda under the hood in v4, which will give us high-level performance. If we had time, we'd probably move everything over to Radix + Tailwind (assuming we could keep things super simple for the developer).
 
 ## Remix
 
@@ -138,3 +138,5 @@ LIMIT 10
 ```
 
 But unlike a raw SQL query, the data that we get back is strongly-typed, neatly-nested, with error handling built-in.
+
+{/* TODO: explain why this is actually a bad setup for joins -- recommend putting joins in SQL VIEWs and then using the supabase client to supabase.from("view").select("*") */}

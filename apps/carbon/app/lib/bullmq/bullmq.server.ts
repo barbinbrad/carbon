@@ -1,7 +1,6 @@
 import { redis } from "@carbon/redis";
 import type { Processor } from "bullmq";
 import { Queue as BullQueue, Worker } from "bullmq";
-// import { isVercel } from "~/config/env";
 
 type RegisteredQueue = {
   queue: BullQueue;
@@ -14,11 +13,6 @@ declare global {
 
 const registeredQueues =
   global.__registeredQueues || (global.__registeredQueues = {});
-
-// const mockQueue = {
-//   add: (args: any) => Promise.resolve(),
-//   addBulk: (args: any) => Promise.resolve(),
-// };
 
 export const Queue = <Payload>(
   name: string,
@@ -36,6 +30,11 @@ export const Queue = <Payload>(
   // in an order determined by factors such as job priority, delay, etc.
   // The scheduler plays an important role in helping workers stay busy.
   const worker = new Worker<Payload>(name, handler, { connection: redis });
+
+  // It is important to properly close the job when the server is restarted.
+  process.on("SIGINT", async () => {
+    await worker.close();
+  });
 
   registeredQueues[name] = { queue, worker };
 

@@ -27,7 +27,7 @@
     "@types/ioredis": "^5.0.0",
     "@types/node": "^18.15.1",
     "dotenv": "16.0.3",
-    "eslint": "^8.4.1",
+    "eslint": "^8.23.1",
     "eslint-config-carbon": "*",
     "rimraf": "^3.0.2",
     "tsup": "^6.5.0",

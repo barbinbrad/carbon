@@ -1,0 +1,49 @@
+{
+  "name": "shared",
+  "private": true,
+  "license": "AGPL-3.0-or-later",
+  "sideEffects": false,
+  "scripts": {
+    "build": "remix build",
+    "dev": "run-p dev:*",
+    "dev:remix": "remix dev",
+    "dev:trigger": "npx @trigger.dev/cli@latest dev",
+    "start": "remix-serve ./build/index.js",
+    "clean": "rimraf .cache .turbo node_modules dist build",
+    "lint": "TIMING=1 eslint \"app/**/*.ts*\"",
+    "types": "tsc"
+  },
+  "dependencies": {
+    "@carbon/logger": "*",
+    "@remix-run/dev": "~2.0.0",
+    "@remix-run/eslint-config": "~2.0.0",
+    "@remix-run/node": "~2.0.0",
+    "@remix-run/react": "~2.0.0",
+    "@remix-run/serve": "~2.0.0",
+    "@supabase/supabase-js": "^2.33.1",
+    "@trigger.dev/react": "^2.2.2",
+    "@trigger.dev/remix": "^2.2.2",
+    "@trigger.dev/sdk": "^2.2.2",
+    "@vercel/analytics": "^1.0.2",
+    "@vercel/remix": "2.0.0",
+    "axios": "1.5.1",
+    "isbot": "latest",
+    "remix-flat-routes": "^0.5.10",
+    "remix-validated-form": "^5.0.2",
+    "zod": "^3.21.4"
+  },
+  "devDependencies": {
+    "@carbon/tsconfig": "*",
+    "@types/react": "^18.2.17",
+    "@types/react-dom": "^18.2.7",
+    "cross-env": "7.0.3",
+    "nodemon": "^3.0.1",
+    "typescript": "^5.2.2"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "trigger.dev": {
+    "endpointId": "carbon-erp-wzkF"
+  }
+}

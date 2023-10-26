@@ -41,9 +41,10 @@ The monorepo follows the Turborepo covention of grouping packages into one of tw
 
 ### `/apps`
 
-| Package Name | Description     |
-| ------------ | --------------- |
-| `carbon`     | ERP Application |
+| Package Name | Description      |
+| ------------ | ---------------- |
+| `carbon`     | ERP Application  |
+| `shared`     | Shared Resources |
 
 ### `/packages`
 
@@ -66,7 +67,8 @@ After running the steps below you should be able to access the following apps/co
 
 | Application     | URL                                                                                                                |
 | --------------- | ------------------------------------------------------------------------------------------------------------------ |
-| Carbon ERP      | [http://localhost:3000](http://localhost:3000)                                                                     |
+| Carbon ERP      | [http://localhost:3600](http://localhost:3600)                                                                     |
+| Shared Server   | [http://localhost:3000](http://localhost:3000)                                                                     |
 | Postgres        | [postgresql://postgres:postgres@localhost:54322/postgres](postgresql://postgres:postgres@localhost:54322/postgres) |
 | Supabase Studio | [http://localhost:54323/project/default](http://localhost:54323/project/default)                                   |
 | Inbucket        | [http://localhost:54324/monitor](http://localhost:54324/monitor)                                                   |

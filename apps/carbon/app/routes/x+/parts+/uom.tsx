@@ -3,12 +3,20 @@ import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import {
-  getUnitOfMeasures,
   UnitOfMeasuresTable,
   UnitOfMeasuresTableFilters,
+  getUnitOfMeasures,
 } from "~/modules/parts";
 import { requirePermissions } from "~/services/auth";
+import type { Handle } from "~/utils/handle";
+import { path } from "~/utils/path";
 import { getGenericQueryFilters } from "~/utils/query";
+
+export const handle: Handle = {
+  breadcrumb: "Unit of Measures",
+  to: path.to.uoms,
+  module: "parts",
+};
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const { client } = await requirePermissions(request, {

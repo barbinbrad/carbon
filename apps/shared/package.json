@@ -5,7 +5,7 @@
   "sideEffects": false,
   "scripts": {
     "build": "remix build",
-    "dev": "run-p dev:*",
+    "dev": "PORT=3000 run-p dev:*",
     "dev:remix": "remix dev",
     "dev:trigger": "npx @trigger.dev/cli@latest dev",
     "start": "remix-serve ./build/index.js",

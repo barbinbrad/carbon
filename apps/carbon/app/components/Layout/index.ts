@@ -1,7 +1,7 @@
 import Background from "./Background";
-import { ContentSidebar, IconSidebar } from "./Sidebar";
 import PageTitle from "./PageTitle";
 import SectionTitle from "./SectionTitle";
+import { ContentSidebar, IconSidebar } from "./Sidebar";
 import Topbar from "./Topbar";
 
 export {

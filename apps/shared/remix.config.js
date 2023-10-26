@@ -20,7 +20,6 @@ module.exports = {
     });
   },
   serverDependenciesToBundle: [
-    "@carbon/database",
     "@carbon/logger",
     "@carbon/react",
     "@carbon/utils",
@@ -30,7 +29,6 @@ module.exports = {
   watchPaths: async () => {
     return [
       "../../packages/react/src/**/*",
-      "../../packages/database/src/**/*",
       "../../packages/logger/src/**/*",
       "../../packages/utils/src/**/*",
     ];

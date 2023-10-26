@@ -12,9 +12,17 @@ import {
 } from "~/modules/parts";
 import { getLocationsList } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
+import type { Handle } from "~/utils/handle";
+import { path } from "~/utils/path";
 
 export const meta: MetaFunction = () => {
   return [{ title: "Carbon | Part" }];
+};
+
+export const handle: Handle = {
+  breadcrumb: "Parts",
+  to: path.to.parts,
+  module: "parts",
 };
 
 export async function loader({ request }: LoaderFunctionArgs) {

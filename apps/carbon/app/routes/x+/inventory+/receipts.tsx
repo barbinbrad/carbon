@@ -3,16 +3,22 @@ import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import {
-  getReceipts,
   ReceiptsTable,
   ReceiptsTableFilters,
+  getReceipts,
 } from "~/modules/inventory";
 import { getLocationsList } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import type { Handle } from "~/utils/handle";
 import { path } from "~/utils/path";
 import { getGenericQueryFilters } from "~/utils/query";
 import { error } from "~/utils/result";
+
+export const handle: Handle = {
+  breadcrumb: "Receipts",
+  to: path.to.receipts,
+};
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const { client } = await requirePermissions(request, {

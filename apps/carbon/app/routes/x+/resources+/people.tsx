@@ -4,17 +4,23 @@ import { json, redirect } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import { usePermissions } from "~/hooks";
 import {
-  getAttributeCategories,
-  getPeople,
   PeopleTable,
   PeopleTableFilters,
+  getAttributeCategories,
+  getPeople,
 } from "~/modules/resources";
 import { getEmployeeTypes } from "~/modules/users";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import type { Handle } from "~/utils/handle";
 import { path } from "~/utils/path";
 import { getGenericQueryFilters } from "~/utils/query";
 import { error } from "~/utils/result";
+
+export const handle: Handle = {
+  breadcrumb: "People",
+  to: path.to.people,
+};
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const { client } = await requirePermissions(request, {

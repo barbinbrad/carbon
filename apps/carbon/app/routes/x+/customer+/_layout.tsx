@@ -9,10 +9,19 @@ import {
 } from "~/modules/inventory";
 import { getCustomerStatuses, getCustomerTypes } from "~/modules/sales";
 import { requirePermissions } from "~/services/auth";
+import type { Handle } from "~/utils/handle";
+import { path } from "~/utils/path";
 
 export const meta: MetaFunction = () => {
   return [{ title: "Carbon | Part" }];
 };
+
+export const handle: Handle = {
+  breadcrumb: "Sales",
+  to: path.to.sales,
+  module: "sales",
+};
+
 export async function loader({ request }: LoaderFunctionArgs) {
   const { client } = await requirePermissions(request, {
     view: "sales",

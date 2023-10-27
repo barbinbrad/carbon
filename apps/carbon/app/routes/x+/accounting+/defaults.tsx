@@ -15,9 +15,15 @@ import {
 } from "~/modules/accounting";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import type { Handle } from "~/utils/handle";
 import { assertIsPost } from "~/utils/http";
 import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
+
+export const handle: Handle = {
+  breadcrumb: "Defaults",
+  to: path.to.accountingDefaults,
+};
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const { client } = await requirePermissions(request, {

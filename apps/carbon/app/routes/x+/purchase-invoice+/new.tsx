@@ -63,7 +63,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const invoice = createPurchaseInvoice.data?.[0];
 
-  return redirect(path.to.purchaseInvoice(invoice?.invoiceId!));
+  return redirect(path.to.purchaseInvoice(invoice?.id!));
 }
 
 export default function PurchaseInvoiceNewRoute() {

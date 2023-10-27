@@ -4,11 +4,17 @@ import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { PageTitle, SectionTitle } from "~/components/Layout";
 import type { PrivateAttributes } from "~/modules/account";
-import { getPrivateAttributes, UserAttributesForm } from "~/modules/account";
+import { UserAttributesForm, getPrivateAttributes } from "~/modules/account";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import type { Handle } from "~/utils/handle";
 import { path } from "~/utils/path";
 import { error } from "~/utils/result";
+
+export const handle: Handle = {
+  breadcrumb: "Personal",
+  to: path.to.accountPersonal,
+};
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const { client, userId } = await requirePermissions(request, {});

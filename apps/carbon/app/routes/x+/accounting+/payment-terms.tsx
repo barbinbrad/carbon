@@ -3,12 +3,19 @@ import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import {
-  getPaymentTerms,
   PaymentTermsTable,
   PaymentTermsTableFilters,
+  getPaymentTerms,
 } from "~/modules/accounting";
 import { requirePermissions } from "~/services/auth";
+import type { Handle } from "~/utils/handle";
+import { path } from "~/utils/path";
 import { getGenericQueryFilters } from "~/utils/query";
+
+export const handle: Handle = {
+  breadcrumb: "Payment Terms",
+  to: path.to.paymentTerms,
+};
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const { client } = await requirePermissions(request, {

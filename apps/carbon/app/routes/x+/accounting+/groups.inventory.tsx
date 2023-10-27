@@ -5,17 +5,23 @@ import { Outlet, useLoaderData } from "@remix-run/react";
 import { useRouteData } from "~/hooks";
 import type { AccountListItem } from "~/modules/accounting";
 import {
-  getInventoryPostingGroups,
   InventoryPostingGroupsFilters,
   InventoryPostingGroupsTable,
+  getInventoryPostingGroups,
 } from "~/modules/accounting";
 import { getPartGroupsList } from "~/modules/parts";
 import { getLocationsList } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import type { Handle } from "~/utils/handle";
 import { path } from "~/utils/path";
 import { getGenericQueryFilters } from "~/utils/query";
 import { error } from "~/utils/result";
+
+export const handle: Handle = {
+  breadcrumb: "Inventory Groups",
+  to: path.to.accountingGroupsInventory,
+};
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const { client } = await requirePermissions(request, {

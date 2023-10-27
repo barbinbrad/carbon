@@ -2,11 +2,25 @@ import { useColor } from "@carbon/react";
 import { Box, IconButton, Tooltip, VStack } from "@chakra-ui/react";
 import { Link, useMatches } from "@remix-run/react";
 import { BsFillHexagonFill } from "react-icons/bs";
+import { z } from "zod";
 import { useSidebar } from "./useSidebar";
+
+export const ModuleHandle = z.object({
+  module: z.string(),
+});
 
 const IconSidebar = () => {
   const links = useSidebar();
-  const matchedPaths = useMatches().map((match) => match.pathname);
+  const matchedModules = useMatches().reduce((acc, match) => {
+    if (match.handle) {
+      const result = ModuleHandle.safeParse(match.handle);
+      if (result.success) {
+        acc.add(result.data.module);
+      }
+    }
+
+    return acc;
+  }, new Set<string>());
 
   return (
     <Box
@@ -31,7 +45,9 @@ const IconSidebar = () => {
 
       <VStack spacing={0} top={50} position="sticky">
         {links.map((link) => {
-          const isActive = matchedPaths.includes(link.to);
+          const module = link.to.split("/")[2]; // link.to is "/x/parts" -- this returns "parts"
+
+          const isActive = matchedModules.has(module);
           return (
             <Tooltip key={link.to} label={link.name} placement="right">
               <IconButton

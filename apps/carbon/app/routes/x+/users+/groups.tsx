@@ -4,11 +4,18 @@ import { json } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import { arrayToTree } from "performant-array-to-tree";
 import type { Group } from "~/modules/users";
-import { getGroups, GroupsTable, GroupsTableFilters } from "~/modules/users";
+import { GroupsTable, GroupsTableFilters, getGroups } from "~/modules/users";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import type { Handle } from "~/utils/handle";
+import { path } from "~/utils/path";
 import { getGenericQueryFilters } from "~/utils/query";
 import { error } from "~/utils/result";
+
+export const handle: Handle = {
+  breadcrumb: "Groups",
+  to: path.to.groups,
+};
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const { client } = await requirePermissions(request, {

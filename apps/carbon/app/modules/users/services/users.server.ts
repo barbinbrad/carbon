@@ -692,10 +692,10 @@ function isClaimPermission(key: string, value: unknown) {
 function makeCustomerClaims() {
   // TODO: this should be more dynamic
   const claims: Record<string, boolean> = {
-    documents: true,
+    documents_view: true,
     jobs_view: true,
     sales_view: true,
-    parts: true,
+    parts_view: true,
   };
 
   return claims;
@@ -794,10 +794,9 @@ export function makePermissionsFromEmployeeType(
 function makeSupplierClaims() {
   // TODO: this should be more dynamic
   const claims: Record<string, boolean> = {
-    documents: true,
-    inventory_view: true,
+    documents_view: true,
     purchasing_view: true,
-    parts: true,
+    parts_view: true,
   };
 
   return claims;

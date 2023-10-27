@@ -11,8 +11,14 @@ import {
 } from "~/modules/sales";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import type { Handle } from "~/utils/handle";
 import { path } from "~/utils/path";
 import { error } from "~/utils/result";
+
+export const handle: Handle = {
+  breadcrumb: "Customers",
+  to: path.to.customers,
+};
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const { client } = await requirePermissions(request, {

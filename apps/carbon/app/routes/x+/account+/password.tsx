@@ -3,12 +3,18 @@ import { json, redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
 import { PageTitle } from "~/components/Layout";
 import { getSupabaseServiceRole } from "~/lib/supabase";
-import { accountPasswordValidator, PasswordForm } from "~/modules/account";
+import { PasswordForm, accountPasswordValidator } from "~/modules/account";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import type { Handle } from "~/utils/handle";
 import { assertIsPost } from "~/utils/http";
 import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
+
+export const handle: Handle = {
+  breadcrumb: "Password",
+  to: path.to.accountPassword,
+};
 
 export async function action({ request }: ActionFunctionArgs) {
   assertIsPost(request);

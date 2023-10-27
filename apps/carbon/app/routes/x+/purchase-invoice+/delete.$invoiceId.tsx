@@ -1,6 +1,6 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import { deleteDocument } from "~/modules/documents";
+import { deletePurchaseInvoice } from "~/modules/invoicing";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";
@@ -9,24 +9,24 @@ import { error } from "~/utils/result";
 
 export async function action({ request, params }: ActionFunctionArgs) {
   assertIsPost(request);
-  const { client, userId } = await requirePermissions(request, {
-    delete: "documents",
+  const { client } = await requirePermissions(request, {
+    delete: "invoicing",
   });
 
-  const { documentId } = params;
-  if (!documentId) throw notFound("documentId not found");
+  const { invoiceId } = params;
+  if (!invoiceId) throw notFound("invoiceId not found");
 
-  const moveToTrash = await deleteDocument(client, documentId, userId);
+  const remove = await deletePurchaseInvoice(client, invoiceId);
 
-  if (moveToTrash.error) {
+  if (remove.error) {
     return redirect(
-      path.to.documents,
+      path.to.purchaseInvoices,
       await flash(
         request,
-        error(moveToTrash.error, "Failed to delete document")
+        error(remove.error, "Failed to delete purchase invoice")
       )
     );
   }
 
-  return redirect(path.to.documents);
+  return redirect(path.to.purchaseInvoices);
 }

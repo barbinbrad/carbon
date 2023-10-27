@@ -3,16 +3,22 @@ import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 import {
+  SupplierHeader,
+  SupplierSidebar,
   getSupplier,
   getSupplierContacts,
   getSupplierLocations,
-  SupplierHeader,
-  SupplierSidebar,
 } from "~/modules/purchasing";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import type { Handle } from "~/utils/handle";
 import { path } from "~/utils/path";
 import { error } from "~/utils/result";
+
+export const handle: Handle = {
+  breadcrumb: "Suppliers",
+  to: path.to.suppliers,
+};
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const { client } = await requirePermissions(request, {

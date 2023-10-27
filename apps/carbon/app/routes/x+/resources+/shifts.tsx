@@ -3,16 +3,22 @@ import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import {
-  getLocations,
-  getShifts,
   ShiftsTable,
   ShiftsTableFilters,
+  getLocations,
+  getShifts,
 } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import type { Handle } from "~/utils/handle";
 import { path } from "~/utils/path";
 import { getGenericQueryFilters } from "~/utils/query";
 import { error } from "~/utils/result";
+
+export const handle: Handle = {
+  breadcrumb: "Shifts",
+  to: path.to.shifts,
+};
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const { client } = await requirePermissions(request, {

@@ -8,6 +8,9 @@ module.exports = {
   // assetsBuildDirectory: "public/build",
   // publicPath: "/build/",
   // serverBuildPath: "build/index.js",
+  dev: {
+    port: 3601,
+  },
   future: {},
   ignoredRouteFiles: ["**/.*"],
   serverModuleFormat: "cjs",

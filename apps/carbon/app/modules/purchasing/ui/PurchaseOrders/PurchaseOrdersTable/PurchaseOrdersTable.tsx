@@ -43,7 +43,7 @@ const PurchaseOrdersTable = memo(
 
     const [selectedPurchaseOrder, setSelectedPurchaseOrder] =
       useState<PurchaseOrder | null>(null);
-    const closePurchaseOrderModal = useDisclosure();
+    const deletePurchaseOrderModal = useDisclosure();
 
     const onFavorite = useCallback(
       async (row: PurchaseOrder) => {
@@ -190,14 +190,14 @@ const PurchaseOrdersTable = memo(
             isDisabled={!permissions.can("delete", "purchasing")}
             onClick={() => {
               setSelectedPurchaseOrder(row);
-              closePurchaseOrderModal.onOpen();
+              deletePurchaseOrderModal.onOpen();
             }}
           >
-            Close
+            Delete
           </MenuItem>
         </>
       );
-    }, [closePurchaseOrderModal, edit, onFavorite, permissions, receive]);
+    }, [deletePurchaseOrderModal, edit, onFavorite, permissions, receive]);
 
     return (
       <>
@@ -216,15 +216,15 @@ const PurchaseOrdersTable = memo(
         {selectedPurchaseOrder && selectedPurchaseOrder.id && (
           <ConfirmDelete
             action={path.to.deletePurchaseOrder(selectedPurchaseOrder.id)}
-            isOpen={closePurchaseOrderModal.isOpen}
+            isOpen={deletePurchaseOrderModal.isOpen}
             name={selectedPurchaseOrder.purchaseOrderId!}
-            text={`Are you sure you want to move ${selectedPurchaseOrder.purchaseOrderId!} to the trash?`}
+            text={`Are you sure you want to delete ${selectedPurchaseOrder.purchaseOrderId!}? This cannot be undone.`}
             onCancel={() => {
-              closePurchaseOrderModal.onClose();
+              deletePurchaseOrderModal.onClose();
               setSelectedPurchaseOrder(null);
             }}
             onSubmit={() => {
-              closePurchaseOrderModal.onClose();
+              deletePurchaseOrderModal.onClose();
               setSelectedPurchaseOrder(null);
             }}
           />

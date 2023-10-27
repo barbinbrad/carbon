@@ -8,7 +8,14 @@ import {
   getEmployeeTypes,
 } from "~/modules/users";
 import { requirePermissions } from "~/services/auth";
+import type { Handle } from "~/utils/handle";
+import { path } from "~/utils/path";
 import { getGenericQueryFilters } from "~/utils/query";
+
+export const handle: Handle = {
+  breadcrumb: "Employee Types",
+  to: path.to.employeeTypes,
+};
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const { client } = await requirePermissions(request, {

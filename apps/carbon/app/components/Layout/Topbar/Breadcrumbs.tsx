@@ -27,18 +27,10 @@ const Breadcrumbs = () => {
       const result = BreadcrumbHandleMatch.safeParse(m);
       if (!result.success || !result.data.handle.breadcrumb) return null;
 
-      return (
-        <BreadcrumbLink
-          key={m.id}
-          fontSize="sm"
-          fontWeight={500}
-          color={linkColor}
-          as={Link}
-          to={result.data.handle?.to ?? m.pathname}
-        >
-          {result.data.handle.breadcrumb}
-        </BreadcrumbLink>
-      );
+      return {
+        breadcrumb: result.data.handle.breadcrumb,
+        to: result.data.handle?.to ?? m.pathname,
+      };
     })
     .filter(Boolean);
 
@@ -46,7 +38,17 @@ const Breadcrumbs = () => {
     <HStack>
       <Breadcrumb noOfLines={1}>
         {breadcrumbs.map((breadcrumb, i) => (
-          <BreadcrumbItem key={i}>{breadcrumb}</BreadcrumbItem>
+          <BreadcrumbItem key={i}>
+            <BreadcrumbLink
+              fontSize="sm"
+              fontWeight={500}
+              color={linkColor}
+              as={Link}
+              to={breadcrumb?.to}
+            >
+              {breadcrumb?.breadcrumb}
+            </BreadcrumbLink>
+          </BreadcrumbItem>
         ))}
       </Breadcrumb>
     </HStack>

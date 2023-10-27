@@ -18,7 +18,6 @@ import { error } from "~/utils/result";
 export const handle: Handle = {
   breadcrumb: "Part Groups",
   to: path.to.partGroups,
-  module: "parts",
 };
 
 export async function loader({ request }: LoaderFunctionArgs) {

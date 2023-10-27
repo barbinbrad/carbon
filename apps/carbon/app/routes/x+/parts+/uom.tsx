@@ -15,7 +15,6 @@ import { getGenericQueryFilters } from "~/utils/query";
 export const handle: Handle = {
   breadcrumb: "Unit of Measures",
   to: path.to.uoms,
-  module: "parts",
 };
 
 export async function loader({ request }: LoaderFunctionArgs) {

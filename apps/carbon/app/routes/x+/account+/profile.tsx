@@ -6,20 +6,26 @@ import { validationError } from "remix-validated-form";
 import { PageTitle, SectionTitle } from "~/components/Layout";
 import type { PublicAttributes } from "~/modules/account";
 import {
+  ProfileForm,
+  ProfilePhotoForm,
+  UserAttributesForm,
   accountProfileValidator,
   getAccount,
   getPublicAttributes,
-  ProfileForm,
-  ProfilePhotoForm,
   updateAvatar,
   updatePublicAccount,
-  UserAttributesForm,
 } from "~/modules/account";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import type { Handle } from "~/utils/handle";
 import { assertIsPost } from "~/utils/http";
 import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
+
+export const handle: Handle = {
+  breadcrumb: "Profile",
+  to: path.to.profile,
+};
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const { client, userId } = await requirePermissions(request, {});

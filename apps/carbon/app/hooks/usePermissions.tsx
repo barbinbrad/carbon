@@ -17,6 +17,8 @@ export function usePermissions() {
     );
   }
 
+  console.log(data?.permissions);
+
   const can = useCallback(
     (action: "view" | "create" | "update" | "delete", feature: string) => {
       return data?.permissions[feature]?.[action] ?? false;

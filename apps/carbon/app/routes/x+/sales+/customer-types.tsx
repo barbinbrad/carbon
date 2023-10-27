@@ -8,7 +8,14 @@ import {
   getCustomerTypes,
 } from "~/modules/sales";
 import { requirePermissions } from "~/services/auth";
+import type { Handle } from "~/utils/handle";
+import { path } from "~/utils/path";
 import { getGenericQueryFilters } from "~/utils/query";
+
+export const handle: Handle = {
+  breadcrumb: "Customer Types",
+  to: path.to.customerTypes,
+};
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const { client } = await requirePermissions(request, {

@@ -3,18 +3,24 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 import {
+  PurchaseOrderHeader,
+  PurchaseOrderSidebar,
   getExternalDocuments,
   getInternalDocuments,
   getPurchaseOrder,
   getPurchaseOrderLines,
-  PurchaseOrderHeader,
-  PurchaseOrderSidebar,
 } from "~/modules/purchasing";
 import { getLocationsList } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import type { Handle } from "~/utils/handle";
 import { path } from "~/utils/path";
 import { error } from "~/utils/result";
+
+export const handle: Handle = {
+  breadcrumb: "Orders",
+  to: path.to.purchaseOrders,
+};
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const { client } = await requirePermissions(request, {

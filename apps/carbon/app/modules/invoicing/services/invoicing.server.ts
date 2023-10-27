@@ -7,6 +7,13 @@ import { setGenericQueryFilters } from "~/utils/query";
 import { sanitize } from "~/utils/supabase";
 import type { purchaseInvoiceValidator } from "./invoicing.form";
 
+export async function deletePurchaseInvoice(
+  client: SupabaseClient<Database>,
+  purchaseInvoiceId: string
+) {
+  return client.from("purchaseInvoice").delete().eq("id", purchaseInvoiceId);
+}
+
 export async function getPurchaseInvoice(
   client: SupabaseClient<Database>,
   purchaseInvoiceId: string

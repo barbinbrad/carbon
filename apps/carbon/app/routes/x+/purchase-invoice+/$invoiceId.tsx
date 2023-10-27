@@ -3,16 +3,22 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 import {
-  getPurchaseInvoice,
-  getPurchaseInvoiceLines,
   PurchaseInvoiceHeader,
   PurchaseInvoiceSidebar,
+  getPurchaseInvoice,
+  getPurchaseInvoiceLines,
 } from "~/modules/invoicing";
 import { getLocationsList } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import type { Handle } from "~/utils/handle";
 import { path } from "~/utils/path";
 import { error } from "~/utils/result";
+
+export const handle: Handle = {
+  breadcrumb: "Purchasing",
+  to: path.to.purchaseInvoices,
+};
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const { client } = await requirePermissions(request, {

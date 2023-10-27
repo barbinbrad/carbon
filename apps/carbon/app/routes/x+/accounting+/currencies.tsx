@@ -8,7 +8,14 @@ import {
   getCurrencies,
 } from "~/modules/accounting";
 import { requirePermissions } from "~/services/auth";
+import type { Handle } from "~/utils/handle";
+import { path } from "~/utils/path";
 import { getGenericQueryFilters } from "~/utils/query";
+
+export const handle: Handle = {
+  breadcrumb: "Currencies",
+  to: path.to.currencies,
+};
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const { client } = await requirePermissions(request, {

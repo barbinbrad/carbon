@@ -12,6 +12,7 @@ import type {
   purchaseOrderLineValidator,
   purchaseOrderPaymentValidator,
   purchaseOrderValidator,
+  supplierContactValidator,
   supplierTypeValidator,
   supplierValidator,
 } from "./purchasing.form";
@@ -365,23 +366,7 @@ export async function insertSupplierContact(
   client: SupabaseClient<Database>,
   supplierContact: {
     supplierId: string;
-    contact: {
-      firstName: string;
-      lastName: string;
-      email: string;
-      mobilePhone?: string;
-      homePhone?: string;
-      workPhone?: string;
-      fax?: string;
-      title?: string;
-      addressLine1?: string;
-      addressLine2?: string;
-      city?: string;
-      state?: string;
-      postalCode?: string;
-      birthday?: string;
-      notes?: string;
-    };
+    contact: TypeOfValidator<typeof supplierContactValidator>;
   }
 ) {
   // Need to use service role here because it violates RLS

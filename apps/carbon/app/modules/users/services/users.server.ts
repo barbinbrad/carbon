@@ -46,7 +46,7 @@ export async function createCustomerAccount(
 
   const { email, firstName, lastName } = customerContact.data.contact;
 
-  // TODO: can we do this after we've done the other stuff?
+  // TODO: convert to transaction and call this at the end of the transaction
   const invitation = await sendInviteByEmail(email);
 
   if (invitation.error)
@@ -127,7 +127,7 @@ export async function createEmployeeAccount(
       "Failed to get employee type permissions"
     );
 
-  // TODO: can we do this after we've done the other stuff?
+  // TODO: convert to transaction and call this at the end of the transaction
   const invitation = await sendInviteByEmail(email);
 
   if (invitation.error)
@@ -192,7 +192,7 @@ export async function createSupplierAccount(
 
   const { email, firstName, lastName } = supplierContact.data.contact;
 
-  // TODO: can we do this after we've done the other stuff?
+  // TODO: convert to transaction and call this at the end of the transaction
   const invitation = await sendInviteByEmail(email);
 
   if (invitation.error)

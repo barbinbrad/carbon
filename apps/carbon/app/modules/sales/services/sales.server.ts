@@ -5,7 +5,11 @@ import type { TypeOfValidator } from "~/types/validators";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
 import { sanitize } from "~/utils/supabase";
-import type { customerTypeValidator, customerValidator } from "./sales.form";
+import type {
+  customerContactValidator,
+  customerTypeValidator,
+  customerValidator,
+} from "./sales.form";
 
 export async function deleteCustomerContact(
   client: SupabaseClient<Database>,
@@ -198,24 +202,7 @@ export async function insertCustomerContact(
   client: SupabaseClient<Database>,
   customerContact: {
     customerId: string;
-    contact: {
-      firstName: string;
-      lastName: string;
-      email: string;
-      mobilePhone?: string;
-      homePhone?: string;
-      workPhone?: string;
-      fax?: string;
-      title?: string;
-      addressLine1?: string;
-      addressLine2?: string;
-      city?: string;
-      state?: string;
-      // countryId: string;
-      postalCode?: string;
-      birthday?: string;
-      notes?: string;
-    };
+    contact: TypeOfValidator<typeof customerContactValidator>;
   }
 ) {
   // Need to use service role here because it violates RLS

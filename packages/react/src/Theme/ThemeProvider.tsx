@@ -1,6 +1,6 @@
-import { useMemo } from "react";
-import type { ReactNode } from "react";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import type { ReactNode } from "react";
+import { useMemo } from "react";
 import { theme as carbonTheme } from "./theme";
 
 export enum Mode {

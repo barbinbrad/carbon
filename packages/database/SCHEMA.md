@@ -4026,8 +4026,8 @@ FOR SELECT USING (
     AND coalesce(get_my_claim('documents_view')::boolean, false) = true
     AND (
         (storage.foldername(name))[1] = auth.uid()::text
-        OR storage.filename(name) IN (
-            SELECT "path" FROM public.document WHERE "readGroups" && groups_for_user(auth.uid()::text)
+        OR "name" IN (
+            SELECT "path" FROM public.document WHERE (groups_for_user(auth.uid()::text) && "readGroups") = true
         )
     )
 );
@@ -4039,8 +4039,8 @@ FOR INSERT WITH CHECK (
     AND coalesce(get_my_claim('documents_create')::boolean, false) = true
     AND (
         (storage.foldername(name))[1] = auth.uid()::text
-        OR storage.filename(name) IN (
-            SELECT "path" FROM public.document WHERE "writeGroups" && groups_for_user(auth.uid()::text)
+        OR "name" IN (
+            SELECT "path" FROM public.document WHERE (groups_for_user(auth.uid()::text) && "writeGroups") = true
         )
     )
 );
@@ -4052,8 +4052,8 @@ FOR UPDATE USING (
     AND coalesce(get_my_claim('documents_update')::boolean, false) = true
     AND (
         (storage.foldername(name))[1] = auth.uid()::text
-        OR storage.filename(name) IN (
-            SELECT "path" FROM public.document WHERE "readGroups" && groups_for_user(auth.uid()::text)
+        OR "name" IN (
+            SELECT "path" FROM public.document WHERE (groups_for_user(auth.uid()::text) && "writeGroups") = true
         )
     )
 );
@@ -4065,8 +4065,8 @@ FOR DELETE USING (
     AND coalesce(get_my_claim('documents_delete')::boolean, false) = true
     AND (
         (storage.foldername(name))[1] = auth.uid()::text
-        OR storage.filename(name) IN (
-            SELECT "path" FROM public.document WHERE "readGroups" && groups_for_user(auth.uid()::text)
+        OR "name" IN (
+            SELECT "path" FROM public.document WHERE (groups_for_user(auth.uid()::text) && "writeGroups") = true
         )
     )
 );

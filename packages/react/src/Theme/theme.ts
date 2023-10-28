@@ -8,6 +8,8 @@ import { colors } from "./palette";
 import { semanticTokens } from "./tokens";
 
 export const theme = {
+  initialColorMode: "dark", // TODO: make this dyanmic
+  useSystemColorMode: false,
   fonts,
   colors,
   styles: {

@@ -1,17 +1,17 @@
 // root.tsx
 import { ThemeProvider } from "@carbon/react";
-import { Heading, VStack } from "@chakra-ui/react";
+import { ColorModeScript, Heading, VStack } from "@chakra-ui/react";
 import { SkipNavLink } from "@chakra-ui/skip-nav";
 import type { MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
-  isRouteErrorResponse,
   Links,
   LiveReload,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
+  isRouteErrorResponse,
   useLoaderData,
   useRouteError,
 } from "@remix-run/react";
@@ -87,6 +87,7 @@ export default function App() {
         <SkipNavLink zIndex={7}>Skip to content</SkipNavLink>
         <Outlet />
       </ThemeProvider>
+      <ColorModeScript initialColorMode="dark" />
       <script
         dangerouslySetInnerHTML={{
           __html: `window.env = ${JSON.stringify(env)}`,

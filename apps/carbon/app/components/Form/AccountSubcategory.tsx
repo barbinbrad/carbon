@@ -13,6 +13,15 @@ import type {
   getAccountSubcategoriesByCategory,
 } from "~/modules/accounting";
 import { path } from "~/utils/path";
+import type { SelectProps } from "./Select";
+
+type AccountSubcategorySelectProps = Omit<
+  SelectProps,
+  "options" | "onChange"
+> & {
+  accountCategoryId?: string;
+  onChange?: (accountCategory: AccountSubcategoryType | undefined) => void;
+};
 
 const AccountSubcategory = ({
   name,
@@ -22,15 +31,7 @@ const AccountSubcategory = ({
   isReadOnly = false,
   placeholder = "Select Account Subcategory",
   onChange,
-}: {
-  name: string;
-  label?: string;
-  accountCategoryId?: string;
-  placeholder?: string;
-  helperText?: string;
-  isReadOnly?: boolean;
-  onChange?: (newValue?: AccountSubcategoryType) => void;
-}) => {
+}: AccountSubcategorySelectProps) => {
   const { error, getInputProps, defaultValue } = useField(name);
 
   const [accountSubcategory, setAccountSubcategory] = useControlField<{
@@ -101,7 +102,6 @@ const AccountSubcategory = ({
         options={accountSubcategories}
         value={accountSubcategory}
         onChange={handleChange}
-        // @ts-ignore
         isReadOnly={isReadOnly}
         w="full"
       />

@@ -12,14 +12,11 @@ import type { getCurrenciesList } from "~/modules/accounting";
 import { path } from "~/utils/path";
 import type { SelectProps } from "./Select";
 
-type CurrencySelectProps = Omit<SelectProps, "options"> & {
-  currency?: string;
-};
+type CurrencySelectProps = Omit<SelectProps, "options"> & {};
 
 const Currency = ({
   name,
   label = "Currency",
-  currency,
   helperText,
   isLoading,
   isReadOnly,

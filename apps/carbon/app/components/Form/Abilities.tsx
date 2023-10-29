@@ -14,7 +14,6 @@ import { path } from "~/utils/path";
 import type { SelectProps } from "./Select";
 
 type AbilitiesSelectProps = Omit<SelectProps, "options" | "onChange"> & {
-  ability?: string;
   onChange?: (
     selections: MultiValue<{
       value: string;
@@ -26,7 +25,6 @@ type AbilitiesSelectProps = Omit<SelectProps, "options" | "onChange"> & {
 const Abilities = ({
   name,
   label = "Abilities",
-  ability,
   helperText,
   isLoading,
   isReadOnly,

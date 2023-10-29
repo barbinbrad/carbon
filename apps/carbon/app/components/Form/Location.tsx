@@ -14,7 +14,6 @@ import type { SelectProps } from "./Select";
 
 type LocationSelectProps = Omit<SelectProps, "options" | "onChange"> & {
   isClearable?: boolean;
-  location?: string;
   onChange?: (
     selected: {
       value: string | number;
@@ -26,7 +25,6 @@ type LocationSelectProps = Omit<SelectProps, "options" | "onChange"> & {
 const Location = ({
   name,
   label = "Location",
-  location,
   helperText,
   isLoading,
   isClearable,
@@ -91,7 +89,6 @@ const Location = ({
         isLoading={isLoading}
         options={options}
         placeholder={placeholder}
-        // @ts-ignore
         onChange={handleChange}
       />
       {error ? (

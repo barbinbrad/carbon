@@ -28,6 +28,7 @@ import Radios from "./Radios";
 import RichText from "./RichText";
 import Select from "./Select";
 import SelectControlled from "./SelectControlled";
+import Sequence from "./Sequence";
 import Slider from "./Slider";
 import Submit from "./Submit";
 import Supplier from "./Supplier";
@@ -70,6 +71,7 @@ export {
   RichText,
   Select,
   SelectControlled,
+  Sequence,
   Slider,
   Submit,
   Supplier,

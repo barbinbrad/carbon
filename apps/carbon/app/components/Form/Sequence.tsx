@@ -1,4 +1,3 @@
-import type { SingleValue } from "@carbon/react";
 import { Select, useMount } from "@carbon/react";
 import {
   FormControl,
@@ -9,57 +8,53 @@ import {
 import { useFetcher } from "@remix-run/react";
 import { useEffect, useMemo } from "react";
 import { useControlField, useField } from "remix-validated-form";
-import type { getAbilitiesList } from "~/modules/resources";
+import type { getSequencesList } from "~/modules/settings";
 import { path } from "~/utils/path";
 import type { SelectProps } from "./Select";
 
-type AbilitySelectProps = Omit<SelectProps, "options" | "onChange"> & {
-  onChange?: (
-    selection: SingleValue<{
-      value: string | number;
-      label: string;
-    }>
-  ) => void;
+type SequenceSelectProps = Omit<SelectProps, "options"> & {
+  table: string;
 };
 
-const Ability = ({
+const Sequence = ({
   name,
-  label = "Ability",
+  label = "Sequence",
+  table,
   helperText,
   isLoading,
   isReadOnly,
-  placeholder = "Select Ability",
+  placeholder = "Select Sequence",
   onChange,
   ...props
-}: AbilitySelectProps) => {
+}: SequenceSelectProps) => {
   const { error, defaultValue } = useField(name);
   const [value, setValue] = useControlField<string | undefined>(name);
 
-  const abilityFetcher =
-    useFetcher<Awaited<ReturnType<typeof getAbilitiesList>>>();
+  const sequenceFetcher =
+    useFetcher<Awaited<ReturnType<typeof getSequencesList>>>();
 
   useMount(() => {
-    abilityFetcher.load(path.to.api.abilities);
+    sequenceFetcher.load(path.to.api.sequences(table));
   });
 
   const options = useMemo(
     () =>
-      abilityFetcher.data?.data
-        ? abilityFetcher.data?.data.map((c) => ({
+      sequenceFetcher.data?.data
+        ? sequenceFetcher.data?.data.map((c) => ({
             value: c.id,
-            label: c.name,
+            label: c.id,
           }))
         : [],
-    [abilityFetcher.data]
+    [sequenceFetcher.data]
   );
 
-  const handleChange = (
-    selection: SingleValue<{
-      value: string | number;
-      label: string;
-    }>
-  ) => {
-    const newValue = (selection?.value as string) || undefined;
+  console.log(sequenceFetcher.data?.data);
+
+  const handleChange = (selection: {
+    value: string | number;
+    label: string;
+  }) => {
+    const newValue = (selection.value as string) || undefined;
     setValue(newValue);
     if (onChange && typeof onChange === "function") {
       onChange(selection);
@@ -67,7 +62,8 @@ const Ability = ({
   };
 
   const controlledValue = useMemo(
-    () => options.find((option) => option.value === value),
+    () =>
+      options.find((option) => option.value === value) ?? options?.[0] ?? null,
     [value, options]
   );
 
@@ -89,6 +85,7 @@ const Ability = ({
         isLoading={isLoading}
         options={options}
         placeholder={placeholder}
+        // @ts-ignore
         onChange={handleChange}
       />
       {error ? (
@@ -100,6 +97,6 @@ const Ability = ({
   );
 };
 
-Ability.displayName = "Ability";
+Sequence.displayName = "Sequence";
 
-export default Ability;
+export default Sequence;

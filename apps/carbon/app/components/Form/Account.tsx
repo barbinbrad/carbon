@@ -12,14 +12,11 @@ import type { getAccountsList } from "~/modules/accounting";
 import { path } from "~/utils/path";
 import type { SelectProps } from "./Select";
 
-type AccountSelectProps = Omit<SelectProps, "options"> & {
-  account?: string;
-};
+type AccountSelectProps = Omit<SelectProps, "options">;
 
 const Account = ({
   name,
   label = "Account",
-  account,
   helperText,
   isLoading,
   isReadOnly,

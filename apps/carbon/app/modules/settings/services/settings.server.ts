@@ -83,6 +83,13 @@ export async function getSequences(
   return query;
 }
 
+export async function getSequencesList(
+  client: SupabaseClient<Database>,
+  table: string
+) {
+  return client.from("sequence").select("id").eq("table", table);
+}
+
 export async function rollbackNextSequence(
   client: SupabaseClient<Database>,
   table: string,

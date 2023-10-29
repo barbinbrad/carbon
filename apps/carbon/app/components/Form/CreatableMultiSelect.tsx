@@ -5,17 +5,10 @@ import {
   FormHelperText,
   FormLabel,
 } from "@chakra-ui/react";
-
 import { useControlField, useField } from "remix-validated-form";
+import type { SelectProps } from "./Select";
 
-export type SelectProps = {
-  name: string;
-  label?: string;
-  options: { value: string | number; label: string }[];
-  helperText?: string;
-  isReadOnly?: boolean;
-  isLoading?: boolean;
-  placeholder?: string;
+export type CreatableMultiSelectProps = Omit<SelectProps, "onChange"> & {
   onChange?: (
     newValue: { value: string | number; label: string }[] | null
   ) => void;
@@ -33,7 +26,7 @@ const Select = ({
   onChange,
   onUsingCreatedChanged,
   ...props
-}: SelectProps) => {
+}: CreatableMultiSelectProps) => {
   const { error } = useField(name);
   const [value, setValue] = useControlField<string[]>(name);
 
@@ -45,7 +38,7 @@ const Select = ({
     onUsingCreatedChanged?.(false);
   };
 
-  const handleCreate = (inputValue: string) => {
+  const onCreateOption = (inputValue: string) => {
     setValue([...value, inputValue]);
     onChange?.(
       value.map((value) => ({
@@ -90,7 +83,7 @@ const Select = ({
         options={options}
         placeholder={placeholder}
         w="full"
-        onCreateOption={handleCreate}
+        onCreateOption={onCreateOption}
         // @ts-ignore
         onChange={handleChange}
       />

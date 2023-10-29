@@ -12,14 +12,11 @@ import type { getDepartmentsList } from "~/modules/resources";
 import { path } from "~/utils/path";
 import type { SelectProps } from "./Select";
 
-type DepartmentSelectProps = Omit<SelectProps, "options"> & {
-  department?: string;
-};
+type DepartmentSelectProps = Omit<SelectProps, "options">;
 
 const Department = ({
   name,
   label = "Department",
-  department,
   helperText,
   isLoading,
   isReadOnly,

@@ -4,8 +4,8 @@ import {
   Card,
   CardBody,
   CardHeader,
-  Heading,
   HStack,
+  Heading,
   Stack,
   Text,
   VStack,
@@ -28,13 +28,8 @@ const PurchaseOrderHeader = () => {
   );
 
   // TODO: factor in default currency, po currency and exchange rate
-  // const currencyFormatter = useMemo(
-  //   () =>
-  //     new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }),
-  //   []
-  // );
 
-  const { receive, release } = usePurchaseOrder();
+  const { receive, release, invoice } = usePurchaseOrder();
 
   return (
     <VStack w="full" alignItems="start" spacing={2}>
@@ -42,7 +37,9 @@ const PurchaseOrderHeader = () => {
         <Menubar>
           <MenubarItem
             onClick={() => {
-              if (routeData?.purchaseOrder) release(routeData.purchaseOrder);
+              if (!routeData?.purchaseOrder)
+                throw new Error("purchaseOrder not found");
+              release(routeData.purchaseOrder);
             }}
             isDisabled={
               !["Draft", "Approved"].includes(
@@ -54,7 +51,9 @@ const PurchaseOrderHeader = () => {
           </MenubarItem>
           <MenubarItem
             onClick={() => {
-              if (routeData?.purchaseOrder) receive(routeData.purchaseOrder);
+              if (!routeData?.purchaseOrder)
+                throw new Error("purchaseOrder not found");
+              receive(routeData.purchaseOrder);
             }}
             isDisabled={
               routeData?.purchaseOrder?.status !== "To Receive" &&
@@ -62,6 +61,19 @@ const PurchaseOrderHeader = () => {
             }
           >
             Receive
+          </MenubarItem>
+          <MenubarItem
+            onClick={() => {
+              if (!routeData?.purchaseOrder)
+                throw new Error("purchaseOrder not found");
+              invoice(routeData.purchaseOrder);
+            }}
+            isDisabled={
+              routeData?.purchaseOrder?.status !== "To Invoice" &&
+              routeData?.purchaseOrder?.status !== "To Receive and Invoice"
+            }
+          >
+            Invoice
           </MenubarItem>
         </Menubar>
       )}

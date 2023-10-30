@@ -18,8 +18,8 @@ import {
   ModalContent,
   ModalOverlay,
   Text,
-  useDisclosure,
   VStack,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { Link, useNavigate } from "@remix-run/react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -126,20 +126,36 @@ const SearchModal = ({
         }
       };
 
+      const next = () => {
+        setSelectedIndex((prev) => {
+          const newIndex = clip(prev + 1, 0, results.length - 1);
+          scrollToListItem(newIndex);
+          return newIndex;
+        });
+      };
+
+      const prev = () => {
+        setSelectedIndex((prev) => {
+          const newIndex = clip(prev - 1, 0, results.length - 1);
+          scrollToListItem(newIndex);
+          return newIndex;
+        });
+      };
+
       switch (event.code) {
+        case "Tab":
+          event.preventDefault();
+          if (event.shiftKey) {
+            prev();
+          } else {
+            next();
+          }
+          break;
         case "ArrowDown":
-          setSelectedIndex((prev) => {
-            const newIndex = clip(prev + 1, 0, results.length - 1);
-            scrollToListItem(newIndex);
-            return newIndex;
-          });
+          next();
           break;
         case "ArrowUp":
-          setSelectedIndex((prev) => {
-            const newIndex = clip(prev - 1, 0, results.length - 1);
-            scrollToListItem(newIndex);
-            return newIndex;
-          });
+          prev();
           break;
         case "Enter":
           const selectedResult = results[selectedIndex];
@@ -195,6 +211,8 @@ const SearchModal = ({
               variant="flushed"
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={onKeyDown}
+              borderTopLeftRadius="lg"
+              borderTopRightRadius="lg"
               _focus={{
                 borderBottomColor: "transparent",
                 boxShadow: "none",

@@ -53,6 +53,14 @@ export const usePurchaseOrder = () => {
     [insertTransaction, supabase, user?.id]
   );
 
+  const invoice = useCallback(
+    (purchaseOrder: PurchaseOrder) =>
+      navigate(
+        `${path.to.newPurchaseInvoice}?sourceDocument=Purchase Order&sourceDocumentId=${purchaseOrder.id}`
+      ),
+    [navigate]
+  );
+
   const receive = useCallback(
     (purchaseOrder: PurchaseOrder) =>
       navigate(
@@ -85,6 +93,7 @@ export const usePurchaseOrder = () => {
   return {
     edit,
     favorite,
+    invoice,
     receive,
     release,
   };

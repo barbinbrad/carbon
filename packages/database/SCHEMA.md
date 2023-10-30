@@ -4367,7 +4367,6 @@ CREATE TABLE "shippingTerm" (
 
 
 CREATE TYPE "purchaseOrderType" AS ENUM (
-  'Draft',
   'Purchase', 
   'Return'
 );

@@ -17,7 +17,7 @@ serve(async (req: Request) => {
   const { receiptId } = await req.json();
 
   try {
-    if (!receiptId) throw new Error("No receiptId provided");
+    if (!receiptId) throw new Error("Payload is missing receiptId");
 
     const client = getSupabaseServiceRole(req.headers.get("Authorization"));
 
@@ -227,6 +227,22 @@ serve(async (req: Request) => {
               .updateTable("purchaseOrderLine")
               .set(update)
               .where("id", "=", purchaseOrderLineId)
+              .execute();
+          }
+
+          const areAllLinesReceived = Object.values(
+            purchaseOrderLineUpdates
+          ).every((line) => line.receivedComplete);
+
+          const isInvoiced = purchaseOrder.data.status === "To Receive";
+
+          if (areAllLinesReceived) {
+            await trx
+              .updateTable("purchaseOrder")
+              .set({
+                status: isInvoiced ? "Completed" : "To Invoice",
+              })
+              .where("id", "=", purchaseOrder.data.id)
               .execute();
           }
 

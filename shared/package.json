@@ -20,7 +20,7 @@
     "@remix-run/node": "~2.0.0",
     "@remix-run/react": "~2.0.0",
     "@remix-run/serve": "~2.0.0",
-    "@supabase/supabase-js": "^2.33.1",
+    "@supabase/supabase-js": "^2.38.4",
     "@trigger.dev/react": "^2.2.2",
     "@trigger.dev/remix": "^2.2.2",
     "@trigger.dev/sdk": "^2.2.2",

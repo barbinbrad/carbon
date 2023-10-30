@@ -64,6 +64,7 @@ const ReceiptForm = ({
     onClose,
     onPost,
     setLocationId,
+    setReceiptLines,
     setSourceDocument,
     setSourceDocumentId,
   } = useReceiptForm({
@@ -172,6 +173,7 @@ const ReceiptForm = ({
                   canEdit={!isPosted}
                   contained={false}
                   editableComponents={editableComponents}
+                  onDataChange={setReceiptLines}
                 />
               </VStack>
 

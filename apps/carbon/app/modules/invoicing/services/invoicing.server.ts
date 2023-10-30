@@ -1,11 +1,38 @@
 import type { Database } from "@carbon/database";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { getSupabaseServiceRole } from "~/lib/supabase";
 import { getSupplier } from "~/modules/purchasing";
 import type { TypeOfValidator } from "~/types/validators";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
 import { sanitize } from "~/utils/supabase";
 import type { purchaseInvoiceValidator } from "./invoicing.form";
+
+export async function createPurchaseInvoiceFromPurchaseOrder(
+  purchaseOrderId: string
+) {
+  const client = getSupabaseServiceRole();
+  return client.functions.invoke<{ id: string }>(
+    "create-purchase-invoice-from-purchase-order",
+    {
+      body: {
+        id: purchaseOrderId,
+      },
+    }
+  );
+}
+
+export async function createPurchaseInvoiceFromReceipt(receiptId: string) {
+  const client = getSupabaseServiceRole();
+  return client.functions.invoke<{ id: string }>(
+    "create-purchase-invoice-from-receipt",
+    {
+      body: {
+        id: receiptId,
+      },
+    }
+  );
+}
 
 export async function deletePurchaseInvoice(
   client: SupabaseClient<Database>,

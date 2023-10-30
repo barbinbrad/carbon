@@ -40,6 +40,7 @@ interface GridProps<T extends object> {
   withColumnOrdering?: boolean;
   withNewRow?: boolean;
   withSimpleSorting?: boolean;
+  onDataChange?: (data: T[]) => void;
   onEditRow?: (row: T) => void;
   onNewRow?: () => void;
 }
@@ -54,6 +55,7 @@ const Grid = <T extends object>({
   defaultColumnVisibility,
   withColumnOrdering = false,
   withSimpleSorting = true,
+  onDataChange,
   onEditRow,
   onNewRow,
 }: GridProps<T>) => {
@@ -111,8 +113,8 @@ const Grid = <T extends object>({
       // These are not part of the standard API, but are accessible via table.options.meta
       editableComponents,
       updateData: (rowIndex, columnId, value) => {
-        setInternalData((previousData) =>
-          previousData.map((row, index) => {
+        setInternalData((previousData) => {
+          const newData = previousData.map((row, index) => {
             if (index === rowIndex) {
               if (columnId.includes("_") && !(columnId in row)) {
                 updateNestedProperty(row, columnId, value);
@@ -125,8 +127,12 @@ const Grid = <T extends object>({
               }
             }
             return row;
-          })
-        );
+          });
+          console.log("calling onDataChange", newData);
+          onDataChange?.(newData);
+
+          return newData;
+        });
       },
     },
   });

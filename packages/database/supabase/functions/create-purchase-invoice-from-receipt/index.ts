@@ -1,0 +1,37 @@
+import { serve } from "https://deno.land/std@0.175.0/http/server.ts";
+import { DB, getConnectionPool, getDatabaseClient } from "../lib/database.ts";
+
+import { corsHeaders } from "../lib/headers.ts";
+import { getSupabaseServiceRole } from "../lib/supabase.ts";
+
+const pool = getConnectionPool(1);
+const db = getDatabaseClient<DB>(pool);
+
+serve(async (req: Request) => {
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: corsHeaders });
+  }
+  const { id } = await req.json();
+
+  try {
+    if (!id) throw new Error("Payload is missing id");
+
+    const client = getSupabaseServiceRole(req.headers.get("Authorization"));
+    await db.transaction().execute(async (trx) => {});
+
+    return new Response(
+      JSON.stringify({
+        id: "abc",
+      }),
+      {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      }
+    );
+  } catch (err) {
+    console.error(err);
+    return new Response(JSON.stringify(err), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 500,
+    });
+  }
+});

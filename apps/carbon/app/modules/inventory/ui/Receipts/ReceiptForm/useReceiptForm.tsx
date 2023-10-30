@@ -38,9 +38,10 @@ export default function useReceiptForm({
   const [internalReceiptLines, setReceiptLines] = useState<ReceiptLine[]>(
     receiptLines ?? []
   );
+
   const canPost =
     internalReceiptLines.length > 0 &&
-    internalReceiptLines.some((l) => l.receivedQuantity > 0);
+    internalReceiptLines.some((line) => line.receivedQuantity > 0);
 
   const [locationId, setLocationId] = useState<string | null>(
     receipt.locationId ?? user.defaults.locationId ?? null
@@ -386,6 +387,7 @@ export default function useReceiptForm({
     onClose,
     onPost,
     setLocationId,
+    setReceiptLines,
     setSourceDocument,
     setSourceDocumentId,
   };

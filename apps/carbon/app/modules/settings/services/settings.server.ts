@@ -3,7 +3,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { TypeOfValidator } from "~/types/validators";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
-import { interpolateDate } from "~/utils/string";
+import { interpolateSequenceDate } from "~/utils/string";
 import { sanitize } from "~/utils/supabase";
 import type { sequenceValidator } from "./settings.form";
 
@@ -19,8 +19,8 @@ export async function getCurrentSequence(
   const { prefix, suffix, next, size } = sequence.data;
 
   const currentSequence = next.toString().padStart(size, "0");
-  const derivedPrefix = interpolateDate(prefix);
-  const derivedSuffix = interpolateDate(suffix);
+  const derivedPrefix = interpolateSequenceDate(prefix);
+  const derivedSuffix = interpolateSequenceDate(suffix);
 
   return {
     data: `${derivedPrefix}${currentSequence}${derivedSuffix}`,
@@ -42,8 +42,8 @@ export async function getNextSequence(
 
   const nextValue = next + step;
   const nextSequence = nextValue.toString().padStart(size, "0");
-  const derivedPrefix = interpolateDate(prefix);
-  const derivedSuffix = interpolateDate(suffix);
+  const derivedPrefix = interpolateSequenceDate(prefix);
+  const derivedSuffix = interpolateSequenceDate(suffix);
 
   const update = await updateSequence(client, table, {
     next: nextValue,

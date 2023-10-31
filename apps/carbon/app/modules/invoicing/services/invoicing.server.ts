@@ -9,7 +9,8 @@ import { sanitize } from "~/utils/supabase";
 import type { purchaseInvoiceValidator } from "./invoicing.form";
 
 export async function createPurchaseInvoiceFromPurchaseOrder(
-  purchaseOrderId: string
+  purchaseOrderId: string,
+  userId: string
 ) {
   const client = getSupabaseServiceRole();
   return client.functions.invoke<{ id: string }>(
@@ -17,18 +18,23 @@ export async function createPurchaseInvoiceFromPurchaseOrder(
     {
       body: {
         id: purchaseOrderId,
+        userId: userId,
       },
     }
   );
 }
 
-export async function createPurchaseInvoiceFromReceipt(receiptId: string) {
+export async function createPurchaseInvoiceFromReceipt(
+  receiptId: string,
+  userId: string
+) {
   const client = getSupabaseServiceRole();
   return client.functions.invoke<{ id: string }>(
     "create-purchase-invoice-from-receipt",
     {
       body: {
         id: receiptId,
+        userId: userId,
       },
     }
   );

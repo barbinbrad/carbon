@@ -1,8 +1,3 @@
-export const capitalize = (words: string) => {
-  const [first, ...otherLetters] = words;
-  return [first.toLocaleUpperCase(), ...otherLetters].join("");
-};
-
 // used to generate sequences
 export const interpolateSequenceDate = (value: string | null) => {
   // replace all instances of %{year} with the current year

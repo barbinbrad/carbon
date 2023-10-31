@@ -20,7 +20,7 @@ import { usePermissions } from "~/hooks";
 import { sequenceValidator } from "~/modules/settings";
 import type { TypeOfValidator } from "~/types/validators";
 import { path } from "~/utils/path";
-import { interpolateDate } from "~/utils/string";
+import { interpolateSequenceDate } from "~/utils/string";
 
 type SequenceFormProps = {
   initialValues: TypeOfValidator<typeof sequenceValidator> & {
@@ -39,8 +39,8 @@ const SequenceForm = ({ initialValues }: SequenceFormProps) => {
   const [size, setSize] = useState(initialValues.size ?? 5);
 
   const makePreview = () => {
-    const p = interpolateDate(prefix);
-    const s = interpolateDate(suffix);
+    const p = interpolateSequenceDate(prefix);
+    const s = interpolateSequenceDate(suffix);
 
     return `${p}${next.toString().padStart(size, "0")}${s}`;
   };

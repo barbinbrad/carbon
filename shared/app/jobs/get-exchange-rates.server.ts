@@ -8,7 +8,7 @@ export const job = triggerClient.defineJob({
   name: "Update Currency Exchange Rates",
   version: "0.0.1",
   trigger: intervalTrigger({
-    seconds: 60 * 12, // twice per day
+    seconds: 60 * 60 * 8, // thrice per day
   }),
   run: async (payload, io, ctx) => {
     await io.logger.info(`💵 Exchange Rates Job: ${payload.lastTimestamp}`);

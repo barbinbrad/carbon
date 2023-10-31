@@ -21,7 +21,7 @@ import { error } from "~/utils/result";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   // we don't use the client here -- if they have this permission, we'll upgrade to a service role if needed
-  await requirePermissions(request, {
+  const { userId } = await requirePermissions(request, {
     create: "invoicing",
   });
 
@@ -34,7 +34,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
   switch (sourceDocument) {
     case "Purchase Order":
       if (!sourceDocumentId) throw new Error("Missing sourceDocumentId");
-      result = await createPurchaseInvoiceFromPurchaseOrder(sourceDocumentId);
+      result = await createPurchaseInvoiceFromPurchaseOrder(
+        sourceDocumentId,
+        userId
+      );
 
       if (result.error || !result?.data) {
         return redirect(
@@ -51,7 +54,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     case "Receipt":
       if (!sourceDocumentId) throw new Error("Missing sourceDocumentId");
 
-      result = await createPurchaseInvoiceFromReceipt(sourceDocumentId);
+      result = await createPurchaseInvoiceFromReceipt(sourceDocumentId, userId);
 
       if (result.error || !result?.data) {
         return redirect(

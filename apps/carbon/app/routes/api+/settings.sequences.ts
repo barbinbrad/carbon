@@ -9,8 +9,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   const table = url.searchParams.get("table");
 
-  console.log({ table });
-
   if (!table) {
     return json({
       data: [],

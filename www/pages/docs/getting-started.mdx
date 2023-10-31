@@ -7,7 +7,7 @@ description: Carbon is a high-performance, open-source ERP
 
 Before getting started with development, it's good to have a basic understanding of our [tech stack](/docs/tech-stack).
 
-You'll also need to have [Docker installed](https://docs.docker.com/desktop/install/mac-install/) on your system since this monorepo uses the Docker for local development.
+You'll need to have [node >= 18](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) and [Docker](https://docs.docker.com/desktop/install/mac-install/) installed on your system since this monorepo uses the Docker for local development.
 
 After running the steps below you should be able to access the following apps/containers locally:
 
@@ -23,7 +23,8 @@ After running the steps below you should be able to access the following apps/co
 First download and initialize the repository dependencies.
 
 ```bash
-$ nvm use           # use node v20
+$ git clone https://github.com/barbinbrad/carbon
+$ cd carbon
 $ npm install       # install dependencies
 $ npm run db:start  # pull and run the containers
 ```

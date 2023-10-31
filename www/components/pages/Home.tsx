@@ -12,15 +12,14 @@ export default function Home() {
           content="Carbon is an open-source, high-performance ERP"
         />
       </Head>
-
-      <div className="px-4 py-16 mx-auto sm:pt-20 sm:pb-24 lg:max-w-7xl lg:pt-24">
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="jumbo absolute -inset-[10px] opacity-50"></div>
+      </div>
+      <div className="relative px-4 py-16 mx-auto sm:pt-20 sm:pb-24 lg:max-w-7xl lg:pt-24">
         <div className="flex flex-col justify-between text-center">
           <div>
             <h1 className="max-w-5xl mx-auto nx-text-6xl font-extrabold tracking-tighter leading-[1.1] text-6xl sm:text-7xl lg:nx-text-8xl xl:nx-text-8xl">
-              ERP&nbsp;
-              <span className="pr-1 inline-block text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-blue-500 ">
-                for the builders
-              </span>
+              ERP for the builders
             </h1>
             <p className="mt-6 nx-text-xl font-medium leading-tight text-gray-400 sm:nx-text-2xl md:nx-text-3xl lg:nx-text-4xl">
               Carbon ERP is an open-source, high performance ERP

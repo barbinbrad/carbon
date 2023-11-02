@@ -4,6 +4,10 @@ code {
   @apply text-sm;
 }
 
+:root {
+  --nextra-primary-hue: 161deg;
+}
+
 body {
   background: linear-gradient(
       to bottom,
@@ -39,7 +43,7 @@ body {
   --shiki-token-constant: var(--shiki-color-text);
   --shiki-token-comment: #999;
   --shiki-token-keyword: #ff0078;
-  --shiki-token-function: #0077ff;
+  --shiki-token-function: #12ff00;
   --shiki-token-string-expression: #028265;
   --shiki-token-punctuation: var(--shiki-color-text);
 }
@@ -49,7 +53,7 @@ body {
   --shiki-token-constant: var(--shiki-color-text);
   --shiki-token-comment: #666;
   --shiki-token-keyword: #ff0078;
-  --shiki-token-function: #0099ff;
+  --shiki-token-function: #12ff00;
   --shiki-token-string-expression: #50e3c2;
   --shiki-token-punctuation: var(--shiki-color-text);
 
@@ -148,4 +152,12 @@ code[data-language="sh"] {
 }
 .dark .jumbo::after {
   background-image: var(--stripesDark), var(--rainbow);
+}
+
+.light .nx-text-primary-600 {
+  --tw-text-opacity: 1;
+  color: hsl(
+    var(--nextra-primary-hue) var(--nextra-primary-saturation) 35% /
+      var(--tw-text-opacity)
+  );
 }

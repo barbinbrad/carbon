@@ -1,7 +1,7 @@
 import React from "react";
 import { BsLightningCharge } from "react-icons/bs";
-import { GoSync } from "react-icons/go";
 import { GiSpeedometer } from "react-icons/gi";
+import { GoSync } from "react-icons/go";
 import { HiCode, HiFingerPrint } from "react-icons/hi";
 import { TbBuildingFactory2 } from "react-icons/tb";
 
@@ -38,7 +38,7 @@ function Features() {
       <div className="grid grid-cols-2 gap-6 my-12 sm:grid-cols-3 ">
         {features.map(({ icon: Icon, ...feature }, i) => (
           <div
-            className="flex items-center space-x-4"
+            className="flex items-center p-8 space-x-4 bg-black/[0.07] hover:bg-black/10 dark:bg-zinc-900 dark:hover:bg-zinc-800/50 sm:-inset-x-6 sm:rounded"
             key={feature.name.split(" ").join("-")}
           >
             <div>

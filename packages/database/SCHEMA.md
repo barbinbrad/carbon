@@ -4676,7 +4676,7 @@ CREATE TABLE "sequence" (
   "name" TEXT NOT NULL,
   "prefix" TEXT,
   "suffix" TEXT,
-  "next" BIGINT NOT NULL DEFAULT 1,
+  "next" INTEGER NOT NULL DEFAULT 1,
   "size" INTEGER NOT NULL DEFAULT 5,
   "step" INTEGER NOT NULL DEFAULT 1,
   "updatedAt" TIMESTAMP WITH TIME ZONE,

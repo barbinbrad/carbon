@@ -1,5 +1,5 @@
 // used to generate sequences
-export const interpolateSequenceDate = (value: string | null) => {
+export const interpolateSequenceDate = (value?: string | null) => {
   // replace all instances of %{year} with the current year
   if (!value) return "";
   let result = value;

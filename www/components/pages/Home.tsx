@@ -21,7 +21,7 @@ export default function Home() {
             <h1 className="max-w-5xl mx-auto nx-text-6xl font-extrabold tracking-tighter leading-[1.1] text-6xl sm:text-7xl lg:nx-text-8xl xl:nx-text-8xl">
               ERP for the builders
             </h1>
-            <p className="mt-6 nx-text-xl font-medium leading-tight text-gray-400 sm:nx-text-2xl md:nx-text-3xl lg:nx-text-4xl">
+            <p className="mt-6 nx-text-xl font-medium leading-tight text-black/60 dark:text-white/60 sm:nx-text-2xl md:nx-text-3xl lg:nx-text-4xl">
               Carbon ERP is an open-source, high performance ERP
             </p>
           </div>
@@ -43,7 +43,7 @@ export default function Home() {
           <h2 className="nx-text-4xl font-extrabold tracking-tight lg:nx-text-5xl xl:nx-text-6xl lg:text-center dark:text-white">
             Fully customizable and extensible
           </h2>
-          <p className="mx-auto mt-4 text-lg font-medium text-gray-400 lg:max-w-3xl lg:text-xl lg:text-center">
+          <p className="mx-auto mt-4 text-lg font-medium text-black/60 dark:text-white/60 lg:max-w-3xl lg:text-xl lg:text-center">
             We've taken the best of modern, open-source technology and combined
             it into a lightning-fast, easy-to-use, open-source ERP system.
           </p>

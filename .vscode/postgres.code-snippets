@@ -1,0 +1,33 @@
+{
+  "enum": {
+    "prefix": "/enum",
+    "body": [
+      "CREATE TYPE \"enum\" AS ENUM (",
+      "  'One',",
+      "  'Two',",
+      "  'Three',",
+      ");"
+    ]
+  },
+  "table": {
+    "prefix": "/table",
+    "body": [
+      "CREATE TABLE \"table\" (",
+      "  \"id\" TEXT NOT NULL DEFAULT xid(),",
+      "  \"name\" TEXT NOT NULL,",
+      "",
+      "  CONSTRAINT \"table_pkey\" PRIMARY KEY (\"id\")",
+      ");"
+    ]
+  },
+  "view": {
+    "prefix": "/view",
+    "body": [
+      "CREATE OR REPLACE VIEW \"view\" WITH(SECURITY_INVOKER=true) AS",
+      "  SELECT",
+      "    \"table\".\"id\",",
+      "    \"table\".\"name\"",
+      "  FROM \"table\";"
+    ]
+  }
+}

@@ -1,5 +1,6 @@
 import {
   Button,
+  Input as ChakraInput,
   Drawer,
   DrawerBody,
   DrawerCloseButton,
@@ -10,7 +11,6 @@ import {
   FormControl,
   FormLabel,
   HStack,
-  Input as ChakraInput,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -256,45 +256,52 @@ const PurchaseOrderLineForm = ({
                   }
                 />
               </FormControl>
-              <Number name="purchaseQuantity" label="Quantity" />
-              {/* 
-              // TODO: implement this and replace the UoM in PartForm */}
-              {/* <UnitOfMeasure name="unitOfMeasureCode" label="Unit of Measure" value={uom} /> */}
-              <FormControl>
-                <FormLabel htmlFor="unitPrice">Unit Cost</FormLabel>
-                <NumberInput
-                  name="unitPrice"
-                  value={partData.unitPrice}
-                  onChange={(value) =>
-                    setPartData((d) => ({
-                      ...d,
-                      unitPrice: value,
-                    }))
-                  }
-                >
-                  <NumberInputField />
-                  <NumberInputStepper>
-                    <NumberIncrementStepper />
-                    <NumberDecrementStepper />
-                  </NumberInputStepper>
-                </NumberInput>
-              </FormControl>
-              <SelectControlled
-                name="locationId"
-                label="Location"
-                options={locationOptions}
-                value={locationId}
-                onChange={onLocationChange}
-              />
-              <SelectControlled
-                name="shelfId"
-                label="Shelf"
-                options={shelfOptions}
-                value={partData.shelfId}
-                onChange={(newValue) =>
-                  setPartData((d) => ({ ...d, shelfId: newValue as string }))
-                }
-              />
+              {type !== "Comment" && (
+                <>
+                  <Number name="purchaseQuantity" label="Quantity" />
+                  {/* 
+                // TODO: implement this and replace the UoM in PartForm */}
+                  {/* <UnitOfMeasure name="unitOfMeasureCode" label="Unit of Measure" value={uom} /> */}
+                  <FormControl>
+                    <FormLabel htmlFor="unitPrice">Unit Cost</FormLabel>
+                    <NumberInput
+                      name="unitPrice"
+                      value={partData.unitPrice}
+                      onChange={(value) =>
+                        setPartData((d) => ({
+                          ...d,
+                          unitPrice: value,
+                        }))
+                      }
+                    >
+                      <NumberInputField />
+                      <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                      </NumberInputStepper>
+                    </NumberInput>
+                  </FormControl>
+                  <SelectControlled
+                    name="locationId"
+                    label="Location"
+                    options={locationOptions}
+                    value={locationId}
+                    onChange={onLocationChange}
+                  />
+                  <SelectControlled
+                    name="shelfId"
+                    label="Shelf"
+                    options={shelfOptions}
+                    value={partData.shelfId}
+                    onChange={(newValue) =>
+                      setPartData((d) => ({
+                        ...d,
+                        shelfId: newValue as string,
+                      }))
+                    }
+                  />
+                </>
+              )}
             </VStack>
           </DrawerBody>
           <DrawerFooter>

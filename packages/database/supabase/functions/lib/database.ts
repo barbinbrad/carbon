@@ -4,7 +4,7 @@ import {
   PostgresAdapter,
   PostgresIntrospector,
   PostgresQueryCompiler,
-} from "https://esm.sh/kysely@0.23.4";
+} from "https://esm.sh/kysely@0.26.3";
 import { Database } from "../../../src/types.ts";
 import { PostgresDriver } from "../lib/driver.ts";
 

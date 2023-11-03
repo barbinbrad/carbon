@@ -75,6 +75,8 @@ CREATE POLICY "Employees with invoicing_delete can delete AP invoices" ON "purch
     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
   );
 
+
+
 CREATE TABLE "purchaseInvoiceStatusHistory" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "invoiceId" TEXT NOT NULL,
@@ -158,6 +160,62 @@ CREATE POLICY "Employees with invoicing_delete can delete AP invoice lines" ON "
     coalesce(get_my_claim('invoicing_delete')::boolean, false) = true 
     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
   );
+
+CREATE TABLE "purchaseInvoicePriceChange" (
+  "id" TEXT NOT NULL DEFAULT xid(),
+  "invoiceId" TEXT NOT NULL,
+  "invoiceLineId" TEXT NOT NULL,
+  "previousPrice" NUMERIC(10, 2) NOT NULL DEFAULT 0,
+  "newPrice" NUMERIC(10, 2) NOT NULL DEFAULT 0,
+  "previousQuantity" NUMERIC(10, 2) NOT NULL DEFAULT 0,
+  "newQuantity" NUMERIC(10, 2) NOT NULL DEFAULT 0,
+  "updatedBy" TEXT NOT NULL,
+
+  CONSTRAINT "purchaseInvoicePriceChange_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "purchaseInvoicePriceChange_invoiceId_fkey" FOREIGN KEY ("invoiceId") REFERENCES "purchaseInvoice" ("id") ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT "purchaseInvoicePriceChange_invoiceLineId_fkey" FOREIGN KEY ("invoiceLineId") REFERENCES "purchaseInvoiceLine" ("id") ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT "purchaseInvoicePriceChange_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON UPDATE CASCADE ON DELETE RESTRICT
+);
+
+ALTER TABLE "purchaseInvoicePriceChange" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Employees with invoicing_view can view AP invoice price changes" ON "purchaseInvoicePriceChange"
+  FOR SELECT
+  USING (
+    coalesce(get_my_claim('invoicing_view')::boolean,false) 
+    AND (get_my_claim('role'::text)) = '"employee"'::jsonb
+  );
+
+CREATE OR REPLACE FUNCTION "purchaseInvoiceLine_update_price_change"()
+  RETURNS TRIGGER AS $$
+  BEGIN
+    IF NEW."unitPrice" <> OLD."unitPrice" OR NEW."quantity" <> OLD."quantity" THEN
+      INSERT INTO "purchaseInvoicePriceChange" (
+        "invoiceId",
+        "invoiceLineId",
+        "previousPrice",
+        "newPrice",
+        "previousQuantity",
+        "newQuantity",
+        "updatedBy"
+      ) VALUES (
+        NEW."invoiceId",
+        NEW."id",
+        OLD."unitPrice",
+        NEW."unitPrice",
+        OLD."quantity",
+        NEW."quantity",
+        NEW."updatedBy"
+      );
+    END IF;
+    RETURN NEW;
+  END;
+  $$ LANGUAGE plpgsql;
+
+CREATE TRIGGER "purchaseInvoiceLine_update_price_change"
+  AFTER UPDATE ON "purchaseInvoiceLine"
+  FOR EACH ROW
+  EXECUTE PROCEDURE "purchaseInvoiceLine_update_price_change"();
 
 CREATE TABLE "purchasePayment" (
   "id" TEXT NOT NULL DEFAULT xid(),

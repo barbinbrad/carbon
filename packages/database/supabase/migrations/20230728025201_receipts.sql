@@ -25,7 +25,7 @@ CREATE TABLE "receipt" (
   "externalDocumentId" TEXT,
   "supplierId" TEXT,
   "status" "receiptStatus" NOT NULL DEFAULT 'Draft',
-  "postingDate" DATE,
+  "postingDate" DATE DEFAULT CURRENT_DATE,
   "invoiced" BOOLEAN DEFAULT FALSE,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   "createdBy" TEXT NOT NULL,

@@ -4778,6 +4778,70 @@ export interface Database {
           }
         ]
       }
+      purchaseInvoicePriceChange: {
+        Row: {
+          id: string
+          invoiceId: string
+          invoiceLineId: string
+          newPrice: number
+          newQuantity: number
+          previousPrice: number
+          previousQuantity: number
+          updatedBy: string
+        }
+        Insert: {
+          id?: string
+          invoiceId: string
+          invoiceLineId: string
+          newPrice?: number
+          newQuantity?: number
+          previousPrice?: number
+          previousQuantity?: number
+          updatedBy: string
+        }
+        Update: {
+          id?: string
+          invoiceId?: string
+          invoiceLineId?: string
+          newPrice?: number
+          newQuantity?: number
+          previousPrice?: number
+          previousQuantity?: number
+          updatedBy?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "purchaseInvoicePriceChange_invoiceId_fkey"
+            columns: ["invoiceId"]
+            referencedRelation: "purchaseInvoice"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseInvoicePriceChange_invoiceId_fkey"
+            columns: ["invoiceId"]
+            referencedRelation: "purchaseInvoices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseInvoicePriceChange_invoiceLineId_fkey"
+            columns: ["invoiceLineId"]
+            referencedRelation: "purchaseInvoiceLine"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseInvoicePriceChange_updatedBy_fkey"
+            columns: ["updatedBy"]
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseInvoicePriceChange_updatedBy_fkey"
+            columns: ["updatedBy"]
+            referencedRelation: "userDefaults"
+            referencedColumns: ["userId"]
+          }
+        ]
+      }
       purchaseInvoiceStatusHistory: {
         Row: {
           createdAt: string

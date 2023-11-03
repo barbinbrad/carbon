@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.175.0/http/server.ts";
-import { format } from "https://deno.land/std@0.91.0/datetime/mod.ts";
+import { format } from "https://deno.land/std@0.205.0/datetime/mod.ts";
 import type { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2.33.1";
 import type { Database } from "../../../src/types.ts";
 import { DB, getConnectionPool, getDatabaseClient } from "../lib/database.ts";
@@ -15,6 +15,9 @@ serve(async (req: Request) => {
     return new Response("ok", { headers: corsHeaders });
   }
   const { receiptId } = await req.json();
+
+  const today = format(new Date(), "yyyy-MM-dd");
+  console.log(`Inserting date: ${today}`);
 
   try {
     if (!receiptId) throw new Error("Payload is missing receiptId");
@@ -249,7 +252,7 @@ serve(async (req: Request) => {
           await trx
             .updateTable("purchaseOrderDelivery")
             .set({
-              deliveryDate: format(new Date(), "yyyy-MM-dd"),
+              deliveryDate: today,
               locationId: receipt.data.locationId,
             })
             .where("id", "=", receipt.data.sourceDocumentId)
@@ -266,7 +269,7 @@ serve(async (req: Request) => {
             .values({
               accountingPeriodId,
               description: `Purchase Receipt ${receipt.data.receiptId}`,
-              postingDate: format(new Date(), "yyyy-MM-dd"),
+              postingDate: today,
             })
             .returning(["id"])
             .execute();
@@ -337,7 +340,7 @@ serve(async (req: Request) => {
             .updateTable("receipt")
             .set({
               status: "Posted",
-              postingDate: format(new Date(), "yyyy-MM-dd"),
+              postingDate: today,
             })
             .where("id", "=", receiptId)
             .execute();

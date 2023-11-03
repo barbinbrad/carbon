@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.175.0/http/server.ts";
 import { DB, getConnectionPool, getDatabaseClient } from "../lib/database.ts";
 
+import { Database } from "../../../src/types.ts";
 import { corsHeaders } from "../lib/headers.ts";
 import { getSupabaseServiceRole } from "../lib/supabase.ts";
 import { getNextSequence } from "../shared/get-next-sequence.ts";
@@ -91,6 +92,51 @@ serve(async (req: Request) => {
 
       if (!purchaseInvoice.id) throw new Error("Purchase invoice not created");
       purchaseInvoiceId = purchaseInvoice.id;
+
+      const purchaseInvoiceLines = uninvoicedLines?.reduce<
+        Database["public"]["Tables"]["purchaseInvoiceLine"]["Insert"][]
+      >((acc, line) => {
+        if (
+          line.purchaseOrderLineType !== "Comment" &&
+          line?.quantityToInvoice &&
+          line.quantityToInvoice > 0
+        ) {
+          acc.push({
+            invoiceId: purchaseInvoiceId,
+            invoiceLineType: line.purchaseOrderLineType,
+            partId: line.partId,
+            accountNumber: line.accountNumber,
+            assetId: line.assetId,
+            description: line.description,
+            quantity: line.quantityToInvoice,
+            unitPrice: line.unitPrice ?? 0,
+            // TODO: currency code and exchange rate
+            currencyCode: "USD",
+            exchangeRate: 1,
+            createdBy: userId,
+          });
+        }
+        return acc;
+      }, []);
+
+      if (uninvoicedLines && uninvoicedLines.length) {
+        for await (const purchaseOrderLine of uninvoicedLines ?? []) {
+          await trx
+            .updateTable("purchaseOrderLine")
+            .set({
+              quantityInvoiced:
+                (purchaseOrderLine.quantityInvoiced ?? 0) +
+                (purchaseOrderLine.quantityToInvoice ?? 0),
+            })
+            .where("id", "=", purchaseOrderLine.id)
+            .execute();
+        }
+      }
+
+      await trx
+        .insertInto("purchaseInvoiceLine")
+        .values(purchaseInvoiceLines)
+        .execute();
 
       await trx
         .updateTable("purchaseOrder")

@@ -4,16 +4,16 @@ import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
 import { useRouteData } from "~/hooks";
 import {
+  PartInventoryForm,
   getPartInventory,
   getPartQuantities,
   getShelvesList,
   insertShelf,
-  PartInventoryForm,
   partInventoryValidator,
   upsertPartInventory,
 } from "~/modules/parts";
 import { getLocationsList } from "~/modules/resources";
-import { getUserDefaults } from "~/modules/users";
+import { getUserDefaults } from "~/modules/users/users.server";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import type { ListItem } from "~/types";

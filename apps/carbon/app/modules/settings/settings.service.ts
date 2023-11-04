@@ -5,7 +5,7 @@ import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
 import { interpolateSequenceDate } from "~/utils/string";
 import { sanitize } from "~/utils/supabase";
-import type { sequenceValidator } from "./settings.form";
+import type { sequenceValidator } from "./settings.models";
 
 export async function getCurrentSequence(
   client: SupabaseClient<Database>,

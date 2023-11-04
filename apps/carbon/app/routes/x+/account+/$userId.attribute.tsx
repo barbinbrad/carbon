@@ -9,7 +9,7 @@ import {
   upsertUserAttributeValue,
 } from "~/modules/account";
 import { getAttribute } from "~/modules/resources";
-import { getUserClaims } from "~/modules/users";
+import { getUserClaims } from "~/modules/users/users.server";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
@@ -30,7 +30,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const attributeId = formData.get("userAttributeId") as string;
   if (!attributeId) throw new Error("No attribute id provided");
 
-  const clientClaims = await getUserClaims(request, client);
+  const clientClaims = await getUserClaims(request);
   const canUpdateAnyUser = clientClaims.permissions["users"]?.update === true;
 
   if (!canUpdateAnyUser && userId !== targetUserId) {

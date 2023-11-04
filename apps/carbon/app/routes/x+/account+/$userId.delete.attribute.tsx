@@ -2,7 +2,7 @@ import type { ActionFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { deleteUserAttributeValue } from "~/modules/account";
 import { getAttribute } from "~/modules/resources";
-import { getUserClaims } from "~/modules/users";
+import { getUserClaims } from "~/modules/users/users.server";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";
@@ -26,7 +26,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const userAttributeValueId = formData.get("userAttributeValueId") as string;
   if (!userAttributeValueId) throw new Error("No attribute value id provided");
 
-  const clientClaims = await getUserClaims(request, client);
+  const clientClaims = await getUserClaims(request);
   const canUpdateAnyUser =
     clientClaims.permissions["resources"]?.update === true;
 

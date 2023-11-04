@@ -5,7 +5,7 @@ import type { ReceiptSourceDocument } from "~/modules/inventory";
 import { upsertReceipt } from "~/modules/inventory";
 import { getPurchaseOrder } from "~/modules/purchasing";
 import { getNextSequence, rollbackNextSequence } from "~/modules/settings";
-import { getUserDefaults } from "~/modules/users";
+import { getUserDefaults } from "~/modules/users/users.server";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { path } from "~/utils/path";

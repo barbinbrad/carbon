@@ -7,7 +7,7 @@ import { sanitize } from "~/utils/supabase";
 import type {
   documentLabelsValidator,
   documentValidator,
-} from "./documents.form";
+} from "./documents.models";
 
 export async function deleteDocument(
   client: SupabaseClient<Database>,

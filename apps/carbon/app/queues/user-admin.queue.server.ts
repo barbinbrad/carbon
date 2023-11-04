@@ -1,6 +1,6 @@
 import { Queue } from "~/lib/bullmq";
 import { getSupabaseServiceRole } from "~/lib/supabase";
-import { deactivateUser, resendInvite } from "~/modules/users";
+import { deactivateUser, resendInvite } from "~/modules/users/users.server";
 
 export enum UserAdminQueueType {
   Resend = "resend",

@@ -8,10 +8,10 @@ import {
   employeeTypeValidator,
   getEmployeeType,
   getPermissionsByEmployeeType,
-  makePermissionsFromEmployeeType,
   upsertEmployeeType,
   upsertEmployeeTypePermissions,
 } from "~/modules/users";
+import { makePermissionsFromEmployeeType } from "~/modules/users/users.server";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";

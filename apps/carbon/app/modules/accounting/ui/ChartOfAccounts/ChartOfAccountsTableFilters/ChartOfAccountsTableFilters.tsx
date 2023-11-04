@@ -16,7 +16,7 @@ import { Link } from "@remix-run/react";
 import { IoMdAdd } from "react-icons/io";
 import { MdCalendarMonth, MdClose } from "react-icons/md";
 import { usePermissions, useUrlParams } from "~/hooks";
-import { incomeBalanceTypes } from "~/modules/accounting/services";
+import { incomeBalanceTypes } from "~/modules/accounting";
 
 const CurrenciesTableFilters = () => {
   const [params, setParams] = useUrlParams();

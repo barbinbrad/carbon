@@ -1,9 +1,10 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
+import { getSupabaseServiceRole } from "~/lib/supabase";
 import {
-  insertSupplierContact,
   SupplierContactForm,
+  insertSupplierContact,
   supplierContactValidator,
 } from "~/modules/purchasing";
 import { requirePermissions } from "~/services/auth";
@@ -14,9 +15,12 @@ import { error, success } from "~/utils/result";
 
 export async function action({ request, params }: ActionFunctionArgs) {
   assertIsPost(request);
-  const { client } = await requirePermissions(request, {
+  await requirePermissions(request, {
     create: "purchasing",
   });
+
+  // RLS doesn't work for selecting a contact with no supplier
+  const client = getSupabaseServiceRole();
 
   const { supplierId } = params;
   if (!supplierId) throw notFound("supplierId not found");

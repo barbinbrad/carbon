@@ -1,5 +1,10 @@
 {
-  "include": ["remix.env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": [
+    "remix.env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "app/modules/documents/documents.service.ts"
+  ],
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "ES2019"],
     "esModuleInterop": true,

@@ -13,7 +13,7 @@ import { json, redirect } from "@remix-run/node";
 import { useNavigate } from "@remix-run/react";
 import { ValidatedForm, validationError } from "remix-validated-form";
 import { Password, Submit } from "~/components/Form";
-import { resetPassword } from "~/modules/users";
+import { resetPassword } from "~/modules/users/users.server";
 import { resetPasswordValidator } from "~/services/auth";
 import { flash, requireAuthSession } from "~/services/session";
 import { assertIsPost } from "~/utils/http";

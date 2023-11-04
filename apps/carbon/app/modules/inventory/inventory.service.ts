@@ -7,7 +7,7 @@ import { sanitize } from "~/utils/supabase";
 import type {
   receiptValidator,
   shippingMethodValidator,
-} from "./inventory.form";
+} from "./inventory.models";
 
 export async function deleteReceipt(
   client: SupabaseClient<Database>,

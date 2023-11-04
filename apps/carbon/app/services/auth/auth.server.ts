@@ -6,7 +6,7 @@ import type {
 } from "@supabase/supabase-js";
 import { REFRESH_ACCESS_TOKEN_THRESHOLD, VERCEL_URL } from "~/config/env";
 import { getSupabase, getSupabaseServiceRole } from "~/lib/supabase";
-import { getUserClaims } from "~/modules/users";
+import { getUserClaims } from "~/modules/users/users.server";
 import { flash, requireAuthSession } from "~/services/session";
 import { path } from "~/utils/path";
 import { error } from "~/utils/result";
@@ -94,7 +94,7 @@ export async function requirePermissions(
   if (Object.keys(requiredPermissions).length === 0)
     return { client, email, userId };
 
-  const myClaims = await getUserClaims(request, client);
+  const myClaims = await getUserClaims(request);
 
   const hasRequiredPermissions = Object.entries(requiredPermissions).every(
     ([action, permission]) => {

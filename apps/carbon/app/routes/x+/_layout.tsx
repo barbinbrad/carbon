@@ -7,14 +7,14 @@ import { Outlet, useLoaderData, useNavigation } from "@remix-run/react";
 import NProgress from "nprogress";
 import { useEffect } from "react";
 import { IconSidebar, Topbar } from "~/components/Layout";
-import { getSupabase, SupabaseProvider } from "~/lib/supabase";
+import { SupabaseProvider, getSupabase } from "~/lib/supabase";
 import { RealtimeDataProvider } from "~/modules/shared";
 import {
   getUser,
   getUserClaims,
   getUserDefaults,
   getUserGroups,
-} from "~/modules/users";
+} from "~/modules/users/users.server";
 import {
   destroyAuthSession,
   getSessionFlash,
@@ -32,7 +32,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const [sessionFlash, user, claims, groups, defaults] = await Promise.all([
     getSessionFlash(request),
     getUser(client, userId),
-    getUserClaims(request, client),
+    getUserClaims(request),
     getUserGroups(client, userId),
     getUserDefaults(client, userId),
   ]);

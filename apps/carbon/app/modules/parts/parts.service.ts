@@ -4,7 +4,6 @@ import type { TypeOfValidator } from "~/types/validators";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
 import { sanitize } from "~/utils/supabase";
-import type { PartReplenishmentSystem } from "../types";
 import type {
   partCostValidator,
   partGroupValidator,
@@ -15,7 +14,8 @@ import type {
   partSupplierValidator,
   partUnitSalePriceValidator,
   partValidator,
-} from "./parts.form";
+} from "./parts.models";
+import type { PartReplenishmentSystem } from "./types";
 
 export async function deletePartGroup(
   client: SupabaseClient<Database>,

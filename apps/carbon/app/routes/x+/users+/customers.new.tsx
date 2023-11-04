@@ -2,10 +2,10 @@ import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
 import {
-  createCustomerAccount,
   createCustomerAccountValidator,
   CreateCustomerModal,
 } from "~/modules/users";
+import { createCustomerAccount } from "~/modules/users/users.server";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";

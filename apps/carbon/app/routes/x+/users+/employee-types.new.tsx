@@ -8,9 +8,9 @@ import {
   employeeTypeValidator,
   getFeatures,
   insertEmployeeType,
-  makeEmptyPermissionsFromFeatures,
   upsertEmployeeTypePermissions,
 } from "~/modules/users";
+import { makeEmptyPermissionsFromFeatures } from "~/modules/users/users.server";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";

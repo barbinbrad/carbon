@@ -6,7 +6,7 @@ import type { TypeOfValidator } from "~/types/validators";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
 import { sanitize } from "~/utils/supabase";
-import type { locationValidator } from "./resources.form";
+import type { locationValidator } from "./resources.models";
 
 export async function deleteAbility(
   client: SupabaseClient<Database>,

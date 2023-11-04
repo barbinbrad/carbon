@@ -5,7 +5,6 @@ import type { TypeOfValidator } from "~/types/validators";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
 import { sanitize } from "~/utils/supabase";
-import type { Account, Transaction } from "../types";
 import type {
   accountCategoryValidator,
   accountSubcategoryValidator,
@@ -17,7 +16,8 @@ import type {
   partLedgerValidator,
   paymentTermValidator,
   valueLedgerValidator,
-} from "./accounting.form";
+} from "./accounting.models";
+import type { Account, Transaction } from "./types";
 
 type AccountWithTotals = Account & { level: number; totaling: string };
 

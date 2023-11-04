@@ -6,13 +6,15 @@ import { validationError } from "remix-validated-form";
 import {
   EmployeePermissionsForm,
   employeeValidator,
-  getClaims,
   getEmployee,
   getEmployeeTypes,
-  makePermissionsFromClaims,
-  updateEmployee,
   userPermissionsValidator,
 } from "~/modules/users";
+import {
+  getClaims,
+  makePermissionsFromClaims,
+  updateEmployee,
+} from "~/modules/users/users.server";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost, notFound } from "~/utils/http";

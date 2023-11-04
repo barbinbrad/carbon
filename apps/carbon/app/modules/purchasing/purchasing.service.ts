@@ -1,7 +1,6 @@
 import type { Database } from "@carbon/database";
 import { getLocalTimeZone, today } from "@internationalized/date";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { getSupabaseServiceRole } from "~/lib/supabase";
 import { getEmployeeJob } from "~/modules/resources";
 import type { TypeOfValidator } from "~/types/validators";
 import type { GenericQueryFilters } from "~/utils/query";
@@ -15,7 +14,7 @@ import type {
   supplierContactValidator,
   supplierTypeValidator,
   supplierValidator,
-} from "./purchasing.form";
+} from "./purchasing.models";
 
 export async function closePurchaseOrder(
   client: SupabaseClient<Database>,
@@ -342,26 +341,6 @@ export async function insertSupplier(
   return client.from("supplier").insert([supplier]).select("id").single();
 }
 
-export async function getUninvoicedReceipts(
-  client: SupabaseClient<Database>,
-  args?: GenericQueryFilters & {
-    supplier: string | null;
-  }
-) {
-  let query = client.from("receiptsPostedNotInvoiced").select("*");
-
-  if (args?.supplier) {
-    query = query.eq("supplierId", args.supplier);
-  }
-
-  if (args)
-    if (args) {
-      query = setGenericQueryFilters(query, args, "name");
-    }
-
-  return query;
-}
-
 export async function insertSupplierContact(
   client: SupabaseClient<Database>,
   supplierContact: {
@@ -369,14 +348,12 @@ export async function insertSupplierContact(
     contact: TypeOfValidator<typeof supplierContactValidator>;
   }
 ) {
-  // Need to use service role here because it violates RLS
-  // to select a contact that does not belong to any supplier
-  // TODO: replace this with a transaction
-  const insertContact = await getSupabaseServiceRole()
+  const insertContact = await client
     .from("contact")
     .insert([supplierContact.contact])
     .select("id")
     .single();
+
   if (insertContact.error) {
     return insertContact;
   }
@@ -396,6 +373,26 @@ export async function insertSupplierContact(
     ])
     .select("id")
     .single();
+}
+
+export async function getUninvoicedReceipts(
+  client: SupabaseClient<Database>,
+  args?: GenericQueryFilters & {
+    supplier: string | null;
+  }
+) {
+  let query = client.from("receiptsPostedNotInvoiced").select("*");
+
+  if (args?.supplier) {
+    query = query.eq("supplierId", args.supplier);
+  }
+
+  if (args)
+    if (args) {
+      query = setGenericQueryFilters(query, args, "name");
+    }
+
+  return query;
 }
 
 export async function insertSupplierLocation(

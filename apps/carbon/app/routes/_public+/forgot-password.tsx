@@ -20,7 +20,7 @@ import { useActionData } from "@remix-run/react";
 import { ValidatedForm, validationError } from "remix-validated-form";
 
 import { Input, Submit } from "~/components/Form";
-import { getUserByEmail } from "~/modules/users";
+import { getUserByEmail } from "~/modules/users/users.server";
 import { forgotPasswordValidator, sendMagicLink } from "~/services/auth";
 import { getAuthSession } from "~/services/session";
 import type { FormActionData, Result } from "~/types";

@@ -1,6 +1,5 @@
 import type { Database } from "@carbon/database";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { getSupabaseServiceRole } from "~/lib/supabase";
 import type { TypeOfValidator } from "~/types/validators";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
@@ -9,7 +8,7 @@ import type {
   customerContactValidator,
   customerTypeValidator,
   customerValidator,
-} from "./sales.form";
+} from "./sales.models";
 
 export async function deleteCustomerContact(
   client: SupabaseClient<Database>,
@@ -205,10 +204,7 @@ export async function insertCustomerContact(
     contact: TypeOfValidator<typeof customerContactValidator>;
   }
 ) {
-  // Need to use service role here because it violates RLS
-  // to select a contact that does not belong to any customer
-  // TODO: replace this with a transaction
-  const insertContact = await getSupabaseServiceRole()
+  const insertContact = await client
     .from("contact")
     .insert([customerContact.contact])
     .select("id")

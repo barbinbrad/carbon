@@ -1,11 +1,8 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
-import {
-  createEmployeeAccount,
-  CreateEmployeeModal,
-  createEmployeeValidator,
-} from "~/modules/users";
+import { CreateEmployeeModal, createEmployeeValidator } from "~/modules/users";
+import { createEmployeeAccount } from "~/modules/users/users.server";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
 import { assertIsPost } from "~/utils/http";

@@ -14,10 +14,9 @@ serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
-  const { receiptId } = await req.json();
 
+  const { receiptId } = await req.json();
   const today = format(new Date(), "yyyy-MM-dd");
-  console.log(`Inserting date: ${today}`);
 
   try {
     if (!receiptId) throw new Error("Payload is missing receiptId");

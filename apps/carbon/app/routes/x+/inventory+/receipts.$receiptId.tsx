@@ -3,9 +3,9 @@ import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
 import {
+  ReceiptForm,
   getReceipt,
   getReceiptLines,
-  ReceiptForm,
   receiptValidator,
   upsertReceipt,
 } from "~/modules/inventory";

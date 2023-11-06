@@ -134,6 +134,7 @@ export async function upsertReceipt(
         updatedBy: string;
       })
 ) {
+  console.log("upserting receipt", receipt);
   if ("createdBy" in receipt) {
     return client.from("receipt").insert([receipt]).select("id").single();
   }

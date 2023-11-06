@@ -104,6 +104,8 @@ serve(async (req: Request) => {
           acc.push({
             invoiceId: purchaseInvoiceId,
             invoiceLineType: line.purchaseOrderLineType,
+            purchaseOrderId: line.purchaseOrderId,
+            purchaseOrderLineId: line.id,
             partId: line.partId,
             accountNumber: line.accountNumber,
             assetId: line.assetId,

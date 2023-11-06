@@ -72,6 +72,11 @@ const ReceiptForm = ({
     receiptLines: receiptLines ?? [],
   });
 
+  console.log({
+    initialValues,
+    isPosted,
+  });
+
   return (
     <>
       <Drawer onClose={onClose} isOpen={true} size="full">

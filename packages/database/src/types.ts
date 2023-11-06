@@ -4624,6 +4624,8 @@ export interface Database {
           invoiceId: string
           invoiceLineType: Database["public"]["Enums"]["payableLineType"]
           partId: string | null
+          purchaseOrderId: string | null
+          purchaseOrderLineId: string | null
           quantity: number
           totalAmount: number | null
           unitPrice: number
@@ -4642,6 +4644,8 @@ export interface Database {
           invoiceId: string
           invoiceLineType: Database["public"]["Enums"]["payableLineType"]
           partId?: string | null
+          purchaseOrderId?: string | null
+          purchaseOrderLineId?: string | null
           quantity?: number
           totalAmount?: number | null
           unitPrice?: number
@@ -4660,6 +4664,8 @@ export interface Database {
           invoiceId?: string
           invoiceLineType?: Database["public"]["Enums"]["payableLineType"]
           partId?: string | null
+          purchaseOrderId?: string | null
+          purchaseOrderLineId?: string | null
           quantity?: number
           totalAmount?: number | null
           unitPrice?: number
@@ -4725,6 +4731,24 @@ export interface Database {
             foreignKeyName: "purchaseInvoiceLines_partId_fkey"
             columns: ["partId"]
             referencedRelation: "parts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseInvoiceLines_purchaseOrderId_fkey"
+            columns: ["purchaseOrderId"]
+            referencedRelation: "purchaseOrder"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseInvoiceLines_purchaseOrderId_fkey"
+            columns: ["purchaseOrderId"]
+            referencedRelation: "purchaseOrders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseInvoiceLines_purchaseOrderLineId_fkey"
+            columns: ["purchaseOrderLineId"]
+            referencedRelation: "purchaseOrderLine"
             referencedColumns: ["id"]
           },
           {

@@ -107,6 +107,8 @@ CREATE TABLE "purchaseInvoiceLine" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "invoiceId" TEXT NOT NULL,
   "invoiceLineType" "payableLineType" NOT NULL,
+  "purchaseOrderId" TEXT,
+  "purchaseOrderLineId" TEXT,
   "partId" TEXT,
   "accountNumber" TEXT,
   "assetId" TEXT,
@@ -123,6 +125,8 @@ CREATE TABLE "purchaseInvoiceLine" (
 
   CONSTRAINT "purchaseInvoiceLines_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "purchaseInvoiceLines_invoiceId_fkey" FOREIGN KEY ("invoiceId") REFERENCES "purchaseInvoice" ("id") ON UPDATE CASCADE ON DELETE RESTRICT,
+  CONSTRAINT "purchaseInvoiceLines_purchaseOrderId_fkey" FOREIGN KEY ("purchaseOrderId") REFERENCES "purchaseOrder" ("id") ON UPDATE CASCADE ON DELETE RESTRICT,
+  CONSTRAINT "purchaseInvoiceLines_purchaseOrderLineId_fkey" FOREIGN KEY ("purchaseOrderLineId") REFERENCES "purchaseOrderLine" ("id") ON UPDATE CASCADE ON DELETE RESTRICT,
   CONSTRAINT "purchaseInvoiceLines_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part" ("id") ON UPDATE CASCADE ON DELETE RESTRICT,
   CONSTRAINT "purchaseInvoiceLines_accountNumber_fkey" FOREIGN KEY ("accountNumber") REFERENCES "account" ("number") ON UPDATE CASCADE ON DELETE RESTRICT,
   -- CONSTRAINT "purchaseInvoiceLines_assetId_fkey" FOREIGN KEY ("assetId") REFERENCES "fixedAsset" ("id") ON UPDATE CASCADE ON DELETE RESTRICT,

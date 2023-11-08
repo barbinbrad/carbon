@@ -11,6 +11,9 @@ export async function deletePurchaseInvoice(
   client: SupabaseClient<Database>,
   purchaseInvoiceId: string
 ) {
+  // TODO: this should be a transaction that checks whether it is posted
+  // and then sets the status of the purchase order back to
+  // "To Receive and Invoice" | "To Invoice"
   return client.from("purchaseInvoice").delete().eq("id", purchaseInvoiceId);
 }
 

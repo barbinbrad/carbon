@@ -19,7 +19,8 @@ const RealtimeDataProvider = ({ children }: { children: React.ReactNode }) => {
       supabase
         .from("part")
         .select("id, name, replenishmentSystem")
-        .eq("active", true),
+        .eq("active", true)
+        .eq("blocked", false),
       supabase.from("supplier").select("id, name"),
       supabase.from("customer").select("id, name"),
     ]);

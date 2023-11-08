@@ -9,15 +9,15 @@ import { useFetcher } from "@remix-run/react";
 import { useEffect, useMemo, useRef } from "react";
 import { useControlField, useField } from "remix-validated-form";
 import type {
-  getSupplierLocations,
   SupplierLocation as SupplierLocationType,
+  getSupplierLocations,
 } from "~/modules/purchasing";
 import { path } from "~/utils/path";
 import type { SelectProps } from "./Select";
 
 type SupplierLocationSelectProps = Omit<SelectProps, "options" | "onChange"> & {
   supplier?: string;
-  onChange?: (supplierLocation: SupplierLocationType | undefined) => void;
+  onChange?: (supplierLocation: SupplierLocationType | null) => void;
 };
 
 const SupplierLocation = ({
@@ -33,7 +33,7 @@ const SupplierLocation = ({
 }: SupplierLocationSelectProps) => {
   const initialLoad = useRef(true);
   const { error, defaultValue } = useField(name);
-  const [value, setValue] = useControlField<string | undefined>(name);
+  const [value, setValue] = useControlField<string | null>(name);
 
   const supplierLocationFetcher =
     useFetcher<Awaited<ReturnType<typeof getSupplierLocations>>>();
@@ -45,9 +45,9 @@ const SupplierLocation = ({
     if (initialLoad.current) {
       initialLoad.current = false;
     } else {
-      setValue(undefined);
+      setValue(null);
       if (onChange) {
-        onChange(undefined);
+        onChange(null);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -65,14 +65,16 @@ const SupplierLocation = ({
     [supplierLocationFetcher.data]
   );
 
-  const handleChange = (selection: {
-    value: string | number;
-    label: string;
-  }) => {
-    const newValue = (selection.value as string) || undefined;
+  const handleChange = (
+    selection: {
+      value: string | number;
+      label: string;
+    } | null
+  ) => {
+    const newValue = (selection?.value as string) ?? null;
     setValue(newValue);
     if (onChange && typeof onChange === "function") {
-      if (newValue === undefined) onChange(newValue);
+      if (newValue === null) onChange(newValue);
       const contact = supplierLocationFetcher.data?.data?.find(
         (c) => c.id === newValue
       );
@@ -98,13 +100,14 @@ const SupplierLocation = ({
   return (
     <FormControl isInvalid={!!error}>
       {label && <FormLabel htmlFor={name}>{label}</FormLabel>}
-      <input type="hidden" name={name} id={name} value={value} />
+      <input type="hidden" name={name} id={name} value={value ?? ""} />
       <Select
         {...props}
         value={controlledValue}
         isLoading={isLoading}
         options={options}
         placeholder={placeholder}
+        isClearable
         // @ts-ignore
         onChange={handleChange}
         w="full"

@@ -26,7 +26,6 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { invoiceId: id } = params;
   if (!id) throw new Error("Could not find invoiceId");
 
-  // validate with invoicingValidator
   const validation = await purchaseInvoiceValidator.validate(
     await request.formData()
   );
@@ -46,7 +45,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   });
   if (updatePurchaseInvoice.error) {
     return redirect(
-      path.to.purchaseInvoice(invoiceId),
+      path.to.purchaseInvoice(id),
       await flash(
         request,
         error(updatePurchaseInvoice.error, "Failed to update purchase invoice")
@@ -55,7 +54,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   return redirect(
-    path.to.purchaseInvoice(invoiceId),
+    path.to.purchaseInvoice(id),
     await flash(request, success("Updated purchase invoice"))
   );
 }
@@ -74,6 +73,7 @@ export default function PurchaseInvoiceBasicRoute() {
     supplierId: invoiceData?.purchaseInvoice?.supplierId ?? "",
     supplierContactId: invoiceData?.purchaseInvoice?.supplierContactId ?? "",
     supplierReference: invoiceData?.purchaseInvoice?.supplierReference ?? "",
+    dateIssued: invoiceData?.purchaseInvoice?.dateIssued ?? "",
     dateDue: invoiceData?.purchaseInvoice?.dateDue ?? "",
     status: invoiceData?.purchaseInvoice?.status ?? ("Draft" as "Draft"),
   };

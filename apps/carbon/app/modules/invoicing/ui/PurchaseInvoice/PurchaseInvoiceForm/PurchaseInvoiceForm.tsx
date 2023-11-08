@@ -98,8 +98,8 @@ const PurchaseInvoiceForm = ({ initialValues }: PurchaseInvoiceFormProps) => {
                 />
               </VStack>
               <VStack alignItems="start" spacing={2} w="full">
-                <DatePicker name="dateIssued" label="Invoice Date" />
-
+                <DatePicker name="dateIssued" label="Date Issued" />
+                <DatePicker name="dateDue" label="Due Date" />
                 {isEditing && (
                   <SelectControlled
                     name="status"

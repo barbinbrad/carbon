@@ -10,14 +10,14 @@ import {
 import { useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import {
-  Currency,
   Boolean,
+  Currency,
   Hidden,
+  Select,
+  Submit,
   Supplier,
   SupplierContact,
   SupplierLocation,
-  Select,
-  Submit,
 } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { purchaseOrderPaymentValidator } from "~/modules/purchasing";

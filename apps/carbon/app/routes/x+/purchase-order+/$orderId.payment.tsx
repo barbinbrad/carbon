@@ -4,8 +4,8 @@ import { useLoaderData } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
 import { getPaymentTermsList } from "~/modules/accounting";
 import {
-  getPurchaseOrderPayment,
   PurchaseOrderPaymentForm,
+  getPurchaseOrderPayment,
   purchaseOrderPaymentValidator,
   upsertPurchaseOrderPayment,
 } from "~/modules/purchasing";

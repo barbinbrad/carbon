@@ -4487,10 +4487,12 @@ export interface Database {
           exchangeRate: number
           id: string
           invoiceId: string
+          paymentTermId: string | null
           status: Database["public"]["Enums"]["purchaseInvoiceStatus"]
           subtotal: number
           supplierContactId: string | null
           supplierId: string | null
+          supplierLocationId: string | null
           supplierReference: string | null
           totalAmount: number
           totalDiscount: number
@@ -4509,10 +4511,12 @@ export interface Database {
           exchangeRate?: number
           id?: string
           invoiceId: string
+          paymentTermId?: string | null
           status?: Database["public"]["Enums"]["purchaseInvoiceStatus"]
           subtotal?: number
           supplierContactId?: string | null
           supplierId?: string | null
+          supplierLocationId?: string | null
           supplierReference?: string | null
           totalAmount?: number
           totalDiscount?: number
@@ -4531,10 +4535,12 @@ export interface Database {
           exchangeRate?: number
           id?: string
           invoiceId?: string
+          paymentTermId?: string | null
           status?: Database["public"]["Enums"]["purchaseInvoiceStatus"]
           subtotal?: number
           supplierContactId?: string | null
           supplierId?: string | null
+          supplierLocationId?: string | null
           supplierReference?: string | null
           totalAmount?: number
           totalDiscount?: number
@@ -4560,6 +4566,12 @@ export interface Database {
             columns: ["currencyCode"]
             referencedRelation: "currency"
             referencedColumns: ["code"]
+          },
+          {
+            foreignKeyName: "purchaseInvoice_paymentTermId_fkey"
+            columns: ["paymentTermId"]
+            referencedRelation: "paymentTerm"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "purchaseInvoice_supplierContactId_fkey"
@@ -4595,6 +4607,12 @@ export interface Database {
             foreignKeyName: "purchaseInvoice_supplierId_fkey"
             columns: ["supplierId"]
             referencedRelation: "suppliers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseInvoice_supplierLocationId_fkey"
+            columns: ["supplierLocationId"]
+            referencedRelation: "supplierLocation"
             referencedColumns: ["id"]
           },
           {

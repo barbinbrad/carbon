@@ -21,27 +21,29 @@ serve(async (req: Request) => {
 
     const client = getSupabaseServiceRole(req.headers.get("Authorization"));
 
-    const [purchaseOrder, purchaseOrderLines] = await Promise.all([
-      client
-        .from("purchaseOrder")
-        .select("*")
-        .eq("id", purchaseOrderId)
-        .single(),
-      client
-        .from("purchaseOrderLine")
-        .select("*")
-        .eq("purchaseOrderId", purchaseOrderId),
-    ]);
+    const [purchaseOrder, purchaseOrderLines, purchaseOrderPayment] =
+      await Promise.all([
+        client
+          .from("purchaseOrder")
+          .select("*")
+          .eq("id", purchaseOrderId)
+          .single(),
+        client
+          .from("purchaseOrderLine")
+          .select("*")
+          .eq("purchaseOrderId", purchaseOrderId),
+        client
+          .from("purchaseOrderPayment")
+          .select("*")
+          .eq("id", purchaseOrderId)
+          .single(),
+      ]);
 
     if (!purchaseOrder.data) throw new Error("Purchase order not found");
     if (purchaseOrderLines.error)
       throw new Error(purchaseOrderLines.error.message);
-
-    const supplier = await client
-      .from("supplier")
-      .select("*")
-      .eq("id", purchaseOrder.data.supplierId)
-      .single();
+    if (!purchaseOrderPayment.data)
+      throw new Error("Purchase order payment not found");
 
     const uninvoicedLines = purchaseOrderLines?.data?.reduce<
       (typeof purchaseOrderLines)["data"]
@@ -75,10 +77,13 @@ serve(async (req: Request) => {
         .values({
           invoiceId: purchaseInvoiceId,
           status: "Draft",
-          supplierId: supplier.data?.id,
+          supplierId: purchaseOrderPayment.data.invoiceSupplierId,
           supplierReference: purchaseOrder.data?.supplierReference,
-          supplierContactId: purchaseOrder.data?.supplierContactId,
-          currencyCode: "USD",
+          supplierLocationId:
+            purchaseOrderPayment.data.invoiceSupplierLocationId,
+          supplierContactId: purchaseOrderPayment.data.invoiceSupplierContactId,
+          paymentTermId: purchaseOrderPayment.data.paymentTermId,
+          currencyCode: purchaseOrderPayment.data.currencyCode,
           exchangeRate: 1,
           subtotal: uninvoicedSubtotal,
           totalDiscount: 0,

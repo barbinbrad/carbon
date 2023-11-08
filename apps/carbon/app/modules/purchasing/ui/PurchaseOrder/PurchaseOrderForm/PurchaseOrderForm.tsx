@@ -97,10 +97,7 @@ const PurchaseOrderForm = ({ initialValues }: PurchaseOrderFormProps) => {
                     supplier={supplier}
                   />
                 )}
-                <Input
-                  name="supplierReference"
-                  label="Supplier Invoice Number"
-                />
+                <Input name="supplierReference" label="Supplier Order Number" />
               </VStack>
               <VStack alignItems="start" spacing={2} w="full">
                 <DatePicker

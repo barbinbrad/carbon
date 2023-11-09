@@ -6,6 +6,8 @@ import { setGenericQueryFilters } from "~/utils/query";
 import { sanitize } from "~/utils/supabase";
 import type {
   customerContactValidator,
+  customerPaymentValidator,
+  customerShippingValidator,
   customerTypeValidator,
   customerValidator,
 } from "./sales.models";
@@ -96,6 +98,28 @@ export async function getCustomerLocations(
       "id, address(id, addressLine1, addressLine2, city, state, country(id, name), postalCode)"
     )
     .eq("customerId", customerId);
+}
+
+export async function getCustomerPayment(
+  client: SupabaseClient<Database>,
+  customerId: string
+) {
+  return client
+    .from("customerPayment")
+    .select("*")
+    .eq("id", customerId)
+    .single();
+}
+
+export async function getCustomerShipping(
+  client: SupabaseClient<Database>,
+  customerId: string
+) {
+  return client
+    .from("customerShipping")
+    .select("*")
+    .eq("id", customerId)
+    .single();
 }
 
 export async function getCustomers(
@@ -335,6 +359,41 @@ export async function updateCustomerLocation(
     .from("address")
     .update(sanitize(customerLocation.address))
     .eq("id", customerLocation.addressId)
+    .select("id")
+    .single();
+}
+export async function updateCustomerPayment(
+  client: SupabaseClient<Database>,
+  customerPayment: TypeOfValidator<typeof customerPaymentValidator>,
+  updatedBy: string
+) {
+  return client
+    .from("customerPayment")
+    .update(
+      sanitize({
+        ...customerPayment,
+        updatedBy,
+      })
+    )
+    .eq("customerId", customerPayment.customerId)
+    .select("id")
+    .single();
+}
+
+export async function updateCustomerShipping(
+  client: SupabaseClient<Database>,
+  customerShipping: TypeOfValidator<typeof customerShippingValidator>,
+  updatedBy: string
+) {
+  return client
+    .from("customerShipping")
+    .update(
+      sanitize({
+        ...customerShipping,
+        updatedBy,
+      })
+    )
+    .eq("customerId", customerShipping.customerId)
     .select("id")
     .single();
 }

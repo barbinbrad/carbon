@@ -25,6 +25,16 @@ export function useCustomerSidebar({ contacts, locations }: Props) {
       role: ["employee", "customer"],
       count: locations,
     },
+    {
+      name: "Payments",
+      to: "payments",
+      role: ["employee"],
+    },
+    {
+      name: "Shipping",
+      to: "shipping",
+      role: ["employee"],
+    },
   ].filter(
     (item) =>
       item.role === undefined ||

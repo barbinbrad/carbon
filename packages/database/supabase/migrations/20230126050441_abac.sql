@@ -292,7 +292,6 @@ CREATE POLICY "Employees with sales_delete can delete customer contacts" ON "cus
   FOR DELETE
   USING (coalesce(get_my_claim('sales_delete')::boolean, false) = true AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
 
-
 -- supplierType
 
 ALTER TABLE "supplierType" ENABLE ROW LEVEL SECURITY;
@@ -400,3 +399,4 @@ CREATE POLICY "Suppliers with purchasing_update can update their supplier contac
 CREATE POLICY "Employees with purchasing_delete can delete supplier contacts" ON "supplierContact"
   FOR DELETE
   USING (coalesce(get_my_claim('purchasing_delete')::boolean, false) = true AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+

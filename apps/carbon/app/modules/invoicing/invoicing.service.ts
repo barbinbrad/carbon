@@ -1,6 +1,6 @@
 import type { Database } from "@carbon/database";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { getSupplier } from "~/modules/purchasing";
+import { getSupplierPayment } from "~/modules/purchasing";
 import type { TypeOfValidator } from "~/types/validators";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
@@ -95,26 +95,21 @@ export async function upsertPurchaseInvoice(
       .select("id, invoiceId");
   }
 
-  const [supplier] = await Promise.all([
-    getSupplier(client, purchaseInvoice.supplierId),
+  const [supplierPayment] = await Promise.all([
+    getSupplierPayment(client, purchaseInvoice.supplierId),
   ]);
 
-  if (supplier.error) return supplier;
+  if (supplierPayment.error) return supplierPayment;
 
-  const {
-    defaultCurrencyCode,
-    // defaultPaymentTermId,
-    // defaultShippingMethodId,
-    // defaultShippingTermId,
-  } = supplier.data;
+  const { currencyCode, paymentTermId } = supplierPayment.data;
 
   const invoice = await client
     .from("purchaseInvoice")
     .insert([
       {
         ...purchaseInvoice,
-        currencyCode:
-          purchaseInvoice.currencyCode ?? defaultCurrencyCode ?? "USD",
+        currencyCode: purchaseInvoice.currencyCode ?? currencyCode ?? "USD",
+        paymentTermId: purchaseInvoice.paymentTermId ?? paymentTermId,
       },
     ])
     .select("id, invoiceId");

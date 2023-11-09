@@ -67,13 +67,6 @@ export default function CustomerEditRoute() {
     customerStatusId: routeData?.customer?.customerStatusId ?? undefined,
     accountManagerId: routeData?.customer?.accountManagerId ?? undefined,
     taxId: routeData?.customer?.taxId ?? "",
-    defaultCurrencyCode: routeData?.customer?.defaultCurrencyCode ?? "",
-    defaultPaymentTermId:
-      routeData?.customer?.defaultPaymentTermId ?? undefined,
-    defaultShippingMethodId:
-      routeData?.customer?.defaultShippingMethodId ?? undefined,
-    defaultShippingTermId:
-      routeData?.customer?.defaultShippingTermId ?? undefined,
   };
 
   return <CustomerForm initialValues={initialValues} />;

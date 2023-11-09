@@ -219,3 +219,5 @@ CREATE TABLE "customerAccount" (
 );
 
 CREATE INDEX "customerAccount_customerId_index" ON "customerAccount"("customerId");
+
+

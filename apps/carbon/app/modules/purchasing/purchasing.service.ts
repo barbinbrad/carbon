@@ -12,6 +12,8 @@ import type {
   purchaseOrderPaymentValidator,
   purchaseOrderValidator,
   supplierContactValidator,
+  supplierPaymentValidator,
+  supplierShippingValidator,
   supplierTypeValidator,
   supplierValidator,
 } from "./purchasing.models";
@@ -239,6 +241,28 @@ export async function getSupplierLocation(
       "id, address(id, addressLine1, addressLine2, city, state, country(id, name), postalCode)"
     )
     .eq("id", supplierContactId)
+    .single();
+}
+
+export async function getSupplierPayment(
+  client: SupabaseClient<Database>,
+  supplierId: string
+) {
+  return client
+    .from("supplierPayment")
+    .select("*")
+    .eq("id", supplierId)
+    .single();
+}
+
+export async function getSupplierShipping(
+  client: SupabaseClient<Database>,
+  supplierId: string
+) {
+  return client
+    .from("supplierShipping")
+    .select("*")
+    .eq("id", supplierId)
     .single();
 }
 
@@ -504,6 +528,42 @@ export async function updateSupplierLocation(
     .single();
 }
 
+export async function updateSupplierPayment(
+  client: SupabaseClient<Database>,
+  supplierPayment: TypeOfValidator<typeof supplierPaymentValidator>,
+  updatedBy: string
+) {
+  return client
+    .from("supplierPayment")
+    .update(
+      sanitize({
+        ...supplierPayment,
+        updatedBy,
+      })
+    )
+    .eq("supplierId", supplierPayment.supplierId)
+    .select("id")
+    .single();
+}
+
+export async function updateSupplierShipping(
+  client: SupabaseClient<Database>,
+  supplierShipping: TypeOfValidator<typeof supplierShippingValidator>,
+  updatedBy: string
+) {
+  return client
+    .from("supplierShipping")
+    .update(
+      sanitize({
+        ...supplierShipping,
+        updatedBy,
+      })
+    )
+    .eq("supplierId", supplierShipping.supplierId)
+    .select("id")
+    .single();
+}
+
 export async function upsertPurchaseOrder(
   client: SupabaseClient<Database>,
   purchaseOrder:
@@ -531,19 +591,18 @@ export async function upsertPurchaseOrder(
       .select("id, purchaseOrderId");
   }
 
-  const [supplier, purchaser] = await Promise.all([
-    getSupplier(client, purchaseOrder.supplierId),
+  const [supplierPayment, supplierShipping, purchaser] = await Promise.all([
+    getSupplierPayment(client, purchaseOrder.supplierId),
+    getSupplierShipping(client, purchaseOrder.supplierId),
     getEmployeeJob(client, purchaseOrder.createdBy),
   ]);
 
-  if (supplier.error) return supplier;
+  if (supplierPayment.error) return supplierPayment;
+  if (supplierShipping.error) return supplierShipping;
 
-  const {
-    defaultCurrencyCode,
-    defaultPaymentTermId,
-    defaultShippingMethodId,
-    defaultShippingTermId,
-  } = supplier.data;
+  const { currencyCode, paymentTermId } = supplierPayment.data;
+
+  const { shippingMethodId, shippingTermId } = supplierShipping.data;
 
   const locationId = purchaser?.data?.locationId ?? null;
 
@@ -561,16 +620,16 @@ export async function upsertPurchaseOrder(
       {
         id: purchaseOrderId,
         locationId: locationId,
-        shippingMethodId: defaultShippingMethodId,
-        shippingTermId: defaultShippingTermId,
+        shippingMethodId: shippingMethodId,
+        shippingTermId: shippingTermId,
       },
     ]),
     client.from("purchaseOrderPayment").insert([
       {
         id: purchaseOrderId,
-        currencyCode: defaultCurrencyCode ?? "USD",
+        currencyCode: currencyCode ?? "USD",
         invoiceSupplierId: purchaseOrder.supplierId,
-        paymentTermId: defaultPaymentTermId,
+        paymentTermId: paymentTermId,
       },
     ]),
   ]);

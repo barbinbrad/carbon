@@ -22,6 +22,7 @@ export const purchaseInvoiceValidator = withZod(
     dateIssued: zfd.text(z.string().optional()),
     dateDue: zfd.text(z.string().optional()),
     status: z.enum(purchaseInvoiceStatusType).optional(),
+    paymentTermId: zfd.text(z.string().optional()),
     currencyCode: zfd.text(z.string().optional()),
   })
 );

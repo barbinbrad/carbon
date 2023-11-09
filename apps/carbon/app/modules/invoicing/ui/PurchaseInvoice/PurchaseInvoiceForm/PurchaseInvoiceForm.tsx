@@ -81,6 +81,7 @@ const PurchaseInvoiceForm = ({ initialValues }: PurchaseInvoiceFormProps) => {
                 <Supplier
                   name="supplierId"
                   label="Supplier"
+                  isReadOnly={isEditing}
                   onChange={(newValue) =>
                     setSupplier(newValue?.value as string | undefined)
                   }

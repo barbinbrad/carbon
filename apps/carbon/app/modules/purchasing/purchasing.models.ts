@@ -159,10 +159,6 @@ export const supplierValidator = withZod(
     supplierStatusId: zfd.text(z.string().optional()),
     taxId: zfd.text(z.string().optional()),
     accountManagerId: zfd.text(z.string().optional()),
-    defaultCurrencyCode: zfd.text(z.string().optional()),
-    defaultPaymentTermId: zfd.text(z.string().optional()),
-    defaultShippingTermId: zfd.text(z.string().optional()),
-    defaultShippingMethodId: zfd.text(z.string().optional()),
   })
 );
 
@@ -178,6 +174,28 @@ export const supplierLocationValidator = withZod(
   z.object({
     id: zfd.text(z.string().optional()),
     ...address,
+  })
+);
+
+export const supplierPaymentValidator = withZod(
+  z.object({
+    supplierId: z.string().min(36, { message: "Supplier is required" }),
+    invoiceSupplierId: zfd.text(z.string().optional()),
+    invoiceSupplierLocationId: zfd.text(z.string().optional()),
+    invoiceSupplierContactId: zfd.text(z.string().optional()),
+    paymentTermId: zfd.text(z.string().optional()),
+    currencyCode: zfd.text(z.string().optional()),
+  })
+);
+
+export const supplierShippingValidator = withZod(
+  z.object({
+    supplierId: z.string().min(36, { message: "Supplier is required" }),
+    shippingSupplierId: zfd.text(z.string().optional()),
+    shippingSupplierLocationId: zfd.text(z.string().optional()),
+    shippingSupplierContactId: zfd.text(z.string().optional()),
+    shippingTermId: zfd.text(z.string().optional()),
+    shippingMethodId: zfd.text(z.string().optional()),
   })
 );
 

@@ -67,13 +67,6 @@ export default function SupplierEditRoute() {
     supplierStatusId: routeData?.supplier?.supplierStatusId ?? undefined,
     accountManagerId: routeData?.supplier?.accountManagerId ?? undefined,
     taxId: routeData?.supplier?.taxId ?? "",
-    defaultCurrencyCode: routeData?.supplier?.defaultCurrencyCode ?? "",
-    defaultPaymentTermId:
-      routeData?.supplier?.defaultPaymentTermId ?? undefined,
-    defaultShippingMethodId:
-      routeData?.supplier?.defaultShippingMethodId ?? undefined,
-    defaultShippingTermId:
-      routeData?.supplier?.defaultShippingTermId ?? undefined,
   };
 
   return <SupplierForm initialValues={initialValues} />;

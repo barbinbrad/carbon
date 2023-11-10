@@ -6,7 +6,7 @@ CREATE TABLE "supplierPayment" (
   "invoiceSupplierLocationId" TEXT,
   "invoiceSupplierContactId" TEXT,
   "paymentTermId" TEXT,
-  "currencyCode" TEXT NOT NULL DEFAULT 'USD',
+  "currencyCode" TEXT,
   "updatedAt" TIMESTAMP WITH TIME ZONE,
   "updatedBy" TEXT,
   
@@ -64,10 +64,10 @@ CREATE POLICY "Employees with purchasing_update can update supplier shipping" ON
 CREATE FUNCTION public.create_supplier_entries()
 RETURNS TRIGGER AS $$
 BEGIN
-  INSERT INTO public."supplierPayment"("supplierId")
-  VALUES (new.id);
-  INSERT INTO public."supplierShipping"("supplierId")
-  VALUES (new.id);
+  INSERT INTO public."supplierPayment"("supplierId", "invoiceSupplierId")
+  VALUES (new.id, new.id);
+  INSERT INTO public."supplierShipping"("supplierId", "shippingSupplierId")
+  VALUES (new.id, new.id);
   RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;

@@ -87,6 +87,10 @@ export const path = {
       generatePath(`${x}/customer/${customerId}/locations/${id}`),
     customerLocations: (id: string) =>
       generatePath(`${x}/customer/${id}/locations`),
+    customerPayment: (id: string) =>
+      generatePath(`${x}/customer/${id}/payments`),
+    customerShipping: (id: string) =>
+      generatePath(`${x}/customer/${id}/shipping`),
     customerType: (id: string) =>
       generatePath(`${x}/sales/customer-types/delete/${id}`),
     customerTypes: `${x}/sales/customer-types`,
@@ -331,6 +335,10 @@ export const path = {
       generatePath(`${x}/supplier/${supplierId}/locations/${id}`),
     supplierLocations: (id: string) =>
       generatePath(`${x}/supplier/${id}/locations`),
+    supplierPayment: (id: string) =>
+      generatePath(`${x}/supplier/${id}/payments`),
+    supplierShipping: (id: string) =>
+      generatePath(`${x}/supplier/${id}/shipping`),
     supplierRoot: `${x}/supplier`,
     supplierType: (id: string) =>
       generatePath(`${x}/purchasing/supplier-types/delete/${id}`),

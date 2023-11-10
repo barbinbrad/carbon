@@ -107,7 +107,7 @@ export async function getCustomerPayment(
   return client
     .from("customerPayment")
     .select("*")
-    .eq("id", customerId)
+    .eq("customerId", customerId)
     .single();
 }
 
@@ -118,7 +118,7 @@ export async function getCustomerShipping(
   return client
     .from("customerShipping")
     .select("*")
-    .eq("id", customerId)
+    .eq("customerId", customerId)
     .single();
 }
 
@@ -364,38 +364,26 @@ export async function updateCustomerLocation(
 }
 export async function updateCustomerPayment(
   client: SupabaseClient<Database>,
-  customerPayment: TypeOfValidator<typeof customerPaymentValidator>,
-  updatedBy: string
+  customerPayment: TypeOfValidator<typeof customerPaymentValidator> & {
+    updatedBy: string;
+  }
 ) {
   return client
     .from("customerPayment")
-    .update(
-      sanitize({
-        ...customerPayment,
-        updatedBy,
-      })
-    )
-    .eq("customerId", customerPayment.customerId)
-    .select("id")
-    .single();
+    .update(sanitize(customerPayment))
+    .eq("customerId", customerPayment.customerId);
 }
 
 export async function updateCustomerShipping(
   client: SupabaseClient<Database>,
-  customerShipping: TypeOfValidator<typeof customerShippingValidator>,
-  updatedBy: string
+  customerShipping: TypeOfValidator<typeof customerShippingValidator> & {
+    updatedBy: string;
+  }
 ) {
   return client
     .from("customerShipping")
-    .update(
-      sanitize({
-        ...customerShipping,
-        updatedBy,
-      })
-    )
-    .eq("customerId", customerShipping.customerId)
-    .select("id")
-    .single();
+    .update(sanitize(customerShipping))
+    .eq("customerId", customerShipping.customerId);
 }
 
 export async function upsertCustomerType(

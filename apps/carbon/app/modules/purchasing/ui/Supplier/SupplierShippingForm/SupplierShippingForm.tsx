@@ -74,17 +74,17 @@ const SupplierShippingForm = ({ initialValues }: SupplierShippingFormProps) => {
             <VStack alignItems="start" spacing={2} w="full">
               <Supplier
                 name="shippingSupplierId"
-                label="Invoice Supplier"
+                label="Shipping Supplier"
                 onChange={({ value }) => setSupplier(value as string)}
               />
               <SupplierLocation
                 name="shippingSupplierLocationId"
-                label="Invoice Location"
+                label="Shipping Location"
                 supplier={supplier}
               />
               <SupplierContact
                 name="shippingSupplierContactId"
-                label="Invoice Contact"
+                label="Shipping Contact"
                 supplier={supplier}
               />
             </VStack>

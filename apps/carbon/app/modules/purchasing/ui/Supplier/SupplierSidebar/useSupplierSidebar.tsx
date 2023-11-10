@@ -10,7 +10,7 @@ export function useSupplierSidebar({ contacts, locations }: Props) {
   const permissions = usePermissions();
   return [
     {
-      name: "Details",
+      name: "Overview",
       to: "",
     },
     {

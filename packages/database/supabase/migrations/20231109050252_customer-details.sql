@@ -5,7 +5,7 @@ CREATE TABLE "customerPayment" (
   "invoiceCustomerLocationId" TEXT,
   "invoiceCustomerContactId" TEXT,
   "paymentTermId" TEXT,
-  "currencyCode" TEXT NOT NULL DEFAULT 'USD',
+  "currencyCode" TEXT,
   "updatedAt" TIMESTAMP WITH TIME ZONE,
   "updatedBy" TEXT,
   
@@ -64,6 +64,8 @@ CREATE FUNCTION public.create_customer_entries()
 RETURNS TRIGGER AS $$
 BEGIN
   INSERT INTO public."customerPayment"("customerId", "invoiceCustomerId")
+  VALUES (new.id, new.id);
+  INSERT INTO public."customerShipping"("customerId", "shippingCustomerId")
   VALUES (new.id, new.id);
   RETURN new;
 END;

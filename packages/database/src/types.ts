@@ -1655,7 +1655,7 @@ export interface Database {
       };
       customerPayment: {
         Row: {
-          currencyCode: string;
+          currencyCode: string | null;
           customerId: string;
           invoiceCustomerContactId: string | null;
           invoiceCustomerId: string | null;
@@ -1665,7 +1665,7 @@ export interface Database {
           updatedBy: string | null;
         };
         Insert: {
-          currencyCode?: string;
+          currencyCode?: string | null;
           customerId: string;
           invoiceCustomerContactId?: string | null;
           invoiceCustomerId?: string | null;
@@ -1675,7 +1675,7 @@ export interface Database {
           updatedBy?: string | null;
         };
         Update: {
-          currencyCode?: string;
+          currencyCode?: string | null;
           customerId?: string;
           invoiceCustomerContactId?: string | null;
           invoiceCustomerId?: string | null;
@@ -6811,7 +6811,7 @@ export interface Database {
       };
       supplierPayment: {
         Row: {
-          currencyCode: string;
+          currencyCode: string | null;
           invoiceSupplierContactId: string | null;
           invoiceSupplierId: string | null;
           invoiceSupplierLocationId: string | null;
@@ -6821,7 +6821,7 @@ export interface Database {
           updatedBy: string | null;
         };
         Insert: {
-          currencyCode?: string;
+          currencyCode?: string | null;
           invoiceSupplierContactId?: string | null;
           invoiceSupplierId?: string | null;
           invoiceSupplierLocationId?: string | null;
@@ -6831,7 +6831,7 @@ export interface Database {
           updatedBy?: string | null;
         };
         Update: {
-          currencyCode?: string;
+          currencyCode?: string | null;
           invoiceSupplierContactId?: string | null;
           invoiceSupplierId?: string | null;
           invoiceSupplierLocationId?: string | null;

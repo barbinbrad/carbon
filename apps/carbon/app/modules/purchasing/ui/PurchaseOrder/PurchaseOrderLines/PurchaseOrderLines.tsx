@@ -27,6 +27,7 @@ import {
 import Grid from "~/components/Grid";
 import { useRouteData, useUser } from "~/hooks";
 import type { PurchaseOrder, PurchaseOrderLine } from "~/modules/purchasing";
+import { usePurchaseOrderTotals } from "~/modules/purchasing";
 import type { ListItem } from "~/types";
 import { path } from "~/utils/path";
 import usePurchaseOrderLines from "./usePurchaseOrderLines";
@@ -53,6 +54,7 @@ const PurchaseOrderLines = () => {
     accountOptions,
     onCellEdit,
   } = usePurchaseOrderLines();
+  const [, setPurchaseOrderTotals] = usePurchaseOrderTotals();
 
   const isEditable = ["Draft", "To Review"].includes(
     routeData?.purchaseOrder?.status ?? ""
@@ -273,6 +275,18 @@ const PurchaseOrderLines = () => {
             columns={columns}
             canEdit={canEdit && isEditable}
             editableComponents={editableComponents}
+            onDataChange={(lines: PurchaseOrderLine[]) => {
+              const totals = lines.reduce(
+                (acc, line) => {
+                  acc.total +=
+                    (line.purchaseQuantity ?? 0) * (line.unitPrice ?? 0);
+
+                  return acc;
+                },
+                { total: 0 }
+              );
+              setPurchaseOrderTotals(totals);
+            }}
             onNewRow={canEdit && isEditable ? () => navigate("new") : undefined}
           />
         </CardBody>

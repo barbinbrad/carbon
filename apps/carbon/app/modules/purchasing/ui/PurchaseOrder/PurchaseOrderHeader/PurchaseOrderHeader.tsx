@@ -11,10 +11,11 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useParams } from "@remix-run/react";
+import { useMemo } from "react";
 import { FaHistory } from "react-icons/fa";
 import { usePermissions, useRouteData } from "~/hooks";
 import type { PurchaseOrder } from "~/modules/purchasing";
-import { PurchasingStatus } from "~/modules/purchasing";
+import { PurchasingStatus, usePurchaseOrderTotals } from "~/modules/purchasing";
 import { path } from "~/utils/path";
 import { usePurchaseOrder } from "../../PurchaseOrders/usePurchaseOrder";
 
@@ -27,7 +28,14 @@ const PurchaseOrderHeader = () => {
     path.to.purchaseOrder(orderId)
   );
 
+  const [purchaseOrderTotals] = usePurchaseOrderTotals();
+
   // TODO: factor in default currency, po currency and exchange rate
+  const formatter = useMemo(
+    () =>
+      new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }),
+    []
+  );
 
   const { receive, release, invoice } = usePurchaseOrder();
 
@@ -96,6 +104,16 @@ const PurchaseOrderHeader = () => {
         </CardHeader>
         <CardBody>
           <Stack direction={["column", "column", "row"]} spacing={8}>
+            <Stack
+              direction={["row", "row", "column"]}
+              alignItems="start"
+              justifyContent="space-between"
+            >
+              <Text color="gray.500">Total</Text>
+              <Text fontWeight="bold">
+                {formatter.format(purchaseOrderTotals?.total ?? 0)}
+              </Text>
+            </Stack>
             <Stack
               direction={["row", "row", "column"]}
               alignItems="start"

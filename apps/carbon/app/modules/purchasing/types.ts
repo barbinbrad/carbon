@@ -9,7 +9,7 @@ import type {
   getSuppliers,
   getSupplierStatuses,
   getSupplierTypes,
-} from "./services";
+} from "./purchasing.service";
 
 // TODO: we should just use the FileObject type from supabase
 export type PurchaseOrderAttachment = NonNullable<

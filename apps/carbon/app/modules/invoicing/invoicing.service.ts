@@ -65,7 +65,7 @@ export async function getPurchaseInvoiceLines(
   return client
     .from("purchaseInvoiceLine")
     .select("*")
-    .eq("purchaseInvoiceId", purchaseInvoiceId);
+    .eq("invoiceId", purchaseInvoiceId);
 }
 
 export async function upsertPurchaseInvoice(

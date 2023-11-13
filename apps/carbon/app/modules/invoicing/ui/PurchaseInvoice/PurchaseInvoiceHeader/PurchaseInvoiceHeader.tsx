@@ -4,17 +4,21 @@ import {
   Card,
   CardBody,
   CardHeader,
-  Heading,
   HStack,
+  Heading,
   Stack,
   Text,
   VStack,
 } from "@chakra-ui/react";
 import { useParams } from "@remix-run/react";
+import { useMemo } from "react";
 import { FaHistory } from "react-icons/fa";
 import { usePermissions, useRouteData } from "~/hooks";
 import type { PurchaseInvoice } from "~/modules/invoicing";
-import { PurchaseInvoicingStatus } from "~/modules/invoicing";
+import {
+  PurchaseInvoicingStatus,
+  usePurchaseInvoiceTotals,
+} from "~/modules/invoicing";
 import { path } from "~/utils/path";
 
 const PurchaseInvoiceHeader = () => {
@@ -27,12 +31,14 @@ const PurchaseInvoiceHeader = () => {
     path.to.purchaseInvoice(invoiceId)
   );
 
+  const [purchaseInvoiceTotals] = usePurchaseInvoiceTotals();
+
   // TODO: factor in default currency, po currency and exchange rate
-  // const currencyFormatter = useMemo(
-  //   () =>
-  //     new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }),
-  //   []
-  // );
+  const formatter = useMemo(
+    () =>
+      new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }),
+    []
+  );
 
   return (
     <VStack w="full" alignItems="start" spacing={2}>
@@ -71,6 +77,16 @@ const PurchaseInvoiceHeader = () => {
         </CardHeader>
         <CardBody>
           <Stack direction={["column", "column", "row"]} spacing={8}>
+            <Stack
+              direction={["row", "row", "column"]}
+              alignItems="start"
+              justifyContent="space-between"
+            >
+              <Text color="gray.500">Total</Text>
+              <Text fontWeight="bold">
+                {formatter.format(purchaseInvoiceTotals?.total ?? 0)}
+              </Text>
+            </Stack>
             <Stack
               direction={["row", "row", "column"]}
               alignItems="start"

@@ -1,7 +1,8 @@
 import { Grid } from "@chakra-ui/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Outlet } from "@remix-run/react";
+import { Outlet, useLoaderData } from "@remix-run/react";
+import { useEffect } from "react";
 import {
   PurchaseOrderHeader,
   PurchaseOrderSidebar,
@@ -9,6 +10,7 @@ import {
   getInternalDocuments,
   getPurchaseOrder,
   getPurchaseOrderLines,
+  usePurchaseOrderTotals,
 } from "~/modules/purchasing";
 import { getLocationsList } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
@@ -68,6 +70,21 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function PurchaseOrderRoute() {
+  const { purchaseOrderLines } = useLoaderData<typeof loader>();
+  const [, setPurchaseOrderTotals] = usePurchaseOrderTotals();
+
+  useEffect(() => {
+    const totals = purchaseOrderLines.reduce(
+      (acc, line) => {
+        acc.total += (line.purchaseQuantity ?? 0) * (line.unitPrice ?? 0);
+
+        return acc;
+      },
+      { total: 0 }
+    );
+    setPurchaseOrderTotals(totals);
+  }, [purchaseOrderLines, setPurchaseOrderTotals]);
+
   return (
     <>
       <PurchaseOrderHeader />

@@ -1,12 +1,14 @@
 import { Grid } from "@chakra-ui/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Outlet } from "@remix-run/react";
+import { Outlet, useLoaderData } from "@remix-run/react";
+import { useEffect } from "react";
 import {
   PurchaseInvoiceHeader,
   PurchaseInvoiceSidebar,
   getPurchaseInvoice,
   getPurchaseInvoiceLines,
+  usePurchaseInvoiceTotals,
 } from "~/modules/invoicing";
 import { getLocationsList } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
@@ -56,6 +58,21 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function PurchaseInvoiceRoute() {
+  const { purchaseInvoiceLines } = useLoaderData<typeof loader>();
+  const [, setPurchaseInvoiceTotals] = usePurchaseInvoiceTotals();
+
+  useEffect(() => {
+    console.log({ purchaseInvoiceLines });
+    const totals = purchaseInvoiceLines.reduce(
+      (acc, line) => {
+        acc.total += line?.totalAmount ?? 0;
+
+        return acc;
+      },
+      { total: 0 }
+    );
+    setPurchaseInvoiceTotals(totals);
+  }, [purchaseInvoiceLines, setPurchaseInvoiceTotals]);
   return (
     <>
       <PurchaseInvoiceHeader />

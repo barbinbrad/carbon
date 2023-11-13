@@ -9,11 +9,11 @@ Our tech stack aims to be as simple as possible, while still being powerful enou
 
 - [TypeScript](https://www.typescriptlang.org) is the programming language
 - [React](https://reactjs.org) for the frontend
-- [Chakra UI](https://chakra-ui.com) for the UI components
 - [Remix](https://remix.run) for the routing and compiling
 - [Supabase](https://supabase.io) for the database and authentication
+- [Chakra UI](https://chakra-ui.com) for the UI components
 
-We also use [Redis](https://redis.io) for caching and [Vercel](https://vercel.com) for hosting, though in most cases you probably won't need those.
+We also use [Redis](https://redis.io) for caching and queues and [Vercel](https://vercel.com) for hosting, though in most cases you probably won't interact with those.
 
 In this page, we'll give you a basic overview of how the tech stack works together. If you want to learn more about any of the technologies, we recommend checking out their documentation.
 
@@ -25,35 +25,27 @@ We chose TypeScript because it allows us to use a single, strongly-typed languag
 
 ## React
 
-[React](https://reactjs.org) is a JavaScript library for building user interfaces. It's the most popular frontend framework in the world, and it's used by many of the biggest companies in the world, including Facebook, Netflix, and Airbnb.
+[React](https://reactjs.org) is a JavaScript library for building user interfaces. React in 2023 is like the Honda Accord of frontend frameworks:
+
+- ✅ Proven
+- ✅ Popular
+- ✅ Flexible
+- ✅ Reliable
+- ✅ Well documented
+- ✅ Easy to find related components
+- ✅ Easy to find people to work on it
+
+However:
+
+- 🚫 It's not the simplest
+- 🚫 It's not the most modern
+- 🚫 It's not “cool”
 
 We have a package called [@carbon/react](https://github.com/barbinbrad/carbon/tree/main/packages/react/src) that has a bunch of React pre-built components that you can use to build your UI. You can also draw from a rich ecosystem of existing React component libraries.
 
-## Chakra UI
-
-[Chakra UI](https://chakra-ui.com) is a flexible component library that gives us accessibility, full-control, and simplicty. It implements the WAI-ARIA spec behaviors with some basic primitive components (like Button and Modal) while providing an easy-to-modify API for customizing the design.
-
-While it's not the most performant choice, it provides an easy-to-use developer experience that should allow contributors to quickly build out new features without an expertise in CSS.
-
-Here's an example of a Chakra UI button:
-
-```jsx
-import { Button } from "@chakra-ui/react";
-
-function App() {
-  return (
-    <Button size="lg" variant="outline">
-      Click me
-    </Button>
-  );
-}
-```
-
-There are a lot of other component libraries out there, but we chose Chakra UI because it gives us a lot of flexibility while providing great user and developer experience. We're hopeful that Chakra will implement Panda under the hood in v4, which will give us high-level performance. If we had time, we'd probably move everything over to Radix + Tailwind (assuming we could keep things super simple for the developer).
-
 ## Remix
 
-[Remix](https://remix.run) is a framework for building full-stack web applications. It's built on top of React, and it allows us to co-locate server-side code and client-side code in the same files. When combined with TypeScript and Supabase, this gives us type-safety from the database to the UI.
+[Remix](https://remix.run) is a framework for building full-stack web applications. It's built on top of React, it is extremely cool. It allows us to co-locate server-side code and client-side code in the same files (routes). When combined with TypeScript and Supabase, this gives us type-safety from the database to the UI.
 
 Remix makes for a beautiful developer experience. It's use of nested routes, [loaders, actions and components](https://remix.run/blog/remix-data-flow) **minimizes the amount of code that needs written while maximzing performance**. To learn more about Remix, check out their documentation, and take a look at some files from our [routes](https://github.com/barbinbrad/carbon/tree/main/apps/carbon/app/routes) directory.
 
@@ -140,3 +132,25 @@ LIMIT 10
 But unlike a raw SQL query, the data that we get back is strongly-typed, neatly-nested, with error handling built-in.
 
 {/* TODO: explain why this is actually a bad setup for joins -- recommend putting joins in SQL VIEWs and then using the supabase client to supabase.from("view").select("*") */}
+
+## Chakra UI
+
+[Chakra UI](https://chakra-ui.com) is a flexible component library that gives us accessibility, full-control, and simplicty. It implements the WAI-ARIA spec behaviors with some basic primitive components (like Button and Modal) while providing an easy-to-modify API for customizing the design.
+
+While it's not the most performant choice, it provides an easy-to-use developer experience that should allow contributors to quickly build out new features without an expertise in CSS.
+
+Here's an example of a Chakra UI button:
+
+```jsx
+import { Button } from "@chakra-ui/react";
+
+function App() {
+  return (
+    <Button size="lg" variant="outline">
+      Click me
+    </Button>
+  );
+}
+```
+
+There are a lot of other component libraries out there, but we chose Chakra UI because it gives us a lot of flexibility while providing great user and developer experience. We're hopeful that Chakra will implement Panda under the hood in v4, which will give us high-level performance. If we had time, we'd probably move everything over to Radix + Tailwind (assuming we could keep things super simple for the developer).

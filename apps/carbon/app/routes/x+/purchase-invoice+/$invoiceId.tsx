@@ -45,9 +45,9 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   }
 
   return json({
+    locations: locations.data ?? [],
     purchaseInvoice: purchaseInvoice.data,
     purchaseInvoiceLines: purchaseInvoiceLines.data ?? [],
-    locations: locations.data ?? [],
   });
 }
 

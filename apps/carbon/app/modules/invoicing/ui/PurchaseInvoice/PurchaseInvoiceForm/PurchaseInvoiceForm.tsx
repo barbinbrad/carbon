@@ -11,20 +11,23 @@ import {
 import { useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import {
+  Currency,
   DatePicker,
   Hidden,
   Input,
+  Select,
   SelectControlled,
   Submit,
   Supplier,
   SupplierContact,
-  TextArea,
+  SupplierLocation,
 } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import {
   purchaseInvoiceStatusType,
   purchaseInvoiceValidator,
 } from "~/modules/invoicing";
+import type { ListItem } from "~/types";
 import type { TypeOfValidator } from "~/types/validators";
 
 type PurchaseInvoiceFormValues = TypeOfValidator<
@@ -33,18 +36,28 @@ type PurchaseInvoiceFormValues = TypeOfValidator<
 
 type PurchaseInvoiceFormProps = {
   initialValues: PurchaseInvoiceFormValues;
+  paymentTerms: ListItem[];
 };
 
-const PurchaseInvoiceForm = ({ initialValues }: PurchaseInvoiceFormProps) => {
+const PurchaseInvoiceForm = ({
+  initialValues,
+  paymentTerms,
+}: PurchaseInvoiceFormProps) => {
   const permissions = usePermissions();
   const [supplier, setSupplier] = useState<string | undefined>(
     initialValues.supplierId
   );
+
   const isEditing = initialValues.id !== undefined;
 
   const statusOptions = purchaseInvoiceStatusType.map((status) => ({
     label: status,
     value: status,
+  }));
+
+  const paymentTermOptions = paymentTerms.map((paymentTerm) => ({
+    label: paymentTerm.name,
+    value: paymentTerm.id,
   }));
 
   return (
@@ -82,23 +95,34 @@ const PurchaseInvoiceForm = ({ initialValues }: PurchaseInvoiceFormProps) => {
                   name="supplierId"
                   label="Supplier"
                   isReadOnly={isEditing}
-                  onChange={(newValue) =>
-                    setSupplier(newValue?.value as string | undefined)
-                  }
                 />
                 {isEditing && (
-                  <SupplierContact
-                    name="supplierContactId"
-                    label="Supplier Contact"
-                    supplier={supplier}
-                  />
+                  <>
+                    <Supplier
+                      name="invoiceSupplierId"
+                      label="Invoice Supplier"
+                      onChange={(newValue) =>
+                        setSupplier(newValue?.value as string | undefined)
+                      }
+                    />
+                    <SupplierLocation
+                      name="invoiceSupplierLocationId"
+                      label="Invoice Location"
+                      supplier={supplier}
+                    />
+                    <SupplierContact
+                      name="invoiceSupplierContactId"
+                      label="Invoice Supplier Contact"
+                      supplier={supplier}
+                    />
+                  </>
                 )}
+              </VStack>
+              <VStack alignItems="start" spacing={2} w="full">
                 <Input
                   name="supplierReference"
                   label="Supplier Invoice Number"
                 />
-              </VStack>
-              <VStack alignItems="start" spacing={2} w="full">
                 <DatePicker name="dateIssued" label="Date Issued" />
                 <DatePicker name="dateDue" label="Due Date" />
                 {isEditing && (
@@ -114,7 +138,12 @@ const PurchaseInvoiceForm = ({ initialValues }: PurchaseInvoiceFormProps) => {
               <VStack alignItems="start" spacing={2} w="full">
                 {isEditing && (
                   <>
-                    <TextArea name="notes" label="Notes" />
+                    <Select
+                      name="paymentTermId"
+                      label="Payment Terms"
+                      options={paymentTermOptions}
+                    />
+                    <Currency name="currencyCode" label="Currency" />
                   </>
                 )}
               </VStack>

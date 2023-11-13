@@ -18,11 +18,14 @@ export const purchaseInvoiceValidator = withZod(
     id: zfd.text(z.string().optional()),
     invoiceId: zfd.text(z.string().optional()),
     supplierId: z.string().min(36, { message: "Supplier is required" }),
-    supplierContactId: zfd.text(z.string().optional()),
+    supplierReference: zfd.text(z.string().optional()),
+    paymentTermId: zfd.text(z.string().optional()),
+    currencyCode: zfd.text(z.string().optional()),
+    invoiceSupplierId: zfd.text(z.string().optional()),
+    invoiceSupplierContactId: zfd.text(z.string().optional()),
+    invoiceSupplierLocationId: zfd.text(z.string().optional()),
     dateIssued: zfd.text(z.string().optional()),
     dateDue: zfd.text(z.string().optional()),
     status: z.enum(purchaseInvoiceStatusType).optional(),
-    paymentTermId: zfd.text(z.string().optional()),
-    currencyCode: zfd.text(z.string().optional()),
   })
 );

@@ -3,7 +3,7 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import type { FunctionsResponse } from "@supabase/functions-js";
 import { validationError } from "remix-validated-form";
-import { useUrlParams } from "~/hooks";
+import { useRouteData, useUrlParams } from "~/hooks";
 import type { PurchaseInvoiceStatus } from "~/modules/invoicing";
 import {
   PurchaseInvoiceForm,
@@ -17,6 +17,7 @@ import {
 import { getNextSequence, rollbackNextSequence } from "~/modules/settings";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import type { ListItem } from "~/types";
 import { assertIsPost } from "~/utils/http";
 import { path } from "~/utils/path";
 import { error } from "~/utils/result";
@@ -127,6 +128,11 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function PurchaseInvoiceNewRoute() {
   const [params] = useUrlParams();
   const supplierId = params.get("supplierId");
+
+  const sharedData = useRouteData<{ paymentTerms: ListItem[] }>(
+    path.to.purchaseInvoiceRoot
+  );
+
   const initialValues = {
     id: undefined,
     invoiceId: undefined,
@@ -139,6 +145,7 @@ export default function PurchaseInvoiceNewRoute() {
       <PurchaseInvoiceForm
         // @ts-expect-error
         initialValues={initialValues}
+        paymentTerms={sharedData?.paymentTerms ?? []}
       />
     </Box>
   );

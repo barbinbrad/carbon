@@ -6486,8 +6486,9 @@ CREATE TABLE "purchaseInvoice" (
   "status" "purchaseInvoiceStatus" NOT NULL DEFAULT 'Draft',
   "supplierId" TEXT,
   "supplierReference" TEXT,
-  "supplierLocationId" TEXT,
-  "supplierContactId" TEXT,
+  "invoiceSupplierId" TEXT,
+  "invoiceSupplierLocationId" TEXT,
+  "invoiceSupplierContactId" TEXT,
   "paymentTermId" TEXT,
   "currencyCode" TEXT NOT NULL,
   "exchangeRate" NUMERIC(10, 4) NOT NULL DEFAULT 1,
@@ -6506,8 +6507,9 @@ CREATE TABLE "purchaseInvoice" (
 
   CONSTRAINT "purchaseInvoice_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "purchaseInvoice_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "supplier" ("id"),
-  CONSTRAINT "purchaseInvoice_supplierLocationId_fkey" FOREIGN KEY ("supplierLocationId") REFERENCES "supplierLocation" ("id"),
-  CONSTRAINT "purchaseInvoice_supplierContactId_fkey" FOREIGN KEY ("supplierContactId") REFERENCES "supplierContact" ("id"),
+  CONSTRAINT "purchaseInvoice_invoiceSupplierId_fkey" FOREIGN KEY ("invoiceSupplierId") REFERENCES "supplier" ("id"),
+  CONSTRAINT "purchaseInvoice_invoiceSupplierLocationId_fkey" FOREIGN KEY ("invoiceSupplierLocationId") REFERENCES "supplierLocation" ("id"),
+  CONSTRAINT "purchaseInvoice_invoiceSupplierContactId_fkey" FOREIGN KEY ("invoiceSupplierContactId") REFERENCES "supplierContact" ("id"),
   CONSTRAINT "purchaseInvoice_paymentTermId_fkey" FOREIGN KEY ("paymentTermId") REFERENCES "paymentTerm" ("id"),
   CONSTRAINT "purchaseInvoice_currencyCode_fkey" FOREIGN KEY ("currencyCode") REFERENCES "currency" ("code"),
   CONSTRAINT "purchaseInvoice_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id"),
@@ -6774,10 +6776,13 @@ CREATE OR REPLACE VIEW "purchaseInvoices" AS
     pi."invoiceId",
     pi."supplierId",
     pi."supplierReference",
-    pi."supplierContactId",
+    pi."invoiceSupplierId",
+    pi."invoiceSupplierLocationId",
+    pi."invoiceSupplierContactId",
     pi."dateIssued",
     pi."dateDue",
     pi."datePaid",
+    pi."paymentTermId",
     pi."currencyCode",
     pi."exchangeRate",
     pi."subtotal",
@@ -6801,7 +6806,7 @@ CREATE OR REPLACE VIEW "purchaseInvoices" AS
     u2."fullName" AS "updatedByFullName"
   FROM "purchaseInvoice" pi
     LEFT JOIN "supplier" s ON s.id = pi."supplierId"
-    LEFT JOIN "supplierContact" sc ON sc.id = pi."supplierContactId"
+    LEFT JOIN "supplierContact" sc ON sc.id = pi."invoiceSupplierContactId"
     LEFT JOIN "contact" c ON c.id = sc."contactId"
     LEFT JOIN "user" u ON u."id" = pi."createdBy"
     LEFT JOIN "user" u2 ON u2."id" = pi."updatedBy";

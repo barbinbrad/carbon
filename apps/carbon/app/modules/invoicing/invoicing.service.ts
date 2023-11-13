@@ -108,6 +108,8 @@ export async function upsertPurchaseInvoice(
     .insert([
       {
         ...purchaseInvoice,
+        invoiceSupplierId:
+          purchaseInvoice.invoiceSupplierId ?? purchaseInvoice.supplierId ?? "",
         currencyCode: purchaseInvoice.currencyCode ?? currencyCode ?? "USD",
         paymentTermId: purchaseInvoice.paymentTermId ?? paymentTermId,
       },

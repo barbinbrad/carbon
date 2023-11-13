@@ -13,6 +13,7 @@ import {
 } from "~/modules/invoicing";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
+import type { ListItem } from "~/types";
 import { assertIsPost } from "~/utils/http";
 import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
@@ -62,6 +63,9 @@ export async function action({ request, params }: ActionFunctionArgs) {
 export default function PurchaseInvoiceBasicRoute() {
   const { invoiceId } = useParams();
   if (!invoiceId) throw new Error("Could not find invoiceId");
+  const sharedData = useRouteData<{ paymentTerms: ListItem[] }>(
+    path.to.purchaseInvoiceRoot
+  );
   const invoiceData = useRouteData<{ purchaseInvoice: PurchaseInvoice }>(
     path.to.purchaseInvoice(invoiceId)
   );
@@ -71,8 +75,14 @@ export default function PurchaseInvoiceBasicRoute() {
     id: invoiceData?.purchaseInvoice?.id ?? "",
     invoiceId: invoiceData?.purchaseInvoice?.invoiceId ?? "",
     supplierId: invoiceData?.purchaseInvoice?.supplierId ?? "",
-    supplierContactId: invoiceData?.purchaseInvoice?.supplierContactId ?? "",
     supplierReference: invoiceData?.purchaseInvoice?.supplierReference ?? "",
+    invoiceSupplierId: invoiceData?.purchaseInvoice?.invoiceSupplierId ?? "",
+    invoiceSupplierContactId:
+      invoiceData?.purchaseInvoice?.invoiceSupplierContactId ?? "",
+    invoiceSupplierLocationId:
+      invoiceData?.purchaseInvoice.invoiceSupplierLocationId ?? "",
+    paymentTermId: invoiceData?.purchaseInvoice?.paymentTermId ?? "",
+    currencyCode: invoiceData?.purchaseInvoice?.currencyCode ?? "",
     dateIssued: invoiceData?.purchaseInvoice?.dateIssued ?? "",
     dateDue: invoiceData?.purchaseInvoice?.dateDue ?? "",
     status: invoiceData?.purchaseInvoice?.status ?? ("Draft" as "Draft"),
@@ -81,7 +91,10 @@ export default function PurchaseInvoiceBasicRoute() {
   return (
     <>
       <Flex w="full" rowGap={4} flexDirection="column">
-        <PurchaseInvoiceForm initialValues={initialValues} />
+        <PurchaseInvoiceForm
+          initialValues={initialValues}
+          paymentTerms={sharedData?.paymentTerms ?? []}
+        />
         {/* <PurchaseInvoiceLines /> */}
         <Outlet />
       </Flex>

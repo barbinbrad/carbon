@@ -588,7 +588,13 @@ export async function upsertPurchaseOrder(
   if (supplierPayment.error) return supplierPayment;
   if (supplierShipping.error) return supplierShipping;
 
-  const { currencyCode, paymentTermId } = supplierPayment.data;
+  const {
+    currencyCode,
+    paymentTermId,
+    invoiceSupplierId,
+    invoiceSupplierContactId,
+    invoiceSupplierLocationId,
+  } = supplierPayment.data;
 
   const { shippingMethodId, shippingTermId } = supplierShipping.data;
 
@@ -616,7 +622,9 @@ export async function upsertPurchaseOrder(
       {
         id: purchaseOrderId,
         currencyCode: currencyCode ?? "USD",
-        invoiceSupplierId: purchaseOrder.supplierId,
+        invoiceSupplierId: invoiceSupplierId,
+        invoiceSupplierContactId: invoiceSupplierContactId,
+        invoiceSupplierLocationId: invoiceSupplierLocationId,
         paymentTermId: paymentTermId,
       },
     ]),

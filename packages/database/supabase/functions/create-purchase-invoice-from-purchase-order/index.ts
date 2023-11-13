@@ -77,11 +77,13 @@ serve(async (req: Request) => {
         .values({
           invoiceId: purchaseInvoiceId,
           status: "Draft",
-          supplierId: purchaseOrderPayment.data.invoiceSupplierId,
+          supplierId: purchaseOrder.data?.supplierId,
           supplierReference: purchaseOrder.data?.supplierReference,
-          supplierLocationId:
+          invoiceSupplierId: purchaseOrderPayment.data.invoiceSupplierId,
+          invoiceSupplierContactId:
+            purchaseOrderPayment.data.invoiceSupplierContactId,
+          invoiceSupplierLocationId:
             purchaseOrderPayment.data.invoiceSupplierLocationId,
-          supplierContactId: purchaseOrderPayment.data.invoiceSupplierContactId,
           paymentTermId: purchaseOrderPayment.data.paymentTermId,
           currencyCode: purchaseOrderPayment.data.currencyCode,
           exchangeRate: 1,

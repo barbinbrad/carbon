@@ -6,14 +6,14 @@ import type {
   SupabaseClient,
 } from "@supabase/supabase-js";
 import type { EditableTableCellComponentProps } from "~/components/Editable";
-import type { PurchaseOrderLine } from "~/modules/purchasing";
+import type { PurchaseInvoiceLine } from "~/modules/invoicing";
 
-const EditablePurchaseOrderLineNumber =
+const EditablePurchaseInvoiceLineNumber =
   (
     mutation: (
       accessorKey: string,
       newValue: string,
-      row: PurchaseOrderLine
+      row: PurchaseInvoiceLine
     ) => Promise<PostgrestSingleResponse<unknown>>,
     options: {
       client?: SupabaseClient<Database>;
@@ -29,12 +29,12 @@ const EditablePurchaseOrderLineNumber =
     accessorKey,
     onError,
     onUpdate,
-  }: EditableTableCellComponentProps<PurchaseOrderLine>) => {
+  }: EditableTableCellComponentProps<PurchaseInvoiceLine>) => {
     const { client, parts, accounts, userId } = options;
     const selectOptions =
-      row.purchaseOrderLineType === "Part"
+      row.invoiceLineType === "Part"
         ? parts
-        : row.purchaseOrderLineType === "G/L Account"
+        : row.invoiceLineType === "G/L Account"
         ? accounts
         : [];
 
@@ -62,7 +62,7 @@ const EditablePurchaseOrderLineNumber =
 
       try {
         const { error } = await client
-          .from("purchaseOrderLine")
+          .from("purchaseInvoiceLine")
           .update({
             partId: null,
             assetId: null,
@@ -123,7 +123,7 @@ const EditablePurchaseOrderLineNumber =
 
       try {
         const { error } = await client
-          .from("purchaseOrderLine")
+          .from("purchaseInvoiceLine")
           .update({
             partId: partId,
             assetId: null,
@@ -132,7 +132,7 @@ const EditablePurchaseOrderLineNumber =
             unitOfMeasureCode: part.data?.unitOfMeasureCode ?? null,
             locationId: options.defaultLocationId,
             shelfId: shelf.data?.defaultShelfId ?? null,
-            unitPrice: cost.data?.unitCost ?? null,
+            unitPrice: cost.data?.unitCost,
             updatedBy: userId,
           })
           .eq("id", row.id);
@@ -147,9 +147,9 @@ const EditablePurchaseOrderLineNumber =
     const onChange = (newValue: { value: string; label: string } | null) => {
       if (!newValue) return;
 
-      if (row.purchaseOrderLineType === "Part") {
+      if (row.invoiceLineType === "Part") {
         onPartChange(newValue);
-      } else if (row.purchaseOrderLineType === "G/L Account") {
+      } else if (row.invoiceLineType === "G/L Account") {
         onAccountChange(newValue);
       }
     };
@@ -171,4 +171,6 @@ const EditablePurchaseOrderLineNumber =
     );
   };
 
-export default EditablePurchaseOrderLineNumber;
+EditablePurchaseInvoiceLineNumber.displayName =
+  "EditablePurchaseInvoiceLineNumber";
+export default EditablePurchaseInvoiceLineNumber;

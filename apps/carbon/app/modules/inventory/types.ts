@@ -3,7 +3,7 @@ import type {
   getReceiptLines,
   getReceipts,
   getShippingMethods,
-} from "./services";
+} from "./inventory.service";
 
 export type Receipt = NonNullable<
   Awaited<ReturnType<typeof getReceipts>>["data"]

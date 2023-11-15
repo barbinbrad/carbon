@@ -7,7 +7,7 @@ import { useRouteData } from "~/hooks";
 import type { PurchaseInvoice } from "~/modules/invoicing";
 import {
   PurchaseInvoiceForm,
-  // PurchaseInvoiceLines,
+  PurchaseInvoiceLines,
   purchaseInvoiceValidator,
   upsertPurchaseInvoice,
 } from "~/modules/invoicing";
@@ -95,7 +95,7 @@ export default function PurchaseInvoiceBasicRoute() {
           initialValues={initialValues}
           paymentTerms={sharedData?.paymentTerms ?? []}
         />
-        {/* <PurchaseInvoiceLines /> */}
+        <PurchaseInvoiceLines />
         <Outlet />
       </Flex>
     </>

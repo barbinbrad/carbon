@@ -9,7 +9,7 @@ import type {
   getPaymentTerms,
   getPurchasingPostingGroups,
   getSalesPostingGroups,
-} from "./services";
+} from "./accounting.service";
 
 export type Account = NonNullable<
   Awaited<ReturnType<typeof getAccount>>["data"]

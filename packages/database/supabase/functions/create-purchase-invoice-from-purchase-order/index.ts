@@ -128,34 +128,9 @@ serve(async (req: Request) => {
         return acc;
       }, []);
 
-      if (uninvoicedLines && uninvoicedLines.length) {
-        for await (const purchaseOrderLine of uninvoicedLines ?? []) {
-          await trx
-            .updateTable("purchaseOrderLine")
-            .set({
-              quantityInvoiced:
-                (purchaseOrderLine.quantityInvoiced ?? 0) +
-                (purchaseOrderLine.quantityToInvoice ?? 0),
-            })
-            .where("id", "=", purchaseOrderLine.id)
-            .execute();
-        }
-      }
-
       await trx
         .insertInto("purchaseInvoiceLine")
         .values(purchaseInvoiceLines)
-        .execute();
-
-      await trx
-        .updateTable("purchaseOrder")
-        .set({
-          status:
-            purchaseOrder.data?.status === "To Receive and Invoice"
-              ? "To Receive"
-              : "Completed",
-        })
-        .where("id", "=", purchaseOrderId)
         .execute();
     });
 

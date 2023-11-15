@@ -4,17 +4,17 @@ import { useCallback, useMemo } from "react";
 import { usePermissions, useUser } from "~/hooks";
 import { useSupabase } from "~/lib/supabase";
 import type { getAccountsList } from "~/modules/accounting";
-import type { PurchaseOrderLine } from "~/modules/purchasing";
+import type { PurchaseInvoiceLine } from "~/modules/invoicing";
 import { usePurchasedParts } from "~/stores/parts";
 import { path } from "~/utils/path";
 
-export default function usePurchaseOrderLines() {
+export default function usePurchaseInvoiceLines() {
   const { id: userId } = useUser();
   const { supabase } = useSupabase();
   const permissions = usePermissions();
 
-  const canEdit = permissions.can("update", "purchasing");
-  const canDelete = permissions.can("delete", "purchasing");
+  const canEdit = permissions.can("update", "invoicing");
+  const canDelete = permissions.can("delete", "invoicing");
 
   const parts = usePurchasedParts();
   const accountsFetcher =
@@ -45,10 +45,10 @@ export default function usePurchaseOrderLines() {
   );
 
   const onCellEdit = useCallback(
-    async (id: string, value: unknown, row: PurchaseOrderLine) => {
+    async (id: string, value: unknown, row: PurchaseInvoiceLine) => {
       if (!supabase) throw new Error("Supabase client not found");
       return await supabase
-        .from("purchaseOrderLine")
+        .from("purchaseInvoiceLine")
         .update({
           [id]: value,
           updatedBy: userId,

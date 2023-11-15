@@ -1,7 +1,3 @@
-import { useRef } from "react";
-import { useDatePickerState } from "@react-stately/datepicker";
-import { useDatePicker } from "@react-aria/datepicker";
-import { MdOutlineCalendarToday, MdOutlineDoNotDisturb } from "react-icons/md";
 import {
   Box,
   Icon,
@@ -9,14 +5,18 @@ import {
   InputRightElement,
   useOutsideClick,
 } from "@chakra-ui/react";
-import type { DatePickerProps } from "@react-types/datepicker";
 import type { CalendarDate } from "@internationalized/date";
+import { useDatePicker } from "@react-aria/datepicker";
+import { useDatePickerState } from "@react-stately/datepicker";
+import type { DatePickerProps } from "@react-types/datepicker";
+import { useRef } from "react";
+import { MdOutlineCalendarToday, MdOutlineDoNotDisturb } from "react-icons/md";
 
 import { FieldButton } from "./components/Button";
 import { Calendar } from "./components/Calendar";
+import DateField from "./components/DateField";
 import { Popover } from "./components/Popover";
 import { StyledField } from "./components/StyledField";
-import DateField from "./components/DateField";
 
 const DatePicker = (props: DatePickerProps<CalendarDate>) => {
   const state = useDatePickerState({

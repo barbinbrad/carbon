@@ -1,12 +1,12 @@
-import { useRef } from "react";
-import { useCalendarCell } from "@react-aria/calendar";
+import { Button, Td } from "@chakra-ui/react";
 import type { CalendarDate } from "@internationalized/date";
 import { isSameMonth } from "@internationalized/date";
-import { Button, Box } from "@chakra-ui/react";
+import { useCalendarCell } from "@react-aria/calendar";
 import type {
   CalendarState,
   RangeCalendarState,
 } from "@react-stately/calendar";
+import { useRef } from "react";
 
 export const CalendarCell = ({
   state,
@@ -18,24 +18,44 @@ export const CalendarCell = ({
   currentMonth: CalendarDate;
 }) => {
   const ref = useRef<HTMLButtonElement>(null);
-  const { cellProps, buttonProps, isSelected, isInvalid, formattedDate } =
-    useCalendarCell({ date }, state, ref);
+  const {
+    cellProps,
+    buttonProps,
+    isSelected,
+    isInvalid,
+    isDisabled,
+    isUnavailable,
+    isFocused,
+    formattedDate,
+  } = useCalendarCell({ date }, state, ref);
 
   const isOutsideMonth = !isSameMonth(currentMonth, date);
 
   return (
-    <Box as="td" {...cellProps} textAlign="center">
+    <Td {...cellProps} textAlign="center" p={1} border="none">
       <Button
         {...buttonProps}
         ref={ref}
-        hidden={isOutsideMonth}
         size="sm"
         colorScheme={isInvalid ? "red" : "brand"}
-        variant={isSelected ? "solid" : "ghost"}
-        width="100%"
+        variant={isSelected || isFocused ? "solid" : "ghost"}
+        w={8}
+        h={8}
+        p={0}
+        rounded="full"
+        opacity={
+          isOutsideMonth
+            ? 0.25
+            : isInvalid || isDisabled || isUnavailable
+            ? 0.5
+            : 1
+        }
+        _hover={{
+          bg: isSelected || isFocused ? undefined : "gray.200",
+        }}
       >
         {formattedDate}
       </Button>
-    </Box>
+    </Td>
   );
 };

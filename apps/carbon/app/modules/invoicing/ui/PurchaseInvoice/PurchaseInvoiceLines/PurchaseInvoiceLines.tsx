@@ -4,7 +4,6 @@ import {
   Card,
   CardBody,
   CardHeader,
-  Checkbox,
   Heading,
   HStack,
   IconButton,
@@ -21,30 +20,29 @@ import { IoMdTrash } from "react-icons/io";
 import { MdMoreHoriz } from "react-icons/md";
 import {
   EditableNumber,
-  EditablePurchaseOrderLineNumber,
+  EditablePurchaseInvoiceLineNumber,
   EditableText,
 } from "~/components/Editable";
 import Grid from "~/components/Grid";
 import { useRouteData, useUser } from "~/hooks";
-import type { PurchaseOrder, PurchaseOrderLine } from "~/modules/purchasing";
-import { usePurchaseOrderTotals } from "~/modules/purchasing";
+import type { PurchaseInvoice, PurchaseInvoiceLine } from "~/modules/invoicing";
+import { usePurchaseInvoiceTotals } from "~/modules/invoicing";
 import type { ListItem } from "~/types";
 import { path } from "~/utils/path";
-import usePurchaseOrderLines from "./usePurchaseOrderLines";
+import usePurchaseInvoiceLines from "./usePurchaseInvoiceLines";
 
-const PurchaseOrderLines = () => {
-  const { orderId } = useParams();
-  if (!orderId) throw new Error("orderId not found");
+const PurchaseInvoiceLines = () => {
+  const { invoiceId } = useParams();
+  if (!invoiceId) throw new Error("invoiceId not found");
 
   const navigate = useNavigate();
 
   const routeData = useRouteData<{
-    purchaseOrderLines: PurchaseOrderLine[];
+    purchaseInvoiceLines: PurchaseInvoiceLine[];
     locations: ListItem[];
-    purchaseOrder: PurchaseOrder;
-  }>(path.to.purchaseOrder(orderId));
+    purchaseInvoice: PurchaseInvoice;
+  }>(path.to.purchaseInvoice(invoiceId));
 
-  const locations = routeData?.locations ?? [];
   const { defaults, id: userId } = useUser();
   const {
     canEdit,
@@ -53,25 +51,25 @@ const PurchaseOrderLines = () => {
     partOptions,
     accountOptions,
     onCellEdit,
-  } = usePurchaseOrderLines();
-  const [, setPurchaseOrderTotals] = usePurchaseOrderTotals();
+  } = usePurchaseInvoiceLines();
+  const [, setPurchaseInvoiceTotals] = usePurchaseInvoiceTotals();
 
   const isEditable = ["Draft", "To Review"].includes(
-    routeData?.purchaseOrder?.status ?? ""
+    routeData?.purchaseInvoice?.status ?? ""
   );
 
-  const columns = useMemo<ColumnDef<PurchaseOrderLine>[]>(() => {
+  const columns = useMemo<ColumnDef<PurchaseInvoiceLine>[]>(() => {
     return [
       {
         header: "Line",
         cell: ({ row }) => row.index + 1,
       },
       {
-        accessorKey: "purchaseOrderLineType",
+        accessorKey: "invoiceLineType",
         header: "Type",
         cell: ({ row }) => (
           <HStack justify="space-between" minW={100}>
-            <span>{row.original.purchaseOrderLineType}</span>
+            <span>{row.original.invoiceLineType}</span>
             <Box position="relative" w={6} h={5}>
               <Menu>
                 <MenuButton
@@ -110,13 +108,11 @@ const PurchaseOrderLines = () => {
         accessorKey: "partId",
         header: "Number",
         cell: ({ row }) => {
-          switch (row.original.purchaseOrderLineType) {
+          switch (row.original.invoiceLineType) {
             case "Part":
               return <span>{row.original.partId}</span>;
             case "G/L Account":
               return <span>{row.original.accountNumber}</span>;
-            case "Comment":
-              return null;
             case "Fixed Asset":
               return <span>{row.original.assetId}</span>;
             default:
@@ -136,106 +132,37 @@ const PurchaseOrderLines = () => {
         },
       },
       {
-        accessorKey: "purchaseQuantity",
+        accessorKey: "quantity",
         header: "Quantity",
-        cell: ({ row }) => {
-          switch (row.original.purchaseOrderLineType) {
-            case "Comment":
-              return null;
-            default:
-              return <span>{row.original.purchaseQuantity}</span>;
-          }
-        },
+        cell: (item) => item.getValue(),
       },
       {
         accessorKey: "unitPrice",
         header: "Unit Price",
-        cell: ({ row }) => {
-          switch (row.original.purchaseOrderLineType) {
-            case "Comment":
-              return null;
-            default:
-              return <span>{row.original.unitPrice}</span>;
-          }
-        },
-      },
-      {
-        accessorKey: "locationId",
-        header: "Location",
-        cell: ({ row }) => {
-          switch (row.original.purchaseOrderLineType) {
-            case "Part":
-              return (
-                <span>
-                  {locations.find((l) => l.id == row.original.locationId)?.name}
-                </span>
-              );
-          }
-        },
+        cell: (item) => item.getValue(),
       },
       {
         accessorKey: "shelfId",
         header: "Shelf",
-        cell: ({ row }) => {
-          switch (row.original.purchaseOrderLineType) {
-            case "Comment":
-              return null;
-            default:
-              return <span>{row.original.shelfId}</span>;
-          }
-        },
+        cell: (item) => item.getValue(),
       },
       {
         id: "totalPrice",
         header: "Total Price",
         cell: ({ row }) => {
-          switch (row.original.purchaseOrderLineType) {
-            case "Comment":
-              return null;
-            default:
-              if (!row.original.unitPrice || !row.original.purchaseQuantity)
-                return 0;
-              return (
-                row.original.unitPrice * row.original.purchaseQuantity
-              ).toFixed(2);
-          }
+          if (!row.original.unitPrice || !row.original.quantity) return 0;
+          return (row.original.unitPrice * row.original.quantity).toFixed(2);
         },
       },
       {
         id: "quantityReceived",
         header: "Quantity Received",
-        cell: ({ row }) => {
-          switch (row.original.purchaseOrderLineType) {
-            case "Comment":
-              return null;
-            default:
-              return <span>{row.original.quantityReceived}</span>;
-          }
-        },
+        cell: (item) => item.getValue(),
       },
       {
         id: "quantityInvoiced",
         header: "Quantity Invoiced",
-        cell: ({ row }) => {
-          switch (row.original.purchaseOrderLineType) {
-            case "Comment":
-              return null;
-            default:
-              return <span>{row.original.quantityInvoiced}</span>;
-          }
-        },
-      },
-      {
-        id: "receivedComplete",
-        header: "Received Complete",
-        cell: ({ row }) => {
-          switch (row.original.purchaseOrderLineType) {
-            case "Comment":
-              return null;
-            default:
-              return <Checkbox isChecked={row.original.receivedComplete} />;
-          }
-        },
+        cell: (item) => item.getValue(),
       },
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -244,9 +171,9 @@ const PurchaseOrderLines = () => {
   const editableComponents = useMemo(
     () => ({
       description: EditableText(onCellEdit),
-      purchaseQuantity: EditableNumber(onCellEdit),
+      quantity: EditableNumber(onCellEdit),
       unitPrice: EditableNumber(onCellEdit),
-      partId: EditablePurchaseOrderLineNumber(onCellEdit, {
+      partId: EditablePurchaseInvoiceLineNumber(onCellEdit, {
         client: supabase,
         parts: partOptions,
         accounts: accountOptions,
@@ -269,7 +196,7 @@ const PurchaseOrderLines = () => {
       <Card w="full" minH={320}>
         <CardHeader display="flex" justifyContent="space-between">
           <Heading size="md" display="inline-flex">
-            Purchase Order Lines
+            Purchase Invoice Lines
           </Heading>
           {canEdit && isEditable && (
             <Button colorScheme="brand" as={Link} to="new">
@@ -278,22 +205,21 @@ const PurchaseOrderLines = () => {
           )}
         </CardHeader>
         <CardBody>
-          <Grid<PurchaseOrderLine>
-            data={routeData?.purchaseOrderLines ?? []}
+          <Grid<PurchaseInvoiceLine>
+            data={routeData?.purchaseInvoiceLines ?? []}
             columns={columns}
             canEdit={canEdit && isEditable}
             editableComponents={editableComponents}
-            onDataChange={(lines: PurchaseOrderLine[]) => {
+            onDataChange={(lines: PurchaseInvoiceLine[]) => {
               const totals = lines.reduce(
                 (acc, line) => {
-                  acc.total +=
-                    (line.purchaseQuantity ?? 0) * (line.unitPrice ?? 0);
+                  acc.total += (line.quantity ?? 0) * (line.unitPrice ?? 0);
 
                   return acc;
                 },
                 { total: 0 }
               );
-              setPurchaseOrderTotals(totals);
+              setPurchaseInvoiceTotals(totals);
             }}
             onNewRow={canEdit && isEditable ? () => navigate("new") : undefined}
           />
@@ -304,4 +230,4 @@ const PurchaseOrderLines = () => {
   );
 };
 
-export default PurchaseOrderLines;
+export default PurchaseInvoiceLines;

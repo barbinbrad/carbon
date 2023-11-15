@@ -1,11 +1,12 @@
-import { useCalendarGrid } from "@react-aria/calendar";
-import { getWeeksInMonth, endOfMonth } from "@internationalized/date";
+import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import type { DateDuration } from "@internationalized/date";
-import { CalendarCell } from "./CalendarCell";
+import { endOfMonth, getWeeksInMonth } from "@internationalized/date";
+import { useCalendarGrid } from "@react-aria/calendar";
 import type {
   CalendarState,
   RangeCalendarState,
 } from "@react-stately/calendar";
+import { CalendarCell } from "./CalendarCell";
 
 const locale = "en-US"; // TODO use user's locale
 
@@ -30,17 +31,25 @@ export const CalendarGrid = ({
   const weeksInMonth = getWeeksInMonth(state.visibleRange.start, locale);
 
   return (
-    <table {...gridProps}>
-      <thead {...headerProps}>
-        <tr>
+    <Table {...gridProps}>
+      <Thead {...headerProps}>
+        <Tr>
           {weekDays.map((day, index) => (
-            <th key={index}>{day}</th>
+            <Th
+              color="gray.500"
+              fontSize="sm"
+              key={index}
+              textAlign="center"
+              px={0}
+            >
+              {day}
+            </Th>
           ))}
-        </tr>
-      </thead>
-      <tbody>
+        </Tr>
+      </Thead>
+      <Tbody>
         {[...new Array(weeksInMonth).keys()].map((weekIndex) => (
-          <tr key={weekIndex}>
+          <Tr key={weekIndex} border="none">
             {state
               .getDatesInWeek(weekIndex, startDate)
               .map((date, i) =>
@@ -52,12 +61,12 @@ export const CalendarGrid = ({
                     currentMonth={startDate}
                   />
                 ) : (
-                  <td key={i} />
+                  <Td key={i} />
                 )
               )}
-          </tr>
+          </Tr>
         ))}
-      </tbody>
-    </table>
+      </Tbody>
+    </Table>
   );
 };

@@ -18,7 +18,7 @@ import type {
   getShifts,
   getWorkCellType,
   getWorkCellTypes,
-} from "./services";
+} from "./resources.service";
 
 export type Ability = NonNullable<
   Awaited<ReturnType<typeof getAbility>>["data"]

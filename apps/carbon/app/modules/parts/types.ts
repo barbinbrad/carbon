@@ -9,7 +9,7 @@ import type {
   getPartSuppliers,
   getUnitOfMeasure,
   getUnitOfMeasuresList,
-} from "./services";
+} from "./parts.service";
 
 export type PartCost = NonNullable<
   Awaited<ReturnType<typeof getPartCost>>

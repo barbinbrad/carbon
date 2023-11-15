@@ -220,7 +220,7 @@ CREATE OR REPLACE FUNCTION "purchaseInvoiceLine_update_price_change"()
     END IF;
     RETURN NEW;
   END;
-  $$ LANGUAGE plpgsql;
+  $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 CREATE TRIGGER "purchaseInvoiceLine_update_price_change"
   AFTER UPDATE ON "purchaseInvoiceLine"

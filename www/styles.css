@@ -46,6 +46,7 @@ body {
   --shiki-token-function: #12ff00;
   --shiki-token-string-expression: #028265;
   --shiki-token-punctuation: var(--shiki-color-text);
+  --shiki-token-string: #797afa;
 }
 
 .dark body {
@@ -56,6 +57,7 @@ body {
   --shiki-token-function: #12ff00;
   --shiki-token-string-expression: #50e3c2;
   --shiki-token-punctuation: var(--shiki-color-text);
+  --shiki-token-string: #797afa;
 
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, #111 300px),
     fixed 0 0 / 20px 20px radial-gradient(#313131 1px, transparent 0),

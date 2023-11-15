@@ -1,5 +1,5 @@
 import type { Database } from "@carbon/database";
-import type { getDocumentLabels } from "./services";
+import type { getDocumentLabels } from "./documents.service";
 
 export type Document = Omit<
   Database["public"]["Tables"]["document"]["Row"],

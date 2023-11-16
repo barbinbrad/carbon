@@ -64,6 +64,7 @@ export const theme = {
           borderColor: "gray.200",
           borderBottomWidth: "1px",
           borderBottomStyle: "solid",
+          letterSpacing: "tight",
         },
         footer: {
           borderTopWidth: "1px",
@@ -88,6 +89,7 @@ export const theme = {
           borderBottomWidth: "1px",
           borderBottomStyle: "solid",
           marginBottom: 4,
+          letterSpacing: "tight",
         },
         footer: {
           borderColor: "gray.200",
@@ -96,6 +98,11 @@ export const theme = {
         },
       },
       defaultProps: {},
+    },
+    Heading: {
+      baseStyle: {
+        letterSpacing: "tight",
+      },
     },
     Input: {
       defaultProps: {
@@ -116,6 +123,9 @@ export const theme = {
     },
     Modal: {
       baseStyle: {
+        header: {
+          letterSpacing: "tight",
+        },
         overlay: {
           backdropFilter: "blur(3px)",
         },

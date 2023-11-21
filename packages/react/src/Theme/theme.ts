@@ -64,6 +64,7 @@ export const theme = {
           borderColor: "gray.200",
           borderBottomWidth: "1px",
           borderBottomStyle: "solid",
+          fontWeight: "bold",
           letterSpacing: "tight",
         },
         footer: {
@@ -88,8 +89,9 @@ export const theme = {
           borderColor: "gray.200",
           borderBottomWidth: "1px",
           borderBottomStyle: "solid",
-          marginBottom: 4,
+          fontWeight: "bold",
           letterSpacing: "tight",
+          marginBottom: 4,
         },
         footer: {
           borderColor: "gray.200",
@@ -124,6 +126,7 @@ export const theme = {
     Modal: {
       baseStyle: {
         header: {
+          fontWeight: "bold",
           letterSpacing: "tight",
         },
         overlay: {

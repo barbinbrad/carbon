@@ -91,7 +91,7 @@ const AccountDefaultsForm = ({
                 </VStack>
                 <VStack w="full" alignItems="start" spacing={4}>
                   <Heading size="xs" color="gray.400" textTransform="uppercase">
-                    Cost of Goods Sold
+                    Expenses
                   </Heading>
                   <Grid
                     gridTemplateColumns={["1fr", "1fr 1fr", "1fr 1fr"]}
@@ -130,19 +130,7 @@ const AccountDefaultsForm = ({
                       label="Inventory Adjustment"
                       options={incomeStatementAccountOptions}
                     />
-                  </Grid>
-                </VStack>
-                <VStack w="full" alignItems="start" spacing={4}>
-                  <Heading size="xs" color="gray.400" textTransform="uppercase">
-                    Direct Costs
-                  </Heading>
-                  <Grid
-                    gridTemplateColumns={["1fr", "1fr 1fr", "1fr 1fr"]}
-                    gridColumnGap={8}
-                    gridRowGap={4}
-                    mb={4}
-                    w="full"
-                  >
+
                     <Select
                       name="materialVarianceAccount"
                       label="Material Variance"
@@ -167,7 +155,7 @@ const AccountDefaultsForm = ({
                 </VStack>
                 <VStack w="full" alignItems="start" spacing={4}>
                   <Heading size="xs" color="gray.400" textTransform="uppercase">
-                    Depreciation of Fixed Assets
+                    Fixed Assets
                   </Heading>
                   <Grid
                     gridTemplateColumns={["1fr", "1fr 1fr", "1fr 1fr"]}
@@ -261,9 +249,10 @@ const AccountDefaultsForm = ({
                       label="Receivables"
                       options={balanceSheetAccountOptions}
                     />
+
                     <Select
-                      name="inventoryShippedNotInvoicedAccount"
-                      label="Inventory Shipped Not Invoiced"
+                      name="inventoryInvoicedNotReceivedAccount"
+                      label="Inventory Invoiced Not Received"
                       options={balanceSheetAccountOptions}
                     />
                     <Select
@@ -340,6 +329,11 @@ const AccountDefaultsForm = ({
                     <Select
                       name="inventoryReceivedNotInvoicedAccount"
                       label="Inventory Received Not Invoiced"
+                      options={balanceSheetAccountOptions}
+                    />
+                    <Select
+                      name="inventoryShippedNotInvoicedAccount"
+                      label="Inventory Shipped Not Invoiced"
                       options={balanceSheetAccountOptions}
                     />
                     <Select

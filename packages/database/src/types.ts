@@ -270,6 +270,7 @@ export interface Database {
           inventoryAccount: string
           inventoryAdjustmentVarianceAccount: string
           inventoryInterimAccrualAccount: string
+          inventoryInvoicedNotReceivedAccount: string
           inventoryReceivedNotInvoicedAccount: string
           inventoryShippedNotInvoicedAccount: string
           maintenanceAccount: string
@@ -312,6 +313,7 @@ export interface Database {
           inventoryAccount: string
           inventoryAdjustmentVarianceAccount: string
           inventoryInterimAccrualAccount: string
+          inventoryInvoicedNotReceivedAccount: string
           inventoryReceivedNotInvoicedAccount: string
           inventoryShippedNotInvoicedAccount: string
           maintenanceAccount: string
@@ -354,6 +356,7 @@ export interface Database {
           inventoryAccount?: string
           inventoryAdjustmentVarianceAccount?: string
           inventoryInterimAccrualAccount?: string
+          inventoryInvoicedNotReceivedAccount?: string
           inventoryReceivedNotInvoicedAccount?: string
           inventoryShippedNotInvoicedAccount?: string
           maintenanceAccount?: string

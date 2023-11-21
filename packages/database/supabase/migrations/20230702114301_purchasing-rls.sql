@@ -1,8 +1,13 @@
 ALTER TABLE "purchaseOrder" ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Employees with purchasing_view can view purchase orders" ON "purchaseOrder"
+CREATE POLICY "Employees with purchasing_view, inventory_view, or invoicing_view can view purchase orders" ON "purchaseOrder"
   FOR SELECT
-  USING (coalesce(get_my_claim('purchasing_view')::boolean, false) = true AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
+  USING (
+    (
+      coalesce(get_my_claim('purchasing_view')::boolean, false) = true OR
+      coalesce(get_my_claim('inventory_view')::boolean, false) = true OR
+      coalesce(get_my_claim('invoicing_view')::boolean, false) = true
+    ) AND (get_my_claim('role'::text)) = '"employee"'::jsonb);
 
 CREATE POLICY "Suppliers with purchasing_view can their own purchase orders" ON "purchaseOrder"
   FOR SELECT

@@ -1,10 +1,10 @@
-import { useRef } from "react";
-import { useDateFieldState } from "@react-stately/datepicker";
+import { Box } from "@chakra-ui/react";
+import type { DateValue } from "@internationalized/date";
+import { createCalendar } from "@internationalized/date";
 import type { AriaDateFieldProps } from "@react-aria/datepicker";
 import { useDateField } from "@react-aria/datepicker";
-import { createCalendar } from "@internationalized/date";
-import type { DateValue } from "@internationalized/date";
-import { Box } from "@chakra-ui/react";
+import { useDateFieldState } from "@react-stately/datepicker";
+import { useRef } from "react";
 import { DateSegment } from "./DateSegment";
 
 const locale = "en-US"; // TODO use user's locale;

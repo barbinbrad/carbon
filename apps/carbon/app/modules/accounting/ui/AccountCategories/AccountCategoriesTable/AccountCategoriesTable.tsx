@@ -1,5 +1,4 @@
 import {
-  Badge,
   Button,
   ButtonGroup,
   IconButton,
@@ -63,18 +62,7 @@ const AccountCategoriesTable = memo(
         {
           header: "Debit/Credit",
           accessorKey: "normalBalance",
-          cell: (item) => {
-            const isDebit = item.getValue<string>() === "Debit";
-            const isCredit = item.getValue<string>() === "Credit";
-            return (
-              <Badge
-                size="sm"
-                colorScheme={isDebit ? "green" : isCredit ? "red" : "gray"}
-              >
-                {item.getValue<string>()}
-              </Badge>
-            );
-          },
+          cell: (item) => item.getValue(),
         },
 
         {

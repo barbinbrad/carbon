@@ -74,6 +74,10 @@ export default function useReceiptForm({
     navigate(path.to.receiptPost(receipt.id));
   };
 
+  const onInvoice = () => {
+    navigate(path.to.receiptInvoice(receipt.id));
+  };
+
   const sourceDocumentIdFromParams = params.get("sourceDocumentId");
   const sourceDocumentFromParams = params.get("sourceDocument");
 
@@ -385,6 +389,7 @@ export default function useReceiptForm({
     supplierId,
     sourceDocuments,
     onClose,
+    onInvoice,
     onPost,
     setLocationId,
     setReceiptLines,

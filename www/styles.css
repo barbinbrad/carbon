@@ -43,7 +43,7 @@ body {
   --shiki-token-constant: var(--shiki-color-text);
   --shiki-token-comment: #999;
   --shiki-token-keyword: #ff0078;
-  --shiki-token-function: #12ff00;
+  --shiki-token-function: #2a0093;
   --shiki-token-string-expression: #028265;
   --shiki-token-punctuation: var(--shiki-color-text);
   --shiki-token-string: #797afa;

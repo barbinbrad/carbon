@@ -43,6 +43,7 @@ CREATE TABLE "accountDefault" (
     "workInProgressAccount" TEXT NOT NULL,
     "receivablesAccount" TEXT NOT NULL,
     "inventoryShippedNotInvoicedAccount" TEXT NOT NULL,
+    "inventoryInvoicedNotReceivedAccount" TEXT NOT NULL,
     "bankCashAccount" TEXT NOT NULL,
     "bankLocalCurrencyAccount" TEXT NOT NULL,
     "bankForeignCurrencyAccount" TEXT NOT NULL,

@@ -1,7 +1,7 @@
 // theme.config.js
-import Image from "next/image";
 import { useTheme } from "next-themes";
-import { useState, useEffect } from "react";
+import Image from "next/image";
+import { useEffect, useState } from "react";
 
 const useDark = () => {
   const { resolvedTheme } = useTheme();
@@ -51,4 +51,9 @@ export default {
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     </>
   ),
+  useNextSeoProps() {
+    return {
+      titleTemplate: "%s – Carbon ERP",
+    };
+  },
 };

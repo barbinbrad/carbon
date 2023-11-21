@@ -72,11 +72,6 @@ const ReceiptForm = ({
     receiptLines: receiptLines ?? [],
   });
 
-  console.log({
-    initialValues,
-    isPosted,
-  });
-
   return (
     <>
       <Drawer onClose={onClose} isOpen={true} size="full">
@@ -88,7 +83,7 @@ const ReceiptForm = ({
             <VStack spacing={4} w="full" alignItems="start">
               <Menubar mb={2} mt={-2}>
                 <MenubarItem isDisabled={!canPost || isPosted} onClick={onPost}>
-                  Post Receipt
+                  Post
                 </MenubarItem>
               </Menubar>
 

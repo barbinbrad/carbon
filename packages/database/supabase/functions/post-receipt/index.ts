@@ -5,6 +5,7 @@ import type { Database } from "../../../src/types.ts";
 import { DB, getConnectionPool, getDatabaseClient } from "../lib/database.ts";
 import { corsHeaders } from "../lib/headers.ts";
 import { getSupabaseServiceRole } from "../lib/supabase.ts";
+import { credit, debit } from "../lib/utils.ts";
 import { getCurrentAccountingPeriod } from "../shared/get-accounting-period.ts";
 
 const pool = getConnectionPool(1);
@@ -202,7 +203,7 @@ serve(async (req: Request) => {
           journalLineInserts.push({
             accountNumber: postingGroup.inventoryInterimAccrualAccount,
             description: "Interim Inventory Accrual",
-            amount: -expectedValue,
+            amount: debit("asset", expectedValue),
             documentType: "Order",
             documentId: receipt.data?.sourceDocumentReadableId ?? undefined,
             externalDocumentId:
@@ -211,7 +212,7 @@ serve(async (req: Request) => {
           journalLineInserts.push({
             accountNumber: postingGroup.inventoryReceivedNotInvoicedAccount,
             description: "Inventory Received Not Invoiced",
-            amount: expectedValue,
+            amount: credit("liability", expectedValue),
             documentType: "Order",
             documentId: receipt.data?.sourceDocumentReadableId ?? undefined,
             externalDocumentId:

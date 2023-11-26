@@ -273,6 +273,7 @@ FROM "accountDefault" WHERE "id" = true;
 INSERT INTO "postingGroupPurchasing" (
   "partGroupId",
   "supplierTypeId",
+  "payablesAccount",
   "purchaseAccount",
   "purchaseDiscountAccount",
   "purchaseCreditAccount",
@@ -282,6 +283,7 @@ INSERT INTO "postingGroupPurchasing" (
 ) SELECT 
   NULL,
   NULL,
+  "payablesAccount",
   "purchaseAccount",
   "purchaseAccount",
   "purchaseAccount",
@@ -293,6 +295,7 @@ FROM "accountDefault" WHERE "id" = true;
 INSERT INTO "postingGroupSales" (
   "partGroupId",
   "customerTypeId",
+  "receivablesAccount",
   "salesAccount",
   "salesDiscountAccount",
   "salesCreditAccount",
@@ -302,6 +305,7 @@ INSERT INTO "postingGroupSales" (
 ) SELECT 
   NULL,
   NULL,
+  "receivablesAccount",
   "salesAccount",
   "salesDiscountAccount",
   "salesAccount",

@@ -4398,6 +4398,7 @@ export interface Database {
         Row: {
           id: string
           partGroupId: string | null
+          payablesAccount: string
           purchaseAccount: string
           purchaseCreditAccount: string
           purchaseDiscountAccount: string
@@ -4409,6 +4410,7 @@ export interface Database {
         Insert: {
           id?: string
           partGroupId?: string | null
+          payablesAccount: string
           purchaseAccount: string
           purchaseCreditAccount: string
           purchaseDiscountAccount: string
@@ -4420,6 +4422,7 @@ export interface Database {
         Update: {
           id?: string
           partGroupId?: string | null
+          payablesAccount?: string
           purchaseAccount?: string
           purchaseCreditAccount?: string
           purchaseDiscountAccount?: string
@@ -4434,6 +4437,18 @@ export interface Database {
             columns: ["partGroupId"]
             referencedRelation: "partGroup"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "postingGroupPurchasing_payablesAccount_fkey"
+            columns: ["payablesAccount"]
+            referencedRelation: "account"
+            referencedColumns: ["number"]
+          },
+          {
+            foreignKeyName: "postingGroupPurchasing_payablesAccount_fkey"
+            columns: ["payablesAccount"]
+            referencedRelation: "accounts"
+            referencedColumns: ["number"]
           },
           {
             foreignKeyName: "postingGroupPurchasing_purchaseAccount_fkey"
@@ -4520,6 +4535,7 @@ export interface Database {
           customerTypeId: string | null
           id: string
           partGroupId: string | null
+          receivablesAccount: string
           salesAccount: string
           salesCreditAccount: string
           salesDiscountAccount: string
@@ -4531,6 +4547,7 @@ export interface Database {
           customerTypeId?: string | null
           id?: string
           partGroupId?: string | null
+          receivablesAccount: string
           salesAccount: string
           salesCreditAccount: string
           salesDiscountAccount: string
@@ -4542,6 +4559,7 @@ export interface Database {
           customerTypeId?: string | null
           id?: string
           partGroupId?: string | null
+          receivablesAccount?: string
           salesAccount?: string
           salesCreditAccount?: string
           salesDiscountAccount?: string
@@ -4561,6 +4579,18 @@ export interface Database {
             columns: ["partGroupId"]
             referencedRelation: "partGroup"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "postingGroupSales_receivablesAccount_fkey"
+            columns: ["receivablesAccount"]
+            referencedRelation: "account"
+            referencedColumns: ["number"]
+          },
+          {
+            foreignKeyName: "postingGroupSales_receivablesAccount_fkey"
+            columns: ["receivablesAccount"]
+            referencedRelation: "accounts"
+            referencedColumns: ["number"]
           },
           {
             foreignKeyName: "postingGroupSales_salesAccount_fkey"

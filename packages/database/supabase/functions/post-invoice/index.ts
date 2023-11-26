@@ -424,9 +424,9 @@ serve(async (req: Request) => {
       });
 
       // credit the accounts payable account
-      // TODO: accountsPayable should be included in the purchasing posting group (and AR in sales posting group)
+
       journalLineInserts.push({
-        accountNumber: postingGroupPurchasing.accountsPayableAccount,
+        accountNumber: postingGroupPurchasing.payablesAccount,
         description: "Accounts Payable",
         amount: credit(
           "liability",

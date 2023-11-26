@@ -189,6 +189,7 @@ CREATE TABLE "postingGroupPurchasing" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "supplierTypeId" TEXT,
   "partGroupId" TEXT,
+  "payablesAccount" TEXT NOT NULL,
   "purchaseAccount" TEXT NOT NULL,
   "purchaseDiscountAccount" TEXT NOT NULL,
   "purchaseCreditAccount" TEXT NOT NULL,
@@ -200,6 +201,7 @@ CREATE TABLE "postingGroupPurchasing" (
   CONSTRAINT "postingGroupPurchasing_id_supplierTypeId_partGroupId_key" UNIQUE ("supplierTypeId", "partGroupId"),
   CONSTRAINT "postingGroupPurchasing_partGroupId_fkey" FOREIGN KEY ("partGroupId") REFERENCES "partGroup" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "postingGroupPurchasing_supplierTypeId_fkey" FOREIGN KEY ("supplierTypeId") REFERENCES "supplierType" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "postingGroupPurchasing_payablesAccount_fkey" FOREIGN KEY ("payablesAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "postingGroupPurchasing_purchaseAccount_fkey" FOREIGN KEY ("purchaseAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "postingGroupPurchasing_purchaseDiscountAccount_fkey" FOREIGN KEY ("purchaseDiscountAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "postingGroupPurchasing_purchaseCreditAccount_fkey" FOREIGN KEY ("purchaseCreditAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
@@ -230,6 +232,7 @@ CREATE TABLE "postingGroupSales" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "customerTypeId" TEXT,
   "partGroupId" TEXT,
+  "receivablesAccount" TEXT NOT NULL,
   "salesAccount" TEXT NOT NULL,
   "salesDiscountAccount" TEXT NOT NULL,
   "salesCreditAccount" TEXT NOT NULL,
@@ -241,6 +244,7 @@ CREATE TABLE "postingGroupSales" (
   CONSTRAINT "postingGroupSales_id_customerTypeId_partGroupId_key" UNIQUE ("customerTypeId", "partGroupId"),
   CONSTRAINT "postingGroupSales_partGroupId_fkey" FOREIGN KEY ("partGroupId") REFERENCES "partGroup" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "postingGroupSales_customerTypeId_fkey" FOREIGN KEY ("customerTypeId") REFERENCES "customerType" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "postingGroupSales_receivablesAccount_fkey" FOREIGN KEY ("receivablesAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "postingGroupSales_salesAccount_fkey" FOREIGN KEY ("salesAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "postingGroupSales_salesDiscountAccount_fkey" FOREIGN KEY ("salesDiscountAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "postingGroupSales_salesCreditAccount_fkey" FOREIGN KEY ("salesCreditAccount") REFERENCES "account" ("number") ON DELETE RESTRICT ON UPDATE CASCADE,
@@ -371,6 +375,7 @@ BEGIN
     INSERT INTO "postingGroupSales" (
       "partGroupId",
       "customerTypeId",
+      "receivablesAccount",
       "salesAccount",
       "salesDiscountAccount",
       "salesCreditAccount",
@@ -380,6 +385,7 @@ BEGIN
     ) VALUES (
       new."id",
       rec."id",
+      account_defaults."receivablesAccount",
       account_defaults."salesAccount",
       account_defaults."salesDiscountAccount",
       account_defaults."receivablesAccount",
@@ -393,6 +399,7 @@ BEGIN
   INSERT INTO "postingGroupSales" (
     "partGroupId",
     "customerTypeId",
+    "receivablesAccount",
     "salesAccount",
     "salesDiscountAccount",
     "salesCreditAccount",
@@ -402,6 +409,7 @@ BEGIN
   ) VALUES (
     new."id",
     NULL,
+    account_defaults."receivablesAccount",
     account_defaults."salesAccount",
     account_defaults."salesDiscountAccount",
     account_defaults."receivablesAccount",
@@ -415,6 +423,7 @@ BEGIN
     INSERT INTO "postingGroupPurchasing" (
       "partGroupId",
       "supplierTypeId",
+      "payablesAccount", 
       "purchaseAccount",
       "purchaseDiscountAccount",
       "purchaseCreditAccount",
@@ -424,6 +433,7 @@ BEGIN
     ) VALUES (
       new."id",
       rec."id",
+      account_defaults."payablesAccount",
       account_defaults."purchaseAccount",
       account_defaults."purchaseAccount",
       account_defaults."payablesAccount",
@@ -437,6 +447,7 @@ BEGIN
   INSERT INTO "postingGroupPurchasing" (
     "partGroupId",
     "supplierTypeId",
+    "payablesAccount",
     "purchaseAccount",
     "purchaseDiscountAccount",
     "purchaseCreditAccount",
@@ -446,6 +457,7 @@ BEGIN
   ) VALUES (
     new."id",
     NULL,
+    account_defaults."payablesAccount",
     account_defaults."purchaseAccount",
     account_defaults."purchaseAccount",
     account_defaults."payablesAccount",
@@ -552,6 +564,7 @@ BEGIN
     INSERT INTO "postingGroupSales" (
       "customerTypeId",
       "partGroupId",
+      "receivablesAccount",
       "salesAccount",
       "salesDiscountAccount",
       "salesCreditAccount",
@@ -561,6 +574,7 @@ BEGIN
     ) VALUES (
       new."id",
       rec."id",
+      account_defaults."receivablesAccount",
       account_defaults."salesAccount",
       account_defaults."salesDiscountAccount",
       account_defaults."salesAccount",
@@ -574,6 +588,7 @@ BEGIN
   INSERT INTO "postingGroupSales" (
     "customerTypeId",
     "partGroupId",
+    "receivablesAccount",
     "salesAccount",
     "salesDiscountAccount",
     "salesCreditAccount",
@@ -583,6 +598,7 @@ BEGIN
   ) VALUES (
     new."id",
     NULL,
+    account_defaults."receivablesAccount",
     account_defaults."salesAccount",
     account_defaults."salesDiscountAccount",
     account_defaults."salesAccount",
@@ -613,6 +629,7 @@ BEGIN
     INSERT INTO "postingGroupPurchasing" (
       "supplierTypeId",
       "partGroupId",
+      "payablesAccount",
       "purchaseAccount",
       "purchaseDiscountAccount",
       "purchaseCreditAccount",
@@ -622,6 +639,7 @@ BEGIN
     ) VALUES (
       new."id",
       rec."id",
+      account_defaults."payablesAccount",
       account_defaults."purchaseAccount",
       account_defaults."purchaseAccount",
       account_defaults."purchaseAccount",
@@ -635,6 +653,7 @@ BEGIN
   INSERT INTO "postingGroupPurchasing" (
     "supplierTypeId",
     "partGroupId",
+    "payablesAccount",
     "purchaseAccount",
     "purchaseDiscountAccount",
     "purchaseCreditAccount",
@@ -644,6 +663,7 @@ BEGIN
   ) VALUES (
     new."id",
     NULL,
+    account_defaults."payablesAccount",
     account_defaults."purchaseAccount",
     account_defaults."purchaseAccount",
     account_defaults."purchaseAccount",

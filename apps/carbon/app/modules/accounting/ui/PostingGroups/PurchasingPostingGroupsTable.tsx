@@ -59,6 +59,11 @@ const PurchasingPostingGroupsTable = ({
             ?.name,
       },
       {
+        accessorKey: "payablesAccount",
+        header: "Payables",
+        cell: (item) => item.getValue(),
+      },
+      {
         accessorKey: "purchaseAccount",
         header: "Purchase",
         cell: (item) => item.getValue(),
@@ -88,6 +93,7 @@ const PurchasingPostingGroupsTable = ({
 
   const editableComponents = useMemo(
     () => ({
+      payablesAccount: EditableList(onCellEdit, balanceSheetAccountOptions),
       purchaseAccount: EditableList(onCellEdit, incomeStatementAccountOptions),
       purchaseDiscountAccount: EditableList(
         onCellEdit,

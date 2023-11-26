@@ -56,6 +56,11 @@ const SalesPostingGroupsTable = ({
             ?.name,
       },
       {
+        accessorKey: "receivablesAccount",
+        header: "Receivables",
+        cell: (item) => item.getValue(),
+      },
+      {
         accessorKey: "salesAccount",
         header: "Sales",
         cell: (item) => item.getValue(),
@@ -85,6 +90,7 @@ const SalesPostingGroupsTable = ({
 
   const editableComponents = useMemo(
     () => ({
+      receivablesAccount: EditableList(onCellEdit, balanceSheetAccountOptions),
       salesAccount: EditableList(onCellEdit, incomeStatementAccountOptions),
       salesDiscountAccount: EditableList(
         onCellEdit,

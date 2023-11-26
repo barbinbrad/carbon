@@ -95,9 +95,11 @@ CREATE TABLE "journalLine" (
   "accountNumber" TEXT NOT NULL,
   "description" TEXT,
   "amount" NUMERIC(19, 4) NOT NULL,
+  "quantity" NUMERIC(12, 4) NOT NULL DEFAULT 1,
   "documentType" "journalLineDocumentType", 
   "documentId" TEXT,
   "externalDocumentId" TEXT,
+  "reference" TEXT,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
 
   CONSTRAINT "journalLine_pkey" PRIMARY KEY ("id"),
@@ -314,5 +316,21 @@ AS $$
 $$;
 
 
-
+CREATE OR REPLACE VIEW "ledgers" WITH(SECURITY_INVOKER=true) AS
+  SELECT 
+    jl."reference",
+    jl."accountNumber",
+    jl."description",
+    jl."amount",
+    jl."quantity",
+    vl."costAmountActual",
+    vl."costAmountExpected",
+    vl."actualCostPostedToGl",
+    vl."expectedCostPostedToGl"
+    FROM "journalLine" jl
+      INNER JOIN "valueLedgerJournalLineRelation" vljlr
+        ON jl."id" = vljlr."journalLineId"
+      INNER JOIN "valueLedger" vl
+        ON vl."id" = vljlr."valueLedgerId"
+      
 

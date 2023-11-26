@@ -2821,6 +2821,8 @@ export interface Database {
           externalDocumentId: string | null
           id: string
           journalId: number
+          quantity: number
+          reference: string | null
         }
         Insert: {
           accountNumber: string
@@ -2834,6 +2836,8 @@ export interface Database {
           externalDocumentId?: string | null
           id?: string
           journalId: number
+          quantity?: number
+          reference?: string | null
         }
         Update: {
           accountNumber?: string
@@ -2847,6 +2851,8 @@ export interface Database {
           externalDocumentId?: string | null
           id?: string
           journalId?: number
+          quantity?: number
+          reference?: string | null
         }
         Relationships: [
           {
@@ -4646,6 +4652,7 @@ export interface Database {
           invoiceSupplierId: string | null
           invoiceSupplierLocationId: string | null
           paymentTermId: string | null
+          postingDate: string | null
           status: Database["public"]["Enums"]["purchaseInvoiceStatus"]
           subtotal: number
           supplierId: string | null
@@ -4671,6 +4678,7 @@ export interface Database {
           invoiceSupplierId?: string | null
           invoiceSupplierLocationId?: string | null
           paymentTermId?: string | null
+          postingDate?: string | null
           status?: Database["public"]["Enums"]["purchaseInvoiceStatus"]
           subtotal?: number
           supplierId?: string | null
@@ -4696,6 +4704,7 @@ export interface Database {
           invoiceSupplierId?: string | null
           invoiceSupplierLocationId?: string | null
           paymentTermId?: string | null
+          postingDate?: string | null
           status?: Database["public"]["Enums"]["purchaseInvoiceStatus"]
           subtotal?: number
           supplierId?: string | null
@@ -4829,6 +4838,7 @@ export interface Database {
           id: string
           invoiceId: string
           invoiceLineType: Database["public"]["Enums"]["payableLineType"]
+          locationId: string | null
           partId: string | null
           purchaseOrderId: string | null
           purchaseOrderLineId: string | null
@@ -4849,6 +4859,7 @@ export interface Database {
           id?: string
           invoiceId: string
           invoiceLineType: Database["public"]["Enums"]["payableLineType"]
+          locationId?: string | null
           partId?: string | null
           purchaseOrderId?: string | null
           purchaseOrderLineId?: string | null
@@ -4869,6 +4880,7 @@ export interface Database {
           id?: string
           invoiceId?: string
           invoiceLineType?: Database["public"]["Enums"]["payableLineType"]
+          locationId?: string | null
           partId?: string | null
           purchaseOrderId?: string | null
           purchaseOrderLineId?: string | null
@@ -4920,6 +4932,24 @@ export interface Database {
             columns: ["invoiceId"]
             referencedRelation: "purchaseInvoices"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseInvoiceLines_locationId_fkey"
+            columns: ["locationId"]
+            referencedRelation: "location"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseInvoiceLines_locationId_fkey"
+            columns: ["locationId"]
+            referencedRelation: "partQuantities"
+            referencedColumns: ["locationId"]
+          },
+          {
+            foreignKeyName: "purchaseInvoiceLines_locationId_fkey"
+            columns: ["locationId"]
+            referencedRelation: "purchaseOrders"
+            referencedColumns: ["locationId"]
           },
           {
             foreignKeyName: "purchaseInvoiceLines_partId_fkey"
@@ -8204,6 +8234,33 @@ export interface Database {
         }
         Relationships: []
       }
+      ledgers: {
+        Row: {
+          accountNumber: string | null
+          actualCostPostedToGl: number | null
+          amount: number | null
+          costAmountActual: number | null
+          costAmountExpected: number | null
+          description: string | null
+          expectedCostPostedToGl: number | null
+          quantity: number | null
+          reference: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "journalLine_accountNumber_fkey"
+            columns: ["accountNumber"]
+            referencedRelation: "account"
+            referencedColumns: ["number"]
+          },
+          {
+            foreignKeyName: "journalLine_accountNumber_fkey"
+            columns: ["accountNumber"]
+            referencedRelation: "accounts"
+            referencedColumns: ["number"]
+          }
+        ]
+      }
       partners: {
         Row: {
           abilityIds: string[] | null
@@ -8278,6 +8335,7 @@ export interface Database {
           invoiceSupplierId: string | null
           invoiceSupplierLocationId: string | null
           paymentTermId: string | null
+          postingDate: string | null
           status: Database["public"]["Enums"]["purchaseInvoiceStatus"] | null
           subtotal: number | null
           supplierId: string | null

@@ -62,30 +62,33 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
 export default function PurchaseInvoiceBasicRoute() {
   const { invoiceId } = useParams();
-  if (!invoiceId) throw new Error("Could not find invoiceId");
+  if (!invoiceId) throw new Error("invoiceId not found");
   const sharedData = useRouteData<{ paymentTerms: ListItem[] }>(
     path.to.purchaseInvoiceRoot
   );
   const invoiceData = useRouteData<{ purchaseInvoice: PurchaseInvoice }>(
     path.to.purchaseInvoice(invoiceId)
   );
+
+  if (!invoiceData?.purchaseInvoice)
+    throw new Error("purchaseInvoice not found");
+  const { purchaseInvoice } = invoiceData;
+
   if (!invoiceData) throw new Error("Could not find invoice data");
 
   const initialValues = {
-    id: invoiceData?.purchaseInvoice?.id ?? "",
-    invoiceId: invoiceData?.purchaseInvoice?.invoiceId ?? "",
-    supplierId: invoiceData?.purchaseInvoice?.supplierId ?? "",
-    supplierReference: invoiceData?.purchaseInvoice?.supplierReference ?? "",
-    invoiceSupplierId: invoiceData?.purchaseInvoice?.invoiceSupplierId ?? "",
-    invoiceSupplierContactId:
-      invoiceData?.purchaseInvoice?.invoiceSupplierContactId ?? "",
-    invoiceSupplierLocationId:
-      invoiceData?.purchaseInvoice.invoiceSupplierLocationId ?? "",
-    paymentTermId: invoiceData?.purchaseInvoice?.paymentTermId ?? "",
-    currencyCode: invoiceData?.purchaseInvoice?.currencyCode ?? "",
-    dateIssued: invoiceData?.purchaseInvoice?.dateIssued ?? "",
-    dateDue: invoiceData?.purchaseInvoice?.dateDue ?? "",
-    status: invoiceData?.purchaseInvoice?.status ?? ("Draft" as "Draft"),
+    id: purchaseInvoice.id ?? "",
+    invoiceId: purchaseInvoice.invoiceId ?? "",
+    supplierId: purchaseInvoice.supplierId ?? "",
+    supplierReference: purchaseInvoice.supplierReference ?? "",
+    invoiceSupplierId: purchaseInvoice.invoiceSupplierId ?? "",
+    invoiceSupplierContactId: purchaseInvoice.invoiceSupplierContactId ?? "",
+    invoiceSupplierLocationId: purchaseInvoice.invoiceSupplierLocationId ?? "",
+    paymentTermId: purchaseInvoice.paymentTermId ?? "",
+    currencyCode: purchaseInvoice.currencyCode ?? "",
+    dateIssued: purchaseInvoice.dateIssued ?? "",
+    dateDue: purchaseInvoice.dateDue ?? "",
+    status: purchaseInvoice.status ?? ("Draft" as "Draft"),
   };
 
   return (

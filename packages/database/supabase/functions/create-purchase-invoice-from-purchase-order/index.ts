@@ -114,6 +114,7 @@ serve(async (req: Request) => {
             purchaseOrderId: line.purchaseOrderId,
             purchaseOrderLineId: line.id,
             partId: line.partId,
+            locationId: line.locationId,
             accountNumber: line.accountNumber,
             assetId: line.assetId,
             description: line.description,

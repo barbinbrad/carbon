@@ -58,7 +58,7 @@ const CustomerForm = ({ initialValues }: CustomerFormProps) => {
             {isEditing ? "Customer Overview" : "New Customer"}
           </Heading>
           {!isEditing && (
-            <Text color="gray.500">
+            <Text color="gray.500" fontWeight="normal">
               A customer is a business or person who buys your parts or
               services.
             </Text>

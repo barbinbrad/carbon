@@ -72,7 +72,7 @@ const PurchaseInvoiceForm = ({
             {isEditing ? "Purchase Invoice" : "New Purchase Invoice"}
           </Heading>
           {!isEditing && (
-            <Text color="gray.500">
+            <Text color="gray.500" fontWeight="normal">
               A purchase invoice is a document that specifies the products or
               services purchased by a customer and the corresponding cost.
             </Text>

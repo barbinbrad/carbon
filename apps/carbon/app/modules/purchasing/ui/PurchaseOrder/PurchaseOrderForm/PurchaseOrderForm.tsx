@@ -65,7 +65,7 @@ const PurchaseOrderForm = ({ initialValues }: PurchaseOrderFormProps) => {
             {isEditing ? "Purchase Order" : "New Purchase Order"}
           </Heading>
           {!isEditing && (
-            <Text color="gray.500">
+            <Text color="gray.500" fontWeight="normal">
               A purchase order contains information about the agreement between
               the company and a specific supplier for parts and services.
             </Text>

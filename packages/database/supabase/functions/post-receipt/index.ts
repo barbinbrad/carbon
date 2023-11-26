@@ -1,12 +1,12 @@
 import { serve } from "https://deno.land/std@0.175.0/http/server.ts";
 import { format } from "https://deno.land/std@0.205.0/datetime/mod.ts";
-import type { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2.33.1";
 import type { Database } from "../../../src/types.ts";
 import { DB, getConnectionPool, getDatabaseClient } from "../lib/database.ts";
 import { corsHeaders } from "../lib/headers.ts";
 import { getSupabaseServiceRole } from "../lib/supabase.ts";
 import { credit, debit } from "../lib/utils.ts";
 import { getCurrentAccountingPeriod } from "../shared/get-accounting-period.ts";
+import { getInventoryPostingGroup } from "../shared/get-posting-group.ts";
 
 const pool = getConnectionPool(1);
 const db = getDatabaseClient<DB>(pool);
@@ -130,7 +130,16 @@ serve(async (req: Request) => {
           return acc;
         }, {});
 
-        const cachedInventoryPostingGroups: Record<
+        // TODO: handle previously invoiced lines
+        // const previouslyInvoicedLines: Record<
+        //   string,
+        //   {
+        //     invoicedQuantity: number;
+        //     invoicedUnitPrice: number;
+        //   }[]
+        // > = {};
+
+        const inventoryPostingGroups: Record<
           string,
           Database["public"]["Tables"]["postingGroupInventory"]["Row"] | null
         > = {};
@@ -175,9 +184,9 @@ serve(async (req: Request) => {
             )?.partGroupId ?? null;
           const locationId = receiptLine.locationId ?? null;
 
-          if (`${partGroupId}-${locationId}` in cachedInventoryPostingGroups) {
+          if (`${partGroupId}-${locationId}` in inventoryPostingGroups) {
             postingGroup =
-              cachedInventoryPostingGroups[`${partGroupId}-${locationId}`];
+              inventoryPostingGroups[`${partGroupId}-${locationId}`];
           } else {
             const inventoryPostingGroup = await getInventoryPostingGroup(
               client,
@@ -192,7 +201,7 @@ serve(async (req: Request) => {
             }
 
             postingGroup = inventoryPostingGroup.data ?? null;
-            cachedInventoryPostingGroups[`${partGroupId}-${locationId}`] =
+            inventoryPostingGroups[`${partGroupId}-${locationId}`] =
               postingGroup;
           }
 
@@ -204,19 +213,23 @@ serve(async (req: Request) => {
             accountNumber: postingGroup.inventoryInterimAccrualAccount,
             description: "Interim Inventory Accrual",
             amount: debit("asset", expectedValue),
+            quantity: receiptLine.receivedQuantity,
             documentType: "Order",
             documentId: receipt.data?.sourceDocumentReadableId ?? undefined,
             externalDocumentId:
               purchaseOrder.data?.supplierReference ?? undefined,
+            reference: `receipt:${receiptLine.lineId}`,
           });
           journalLineInserts.push({
             accountNumber: postingGroup.inventoryReceivedNotInvoicedAccount,
             description: "Inventory Received Not Invoiced",
             amount: credit("liability", expectedValue),
+            quantity: receiptLine.receivedQuantity,
             documentType: "Order",
             documentId: receipt.data?.sourceDocumentReadableId ?? undefined,
             externalDocumentId:
               purchaseOrder.data?.supplierReference ?? undefined,
+            reference: `receipt:${receiptLine.lineId}`,
           });
         }
 
@@ -372,28 +385,3 @@ serve(async (req: Request) => {
     });
   }
 });
-
-// TODO: should this be in a shared package?
-async function getInventoryPostingGroup(
-  client: SupabaseClient<Database>,
-  args: {
-    partGroupId: string | null;
-    locationId: string | null;
-  }
-) {
-  let query = client.from("postingGroupInventory").select("*");
-
-  if (args.partGroupId === null) {
-    query = query.is("partGroupId", null);
-  } else {
-    query = query.eq("partGroupId", args.partGroupId);
-  }
-
-  if (args.locationId === null) {
-    query = query.is("locationId", null);
-  } else {
-    query = query.eq("locationId", args.locationId);
-  }
-
-  return await query.single();
-}

@@ -4,3 +4,49 @@ description: Learn about posting groups in the accounting module
 ---
 
 # Posting Groups
+
+Posting groups are used to target specific accounts when posting transactions. For example, you may want to post sales of one product line to one account, while posting sales of another product line to a different account. Posting groups allow you to do this.
+
+Different types of posting groups are used in different situations. Posting groups are created automatically and use the default accounts whenever a new group is created.
+
+## Inventory Posting Groups
+
+Inventory posting groups are used to target specific accounts when posting inventory and cost-of-goods sold transactions. An inventory part group is created automatically whenever a **Part Group** is created and whenever a **Location** is created. It uses the part's **Part Group** and the transaction's **Location** to determine which account to use at the time of posting.
+
+The Inventory Posting Group accounts are:
+
+- **Inventory:**
+- **Inventory Interim Accrual:**
+- **Inventory Received not Invoiced:**
+- **Inventory Shipped not Invoiced:**
+- **WIP:**
+- **COGS:**
+- **Direct Cost Applied:**
+- **Overhead:**
+- **Overhead Cost Applied:**
+- **Purchase Variance:**
+- **Inventory Adjustment Variance:**
+- **Material Variance:**
+- **Capacity Variance:**
+
+## Purchasing Posting Groups
+
+Purchasing posting groups are used to target specific accounts when posting purchasing transactions. A purchasing posting group is created automatically whenever a **Part Group** is created and whenever a **Supplier Type** is created. It uses the part's **Part Group** and the suppliers's **Supplier Type** to determine which account to use at the time of posting.
+
+The Purchasing Posting Group accounts are:
+
+- **Purchase:**
+- **Purchase Discount:**
+- **Purchase Credit:**
+- **Purchase Tax Payable:**
+
+## Sales Posting Groups
+
+Sales posting groups are used to target specific accounts when posting sales transactions. A sales posting group is created automatically whenever a **Part Group** is created and whenever a **Customer Type** is created. It uses the part's **Part Group** and the customer's **Customer Type** to determine which account to use at the time of posting.
+
+The Sales Posting Group accounts are:
+
+- **Sales:**
+- **Sales Discount:**
+- **Sales Credit:**
+- **Sales Tax Payable:**

@@ -58,7 +58,7 @@ const SupplierForm = ({ initialValues }: SupplierFormProps) => {
             {isEditing ? "Supplier Overview" : "New Supplier"}
           </Heading>
           {!isEditing && (
-            <Text color="gray.500">
+            <Text color="gray.500" fontWeight="normal">
               A supplier is a business or person who sells you parts or
               services.
             </Text>

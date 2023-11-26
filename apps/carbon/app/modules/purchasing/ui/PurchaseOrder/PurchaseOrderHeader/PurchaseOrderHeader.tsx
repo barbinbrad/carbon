@@ -93,7 +93,7 @@ const PurchaseOrderHeader = () => {
               <Heading size="md">
                 {routeData?.purchaseOrder?.purchaseOrderId}
               </Heading>
-              <Text color="gray.500">
+              <Text color="gray.500" fontWeight="normal">
                 {routeData?.purchaseOrder?.supplierName}
               </Text>
             </Stack>

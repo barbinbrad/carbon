@@ -25,11 +25,16 @@ const PurchaseInvoiceHeader = () => {
   const permissions = usePermissions();
   const { invoiceId } = useParams();
 
-  if (!invoiceId) throw new Error("Could not find invoiceId");
+  if (!invoiceId) throw new Error("invoiceId not found");
 
   const routeData = useRouteData<{ purchaseInvoice: PurchaseInvoice }>(
     path.to.purchaseInvoice(invoiceId)
   );
+
+  if (!routeData?.purchaseInvoice) throw new Error("purchaseInvoice not found");
+  const { purchaseInvoice } = routeData;
+
+  const isPosted = purchaseInvoice.postingDate !== null;
 
   const [purchaseInvoiceTotals] = usePurchaseInvoiceTotals();
 
@@ -45,16 +50,9 @@ const PurchaseInvoiceHeader = () => {
       {permissions.is("employee") && (
         <Menubar>
           <MenubarItem
-          // onClick={() => {
-          //   if (routeData?.purchaseInvoice) release(routeData.purchaseInvoice);
-          // }}
-          // isDisabled={
-          //   !["Draft", "Approved"].includes(
-          //     routeData?.purchaseInvoice?.status ?? ""
-          //   )
-          // }
+            isDisabled={permissions.can("update", "invoicing") || isPosted}
           >
-            Action 1
+            Post
           </MenubarItem>
         </Menubar>
       )}
@@ -63,11 +61,9 @@ const PurchaseInvoiceHeader = () => {
         <CardHeader>
           <HStack justifyContent="space-between" alignItems="start">
             <Stack direction="column" spacing={2}>
-              <Heading size="md">
-                {routeData?.purchaseInvoice?.invoiceId}
-              </Heading>
-              <Text color="gray.500">
-                {routeData?.purchaseInvoice?.supplierName}
+              <Heading size="md">{purchaseInvoice.invoiceId}</Heading>
+              <Text color="gray.500" fontWeight="normal">
+                {purchaseInvoice.supplierName}
               </Text>
             </Stack>
             <Button onClick={() => alert("TODO")} leftIcon={<FaHistory />}>
@@ -93,9 +89,7 @@ const PurchaseInvoiceHeader = () => {
               justifyContent="space-between"
             >
               <Text color="gray.500">Date Issued</Text>
-              <Text fontWeight="bold">
-                {routeData?.purchaseInvoice?.dateIssued}
-              </Text>
+              <Text fontWeight="bold">{purchaseInvoice.dateIssued}</Text>
             </Stack>
 
             <Stack
@@ -104,9 +98,7 @@ const PurchaseInvoiceHeader = () => {
               justifyContent="space-between"
             >
               <Text color="gray.500">Status</Text>
-              <PurchaseInvoicingStatus
-                status={routeData?.purchaseInvoice?.status}
-              />
+              <PurchaseInvoicingStatus status={purchaseInvoice.status} />
             </Stack>
           </Stack>
         </CardBody>

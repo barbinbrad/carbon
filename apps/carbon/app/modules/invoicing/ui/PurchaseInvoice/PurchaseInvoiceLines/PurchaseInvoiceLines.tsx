@@ -54,9 +54,7 @@ const PurchaseInvoiceLines = () => {
   } = usePurchaseInvoiceLines();
   const [, setPurchaseInvoiceTotals] = usePurchaseInvoiceTotals();
 
-  const isEditable = ["Draft", "To Review"].includes(
-    routeData?.purchaseInvoice?.status ?? ""
-  );
+  const isEditable = !!routeData?.purchaseInvoice?.postingDate ?? false;
 
   const columns = useMemo<ColumnDef<PurchaseInvoiceLine>[]>(() => {
     return [

@@ -224,19 +224,11 @@ serve(async (req: Request) => {
           (purchaseOrderLine?.quantityReceived ?? 0)
       );
 
-      console.log({
-        quantityToReverse,
-        quantityAlreadyReversed,
-        invoiceLineQuantity: invoiceLine?.quantity,
-        quantityReceived: purchaseOrderLine?.quantityReceived,
-        quantityInvoiced: purchaseOrderLine?.quantityInvoiced,
-      });
-
       let expectedUnitCost = 0;
 
       if (quantityToReverse > 0) {
         const expectedUnitCostOfReversingEntries = reversingEntryPairs.reduce(
-          (acc, entry, i) => {
+          (acc, entry) => {
             if (entry[0].costAmountExpected && entry[0].quantity) {
               const unitCostForEntry =
                 entry[0].costAmountExpected / entry[0].quantity;

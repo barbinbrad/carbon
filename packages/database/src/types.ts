@@ -5465,7 +5465,7 @@ export interface Database {
           createdBy: string
           description: string | null
           id: string
-          invoiceComplete: boolean
+          invoicedComplete: boolean
           locationId: string | null
           partId: string | null
           purchaseOrderId: string
@@ -5491,7 +5491,7 @@ export interface Database {
           createdBy: string
           description?: string | null
           id?: string
-          invoiceComplete?: boolean
+          invoicedComplete?: boolean
           locationId?: string | null
           partId?: string | null
           purchaseOrderId: string
@@ -5517,7 +5517,7 @@ export interface Database {
           createdBy?: string
           description?: string | null
           id?: string
-          invoiceComplete?: boolean
+          invoicedComplete?: boolean
           locationId?: string | null
           partId?: string | null
           purchaseOrderId?: string
@@ -8962,6 +8962,7 @@ export interface Database {
       paymentTermCalculationMethod: "Net" | "End of Month" | "Day of Month"
       purchaseInvoiceStatus:
         | "Draft"
+        | "Pending"
         | "Submitted"
         | "Return"
         | "Debit Note Issued"

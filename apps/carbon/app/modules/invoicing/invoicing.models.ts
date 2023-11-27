@@ -4,6 +4,7 @@ import { zfd } from "zod-form-data";
 
 export const purchaseInvoiceStatusType = [
   "Draft",
+  "Pending",
   "Submitted",
   "Return",
   "Debit Note Issued",

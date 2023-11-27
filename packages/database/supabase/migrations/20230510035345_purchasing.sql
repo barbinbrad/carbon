@@ -228,7 +228,7 @@ CREATE TABLE "purchaseOrderLine" (
   "shelfId" TEXT,
   "setupPrice" NUMERIC(9,2),
   "receivedComplete" BOOLEAN NOT NULL DEFAULT FALSE,
-  "invoiceComplete" BOOLEAN NOT NULL DEFAULT FALSE,
+  "invoicedComplete" BOOLEAN NOT NULL DEFAULT FALSE,
   "requiresInspection" BOOLEAN NOT NULL DEFAULT FALSE,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   "createdBy" TEXT NOT NULL,

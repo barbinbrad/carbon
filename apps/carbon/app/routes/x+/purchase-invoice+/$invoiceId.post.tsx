@@ -1,6 +1,5 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import { ReceiptPostModal } from "~/modules/inventory";
 import { postingQueue, PostingQueueType } from "~/queues";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session";
@@ -9,37 +8,33 @@ import { error } from "~/utils/result";
 
 export async function action({ request, params }: ActionFunctionArgs) {
   const { client } = await requirePermissions(request, {
-    update: "inventory",
+    update: "invoicing",
   });
 
-  const { receiptId } = params;
-  if (!receiptId) throw new Error("receiptId not found");
+  const { invoiceId } = params;
+  if (!invoiceId) throw new Error("invoiceId not found");
 
   const setPendingState = await client
-    .from("receipt")
+    .from("purchaseInvoice")
     .update({
       status: "Pending",
     })
-    .eq("id", receiptId);
+    .eq("id", invoiceId);
 
   if (setPendingState.error) {
     return redirect(
-      path.to.receipts,
+      path.to.purchaseInvoices,
       await flash(
         request,
-        error(setPendingState.error, "Failed to post receipt")
+        error(setPendingState.error, "Failed to post purchase invoice")
       )
     );
   }
 
-  postingQueue.add(`posting receipt ${receiptId}`, {
-    type: PostingQueueType.Receipt,
-    documentId: receiptId,
+  postingQueue.add(`posting invoice ${invoiceId}`, {
+    type: PostingQueueType.PurchaseInvoice,
+    documentId: invoiceId,
   });
 
-  return redirect(path.to.receipts);
-}
-
-export default function ReceiptPostRoute() {
-  return <ReceiptPostModal />;
+  return redirect(path.to.purchaseInvoices);
 }

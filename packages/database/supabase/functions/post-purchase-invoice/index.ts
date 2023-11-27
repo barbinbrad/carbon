@@ -96,8 +96,7 @@ serve(async (req: Request) => {
 
     const valueLedgerInserts: Database["public"]["Tables"]["valueLedger"]["Insert"][] =
       [];
-    const partLedgerInserts: Database["public"]["Tables"]["partLedger"]["Insert"][] =
-      [];
+
     const journalLineInserts: Omit<
       Database["public"]["Tables"]["journalLine"]["Insert"],
       "journalId"
@@ -134,7 +133,7 @@ serve(async (req: Request) => {
           (purchaseOrderLine.quantityInvoiced ?? 0) + invoiceLine.quantity;
 
         const invoicedComplete =
-          purchaseOrderLine.receivedComplete ||
+          purchaseOrderLine.invoicedComplete ||
           invoiceLine.quantity >=
             (purchaseOrderLine.quantityToInvoice ??
               purchaseOrderLine.purchaseQuantity);
@@ -144,6 +143,7 @@ serve(async (req: Request) => {
           [purchaseOrderLine.id]: {
             quantityInvoiced: newQuantityInvoiced,
             invoicedComplete,
+            purchaseOrderId: purchaseOrderLine.purchaseOrderId,
           },
         };
       }
@@ -152,7 +152,7 @@ serve(async (req: Request) => {
     }, {});
 
     const journalEntriesToReverse = await client
-      .from("receiptLedgers")
+      .from("ledgers")
       .select("*")
       .in(
         "reference",
@@ -194,39 +194,59 @@ serve(async (req: Request) => {
       const reversingEntries = invoiceLine.purchaseOrderLineId
         ? journalEntriesToReverseByPurchaseOrderLine[
             invoiceLine.purchaseOrderLineId
-          ]
-        : undefined;
+          ] ?? []
+        : [];
+
+      const reversingEntryPairs = reversingEntries.reduce<
+        Database["public"]["Views"]["ledgers"]["Row"][][]
+      >((acc, entry, i) => {
+        if (i % 2 === 0) {
+          acc.push([entry, reversingEntries[i + 1]]);
+        }
+        return acc;
+      }, []);
 
       const purchaseOrderLine = purchaseOrderLines.data.find(
         (line) => line.id === invoiceLine.purchaseOrderLineId
       );
 
-      const quantityToReverse = Math.min(
+      const quantityToReverse = Math.max(
         0,
-        invoiceLine.quantity ?? 0,
-        (purchaseOrderLine?.quantityReceived ?? 0) -
-          (purchaseOrderLine?.quantityInvoiced ?? 0)
+        Math.min(
+          invoiceLine.quantity ?? 0,
+          (purchaseOrderLine?.quantityReceived ?? 0) -
+            (purchaseOrderLine?.quantityInvoiced ?? 0)
+        )
       );
       const quantityAlreadyReversed = Math.max(
         0,
         (purchaseOrderLine?.quantityInvoiced ?? 0) -
           (purchaseOrderLine?.quantityReceived ?? 0)
       );
-      let expectedValue = 0;
+
+      console.log({
+        quantityToReverse,
+        quantityAlreadyReversed,
+        invoiceLineQuantity: invoiceLine?.quantity,
+        quantityReceived: purchaseOrderLine?.quantityReceived,
+        quantityInvoiced: purchaseOrderLine?.quantityInvoiced,
+      });
+
+      let expectedUnitCost = 0;
 
       if (quantityToReverse > 0) {
-        const expectedValueOfReversingEntries = (reversingEntries ?? []).reduce(
+        const expectedUnitCostOfReversingEntries = reversingEntryPairs.reduce(
           (acc, entry, i) => {
-            if (entry.costAmountExpected && entry.quantity) {
+            if (entry[0].costAmountExpected && entry[0].quantity) {
               const unitCostForEntry =
-                entry.costAmountExpected / entry.quantity;
+                entry[0].costAmountExpected / entry[0].quantity;
 
               // we don't want to reverse an entry twice, so we need to keep track of what's been previously reversed
               // akin to supply
               const quantityAvailableToReverseForEntry =
                 acc.counted > quantityAlreadyReversed
-                  ? entry.quantity + acc.counted - quantityAlreadyReversed
-                  : entry.quantity;
+                  ? entry[0].quantity + acc.counted - quantityAlreadyReversed
+                  : entry[0].quantity;
 
               // akin to demand
               const quantityRequiredToReverse =
@@ -239,12 +259,31 @@ serve(async (req: Request) => {
               );
 
               if (quantityToReverseForEntry > 0) {
-                // create the reversal entry for the journal line
+                // create the reversal entries
                 journalLineInserts.push({
-                  accountNumber: entry.accountNumber!,
-                  description: entry.description,
+                  accountNumber: entry[0].accountNumber!,
+                  description: entry[0].description,
                   amount:
-                    entry.description === "Interim Inventory Accrual"
+                    entry[0].description === "Interim Inventory Accrual"
+                      ? credit(
+                          "asset",
+                          quantityToReverseForEntry * unitCostForEntry
+                        )
+                      : debit(
+                          "liability",
+                          quantityToReverseForEntry * unitCostForEntry
+                        ),
+                  quantity: quantityToReverseForEntry,
+                  documentType: "Invoice",
+                  documentId: purchaseInvoice.data?.invoiceId,
+                  externalDocumentId: purchaseInvoice?.data.supplierReference,
+                  reference: `purchase-invoice:${invoiceLine.purchaseOrderLineId}`,
+                });
+                journalLineInserts.push({
+                  accountNumber: entry[1].accountNumber!,
+                  description: entry[1].description,
+                  amount:
+                    entry[1].description === "Interim Inventory Accrual"
                       ? credit(
                           "asset",
                           quantityToReverseForEntry * unitCostForEntry
@@ -261,16 +300,13 @@ serve(async (req: Request) => {
                 });
               }
 
-              // there are two matching entries for each part, so we only need to increment the accumulator for even numbers
-              if (i % 2 === 0 && entry.costAmountExpected && entry.quantity) {
-                acc.counted += entry.quantity;
-                acc.reversed += quantityToReverseForEntry;
+              acc.counted += entry[0].quantity;
+              acc.reversed += quantityToReverseForEntry;
 
-                // this gives us a weighted average of the unit costs for each entry we're reversing
-                acc.value +=
-                  (quantityToReverseForEntry * unitCostForEntry) /
-                  quantityToReverseForEntry;
-              }
+              // this gives us a weighted average of the unit costs for each entry we're reversing
+              acc.value +=
+                (quantityToReverseForEntry * unitCostForEntry) /
+                quantityToReverseForEntry;
             }
 
             return acc;
@@ -282,7 +318,7 @@ serve(async (req: Request) => {
           }
         );
 
-        expectedValue = expectedValueOfReversingEntries.value;
+        expectedUnitCost = expectedUnitCostOfReversingEntries.value;
 
         valueLedgerInserts.push({
           partLedgerType: "Purchase",
@@ -293,9 +329,9 @@ serve(async (req: Request) => {
           externalDocumentId:
             purchaseInvoice.data?.supplierReference ?? undefined,
           costAmountActual: invoiceLine.quantity * invoiceLine.unitPrice,
-          costAmountExpected: -expectedValue,
+          costAmountExpected: invoiceLine.quantity * -expectedUnitCost,
           actualCostPostedToGl: invoiceLine.quantity * invoiceLine.unitPrice,
-          expectedCostPostedToGl: -expectedValue,
+          expectedCostPostedToGl: invoiceLine.quantity * -expectedUnitCost,
         });
       } else {
         valueLedgerInserts.push({
@@ -385,8 +421,6 @@ serve(async (req: Request) => {
         throw new Error("No purchasing posting group found");
       }
 
-      // journal lines
-
       // debit the inventory account
       journalLineInserts.push({
         accountNumber: postingGroupInventory.inventoryAccount,
@@ -424,7 +458,6 @@ serve(async (req: Request) => {
       });
 
       // credit the accounts payable account
-
       journalLineInserts.push({
         accountNumber: postingGroupPurchasing.payablesAccount,
         description: "Accounts Payable",
@@ -453,42 +486,61 @@ serve(async (req: Request) => {
           .execute();
       }
 
-      const areAllLinesReceived = Object.values(purchaseOrderLineUpdates).every(
-        (line) => line.receivedComplete
-      );
+      const purchaseOrdersUpdated = Object.values(
+        purchaseOrderLineUpdates
+      ).reduce<string[]>((acc, update) => {
+        if (update.purchaseOrderId && !acc.includes(update.purchaseOrderId)) {
+          acc.push(update.purchaseOrderId);
+        }
+        return acc;
+      }, []);
 
-      const isInvoiced = purchaseOrder.data.status === "To Receive";
+      console.log({ purchaseOrdersUpdated, purchaseOrderLineUpdates });
 
-      if (areAllLinesReceived) {
+      for await (const purchaseOrderId of purchaseOrdersUpdated) {
+        const purchaseOrderLines = await trx
+          .selectFrom("purchaseOrderLine")
+          .select(["id", "invoicedComplete", "receivedComplete"])
+          .where("purchaseOrderId", "=", purchaseOrderId)
+          .execute();
+
+        const areAllLinesInvoiced = purchaseOrderLines.every(
+          (line) => line.invoicedComplete
+        );
+
+        const areAllLinesReceived = purchaseOrderLines.every(
+          (line) => line.receivedComplete
+        );
+
+        let status: Database["public"]["Tables"]["purchaseOrder"]["Row"]["status"] =
+          "To Receive and Invoice";
+        console.log({
+          areAllLinesInvoiced,
+          areAllLinesReceived,
+          purchaseOrderLines,
+        });
+        if (areAllLinesInvoiced && areAllLinesReceived) {
+          status = "Completed";
+        } else if (areAllLinesInvoiced) {
+          status = "To Receive";
+        } else if (areAllLinesReceived) {
+          status = "To Invoice";
+        }
+
         await trx
           .updateTable("purchaseOrder")
           .set({
-            status: isInvoiced ? "Completed" : "To Invoice",
+            status,
           })
-          .where("id", "=", purchaseOrder.data.id)
+          .where("id", "=", purchaseOrderId)
           .execute();
       }
-
-      await trx
-        .updateTable("purchaseOrderDelivery")
-        .set({
-          deliveryDate: today,
-          locationId: receipt.data.locationId,
-        })
-        .where("id", "=", receipt.data.sourceDocumentId)
-        .execute();
-
-      const partLedgerIds = await trx
-        .insertInto("partLedger")
-        .values(partLedgerInserts)
-        .returning(["id"])
-        .execute();
 
       const journal = await trx
         .insertInto("journal")
         .values({
           accountingPeriodId,
-          description: `Purchase Receipt ${receipt.data.receiptId}`,
+          description: `Purchase Invoice ${purchaseInvoice.data?.invoiceId}`,
           postingDate: today,
         })
         .returning(["id"])
@@ -516,34 +568,18 @@ serve(async (req: Request) => {
 
       const journalLinesPerValueEntry =
         journalLineIds.length / valueLedgerIds.length;
-      if (
-        journalLinesPerValueEntry !== 2 ||
-        partLedgerIds.length !== valueLedgerIds.length
-      ) {
-        throw new Error("Failed to insert ledger entries");
-      }
 
       for (let i = 0; i < valueLedgerIds.length; i++) {
         const valueLedgerId = valueLedgerIds[i].id;
-        const partLedgerId = partLedgerIds[i].id;
-
-        if (!valueLedgerId || !partLedgerId) {
-          throw new Error("Failed to insert ledger entries");
-        }
-
-        await trx
-          .insertInto("partLedgerValueLedgerRelation")
-          .values({
-            partLedgerId,
-            valueLedgerId,
-          })
-          .execute();
-
         for (let j = 0; j < journalLinesPerValueEntry; j++) {
           const journalLineId =
             journalLineIds[i * journalLinesPerValueEntry + j].id;
           if (!journalLineId) {
-            throw new Error("Failed to insert ledger entries");
+            throw new Error("Failed to insert journal line entries");
+          }
+
+          if (!valueLedgerId) {
+            throw new Error("Failed to insert value ledger entries");
           }
 
           await trx
@@ -557,12 +593,12 @@ serve(async (req: Request) => {
       }
 
       await trx
-        .updateTable("receipt")
+        .updateTable("purchaseInvoice")
         .set({
-          status: "Posted",
           postingDate: today,
+          status: "Submitted",
         })
-        .where("id", "=", receiptId)
+        .where("id", "=", invoiceId)
         .execute();
     });
 
@@ -576,9 +612,12 @@ serve(async (req: Request) => {
     );
   } catch (err) {
     console.error(err);
-    if (receiptId) {
+    if (invoiceId) {
       const client = getSupabaseServiceRole(req.headers.get("Authorization"));
-      client.from("receipt").update({ status: "Draft" }).eq("id", receiptId);
+      client
+        .from("purchaseInvoice")
+        .update({ status: "Draft" })
+        .eq("id", invoiceId);
     }
     return new Response(JSON.stringify(err), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },

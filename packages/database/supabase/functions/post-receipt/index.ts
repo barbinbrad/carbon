@@ -246,21 +246,37 @@ serve(async (req: Request) => {
               .execute();
           }
 
-          const areAllLinesReceived = Object.values(
-            purchaseOrderLineUpdates
-          ).every((line) => line.receivedComplete);
+          const purchaseOrderLines = await trx
+            .selectFrom("purchaseOrderLine")
+            .select(["id", "invoicedComplete", "receivedComplete"])
+            .where("purchaseOrderId", "=", purchaseOrder.data.id)
+            .execute();
 
-          const isInvoiced = purchaseOrder.data.status === "To Receive";
+          const areAllLinesInvoiced = purchaseOrderLines.every(
+            (line) => line.invoicedComplete
+          );
 
-          if (areAllLinesReceived) {
-            await trx
-              .updateTable("purchaseOrder")
-              .set({
-                status: isInvoiced ? "Completed" : "To Invoice",
-              })
-              .where("id", "=", purchaseOrder.data.id)
-              .execute();
+          const areAllLinesReceived = purchaseOrderLines.every(
+            (line) => line.receivedComplete
+          );
+
+          let status: Database["public"]["Tables"]["purchaseOrder"]["Row"]["status"] =
+            "To Receive and Invoice";
+          if (areAllLinesInvoiced && areAllLinesReceived) {
+            status = "Completed";
+          } else if (areAllLinesInvoiced) {
+            status = "To Receive";
+          } else if (areAllLinesReceived) {
+            status = "To Invoice";
           }
+
+          await trx
+            .updateTable("purchaseOrder")
+            .set({
+              status,
+            })
+            .where("id", "=", purchaseOrder.data.id)
+            .execute();
 
           await trx
             .updateTable("purchaseOrderDelivery")

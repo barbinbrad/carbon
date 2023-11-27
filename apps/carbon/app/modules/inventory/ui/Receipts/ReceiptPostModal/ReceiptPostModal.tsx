@@ -34,9 +34,8 @@ const ReceiptPostModal = (props: ReceiptPostModalProps) => {
               Cancel
             </Button>
             <Form method="post">
-              <input type="hidden" name="intent" value="receive" />
               <Button colorScheme="brand" type="submit">
-                Receive
+                Post Receipt
               </Button>
             </Form>
           </HStack>

@@ -12,6 +12,7 @@ const PurchaseInvoicingStatus = ({ status }: PurchaseInvoicingStatusProps) => {
       return <Status color="gray">{status}</Status>;
     case "Submitted":
       return <Status color="yellow">{status}</Status>;
+    case "Pending":
     case "Partially Paid":
       return <Status color="orange">{status}</Status>;
     case "Overdue":

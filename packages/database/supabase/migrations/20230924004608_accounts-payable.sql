@@ -1,5 +1,6 @@
 CREATE TYPE "purchaseInvoiceStatus" AS ENUM (
   'Draft', 
+  'Pending',
   'Submitted',
   'Return',
   'Debit Note Issued',
@@ -51,6 +52,8 @@ CREATE INDEX "purchaseInvoice_status_idx" ON "purchaseInvoice" ("status");
 CREATE INDEX "purchaseInvoice_supplierId_idx" ON "purchaseInvoice" ("supplierId");
 CREATE INDEX "purchaseInvoice_dateDue_idx" ON "purchaseInvoice" ("dateDue");
 CREATE INDEX "purchaseInvoice_datePaid_idx" ON "purchaseInvoice" ("datePaid");
+
+ALTER publication supabase_realtime ADD TABLE "purchaseInvoice";
 
 ALTER TABLE "purchaseInvoice" ENABLE ROW LEVEL SECURITY;
 

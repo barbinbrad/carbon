@@ -6,7 +6,7 @@ import { BsPencilSquare } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { Avatar, Table } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
-import { usePermissions } from "~/hooks";
+import { usePermissions, useRealtime } from "~/hooks";
 import type {
   PurchaseInvoice,
   purchaseInvoiceStatusType,
@@ -21,6 +21,11 @@ type PurchaseInvoicesTableProps = {
 
 const PurchaseInvoicesTable = memo(
   ({ data, count }: PurchaseInvoicesTableProps) => {
+    useRealtime(
+      "purchaseInvoice",
+      `id=in.(${data.map((d) => d.id).join(",")})`
+    );
+
     const permissions = usePermissions();
     const navigate = useNavigate();
 

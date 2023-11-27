@@ -4454,7 +4454,7 @@ CREATE TABLE "purchaseOrderLine" (
   "shelfId" TEXT,
   "setupPrice" NUMERIC(9,2),
   "receivedComplete" BOOLEAN NOT NULL DEFAULT FALSE,
-  "invoiceComplete" BOOLEAN NOT NULL DEFAULT FALSE,
+  "invoicedComplete" BOOLEAN NOT NULL DEFAULT FALSE,
   "requiresInspection" BOOLEAN NOT NULL DEFAULT FALSE,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   "createdBy" TEXT NOT NULL,
@@ -6515,6 +6515,7 @@ CREATE OR REPLACE VIEW "partQuantities" AS
 ```sql
 CREATE TYPE "purchaseInvoiceStatus" AS ENUM (
   'Draft', 
+  'Pending',
   'Submitted',
   'Return',
   'Debit Note Issued',
@@ -6566,6 +6567,8 @@ CREATE INDEX "purchaseInvoice_status_idx" ON "purchaseInvoice" ("status");
 CREATE INDEX "purchaseInvoice_supplierId_idx" ON "purchaseInvoice" ("supplierId");
 CREATE INDEX "purchaseInvoice_dateDue_idx" ON "purchaseInvoice" ("dateDue");
 CREATE INDEX "purchaseInvoice_datePaid_idx" ON "purchaseInvoice" ("datePaid");
+
+ALTER publication supabase_realtime ADD TABLE "purchaseInvoice";
 
 ALTER TABLE "purchaseInvoice" ENABLE ROW LEVEL SECURITY;
 

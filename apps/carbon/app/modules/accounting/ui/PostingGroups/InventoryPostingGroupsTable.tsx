@@ -78,6 +78,11 @@ const InventoryPostingGroupsTable = ({
         cell: (item) => item.getValue(),
       },
       {
+        accessorKey: "inventoryInvoicedNotReceivedAccount",
+        header: "Invoiced Not Received",
+        cell: (item) => item.getValue(),
+      },
+      {
         accessorKey: "inventoryShippedNotInvoicedAccount",
         header: "Shipped Not Invoiced",
         cell: (item) => item.getValue(),
@@ -137,6 +142,10 @@ const InventoryPostingGroupsTable = ({
         balanceSheetAccountOptions
       ),
       inventoryReceivedNotInvoicedAccount: EditableList(
+        onCellEdit,
+        balanceSheetAccountOptions
+      ),
+      inventoryInvoicedNotReceivedAccount: EditableList(
         onCellEdit,
         balanceSheetAccountOptions
       ),

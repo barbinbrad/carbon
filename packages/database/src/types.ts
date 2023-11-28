@@ -4150,6 +4150,7 @@ export interface Database {
           inventoryAccount: string
           inventoryAdjustmentVarianceAccount: string
           inventoryInterimAccrualAccount: string
+          inventoryInvoicedNotReceivedAccount: string
           inventoryReceivedNotInvoicedAccount: string
           inventoryShippedNotInvoicedAccount: string
           locationId: string | null
@@ -4169,6 +4170,7 @@ export interface Database {
           inventoryAccount: string
           inventoryAdjustmentVarianceAccount: string
           inventoryInterimAccrualAccount: string
+          inventoryInvoicedNotReceivedAccount: string
           inventoryReceivedNotInvoicedAccount: string
           inventoryShippedNotInvoicedAccount: string
           locationId?: string | null
@@ -4188,6 +4190,7 @@ export interface Database {
           inventoryAccount?: string
           inventoryAdjustmentVarianceAccount?: string
           inventoryInterimAccrualAccount?: string
+          inventoryInvoicedNotReceivedAccount?: string
           inventoryReceivedNotInvoicedAccount?: string
           inventoryShippedNotInvoicedAccount?: string
           locationId?: string | null
@@ -4269,6 +4272,18 @@ export interface Database {
           {
             foreignKeyName: "postingGroupInventory_inventoryInterimAccrualAccount_fkey"
             columns: ["inventoryInterimAccrualAccount"]
+            referencedRelation: "accounts"
+            referencedColumns: ["number"]
+          },
+          {
+            foreignKeyName: "postingGroupInventory_inventoryInvoicedNotReceivedAccount_fkey"
+            columns: ["inventoryInvoicedNotReceivedAccount"]
+            referencedRelation: "account"
+            referencedColumns: ["number"]
+          },
+          {
+            foreignKeyName: "postingGroupInventory_inventoryInvoicedNotReceivedAccount_fkey"
+            columns: ["inventoryInvoicedNotReceivedAccount"]
             referencedRelation: "accounts"
             referencedColumns: ["number"]
           },

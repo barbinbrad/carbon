@@ -283,19 +283,15 @@ serve(async (req: Request) => {
         (line) => line.id === invoiceLine.purchaseOrderLineId
       );
 
+      const quantityReceived = purchaseOrderLine?.quantityReceived ?? 0;
+      const quantityInvoiced = purchaseOrderLine?.quantityInvoiced ?? 0;
       const quantityToReverse = Math.max(
         0,
-        Math.min(
-          invoiceLine.quantity ?? 0,
-          (purchaseOrderLine?.quantityReceived ?? 0) -
-            (purchaseOrderLine?.quantityInvoiced ?? 0)
-        )
+        Math.min(invoiceLine.quantity ?? 0, quantityReceived - quantityInvoiced)
       );
-      const quantityAlreadyReversed = Math.max(
-        0,
-        (purchaseOrderLine?.quantityInvoiced ?? 0) -
-          (purchaseOrderLine?.quantityReceived ?? 0)
-      );
+
+      const quantityAlreadyReversed =
+        quantityReceived > quantityInvoiced ? quantityInvoiced : 0;
 
       if (quantityToReverse > 0) {
         // reverse the receipt entries, create the final entries and calculate the value entry in one pass
@@ -308,7 +304,7 @@ serve(async (req: Request) => {
               // we don't want to reverse an entry twice, so we need to keep track of what's been previously reversed
               // akin to supply
               const quantityAvailableToReverseForEntry =
-                acc.counted > quantityAlreadyReversed
+                quantityAlreadyReversed > acc.counted
                   ? entry[0].quantity + acc.counted - quantityAlreadyReversed
                   : entry[0].quantity;
 
@@ -317,15 +313,13 @@ serve(async (req: Request) => {
                 quantityToReverse - acc.reversed;
 
               // we can't reverse more than what's available or what's required
-              const quantityToReverseForEntry = Math.min(
-                quantityAvailableToReverseForEntry,
-                quantityRequiredToReverse
+              const quantityToReverseForEntry = Math.max(
+                0,
+                Math.min(
+                  quantityAvailableToReverseForEntry,
+                  quantityRequiredToReverse
+                )
               );
-
-              console.log({
-                unitCostForEntry,
-                quantityToReverseForEntry,
-              });
 
               if (quantityToReverseForEntry > 0) {
                 // create the reversal entries

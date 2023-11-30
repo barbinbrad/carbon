@@ -34,4 +34,16 @@ We'll then be able to focus on the original goal of scheduling and planning.
 
 ## What about other open-source ERPs?
 
-One major difference between Carbon and other open-source ERPs is the license. ERPs like [Odoo](https://www.odoo.com/) and [ERPNext](https://erpnext.com/) are licensed under the "copyleft" GPL-family of licenses. This means that if you use the software, you must also open-source your software. This is a great license for open-source software vendors, but it's not a great license for business software.
+The major difference between Carbon and other open-source ERPs is the license. ERPs like [Odoo](https://www.odoo.com/) and [ERPNext](https://erpnext.com/) are licensed under the "copyleft" GPL-family of licenses where Carbon uses a "permissive" (Apache 2.0) license.
+
+The big difference between a permissive license and a copyleft license is in the obligation of the user when modifications have been made to the code.
+
+A permissive license may require that you make the original source code available to your users, but that does not necessarily apply to your modifications. So if, for example, I have written project X, and license it as Apache 2.0, and you add some features to it, and now a user wants to see the source code, then you can give them the original code to project X, but you are not required to provide the code for your privately developed features.
+
+Conversely, with a copyleft license, in the same scenario, you would be required to release the code for your privately developed feature as well to your customer. Moreover, they would then be able to freely distribute that source code as well, including your privately developed features. That is why the copyleft licenses are often defined as being viral or infectious, because they propagate to whatever code they come into contact with.
+
+So then, the question of boundaries comes into play. What if the software is on another system? For example, you write program Y, and it calls system X across the network. With the GPL version 2, the copy left license does not cross the network barrier. AGPL, however, removes this barrier, making the virality of project X extend to program Y.
+
+Copyleft is generally hostile to any proprietary use, and many companies won't touch it for any software that must be distributed to customers. Again, this aligns with some people's political and philosophical wishes, so they do not see a problem with this.
+
+In short, permissive versus copyleft is a fundamental difference in how freedom is defined. The permissive license gives you the freedom to use software however you see fit. The copyleft license tries to eliminate the possibility of proprietary control. It's really two different sides of freedom. Permissive is freedom of the individual from control of the many. Copyleft is freedom of the many from control of the one.

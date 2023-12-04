@@ -5,6 +5,92 @@ description: Learn about how we account for purchasing
 
 # Accounting for Purchasing
 
-- General Ledger is populated when a line invoiced or received
-- Cost Ledger is populated when a line is both invoiced and received
-- Part Ledger is populated when a line is received
+Carbon uses three ledgers to track the purchasing process:
+
+- **General Ledger** is populated when a line invoiced or received
+- **Cost Ledger** is populated when a line is both invoiced and received
+- **Part Ledger** is populated when a line is received
+
+## Overview
+
+A purchase order is made of one or more purchase order lines. Each purchase order line is for a specific part, and has a quantity and a price. The price is the price that we expect to pay for the part. The quantity is how many we expect to receive.
+
+The basic accounting flow for purchasing is that a purchase order is created, then the purchase order is received, then the purchase order is invoiced. After the purchase order is received and invoiced, we should have a general ledger entry (journal line) to debit inventory and a general ledger entry to credit accounts payable for each part received.
+
+In practice, it's a little more sophisticated than that. We have to account for the fact that we may receive a partial shipment, or we may receive a shipment that is different than what we ordered. We also have to account for the fact that we may receive a shipment before we receive the invoice, or we may receive the invoice before we receive the shipment. The price may also change between the purchase order and the invoice.
+
+## Posting Groups
+
+Each part has a posting group that determines which accounts we'll use when post to the general ledger. There are two posting groups that are relevant to purchasing:
+
+1. **Inventory Posting Group** determines which general ledger accounts we'll use when we receive a part
+2. **Purchase Posting Group** determines which general ledger accounts we'll use when we invoice a part
+
+## General Ledger Entries
+
+In order to decouple the receiving and invoicing processes, we use accrual accounting in the general ledger. This means that we post to the general ledger when we receive a part, and then we post again when we invoice the part. This allows us to receive a part before we receive the invoice, or receive the invoice before we receive the part.
+
+Here are the basic entries that occur depending on the order of the transactions:
+
+- **Goods Received Before Invoice:**
+  - **Goods Received:**
+    - **Accrual Entry**
+      - Debit the asset Interim Inventory Accrual
+      - Credit the liability Inventory Received Not Invoiced
+  - **Invoice Received:**
+    - **Reversing the Accrual Entry:**
+      - Debit the liability Inventory Received Not Invoiced
+      - Credit the asset Interim Inventory Accrual
+        - This reversing entry cancels out the initial accrual
+    - **Inventory Entry:**
+      - Debit the asset Inventory (from Inventory posting group)
+      - Credit the expense Direct Cost Applied (from posting group)
+    - **Purchase Entry:**
+      - Debit the expense Purchase Account (from Purchasing posting group)
+      - Credit the liability Accounts Payable (from posting group)
+  - **Payment:**
+    - Debit the liability Accounts Payable (from Purchasing posting group)
+    - Credit the asset of a Cash or Bank Account (from Bank Account posting group)
+- **Invoice Received Before Goods:**
+  - **Invoice Received:**
+    - **Accrual Entry:**
+      - Debit the asset Inventory Invoiced Not Received
+      - Credit the asset Interim Inventory Accrual
+  - **Goods Received:**
+    - **Reversing the Accrual Entry**
+      - Debit the asset Interim Inventory Accrual
+      - Credit the asset Inventory Invoiced Not Received
+    - **Inventory Entry:**
+      - Debit the asset Inventory (from Inventory posting group)
+      - Credit the expense Direct Cost Applied (from Inventory posting group)
+    - **Purchase Entry:**
+      - Debit the expense Purchase Account (from Purchasing posting group)
+      - Credit the liability Accounts Payable (from Purchasing posting group)
+  - **Payment:**
+    - Debit the liability Accounts Payable (from Purchasing posting group)
+    - Credit the asset of a Cash or Bank Account (from Bank Account posting group)
+- **Goods Received and Invoiced at Same Time**
+  - **Goods and Invoiced and Received**
+    - **Inventory Entry:**
+      - Debit the asset Inventory (from Inventory posting group)
+      - Credit the expense Direct Cost Applied (from Inventory posting group)
+    - **Purchase Entry:**
+      - Debit the expense Purchase Account (from Purchasing posting group)
+      - Credit the liability Accounts Payable (from Purchasing posting group)
+  - **Payment:**
+    - Debit the liability Accounts Payable (from Purchasing posting group)
+    - Credit the asset of a Cash or Bank Account (from Bank Account posting group)
+
+On thing that may be surprising here is the **Purchasing Account** and the **Direct Cost Applied** accounts. These are both income statement accounts that offset each other. One benefit of using this setup is that we can see the total amount of purchases of a particular purchasing account directly on the income statement for a period of time. This is useful for understanding the total amount of purchases for a particular group or location at a glance.
+
+## Cost Ledger Entries
+
+The cost ledger is used to track the cost of inventory. The cost ledger is populated when a purchase order line is both invoiced and received. The cost ledger is used to calculate the cost of of a part, particularly in relation to Cost of Goods Sold (COGS).
+
+Unlike the general ledger, the cost ledger is not accrual based. The cost ledger is only populated when a purchase order line is both invoiced and received. Multiple cost ledger entries can be created for a single purchase order line. This can happen when a purchase order line is received in multiple shipments.
+
+Cost ledger entries track quantity and cost.
+
+## Part Ledger Entries
+
+The part ledger is used to track the quantity of inventory. The part ledger is populated when a purchase order line is received. The part ledger is used to track the quantity of inventory on hand, and so entries are tied directly to the receipt of a part without regard for the invoiced amount.

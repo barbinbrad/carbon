@@ -158,7 +158,7 @@ import { getSupabaseServiceRole } from "../lib/supabase.ts";
 interface DB {
   generalLedger: Database["public"]["Tables"]["generalLedger"]["Update"];
   partLedger: Database["public"]["Tables"]["partLedger"]["Insert"];
-  valueLedger: Database["public"]["Tables"]["valueLedger"]["Insert"];
+  costLedger: Database["public"]["Tables"]["costLedger"]["Insert"];
 }
 
 const pool = getConnectionPool(1);
@@ -184,9 +184,9 @@ serve(async (req: Request) => {
         .values(generalLedgerInserts)
         .execute();
 
-      const valueLedgerIds = await trx
-        .insertInto("valueLedger")
-        .values(valueLedgerInserts)
+      const costLedgerIds = await trx
+        .insertInto("costLedger")
+        .values(costLedgerInserts)
         .execute();
     });
 

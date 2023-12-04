@@ -81,8 +81,7 @@ CREATE POLICY "Employees with accounting_create can insert journals" ON "journal
 
 
 CREATE TYPE "journalLineDocumentType" AS ENUM (
-  'Quote',
-  'Order',
+  'Receipt',
   'Invoice',
   'Credit Memo',
   'Blanket Order',
@@ -100,6 +99,7 @@ CREATE TABLE "journalLine" (
   "documentId" TEXT,
   "externalDocumentId" TEXT,
   "reference" TEXT,
+  "accrual" BOOLEAN NOT NULL DEFAULT false,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
 
   CONSTRAINT "journalLine_pkey" PRIMARY KEY ("id"),
@@ -168,7 +168,7 @@ CREATE TYPE "partLedgerDocumentType" AS ENUM (
   'Direct Transfer'
 );
 
-CREATE TABLE "valueLedger" (
+CREATE TABLE "costLedger" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "entryNumber" SERIAL,
   "postingDate" DATE NOT NULL DEFAULT CURRENT_DATE,
@@ -178,36 +178,36 @@ CREATE TABLE "valueLedger" (
   "documentType" "partLedgerDocumentType",
   "documentId" TEXT,
   "externalDocumentId" TEXT,
-  "costAmountActual" NUMERIC(19, 4) NOT NULL DEFAULT 0,
-  "costAmountExpected" NUMERIC(19, 4) NOT NULL DEFAULT 0,
-  "actualCostPostedToGl" NUMERIC(19, 4) NOT NULL DEFAULT 0,
-  "expectedCostPostedToGl" NUMERIC(19, 4) NOT NULL DEFAULT 0,
+  "partId" TEXT,
+  "quantity" NUMERIC(12, 4) NOT NULL DEFAULT 0,
+  "cost" NUMERIC(19, 4) NOT NULL DEFAULT 0,
+  "costPostedToGL" NUMERIC(19, 4) NOT NULL DEFAULT 0,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
 
-  CONSTRAINT "valueLedger_pkey" PRIMARY KEY ("id")
+  CONSTRAINT "costLedger_pkey" PRIMARY KEY ("id")
 );
 
-ALTER TABLE "valueLedger" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "costLedger" ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Employees with accounting_view can view the value ledger" ON "valueLedger"
+CREATE POLICY "Employees with accounting_view can view the value ledger" ON "costLedger"
   FOR SELECT
   USING (
     coalesce(get_my_claim('accounting_view')::boolean, false) = true AND
     (get_my_claim('role'::text)) = '"employee"'::jsonb
   );
 
-CREATE TABLE "valueLedgerJournalLineRelation" (
-  "valueLedgerId" TEXT NOT NULL,
+CREATE TABLE "costLedgerJournalLineRelation" (
+  "costLedgerId" TEXT NOT NULL,
   "journalLineId" TEXT NOT NULL,
 
-  CONSTRAINT "valueLedgerJournalLineRelation_pkey" PRIMARY KEY ("valueLedgerId", "journalLineId"),
-  CONSTRAINT "valueLedgerJournalLineRelation_valueLedgerId_fkey" FOREIGN KEY ("valueLedgerId") REFERENCES "valueLedger"("id"),
-  CONSTRAINT "valueLedgerJournalLineRelation_journalLineId_fkey" FOREIGN KEY ("journalLineId") REFERENCES "journalLine"("id")
+  CONSTRAINT "costLedgerJournalLineRelation_pkey" PRIMARY KEY ("costLedgerId", "journalLineId"),
+  CONSTRAINT "costLedgerJournalLineRelation_costLedgerId_fkey" FOREIGN KEY ("costLedgerId") REFERENCES "costLedger"("id"),
+  CONSTRAINT "costLedgerJournalLineRelation_journalLineId_fkey" FOREIGN KEY ("journalLineId") REFERENCES "journalLine"("id")
 );
 
-ALTER TABLE "valueLedgerJournalLineRelation" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "costLedgerJournalLineRelation" ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Employees with accounting_view can view the value ledger/general ledger relations" ON "valueLedgerJournalLineRelation"
+CREATE POLICY "Employees with accounting_view can view the value ledger/general ledger relations" ON "costLedgerJournalLineRelation"
   FOR SELECT
   USING (
     coalesce(get_my_claim('accounting_view')::boolean, false) = true AND
@@ -245,24 +245,6 @@ CREATE POLICY "Certain employees can view the parts ledger" ON "partLedger"
       coalesce(get_my_claim('parts_view')::boolean, false) = true
     )
     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
-  );
-  
-CREATE TABLE "partLedgerValueLedgerRelation" (
-  "partLedgerId" TEXT NOT NULL,
-  "valueLedgerId" TEXT NOT NULL,
-
-  CONSTRAINT "partLedgerValueLedgerRelation_pkey" PRIMARY KEY ("partLedgerId", "valueLedgerId"),
-  CONSTRAINT "partLedgerValueLedgerRelation_partLedgerId_fkey" FOREIGN KEY ("partLedgerId") REFERENCES "partLedger"("id"),
-  CONSTRAINT "partLedgerValueLedgerRelation_valueLedgerId_fkey" FOREIGN KEY ("valueLedgerId") REFERENCES "valueLedger"("id")
-);
-
-ALTER TABLE "partLedgerValueLedgerRelation" ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Employees with accounting_view can view the part ledger/value ledger relations" ON "partLedgerValueLedgerRelation"
-  FOR SELECT
-  USING (
-    coalesce(get_my_claim('accounting_view')::boolean, false) = true AND
-    (get_my_claim('role'::text)) = '"employee"'::jsonb
   );
 
 CREATE TYPE "supplierLedgerDocumentType" AS ENUM (
@@ -316,21 +298,7 @@ AS $$
 $$;
 
 
-CREATE OR REPLACE VIEW "ledgers" WITH(SECURITY_INVOKER=true) AS
-  SELECT 
-    jl."reference",
-    jl."accountNumber",
-    jl."description",
-    jl."amount",
-    jl."quantity",
-    vl."costAmountActual",
-    vl."costAmountExpected",
-    vl."actualCostPostedToGl",
-    vl."expectedCostPostedToGl"
-    FROM "journalLine" jl
-      INNER JOIN "valueLedgerJournalLineRelation" vljlr
-        ON jl."id" = vljlr."journalLineId"
-      INNER JOIN "valueLedger" vl
-        ON vl."id" = vljlr."valueLedgerId"
+
+      
       
 

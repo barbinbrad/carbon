@@ -15,7 +15,6 @@ import type {
   journalLineValidator,
   partLedgerValidator,
   paymentTermValidator,
-  valueLedgerValidator,
 } from "./accounting.models";
 import type { Account, Transaction } from "./types";
 
@@ -609,20 +608,6 @@ export async function insertPartLedger(
   partEntry: TypeOfValidator<typeof partLedgerValidator>
 ) {
   return client.from("partLedger").insert([partEntry]);
-}
-
-export async function insertValueEntries(
-  client: SupabaseClient<Database>,
-  valueEntries: TypeOfValidator<typeof valueLedgerValidator>[]
-) {
-  return client.from("valueLedger").insert(valueEntries);
-}
-
-export async function insertValueLedger(
-  client: SupabaseClient<Database>,
-  valueEntry: TypeOfValidator<typeof valueLedgerValidator>
-) {
-  return client.from("valueLedger").insert([valueEntry]);
 }
 
 export async function updateDefaultAccounts(

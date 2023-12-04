@@ -52,3 +52,10 @@ export const debit = (accountType: AccountType, amount: number) => {
       throw new Error(`Invalid account type: ${accountType}`);
   }
 };
+
+export const journalReference = {
+  to: {
+    purchaseInvoice: (id: string) => `purchase-invoice:${id}`,
+    receipt: (id: string) => `receipt:${id}`,
+  },
+};

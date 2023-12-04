@@ -44,7 +44,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   return redirect(
     path.to.locations,
-    await flash(request, success("Location created."))
+    await flash(request, success("Location created"))
   );
 }
 

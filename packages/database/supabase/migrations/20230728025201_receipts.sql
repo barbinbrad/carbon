@@ -95,7 +95,7 @@ CREATE TABLE "receiptLine" (
   "updatedBy" TEXT,
 
   CONSTRAINT "receiptLine_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "receiptLine_receiptId_fkey" FOREIGN KEY ("receiptId") REFERENCES "receipt" ("receiptId") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "receiptLine_receiptId_fkey" FOREIGN KEY ("receiptId") REFERENCES "receipt" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "receiptLine_partId_fkey" FOREIGN KEY ("partId") REFERENCES "part" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "receiptLine_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "location" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT "receiptLine_shelfId_fkey" FOREIGN KEY ("shelfId", "locationId") REFERENCES "shelf" ("id", "locationId") ON DELETE SET NULL ON UPDATE CASCADE,
@@ -138,14 +138,6 @@ CREATE POLICY "Employees with inventory_delete can delete receipt lines" ON "rec
     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
   );
 
-CREATE OR REPLACE VIEW "receiptQuantityReceivedByLine" AS 
-  SELECT
-    r."sourceDocumentId",
-    l."lineId",
-    SUM(l."receivedQuantity") AS "receivedQuantity"
-  FROM "receipt" r 
-  INNER JOIN "receiptLine" l
-    ON l."receiptId" = r."receiptId"
-  GROUP BY r."sourceDocumentId", l."lineId";
+
 
 

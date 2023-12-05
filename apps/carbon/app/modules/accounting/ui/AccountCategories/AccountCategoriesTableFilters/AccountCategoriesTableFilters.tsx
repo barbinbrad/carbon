@@ -4,7 +4,7 @@ import { Link } from "@remix-run/react";
 import { IoMdAdd } from "react-icons/io";
 import { DebouncedInput } from "~/components/Search";
 import { usePermissions, useUrlParams } from "~/hooks";
-import { incomeBalanceTypes, normalBalanceTypes } from "~/modules/accounting";
+import { accountClassTypes, incomeBalanceTypes } from "~/modules/accounting";
 
 const AttributeCategoriesTableFilters = () => {
   const permissions = usePermissions();
@@ -49,19 +49,19 @@ const AttributeCategoriesTableFilters = () => {
         <Select
           size="sm"
           placeholder="Normal Balance"
-          value={normalBalanceTypes
-            .map((normalBalance) => ({
-              value: normalBalance,
-              label: normalBalance,
+          value={accountClassTypes
+            .map((accountClass) => ({
+              value: accountClass,
+              label: accountClass,
             }))
-            .filter((type) => type.value === params.get("normalBalance"))}
+            .filter((type) => type.value === params.get("accountClass"))}
           isClearable
-          options={normalBalanceTypes.map((normalBalance) => ({
-            value: normalBalance,
-            label: normalBalance,
+          options={accountClassTypes.map((accountClass) => ({
+            value: accountClass,
+            label: accountClass,
           }))}
           onChange={(selected) => {
-            setParams({ normalBalance: selected?.value });
+            setParams({ accountClass: selected?.value });
           }}
         />
       </HStack>

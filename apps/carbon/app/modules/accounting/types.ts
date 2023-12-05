@@ -33,8 +33,7 @@ export type AccountSubcategory = NonNullable<
 export type AccountIncomeBalance =
   Database["public"]["Enums"]["glIncomeBalance"];
 
-export type AccountNormalBalance =
-  Database["public"]["Enums"]["glNormalBalance"];
+export type AccountClass = Database["public"]["Enums"]["glAccountClass"];
 
 export type AccountType = Database["public"]["Enums"]["glAccountType"];
 

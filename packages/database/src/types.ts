@@ -100,6 +100,7 @@ export interface Database {
           accountCategoryId: string | null
           accountSubcategoryId: string | null
           active: boolean
+          class: Database["public"]["Enums"]["glAccountClass"] | null
           consolidatedRate:
             | Database["public"]["Enums"]["glConsolidatedRate"]
             | null
@@ -109,7 +110,6 @@ export interface Database {
           id: string
           incomeBalance: Database["public"]["Enums"]["glIncomeBalance"]
           name: string
-          normalBalance: Database["public"]["Enums"]["glNormalBalance"]
           number: string
           type: Database["public"]["Enums"]["glAccountType"]
           updatedAt: string | null
@@ -119,6 +119,7 @@ export interface Database {
           accountCategoryId?: string | null
           accountSubcategoryId?: string | null
           active?: boolean
+          class?: Database["public"]["Enums"]["glAccountClass"] | null
           consolidatedRate?:
             | Database["public"]["Enums"]["glConsolidatedRate"]
             | null
@@ -128,7 +129,6 @@ export interface Database {
           id?: string
           incomeBalance: Database["public"]["Enums"]["glIncomeBalance"]
           name: string
-          normalBalance: Database["public"]["Enums"]["glNormalBalance"]
           number: string
           type: Database["public"]["Enums"]["glAccountType"]
           updatedAt?: string | null
@@ -138,6 +138,7 @@ export interface Database {
           accountCategoryId?: string | null
           accountSubcategoryId?: string | null
           active?: boolean
+          class?: Database["public"]["Enums"]["glAccountClass"] | null
           consolidatedRate?:
             | Database["public"]["Enums"]["glConsolidatedRate"]
             | null
@@ -147,7 +148,6 @@ export interface Database {
           id?: string
           incomeBalance?: Database["public"]["Enums"]["glIncomeBalance"]
           name?: string
-          normalBalance?: Database["public"]["Enums"]["glNormalBalance"]
           number?: string
           type?: Database["public"]["Enums"]["glAccountType"]
           updatedAt?: string | null
@@ -195,31 +195,31 @@ export interface Database {
       accountCategory: {
         Row: {
           category: string
+          class: Database["public"]["Enums"]["glAccountClass"]
           createdAt: string
           createdBy: string
           id: string
           incomeBalance: Database["public"]["Enums"]["glIncomeBalance"]
-          normalBalance: Database["public"]["Enums"]["glNormalBalance"]
           updatedAt: string | null
           updatedBy: string | null
         }
         Insert: {
           category: string
+          class: Database["public"]["Enums"]["glAccountClass"]
           createdAt?: string
           createdBy: string
           id?: string
           incomeBalance: Database["public"]["Enums"]["glIncomeBalance"]
-          normalBalance: Database["public"]["Enums"]["glNormalBalance"]
           updatedAt?: string | null
           updatedBy?: string | null
         }
         Update: {
           category?: string
+          class?: Database["public"]["Enums"]["glAccountClass"]
           createdAt?: string
           createdBy?: string
           id?: string
           incomeBalance?: Database["public"]["Enums"]["glIncomeBalance"]
-          normalBalance?: Database["public"]["Enums"]["glNormalBalance"]
           updatedAt?: string | null
           updatedBy?: string | null
         }
@@ -7901,33 +7901,33 @@ export interface Database {
       accountCategories: {
         Row: {
           category: string | null
+          class: Database["public"]["Enums"]["glAccountClass"] | null
           createdAt: string | null
           createdBy: string | null
           id: string | null
           incomeBalance: Database["public"]["Enums"]["glIncomeBalance"] | null
-          normalBalance: Database["public"]["Enums"]["glNormalBalance"] | null
           subCategoriesCount: number | null
           updatedAt: string | null
           updatedBy: string | null
         }
         Insert: {
           category?: string | null
+          class?: Database["public"]["Enums"]["glAccountClass"] | null
           createdAt?: string | null
           createdBy?: string | null
           id?: string | null
           incomeBalance?: Database["public"]["Enums"]["glIncomeBalance"] | null
-          normalBalance?: Database["public"]["Enums"]["glNormalBalance"] | null
           subCategoriesCount?: never
           updatedAt?: string | null
           updatedBy?: string | null
         }
         Update: {
           category?: string | null
+          class?: Database["public"]["Enums"]["glAccountClass"] | null
           createdAt?: string | null
           createdBy?: string | null
           id?: string | null
           incomeBalance?: Database["public"]["Enums"]["glIncomeBalance"] | null
-          normalBalance?: Database["public"]["Enums"]["glNormalBalance"] | null
           subCategoriesCount?: never
           updatedAt?: string | null
           updatedBy?: string | null
@@ -7966,6 +7966,7 @@ export interface Database {
           accountSubCategory: string | null
           accountSubcategoryId: string | null
           active: boolean | null
+          class: Database["public"]["Enums"]["glAccountClass"] | null
           consolidatedRate:
             | Database["public"]["Enums"]["glConsolidatedRate"]
             | null
@@ -7975,7 +7976,6 @@ export interface Database {
           id: string | null
           incomeBalance: Database["public"]["Enums"]["glIncomeBalance"] | null
           name: string | null
-          normalBalance: Database["public"]["Enums"]["glNormalBalance"] | null
           number: string | null
           type: Database["public"]["Enums"]["glAccountType"] | null
           updatedAt: string | null
@@ -7987,6 +7987,7 @@ export interface Database {
           accountSubCategory?: never
           accountSubcategoryId?: string | null
           active?: boolean | null
+          class?: Database["public"]["Enums"]["glAccountClass"] | null
           consolidatedRate?:
             | Database["public"]["Enums"]["glConsolidatedRate"]
             | null
@@ -7996,7 +7997,6 @@ export interface Database {
           id?: string | null
           incomeBalance?: Database["public"]["Enums"]["glIncomeBalance"] | null
           name?: string | null
-          normalBalance?: Database["public"]["Enums"]["glNormalBalance"] | null
           number?: string | null
           type?: Database["public"]["Enums"]["glAccountType"] | null
           updatedAt?: string | null
@@ -8008,6 +8008,7 @@ export interface Database {
           accountSubCategory?: never
           accountSubcategoryId?: string | null
           active?: boolean | null
+          class?: Database["public"]["Enums"]["glAccountClass"] | null
           consolidatedRate?:
             | Database["public"]["Enums"]["glConsolidatedRate"]
             | null
@@ -8017,7 +8018,6 @@ export interface Database {
           id?: string | null
           incomeBalance?: Database["public"]["Enums"]["glIncomeBalance"] | null
           name?: string | null
-          normalBalance?: Database["public"]["Enums"]["glNormalBalance"] | null
           number?: string | null
           type?: Database["public"]["Enums"]["glAccountType"] | null
           updatedAt?: string | null
@@ -8852,10 +8852,10 @@ export interface Database {
         | "Expense"
         | "Other Income"
         | "Other Expense"
+      glAccountClass: "Asset" | "Liability" | "Equity" | "Revenue" | "Expense"
       glAccountType: "Posting" | "Heading" | "Begin Total" | "End Total"
       glConsolidatedRate: "Average" | "Current" | "Historical"
       glIncomeBalance: "Balance Sheet" | "Income Statement"
-      glNormalBalance: "Debit" | "Credit" | "Both"
       journalLineDocumentType:
         | "Receipt"
         | "Invoice"
@@ -8912,7 +8912,7 @@ export interface Database {
         | "Maximum Quantity"
       partReplenishmentSystem: "Buy" | "Make" | "Buy and Make"
       partType: "Inventory" | "Non-Inventory" | "Service"
-      payableLineType: "G/L Account" | "Part" | "Fixed Asset"
+      payableLineType: "G/L Account" | "Part" | "Fixed Asset" | "Comment"
       paymentTermCalculationMethod: "Net" | "End of Month" | "Day of Month"
       purchaseInvoiceStatus:
         | "Draft"

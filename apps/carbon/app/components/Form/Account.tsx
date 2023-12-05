@@ -8,11 +8,13 @@ import {
 import { useFetcher } from "@remix-run/react";
 import { useEffect, useMemo } from "react";
 import { useControlField, useField } from "remix-validated-form";
-import type { getAccountsList } from "~/modules/accounting";
+import type { AccountClass, getAccountsList } from "~/modules/accounting";
 import { path } from "~/utils/path";
 import type { SelectProps } from "./Select";
 
-type AccountSelectProps = Omit<SelectProps, "options">;
+type AccountSelectProps = Omit<SelectProps, "options"> & {
+  classes: AccountClass[];
+};
 
 const Account = ({
   name,
@@ -21,6 +23,7 @@ const Account = ({
   isLoading,
   isReadOnly,
   placeholder = "Select Account",
+  classes,
   onChange,
   ...props
 }: AccountSelectProps) => {
@@ -31,7 +34,10 @@ const Account = ({
     useFetcher<Awaited<ReturnType<typeof getAccountsList>>>();
 
   useMount(() => {
-    accountFetcher.load(`${path.to.api.accounts}?type=Posting`);
+    let classQueryParamas = classes?.map((c) => `class=${c}`).join("&") ?? "";
+    accountFetcher.load(
+      `${path.to.api.accounts}?type=Posting&${classQueryParamas}`
+    );
   });
 
   const options = useMemo(

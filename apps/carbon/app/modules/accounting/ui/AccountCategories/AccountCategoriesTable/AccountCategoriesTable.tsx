@@ -60,8 +60,8 @@ const AccountCategoriesTable = memo(
           cell: (item) => item.getValue(),
         },
         {
-          header: "Debit/Credit",
-          accessorKey: "normalBalance",
+          header: "Class",
+          accessorKey: "class",
           cell: (item) => item.getValue(),
         },
 

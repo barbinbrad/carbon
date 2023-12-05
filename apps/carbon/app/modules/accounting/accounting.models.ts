@@ -70,7 +70,13 @@ export const incomeBalanceTypes = [
   "Balance Sheet",
   "Income Statement",
 ] as const;
-export const normalBalanceTypes = ["Debit", "Credit", "Both"] as const;
+export const accountClassTypes = [
+  "Asset",
+  "Liability",
+  "Equity",
+  "Revenue",
+  "Expense",
+] as const;
 
 export const accountValidator = withZod(
   z
@@ -90,14 +96,38 @@ export const accountValidator = withZod(
           message: "Income balance is required",
         }),
       }),
-      normalBalance: z.enum(normalBalanceTypes, {
+      class: z.enum(accountClassTypes, {
         errorMap: (issue, ctx) => ({
-          message: "Normal balance is required",
+          message: "Class is required",
         }),
       }),
       consolidatedRate: z.enum(consolidatedRateTypes),
       directPosting: zfd.checkbox(),
     })
+    .refine(
+      (data) => {
+        if (["Asset", "Liability", "Equity"].includes(data.class)) {
+          return data.incomeBalance === "Balance Sheet";
+        }
+        return true;
+      },
+      {
+        message: "Asset, Liability and Equity are Balance Sheet accounts",
+        path: ["class"],
+      }
+    )
+    .refine(
+      (data) => {
+        if (["Revenue", "Expense"].includes(data.class)) {
+          return data.incomeBalance === "Income Statement";
+        }
+        return true;
+      },
+      {
+        message: "Revenue and Expense are Income Statement accounts",
+        path: ["class"],
+      }
+    )
     .refine(
       (data) => {
         if (!["Heading", "Begin Total", "End Total"].includes(data.type)) {
@@ -144,9 +174,9 @@ export const accountCategoryValidator = withZod(
         message: "Income balance is required",
       }),
     }),
-    normalBalance: z.enum(normalBalanceTypes, {
+    class: z.enum(accountClassTypes, {
       errorMap: (issue, ctx) => ({
-        message: "Normal balance is required",
+        message: "Class is required",
       }),
     }),
   })

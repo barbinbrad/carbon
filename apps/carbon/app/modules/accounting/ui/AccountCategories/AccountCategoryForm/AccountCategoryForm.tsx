@@ -15,8 +15,8 @@ import { Hidden, Input, Select, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import {
   accountCategoryValidator,
+  accountClassTypes,
   incomeBalanceTypes,
-  normalBalanceTypes,
 } from "~/modules/accounting";
 import type { TypeOfValidator } from "~/types/validators";
 import { path } from "~/utils/path";
@@ -68,11 +68,11 @@ const AccountCategoryForm = ({
                 }))}
               />
               <Select
-                name="normalBalance"
-                label="Normal Balance"
-                options={normalBalanceTypes.map((normalBalance) => ({
-                  value: normalBalance,
-                  label: normalBalance,
+                name="class"
+                label="Class"
+                options={accountClassTypes.map((accountClass) => ({
+                  value: accountClass,
+                  label: accountClass,
                 }))}
               />
             </VStack>

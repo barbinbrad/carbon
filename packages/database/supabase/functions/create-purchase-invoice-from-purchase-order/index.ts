@@ -104,9 +104,9 @@ serve(async (req: Request) => {
         Database["public"]["Tables"]["purchaseInvoiceLine"]["Insert"][]
       >((acc, line) => {
         if (
-          line.purchaseOrderLineType !== "Comment" &&
           line?.quantityToInvoice &&
-          line.quantityToInvoice > 0
+          line.quantityToInvoice > 0 &&
+          !line.invoicedComplete
         ) {
           acc.push({
             invoiceId: purchaseInvoiceId,

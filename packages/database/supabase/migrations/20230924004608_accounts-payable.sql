@@ -110,7 +110,8 @@ CREATE POLICY "Employees with invoicing_view can view AP invoices status history
 CREATE TYPE "payableLineType" AS ENUM (
   'G/L Account',
   'Part',
-  'Fixed Asset'
+  'Fixed Asset',
+  'Comment'
 );
 
 CREATE TABLE "purchaseInvoiceLine" (

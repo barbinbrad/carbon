@@ -70,15 +70,17 @@ CREATE TYPE "glAccountCategory" AS ENUM (
   'Other Expense'
 );
 
+CREATE TYPE "glAccountClass" AS ENUM (
+  'Asset',
+  'Liability',
+  'Equity',
+  'Revenue',
+  'Expense'
+);
+
 CREATE TYPE "glIncomeBalance" AS ENUM (
   'Balance Sheet',
   'Income Statement'
-);
-
-CREATE TYPE "glNormalBalance" AS ENUM (
-  'Debit',
-  'Credit',
-  'Both'
 );
 
 CREATE TYPE "glAccountType" AS ENUM (
@@ -92,8 +94,8 @@ CREATE TYPE "glAccountType" AS ENUM (
 CREATE TABLE "accountCategory" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "category" TEXT NOT NULL,
+  "class" "glAccountClass" NOT NULL,
   "incomeBalance" "glIncomeBalance" NOT NULL,
-  "normalBalance" "glNormalBalance" NOT NULL,
   "createdBy" TEXT NOT NULL,
   "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   "updatedBy" TEXT,
@@ -197,10 +199,10 @@ CREATE TABLE "account" (
   "number" TEXT NOT NULL,
   "name" TEXT NOT NULL,
   "type" "glAccountType" NOT NULL,
+  "class" "glAccountClass",
   "accountCategoryId" TEXT,
   "accountSubcategoryId" TEXT,
   "incomeBalance" "glIncomeBalance" NOT NULL,
-  "normalBalance" "glNormalBalance" NOT NULL,
   "consolidatedRate" "glConsolidatedRate",
   "directPosting" BOOLEAN NOT NULL DEFAULT false,
   "active" BOOLEAN NOT NULL DEFAULT true,
@@ -265,8 +267,8 @@ CREATE OR REPLACE VIEW "accountCategories" AS
   SELECT
     "id",
     "category",
+    "class",
     "incomeBalance",
-    "normalBalance",
     "createdBy",
     "createdAt",
     "updatedBy",
@@ -285,8 +287,8 @@ CREATE OR REPLACE VIEW "accounts" AS
     (SELECT "category" FROM "accountCategory" WHERE "accountCategory"."id" = "account"."accountCategoryId") AS "accountCategory",
     "accountSubcategoryId",
     (SELECT "name" FROM "accountSubcategory" WHERE "accountSubcategory"."id" = "account"."accountSubcategoryId") AS "accountSubCategory",
+    "class",
     "incomeBalance",
-    "normalBalance",
     "consolidatedRate",
     "directPosting",
     "active",

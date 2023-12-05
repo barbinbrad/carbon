@@ -2,14 +2,14 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { validationError } from "remix-validated-form";
 import type {
+  AccountClass,
   AccountConsolidatedRate,
   AccountIncomeBalance,
-  AccountNormalBalance,
   AccountType,
 } from "~/modules/accounting";
 import {
-  accountValidator,
   ChartOfAccountForm,
+  accountValidator,
   upsertAccount,
 } from "~/modules/accounting";
 import { requirePermissions } from "~/services/auth";
@@ -74,8 +74,8 @@ export default function NewAccountRoute() {
     number: "",
     type: "Posting" as AccountType,
     accountCategoryId: "",
+    class: "Asset" as AccountClass,
     incomeBalance: "Balance Sheet" as AccountIncomeBalance,
-    normalBalance: "Debit" as AccountNormalBalance,
     consolidatedRate: "Average" as AccountConsolidatedRate,
     directPosting: false,
   };

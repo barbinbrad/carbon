@@ -29,13 +29,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const searchParams = new URLSearchParams(url.search);
   const name = searchParams.get("name");
   const incomeBalance = searchParams.get("incomeBalance");
-  const normalBalance = searchParams.get("normalBalance");
+  const accountClass = searchParams.get("class");
   const { limit, offset, sorts } = getGenericQueryFilters(searchParams);
 
   const [categories] = await Promise.all([
     getAccountCategories(client, {
       name,
-      normalBalance,
+      class: accountClass,
       incomeBalance,
       limit,
       offset,

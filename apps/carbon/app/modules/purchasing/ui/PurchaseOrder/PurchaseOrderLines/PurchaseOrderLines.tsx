@@ -237,6 +237,18 @@ const PurchaseOrderLines = () => {
           }
         },
       },
+      {
+        id: "invoicedComplete",
+        header: "Invoiced Complete",
+        cell: ({ row }) => {
+          switch (row.original.purchaseOrderLineType) {
+            case "Comment":
+              return null;
+            default:
+              return <Checkbox isChecked={row.original.invoicedComplete} />;
+          }
+        },
+      },
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigate]);

@@ -232,6 +232,7 @@ const PurchaseOrderLineForm = ({
                 <Account
                   name="accountNumber"
                   label="Account"
+                  classes={["Expense", "Asset"]}
                   onChange={({ label }) => {
                     setPartData({
                       partId: "",

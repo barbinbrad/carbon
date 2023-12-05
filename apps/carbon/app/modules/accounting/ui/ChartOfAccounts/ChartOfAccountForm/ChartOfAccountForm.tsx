@@ -28,15 +28,15 @@ import {
 import { usePermissions } from "~/hooks";
 import type {
   AccountCategory as AccountCategoryType,
+  AccountClass,
   AccountIncomeBalance,
-  AccountNormalBalance,
 } from "~/modules/accounting";
 import {
+  accountClassTypes,
   accountTypes,
   accountValidator,
   consolidatedRateTypes,
   incomeBalanceTypes,
-  normalBalanceTypes,
 } from "~/modules/accounting";
 import type { TypeOfValidator } from "~/types/validators";
 import { path } from "~/utils/path";
@@ -53,12 +53,12 @@ const ChartOfAccountForm = ({ initialValues }: ChartOfAccountFormProps) => {
   const [accountCategoryId, setAccountCategoryId] = useState<string>(
     initialValues.accountCategoryId ?? ""
   );
-  const [incomeBalance, setIncomeBalance] = useState<
-    "Balance Sheet" | "Income Statement"
-  >(initialValues.incomeBalance);
-  const [normalBalance, setNormalBalance] = useState<
-    "Debit" | "Credit" | "Both"
-  >(initialValues.normalBalance);
+  const [incomeBalance, setIncomeBalance] = useState<AccountIncomeBalance>(
+    initialValues.incomeBalance
+  );
+  const [accountClass, setAccountClass] = useState<AccountClass>(
+    initialValues.class
+  );
 
   const isEditing = initialValues.id !== undefined;
   const isDisabled = isEditing
@@ -69,7 +69,7 @@ const ChartOfAccountForm = ({ initialValues }: ChartOfAccountFormProps) => {
     if (category) {
       setAccountCategoryId(category.id ?? "");
       setIncomeBalance(category.incomeBalance ?? "Income Statement");
-      setNormalBalance(category.normalBalance ?? "Debit");
+      setAccountClass(category.class ?? "Asset");
     }
   };
 
@@ -139,16 +139,15 @@ const ChartOfAccountForm = ({ initialValues }: ChartOfAccountFormProps) => {
               </VStack>
               <VStack spacing={4} alignItems="start">
                 <SelectControlled
-                  name="normalBalance"
-                  label="Normal Balance"
-                  options={normalBalanceTypes.map((normalBalance) => ({
-                    label: normalBalance,
-                    value: normalBalance,
+                  name="class"
+                  label="Class"
+                  options={accountClassTypes.map((accountClass) => ({
+                    label: accountClass,
+                    value: accountClass,
                   }))}
-                  value={normalBalance}
+                  value={accountClass}
                   onChange={(newValue) => {
-                    if (newValue)
-                      setNormalBalance(newValue as AccountNormalBalance);
+                    if (newValue) setAccountClass(newValue as AccountClass);
                   }}
                 />
                 <Select

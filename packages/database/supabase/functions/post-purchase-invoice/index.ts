@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-case-declarations
 import { serve } from "https://deno.land/std@0.175.0/http/server.ts";
 import { format } from "https://deno.land/std@0.205.0/datetime/mod.ts";
 import type { Database } from "../../../src/types.ts";
@@ -196,309 +197,434 @@ serve(async (req: Request) => {
     > = {};
 
     for await (const invoiceLine of purchaseInvoiceLines.data) {
-      let postingGroupInventory:
-        | Database["public"]["Tables"]["postingGroupInventory"]["Row"]
-        | null = null;
-
-      const partGroupId: string | null =
-        partGroups.data.find((partGroup) => partGroup.id === invoiceLine.partId)
-          ?.partGroupId ?? null;
-      const locationId = invoiceLine.locationId ?? null;
-      const supplierTypeId: string | null =
-        supplier.data.supplierTypeId ?? null;
-
-      // inventory posting group
-      if (`${partGroupId}-${locationId}` in inventoryPostingGroups) {
-        postingGroupInventory =
-          inventoryPostingGroups[`${partGroupId}-${locationId}`];
-      } else {
-        const inventoryPostingGroup = await getInventoryPostingGroup(client, {
-          partGroupId,
-          locationId,
-        });
-
-        if (inventoryPostingGroup.error || !inventoryPostingGroup.data) {
-          throw new Error("Error getting inventory posting group");
-        }
-
-        postingGroupInventory = inventoryPostingGroup.data ?? null;
-        inventoryPostingGroups[`${partGroupId}-${locationId}`] =
-          postingGroupInventory;
-      }
-
-      if (!postingGroupInventory) {
-        throw new Error("No inventory posting group found");
-      }
-
-      // purchasing posting group
-      const purchasingPostingGroups: Record<
-        string,
-        Database["public"]["Tables"]["postingGroupPurchasing"]["Row"] | null
-      > = {};
-
-      let postingGroupPurchasing:
-        | Database["public"]["Tables"]["postingGroupPurchasing"]["Row"]
-        | null = null;
-
-      if (`${partGroupId}-${supplierTypeId}` in purchasingPostingGroups) {
-        postingGroupPurchasing =
-          purchasingPostingGroups[`${partGroupId}-${supplierTypeId}`];
-      } else {
-        const purchasingPostingGroup = await getPurchasingPostingGroup(client, {
-          partGroupId,
-          supplierTypeId,
-        });
-
-        if (purchasingPostingGroup.error || !purchasingPostingGroup.data) {
-          throw new Error("Error getting purchasing posting group");
-        }
-
-        postingGroupPurchasing = purchasingPostingGroup.data ?? null;
-        purchasingPostingGroups[`${partGroupId}-${supplierTypeId}`] =
-          postingGroupPurchasing;
-      }
-
-      if (!postingGroupPurchasing) {
-        throw new Error("No purchasing posting group found");
-      }
-
-      // determine the journal lines that should be reversed
-      const existingJournalLines = invoiceLine.purchaseOrderLineId
-        ? journalLinesByPurchaseOrderLine[invoiceLine.purchaseOrderLineId] ?? []
-        : [];
-
-      let previousJournalId: number | null = null;
-      let previousAccrual: boolean | null = null;
-      let currentGroup = 0;
-
-      const existingJournalLineGroups = existingJournalLines.reduce<
-        Database["public"]["Tables"]["journalLine"]["Row"][][]
-      >((acc, entry) => {
-        const { journalId, accrual } = entry;
-
-        if (journalId === previousJournalId && accrual === previousAccrual) {
-          acc[currentGroup - 1].push(entry);
-        } else {
-          acc.push([entry]);
-          currentGroup++;
-        }
-
-        previousJournalId = journalId;
-        previousAccrual = accrual;
-        return acc;
-      }, []);
-
-      const purchaseOrderLine = purchaseOrderLines.data.find(
-        (line) => line.id === invoiceLine.purchaseOrderLineId
-      );
-
-      const quantityReceived = purchaseOrderLine?.quantityReceived ?? 0;
-      const quantityInvoiced = purchaseOrderLine?.quantityInvoiced ?? 0;
-      const quantityToReverse = Math.max(
-        0,
-        Math.min(invoiceLine.quantity ?? 0, quantityReceived - quantityInvoiced)
-      );
-
-      const quantityAlreadyReversed =
-        quantityReceived > quantityInvoiced ? quantityInvoiced : 0;
-
-      if (quantityToReverse > 0) {
-        let counted = 0;
-        let reversed = 0;
-
-        existingJournalLineGroups.forEach((entry) => {
-          if (entry[0].quantity) {
-            const unitCostForEntry = (entry[0].amount ?? 0) / entry[0].quantity;
-
-            // we don't want to reverse an entry twice, so we need to keep track of what's been previously reversed
-
-            // akin to supply
-            const quantityAvailableToReverseForEntry =
-              quantityAlreadyReversed > counted
-                ? entry[0].quantity + counted - quantityAlreadyReversed
-                : entry[0].quantity;
-
-            // akin to demand
-            const quantityRequiredToReverse = quantityToReverse - reversed;
-
-            // we can't reverse more than what's available or what's required
-            const quantityToReverseForEntry = Math.max(
-              0,
-              Math.min(
-                quantityAvailableToReverseForEntry,
-                quantityRequiredToReverse
+      switch (invoiceLine.invoiceLineType) {
+        case "G/L Account":
+          const [account, accountDefaults] = await Promise.all([
+            client
+              .from("accounts")
+              .select("name, number, directPosting")
+              .eq("number", invoiceLine.accountNumber ?? "")
+              .single(),
+            client
+              .from("accountDefault")
+              .select(
+                "overheadCostAppliedAccount, payablesAccount, purchaseAccount"
               )
+              .single(),
+          ]);
+          if (account.error || !account.data)
+            throw new Error("Failed to fetch account");
+          if (!account.data.directPosting)
+            throw new Error("Account is not a direct posting account");
+
+          if (accountDefaults.error || !accountDefaults.data)
+            throw new Error("Failed to fetch account defaults");
+
+          // debit the G/L account
+          journalLineInserts.push({
+            accountNumber: account.data.number!,
+            description: account.data.name!,
+            // we limit the account to assets and expenses in the UI, so we don't need to check here
+            amount: debit(
+              "asset",
+              invoiceLine.quantity * invoiceLine.unitPrice
+            ),
+            quantity: invoiceLine.quantity,
+            documentType: "Invoice",
+            documentId: purchaseInvoice.data?.id,
+            externalDocumentId: purchaseInvoice.data?.supplierReference,
+            reference: journalReference.to.purchaseInvoice(
+              invoiceLine.purchaseOrderLineId!
+            ),
+          });
+
+          // creidt the direct cost applied account
+          journalLineInserts.push({
+            accountNumber: accountDefaults.data.overheadCostAppliedAccount!,
+            description: "Overhead Cost Applied",
+            amount: credit(
+              "expense",
+              invoiceLine.quantity * invoiceLine.unitPrice
+            ),
+            quantity: invoiceLine.quantity,
+            documentType: "Invoice",
+            documentId: purchaseInvoice.data?.id,
+            externalDocumentId: purchaseInvoice.data?.supplierReference,
+            reference: journalReference.to.purchaseInvoice(
+              invoiceLine.purchaseOrderLineId!
+            ),
+          });
+
+          // debit the purchase account
+          journalLineInserts.push({
+            accountNumber: accountDefaults.data.purchaseAccount!,
+            description: "Purchase Account",
+            amount: debit(
+              "expense",
+              invoiceLine.quantity * invoiceLine.unitPrice
+            ),
+            quantity: invoiceLine.quantity,
+            documentType: "Invoice",
+            documentId: purchaseInvoice.data?.id,
+            externalDocumentId: purchaseInvoice.data?.supplierReference,
+            reference: journalReference.to.purchaseInvoice(
+              invoiceLine.purchaseOrderLineId!
+            ),
+          });
+
+          // credit the accounts payable account
+          journalLineInserts.push({
+            accountNumber: accountDefaults.data.payablesAccount!,
+            description: "Accounts Payable",
+            amount: credit(
+              "liability",
+              invoiceLine.quantity * invoiceLine.unitPrice
+            ),
+            quantity: invoiceLine.quantity,
+            documentType: "Invoice",
+            documentId: purchaseInvoice.data?.id,
+            externalDocumentId: purchaseInvoice.data?.supplierReference,
+            reference: journalReference.to.purchaseInvoice(
+              invoiceLine.purchaseOrderLineId!
+            ),
+          });
+          break;
+        case "Part":
+          let postingGroupInventory:
+            | Database["public"]["Tables"]["postingGroupInventory"]["Row"]
+            | null = null;
+
+          const partGroupId: string | null =
+            partGroups.data.find(
+              (partGroup) => partGroup.id === invoiceLine.partId
+            )?.partGroupId ?? null;
+          const locationId = invoiceLine.locationId ?? null;
+          const supplierTypeId: string | null =
+            supplier.data.supplierTypeId ?? null;
+
+          // inventory posting group
+          if (`${partGroupId}-${locationId}` in inventoryPostingGroups) {
+            postingGroupInventory =
+              inventoryPostingGroups[`${partGroupId}-${locationId}`];
+          } else {
+            const inventoryPostingGroup = await getInventoryPostingGroup(
+              client,
+              {
+                partGroupId,
+                locationId,
+              }
             );
 
-            if (quantityToReverseForEntry > 0) {
-              // create the reversal entries
-              journalLineInserts.push({
-                accountNumber: entry[0].accountNumber!,
-                description: entry[0].description,
-                amount:
-                  entry[0].description === "Interim Inventory Accrual"
-                    ? credit(
-                        "asset",
-                        quantityToReverseForEntry * unitCostForEntry
-                      )
-                    : debit(
-                        "liability",
-                        quantityToReverseForEntry * unitCostForEntry
-                      ),
-                quantity: quantityToReverseForEntry,
-                documentType: "Invoice",
-                documentId: purchaseInvoice.data?.id,
-                externalDocumentId: purchaseInvoice?.data.supplierReference,
-                reference: invoiceLine.purchaseOrderLineId
-                  ? journalReference.to.purchaseInvoice(
-                      invoiceLine.purchaseOrderLineId
-                    )
-                  : null,
-              });
-
-              journalLineInserts.push({
-                accountNumber: entry[1].accountNumber!,
-                description: entry[1].description,
-                amount:
-                  entry[1].description === "Interim Inventory Accrual"
-                    ? credit(
-                        "asset",
-                        quantityToReverseForEntry * unitCostForEntry
-                      )
-                    : debit(
-                        "liability",
-                        quantityToReverseForEntry * unitCostForEntry
-                      ),
-                quantity: quantityToReverseForEntry,
-                documentType: "Invoice",
-                documentId: purchaseInvoice.data?.id,
-                externalDocumentId: purchaseInvoice?.data.supplierReference,
-                reference: journalReference.to.purchaseInvoice(
-                  invoiceLine.purchaseOrderLineId!
-                ),
-              });
+            if (inventoryPostingGroup.error || !inventoryPostingGroup.data) {
+              throw new Error("Error getting inventory posting group");
             }
 
-            counted += entry[0].quantity;
-            reversed += quantityToReverseForEntry;
+            postingGroupInventory = inventoryPostingGroup.data ?? null;
+            inventoryPostingGroups[`${partGroupId}-${locationId}`] =
+              postingGroupInventory;
           }
-        });
 
-        // create the cost entry
-        costLedgerInserts.push({
-          partLedgerType: "Purchase",
-          costLedgerType: "Direct Cost",
-          adjustment: false,
-          documentType: "Purchase Invoice",
-          documentId: purchaseInvoice.data?.id ?? undefined,
-          externalDocumentId:
-            purchaseInvoice.data?.supplierReference ?? undefined,
-          partId: invoiceLine.partId,
-          quantity: quantityToReverse,
-          cost: quantityToReverse * invoiceLine.unitPrice,
-          costPostedToGL: quantityToReverse * invoiceLine.unitPrice,
-        });
+          if (!postingGroupInventory) {
+            throw new Error("No inventory posting group found");
+          }
 
-        // create the normal GL entries
+          // purchasing posting group
+          const purchasingPostingGroups: Record<
+            string,
+            Database["public"]["Tables"]["postingGroupPurchasing"]["Row"] | null
+          > = {};
 
-        // debit the inventory account
-        journalLineInserts.push({
-          accountNumber: postingGroupInventory.inventoryAccount,
-          description: "Inventory Account",
-          amount: debit("asset", quantityToReverse * invoiceLine.unitPrice),
-          quantity: quantityToReverse,
-          documentType: "Invoice",
-          documentId: purchaseInvoice.data?.id,
-          externalDocumentId: purchaseInvoice.data?.supplierReference,
-          reference: journalReference.to.purchaseInvoice(
-            invoiceLine.purchaseOrderLineId!
-          ),
-        });
+          let postingGroupPurchasing:
+            | Database["public"]["Tables"]["postingGroupPurchasing"]["Row"]
+            | null = null;
 
-        // creidt the direct cost applied account
-        journalLineInserts.push({
-          accountNumber: postingGroupInventory.directCostAppliedAccount,
-          description: "Direct Cost Applied",
-          amount: credit("expense", quantityToReverse * invoiceLine.unitPrice),
-          quantity: quantityToReverse,
-          documentType: "Invoice",
-          documentId: purchaseInvoice.data?.id,
-          externalDocumentId: purchaseInvoice.data?.supplierReference,
-          reference: journalReference.to.purchaseInvoice(
-            invoiceLine.purchaseOrderLineId!
-          ),
-        });
+          if (`${partGroupId}-${supplierTypeId}` in purchasingPostingGroups) {
+            postingGroupPurchasing =
+              purchasingPostingGroups[`${partGroupId}-${supplierTypeId}`];
+          } else {
+            const purchasingPostingGroup = await getPurchasingPostingGroup(
+              client,
+              {
+                partGroupId,
+                supplierTypeId,
+              }
+            );
 
-        // debit the purchase account
-        journalLineInserts.push({
-          accountNumber: postingGroupPurchasing.purchaseAccount,
-          description: "Purchase Account",
-          amount: debit("expense", quantityToReverse * invoiceLine.unitPrice),
-          quantity: quantityToReverse,
-          documentType: "Invoice",
-          documentId: purchaseInvoice.data?.id,
-          externalDocumentId: purchaseInvoice.data?.supplierReference,
-          reference: journalReference.to.purchaseInvoice(
-            invoiceLine.purchaseOrderLineId!
-          ),
-        });
+            if (purchasingPostingGroup.error || !purchasingPostingGroup.data) {
+              throw new Error("Error getting purchasing posting group");
+            }
 
-        // credit the accounts payable account
-        journalLineInserts.push({
-          accountNumber: postingGroupPurchasing.payablesAccount,
-          description: "Accounts Payable",
-          amount: credit(
-            "liability",
-            quantityToReverse * invoiceLine.unitPrice
-          ),
-          quantity: quantityToReverse,
-          documentType: "Invoice",
-          documentId: purchaseInvoice.data?.id,
-          externalDocumentId: purchaseInvoice.data?.supplierReference,
-          reference: journalReference.to.purchaseInvoice(
-            invoiceLine.purchaseOrderLineId!
-          ),
-        });
-      }
+            postingGroupPurchasing = purchasingPostingGroup.data ?? null;
+            purchasingPostingGroups[`${partGroupId}-${supplierTypeId}`] =
+              postingGroupPurchasing;
+          }
 
-      if (invoiceLine.quantity > quantityToReverse) {
-        // create the accrual entries for invoiced not received
-        const quantityToAccrue = invoiceLine.quantity - quantityToReverse;
+          if (!postingGroupPurchasing) {
+            throw new Error("No purchasing posting group found");
+          }
 
-        // debit the inventory invoiced not received account
-        journalLineInserts.push({
-          accountNumber:
-            postingGroupInventory.inventoryInvoicedNotReceivedAccount,
-          description: "Inventory Invoiced Not Received",
-          accrual: true,
-          amount: debit("asset", quantityToAccrue * invoiceLine.unitPrice),
-          quantity: quantityToAccrue,
-          documentType: "Invoice",
-          documentId: purchaseInvoice.data?.id,
-          externalDocumentId: purchaseInvoice.data?.supplierReference,
-          reference: invoiceLine.purchaseOrderLineId
-            ? journalReference.to.purchaseInvoice(
+          // determine the journal lines that should be reversed
+          const existingJournalLines = invoiceLine.purchaseOrderLineId
+            ? journalLinesByPurchaseOrderLine[
                 invoiceLine.purchaseOrderLineId
-              )
-            : null,
-        });
+              ] ?? []
+            : [];
 
-        // credit the inventory interim accrual account
-        journalLineInserts.push({
-          accountNumber: postingGroupInventory.inventoryInterimAccrualAccount,
-          accrual: true,
-          description: "Interim Inventory Accrual",
-          amount: credit("asset", quantityToAccrue * invoiceLine.unitPrice),
-          quantity: quantityToAccrue,
-          documentType: "Invoice",
-          documentId: purchaseInvoice.data?.id,
-          externalDocumentId: purchaseInvoice.data?.supplierReference,
-          reference: invoiceLine.purchaseOrderLineId
-            ? journalReference.to.purchaseInvoice(
-                invoiceLine.purchaseOrderLineId
-              )
-            : null,
-        });
+          let previousJournalId: number | null = null;
+          let previousAccrual: boolean | null = null;
+          let currentGroup = 0;
+
+          const existingJournalLineGroups = existingJournalLines.reduce<
+            Database["public"]["Tables"]["journalLine"]["Row"][][]
+          >((acc, entry) => {
+            const { journalId, accrual } = entry;
+
+            if (
+              journalId === previousJournalId &&
+              accrual === previousAccrual
+            ) {
+              acc[currentGroup - 1].push(entry);
+            } else {
+              acc.push([entry]);
+              currentGroup++;
+            }
+
+            previousJournalId = journalId;
+            previousAccrual = accrual;
+            return acc;
+          }, []);
+
+          const purchaseOrderLine = purchaseOrderLines.data.find(
+            (line) => line.id === invoiceLine.purchaseOrderLineId
+          );
+
+          const quantityReceived = purchaseOrderLine?.quantityReceived ?? 0;
+          const quantityInvoiced = purchaseOrderLine?.quantityInvoiced ?? 0;
+          const quantityToReverse = Math.max(
+            0,
+            Math.min(
+              invoiceLine.quantity ?? 0,
+              quantityReceived - quantityInvoiced
+            )
+          );
+
+          const quantityAlreadyReversed =
+            quantityReceived > quantityInvoiced ? quantityInvoiced : 0;
+
+          if (quantityToReverse > 0) {
+            let counted = 0;
+            let reversed = 0;
+
+            existingJournalLineGroups.forEach((entry) => {
+              if (entry[0].quantity) {
+                const unitCostForEntry =
+                  (entry[0].amount ?? 0) / entry[0].quantity;
+
+                // we don't want to reverse an entry twice, so we need to keep track of what's been previously reversed
+
+                // akin to supply
+                const quantityAvailableToReverseForEntry =
+                  quantityAlreadyReversed > counted
+                    ? entry[0].quantity + counted - quantityAlreadyReversed
+                    : entry[0].quantity;
+
+                // akin to demand
+                const quantityRequiredToReverse = quantityToReverse - reversed;
+
+                // we can't reverse more than what's available or what's required
+                const quantityToReverseForEntry = Math.max(
+                  0,
+                  Math.min(
+                    quantityAvailableToReverseForEntry,
+                    quantityRequiredToReverse
+                  )
+                );
+
+                if (quantityToReverseForEntry > 0) {
+                  // create the reversal entries
+                  journalLineInserts.push({
+                    accountNumber: entry[0].accountNumber!,
+                    description: entry[0].description,
+                    amount:
+                      entry[0].description === "Interim Inventory Accrual"
+                        ? credit(
+                            "asset",
+                            quantityToReverseForEntry * unitCostForEntry
+                          )
+                        : debit(
+                            "liability",
+                            quantityToReverseForEntry * unitCostForEntry
+                          ),
+                    quantity: quantityToReverseForEntry,
+                    documentType: "Invoice",
+                    documentId: purchaseInvoice.data?.id,
+                    externalDocumentId: purchaseInvoice?.data.supplierReference,
+                    reference: invoiceLine.purchaseOrderLineId
+                      ? journalReference.to.purchaseInvoice(
+                          invoiceLine.purchaseOrderLineId
+                        )
+                      : null,
+                  });
+
+                  journalLineInserts.push({
+                    accountNumber: entry[1].accountNumber!,
+                    description: entry[1].description,
+                    amount:
+                      entry[1].description === "Interim Inventory Accrual"
+                        ? credit(
+                            "asset",
+                            quantityToReverseForEntry * unitCostForEntry
+                          )
+                        : debit(
+                            "liability",
+                            quantityToReverseForEntry * unitCostForEntry
+                          ),
+                    quantity: quantityToReverseForEntry,
+                    documentType: "Invoice",
+                    documentId: purchaseInvoice.data?.id,
+                    externalDocumentId: purchaseInvoice?.data.supplierReference,
+                    reference: journalReference.to.purchaseInvoice(
+                      invoiceLine.purchaseOrderLineId!
+                    ),
+                  });
+                }
+
+                counted += entry[0].quantity;
+                reversed += quantityToReverseForEntry;
+              }
+            });
+
+            // create the cost entry
+            costLedgerInserts.push({
+              partLedgerType: "Purchase",
+              costLedgerType: "Direct Cost",
+              adjustment: false,
+              documentType: "Purchase Invoice",
+              documentId: purchaseInvoice.data?.id ?? undefined,
+              externalDocumentId:
+                purchaseInvoice.data?.supplierReference ?? undefined,
+              partId: invoiceLine.partId,
+              quantity: quantityToReverse,
+              cost: quantityToReverse * invoiceLine.unitPrice,
+              costPostedToGL: quantityToReverse * invoiceLine.unitPrice,
+            });
+
+            // create the normal GL entries
+
+            // debit the inventory account
+            journalLineInserts.push({
+              accountNumber: postingGroupInventory.inventoryAccount,
+              description: "Inventory Account",
+              amount: debit("asset", quantityToReverse * invoiceLine.unitPrice),
+              quantity: quantityToReverse,
+              documentType: "Invoice",
+              documentId: purchaseInvoice.data?.id,
+              externalDocumentId: purchaseInvoice.data?.supplierReference,
+              reference: journalReference.to.purchaseInvoice(
+                invoiceLine.purchaseOrderLineId!
+              ),
+            });
+
+            // creidt the direct cost applied account
+            journalLineInserts.push({
+              accountNumber: postingGroupInventory.directCostAppliedAccount,
+              description: "Direct Cost Applied",
+              amount: credit(
+                "expense",
+                quantityToReverse * invoiceLine.unitPrice
+              ),
+              quantity: quantityToReverse,
+              documentType: "Invoice",
+              documentId: purchaseInvoice.data?.id,
+              externalDocumentId: purchaseInvoice.data?.supplierReference,
+              reference: journalReference.to.purchaseInvoice(
+                invoiceLine.purchaseOrderLineId!
+              ),
+            });
+
+            // debit the purchase account
+            journalLineInserts.push({
+              accountNumber: postingGroupPurchasing.purchaseAccount,
+              description: "Purchase Account",
+              amount: debit(
+                "expense",
+                quantityToReverse * invoiceLine.unitPrice
+              ),
+              quantity: quantityToReverse,
+              documentType: "Invoice",
+              documentId: purchaseInvoice.data?.id,
+              externalDocumentId: purchaseInvoice.data?.supplierReference,
+              reference: journalReference.to.purchaseInvoice(
+                invoiceLine.purchaseOrderLineId!
+              ),
+            });
+
+            // credit the accounts payable account
+            journalLineInserts.push({
+              accountNumber: postingGroupPurchasing.payablesAccount,
+              description: "Accounts Payable",
+              amount: credit(
+                "liability",
+                quantityToReverse * invoiceLine.unitPrice
+              ),
+              quantity: quantityToReverse,
+              documentType: "Invoice",
+              documentId: purchaseInvoice.data?.id,
+              externalDocumentId: purchaseInvoice.data?.supplierReference,
+              reference: journalReference.to.purchaseInvoice(
+                invoiceLine.purchaseOrderLineId!
+              ),
+            });
+          }
+
+          if (invoiceLine.quantity > quantityToReverse) {
+            // create the accrual entries for invoiced not received
+            const quantityToAccrue = invoiceLine.quantity - quantityToReverse;
+
+            // debit the inventory invoiced not received account
+            journalLineInserts.push({
+              accountNumber:
+                postingGroupInventory.inventoryInvoicedNotReceivedAccount,
+              description: "Inventory Invoiced Not Received",
+              accrual: true,
+              amount: debit("asset", quantityToAccrue * invoiceLine.unitPrice),
+              quantity: quantityToAccrue,
+              documentType: "Invoice",
+              documentId: purchaseInvoice.data?.id,
+              externalDocumentId: purchaseInvoice.data?.supplierReference,
+              reference: invoiceLine.purchaseOrderLineId
+                ? journalReference.to.purchaseInvoice(
+                    invoiceLine.purchaseOrderLineId
+                  )
+                : null,
+            });
+
+            // credit the inventory interim accrual account
+            journalLineInserts.push({
+              accountNumber:
+                postingGroupInventory.inventoryInterimAccrualAccount,
+              accrual: true,
+              description: "Interim Inventory Accrual",
+              amount: credit("asset", quantityToAccrue * invoiceLine.unitPrice),
+              quantity: quantityToAccrue,
+              documentType: "Invoice",
+              documentId: purchaseInvoice.data?.id,
+              externalDocumentId: purchaseInvoice.data?.supplierReference,
+              reference: invoiceLine.purchaseOrderLineId
+                ? journalReference.to.purchaseInvoice(
+                    invoiceLine.purchaseOrderLineId
+                  )
+                : null,
+            });
+          }
+          break;
+        case "Fixed Asset":
+          // TODO: fixed assets
+          break;
+        case "Comment":
+          break;
+        default:
+          throw new Error("Unsupported invoice line type");
       }
     }
 

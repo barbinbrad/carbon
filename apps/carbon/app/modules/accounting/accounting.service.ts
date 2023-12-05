@@ -140,6 +140,7 @@ export async function getAccountsList(
   args?: {
     type?: string | null;
     incomeBalance?: string | null;
+    classes?: string[];
   }
 ) {
   let query = client.from("account").select("number, name").eq("active", true);
@@ -152,6 +153,10 @@ export async function getAccountsList(
     query = query.eq("incomeBalance", args.incomeBalance);
   }
 
+  if (args?.classes) {
+    query = query.in("class", args.classes);
+  }
+
   query = query.order("number", { ascending: true });
   return query;
 }
@@ -160,7 +165,7 @@ export async function getAccountCategories(
   client: SupabaseClient<Database>,
   args: GenericQueryFilters & {
     name: string | null;
-    normalBalance: string | null;
+    class: string | null;
     incomeBalance: string | null;
   }
 ) {
@@ -172,8 +177,8 @@ export async function getAccountCategories(
     query = query.ilike("category", `%${args.name}%`);
   }
 
-  if (args.normalBalance) {
-    query = query.eq("normalBalance", args.normalBalance);
+  if (args.class) {
+    query = query.eq("class", args.class);
   }
 
   if (args.incomeBalance) {

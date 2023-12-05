@@ -78,7 +78,7 @@ export default function EditChartOfAccountsRoute() {
     type: account?.type ?? "Posting",
     accountCategoryId: account?.accountCategoryId ?? undefined,
     accountSubcategoryId: account?.accountSubcategoryId ?? undefined,
-    normalBalance: account?.normalBalance ?? "Debit",
+    class: account?.class ?? "Asset",
     incomeBalance: account?.incomeBalance ?? "Balance Sheet",
     consolidatedRate: account?.consolidatedRate ?? "Average",
     directPosting: account?.directPosting ?? false,

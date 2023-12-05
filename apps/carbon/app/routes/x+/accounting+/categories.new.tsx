@@ -2,10 +2,7 @@ import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { useNavigate } from "@remix-run/react";
 import { validationError } from "remix-validated-form";
-import type {
-  AccountIncomeBalance,
-  AccountNormalBalance,
-} from "~/modules/accounting";
+import type { AccountClass, AccountIncomeBalance } from "~/modules/accounting";
 import {
   AccountCategoryForm,
   accountCategoryValidator,
@@ -60,7 +57,7 @@ export default function NewAccountCategoryRoute() {
   const initialValues = {
     category: "",
     incomeBalance: "" as AccountIncomeBalance,
-    normalBalance: "" as AccountNormalBalance,
+    class: "" as AccountClass,
   };
 
   return (

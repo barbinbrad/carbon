@@ -10,40 +10,52 @@ const supabaseProjectDetailsEndpoint = SUPABASE_API_URL.includes("localhost")
   ? `${SUPABASE_STUDIO_URL}/api/projects/default`
   : `${SUPABASE_API_URL}/platform/projects/${SUPABASE_PROJECT_REF}`;
 
-export async function getTableSchema(
+type Response<T> = { data: T; error: null } | { data: null; error: Error };
+
+export async function getTableSchema<T>(
   client: SupabaseClient<Database>,
   tableId: string
-) {
-  const accessToken = client.realtime.accessToken;
-  if (!accessToken) throw Error("Failed to get accessToken");
-  const supabaseProject = await fetch(`${supabaseProjectDetailsEndpoint}`);
-  const data = await supabaseProject.json();
-  if (!data) throw Error("Failed to fetch connection string");
-  // platform/projects/{project_ref_here} with bearer token and project ref to get connectionString
-  // const connectionString = data.connectionString;
-  const tableSchemaEndpoint = SUPABASE_API_URL.includes("localhost")
-    ? `${SUPABASE_STUDIO_URL}/api/pg-meta/default/tables?id=${tableId}`
-    : `${SUPABASE_API_URL}/platform/pg-meta/{project_ref_here}/tables?id=${tableId}`;
-  const tableSchemaResponse = await fetch(`${tableSchemaEndpoint}`);
-  const response = tableSchemaResponse.json();
-  return response;
+): Promise<Response<T>> {
+  try {
+    const accessToken = client.realtime.accessToken;
+    if (!accessToken) throw Error("Failed to get accessToken");
+    const supabaseProject = await fetch(`${supabaseProjectDetailsEndpoint}`);
+    const data = await supabaseProject.json();
+    if (!data) throw Error("Failed to fetch connection string");
+    // platform/projects/{project_ref_here} with bearer token and project ref to get connectionString
+    // const connectionString = data.connectionString;
+    const tableSchemaEndpoint = SUPABASE_API_URL.includes("localhost")
+      ? `${SUPABASE_STUDIO_URL}/api/pg-meta/default/tables?id=${tableId}`
+      : `${SUPABASE_API_URL}/platform/pg-meta/{project_ref_here}/tables?id=${tableId}`;
+    const tableSchemaResponse = await fetch(`${tableSchemaEndpoint}`);
+    const response = await tableSchemaResponse.json();
+    return response;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Could not fetch table schema");
+  }
 }
 
-export async function getViewSchema(
+export async function getViewSchema<T>(
   client: SupabaseClient<Database>,
   viewId: string
-) {
-  const accessToken = client.realtime.accessToken;
-  if (!accessToken) throw Error("Failed to get accessToken");
-  const supabaseProject = await fetch(`${supabaseProjectDetailsEndpoint}`);
-  const data = await supabaseProject.json();
-  if (!data) throw Error("Failed to fetch connection string");
-  // platform/projects/{project_ref_here} with bearer token and project ref to get connectionString
-  // const connectionString = data.connectionString;
-  const viewSchemaEndpoint = SUPABASE_API_URL.includes("localhost")
-    ? `${SUPABASE_STUDIO_URL}/api/pg-meta/default/views?id=${viewId}`
-    : `${SUPABASE_API_URL}/platform/pg-meta/{project_ref_here}/views?id=${viewId}`;
-  const viewSchemaResponse = await fetch(`${viewSchemaEndpoint}`);
-  const response = viewSchemaResponse.json();
-  return response;
+): Promise<Response<T>> {
+  try {
+    const accessToken = client.realtime.accessToken;
+    if (!accessToken) throw Error("Failed to get accessToken");
+    const supabaseProject = await fetch(`${supabaseProjectDetailsEndpoint}`);
+    const data = await supabaseProject.json();
+    if (!data) throw Error("Failed to fetch connection string");
+    // platform/projects/{project_ref_here} with bearer token and project ref to get connectionString
+    // const connectionString = data.connectionString;
+    const viewSchemaEndpoint = SUPABASE_API_URL.includes("localhost")
+      ? `${SUPABASE_STUDIO_URL}/api/pg-meta/default/views?id=${viewId}`
+      : `${SUPABASE_API_URL}/platform/pg-meta/{project_ref_here}/views?id=${viewId}`;
+    const viewSchemaResponse = await fetch(`${viewSchemaEndpoint}`);
+    const response = await viewSchemaResponse.json();
+    return response;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Could not fetch view schema");
+  }
 }

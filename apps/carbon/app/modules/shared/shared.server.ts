@@ -1,6 +1,14 @@
-import { SUPABASE_API_URL, SUPABASE_STUDIO_URL } from "~/config/env";
+import {
+  SUPABASE_API_URL,
+  SUPABASE_STUDIO_URL,
+  SUPABASE_PROJECT_REF,
+} from "~/config/env";
 import type { Database } from "@carbon/database";
 import type { SupabaseClient } from "@supabase/supabase-js";
+
+const supabaseProjectDetailsEndpoint = SUPABASE_API_URL.includes("localhost")
+  ? `${SUPABASE_STUDIO_URL}/api/projects/default`
+  : `${SUPABASE_API_URL}/platform/projects/${SUPABASE_PROJECT_REF}`;
 
 export async function getTableSchema(
   client: SupabaseClient<Database>,
@@ -8,10 +16,6 @@ export async function getTableSchema(
 ) {
   const accessToken = client.realtime.accessToken;
   if (!accessToken) throw Error("Failed to get accessToken");
-  const projectRef = "";
-  const supabaseProjectDetailsEndpoint = SUPABASE_API_URL.includes("localhost")
-    ? `${SUPABASE_STUDIO_URL}/api/projects/default`
-    : `${SUPABASE_API_URL}/platform/projects/${projectRef}`;
   const supabaseProject = await fetch(`${supabaseProjectDetailsEndpoint}`);
   const data = await supabaseProject.json();
   if (!data) throw Error("Failed to fetch connection string");
@@ -31,10 +35,6 @@ export async function getViewSchema(
 ) {
   const accessToken = client.realtime.accessToken;
   if (!accessToken) throw Error("Failed to get accessToken");
-  const projectRef = "";
-  const supabaseProjectDetailsEndpoint = SUPABASE_API_URL.includes("localhost")
-    ? `${SUPABASE_STUDIO_URL}/api/projects/default`
-    : `${SUPABASE_API_URL}/platform/projects/${projectRef}`;
   const supabaseProject = await fetch(`${supabaseProjectDetailsEndpoint}`);
   const data = await supabaseProject.json();
   if (!data) throw Error("Failed to fetch connection string");

@@ -64,7 +64,12 @@ export const NODE_ENV = getEnv("NODE_ENV", {
   isRequired: false,
 });
 export const SUPABASE_API_URL = getEnv("SUPABASE_API_URL", { isSecret: false });
-export const SUPABASE_STUDIO_URL = getEnv("SUPABASE_STUDIO_URL", { isSecret: false });
+export const SUPABASE_STUDIO_URL = getEnv("SUPABASE_STUDIO_URL", {
+  isSecret: false,
+});
+export const SUPABASE_PROJECT_REF = getEnv("SUPABASE_STUDIO_URL", {
+  isSecret: false,
+});
 export const SUPABASE_ANON_PUBLIC = getEnv("SUPABASE_ANON_PUBLIC", {
   isSecret: false,
 });
@@ -72,7 +77,6 @@ export const SUPABASE_ANON_PUBLIC = getEnv("SUPABASE_ANON_PUBLIC", {
 export function getBrowserEnv() {
   return {
     SUPABASE_API_URL,
-    SUPABASE_STUDIO_URL,
     SUPABASE_ANON_PUBLIC,
   };
 }

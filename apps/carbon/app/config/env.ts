@@ -67,7 +67,7 @@ export const SUPABASE_API_URL = getEnv("SUPABASE_API_URL", { isSecret: false });
 export const SUPABASE_STUDIO_URL = getEnv("SUPABASE_STUDIO_URL", {
   isSecret: false,
 });
-export const SUPABASE_PROJECT_REF = getEnv("SUPABASE_STUDIO_URL", {
+export const SUPABASE_PROJECT_REF = getEnv("SUPABASE_PROJECT_REF", {
   isSecret: false,
 });
 export const SUPABASE_ANON_PUBLIC = getEnv("SUPABASE_ANON_PUBLIC", {
@@ -77,6 +77,8 @@ export const SUPABASE_ANON_PUBLIC = getEnv("SUPABASE_ANON_PUBLIC", {
 export function getBrowserEnv() {
   return {
     SUPABASE_API_URL,
+    SUPABASE_STUDIO_URL,
+    SUPABASE_PROJECT_REF,
     SUPABASE_ANON_PUBLIC,
   };
 }

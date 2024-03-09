@@ -1,7 +1,7 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData, useNavigate } from "@remix-run/react";
-import { validationError } from "remix-validated-form";
 import {
   ResendForm,
   apiKey,
@@ -54,7 +54,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
     update: "settings",
   });
 
-  const validation = await resendFormValidator.validate(
+  const validation = await validator(resendFormValidator).validate(
     await request.formData()
   );
 

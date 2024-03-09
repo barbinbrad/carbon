@@ -1,8 +1,8 @@
 import { redirect, useParams } from "@remix-run/react";
 import { useUrlParams } from "~/hooks";
 
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs } from "@remix-run/node";
-import { validationError } from "remix-validated-form";
 import {
   QuotationOperationForm,
   quotationOperationValidator,
@@ -24,7 +24,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   if (!quoteId) throw new Error("Could not find quoteId");
   if (!quoteLineId) throw new Error("Could not find quoteLineId");
 
-  const validation = await quotationOperationValidator.validate(
+  const validation = await validator(quotationOperationValidator).validate(
     await request.formData()
   );
 

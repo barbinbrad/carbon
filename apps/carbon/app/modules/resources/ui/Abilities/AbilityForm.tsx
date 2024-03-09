@@ -10,9 +10,10 @@ import {
   VStack,
 } from "@carbon/react";
 
+import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useNavigate } from "@remix-run/react";
 import { useState } from "react";
-import { ValidatedForm } from "remix-validated-form";
+import type { z } from "zod";
 import {
   Employees,
   Hidden,
@@ -23,11 +24,10 @@ import {
 } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { abilityValidator } from "~/modules/resources";
-import type { TypeOfValidator } from "~/types/validators";
 import { path } from "~/utils/path";
 
 type AbilityFormProps = {
-  initialValues: TypeOfValidator<typeof abilityValidator>;
+  initialValues: z.infer<typeof abilityValidator>;
 };
 
 const AbilityForm = ({ initialValues }: AbilityFormProps) => {

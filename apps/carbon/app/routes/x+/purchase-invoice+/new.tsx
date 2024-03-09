@@ -1,7 +1,7 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import type { FunctionsResponse } from "@supabase/functions-js";
-import { validationError } from "remix-validated-form";
 import { useRouteData, useUrlParams } from "~/hooks";
 import type { PurchaseInvoiceStatus } from "~/modules/invoicing";
 import {
@@ -81,7 +81,7 @@ export async function action({ request }: ActionFunctionArgs) {
     create: "invoicing",
   });
 
-  const validation = await purchaseInvoiceValidator.validate(
+  const validation = await validator(purchaseInvoiceValidator).validate(
     await request.formData()
   );
 
@@ -135,14 +135,13 @@ export default function PurchaseInvoiceNewRoute() {
   const initialValues = {
     id: undefined,
     invoiceId: undefined,
-    supplierId: supplierId ?? undefined,
+    supplierId: supplierId ?? "",
     status: "Draft" as PurchaseInvoiceStatus,
   };
 
   return (
     <div className="w-1/2 max-w-[720px] min-w-[420px] mx-auto">
       <PurchaseInvoiceForm
-        // @ts-expect-error
         initialValues={initialValues}
         paymentTerms={sharedData?.paymentTerms ?? []}
       />

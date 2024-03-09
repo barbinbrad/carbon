@@ -5,9 +5,9 @@ import {
   FormLabel,
   Textarea as TextAreaBase,
 } from "@carbon/react";
+import { useField } from "@carbon/remix-validated-form";
 import type { ChangeEvent } from "react";
 import { forwardRef, useState } from "react";
-import { useField } from "remix-validated-form";
 
 type FormTextArea = TextareaProps & {
   name: string;

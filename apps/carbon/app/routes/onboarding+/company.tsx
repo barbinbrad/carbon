@@ -9,10 +9,14 @@ import {
   HStack,
   VStack,
 } from "@carbon/react";
+import {
+  ValidatedForm,
+  validationError,
+  validator,
+} from "@carbon/remix-validated-form";
 import { getLocalTimeZone } from "@internationalized/date";
 import { json, redirect, type ActionFunctionArgs } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
-import { ValidatedForm, validationError } from "remix-validated-form";
 import { Hidden, Input, Submit } from "~/components/Form";
 import { useOnboarding } from "~/hooks";
 import {
@@ -50,7 +54,7 @@ export async function action({ request }: ActionFunctionArgs) {
     update: "settings",
   });
 
-  const validation = await onboardingCompanyValidator.validate(
+  const validation = await validator(onboardingCompanyValidator).validate(
     await request.formData()
   );
 
@@ -144,7 +148,7 @@ export default function OnboardingCompany() {
         <CardContent>
           <Hidden name="next" value={next} />
           <VStack spacing={4}>
-            <Input name="name" label="Company Name" />
+            <Input autoFocus name="name" label="Company Name" />
             <Input name="addressLine1" label="Address" />
             <Input name="city" label="City" />
             <Input name="state" label="State" />

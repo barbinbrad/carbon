@@ -6,17 +6,17 @@ import {
   CardTitle,
   VStack,
 } from "@carbon/react";
-import { ValidatedForm } from "remix-validated-form";
+import { ValidatedForm } from "@carbon/remix-validated-form";
+import type { z } from "zod";
 import { Boolean, Hidden, Number, Select, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import {
   partManufacturingPolicies,
   partManufacturingValidator,
 } from "~/modules/parts";
-import type { TypeOfValidator } from "~/types/validators";
 
 type PartManufacturingFormProps = {
-  initialValues: TypeOfValidator<typeof partManufacturingValidator>;
+  initialValues: z.infer<typeof partManufacturingValidator>;
 };
 
 const PartManufacturingForm = ({

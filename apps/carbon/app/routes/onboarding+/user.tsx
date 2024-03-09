@@ -8,9 +8,14 @@ import {
   HStack,
   VStack,
 } from "@carbon/react";
+import {
+  ValidatedForm,
+  validationError,
+  validator,
+} from "@carbon/remix-validated-form";
 import { redirect, type ActionFunctionArgs } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
-import { ValidatedForm, validationError } from "remix-validated-form";
+import type { z } from "zod";
 import { Hidden, Input, Password, Submit } from "~/components/Form";
 import { useOnboarding } from "~/hooks";
 import { getSupabaseServiceRole } from "~/lib/supabase";
@@ -21,7 +26,6 @@ import {
 import { getUser } from "~/modules/users/users.server";
 import { requirePermissions } from "~/services/auth";
 import { destroyAuthSession } from "~/services/session.server";
-import type { TypeOfValidator } from "~/types/validators";
 import { assertIsPost } from "~/utils/http";
 
 export async function loader({ request }: ActionFunctionArgs) {
@@ -43,7 +47,7 @@ export async function action({ request }: ActionFunctionArgs) {
     update: "users",
   });
 
-  const validation = await onboardingUserValidator.validate(
+  const validation = await validator(onboardingUserValidator).validate(
     await request.formData()
   );
 
@@ -84,7 +88,7 @@ export default function OnboardingUser() {
   const { user } = useLoaderData<typeof loader>();
   const { next, previous } = useOnboarding();
 
-  const initialValues = {} as TypeOfValidator<typeof onboardingUserValidator>;
+  const initialValues = {} as z.infer<typeof onboardingUserValidator>;
 
   if (user?.email && user.email !== "admin@carbon.us.org") {
     initialValues.email = user.email;
@@ -113,7 +117,7 @@ export default function OnboardingUser() {
         <CardContent>
           <Hidden name="next" value={next} />
           <VStack spacing={4}>
-            <Input name="firstName" label="First Name" />
+            <Input autoFocus name="firstName" label="First Name" />
             <Input name="lastName" label="Last Name" />
             <Input autoComplete="off" name="email" label="Email" />
             <Password autoComplete="off" name="password" label="Password" />

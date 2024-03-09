@@ -1,7 +1,7 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { validationError } from "remix-validated-form";
 import type { PaymentTermCalculationMethod } from "~/modules/accounting";
 import {
   PaymentTermForm,
@@ -37,7 +37,7 @@ export async function action({ request }: ActionFunctionArgs) {
     update: "accounting",
   });
 
-  const validation = await paymentTermValidator.validate(
+  const validation = await validator(paymentTermValidator).validate(
     await request.formData()
   );
 

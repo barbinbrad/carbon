@@ -1,6 +1,6 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import { validationError } from "remix-validated-form";
 import {
   documentLabelsValidator,
   updateDocumentLabels,
@@ -16,7 +16,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const { client, userId } = await requirePermissions(request, {
     view: "documents",
   });
-  const validation = await documentLabelsValidator.validate(
+  const validation = await validator(documentLabelsValidator).validate(
     await request.formData()
   );
 

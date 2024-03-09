@@ -34,7 +34,7 @@ Product highlights/roadmap are:
 ## Project Status
 
 - [x] Pre-Alpha: Developing foundation
-- [ ] Alpha: Heavy feature development and refinement
+- [X] Alpha: Heavy feature development and refinement
 - [ ] Public Alpha: Ready for use. But go easy on us, there'll be bugs.
 - [ ] Public Beta: Stable enough for most non-enterprise use-cases.
 - [ ] Public: Production-ready

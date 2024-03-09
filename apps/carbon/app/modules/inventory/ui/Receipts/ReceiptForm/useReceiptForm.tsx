@@ -1,6 +1,7 @@
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import type { z } from "zod";
 import { EditableNumber } from "~/components/Editable";
 import { usePermissions, useRouteData, useUrlParams, useUser } from "~/hooks";
 import { useSupabase } from "~/lib/supabase";
@@ -12,14 +13,13 @@ import type {
 } from "~/modules/inventory/types";
 import type { PurchaseOrderLine } from "~/modules/purchasing";
 import type { ListItem } from "~/types";
-import type { TypeOfValidator } from "~/types/validators";
 import { path } from "~/utils/path";
 
 export default function useReceiptForm({
   receipt,
   receiptLines,
 }: {
-  receipt: TypeOfValidator<typeof receiptValidator>;
+  receipt: z.infer<typeof receiptValidator>;
   receiptLines: ReceiptLine[];
 }) {
   const permissions = usePermissions();

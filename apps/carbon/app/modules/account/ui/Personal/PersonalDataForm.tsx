@@ -1,5 +1,5 @@
 import { VStack } from "@carbon/react";
-import { ValidatedForm } from "remix-validated-form";
+import { ValidatedForm } from "@carbon/remix-validated-form";
 import { Submit } from "~/components/Form";
 import type { PersonalData } from "~/modules/account";
 import { accountPersonalDataValidator } from "~/modules/account";

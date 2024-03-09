@@ -1,9 +1,9 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import { validationError } from "remix-validated-form";
 import {
-  createSupplierAccountValidator,
   CreateSupplierModal,
+  createSupplierAccountValidator,
 } from "~/modules/users";
 import { createSupplierAccount } from "~/modules/users/users.server";
 import { requirePermissions } from "~/services/auth";
@@ -17,7 +17,7 @@ export async function action({ request }: ActionFunctionArgs) {
     view: "users",
   });
 
-  const validation = await createSupplierAccountValidator.validate(
+  const validation = await validator(createSupplierAccountValidator).validate(
     await request.formData()
   );
 

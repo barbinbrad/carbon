@@ -1,8 +1,8 @@
 import type { Json } from "@carbon/database";
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { validationError } from "remix-validated-form";
 import {
   EmployeePermissionsForm,
   employeeValidator,
@@ -70,7 +70,9 @@ export async function action({ request }: ActionFunctionArgs) {
     update: "users",
   });
 
-  const validation = await employeeValidator.validate(await request.formData());
+  const validation = await validator(employeeValidator).validate(
+    await request.formData()
+  );
 
   if (validation.error) {
     return validationError(validation.error);

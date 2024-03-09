@@ -4,6 +4,7 @@ import {
   FormLabel,
   TimePicker as TimePickerBase,
 } from "@carbon/react";
+import { useField } from "@carbon/remix-validated-form";
 import type {
   CalendarDateTime,
   Time,
@@ -11,7 +12,6 @@ import type {
 } from "@internationalized/date";
 import { parseTime } from "@internationalized/date";
 import { useState } from "react";
-import { useField } from "remix-validated-form";
 
 type TimePickerProps = {
   name: string;

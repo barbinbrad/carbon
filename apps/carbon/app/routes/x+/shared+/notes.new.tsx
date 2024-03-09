@@ -1,6 +1,6 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import { validationError } from "remix-validated-form";
 import { insertNote, noteValidator } from "~/modules/shared";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session.server";
@@ -11,7 +11,9 @@ export async function action({ request }: ActionFunctionArgs) {
   assertIsPost(request);
   const { client, userId } = await requirePermissions(request, {});
 
-  const validation = await noteValidator.validate(await request.formData());
+  const validation = await validator(noteValidator).validate(
+    await request.formData()
+  );
 
   if (validation.error) {
     return validationError(validation.error);

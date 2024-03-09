@@ -10,10 +10,10 @@ import {
   HStack,
   VStack,
 } from "@carbon/react";
+import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useNavigate } from "@remix-run/react";
 import { useState } from "react";
-
-import { ValidatedForm } from "remix-validated-form";
+import type { z } from "zod";
 import {
   AccountCategory,
   AccountSubcategory,
@@ -37,11 +37,10 @@ import {
   consolidatedRateTypes,
   incomeBalanceTypes,
 } from "~/modules/accounting";
-import type { TypeOfValidator } from "~/types/validators";
 import { path } from "~/utils/path";
 
 type ChartOfAccountFormProps = {
-  initialValues: TypeOfValidator<typeof accountValidator>;
+  initialValues: z.infer<typeof accountValidator>;
 };
 
 const ChartOfAccountForm = ({ initialValues }: ChartOfAccountFormProps) => {

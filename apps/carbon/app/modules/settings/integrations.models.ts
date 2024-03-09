@@ -1,4 +1,3 @@
-import { withZod } from "@remix-validated-form/with-zod";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
 
@@ -10,7 +9,7 @@ export const apiKey = z.object({
   apiKey: z.string(),
 });
 
-export const exchangeRatesIntegration = integration.merge(apiKey).refine(
+export const exchangeRatesFormValidator = integration.merge(apiKey).refine(
   (data) => {
     if (data.active) {
       return data.apiKey.length > 0;
@@ -22,9 +21,8 @@ export const exchangeRatesIntegration = integration.merge(apiKey).refine(
     path: ["apiKey"],
   }
 );
-export const exchangeRatesFormValidator = withZod(exchangeRatesIntegration);
 
-export const googlePlacesIntegration = integration.merge(apiKey).refine(
+export const googlePlacesFormValidator = integration.merge(apiKey).refine(
   (data) => {
     if (data.active) {
       return data.apiKey.length > 0;
@@ -36,9 +34,8 @@ export const googlePlacesIntegration = integration.merge(apiKey).refine(
     path: ["apiKey"],
   }
 );
-export const googlePlacesFormValidator = withZod(googlePlacesIntegration);
 
-export const resendIntegration = integration.merge(apiKey).refine(
+export const resendFormValidator = integration.merge(apiKey).refine(
   (data) => {
     if (data.active) {
       return data.apiKey.length > 0;
@@ -50,4 +47,3 @@ export const resendIntegration = integration.merge(apiKey).refine(
     path: ["apiKey"],
   }
 );
-export const resendFormValidator = withZod(resendIntegration);

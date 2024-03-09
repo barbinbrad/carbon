@@ -1,8 +1,8 @@
-import { useEffect, useMemo } from "react";
-
+import { validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useFetcher } from "@remix-run/react";
+import { useEffect, useMemo } from "react";
 import { getSupabase } from "~/lib/supabase";
 import { getUserByEmail } from "~/modules/users/users.server";
 import { refreshAccessToken } from "~/services/auth";
@@ -29,7 +29,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export async function action({ request }: ActionFunctionArgs): FormActionData {
   assertIsPost(request);
 
-  const validation = await callbackValidator.validate(await request.formData());
+  const validation = await validator(callbackValidator).validate(
+    await request.formData()
+  );
 
   if (validation.error) {
     return json(error(validation.error, "Invalid callback form"), {

@@ -1,8 +1,8 @@
 import { VStack } from "@carbon/react";
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { validationError } from "remix-validated-form";
 import type { Theme as ThemeValue } from "~/modules/settings";
 import {
   ThemeForm,
@@ -47,7 +47,7 @@ export async function action({ request }: ActionFunctionArgs) {
   });
   const formData = await request.formData();
 
-  const validation = await themeValidator.validate(formData);
+  const validation = await validator(themeValidator).validate(formData);
 
   if (validation.error) {
     return validationError(validation.error);

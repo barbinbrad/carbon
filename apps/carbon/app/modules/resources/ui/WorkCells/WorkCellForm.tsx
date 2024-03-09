@@ -9,8 +9,8 @@ import {
   HStack,
   VStack,
 } from "@carbon/react";
-
-import { ValidatedForm } from "remix-validated-form";
+import { ValidatedForm } from "@carbon/remix-validated-form";
+import type { z } from "zod";
 import {
   DatePicker,
   Department,
@@ -23,11 +23,10 @@ import {
 } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { workCellValidator } from "~/modules/resources";
-import type { TypeOfValidator } from "~/types/validators";
 import { path } from "~/utils/path";
 
 type WorkCellFormProps = {
-  initialValues: TypeOfValidator<typeof workCellValidator>;
+  initialValues: z.infer<typeof workCellValidator>;
   workCellTypes: {
     id: string;
     name: string;

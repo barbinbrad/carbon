@@ -11,9 +11,10 @@ import {
   VStack,
 } from "@carbon/react";
 
+import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useLocation, useNavigate } from "@remix-run/react";
 import { useState } from "react";
-import { ValidatedForm } from "remix-validated-form";
+import type { z } from "zod";
 import {
   Abilities,
   Number,
@@ -23,11 +24,10 @@ import {
 } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { contractorValidator } from "~/modules/resources";
-import type { TypeOfValidator } from "~/types/validators";
 import { path } from "~/utils/path";
 
 type ContractorFormProps = {
-  initialValues: TypeOfValidator<typeof contractorValidator>;
+  initialValues: z.infer<typeof contractorValidator>;
 };
 
 const ContractorForm = ({ initialValues }: ContractorFormProps) => {

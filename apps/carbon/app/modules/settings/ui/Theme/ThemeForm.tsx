@@ -9,20 +9,20 @@ import {
   VStack,
   cn,
 } from "@carbon/react";
+import { ValidatedForm } from "@carbon/remix-validated-form";
 import type { Theme } from "@carbon/utils";
 import { themes } from "@carbon/utils";
 import { useEffect, useState } from "react";
 import { RxCheck } from "react-icons/rx";
-import { ValidatedForm } from "remix-validated-form";
+import type { z } from "zod";
 import { Hidden, Submit } from "~/components/Form";
 import { useMode } from "~/hooks/useMode";
 import type { Theme as ThemeValue } from "~/modules/settings";
 import { themeValidator } from "~/modules/settings";
-import type { TypeOfValidator } from "~/types/validators";
 import { path } from "~/utils/path";
 
 type ThemeFormProps = {
-  theme: TypeOfValidator<typeof themeValidator>;
+  theme: z.infer<typeof themeValidator>;
 };
 
 const ThemeForm = ({ theme: defaultValues }: ThemeFormProps) => {

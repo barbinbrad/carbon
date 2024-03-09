@@ -1,6 +1,6 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { validationError } from "remix-validated-form";
 import { attributeValidator, insertAttribute } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session.server";
@@ -14,7 +14,7 @@ export async function action({ request }: ActionFunctionArgs) {
     create: "resources",
   });
 
-  const validation = await attributeValidator.validate(
+  const validation = await validator(attributeValidator).validate(
     await request.formData()
   );
 

@@ -5,7 +5,7 @@ import {
   FormLabel,
 } from "@carbon/react";
 
-import { useControlField, useField } from "remix-validated-form";
+import { useControlField, useField } from "@carbon/remix-validated-form";
 import { Combobox as ComboboxBase } from "~/components";
 import type { ComboboxProps as ComboboxBaseProps } from "~/components/Combobox";
 

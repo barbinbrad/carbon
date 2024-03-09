@@ -1,7 +1,7 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { validationError } from "remix-validated-form";
 import {
   SupplierShippingForm,
   getSupplierShipping,
@@ -49,7 +49,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   if (!supplierId) throw new Error("Could not find supplierId");
 
   // validate with purchasingValidator
-  const validation = await supplierShippingValidator.validate(
+  const validation = await validator(supplierShippingValidator).validate(
     await request.formData()
   );
 

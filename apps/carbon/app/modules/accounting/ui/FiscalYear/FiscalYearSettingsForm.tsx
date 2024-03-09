@@ -1,14 +1,14 @@
 import { VStack } from "@carbon/react";
-import { ValidatedForm } from "remix-validated-form";
+import { ValidatedForm } from "@carbon/remix-validated-form";
+import type { z } from "zod";
 import { Select, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { fiscalYearSettingsValidator } from "~/modules/accounting";
 import { months } from "~/modules/shared";
-import type { TypeOfValidator } from "~/types/validators";
 import { path } from "~/utils/path";
 
 type FiscalYearSettingsFormProps = {
-  initialValues: TypeOfValidator<typeof fiscalYearSettingsValidator>;
+  initialValues: z.infer<typeof fiscalYearSettingsValidator>;
 };
 
 const FiscalYearSettingsForm = ({

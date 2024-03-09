@@ -1,6 +1,6 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import { validationError } from "remix-validated-form";
 import { useUrlParams } from "~/hooks";
 import {
   PartnerForm,
@@ -19,7 +19,9 @@ export async function action({ request }: ActionFunctionArgs) {
     create: "resources",
   });
 
-  const validation = await partnerValidator.validate(await request.formData());
+  const validation = await validator(partnerValidator).validate(
+    await request.formData()
+  );
 
   if (validation.error) {
     return validationError(validation.error);

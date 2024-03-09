@@ -10,8 +10,8 @@ import {
   VStack,
   useMount,
 } from "@carbon/react";
+import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useFetcher, useNavigate } from "@remix-run/react";
-import { ValidatedForm } from "remix-validated-form";
 import { Input, Select, Submit } from "~/components/Form";
 import type { getEmployeeTypes } from "~/modules/users";
 import { createEmployeeValidator } from "~/modules/users";

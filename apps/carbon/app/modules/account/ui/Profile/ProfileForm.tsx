@@ -6,8 +6,8 @@ import {
   CardTitle,
   VStack,
 } from "@carbon/react";
+import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useParams } from "@remix-run/react";
-import { ValidatedForm } from "remix-validated-form";
 import { Hidden, Input, Submit, TextArea } from "~/components/Form";
 import { accountProfileValidator } from "~/modules/account";
 import type { User } from "~/modules/users";

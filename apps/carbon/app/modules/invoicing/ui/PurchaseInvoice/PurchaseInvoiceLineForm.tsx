@@ -19,10 +19,11 @@ import {
   VStack,
 } from "@carbon/react";
 
+import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useFetcher, useNavigate, useParams } from "@remix-run/react";
 import { useEffect, useMemo, useState } from "react";
 import { LuChevronDown, LuChevronUp } from "react-icons/lu";
-import { ValidatedForm } from "remix-validated-form";
+import type { z } from "zod";
 import {
   Account,
   ComboboxControlled,
@@ -45,11 +46,10 @@ import {
 } from "~/modules/invoicing";
 import type { getShelvesList } from "~/modules/parts";
 import type { ListItem } from "~/types";
-import type { TypeOfValidator } from "~/types/validators";
 import { path } from "~/utils/path";
 
 type PurchaseInvoiceLineFormProps = {
-  initialValues: TypeOfValidator<typeof purchaseInvoiceLineValidator>;
+  initialValues: z.infer<typeof purchaseInvoiceLineValidator>;
 };
 
 const PurchaseInvoiceLineForm = ({

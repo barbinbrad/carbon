@@ -1,6 +1,5 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import { json, type ActionFunctionArgs } from "@remix-run/node";
-import { withZod } from "@remix-validated-form/with-zod";
-import { validationError } from "remix-validated-form";
 import { updateRequestForQuoteFavorite } from "~/modules/purchasing";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session.server";
@@ -12,7 +11,7 @@ export async function action({ request }: ActionFunctionArgs) {
     view: "purchasing",
   });
 
-  const validation = await withZod(favoriteSchema).validate(
+  const validation = await validator(favoriteSchema).validate(
     await request.formData()
   );
   if (validation.error) {

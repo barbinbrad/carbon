@@ -1,7 +1,7 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import { getLocalTimeZone, today } from "@internationalized/date";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import { validationError } from "remix-validated-form";
 import { useUrlParams } from "~/hooks";
 import type {
   PurchaseOrderStatus,
@@ -25,7 +25,7 @@ export async function action({ request }: ActionFunctionArgs) {
     create: "purchasing",
   });
 
-  const validation = await purchaseOrderValidator.validate(
+  const validation = await validator(purchaseOrderValidator).validate(
     await request.formData()
   );
 
@@ -73,7 +73,7 @@ export default function PurchaseOrderNewRoute() {
   const initialValues = {
     id: undefined,
     purchaseOrderId: undefined,
-    supplierId: supplierId ?? undefined,
+    supplierId: supplierId ?? "",
     orderDate: today(getLocalTimeZone()).toString(),
     status: "Draft" as PurchaseOrderStatus,
     type: "Purchase" as PurchaseOrderType,
@@ -81,10 +81,7 @@ export default function PurchaseOrderNewRoute() {
 
   return (
     <div className="w-1/2 max-w-[720px] min-w-[420px] mx-auto">
-      <PurchaseOrderForm
-        // @ts-expect-error
-        initialValues={initialValues}
-      />
+      <PurchaseOrderForm initialValues={initialValues} />
     </div>
   );
 }

@@ -1,4 +1,9 @@
 import { Alert, AlertTitle, Button, VStack } from "@carbon/react";
+import {
+  ValidatedForm,
+  validationError,
+  validator,
+} from "@carbon/remix-validated-form";
 import type {
   ActionFunctionArgs,
   LoaderFunctionArgs,
@@ -7,7 +12,6 @@ import type {
 import { json, redirect } from "@remix-run/node";
 import { Link, useActionData, useSearchParams } from "@remix-run/react";
 import { LuAlertCircle } from "react-icons/lu";
-import { ValidatedForm, validationError } from "remix-validated-form";
 
 import { Hidden, Input, Password, Submit } from "~/components/Form";
 import {
@@ -36,7 +40,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export async function action({ request }: ActionFunctionArgs): FormActionData {
   assertIsPost(request);
-  const validation = await loginValidator.validate(await request.formData());
+  const validation = await validator(loginValidator).validate(
+    await request.formData()
+  );
 
   if (validation.error) {
     return validationError(validation.error);

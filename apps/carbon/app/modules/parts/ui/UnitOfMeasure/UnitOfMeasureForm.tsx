@@ -10,16 +10,16 @@ import {
   VStack,
 } from "@carbon/react";
 
+import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useNavigate } from "@remix-run/react";
-import { ValidatedForm } from "remix-validated-form";
+import type { z } from "zod";
 import { Hidden, Input, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { unitOfMeasureValidator } from "~/modules/parts";
-import type { TypeOfValidator } from "~/types/validators";
 import { path } from "~/utils/path";
 
 type UnitOfMeasureFormProps = {
-  initialValues: TypeOfValidator<typeof unitOfMeasureValidator>;
+  initialValues: z.infer<typeof unitOfMeasureValidator>;
 };
 
 const UnitOfMeasureForm = ({ initialValues }: UnitOfMeasureFormProps) => {

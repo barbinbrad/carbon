@@ -10,6 +10,11 @@ import {
   NumberInputStepper,
   useDisclosure,
 } from "@carbon/react";
+import {
+  ValidatedForm,
+  validationError,
+  validator,
+} from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Outlet, useLoaderData, useNavigate } from "@remix-run/react";
@@ -18,7 +23,6 @@ import { useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import { LuChevronDown, LuChevronUp } from "react-icons/lu";
 import { MdEdit, MdOutlineArrowBackIos } from "react-icons/md";
-import { ValidatedForm, validationError } from "remix-validated-form";
 import { New } from "~/components";
 import { Hidden, Input, Submit } from "~/components/Form";
 import type { AbilityDatum } from "~/modules/resources";
@@ -83,7 +87,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const formData = await request.formData();
 
   if (formData.get("intent") === "name") {
-    const validation = await abilityNameValidator.validate(formData);
+    const validation = await validator(abilityNameValidator).validate(formData);
     if (validation.error) {
       return validationError(validation.error);
     }
@@ -104,7 +108,9 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   if (formData.get("intent") === "curve") {
-    const validation = await abilityCurveValidator.validate(formData);
+    const validation = await validator(abilityCurveValidator).validate(
+      formData
+    );
     if (validation.error) {
       return validationError(validation.error);
     }

@@ -3,7 +3,7 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 
-import { validationError } from "remix-validated-form";
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { PublicAttributes } from "~/modules/account";
 import { UserAttributesForm, getPublicAttributes } from "~/modules/account";
 import { employeeJobValidator, upsertEmployeeJob } from "~/modules/resources";
@@ -45,7 +45,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { personId } = params;
   if (!personId) throw new Error("No person ID provided");
 
-  const validation = await employeeJobValidator.validate(
+  const validation = await validator(employeeJobValidator).validate(
     await request.formData()
   );
 

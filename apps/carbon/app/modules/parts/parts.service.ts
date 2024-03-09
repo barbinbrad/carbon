@@ -1,6 +1,6 @@
 import type { Database } from "@carbon/database";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { TypeOfValidator } from "~/types/validators";
+import type { z } from "zod";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
 import { sanitize } from "~/utils/supabase";
@@ -383,8 +383,8 @@ export async function insertShelf(
 export async function upsertPart(
   client: SupabaseClient<Database>,
   part:
-    | (TypeOfValidator<typeof partValidator> & { createdBy: string })
-    | (TypeOfValidator<typeof partValidator> & { updatedBy: string })
+    | (z.infer<typeof partValidator> & { createdBy: string })
+    | (z.infer<typeof partValidator> & { updatedBy: string })
 ) {
   if ("createdBy" in part) {
     return client.from("part").insert(part).select("id").single();
@@ -394,7 +394,7 @@ export async function upsertPart(
 
 export async function upsertPartCost(
   client: SupabaseClient<Database>,
-  partCost: TypeOfValidator<typeof partCostValidator> & { updatedBy: string }
+  partCost: z.infer<typeof partCostValidator> & { updatedBy: string }
 ) {
   return client
     .from("partCost")
@@ -410,7 +410,7 @@ export async function upsertPartInventory(
         locationId: string;
         createdBy: string;
       }
-    | (TypeOfValidator<typeof partInventoryValidator> & {
+    | (z.infer<typeof partInventoryValidator> & {
         updatedBy: string;
       })
 ) {
@@ -427,7 +427,7 @@ export async function upsertPartInventory(
 
 export async function upsertPartManufacturing(
   client: SupabaseClient<Database>,
-  partManufacturing: TypeOfValidator<typeof partManufacturingValidator> & {
+  partManufacturing: z.infer<typeof partManufacturingValidator> & {
     updatedBy: string;
   }
 ) {
@@ -445,7 +445,7 @@ export async function upsertPartPlanning(
         locationId: string;
         createdBy: string;
       }
-    | (TypeOfValidator<typeof partPlanningValidator> & {
+    | (z.infer<typeof partPlanningValidator> & {
         updatedBy: string;
       })
 ) {
@@ -461,7 +461,7 @@ export async function upsertPartPlanning(
 
 export async function upsertPartPurchasing(
   client: SupabaseClient<Database>,
-  partPurchasing: TypeOfValidator<typeof partPurchasingValidator> & {
+  partPurchasing: z.infer<typeof partPurchasingValidator> & {
     updatedBy: string;
   }
 ) {
@@ -474,10 +474,10 @@ export async function upsertPartPurchasing(
 export async function upsertPartGroup(
   client: SupabaseClient<Database>,
   partGroup:
-    | (Omit<TypeOfValidator<typeof partGroupValidator>, "id"> & {
+    | (Omit<z.infer<typeof partGroupValidator>, "id"> & {
         createdBy: string;
       })
-    | (Omit<TypeOfValidator<typeof partGroupValidator>, "id"> & {
+    | (Omit<z.infer<typeof partGroupValidator>, "id"> & {
         id: string;
         updatedBy: string;
       })
@@ -499,10 +499,10 @@ export async function upsertPartGroup(
 export async function upsertPartSupplier(
   client: SupabaseClient<Database>,
   partSupplier:
-    | (Omit<TypeOfValidator<typeof partSupplierValidator>, "id"> & {
+    | (Omit<z.infer<typeof partSupplierValidator>, "id"> & {
         createdBy: string;
       })
-    | (Omit<TypeOfValidator<typeof partSupplierValidator>, "id"> & {
+    | (Omit<z.infer<typeof partSupplierValidator>, "id"> & {
         id: string;
         updatedBy: string;
       })
@@ -524,7 +524,7 @@ export async function upsertPartSupplier(
 
 export async function upsertPartUnitSalePrice(
   client: SupabaseClient<Database>,
-  partUnitSalePrice: TypeOfValidator<typeof partUnitSalePriceValidator> & {
+  partUnitSalePrice: z.infer<typeof partUnitSalePriceValidator> & {
     updatedBy: string;
   }
 ) {
@@ -537,8 +537,8 @@ export async function upsertPartUnitSalePrice(
 export async function upsertService(
   client: SupabaseClient<Database>,
   service:
-    | (TypeOfValidator<typeof serviceValidator> & { createdBy: string })
-    | (Omit<TypeOfValidator<typeof serviceValidator>, "id"> & {
+    | (z.infer<typeof serviceValidator> & { createdBy: string })
+    | (Omit<z.infer<typeof serviceValidator>, "id"> & {
         id: string;
         updatedBy: string;
       })
@@ -552,10 +552,10 @@ export async function upsertService(
 export async function upsertServiceSupplier(
   client: SupabaseClient<Database>,
   serviceSupplier:
-    | (Omit<TypeOfValidator<typeof serviceSupplierValidator>, "id"> & {
+    | (Omit<z.infer<typeof serviceSupplierValidator>, "id"> & {
         createdBy: string;
       })
-    | (Omit<TypeOfValidator<typeof serviceSupplierValidator>, "id"> & {
+    | (Omit<z.infer<typeof serviceSupplierValidator>, "id"> & {
         id: string;
         updatedBy: string;
       })

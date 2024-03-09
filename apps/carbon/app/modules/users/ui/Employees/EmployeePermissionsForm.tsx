@@ -9,21 +9,21 @@ import {
   HStack,
   VStack,
 } from "@carbon/react";
+import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useNavigate } from "@remix-run/react";
 import { useState } from "react";
-import { ValidatedForm } from "remix-validated-form";
+import type { z } from "zod";
 import { Hidden, Select, Submit } from "~/components/Form";
 import type { Permission } from "~/modules/users";
 import { employeeValidator } from "~/modules/users";
 import PermissionCheckboxes from "~/modules/users/ui/components/Permission";
 import type { ListItem } from "~/types";
-import type { TypeOfValidator } from "~/types/validators";
 import { path } from "~/utils/path";
 
 type EmployeePermissionsFormProps = {
   name: string;
   employeeTypes: ListItem[];
-  initialValues: TypeOfValidator<typeof employeeValidator> & {
+  initialValues: z.infer<typeof employeeValidator> & {
     permissions: Record<string, Permission>;
   };
 };

@@ -1,6 +1,6 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { validationError } from "remix-validated-form";
 import {
   UnitOfMeasureForm,
   unitOfMeasureValidator,
@@ -26,7 +26,7 @@ export async function action({ request }: ActionFunctionArgs) {
     create: "parts",
   });
 
-  const validation = await unitOfMeasureValidator.validate(
+  const validation = await validator(unitOfMeasureValidator).validate(
     await request.formData()
   );
 

@@ -4,10 +4,10 @@ import {
   FormErrorMessage,
   FormLabel,
 } from "@carbon/react";
+import { useField } from "@carbon/remix-validated-form";
 import type { CalendarDate } from "@internationalized/date";
 import { parseDate } from "@internationalized/date";
 import { useState } from "react";
-import { useField } from "remix-validated-form";
 
 type DatePickerProps = { name: string; label?: string; isDisabled?: boolean };
 

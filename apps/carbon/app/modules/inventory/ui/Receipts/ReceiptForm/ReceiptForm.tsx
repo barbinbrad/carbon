@@ -12,8 +12,9 @@ import {
   MenubarItem,
   VStack,
 } from "@carbon/react";
+import { ValidatedForm } from "@carbon/remix-validated-form";
 import { Outlet } from "@remix-run/react";
-import { ValidatedForm } from "remix-validated-form";
+import type { z } from "zod";
 import {
   ComboboxControlled,
   Hidden,
@@ -35,12 +36,11 @@ import {
 } from "~/modules/inventory";
 import type { Note } from "~/modules/shared";
 import { Notes } from "~/modules/shared";
-import type { TypeOfValidator } from "~/types/validators";
 import { path } from "~/utils/path";
 import useReceiptForm from "./useReceiptForm";
 
 type ReceiptFormProps = {
-  initialValues: TypeOfValidator<typeof receiptValidator>;
+  initialValues: z.infer<typeof receiptValidator>;
   status: (typeof receiptStatusType)[number];
   notes: Note[];
   receiptLines?: ReceiptLine[];

@@ -13016,7 +13016,7 @@ export type Database = {
         | "Other Income"
         | "Other Expense"
       glAccountClass: "Asset" | "Liability" | "Equity" | "Revenue" | "Expense"
-      glAccountType: "Posting" | "Heading" | "Begin Total" | "End Total"
+      glAccountType: "Posting" | "Total" | "Begin Total" | "End Total"
       glConsolidatedRate: "Average" | "Current" | "Historical"
       glIncomeBalance: "Balance Sheet" | "Income Statement"
       journalLineDocumentType:

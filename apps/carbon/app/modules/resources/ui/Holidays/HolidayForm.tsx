@@ -9,16 +9,16 @@ import {
   HStack,
   VStack,
 } from "@carbon/react";
+import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useNavigate } from "@remix-run/react";
-import { ValidatedForm } from "remix-validated-form";
+import type { z } from "zod";
 import { DatePicker, Hidden, Input, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { holidayValidator } from "~/modules/resources";
-import type { TypeOfValidator } from "~/types/validators";
 import { path } from "~/utils/path";
 
 type HolidayFormProps = {
-  initialValues: TypeOfValidator<typeof holidayValidator>;
+  initialValues: z.infer<typeof holidayValidator>;
 };
 
 const HolidayForm = ({ initialValues }: HolidayFormProps) => {

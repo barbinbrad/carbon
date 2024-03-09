@@ -1,6 +1,7 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { validationError } from "remix-validated-form";
+import type { ZodSchema } from "zod";
 import {
   attributeBooleanValidator,
   attributeNumericValidator,
@@ -65,9 +66,9 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const type = formData.get("type") as string;
   if (!type) throw new Error("No type provided");
 
-  const validator = getValidatorByType(type);
+  const v = getValidatorByType(type);
 
-  const validation = await validator.validate(formData);
+  const validation = await validator(v as ZodSchema).validate(formData);
   if (validation.error) {
     return validationError(validation.error);
   }

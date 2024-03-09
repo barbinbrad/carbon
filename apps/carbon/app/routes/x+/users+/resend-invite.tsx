@@ -1,10 +1,10 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { validationError } from "remix-validated-form";
 import { resendInviteValidator } from "~/modules/users";
 import { resendInvite } from "~/modules/users/users.server";
 import type { UserAdminQueueData } from "~/queues";
-import { userAdminQueue, UserAdminQueueType } from "~/queues";
+import { UserAdminQueueType, userAdminQueue } from "~/queues";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session.server";
 import { error, success } from "~/utils/result";
@@ -14,7 +14,7 @@ export async function action({ request }: ActionFunctionArgs) {
     delete: "users",
   });
 
-  const validation = await resendInviteValidator.validate(
+  const validation = await validator(resendInviteValidator).validate(
     await request.formData()
   );
 

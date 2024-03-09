@@ -1,15 +1,19 @@
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
   HStack,
+  ModalCard,
+  ModalCardBody,
+  ModalCardContent,
+  ModalCardDescription,
+  ModalCardFooter,
+  ModalCardHeader,
+  ModalCardProvider,
+  ModalCardTitle,
   VStack,
   cn,
 } from "@carbon/react";
-import { ValidatedForm } from "remix-validated-form";
+import { ValidatedForm } from "@carbon/remix-validated-form";
+import { useFetcher } from "@remix-run/react";
+import type { z } from "zod";
 import {
   Combobox,
   Employee,
@@ -21,15 +25,21 @@ import {
 import { usePermissions, useRouteData } from "~/hooks";
 import type { CustomerStatus, CustomerType } from "~/modules/sales";
 import { customerValidator } from "~/modules/sales";
-import type { TypeOfValidator } from "~/types/validators";
 import { path } from "~/utils/path";
 
 type CustomerFormProps = {
-  initialValues: TypeOfValidator<typeof customerValidator>;
+  initialValues: z.infer<typeof customerValidator>;
+  type?: "card" | "modal";
+  onClose?: () => void;
 };
 
-const CustomerForm = ({ initialValues }: CustomerFormProps) => {
+const CustomerForm = ({
+  initialValues,
+  type = "card",
+  onClose,
+}: CustomerFormProps) => {
   const permissions = usePermissions();
+  const fetcher = useFetcher();
 
   const routeData = useRouteData<{
     customerTypes: CustomerType[];
@@ -54,65 +64,81 @@ const CustomerForm = ({ initialValues }: CustomerFormProps) => {
     : !permissions.can("create", "sales");
 
   return (
-    <ValidatedForm
-      method="post"
-      validator={customerValidator}
-      defaultValues={initialValues}
-    >
-      <Card>
-        <CardHeader>
-          <CardTitle>
-            {isEditing ? "Customer Overview" : "New Customer"}
-          </CardTitle>
-          {!isEditing && (
-            <CardDescription>
-              A customer is a business or person who buys your parts or
-              services.
-            </CardDescription>
-          )}
-        </CardHeader>
-        <CardContent>
-          <Hidden name="id" />
-          <div
-            className={cn(
-              "grid w-full gap-x-8 gap-y-2",
-              isEditing ? "grid-cols-1 lg:grid-cols-3" : "grid-cols-1"
-            )}
+    <ModalCardProvider type={type}>
+      <ModalCard onClose={onClose}>
+        <ModalCardContent>
+          <ValidatedForm
+            method="post"
+            action={
+              isEditing
+                ? undefined
+                : type === "card"
+                ? path.to.newCustomer
+                : path.to.api.newCustomer
+            }
+            validator={customerValidator}
+            defaultValues={initialValues}
+            onSubmit={onClose}
+            fetcher={fetcher}
           >
-            <VStack>
-              <Input autoFocus={!isEditing} name="name" label="Name" />
-              <Input name="taxId" label="Tax ID" />
-            </VStack>
-            <VStack>
-              <Combobox
-                name="customerTypeId"
-                label="Customer Type"
-                options={customerTypeOptions}
-                placeholder="Select Customer Type"
-              />
-              <Select
-                name="customerStatusId"
-                label="Customer Status"
-                options={customerStatusOptions}
-                placeholder="Select Customer Status"
-              />
-            </VStack>
-            {isEditing && (
-              <>
+            <ModalCardHeader>
+              <ModalCardTitle>
+                {isEditing ? "Customer Overview" : "New Customer"}
+              </ModalCardTitle>
+              {!isEditing && (
+                <ModalCardDescription>
+                  A customer is a business or person who buys your parts or
+                  services.
+                </ModalCardDescription>
+              )}
+            </ModalCardHeader>
+            <ModalCardBody>
+              <Hidden name="id" />
+              <div
+                className={cn(
+                  "grid w-full gap-x-8 gap-y-2",
+                  isEditing ? "grid-cols-1 lg:grid-cols-3" : "grid-cols-1"
+                )}
+              >
                 <VStack>
-                  <Employee name="accountManagerId" label="Account Manager" />
+                  <Input name="name" label="Name" />
+                  <Input name="taxId" label="Tax ID" />
                 </VStack>
-              </>
-            )}
-          </div>
-        </CardContent>
-        <CardFooter>
-          <HStack>
-            <Submit isDisabled={isDisabled}>Save</Submit>
-          </HStack>
-        </CardFooter>
-      </Card>
-    </ValidatedForm>
+                <VStack>
+                  <Combobox
+                    name="customerTypeId"
+                    label="Customer Type"
+                    options={customerTypeOptions}
+                    placeholder="Select Customer Type"
+                  />
+                  <Select
+                    name="customerStatusId"
+                    label="Customer Status"
+                    options={customerStatusOptions}
+                    placeholder="Select Customer Status"
+                  />
+                </VStack>
+                {isEditing && (
+                  <>
+                    <VStack>
+                      <Employee
+                        name="accountManagerId"
+                        label="Account Manager"
+                      />
+                    </VStack>
+                  </>
+                )}
+              </div>
+            </ModalCardBody>
+            <ModalCardFooter>
+              <HStack>
+                <Submit isDisabled={isDisabled}>Save</Submit>
+              </HStack>
+            </ModalCardFooter>
+          </ValidatedForm>
+        </ModalCardContent>
+      </ModalCard>
+    </ModalCardProvider>
   );
 };
 

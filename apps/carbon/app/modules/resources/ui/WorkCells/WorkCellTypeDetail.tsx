@@ -91,6 +91,7 @@ const WorkCellTypeDetail = ({
                             Edit Cell
                           </Link>
                         </DropdownMenuItem>
+                        {/* @ts-ignore */}
                         <DropdownMenuItem onClick={() => onDelete(workCell)}>
                           <DropdownMenuIcon icon={<IoMdTrash />} />
                           Delete Cell

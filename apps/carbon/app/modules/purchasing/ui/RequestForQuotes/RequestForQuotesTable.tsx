@@ -64,6 +64,7 @@ const RequestForQuotesTable = memo(
                 <fetcher.Form
                   method="post"
                   action={path.to.requestForQuoteFavorite}
+                  className="flex items-center"
                 >
                   <input type="hidden" name="id" value={row.original.id!} />
                   <input type="hidden" name="favorite" value="unfavorite" />
@@ -78,6 +79,7 @@ const RequestForQuotesTable = memo(
                 <fetcher.Form
                   method="post"
                   action={path.to.requestForQuoteFavorite}
+                  className="flex items-center"
                 >
                   <input type="hidden" name="id" value={row.original.id!} />
                   <input type="hidden" name="favorite" value="favorite" />

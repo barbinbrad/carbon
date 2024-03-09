@@ -9,7 +9,8 @@ import {
   HStack,
   VStack,
 } from "@carbon/react";
-import { ValidatedForm } from "remix-validated-form";
+import { ValidatedForm } from "@carbon/remix-validated-form";
+import type { z } from "zod";
 import {
   Ability,
   Color,
@@ -21,11 +22,10 @@ import {
 } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { equipmentTypeValidator } from "~/modules/resources";
-import type { TypeOfValidator } from "~/types/validators";
 import { path } from "~/utils/path";
 
 type EquipmentTypeFormProps = {
-  initialValues: TypeOfValidator<typeof equipmentTypeValidator>;
+  initialValues: z.infer<typeof equipmentTypeValidator>;
   onClose: () => void;
 };
 

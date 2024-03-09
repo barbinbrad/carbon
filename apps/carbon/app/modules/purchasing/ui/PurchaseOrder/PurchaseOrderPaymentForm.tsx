@@ -6,8 +6,9 @@ import {
   CardTitle,
   VStack,
 } from "@carbon/react";
+import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useState } from "react";
-import { ValidatedForm } from "remix-validated-form";
+import type { z } from "zod";
 import {
   Boolean,
   Currency,
@@ -21,10 +22,9 @@ import {
 import { usePermissions } from "~/hooks";
 import { purchaseOrderPaymentValidator } from "~/modules/purchasing";
 import type { ListItem } from "~/types";
-import type { TypeOfValidator } from "~/types/validators";
 
 type PurchaseOrderPaymentFormProps = {
-  initialValues: TypeOfValidator<typeof purchaseOrderPaymentValidator>;
+  initialValues: z.infer<typeof purchaseOrderPaymentValidator>;
   paymentTerms: ListItem[];
 };
 

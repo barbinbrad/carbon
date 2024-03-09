@@ -1,7 +1,7 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { useNavigate } from "@remix-run/react";
-import { validationError } from "remix-validated-form";
 import type { AccountClass, AccountIncomeBalance } from "~/modules/accounting";
 import {
   AccountCategoryForm,
@@ -20,7 +20,7 @@ export async function action({ request }: ActionFunctionArgs) {
     update: "accounting",
   });
 
-  const validation = await accountCategoryValidator.validate(
+  const validation = await validator(accountCategoryValidator).validate(
     await request.formData()
   );
 

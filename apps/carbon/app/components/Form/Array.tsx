@@ -9,9 +9,9 @@ import {
   Input as InputBase,
   VStack,
 } from "@carbon/react";
+import { useField, useFieldArray } from "@carbon/remix-validated-form";
 import { forwardRef } from "react";
 import { IoMdAdd, IoMdClose } from "react-icons/io";
-import { useField, useFieldArray } from "remix-validated-form";
 
 type FormArrayProps = InputProps & {
   name: string;

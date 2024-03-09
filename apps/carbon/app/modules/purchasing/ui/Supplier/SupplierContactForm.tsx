@@ -9,8 +9,9 @@ import {
   HStack,
   VStack,
 } from "@carbon/react";
+import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useNavigate, useParams } from "@remix-run/react";
-import { ValidatedForm } from "remix-validated-form";
+import type { z } from "zod";
 import {
   DatePicker,
   Hidden,
@@ -21,11 +22,10 @@ import {
 } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { supplierContactValidator } from "~/modules/purchasing";
-import type { TypeOfValidator } from "~/types/validators";
 import { path } from "~/utils/path";
 
 type SupplierContactFormProps = {
-  initialValues: TypeOfValidator<typeof supplierContactValidator>;
+  initialValues: z.infer<typeof supplierContactValidator>;
 };
 
 const SupplierContactForm = ({ initialValues }: SupplierContactFormProps) => {

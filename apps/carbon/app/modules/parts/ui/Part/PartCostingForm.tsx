@@ -6,14 +6,14 @@ import {
   CardTitle,
   VStack,
 } from "@carbon/react";
-import { ValidatedForm } from "remix-validated-form";
+import { ValidatedForm } from "@carbon/remix-validated-form";
+import type { z } from "zod";
 import { Boolean, Hidden, Number, Select, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { partCostValidator, partCostingMethods } from "~/modules/parts";
-import type { TypeOfValidator } from "~/types/validators";
 
 type PartCostingFormProps = {
-  initialValues: TypeOfValidator<typeof partCostValidator>;
+  initialValues: z.infer<typeof partCostValidator>;
 };
 
 const currency = "USD"; // TODO: get from settings

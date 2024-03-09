@@ -28,6 +28,7 @@ module.exports = {
     "@carbon/documents",
     "@carbon/logger",
     "@carbon/react",
+    "@carbon/remix-validated-form",
     "@carbon/utils",
     "nanoid",
     "nanostores",

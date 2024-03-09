@@ -1,6 +1,6 @@
 import { VStack } from "@carbon/react";
+import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useRef, useState } from "react";
-import { ValidatedForm } from "remix-validated-form";
 import { Password, Submit } from "~/components/Form";
 import { accountPasswordValidator } from "~/modules/account";
 import { path } from "~/utils/path";

@@ -1,7 +1,6 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import { validationError } from "remix-validated-form";
-import type { RequestForQuoteStatus } from "~/modules/purchasing";
 import {
   RequestForQuoteForm,
   requestForQuoteValidator,
@@ -20,7 +19,7 @@ export async function action({ request }: ActionFunctionArgs) {
     create: "purchasing",
   });
 
-  const validation = await requestForQuoteValidator.validate(
+  const validation = await validator(requestForQuoteValidator).validate(
     await request.formData()
   );
 
@@ -63,14 +62,15 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function RequestForQuoteNewRoute() {
+  const today = new Date().toISOString().split("T")[0];
   const initialValues = {
-    description: "",
-    status: "Draft" as RequestForQuoteStatus,
+    name: "",
+    receiptDate: today,
+    status: "Draft" as "Draft",
   };
 
   return (
     <div className="w-1/2 max-w-[720px] min-w-[420px] mx-auto">
-      {/* @ts-expect-error */}
       <RequestForQuoteForm initialValues={initialValues} />
     </div>
   );

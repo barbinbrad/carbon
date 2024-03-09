@@ -1,6 +1,6 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import { validationError } from "remix-validated-form";
 import type { Permission } from "~/modules/users";
 import {
   bulkPermissionsValidator,
@@ -20,7 +20,7 @@ export async function action({ request }: ActionFunctionArgs) {
     update: "users",
   });
 
-  const validation = await bulkPermissionsValidator.validate(
+  const validation = await validator(bulkPermissionsValidator).validate(
     await request.formData()
   );
 

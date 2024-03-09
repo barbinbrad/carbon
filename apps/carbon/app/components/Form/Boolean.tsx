@@ -6,8 +6,8 @@ import {
   HStack,
   Switch,
 } from "@carbon/react";
+import { useControlField, useField } from "@carbon/remix-validated-form";
 import { forwardRef } from "react";
-import { useControlField, useField } from "remix-validated-form";
 
 type FormBooleanProps = {
   name: string;

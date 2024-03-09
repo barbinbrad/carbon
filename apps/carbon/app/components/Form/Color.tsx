@@ -6,9 +6,9 @@ import {
   useDisclosure,
   useOutsideClick,
 } from "@carbon/react";
+import { useControlField, useField } from "@carbon/remix-validated-form";
 import { useRef } from "react";
 import { HexColorInput, HexColorPicker } from "react-colorful";
-import { useControlField, useField } from "remix-validated-form";
 
 type ColorFieldProps = {
   name: string;

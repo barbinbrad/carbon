@@ -5,7 +5,7 @@ import { z } from "zod";
 
 import { getSupabaseServiceRole } from "~/lib/supabase";
 import { triggerClient } from "~/lib/trigger.server";
-import { resendIntegration } from "~/modules/settings";
+import { resendFormValidator } from "~/modules/settings";
 
 const supabaseClient = getSupabaseServiceRole();
 
@@ -38,7 +38,7 @@ const job = triggerClient.defineJob({
       .eq("id", "resend")
       .maybeSingle();
 
-    const integrationMetadata = resendIntegration.safeParse(
+    const integrationMetadata = resendFormValidator.safeParse(
       integration?.data?.metadata
     );
 

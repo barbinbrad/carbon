@@ -9,9 +9,9 @@ import {
   InputLeftAddon,
   InputRightAddon,
 } from "@carbon/react";
+import { useControlField, useField } from "@carbon/remix-validated-form";
 import type { ChangeEvent } from "react";
 import { forwardRef, useEffect } from "react";
-import { useControlField, useField } from "remix-validated-form";
 
 type FormInputControlledProps = Omit<InputProps, "value" | "onChange"> & {
   name: string;

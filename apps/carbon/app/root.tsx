@@ -1,5 +1,6 @@
 // root.tsx
 import { Heading } from "@carbon/react";
+import { validator } from "@carbon/remix-validated-form";
 import type {
   ActionFunctionArgs,
   LoaderFunctionArgs,
@@ -17,7 +18,6 @@ import {
   useLoaderData,
   useRouteError,
 } from "@remix-run/react";
-import { withZod } from "@remix-validated-form/with-zod";
 import { Analytics } from "@vercel/analytics/react";
 import React from "react";
 import { getBrowserEnv } from "~/config/env";
@@ -63,7 +63,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-  const validation = await withZod(modeValidator).validate(
+  const validation = await validator(modeValidator).validate(
     await request.formData()
   );
 

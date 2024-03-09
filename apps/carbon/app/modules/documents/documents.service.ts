@@ -1,6 +1,6 @@
 import type { Database } from "@carbon/database";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { TypeOfValidator } from "~/types/validators";
+import type { z } from "zod";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
 import { sanitize } from "~/utils/supabase";
@@ -187,12 +187,12 @@ export async function restoreDocument(
 export async function upsertDocument(
   client: SupabaseClient<Database>,
   document:
-    | (Omit<TypeOfValidator<typeof documentValidator>, "id"> & {
+    | (Omit<z.infer<typeof documentValidator>, "id"> & {
         path: string;
         size: number;
         createdBy: string;
       })
-    | (Omit<TypeOfValidator<typeof documentValidator>, "id"> & {
+    | (Omit<z.infer<typeof documentValidator>, "id"> & {
         id: string;
         updatedBy: string;
       })
@@ -235,7 +235,7 @@ export async function updateDocumentFavorite(
 
 export async function updateDocumentLabels(
   client: SupabaseClient<Database>,
-  document: TypeOfValidator<typeof documentLabelsValidator> & {
+  document: z.infer<typeof documentLabelsValidator> & {
     userId: string;
   }
 ) {

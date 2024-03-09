@@ -1,7 +1,7 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useParams } from "@remix-run/react";
-import { validationError } from "remix-validated-form";
 import { useRouteData } from "~/hooks";
 import type { CustomerDetail } from "~/modules/sales";
 import {
@@ -21,7 +21,9 @@ export async function action({ request }: ActionFunctionArgs) {
     create: "sales",
   });
 
-  const validation = await customerValidator.validate(await request.formData());
+  const validation = await validator(customerValidator).validate(
+    await request.formData()
+  );
 
   if (validation.error) {
     return validationError(validation.error);

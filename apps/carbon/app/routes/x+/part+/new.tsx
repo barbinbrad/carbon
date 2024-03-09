@@ -1,6 +1,6 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import { validationError } from "remix-validated-form";
 import { PartForm, partValidator, upsertPart } from "~/modules/parts";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session.server";
@@ -14,7 +14,9 @@ export async function action({ request }: ActionFunctionArgs) {
     create: "parts",
   });
 
-  const validation = await partValidator.validate(await request.formData());
+  const validation = await validator(partValidator).validate(
+    await request.formData()
+  );
 
   if (validation.error) {
     return validationError(validation.error);

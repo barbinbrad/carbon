@@ -1,7 +1,7 @@
 import type { Database, Json } from "@carbon/database";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import type { z } from "zod";
 import { SUPABASE_API_URL } from "~/config/env";
-import type { TypeOfValidator } from "~/types/validators";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
 import { interpolateSequenceDate } from "~/utils/string";
@@ -140,7 +140,7 @@ export async function getTheme(client: SupabaseClient<Database>) {
 
 export async function insertCompany(
   client: SupabaseClient<Database>,
-  company: TypeOfValidator<typeof companyValidator>
+  company: z.infer<typeof companyValidator>
 ) {
   return client.from("company").insert(company);
 }
@@ -167,7 +167,7 @@ export async function rollbackNextSequence(
 
 export async function updateCompany(
   client: SupabaseClient<Database>,
-  company: Partial<TypeOfValidator<typeof companyValidator>> & {
+  company: Partial<z.infer<typeof companyValidator>> & {
     updatedBy: string;
   }
 ) {
@@ -204,7 +204,7 @@ export async function updateLogo(
 export async function updateSequence(
   client: SupabaseClient<Database>,
   table: string,
-  sequence: Partial<TypeOfValidator<typeof sequenceValidator>> & {
+  sequence: Partial<z.infer<typeof sequenceValidator>> & {
     updatedBy: string;
   }
 ) {
@@ -213,7 +213,7 @@ export async function updateSequence(
 
 export async function updateTheme(
   client: SupabaseClient<Database>,
-  theme: TypeOfValidator<typeof themeValidator> & { updatedBy: string }
+  theme: z.infer<typeof themeValidator> & { updatedBy: string }
 ) {
   return client.from("theme").update(theme).eq("id", true);
 }

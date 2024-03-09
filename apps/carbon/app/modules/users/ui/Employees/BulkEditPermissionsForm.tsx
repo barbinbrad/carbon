@@ -10,9 +10,9 @@ import {
   VStack,
   useMount,
 } from "@carbon/react";
+import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useFetcher } from "@remix-run/react";
 import { useEffect, useState } from "react";
-import { ValidatedForm } from "remix-validated-form";
 import { Employees, Hidden, Radios, Submit } from "~/components/Form";
 import type { Permission } from "~/modules/users";
 import { bulkPermissionsValidator } from "~/modules/users";

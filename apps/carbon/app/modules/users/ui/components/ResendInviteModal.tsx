@@ -8,8 +8,8 @@ import {
   ModalHeader,
   ModalTitle,
 } from "@carbon/react";
+import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useFetcher } from "@remix-run/react";
-import { ValidatedForm } from "remix-validated-form";
 import { UserSelect } from "~/components/Selectors";
 import { resendInviteValidator } from "~/modules/users";
 import { path } from "~/utils/path";

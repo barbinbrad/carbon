@@ -1,8 +1,9 @@
 import { Button, HStack, Switch, VStack, useDisclosure } from "@carbon/react";
+import { ValidatedForm } from "@carbon/remix-validated-form";
 import { parseDate } from "@internationalized/date";
 import { useFetcher, useParams } from "@remix-run/react";
 import { useState } from "react";
-import { ValidatedForm } from "remix-validated-form";
+import type { ZodSchema } from "zod";
 import {
   Boolean as BooleanInput,
   DatePicker,
@@ -143,7 +144,7 @@ function renderTypedForm({
         <ValidatedForm
           method="post"
           action={path.to.userAttribute(userId)}
-          validator={attributeBooleanValidator}
+          validator={attributeBooleanValidator as ZodSchema}
           defaultValues={{
             userAttributeId,
             userAttributeValueId,

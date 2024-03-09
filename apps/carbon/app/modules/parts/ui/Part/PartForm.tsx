@@ -1,15 +1,19 @@
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
+  ModalCard,
+  ModalCardBody,
+  ModalCardContent,
+  ModalCardDescription,
+  ModalCardFooter,
+  ModalCardHeader,
+  ModalCardProvider,
+  ModalCardTitle,
   VStack,
   cn,
 } from "@carbon/react";
+import { ValidatedForm } from "@carbon/remix-validated-form";
+import { useFetcher } from "@remix-run/react";
 import { useState } from "react";
-import { ValidatedForm } from "remix-validated-form";
+import type { z } from "zod";
 import {
   Boolean,
   Combobox,
@@ -27,11 +31,12 @@ import {
   partTypes,
   partValidator,
 } from "~/modules/parts";
-import type { TypeOfValidator } from "~/types/validators";
 import { path } from "~/utils/path";
 
 type PartFormProps = {
-  initialValues: TypeOfValidator<typeof partValidator>;
+  initialValues: z.infer<typeof partValidator>;
+  type?: "card" | "modal";
+  onClose?: () => void;
 };
 
 const useNextPartIdShortcut = () => {
@@ -79,12 +84,13 @@ const useNextPartIdShortcut = () => {
   return { partId, onPartIdChange, loading };
 };
 
-const PartForm = ({ initialValues }: PartFormProps) => {
+const PartForm = ({ initialValues, type = "card", onClose }: PartFormProps) => {
   const sharedPartsData = useRouteData<{
     partGroups: PartGroupListItem[];
     unitOfMeasures: UnitOfMeasureListItem[];
   }>(path.to.partRoot);
 
+  const fetcher = useFetcher();
   const { partId, onPartIdChange, loading } = useNextPartIdShortcut();
   const permissions = usePermissions();
   const isEditing = !!initialValues.id;
@@ -114,86 +120,101 @@ const PartForm = ({ initialValues }: PartFormProps) => {
     })) ?? [];
 
   return (
-    <ValidatedForm
-      method="post"
-      validator={partValidator}
-      defaultValues={initialValues}
-    >
-      <Card>
-        <CardHeader>
-          <CardTitle>{isEditing ? "Part Details" : "New Part"}</CardTitle>
-          {!isEditing && (
-            <CardDescription>
-              A part contains the information about a specific item that can be
-              purchased or manufactured.
-            </CardDescription>
-          )}
-        </CardHeader>
-        <CardContent>
-          <div
-            className={cn(
-              "grid w-full gap-x-8 gap-y-2",
-              isEditing ? "grid-cols-1 lg:grid-cols-3" : "grid-cols-1"
-            )}
-          >
-            <VStack>
-              {isEditing ? (
-                <Input autoFocus name="id" label="Part ID" isReadOnly />
-              ) : (
-                <InputControlled
-                  name="id"
-                  label="Part ID"
-                  helperText="Use ... to get the next part ID"
-                  value={partId}
-                  onChange={onPartIdChange}
-                  isDisabled={loading}
-                />
-              )}
-
-              <Input name="name" label="Name" />
-              <TextArea name="description" label="Description" />
-            </VStack>
-            <VStack>
-              <Select
-                name="replenishmentSystem"
-                label="Replenishment System"
-                options={partReplenishmentSystemOptions}
-              />
-              <Select
-                name="partType"
-                label="Part Type"
-                options={partTypeOptions}
-              />
-              <Combobox
-                name="unitOfMeasureCode"
-                label="Unit of Measure"
-                options={unitOfMeasureOptions}
-              />
-            </VStack>
-            <VStack>
-              <Combobox
-                name="partGroupId"
-                label="Part Group"
-                options={partGroupOptions}
-              />
-              <Boolean name="blocked" label="Blocked" />
-              {isEditing && <Boolean name="active" label="Active" />}
-            </VStack>
-          </div>
-        </CardContent>
-        <CardFooter>
-          <Submit
-            isDisabled={
+    <ModalCardProvider type={type}>
+      <ModalCard onClose={onClose}>
+        <ModalCardContent>
+          <ValidatedForm
+            action={
               isEditing
-                ? !permissions.can("update", "parts")
-                : !permissions.can("create", "parts")
+                ? undefined
+                : type === "card"
+                ? path.to.newPart
+                : path.to.api.newPart
             }
+            method="post"
+            validator={partValidator}
+            defaultValues={initialValues}
+            onSubmit={onClose}
+            fetcher={fetcher}
           >
-            Save
-          </Submit>
-        </CardFooter>
-      </Card>
-    </ValidatedForm>
+            <ModalCardHeader>
+              <ModalCardTitle>
+                {isEditing ? "Part Details" : "New Part"}
+              </ModalCardTitle>
+              {!isEditing && (
+                <ModalCardDescription>
+                  A part contains the information about a specific item that can
+                  be purchased or manufactured.
+                </ModalCardDescription>
+              )}
+            </ModalCardHeader>
+            <ModalCardBody>
+              <div
+                className={cn(
+                  "grid w-full gap-x-8 gap-y-2",
+                  isEditing ? "grid-cols-1 md:grid-cols-3" : "grid-cols-1"
+                )}
+              >
+                <VStack>
+                  {isEditing ? (
+                    <Input name="id" label="Part ID" isReadOnly />
+                  ) : (
+                    <InputControlled
+                      name="id"
+                      label="Part ID"
+                      helperText="Use ... to get the next part ID"
+                      value={partId}
+                      onChange={onPartIdChange}
+                      isDisabled={loading}
+                    />
+                  )}
+
+                  <Input name="name" label="Name" />
+                  <TextArea name="description" label="Description" />
+                </VStack>
+                <VStack>
+                  <Select
+                    name="replenishmentSystem"
+                    label="Replenishment System"
+                    options={partReplenishmentSystemOptions}
+                  />
+                  <Select
+                    name="partType"
+                    label="Part Type"
+                    options={partTypeOptions}
+                  />
+                  <Combobox
+                    name="unitOfMeasureCode"
+                    label="Unit of Measure"
+                    options={unitOfMeasureOptions}
+                  />
+                </VStack>
+                <VStack>
+                  <Combobox
+                    name="partGroupId"
+                    label="Part Group"
+                    options={partGroupOptions}
+                  />
+                  <Boolean name="blocked" label="Blocked" />
+                  {isEditing && <Boolean name="active" label="Active" />}
+                </VStack>
+              </div>
+            </ModalCardBody>
+            <ModalCardFooter>
+              <Submit
+                isDisabled={
+                  isEditing
+                    ? !permissions.can("update", "parts")
+                    : !permissions.can("create", "parts")
+                }
+              >
+                Save
+              </Submit>
+            </ModalCardFooter>
+          </ValidatedForm>
+        </ModalCardContent>
+      </ModalCard>
+    </ModalCardProvider>
   );
 };
 

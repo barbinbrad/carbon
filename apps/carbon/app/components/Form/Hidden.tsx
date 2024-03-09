@@ -4,8 +4,8 @@ import {
   FormErrorMessage,
   Input as InputBase,
 } from "@carbon/react";
+import { useField } from "@carbon/remix-validated-form";
 import { forwardRef } from "react";
-import { useField } from "remix-validated-form";
 
 type HiddenProps = InputProps & {
   name: string;

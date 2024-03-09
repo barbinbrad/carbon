@@ -1,6 +1,6 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import { validationError } from "remix-validated-form";
 import { useUser } from "~/hooks";
 import {
   QuotationForm,
@@ -20,7 +20,7 @@ export async function action({ request }: ActionFunctionArgs) {
     create: "sales",
   });
 
-  const validation = await quotationValidator.validate(
+  const validation = await validator(quotationValidator).validate(
     await request.formData()
   );
 
@@ -73,7 +73,7 @@ export default function QuotationNewRoute() {
 
   return (
     <div className="w-1/2 max-w-[720px] min-w-[420px] mx-auto pt-4">
-      {/* @ts-expect-error */}
+      {/* @ts-ignore */}
       <QuotationForm initialValues={initialValues} />
     </div>
   );

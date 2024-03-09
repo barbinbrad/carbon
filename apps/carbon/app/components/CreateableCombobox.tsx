@@ -25,6 +25,7 @@ export type CreatableComboboxProps = Omit<
   options: {
     label: string;
     value: string;
+    helper?: string;
   }[];
   selected?: string[];
   isClearable?: boolean;
@@ -50,14 +51,17 @@ const CreatableCombobox = forwardRef<HTMLButtonElement, CreatableComboboxProps>(
     },
     ref
   ) => {
+    const [open, setOpen] = useState(false);
     const [search, setSearch] = useState("");
-    const isExactMatch = options.some(
-      (option) => option.value.toLowerCase() === search.toLowerCase()
+    const isExactMatch = options.some((option) =>
+      [option.label.toLowerCase(), option.helper?.toLowerCase()].includes(
+        search.toLowerCase()
+      )
     );
 
     return (
       <HStack spacing={1}>
-        <Popover>
+        <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <CommandTrigger
               size={size}
@@ -65,6 +69,7 @@ const CreatableCombobox = forwardRef<HTMLButtonElement, CreatableComboboxProps>(
               className={cn("min-w-[160px]", !value && "text-muted-foreground")}
               ref={ref}
               {...props}
+              onClick={() => setOpen(true)}
             >
               {value
                 ? options.find((option) => option.value === value)?.label
@@ -84,13 +89,27 @@ const CreatableCombobox = forwardRef<HTMLButtonElement, CreatableComboboxProps>(
                   const isSelected = !!selected?.includes(option.value);
                   return (
                     <CommandItem
-                      value={option.label}
+                      value={
+                        typeof option.label === "string"
+                          ? option.label + option.helper
+                          : undefined
+                      }
                       key={option.value}
                       onSelect={() => {
                         if (!isSelected) onChange?.(option.value);
+                        setOpen(false);
                       }}
                     >
-                      {option.label}
+                      {option.helper ? (
+                        <div className="flex flex-col">
+                          <p>{option.label}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {option.helper}
+                          </p>
+                        </div>
+                      ) : (
+                        option.label
+                      )}
                       <RxCheck
                         className={cn(
                           "ml-auto h-4 w-4",

@@ -11,19 +11,19 @@ import {
   TabsTrigger,
   VStack,
 } from "@carbon/react";
+import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useNavigate } from "@remix-run/react";
-import { ValidatedForm } from "remix-validated-form";
+import type { z } from "zod";
 import { Select, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import type { AccountListItem } from "~/modules/accounting";
 import { defaultAcountValidator } from "~/modules/accounting";
-import type { TypeOfValidator } from "~/types/validators";
 import { path } from "~/utils/path";
 
 type AccountDefaultsFormProps = {
   balanceSheetAccounts: AccountListItem[];
   incomeStatementAccounts: AccountListItem[];
-  initialValues: TypeOfValidator<typeof defaultAcountValidator>;
+  initialValues: z.infer<typeof defaultAcountValidator>;
 };
 
 const AccountDefaultsForm = ({

@@ -1,6 +1,6 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { validationError } from "remix-validated-form";
 import { PageTitle } from "~/components/Layout";
 import { getSupabaseServiceRole } from "~/lib/supabase";
 import { PasswordForm, accountPasswordValidator } from "~/modules/account";
@@ -20,7 +20,7 @@ export async function action({ request }: ActionFunctionArgs) {
   assertIsPost(request);
   const { email, userId } = await requirePermissions(request, {});
 
-  const validation = await accountPasswordValidator.validate(
+  const validation = await validator(accountPasswordValidator).validate(
     await request.formData()
   );
 

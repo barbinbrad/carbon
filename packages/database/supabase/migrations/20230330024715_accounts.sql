@@ -84,8 +84,7 @@ CREATE TYPE "glIncomeBalance" AS ENUM (
 
 CREATE TYPE "glAccountType" AS ENUM (
   'Posting',
-  'Heading',
-  -- 'Total',
+  'Total',
   'Begin Total',
   'End Total'
 );

@@ -255,6 +255,7 @@ const CommandTrigger = forwardRef<ElementRef<"button">, CommandTriggerProps>(
   ({ size, className, children, ...props }, ref) => (
     <button
       ref={ref}
+      type="button"
       className={cn(
         commandTriggerVariants({
           size,

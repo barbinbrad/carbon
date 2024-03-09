@@ -69,7 +69,9 @@ const ChartOfAccountsTable = memo(({ data }: ChartOfAccountsTableProps) => {
         accessorKey: "netChange",
         header: "Net Change",
         cell: ({ row }) => {
-          const hasValue = ["Posting", "End Total"].includes(row.original.type);
+          const hasValue = ["Posting", "End Total", "Total"].includes(
+            row.original.type
+          );
           return hasValue ? (row.original.netChange ?? 0).toFixed(2) : null;
         },
       },
@@ -77,7 +79,9 @@ const ChartOfAccountsTable = memo(({ data }: ChartOfAccountsTableProps) => {
         accessorKey: "balanceAtDate",
         header: "Balance at Date",
         cell: ({ row }) => {
-          const hasValue = ["Posting", "End Total"].includes(row.original.type);
+          const hasValue = ["Posting", "End Total", "Total"].includes(
+            row.original.type
+          );
           return hasValue ? (row.original.balanceAtDate ?? 0).toFixed(2) : null;
         },
       },
@@ -85,7 +89,9 @@ const ChartOfAccountsTable = memo(({ data }: ChartOfAccountsTableProps) => {
         accessorKey: "balance",
         header: "Balance",
         cell: ({ row }) => {
-          const hasValue = ["Posting", "End Total"].includes(row.original.type);
+          const hasValue = ["Posting", "End Total", "Total"].includes(
+            row.original.type
+          );
           return hasValue ? (row.original.balance ?? 0).toFixed(2) : null;
         },
       },

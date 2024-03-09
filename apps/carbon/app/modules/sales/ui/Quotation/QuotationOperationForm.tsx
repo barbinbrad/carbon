@@ -15,11 +15,12 @@ import {
   IconButton,
   VStack,
 } from "@carbon/react";
+import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useNavigate, useParams } from "@remix-run/react";
 import { useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { ValidatedForm } from "remix-validated-form";
+import type { z } from "zod";
 import {
   EquipmentType,
   Hidden,
@@ -34,12 +35,9 @@ import { usePermissions, useRouteData, useUrlParams } from "~/hooks";
 import { useSupabase } from "~/lib/supabase";
 import type { Quotation } from "~/modules/sales";
 import { quotationOperationValidator } from "~/modules/sales";
-import type { TypeOfValidator } from "~/types/validators";
 import { path } from "~/utils/path";
 
-type QuotationOperationFormValues = TypeOfValidator<
-  typeof quotationOperationValidator
->;
+type QuotationOperationFormValues = z.infer<typeof quotationOperationValidator>;
 
 type QuotationOperationFormProps = {
   initialValues: QuotationOperationFormValues;

@@ -6,8 +6,9 @@ import {
   CardTitle,
   VStack,
 } from "@carbon/react";
+import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useState } from "react";
-import { ValidatedForm } from "remix-validated-form";
+import type { z } from "zod";
 import {
   Boolean,
   Combobox,
@@ -19,10 +20,9 @@ import {
 import { usePermissions } from "~/hooks";
 import type { UnitOfMeasureListItem } from "~/modules/parts";
 import { partUnitSalePriceValidator } from "~/modules/parts";
-import type { TypeOfValidator } from "~/types/validators";
 
 type PartSalePriceFormProps = {
-  initialValues: TypeOfValidator<typeof partUnitSalePriceValidator>;
+  initialValues: z.infer<typeof partUnitSalePriceValidator>;
   unitOfMeasures: UnitOfMeasureListItem[];
 };
 

@@ -41,7 +41,7 @@ export type RequestForQuote = NonNullable<
   Awaited<ReturnType<typeof getRequestsForQuotes>>["data"]
 >[number];
 
-export type RequestForQuoteStatus =
+export type RequestForQuoteStatusType =
   Database["public"]["Enums"]["requestForQuoteStatus"];
 
 export type Supplier = NonNullable<

@@ -8,7 +8,8 @@ import {
   HStack,
   VStack,
 } from "@carbon/react";
-import { ValidatedForm } from "remix-validated-form";
+import { ValidatedForm } from "@carbon/remix-validated-form";
+import type { z } from "zod";
 import { Combobox } from "~/components";
 import {
   Boolean,
@@ -20,11 +21,10 @@ import {
 import { usePermissions } from "~/hooks";
 import { partPlanningValidator, partReorderingPolicies } from "~/modules/parts";
 import type { ListItem } from "~/types";
-import type { TypeOfValidator } from "~/types/validators";
 import { path } from "~/utils/path";
 
 type PartPlanningFormProps = {
-  initialValues: TypeOfValidator<typeof partPlanningValidator>;
+  initialValues: z.infer<typeof partPlanningValidator>;
   locations: ListItem[];
 };
 

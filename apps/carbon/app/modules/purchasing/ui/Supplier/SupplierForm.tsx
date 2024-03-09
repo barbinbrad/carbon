@@ -1,28 +1,38 @@
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
   HStack,
+  ModalCard,
+  ModalCardBody,
+  ModalCardContent,
+  ModalCardDescription,
+  ModalCardFooter,
+  ModalCardHeader,
+  ModalCardProvider,
+  ModalCardTitle,
   VStack,
   cn,
 } from "@carbon/react";
-import { ValidatedForm } from "remix-validated-form";
+import { ValidatedForm } from "@carbon/remix-validated-form";
+import { useFetcher } from "@remix-run/react";
+import type { z } from "zod";
 import { Employee, Hidden, Input, Select, Submit } from "~/components/Form";
 import { usePermissions, useRouteData } from "~/hooks";
 import type { SupplierStatus, SupplierType } from "~/modules/purchasing";
 import { supplierValidator } from "~/modules/purchasing";
-import type { TypeOfValidator } from "~/types/validators";
 import { path } from "~/utils/path";
 
 type SupplierFormProps = {
-  initialValues: TypeOfValidator<typeof supplierValidator>;
+  initialValues: z.infer<typeof supplierValidator>;
+  type?: "card" | "modal";
+  onClose?: () => void;
 };
 
-const SupplierForm = ({ initialValues }: SupplierFormProps) => {
+const SupplierForm = ({
+  initialValues,
+  type = "card",
+  onClose,
+}: SupplierFormProps) => {
   const permissions = usePermissions();
+  const fetcher = useFetcher();
 
   const routeData = useRouteData<{
     supplierTypes: SupplierType[];
@@ -47,65 +57,81 @@ const SupplierForm = ({ initialValues }: SupplierFormProps) => {
     : !permissions.can("create", "purchasing");
 
   return (
-    <ValidatedForm
-      method="post"
-      validator={supplierValidator}
-      defaultValues={initialValues}
-    >
-      <Card>
-        <CardHeader>
-          <CardTitle>
-            {isEditing ? "Supplier Overview" : "New Supplier"}
-          </CardTitle>
-          {!isEditing && (
-            <CardDescription>
-              A supplier is a business or person who sells you parts or
-              services.
-            </CardDescription>
-          )}
-        </CardHeader>
-        <CardContent>
-          <Hidden name="id" />
-          <div
-            className={cn(
-              "grid w-full gap-x-8 gap-y-2",
-              isEditing ? "grid-cols-1 lg:grid-cols-3" : "grid-cols-1"
-            )}
+    <ModalCardProvider type={type}>
+      <ModalCard onClose={onClose}>
+        <ModalCardContent>
+          <ValidatedForm
+            method="post"
+            action={
+              isEditing
+                ? undefined
+                : type === "card"
+                ? path.to.newSupplier
+                : path.to.api.newSupplier
+            }
+            validator={supplierValidator}
+            defaultValues={initialValues}
+            onSubmit={onClose}
+            fetcher={fetcher}
           >
-            <VStack>
-              <Input autoFocus={!isEditing} name="name" label="Name" />
-              <Input name="taxId" label="Tax ID" />
-            </VStack>
-            <VStack>
-              <Select
-                name="supplierTypeId"
-                label="Supplier Type"
-                options={supplierTypeOptions}
-                placeholder="Select Supplier Type"
-              />
-              <Select
-                name="supplierStatusId"
-                label="Supplier Status"
-                options={supplierStatusOptions}
-                placeholder="Select Supplier Status"
-              />
-            </VStack>
-            {isEditing && (
-              <>
+            <ModalCardHeader>
+              <ModalCardTitle>
+                {isEditing ? "Supplier Overview" : "New Supplier"}
+              </ModalCardTitle>
+              {!isEditing && (
+                <ModalCardDescription>
+                  A supplier is a business or person who sells you parts or
+                  services.
+                </ModalCardDescription>
+              )}
+            </ModalCardHeader>
+            <ModalCardBody>
+              <Hidden name="id" />
+              <div
+                className={cn(
+                  "grid w-full gap-x-8 gap-y-2",
+                  isEditing ? "grid-cols-1 lg:grid-cols-3" : "grid-cols-1"
+                )}
+              >
                 <VStack>
-                  <Employee name="accountManagerId" label="Account Manager" />
+                  <Input autoFocus={!isEditing} name="name" label="Name" />
+                  <Input name="taxId" label="Tax ID" />
                 </VStack>
-              </>
-            )}
-          </div>
-        </CardContent>
-        <CardFooter>
-          <HStack>
-            <Submit isDisabled={isDisabled}>Save</Submit>
-          </HStack>
-        </CardFooter>
-      </Card>
-    </ValidatedForm>
+                <VStack>
+                  <Select
+                    name="supplierTypeId"
+                    label="Supplier Type"
+                    options={supplierTypeOptions}
+                    placeholder="Select Supplier Type"
+                  />
+                  <Select
+                    name="supplierStatusId"
+                    label="Supplier Status"
+                    options={supplierStatusOptions}
+                    placeholder="Select Supplier Status"
+                  />
+                </VStack>
+                {isEditing && (
+                  <>
+                    <VStack>
+                      <Employee
+                        name="accountManagerId"
+                        label="Account Manager"
+                      />
+                    </VStack>
+                  </>
+                )}
+              </div>
+            </ModalCardBody>
+            <ModalCardFooter>
+              <HStack>
+                <Submit isDisabled={isDisabled}>Save</Submit>
+              </HStack>
+            </ModalCardFooter>
+          </ValidatedForm>
+        </ModalCardContent>
+      </ModalCard>
+    </ModalCardProvider>
   );
 };
 

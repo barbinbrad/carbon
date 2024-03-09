@@ -1,9 +1,12 @@
 import { Button, HStack, VStack } from "@carbon/react";
-
+import {
+  ValidatedForm,
+  validationError,
+  validator,
+} from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useNavigate } from "@remix-run/react";
-import { ValidatedForm, validationError } from "remix-validated-form";
 import { Password, Submit } from "~/components/Form";
 import { resetPassword } from "~/modules/users/users.server";
 import { resetPasswordValidator } from "~/services/auth";
@@ -19,7 +22,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export async function action({ request }: ActionFunctionArgs) {
   assertIsPost(request);
-  const validation = await resetPasswordValidator.validate(
+  const validation = await validator(resetPasswordValidator).validate(
     await request.formData()
   );
 

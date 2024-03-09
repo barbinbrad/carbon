@@ -58,7 +58,11 @@ const QuotationsTable = memo(({ data, count }: QuotationsTableProps) => {
         cell: ({ row }) => (
           <HStack>
             {row.original.favorite ? (
-              <fetcher.Form method="post" action={path.to.quoteFavorite}>
+              <fetcher.Form
+                method="post"
+                action={path.to.quoteFavorite}
+                className="flex items-center"
+              >
                 <input type="hidden" name="id" value={row.original.id!} />
                 <input type="hidden" name="favorite" value="unfavorite" />
                 <button type="submit">
@@ -69,7 +73,11 @@ const QuotationsTable = memo(({ data, count }: QuotationsTableProps) => {
                 </button>
               </fetcher.Form>
             ) : (
-              <fetcher.Form method="post" action={path.to.quoteFavorite}>
+              <fetcher.Form
+                method="post"
+                action={path.to.quoteFavorite}
+                className="flex items-center"
+              >
                 <input type="hidden" name="id" value={row.original.id!} />
                 <input type="hidden" name="favorite" value="favorite" />
                 <button type="submit">

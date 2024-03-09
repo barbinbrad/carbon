@@ -1,7 +1,7 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { validationError } from "remix-validated-form";
 import {
   UnitOfMeasureForm,
   getUnitOfMeasure,
@@ -36,7 +36,7 @@ export async function action({ request }: ActionFunctionArgs) {
     update: "parts",
   });
 
-  const validation = await unitOfMeasureValidator.validate(
+  const validation = await validator(unitOfMeasureValidator).validate(
     await request.formData()
   );
 

@@ -1,7 +1,7 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { useLoaderData, useNavigate, useParams } from "@remix-run/react";
-import { validationError } from "remix-validated-form";
 import { useRouteData } from "~/hooks";
 import type { Ability } from "~/modules/resources";
 import {
@@ -55,7 +55,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
     create: "resources",
   });
 
-  const validation = await employeeAbilityValidator.validate(
+  const validation = await validator(employeeAbilityValidator).validate(
     await request.formData()
   );
 

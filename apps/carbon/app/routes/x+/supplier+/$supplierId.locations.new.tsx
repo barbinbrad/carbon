@@ -1,9 +1,9 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import { validationError } from "remix-validated-form";
 import {
-  insertSupplierLocation,
   SupplierLocationForm,
+  insertSupplierLocation,
   supplierLocationValidator,
 } from "~/modules/purchasing";
 import { requirePermissions } from "~/services/auth";
@@ -21,7 +21,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { supplierId } = params;
   if (!supplierId) throw notFound("supplierId not found");
 
-  const validation = await supplierLocationValidator.validate(
+  const validation = await validator(supplierLocationValidator).validate(
     await request.formData()
   );
 

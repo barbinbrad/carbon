@@ -1,4 +1,3 @@
-import { withZod } from "@remix-validated-form/with-zod";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
 
@@ -17,24 +16,20 @@ const company = {
   website: zfd.text(z.string().optional()),
 };
 
-export const companyValidator = withZod(z.object(company));
-export const onboardingCompanyValidator = withZod(
-  z.object({
-    ...company,
-    next: z.string().min(1, { message: "Next is required" }),
-  })
-);
+export const companyValidator = z.object(company);
+export const onboardingCompanyValidator = z.object({
+  ...company,
+  next: z.string().min(1, { message: "Next is required" }),
+});
 
-export const sequenceValidator = withZod(
-  z.object({
-    table: z.string().min(1, { message: "Table is required" }),
-    prefix: zfd.text(z.string().optional()),
-    suffix: zfd.text(z.string().optional()),
-    next: zfd.numeric(z.number().min(0)),
-    step: zfd.numeric(z.number().min(1)),
-    size: zfd.numeric(z.number().min(1).max(20)),
-  })
-);
+export const sequenceValidator = z.object({
+  table: z.string().min(1, { message: "Table is required" }),
+  prefix: zfd.text(z.string().optional()),
+  suffix: zfd.text(z.string().optional()),
+  next: zfd.numeric(z.number().min(0)),
+  step: zfd.numeric(z.number().min(1)),
+  size: zfd.numeric(z.number().min(1).max(20)),
+});
 
 export const themes = [
   "zinc",
@@ -49,11 +44,9 @@ export const themes = [
 ] as const;
 export type Theme = (typeof themes)[number];
 
-export const themeValidator = withZod(
-  z.object({
-    next: zfd.text(z.string().optional()),
-    theme: z.enum(themes, {
-      errorMap: (issue, ctx) => ({ message: "Theme is required" }),
-    }),
-  })
-);
+export const themeValidator = z.object({
+  next: zfd.text(z.string().optional()),
+  theme: z.enum(themes, {
+    errorMap: (issue, ctx) => ({ message: "Theme is required" }),
+  }),
+});

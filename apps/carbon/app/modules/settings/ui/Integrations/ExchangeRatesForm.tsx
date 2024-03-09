@@ -10,15 +10,15 @@ import {
   HStack,
   VStack,
 } from "@carbon/react";
-import { ValidatedForm } from "remix-validated-form";
+import { ValidatedForm } from "@carbon/remix-validated-form";
+import type { z } from "zod";
 import { Boolean, Input, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { exchangeRatesFormValidator } from "~/modules/settings";
-import type { TypeOfValidator } from "~/types/validators";
 import { path } from "~/utils/path";
 
 type ExchangeRatesFormProps = {
-  initialValues: TypeOfValidator<typeof exchangeRatesFormValidator>;
+  initialValues: z.infer<typeof exchangeRatesFormValidator>;
   onClose: () => void;
 };
 

@@ -8,8 +8,9 @@ import {
   HStack,
   VStack,
 } from "@carbon/react";
+import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useRevalidator } from "@remix-run/react";
-import { ValidatedForm } from "remix-validated-form";
+import type { z } from "zod";
 import { Combobox } from "~/components";
 import { CreatableCombobox, Hidden, Number, Submit } from "~/components/Form";
 import { usePermissions, useUser } from "~/hooks";
@@ -17,11 +18,10 @@ import { useSupabase } from "~/lib/supabase";
 import type { PartQuantities } from "~/modules/parts";
 import { partInventoryValidator } from "~/modules/parts";
 import type { ListItem } from "~/types";
-import type { TypeOfValidator } from "~/types/validators";
 import { path } from "~/utils/path";
 
 type PartInventoryFormProps = {
-  initialValues: TypeOfValidator<typeof partInventoryValidator>;
+  initialValues: z.infer<typeof partInventoryValidator>;
   quantities: PartQuantities;
   locations: ListItem[];
   shelves: string[];

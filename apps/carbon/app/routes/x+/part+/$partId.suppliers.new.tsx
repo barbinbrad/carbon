@@ -1,7 +1,7 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { useParams } from "@remix-run/react";
-import { validationError } from "remix-validated-form";
 import {
   PartSupplierForm,
   partSupplierValidator,
@@ -22,7 +22,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { partId } = params;
   if (!partId) throw new Error("Could not find partId");
 
-  const validation = await partSupplierValidator.validate(
+  const validation = await validator(partSupplierValidator).validate(
     await request.formData()
   );
 

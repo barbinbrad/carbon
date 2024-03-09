@@ -9,15 +9,15 @@ import {
   HStack,
   VStack,
 } from "@carbon/react";
-import { ValidatedForm } from "remix-validated-form";
+import { ValidatedForm } from "@carbon/remix-validated-form";
+import type { z } from "zod";
 import { Boolean, Hidden, Input, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { attributeCategoryValidator } from "~/modules/resources";
-import type { TypeOfValidator } from "~/types/validators";
 import { path } from "~/utils/path";
 
 type AttributeCategoryFormProps = {
-  initialValues: TypeOfValidator<typeof attributeCategoryValidator>;
+  initialValues: z.infer<typeof attributeCategoryValidator>;
   onClose: () => void;
 };
 

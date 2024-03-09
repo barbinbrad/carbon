@@ -1,6 +1,6 @@
 import type { Database } from "@carbon/database";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { TypeOfValidator } from "~/types/validators";
+import type { z } from "zod";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
 import { sanitize } from "~/utils/supabase";
@@ -128,11 +128,11 @@ export async function getShippingTermsList(client: SupabaseClient<Database>) {
 export async function upsertReceipt(
   client: SupabaseClient<Database>,
   receipt:
-    | (Omit<TypeOfValidator<typeof receiptValidator>, "id" | "receiptId"> & {
+    | (Omit<z.infer<typeof receiptValidator>, "id" | "receiptId"> & {
         receiptId: string;
         createdBy: string;
       })
-    | (Omit<TypeOfValidator<typeof receiptValidator>, "id" | "receiptId"> & {
+    | (Omit<z.infer<typeof receiptValidator>, "id" | "receiptId"> & {
         id: string;
         receiptId: string;
         updatedBy: string;
@@ -152,10 +152,10 @@ export async function upsertReceipt(
 export async function upsertShippingMethod(
   client: SupabaseClient<Database>,
   shippingMethod:
-    | (Omit<TypeOfValidator<typeof shippingMethodValidator>, "id"> & {
+    | (Omit<z.infer<typeof shippingMethodValidator>, "id"> & {
         createdBy: string;
       })
-    | (Omit<TypeOfValidator<typeof shippingMethodValidator>, "id"> & {
+    | (Omit<z.infer<typeof shippingMethodValidator>, "id"> & {
         id: string;
         updatedBy: string;
       })

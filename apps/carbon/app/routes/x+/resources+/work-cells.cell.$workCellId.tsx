@@ -1,6 +1,6 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import { validationError } from "remix-validated-form";
 import { upsertWorkCell, workCellValidator } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session.server";
@@ -14,7 +14,9 @@ export async function action({ request, params }: ActionFunctionArgs) {
     update: "resources",
   });
 
-  const validation = await workCellValidator.validate(await request.formData());
+  const validation = await validator(workCellValidator).validate(
+    await request.formData()
+  );
 
   if (validation.error) {
     return validationError(validation.error);

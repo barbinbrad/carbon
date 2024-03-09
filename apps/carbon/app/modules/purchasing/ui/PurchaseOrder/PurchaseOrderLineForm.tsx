@@ -10,9 +10,10 @@ import {
   VStack,
 } from "@carbon/react";
 
+import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useFetcher, useNavigate, useParams } from "@remix-run/react";
 import { useEffect, useMemo, useState } from "react";
-import { ValidatedForm } from "remix-validated-form";
+import type { z } from "zod";
 import {
   Account,
   ComboboxControlled,
@@ -37,11 +38,10 @@ import {
   purchaseOrderLineValidator,
 } from "~/modules/purchasing";
 import type { ListItem } from "~/types";
-import type { TypeOfValidator } from "~/types/validators";
 import { path } from "~/utils/path";
 
 type PurchaseOrderLineFormProps = {
-  initialValues: TypeOfValidator<typeof purchaseOrderLineValidator>;
+  initialValues: z.infer<typeof purchaseOrderLineValidator>;
 };
 
 const PurchaseOrderLineForm = ({

@@ -8,9 +8,9 @@ import {
   InputGroup,
   InputRightElement,
 } from "@carbon/react";
+import { useField } from "@carbon/remix-validated-form";
 import { forwardRef, useState } from "react";
 import { BiHide, BiShowAlt } from "react-icons/bi";
-import { useField } from "remix-validated-form";
 
 type FormPasswordProps = InputProps & {
   name: string;

@@ -1,6 +1,6 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import { validationError } from "remix-validated-form";
 import {
   DepartmentForm,
   departmentValidator,
@@ -18,7 +18,7 @@ export async function action({ request }: ActionFunctionArgs) {
     create: "resources",
   });
 
-  const validation = await departmentValidator.validate(
+  const validation = await validator(departmentValidator).validate(
     await request.formData()
   );
 

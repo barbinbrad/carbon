@@ -8,8 +8,9 @@ import {
   VStack,
   cn,
 } from "@carbon/react";
+import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useState } from "react";
-import { ValidatedForm } from "remix-validated-form";
+import type { z } from "zod";
 import {
   DatePicker,
   Hidden,
@@ -27,9 +28,8 @@ import {
   purchaseOrderTypeType,
   purchaseOrderValidator,
 } from "~/modules/purchasing";
-import type { TypeOfValidator } from "~/types/validators";
 
-type PurchaseOrderFormValues = TypeOfValidator<typeof purchaseOrderValidator>;
+type PurchaseOrderFormValues = z.infer<typeof purchaseOrderValidator>;
 
 type PurchaseOrderFormProps = {
   initialValues: PurchaseOrderFormValues;

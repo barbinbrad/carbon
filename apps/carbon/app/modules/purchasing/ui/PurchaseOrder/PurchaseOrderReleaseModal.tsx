@@ -9,9 +9,9 @@ import {
   ModalTitle,
   VStack,
 } from "@carbon/react";
+import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useParams } from "@remix-run/react";
 import { useState } from "react";
-import { ValidatedForm } from "remix-validated-form";
 import { SelectControlled, SupplierContact } from "~/components/Form";
 import { useIntegrations } from "~/hooks/useIntegrations";
 import { path } from "~/utils/path";

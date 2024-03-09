@@ -1,6 +1,6 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { validationError } from "remix-validated-form";
 import {
   GroupForm,
   deleteGroup,
@@ -20,7 +20,9 @@ export async function action({ request }: ActionFunctionArgs) {
     create: "users",
   });
 
-  const validation = await groupValidator.validate(await request.formData());
+  const validation = await validator(groupValidator).validate(
+    await request.formData()
+  );
 
   if (validation.error) {
     return validationError(validation.error);

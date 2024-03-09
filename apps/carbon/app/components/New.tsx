@@ -1,7 +1,6 @@
 import {
   Button,
   HStack,
-  Kbd,
   Tooltip,
   TooltipContent,
   TooltipProvider,
@@ -35,10 +34,7 @@ const New = ({ label, to }: NewProps) => {
           </Button>
         </TooltipTrigger>
         <TooltipContent>
-          <HStack>
-            <span>Press </span>
-            <Kbd>n</Kbd>
-          </HStack>
+          <HStack>N</HStack>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

@@ -9,18 +9,18 @@ import {
   HStack,
   VStack,
 } from "@carbon/react";
+import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useNavigate } from "@remix-run/react";
 import { useState } from "react";
-import { ValidatedForm } from "remix-validated-form";
+import type { z } from "zod";
 import { Boolean, Hidden, Input, Number, Submit } from "~/components/Form";
 import { usePermissions, useRouteData } from "~/hooks";
 import type { Currency } from "~/modules/accounting";
 import { currencyValidator } from "~/modules/accounting";
-import type { TypeOfValidator } from "~/types/validators";
 import { path } from "~/utils/path";
 
 type CurrencyFormProps = {
-  initialValues: TypeOfValidator<typeof currencyValidator>;
+  initialValues: z.infer<typeof currencyValidator>;
 };
 
 const CurrencyForm = ({ initialValues }: CurrencyFormProps) => {

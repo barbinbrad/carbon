@@ -8,8 +8,9 @@ import {
   VStack,
   cn,
 } from "@carbon/react";
+import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useState } from "react";
-import { ValidatedForm } from "remix-validated-form";
+import type { z } from "zod";
 import {
   Customer,
   CustomerContact,
@@ -24,9 +25,8 @@ import {
 } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { quotationValidator } from "~/modules/sales";
-import type { TypeOfValidator } from "~/types/validators";
 
-type QuotationFormValues = TypeOfValidator<typeof quotationValidator>;
+type QuotationFormValues = z.infer<typeof quotationValidator>;
 
 type QuotationFormProps = {
   initialValues: QuotationFormValues;

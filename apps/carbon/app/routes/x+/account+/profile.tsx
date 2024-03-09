@@ -5,10 +5,10 @@ import {
   CardTitle,
   VStack,
 } from "@carbon/react";
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { validationError } from "remix-validated-form";
 import { PageTitle } from "~/components/Layout";
 import {
   ProfileForm,
@@ -66,7 +66,9 @@ export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
 
   if (formData.get("intent") === "about") {
-    const validation = await accountProfileValidator.validate(formData);
+    const validation = await validator(accountProfileValidator).validate(
+      formData
+    );
 
     if (validation.error) {
       return validationError(validation.error);

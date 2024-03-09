@@ -1,6 +1,6 @@
 import type { Database } from "@carbon/database";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { TypeOfValidator } from "~/types/validators";
+import type { z } from "zod";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
 import { sanitize } from "~/utils/supabase";
@@ -428,10 +428,10 @@ export async function getQuoteOperations(
 export async function insertCustomer(
   client: SupabaseClient<Database>,
   customer:
-    | (Omit<TypeOfValidator<typeof customerValidator>, "id"> & {
+    | (Omit<z.infer<typeof customerValidator>, "id"> & {
         createdBy: string;
       })
-    | (Omit<TypeOfValidator<typeof customerValidator>, "id"> & {
+    | (Omit<z.infer<typeof customerValidator>, "id"> & {
         id: string;
         updatedBy: string;
       })
@@ -443,7 +443,7 @@ export async function insertCustomerContact(
   client: SupabaseClient<Database>,
   customerContact: {
     customerId: string;
-    contact: TypeOfValidator<typeof customerContactValidator>;
+    contact: z.infer<typeof customerContactValidator>;
   }
 ) {
   const insertContact = await client
@@ -551,7 +551,7 @@ export async function insertQuoteLineQuantity(
 
 export async function updateCustomer(
   client: SupabaseClient<Database>,
-  customer: Omit<TypeOfValidator<typeof customerValidator>, "id"> & {
+  customer: Omit<z.infer<typeof customerValidator>, "id"> & {
     id: string;
     updatedBy: string;
   }
@@ -619,7 +619,7 @@ export async function updateCustomerLocation(
 }
 export async function updateCustomerPayment(
   client: SupabaseClient<Database>,
-  customerPayment: TypeOfValidator<typeof customerPaymentValidator> & {
+  customerPayment: z.infer<typeof customerPaymentValidator> & {
     updatedBy: string;
   }
 ) {
@@ -631,7 +631,7 @@ export async function updateCustomerPayment(
 
 export async function updateCustomerShipping(
   client: SupabaseClient<Database>,
-  customerShipping: TypeOfValidator<typeof customerShippingValidator> & {
+  customerShipping: z.infer<typeof customerShippingValidator> & {
     updatedBy: string;
   }
 ) {
@@ -644,10 +644,10 @@ export async function updateCustomerShipping(
 export async function upsertCustomerType(
   client: SupabaseClient<Database>,
   customerType:
-    | (Omit<TypeOfValidator<typeof customerTypeValidator>, "id"> & {
+    | (Omit<z.infer<typeof customerTypeValidator>, "id"> & {
         createdBy: string;
       })
-    | (Omit<TypeOfValidator<typeof customerTypeValidator>, "id"> & {
+    | (Omit<z.infer<typeof customerTypeValidator>, "id"> & {
         id: string;
         updatedBy: string;
       })
@@ -685,11 +685,11 @@ export async function updateQuoteFavorite(
 export async function upsertQuote(
   client: SupabaseClient<Database>,
   quote:
-    | (Omit<TypeOfValidator<typeof quotationValidator>, "id" | "quoteId"> & {
+    | (Omit<z.infer<typeof quotationValidator>, "id" | "quoteId"> & {
         quoteId: string;
         createdBy: string;
       })
-    | (Omit<TypeOfValidator<typeof quotationValidator>, "id" | "quoteId"> & {
+    | (Omit<z.infer<typeof quotationValidator>, "id" | "quoteId"> & {
         id: string;
         quoteId: string;
         updatedBy: string;
@@ -705,12 +705,12 @@ export async function upsertQuote(
 export async function upsertQuoteAssembly(
   client: SupabaseClient<Database>,
   quotationAssembly:
-    | (Omit<TypeOfValidator<typeof quotationAssemblyValidator>, "id"> & {
+    | (Omit<z.infer<typeof quotationAssemblyValidator>, "id"> & {
         quoteId: string;
         quoteLineId: string;
         createdBy: string;
       })
-    | (Omit<TypeOfValidator<typeof quotationAssemblyValidator>, "id"> & {
+    | (Omit<z.infer<typeof quotationAssemblyValidator>, "id"> & {
         id: string;
         quoteId: string;
         quoteLineId: string;
@@ -735,10 +735,10 @@ export async function upsertQuoteAssembly(
 export async function upsertQuoteLine(
   client: SupabaseClient<Database>,
   quotationLine:
-    | (Omit<TypeOfValidator<typeof quotationLineValidator>, "id"> & {
+    | (Omit<z.infer<typeof quotationLineValidator>, "id"> & {
         createdBy: string;
       })
-    | (Omit<TypeOfValidator<typeof quotationLineValidator>, "id"> & {
+    | (Omit<z.infer<typeof quotationLineValidator>, "id"> & {
         id: string;
         updatedBy: string;
       })
@@ -757,13 +757,13 @@ export async function upsertQuoteLine(
 export async function upsertQuoteMaterial(
   client: SupabaseClient<Database>,
   quotationMaterial:
-    | (Omit<TypeOfValidator<typeof quotationMaterialValidator>, "id"> & {
+    | (Omit<z.infer<typeof quotationMaterialValidator>, "id"> & {
         quoteId: string;
         quoteLineId: string;
         quoteOperationId: string;
         createdBy: string;
       })
-    | (Omit<TypeOfValidator<typeof quotationMaterialValidator>, "id"> & {
+    | (Omit<z.infer<typeof quotationMaterialValidator>, "id"> & {
         id: string;
         quoteId: string;
         quoteLineId: string;
@@ -789,12 +789,12 @@ export async function upsertQuoteMaterial(
 export async function upsertQuoteOperation(
   client: SupabaseClient<Database>,
   quotationOperation:
-    | (Omit<TypeOfValidator<typeof quotationOperationValidator>, "id"> & {
+    | (Omit<z.infer<typeof quotationOperationValidator>, "id"> & {
         quoteId: string;
         quoteLineId: string;
         createdBy: string;
       })
-    | (Omit<TypeOfValidator<typeof quotationOperationValidator>, "id"> & {
+    | (Omit<z.infer<typeof quotationOperationValidator>, "id"> & {
         id: string;
         quoteId: string;
         quoteLineId: string;

@@ -1,6 +1,6 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import { validationError } from "remix-validated-form";
 import {
   HolidayForm,
   holidayValidator,
@@ -18,7 +18,9 @@ export async function action({ request }: ActionFunctionArgs) {
     create: "resources",
   });
 
-  const validation = await holidayValidator.validate(await request.formData());
+  const validation = await validator(holidayValidator).validate(
+    await request.formData()
+  );
 
   if (validation.error) {
     return validationError(validation.error);
@@ -51,13 +53,8 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function NewHolidayRoute() {
   const initialValues = {
     name: "",
-    date: undefined,
+    date: "",
   };
 
-  return (
-    <HolidayForm
-      // @ts-expect-error
-      initialValues={initialValues}
-    />
-  );
+  return <HolidayForm initialValues={initialValues} />;
 }

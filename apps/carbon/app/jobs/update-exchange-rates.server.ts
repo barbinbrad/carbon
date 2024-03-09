@@ -3,7 +3,7 @@ import { getExchangeRatesClient } from "~/lib/exchange-rates.server";
 import { getSupabaseServiceRole } from "~/lib/supabase";
 import { triggerClient } from "~/lib/trigger.server";
 import type { CurrencyCode } from "~/modules/accounting";
-import { exchangeRatesIntegration } from "~/modules/settings";
+import { exchangeRatesFormValidator } from "~/modules/settings";
 
 const supabaseClient = getSupabaseServiceRole();
 
@@ -21,7 +21,7 @@ const job = triggerClient.defineJob({
       .eq("id", "exchange-rates-v1")
       .maybeSingle();
 
-    const integrationMetadata = exchangeRatesIntegration.safeParse(
+    const integrationMetadata = exchangeRatesFormValidator.safeParse(
       integration?.data?.metadata
     );
 

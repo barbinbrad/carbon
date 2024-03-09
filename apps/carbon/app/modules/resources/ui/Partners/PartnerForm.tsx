@@ -13,9 +13,10 @@ import {
   VStack,
   useMount,
 } from "@carbon/react";
+import { ValidatedForm, useControlField } from "@carbon/remix-validated-form";
 import { useFetcher, useNavigate } from "@remix-run/react";
 import { useEffect, useMemo } from "react";
-import { ValidatedForm, useControlField } from "remix-validated-form";
+import type { z } from "zod";
 import {
   Ability,
   ComboboxControlled,
@@ -26,11 +27,10 @@ import {
 import { usePermissions } from "~/hooks";
 import type { getSupplierLocations } from "~/modules/purchasing";
 import { partnerValidator } from "~/modules/resources";
-import type { TypeOfValidator } from "~/types/validators";
 import { path } from "~/utils/path";
 
 type PartnerFormProps = {
-  initialValues: TypeOfValidator<typeof partnerValidator>;
+  initialValues: z.infer<typeof partnerValidator>;
 };
 
 const PartnerForm = ({ initialValues }: PartnerFormProps) => {

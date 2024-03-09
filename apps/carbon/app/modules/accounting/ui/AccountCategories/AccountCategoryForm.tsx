@@ -9,7 +9,8 @@ import {
   HStack,
   VStack,
 } from "@carbon/react";
-import { ValidatedForm } from "remix-validated-form";
+import { ValidatedForm } from "@carbon/remix-validated-form";
+import type { z } from "zod";
 import { Hidden, Input, Select, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import {
@@ -17,11 +18,10 @@ import {
   accountClassTypes,
   incomeBalanceTypes,
 } from "~/modules/accounting";
-import type { TypeOfValidator } from "~/types/validators";
 import { path } from "~/utils/path";
 
 type AccountCategoryFormProps = {
-  initialValues: TypeOfValidator<typeof accountCategoryValidator>;
+  initialValues: z.infer<typeof accountCategoryValidator>;
   onClose: () => void;
 };
 

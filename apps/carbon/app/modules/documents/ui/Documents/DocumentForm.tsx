@@ -9,16 +9,16 @@ import {
   HStack,
   VStack,
 } from "@carbon/react";
+import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useNavigate } from "@remix-run/react";
-import { ValidatedForm } from "remix-validated-form";
+import type { z } from "zod";
 import { Hidden, Input, Submit, TextArea, Users } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { documentValidator } from "~/modules/documents";
-import type { TypeOfValidator } from "~/types/validators";
 import { path } from "~/utils/path";
 
 type DocumentFormProps = {
-  initialValues: TypeOfValidator<typeof documentValidator>;
+  initialValues: z.infer<typeof documentValidator>;
   ownerId: string;
 };
 

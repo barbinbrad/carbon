@@ -12,9 +12,9 @@ import {
   NumberInputStepper,
 } from "@carbon/react";
 
+import { useField } from "@carbon/remix-validated-form";
 import { forwardRef } from "react";
 import { LuChevronDown, LuChevronUp } from "react-icons/lu";
-import { useField } from "remix-validated-form";
 
 type FormNumberProps = NumberFieldProps & {
   name: string;

@@ -5,7 +5,7 @@ import {
   FormLabel,
 } from "@carbon/react";
 
-import { useControlField, useField } from "remix-validated-form";
+import { useControlField, useField } from "@carbon/remix-validated-form";
 import { MultiSelect as MultiSelectBase } from "~/components";
 import type { MultiSelectProps as MultiSelectBaseProps } from "~/components/MultiSelect";
 

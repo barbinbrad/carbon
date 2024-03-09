@@ -66,6 +66,7 @@ const PurchaseOrdersTable = memo(
                 <fetcher.Form
                   method="post"
                   action={path.to.purchaseOrderFavorite}
+                  className="flex items-center"
                 >
                   <input type="hidden" name="id" value={row.original.id!} />
                   <input type="hidden" name="favorite" value="unfavorite" />
@@ -80,6 +81,7 @@ const PurchaseOrdersTable = memo(
                 <fetcher.Form
                   method="post"
                   action={path.to.purchaseOrderFavorite}
+                  className="flex items-center"
                 >
                   <input type="hidden" name="id" value={row.original.id!} />
                   <input type="hidden" name="favorite" value="favorite" />

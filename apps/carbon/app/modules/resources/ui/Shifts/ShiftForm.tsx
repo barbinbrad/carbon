@@ -11,8 +11,9 @@ import {
   HStack,
   VStack,
 } from "@carbon/react";
+import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useNavigate } from "@remix-run/react";
-import { ValidatedForm } from "remix-validated-form";
+import type { z } from "zod";
 import {
   Boolean,
   Hidden,
@@ -23,11 +24,10 @@ import {
 } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { shiftValidator } from "~/modules/resources";
-import type { TypeOfValidator } from "~/types/validators";
 import { path } from "~/utils/path";
 
 type ShiftFormProps = {
-  initialValues: TypeOfValidator<typeof shiftValidator>;
+  initialValues: z.infer<typeof shiftValidator>;
 };
 
 const ShiftForm = ({ initialValues }: ShiftFormProps) => {

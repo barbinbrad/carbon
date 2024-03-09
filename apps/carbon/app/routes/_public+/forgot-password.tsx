@@ -5,6 +5,11 @@ import {
   Button,
   VStack,
 } from "@carbon/react";
+import {
+  ValidatedForm,
+  validationError,
+  validator,
+} from "@carbon/remix-validated-form";
 import type {
   ActionFunctionArgs,
   LoaderFunctionArgs,
@@ -13,7 +18,6 @@ import type {
 import { json, redirect } from "@remix-run/node";
 import { Link, useActionData } from "@remix-run/react";
 import { LuAlertCircle, LuCheckCircle } from "react-icons/lu";
-import { ValidatedForm, validationError } from "remix-validated-form";
 
 import { Input, Submit } from "~/components/Form";
 import { getUserByEmail } from "~/modules/users/users.server";
@@ -40,7 +44,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export async function action({ request }: ActionFunctionArgs): FormActionData {
   assertIsPost(request);
-  const validation = await forgotPasswordValidator.validate(
+  const validation = await validator(forgotPasswordValidator).validate(
     await request.formData()
   );
 

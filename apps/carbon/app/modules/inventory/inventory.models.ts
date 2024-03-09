@@ -1,4 +1,3 @@
-import { withZod } from "@remix-validated-form/with-zod";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
 
@@ -17,31 +16,27 @@ export const receiptSourceDocumentType = [
 
 export const receiptStatusType = ["Draft", "Pending", "Posted"] as const;
 
-export const receiptValidator = withZod(
-  z.object({
-    id: z.string().min(1),
-    receiptId: z.string().min(1, { message: "Receipt ID is required" }),
-    locationId: zfd.text(z.string().optional()),
-    sourceDocument: z.enum(receiptSourceDocumentType).optional(),
-    sourceDocumentId: zfd.text(
-      z.string().min(1, { message: "Source Document ID is required" })
-    ),
-    externalDocumentId: zfd.text(z.string().optional()),
-    sourceDocumentReadableId: zfd.text(z.string().optional()),
-    supplierId: zfd.text(z.string().optional()),
-  })
-);
+export const receiptValidator = z.object({
+  id: z.string().min(1),
+  receiptId: z.string().min(1, { message: "Receipt ID is required" }),
+  locationId: zfd.text(z.string().optional()),
+  sourceDocument: z.enum(receiptSourceDocumentType).optional(),
+  sourceDocumentId: zfd.text(
+    z.string().min(1, { message: "Source Document ID is required" })
+  ),
+  externalDocumentId: zfd.text(z.string().optional()),
+  sourceDocumentReadableId: zfd.text(z.string().optional()),
+  supplierId: zfd.text(z.string().optional()),
+});
 
-export const shippingMethodValidator = withZod(
-  z.object({
-    id: zfd.text(z.string().optional()),
-    name: z.string().min(1, { message: "Name is required" }),
-    carrier: z.enum(["UPS", "FedEx", "USPS", "DHL", "Other"], {
-      errorMap: (issue, ctx) => ({
-        message: "Carrier is required",
-      }),
+export const shippingMethodValidator = z.object({
+  id: zfd.text(z.string().optional()),
+  name: z.string().min(1, { message: "Name is required" }),
+  carrier: z.enum(["UPS", "FedEx", "USPS", "DHL", "Other"], {
+    errorMap: (issue, ctx) => ({
+      message: "Carrier is required",
     }),
-    carrierAccountId: zfd.text(z.string().optional()),
-    trackingUrl: zfd.text(z.string().optional()),
-  })
-);
+  }),
+  carrierAccountId: zfd.text(z.string().optional()),
+  trackingUrl: zfd.text(z.string().optional()),
+});

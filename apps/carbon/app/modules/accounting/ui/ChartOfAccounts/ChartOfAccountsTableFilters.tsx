@@ -39,7 +39,7 @@ const ChartOfAccountsTableFilters = () => {
         />
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="solid" leftIcon={<MdCalendarMonth />}>
+            <Button variant="secondary" leftIcon={<MdCalendarMonth />}>
               Date Range
             </Button>
           </PopoverTrigger>

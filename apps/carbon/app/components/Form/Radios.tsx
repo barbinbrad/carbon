@@ -5,8 +5,8 @@ import {
   RadioGroup,
   RadioGroupItem,
 } from "@carbon/react";
+import { useField } from "@carbon/remix-validated-form";
 import { useId } from "react";
-import { useField } from "remix-validated-form";
 
 type RadiosProps = {
   name: string;

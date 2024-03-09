@@ -1,10 +1,10 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import { validationError } from "remix-validated-form";
 import { deactivateUsersValidator } from "~/modules/users";
 import { deactivateUser } from "~/modules/users/users.server";
 import type { UserAdminQueueData } from "~/queues";
-import { userAdminQueue, UserAdminQueueType } from "~/queues";
+import { UserAdminQueueType, userAdminQueue } from "~/queues";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session.server";
 import { safeRedirect } from "~/utils/http";
@@ -15,7 +15,7 @@ export async function action({ request }: ActionFunctionArgs) {
     delete: "users",
   });
 
-  const validation = await deactivateUsersValidator.validate(
+  const validation = await validator(deactivateUsersValidator).validate(
     await request.formData()
   );
 

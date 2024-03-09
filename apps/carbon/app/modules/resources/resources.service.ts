@@ -1,8 +1,8 @@
 import type { Database } from "@carbon/database";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import type { z } from "zod";
 import type { DataType, Employee } from "~/modules/users";
 import { getEmployees } from "~/modules/users";
-import type { TypeOfValidator } from "~/types/validators";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
 import { sanitize } from "~/utils/supabase";
@@ -521,6 +521,17 @@ export async function getLocations(
 
 export async function getLocationsList(client: SupabaseClient<Database>) {
   return client.from("location").select(`id, name`).order("name");
+}
+
+export async function getPartnerBySupplierId(
+  client: SupabaseClient<Database>,
+  partnerId: string
+) {
+  return client
+    .from("partners")
+    .select("*")
+    .eq("supplierLocationId", partnerId)
+    .single();
 }
 
 export async function getPartner(
@@ -1073,7 +1084,7 @@ export async function upsertEmployeeAbility(
 export async function upsertEmployeeJob(
   client: SupabaseClient<Database>,
   employeeId: string,
-  employeeJob: TypeOfValidator<typeof employeeJobValidator>
+  employeeJob: z.infer<typeof employeeJobValidator>
 ) {
   return client
     .from("employeeJob")
@@ -1083,10 +1094,10 @@ export async function upsertEmployeeJob(
 export async function upsertEquipment(
   client: SupabaseClient<Database>,
   equipment:
-    | (Omit<TypeOfValidator<typeof equipmentValidator>, "id"> & {
+    | (Omit<z.infer<typeof equipmentValidator>, "id"> & {
         createdBy: string;
       })
-    | (Omit<TypeOfValidator<typeof equipmentValidator>, "id"> & {
+    | (Omit<z.infer<typeof equipmentValidator>, "id"> & {
         id: string;
         updatedBy: string;
       })
@@ -1102,10 +1113,10 @@ export async function upsertEquipment(
 export async function upsertEquipmentType(
   client: SupabaseClient<Database>,
   equipmentType:
-    | (Omit<TypeOfValidator<typeof equipmentTypeValidator>, "id"> & {
+    | (Omit<z.infer<typeof equipmentTypeValidator>, "id"> & {
         createdBy: string;
       })
-    | (Omit<TypeOfValidator<typeof equipmentTypeValidator>, "id"> & {
+    | (Omit<z.infer<typeof equipmentTypeValidator>, "id"> & {
         id: string;
         updatedBy: string;
       })
@@ -1148,10 +1159,10 @@ export async function upsertHoliday(
 export async function upsertLocation(
   client: SupabaseClient<Database>,
   location:
-    | (Omit<TypeOfValidator<typeof locationValidator>, "id"> & {
+    | (Omit<z.infer<typeof locationValidator>, "id"> & {
         createdBy: string;
       })
-    | (Omit<TypeOfValidator<typeof locationValidator>, "id"> & {
+    | (Omit<z.infer<typeof locationValidator>, "id"> & {
         id: string;
         updatedBy: string;
       })
@@ -1168,10 +1179,10 @@ export async function upsertLocation(
 export async function upsertPartner(
   client: SupabaseClient<Database>,
   partner:
-    | (Omit<TypeOfValidator<typeof partnerValidator>, "supplierId"> & {
+    | (Omit<z.infer<typeof partnerValidator>, "supplierId"> & {
         createdBy: string;
       })
-    | (Omit<TypeOfValidator<typeof partnerValidator>, "supplierId"> & {
+    | (Omit<z.infer<typeof partnerValidator>, "supplierId"> & {
         updatedBy: string;
       })
 ) {
@@ -1244,10 +1255,10 @@ export async function upsertWorkCell(
 export async function upsertWorkCellType(
   client: SupabaseClient<Database>,
   workCellType:
-    | (Omit<TypeOfValidator<typeof workCellTypeValidator>, "id"> & {
+    | (Omit<z.infer<typeof workCellTypeValidator>, "id"> & {
         createdBy: string;
       })
-    | (Omit<TypeOfValidator<typeof workCellTypeValidator>, "id"> & {
+    | (Omit<z.infer<typeof workCellTypeValidator>, "id"> & {
         id: string;
         updatedBy: string;
       })

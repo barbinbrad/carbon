@@ -10,8 +10,9 @@ import {
   VStack,
 } from "@carbon/react";
 
+import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useState } from "react";
-import { ValidatedForm } from "remix-validated-form";
+import type { z } from "zod";
 import {
   Array,
   Boolean,
@@ -23,11 +24,10 @@ import {
 import { usePermissions } from "~/hooks";
 import { attributeValidator } from "~/modules/resources";
 import { DataType } from "~/modules/users";
-import type { TypeOfValidator } from "~/types/validators";
 import { path } from "~/utils/path";
 
 type AttributeFormProps = {
-  initialValues: TypeOfValidator<typeof attributeValidator>;
+  initialValues: z.infer<typeof attributeValidator>;
   dataTypes: {
     id: number;
     label: string;

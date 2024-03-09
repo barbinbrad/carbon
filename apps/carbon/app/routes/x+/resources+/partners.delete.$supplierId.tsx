@@ -2,7 +2,7 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData, useNavigate } from "@remix-run/react";
 import { ConfirmDelete } from "~/components/Modals";
-import { deletePartner, getPartner } from "~/modules/resources";
+import { deletePartner, getPartnerBySupplierId } from "~/modules/resources";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session.server";
 import { notFound } from "~/utils/http";
@@ -18,7 +18,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const { supplierId } = params;
   if (!supplierId) throw notFound("supplierId not found");
 
-  const partner = await getPartner(client, supplierId);
+  const partner = await getPartnerBySupplierId(client, supplierId);
   if (partner.error) {
     return redirect(
       path.to.partners,

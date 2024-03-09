@@ -1,6 +1,6 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import { validationError } from "remix-validated-form";
 import {
   accountSubcategoryValidator,
   upsertAccountSubcategory,
@@ -20,7 +20,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { subcategoryId } = params;
   if (!subcategoryId) throw new Error("subcategoryId not found");
 
-  const validation = await accountSubcategoryValidator.validate(
+  const validation = await validator(accountSubcategoryValidator).validate(
     await request.formData()
   );
 

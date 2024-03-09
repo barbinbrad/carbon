@@ -1,7 +1,7 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { useParams } from "@remix-run/react";
-import { validationError } from "remix-validated-form";
 import { useRouteData } from "~/hooks";
 import type { PurchaseOrder } from "~/modules/purchasing";
 import {
@@ -25,7 +25,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   if (!orderId) throw new Error("Could not find orderId");
 
   // validate with purchasingValidator
-  const validation = await purchaseOrderValidator.validate(
+  const validation = await validator(purchaseOrderValidator).validate(
     await request.formData()
   );
 

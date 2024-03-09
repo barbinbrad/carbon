@@ -9,16 +9,16 @@ import {
   HStack,
   VStack,
 } from "@carbon/react";
+import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useNavigate } from "@remix-run/react";
-import { ValidatedForm } from "remix-validated-form";
+import type { z } from "zod";
 import { Hidden, Input, Submit, Timezone } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { locationValidator } from "~/modules/resources";
-import type { TypeOfValidator } from "~/types/validators";
 import { path } from "~/utils/path";
 
 type LocationFormProps = {
-  initialValues: TypeOfValidator<typeof locationValidator>;
+  initialValues: z.infer<typeof locationValidator>;
 };
 
 const LocationForm = ({ initialValues }: LocationFormProps) => {

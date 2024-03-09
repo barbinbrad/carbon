@@ -4,9 +4,9 @@ import {
   FormErrorMessage,
   useEditor,
 } from "@carbon/react";
+import { useControlField, useField } from "@carbon/remix-validated-form";
 import type { ComponentProps } from "react";
 import { useEffect } from "react";
-import { useControlField, useField } from "remix-validated-form";
 
 type RichTextProps = Omit<ComponentProps<typeof Editor>, "editor"> & {
   name: string;

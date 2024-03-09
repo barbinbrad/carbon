@@ -1,7 +1,7 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData, useNavigate } from "@remix-run/react";
-import { validationError } from "remix-validated-form";
 import {
   ExchangeRatesForm,
   apiKey,
@@ -48,13 +48,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
   });
 }
 
-export async function action({ request, params }: ActionFunctionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   assertIsPost(request);
   const { client, userId } = await requirePermissions(request, {
     update: "settings",
   });
 
-  const validation = await exchangeRatesFormValidator.validate(
+  const validation = await validator(exchangeRatesFormValidator).validate(
     await request.formData()
   );
 

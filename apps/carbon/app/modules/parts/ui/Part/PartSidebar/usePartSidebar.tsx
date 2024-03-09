@@ -14,6 +14,7 @@ export function usePartSidebar(replenishment: PartReplenishmentSystem) {
       name: "Details",
       to: "",
       icon: BsBank,
+      shortcut: "Command+Shift+d",
     },
     {
       name: "Purchasing",
@@ -21,6 +22,7 @@ export function usePartSidebar(replenishment: PartReplenishmentSystem) {
       isDisabled: replenishment === "Make",
       role: ["employee", "supplier"],
       icon: BsCartDash,
+      shortcut: "Command+Shift+p",
     },
     {
       name: "Suppliers",
@@ -28,6 +30,7 @@ export function usePartSidebar(replenishment: PartReplenishmentSystem) {
       isDisabled: replenishment === "Make",
       role: ["employee", "supplier"],
       icon: PiShareNetworkFill,
+      shortcut: "Command+Shift+s",
     },
     {
       name: "Manufacturing",
@@ -35,30 +38,35 @@ export function usePartSidebar(replenishment: PartReplenishmentSystem) {
       isDisabled: replenishment === "Buy",
       role: ["employee"],
       icon: BiListCheck,
+      shortcut: "Command+Shift+m",
     },
     {
       name: "Costing",
       to: "costing",
       role: ["employee", "supplier"],
       icon: IoPricetagsOutline,
+      shortcut: "Command+Shift+c",
     },
     {
       name: "Planning",
       to: "planning",
       role: ["employee"],
       icon: BsBarChartLineFill,
+      shortcut: "Command+Shift+p",
     },
     {
       name: "Inventory",
       to: "inventory",
       role: ["employee", "supplier"],
       icon: HiOutlineCube,
+      shortcut: "Command+Shift+i",
     },
     {
       name: "Sale Price",
       to: "sale-price",
       role: ["employee", "customer"],
       icon: PiMoneyFill,
+      shortcut: "Command+Shift+x",
     },
   ].filter(
     (item) =>

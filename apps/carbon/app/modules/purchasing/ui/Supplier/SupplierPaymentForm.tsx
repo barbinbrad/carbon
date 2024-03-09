@@ -7,8 +7,9 @@ import {
   HStack,
   VStack,
 } from "@carbon/react";
+import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useState } from "react";
-import { ValidatedForm } from "remix-validated-form";
+import type { z } from "zod";
 import {
   Currency,
   Hidden,
@@ -21,11 +22,10 @@ import {
 import { usePermissions, useRouteData } from "~/hooks";
 import { supplierPaymentValidator } from "~/modules/purchasing";
 import type { ListItem } from "~/types";
-import type { TypeOfValidator } from "~/types/validators";
 import { path } from "~/utils/path";
 
 type SupplierPaymentFormProps = {
-  initialValues: TypeOfValidator<typeof supplierPaymentValidator>;
+  initialValues: z.infer<typeof supplierPaymentValidator>;
 };
 
 const SupplierPaymentForm = ({ initialValues }: SupplierPaymentFormProps) => {

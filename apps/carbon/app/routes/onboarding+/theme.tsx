@@ -10,13 +10,17 @@ import {
   VStack,
   cn,
 } from "@carbon/react";
+import {
+  ValidatedForm,
+  validationError,
+  validator,
+} from "@carbon/remix-validated-form";
 import { themes, type Theme } from "@carbon/utils";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import { RxCheck } from "react-icons/rx";
-import { ValidatedForm, validationError } from "remix-validated-form";
 import { Hidden, Submit } from "~/components/Form";
 import { useOnboarding } from "~/hooks";
 import { useMode } from "~/hooks/useMode";
@@ -53,7 +57,7 @@ export async function action({ request }: ActionFunctionArgs) {
   });
   const formData = await request.formData();
 
-  const validation = await themeValidator.validate(formData);
+  const validation = await validator(themeValidator).validate(formData);
 
   if (validation.error) {
     return validationError(validation.error);

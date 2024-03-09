@@ -1,7 +1,7 @@
 import { VStack } from "@carbon/react";
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { validationError } from "remix-validated-form";
 import { useRouteData } from "~/hooks";
 import type { Company as CompanyType } from "~/modules/settings";
 import {
@@ -31,7 +31,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
 
   if (formData.get("intent") === "about") {
-    const validation = await companyValidator.validate(formData);
+    const validation = await validator(companyValidator).validate(formData);
 
     if (validation.error) {
       return validationError(validation.error);

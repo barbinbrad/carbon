@@ -1,7 +1,7 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { validationError } from "remix-validated-form";
 import {
   CustomerContactForm,
   customerContactValidator,
@@ -49,7 +49,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   if (!customerId) throw notFound("customerId not found");
   if (!customerContactId) throw notFound("customerContactId not found");
 
-  const validation = await customerContactValidator.validate(
+  const validation = await validator(customerContactValidator).validate(
     await request.formData()
   );
 

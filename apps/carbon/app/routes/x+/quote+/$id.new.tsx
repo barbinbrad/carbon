@@ -1,7 +1,7 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { useParams } from "@remix-run/react";
-import { validationError } from "remix-validated-form";
 import {
   QuotationLineForm,
   insertQuoteLineQuantity,
@@ -23,7 +23,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { id: quoteId } = params;
   if (!quoteId) throw new Error("Could not find id");
 
-  const validation = await quotationLineValidator.validate(
+  const validation = await validator(quotationLineValidator).validate(
     await request.formData()
   );
 

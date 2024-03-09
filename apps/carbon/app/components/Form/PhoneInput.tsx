@@ -1,5 +1,3 @@
-import * as ReactPhoneInput from "react-phone-number-input";
-import flags from "react-phone-number-input/flags";
 import type { InputProps } from "@carbon/react";
 import {
   Button,
@@ -18,14 +16,16 @@ import {
   PopoverTrigger,
   cn,
 } from "@carbon/react";
-import { RxCaretSort, RxCheck } from "react-icons/rx";
-import { useControlField, useField } from "remix-validated-form";
+import { useControlField, useField } from "@carbon/remix-validated-form";
 import type {
   ElementRef,
   ForwardRefExoticComponent,
   InputHTMLAttributes,
 } from "react";
 import { forwardRef, useCallback } from "react";
+import { RxCaretSort, RxCheck } from "react-icons/rx";
+import * as ReactPhoneInput from "react-phone-number-input";
+import flags from "react-phone-number-input/flags";
 
 const PhoneInputComponent = ReactPhoneInput.default;
 

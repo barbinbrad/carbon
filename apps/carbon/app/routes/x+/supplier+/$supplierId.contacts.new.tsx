@@ -1,6 +1,6 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import { validationError } from "remix-validated-form";
 import { getSupabaseServiceRole } from "~/lib/supabase";
 import {
   SupplierContactForm,
@@ -25,7 +25,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { supplierId } = params;
   if (!supplierId) throw notFound("supplierId not found");
 
-  const validation = await supplierContactValidator.validate(
+  const validation = await validator(supplierContactValidator).validate(
     await request.formData()
   );
 

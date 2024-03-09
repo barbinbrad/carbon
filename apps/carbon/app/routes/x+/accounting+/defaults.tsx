@@ -1,8 +1,8 @@
 import { VStack } from "@carbon/react";
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { validationError } from "remix-validated-form";
 import { PageTitle } from "~/components/Layout";
 import { useRouteData } from "~/hooks";
 import type { AccountListItem } from "~/modules/accounting";
@@ -52,7 +52,7 @@ export async function action({ request }: ActionFunctionArgs) {
     create: "accounting",
   });
 
-  const validation = await defaultAcountValidator.validate(
+  const validation = await validator(defaultAcountValidator).validate(
     await request.formData()
   );
 
@@ -88,7 +88,7 @@ export default function AccountDefaultsRoute() {
   }>(path.to.accounting);
 
   return (
-    <VStack className="h-full p-4 overflow-y-auto">
+    <VStack className="bg-background h-full p-4 overflow-y-auto">
       <PageTitle
         title="Account Defaults"
         subtitle="These accounts will be used to prepopulate posting grous when a new customer type, supplier type, part group, or location is created."

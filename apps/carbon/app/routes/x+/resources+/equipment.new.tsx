@@ -1,7 +1,7 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { useNavigate } from "@remix-run/react";
-import { validationError } from "remix-validated-form";
 import {
   EquipmentTypeForm,
   equipmentTypeValidator,
@@ -19,7 +19,7 @@ export async function action({ request }: ActionFunctionArgs) {
     update: "resources",
   });
 
-  const validation = await equipmentTypeValidator.validate(
+  const validation = await validator(equipmentTypeValidator).validate(
     await request.formData()
   );
 

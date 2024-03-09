@@ -10,18 +10,18 @@ import {
   HStack,
   VStack,
 } from "@carbon/react";
+import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useNavigate } from "@remix-run/react";
 import { useState } from "react";
-import { ValidatedForm } from "remix-validated-form";
+import type { z } from "zod";
 import { Hidden, Input, Number, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { sequenceValidator } from "~/modules/settings";
-import type { TypeOfValidator } from "~/types/validators";
 import { path } from "~/utils/path";
 import { interpolateSequenceDate } from "~/utils/string";
 
 type SequenceFormProps = {
-  initialValues: TypeOfValidator<typeof sequenceValidator> & {
+  initialValues: z.infer<typeof sequenceValidator> & {
     name: string;
   };
 };

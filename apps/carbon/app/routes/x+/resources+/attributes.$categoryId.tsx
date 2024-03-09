@@ -1,7 +1,7 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData, useNavigate } from "@remix-run/react";
-import { validationError } from "remix-validated-form";
 import {
   AttributeCategoryForm,
   attributeCategoryValidator,
@@ -43,7 +43,7 @@ export async function action({ request }: ActionFunctionArgs) {
     update: "resources",
   });
 
-  const validation = await attributeCategoryValidator.validate(
+  const validation = await validator(attributeCategoryValidator).validate(
     await request.formData()
   );
 

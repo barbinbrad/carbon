@@ -9,8 +9,8 @@ import {
   InputLeftAddon,
   InputRightAddon,
 } from "@carbon/react";
+import { useField } from "@carbon/remix-validated-form";
 import { forwardRef } from "react";
-import { useField } from "remix-validated-form";
 
 type FormInputProps = InputProps & {
   name: string;

@@ -8,8 +8,9 @@ import {
   VStack,
   cn,
 } from "@carbon/react";
+import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useState } from "react";
-import { ValidatedForm } from "remix-validated-form";
+import type { z } from "zod";
 import {
   Boolean,
   Combobox,
@@ -23,11 +24,10 @@ import { usePermissions, useRouteData } from "~/hooks";
 import { useSupabase } from "~/lib/supabase";
 import { serviceType, serviceValidator } from "~/modules/parts";
 import type { ListItem } from "~/types";
-import type { TypeOfValidator } from "~/types/validators";
 import { path } from "~/utils/path";
 
 type ServiceFormProps = {
-  initialValues: TypeOfValidator<typeof serviceValidator>;
+  initialValues: z.infer<typeof serviceValidator>;
 };
 
 const useNextServiceIdShortcut = () => {

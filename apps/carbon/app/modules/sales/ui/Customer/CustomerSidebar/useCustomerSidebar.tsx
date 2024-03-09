@@ -17,9 +17,10 @@ export function useCustomerSidebar({ contacts, locations }: Props) {
   const permissions = usePermissions();
   return [
     {
-      name: "Overview",
+      name: "Details",
       to: "",
       icon: BsBank,
+      shortcut: "Command+Shift+d",
     },
     {
       name: "Contacts",
@@ -27,6 +28,7 @@ export function useCustomerSidebar({ contacts, locations }: Props) {
       role: ["employee"],
       count: contacts,
       icon: BsFillPersonLinesFill,
+      shortcut: "Command+Shift+c",
     },
     {
       name: "Locations",
@@ -34,18 +36,21 @@ export function useCustomerSidebar({ contacts, locations }: Props) {
       role: ["employee", "customer"],
       count: locations,
       icon: BsFillPinMapFill,
+      shortcut: "Command+Shift+l",
     },
     {
       name: "Payments",
       to: "payments",
       role: ["employee"],
       icon: BsCreditCard,
+      shortcut: "Command+Shift+p",
     },
     {
       name: "Shipping",
       to: "shipping",
       role: ["employee"],
       icon: BsTruck,
+      shortcut: "Command+Shift+s",
     },
   ].filter(
     (item) =>

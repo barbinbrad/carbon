@@ -1,6 +1,6 @@
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import { validationError } from "remix-validated-form";
 import { CreateEmployeeModal, createEmployeeValidator } from "~/modules/users";
 import { createEmployeeAccount } from "~/modules/users/users.server";
 import { requirePermissions } from "~/services/auth";
@@ -14,7 +14,7 @@ export async function action({ request }: ActionFunctionArgs) {
     create: "users",
   });
 
-  const validation = await createEmployeeValidator.validate(
+  const validation = await validator(createEmployeeValidator).validate(
     await request.formData()
   );
 

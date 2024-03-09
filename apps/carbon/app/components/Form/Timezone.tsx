@@ -13,9 +13,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@carbon/react";
+import { useControlField, useField } from "@carbon/remix-validated-form";
 import { timezones } from "@carbon/utils";
 import { MdClose } from "react-icons/md";
-import { useControlField, useField } from "remix-validated-form";
 import type { SelectProps } from "./Select";
 
 type TimezoneProps = Omit<SelectProps, "options"> & {

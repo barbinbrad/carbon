@@ -1,8 +1,7 @@
-import type { OptionBase } from "@carbon/react";
+import type { ValidationErrorResponseData } from "@carbon/remix-validated-form";
 import type { TypedResponse } from "@remix-run/node";
 import type { ReactElement } from "react";
 import type { IconType } from "react-icons";
-import type { ValidationErrorResponseData } from "remix-validated-form";
 
 export type Action = {
   label: string;
@@ -55,7 +54,8 @@ export type RouteGroup = {
   routes: Route[];
 };
 
-export interface SelectOption extends OptionBase {
+export interface SelectOption {
   label: string;
   value: string;
+  helper?: string;
 }

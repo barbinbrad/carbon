@@ -1,8 +1,8 @@
 import { Outlet, json, redirect, useLoaderData } from "@remix-run/react";
 import QuotationAssemblyForm from "~/modules/sales/ui/Quotation/QuotationAssemblyForm";
 
+import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { validationError } from "remix-validated-form";
 import {
   getQuoteAssembly,
   quotationAssemblyValidator,
@@ -50,7 +50,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   if (!quoteLineId) throw new Error("Could not find quoteLineId");
   if (!assemblyId) throw new Error("Could not find assemblyId");
 
-  const validation = await quotationAssemblyValidator.validate(
+  const validation = await validator(quotationAssemblyValidator).validate(
     await request.formData()
   );
 

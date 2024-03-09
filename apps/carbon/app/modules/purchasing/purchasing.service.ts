@@ -1,8 +1,8 @@
 import type { Database } from "@carbon/database";
 import { getLocalTimeZone, today } from "@internationalized/date";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import type { z } from "zod";
 import { getEmployeeJob } from "~/modules/resources";
-import type { TypeOfValidator } from "~/types/validators";
 import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
 import { sanitize } from "~/utils/supabase";
@@ -200,7 +200,8 @@ export async function getPurchaseOrderLines(
   return client
     .from("purchaseOrderLines")
     .select("*")
-    .eq("purchaseOrderId", purchaseOrderId);
+    .eq("purchaseOrderId", purchaseOrderId)
+    .order("createdAt", { ascending: true });
 }
 
 export async function getPurchaseOrderLine(
@@ -429,10 +430,10 @@ export async function getSupplierTypesList(client: SupabaseClient<Database>) {
 export async function insertSupplier(
   client: SupabaseClient<Database>,
   supplier:
-    | (Omit<TypeOfValidator<typeof supplierValidator>, "id"> & {
+    | (Omit<z.infer<typeof supplierValidator>, "id"> & {
         createdBy: string;
       })
-    | (Omit<TypeOfValidator<typeof supplierValidator>, "id"> & {
+    | (Omit<z.infer<typeof supplierValidator>, "id"> & {
         id: string;
         updatedBy: string;
       })
@@ -444,7 +445,7 @@ export async function insertSupplierContact(
   client: SupabaseClient<Database>,
   supplierContact: {
     supplierId: string;
-    contact: TypeOfValidator<typeof supplierContactValidator>;
+    contact: z.infer<typeof supplierContactValidator>;
   }
 ) {
   const insertContact = await client
@@ -597,7 +598,7 @@ export async function updateRequestForQuoteFavorite(
 
 export async function updateSupplier(
   client: SupabaseClient<Database>,
-  supplier: Omit<TypeOfValidator<typeof supplierValidator>, "id"> & {
+  supplier: Omit<z.infer<typeof supplierValidator>, "id"> & {
     id: string;
     updatedBy: string;
   }
@@ -666,7 +667,7 @@ export async function updateSupplierLocation(
 
 export async function updateSupplierPayment(
   client: SupabaseClient<Database>,
-  supplierPayment: TypeOfValidator<typeof supplierPaymentValidator> & {
+  supplierPayment: z.infer<typeof supplierPaymentValidator> & {
     updatedBy: string;
   }
 ) {
@@ -678,7 +679,7 @@ export async function updateSupplierPayment(
 
 export async function updateSupplierShipping(
   client: SupabaseClient<Database>,
-  supplierShipping: TypeOfValidator<typeof supplierShippingValidator> & {
+  supplierShipping: z.infer<typeof supplierShippingValidator> & {
     updatedBy: string;
   }
 ) {
@@ -692,14 +693,14 @@ export async function upsertPurchaseOrder(
   client: SupabaseClient<Database>,
   purchaseOrder:
     | (Omit<
-        TypeOfValidator<typeof purchaseOrderValidator>,
+        z.infer<typeof purchaseOrderValidator>,
         "id" | "purchaseOrderId"
       > & {
         purchaseOrderId: string;
         createdBy: string;
       })
     | (Omit<
-        TypeOfValidator<typeof purchaseOrderValidator>,
+        z.infer<typeof purchaseOrderValidator>,
         "id" | "purchaseOrderId"
       > & {
         id: string;
@@ -781,10 +782,10 @@ export async function upsertPurchaseOrder(
 export async function upsertPurchaseOrderDelivery(
   client: SupabaseClient<Database>,
   purchaseOrderDelivery:
-    | (TypeOfValidator<typeof purchaseOrderDeliveryValidator> & {
+    | (z.infer<typeof purchaseOrderDeliveryValidator> & {
         createdBy: string;
       })
-    | (TypeOfValidator<typeof purchaseOrderDeliveryValidator> & {
+    | (z.infer<typeof purchaseOrderDeliveryValidator> & {
         id: string;
         updatedBy: string;
       })
@@ -807,10 +808,10 @@ export async function upsertPurchaseOrderDelivery(
 export async function upsertPurchaseOrderLine(
   client: SupabaseClient<Database>,
   purchaseOrderLine:
-    | (Omit<TypeOfValidator<typeof purchaseOrderLineValidator>, "id"> & {
+    | (Omit<z.infer<typeof purchaseOrderLineValidator>, "id"> & {
         createdBy: string;
       })
-    | (Omit<TypeOfValidator<typeof purchaseOrderLineValidator>, "id"> & {
+    | (Omit<z.infer<typeof purchaseOrderLineValidator>, "id"> & {
         id: string;
         updatedBy: string;
       })
@@ -833,10 +834,10 @@ export async function upsertPurchaseOrderLine(
 export async function upsertPurchaseOrderPayment(
   client: SupabaseClient<Database>,
   purchaseOrderPayment:
-    | (TypeOfValidator<typeof purchaseOrderPaymentValidator> & {
+    | (z.infer<typeof purchaseOrderPaymentValidator> & {
         createdBy: string;
       })
-    | (TypeOfValidator<typeof purchaseOrderPaymentValidator> & {
+    | (z.infer<typeof purchaseOrderPaymentValidator> & {
         id: string;
         updatedBy: string;
       })
@@ -860,14 +861,14 @@ export async function upsertRequestForQuote(
   client: SupabaseClient<Database>,
   requestForQuote:
     | (Omit<
-        TypeOfValidator<typeof requestForQuoteValidator>,
+        z.infer<typeof requestForQuoteValidator>,
         "id" | "requestForQuoteId"
       > & {
         requestForQuoteId: string;
         createdBy: string;
       })
     | (Omit<
-        TypeOfValidator<typeof requestForQuoteValidator>,
+        z.infer<typeof requestForQuoteValidator>,
         "id" | "requestForQuoteId"
       > & {
         id: string;
@@ -891,10 +892,10 @@ export async function upsertRequestForQuote(
 export async function upsertSupplierType(
   client: SupabaseClient<Database>,
   supplierType:
-    | (Omit<TypeOfValidator<typeof supplierTypeValidator>, "id"> & {
+    | (Omit<z.infer<typeof supplierTypeValidator>, "id"> & {
         createdBy: string;
       })
-    | (Omit<TypeOfValidator<typeof supplierTypeValidator>, "id"> & {
+    | (Omit<z.infer<typeof supplierTypeValidator>, "id"> & {
         id: string;
         updatedBy: string;
       })

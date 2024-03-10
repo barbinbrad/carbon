@@ -28,11 +28,15 @@ export async function getTableSchema<T>(
       ? `${SUPABASE_STUDIO_URL}/api/pg-meta/default/tables?id=${tableId}`
       : `${SUPABASE_API_URL}/platform/pg-meta/{project_ref_here}/tables?id=${tableId}`;
     const tableSchemaResponse = await fetch(`${tableSchemaEndpoint}`);
-    const response = await tableSchemaResponse.json();
-    return response;
+    return {
+      data: await tableSchemaResponse.json(),
+      error: null,
+    };
   } catch (error) {
-    console.log(error);
-    throw new Error("Could not fetch table schema");
+    return {
+      data: null,
+      error: error as Error,
+    };
   }
 }
 
@@ -52,10 +56,14 @@ export async function getViewSchema<T>(
       ? `${SUPABASE_STUDIO_URL}/api/pg-meta/default/views?id=${viewId}`
       : `${SUPABASE_API_URL}/platform/pg-meta/{project_ref_here}/views?id=${viewId}`;
     const viewSchemaResponse = await fetch(`${viewSchemaEndpoint}`);
-    const response = await viewSchemaResponse.json();
-    return response;
+    return {
+      data: await viewSchemaResponse.json(),
+      error: null,
+    };
   } catch (error) {
-    console.log(error);
-    throw new Error("Could not fetch view schema");
+    return {
+      data: null,
+      error: error as Error,
+    };
   }
 }

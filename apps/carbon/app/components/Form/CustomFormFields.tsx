@@ -9,13 +9,7 @@ import {
 } from "@carbon/react";
 import { ValidatedForm } from "@carbon/remix-validated-form";
 import { z } from "zod";
-import {
-  Boolean,
-  Hidden,
-  Number,
-  Select as SelectForm,
-  Submit,
-} from "~/components/Form";
+import { Hidden, Submit } from "~/components/Form";
 import { type useCustomFields } from "~/hooks/useCustomFields";
 
 type CustomFormFieldsProps = {
@@ -58,23 +52,6 @@ const CustomFormFields = ({ fields }: CustomFormFieldsProps) => {
                     </>
                   );
                 })}
-              <SelectForm
-                name="reorderingPolicy"
-                label="Reordering Policy"
-                options={[].map((policy) => ({
-                  label: policy,
-                  value: policy,
-                }))}
-              />
-              <Boolean name="critical" label="Critical" />
-              <Number
-                name="safetyStockQuantity"
-                label="Safety Stock Quantity"
-              />
-              <Number
-                name="safetyStockLeadTime"
-                label="Safety Stock Lead Time (Days)"
-              />
             </VStack>
           </div>
         </CardContent>

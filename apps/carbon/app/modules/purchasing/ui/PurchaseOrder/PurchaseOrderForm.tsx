@@ -22,7 +22,9 @@ import {
   SupplierLocation,
   TextArea,
 } from "~/components/Form";
+import CustomFormFields from "~/components/Form/CustomFormFields";
 import { usePermissions } from "~/hooks";
+import { useCustomFields } from "~/hooks/useCustomFields";
 import {
   purchaseOrderStatusType,
   purchaseOrderTypeType,
@@ -37,6 +39,7 @@ type PurchaseOrderFormProps = {
 
 const PurchaseOrderForm = ({ initialValues }: PurchaseOrderFormProps) => {
   const permissions = usePermissions();
+  const customFields = useCustomFields();
   const [supplier, setSupplier] = useState<string | undefined>(
     initialValues.supplierId
   );
@@ -124,7 +127,7 @@ const PurchaseOrderForm = ({ initialValues }: PurchaseOrderFormProps) => {
               {isEditing && (
                 <TextArea name="notes" label="Notes" readOnly={isSupplier} />
               )}
-              {/* <CustomFormFields table="purchaseOrder" />*/}
+              <CustomFormFields fields={customFields["purchaseOrder"]} />
             </div>
           </VStack>
         </CardContent>

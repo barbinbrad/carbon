@@ -66,7 +66,6 @@ export default function NewCustomerTypesRoute() {
   const navigate = useNavigate();
   const initialValues = {
     name: "",
-    color: "#000000",
   };
 
   return (

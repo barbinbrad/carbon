@@ -80,6 +80,7 @@ const SupplierLocationForm = ({
               <Input name="state" label="State" />
               <Input name="postalCode" label="Zip Code" />
               {/* Country dropdown */}
+              {/* <CustomFormFields table="supplierLocation" />*/}
             </VStack>
           </DrawerBody>
           <DrawerFooter>

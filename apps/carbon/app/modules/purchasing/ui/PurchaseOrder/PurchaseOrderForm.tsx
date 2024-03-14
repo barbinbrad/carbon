@@ -80,61 +80,51 @@ const PurchaseOrderForm = ({ initialValues }: PurchaseOrderFormProps) => {
                 isEditing ? "grid-cols-1 lg:grid-cols-3" : "grid-cols-1"
               )}
             >
-              <VStack>
-                <Supplier
-                  autoFocus={!isEditing}
-                  name="supplierId"
-                  label="Supplier"
-                  onChange={(newValue) =>
-                    setSupplier(newValue?.value as string | undefined)
-                  }
-                />
-
-                <SupplierLocation
-                  name="supplierLocationId"
-                  label="Supplier Location"
-                  supplier={supplier}
-                />
-                <SupplierContact
-                  name="supplierContactId"
-                  label="Supplier Contact"
-                  supplier={supplier}
-                />
-              </VStack>
-              <VStack>
-                <Input name="supplierReference" label="Supplier Order Number" />
-                <DatePicker
-                  name="orderDate"
-                  label="Order Date"
-                  isDisabled={isSupplier}
-                />
+              <Supplier
+                autoFocus={!isEditing}
+                name="supplierId"
+                label="Supplier"
+                onChange={(newValue) =>
+                  setSupplier(newValue?.value as string | undefined)
+                }
+              />
+              <Input name="supplierReference" label="Supplier Order Number" />
+              {isEditing && permissions.can("delete", "purchasing") && (
                 <Select
-                  name="type"
-                  label="Type"
-                  options={typeOptions}
-                  isReadOnly={true} // {isSupplier}
+                  name="status"
+                  label="Status"
+                  value={initialValues.status}
+                  options={statusOptions}
+                  isReadOnly={isSupplier}
                 />
-              </VStack>
-              <VStack>
-                {isEditing && (
-                  <>
-                    {permissions.can("delete", "purchasing") && (
-                      <Select
-                        name="status"
-                        label="Status"
-                        value={initialValues.status}
-                        options={statusOptions}
-                        isReadOnly={isSupplier}
-                      />
-                    )}
-                    <TextArea
-                      name="notes"
-                      label="Notes"
-                      readOnly={isSupplier}
-                    />
-                  </>
-                )}
-              </VStack>
+              )}
+              <SupplierLocation
+                name="supplierLocationId"
+                label="Supplier Location"
+                supplier={supplier}
+              />
+              <SupplierContact
+                name="supplierContactId"
+                label="Supplier Contact"
+                supplier={supplier}
+              />
+
+              <DatePicker
+                name="orderDate"
+                label="Order Date"
+                isDisabled={isSupplier}
+              />
+              <Select
+                name="type"
+                label="Type"
+                options={typeOptions}
+                isReadOnly={true} // {isSupplier}
+              />
+
+              {isEditing && (
+                <TextArea name="notes" label="Notes" readOnly={isSupplier} />
+              )}
+              {/* <CustomFormFields table="purchaseOrder" />*/}
             </div>
           </VStack>
         </CardContent>

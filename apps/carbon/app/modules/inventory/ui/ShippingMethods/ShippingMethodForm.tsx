@@ -82,6 +82,7 @@ const ShippingMethodForm = ({ initialValues }: ShippingMethodFormProps) => {
                 label="Tracking URL"
                 prefix="https://"
               />
+              {/* <CustomFormFields table="shippingMethod" />*/}
             </VStack>
           </DrawerBody>
           <DrawerFooter>

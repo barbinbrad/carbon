@@ -69,33 +69,27 @@ const RequestForQuoteForm = ({ initialValues }: RequestForQuoteFormProps) => {
                 isEditing ? "grid-cols-1 lg:grid-cols-3" : "grid-cols-1"
               )}
             >
-              <VStack>
-                <Input autoFocus={!isEditing} name="name" label="Name" />
-                <DatePicker name="receiptDate" label="Receipt Date" />
-                <DatePicker name="expirationDate" label="Expiration Date" />
-              </VStack>
-              <VStack>
-                <Location name="locationId" label="Location" />
-                {isEditing && (
-                  <>
-                    <Select
-                      name="status"
-                      label="Status"
-                      value={initialValues.status}
-                      options={statusOptions}
-                      isReadOnly={
-                        isSupplier || !permissions.can("delete", "purchasing")
-                      }
-                    />
+              <Input autoFocus={!isEditing} name="name" label="Name" />
+              <DatePicker name="receiptDate" label="Receipt Date" />
+              <DatePicker name="expirationDate" label="Expiration Date" />
 
-                    <TextArea
-                      name="notes"
-                      label="Notes"
-                      readOnly={isSupplier}
-                    />
-                  </>
-                )}
-              </VStack>
+              <Location name="locationId" label="Location" />
+              {isEditing && (
+                <>
+                  <Select
+                    name="status"
+                    label="Status"
+                    value={initialValues.status}
+                    options={statusOptions}
+                    isReadOnly={
+                      isSupplier || !permissions.can("delete", "purchasing")
+                    }
+                  />
+
+                  <TextArea name="notes" label="Notes" readOnly={isSupplier} />
+                </>
+              )}
+              {/* <CustomFormFields table="requestForQuote" />*/}
             </div>
           </VStack>
         </CardContent>

@@ -42,7 +42,6 @@ export const deactivateUsersValidator = z.object({
 export const employeeTypeValidator = z.object({
   id: zfd.text(z.string().optional()),
   name: z.string().min(1, { message: "Name is required" }),
-  color: z.string(),
   data: z
     .string()
     .startsWith("[", { message: "Invalid JSON" })

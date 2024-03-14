@@ -154,72 +154,69 @@ const QuotationLineForm = ({ initialValues }: QuotationLineFormProps) => {
           <Hidden name="quoteId" />
           <Hidden name="unitOfMeasureCode" value={partData?.uom} />
           <VStack>
-            <div className="grid w-full gap-x-8 gap-y-2 grid-cols-1 lg:grid-cols-3">
-              <VStack>
-                <Part
-                  name="partId"
-                  label="Part"
-                  onChange={(value) => {
-                    onPartChange(value?.value as string);
-                  }}
-                />
+            <div className="grid w-full gap-x-8 gap-y-4 grid-cols-1 lg:grid-cols-3">
+              <Part
+                name="partId"
+                label="Part"
+                onChange={(value) => {
+                  onPartChange(value?.value as string);
+                }}
+              />
 
-                <InputControlled
-                  name="description"
-                  label="Description"
-                  value={partData.description}
-                  onChange={(newValue) =>
-                    setPartData((d) => ({ ...d, description: newValue }))
-                  }
-                />
-              </VStack>
-              <VStack>
-                <Input name="customerPartId" label="Customer Part ID" />
-                <Input
-                  name="customerPartRevision"
-                  label="Customer Part Revision"
-                />
-              </VStack>
-              <VStack>
-                <SelectControlled
-                  name="replenishmentSystem"
-                  label="Replenishment System"
-                  options={
-                    partData.replenishmentSystem === "Buy"
-                      ? [{ label: "Buy", value: "Buy" }]
-                      : partData.replenishmentSystem === "Make"
-                      ? [{ label: "Make", value: "Make" }]
-                      : [
-                          {
-                            label: "Buy",
-                            value: "Buy",
-                          },
-                          {
-                            label: "Make",
-                            value: "Make",
-                          },
-                        ]
-                  }
-                  value={partData.replenishmentSystem}
-                  onChange={(newValue) => {
-                    if (newValue)
-                      setPartData((d) => ({
-                        ...d,
-                        replenishmentSystem: newValue?.value,
-                      }));
-                  }}
-                />
+              <InputControlled
+                name="description"
+                label="Description"
+                value={partData.description}
+                onChange={(newValue) =>
+                  setPartData((d) => ({ ...d, description: newValue }))
+                }
+              />
 
-                <Select
-                  name="status"
-                  label="Status"
-                  options={quoteLineStatusType.map((s) => ({
-                    label: s,
-                    value: s,
-                  }))}
-                  className={cn(!isEditing && "sr-only")}
-                />
-              </VStack>
+              <SelectControlled
+                name="replenishmentSystem"
+                label="Replenishment System"
+                options={
+                  partData.replenishmentSystem === "Buy"
+                    ? [{ label: "Buy", value: "Buy" }]
+                    : partData.replenishmentSystem === "Make"
+                    ? [{ label: "Make", value: "Make" }]
+                    : [
+                        {
+                          label: "Buy",
+                          value: "Buy",
+                        },
+                        {
+                          label: "Make",
+                          value: "Make",
+                        },
+                      ]
+                }
+                value={partData.replenishmentSystem}
+                onChange={(newValue) => {
+                  if (newValue)
+                    setPartData((d) => ({
+                      ...d,
+                      replenishmentSystem: newValue?.value,
+                    }));
+                }}
+              />
+
+              <Input name="customerPartId" label="Customer Part ID" />
+              <Input
+                name="customerPartRevision"
+                label="Customer Part Revision"
+              />
+
+              <Select
+                name="status"
+                label="Line Status"
+                options={quoteLineStatusType.map((s) => ({
+                  label: s,
+                  value: s,
+                }))}
+                className={cn(!isEditing && "sr-only")}
+              />
+              {/* <CustomFormFields table="quoteLine" />*/}
             </div>
           </VStack>
         </CardContent>

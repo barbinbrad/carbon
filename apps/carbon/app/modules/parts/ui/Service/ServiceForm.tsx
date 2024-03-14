@@ -5,7 +5,6 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-  VStack,
   cn,
 } from "@carbon/react";
 import { ValidatedForm } from "@carbon/remix-validated-form";
@@ -119,38 +118,35 @@ const ServiceForm = ({ initialValues }: ServiceFormProps) => {
               isEditing ? "grid-cols-1 lg:grid-cols-3" : "grid-cols-1"
             )}
           >
-            <VStack>
-              {isEditing ? (
-                <Input name="id" label="Service ID" isReadOnly />
-              ) : (
-                <InputControlled
-                  name="id"
-                  label="Service ID"
-                  helperText="Use ... to get the next service ID"
-                  value={serviceId}
-                  onChange={onServiceIdChange}
-                  isDisabled={loading}
-                />
-              )}
-              <Input name="name" label="Name" />
-              <TextArea name="description" label="Description" />
-            </VStack>
-            <VStack>
-              <Select
-                name="serviceType"
-                label="Service Type"
-                options={serviceTypeOptions}
+            {isEditing ? (
+              <Input name="id" label="Service ID" isReadOnly />
+            ) : (
+              <InputControlled
+                name="id"
+                label="Service ID"
+                helperText="Use ... to get the next service ID"
+                value={serviceId}
+                onChange={onServiceIdChange}
+                isDisabled={loading}
               />
-              <Combobox
-                name="partGroupId"
-                label="Part Group"
-                options={partGroupOptions}
-              />
-            </VStack>
-            <VStack>
-              <Boolean name="blocked" label="Blocked" />
-              {isEditing && <Boolean name="active" label="Active" />}
-            </VStack>
+            )}
+            <Input name="name" label="Name" />
+            <Combobox
+              name="partGroupId"
+              label="Part Group"
+              options={partGroupOptions}
+            />
+            <TextArea name="description" label="Description" />
+
+            <Select
+              name="serviceType"
+              label="Service Type"
+              options={serviceTypeOptions}
+            />
+
+            <Boolean name="blocked" label="Blocked" />
+            {isEditing && <Boolean name="active" label="Active" />}
+            {/* <CustomFormFields table="service" />*/}
           </div>
         </CardContent>
         <CardFooter>

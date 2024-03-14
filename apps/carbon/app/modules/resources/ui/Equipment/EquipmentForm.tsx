@@ -140,6 +140,7 @@ const EquipmentForm = ({
                 minValue={0}
                 maxValue={100} // this seems like a reasonable max?
               />
+              {/* <CustomFormFields table="equipment" />*/}
             </VStack>
           </DrawerBody>
           <DrawerFooter>

@@ -125,6 +125,7 @@ const EmployeeAbilityForm = ({
                   <Hidden name="trainingDays" value={trainingDays} />
                 </>
               )}
+              {/* <CustomFormFields table="employeeAbility" />*/}
             </VStack>
           </DrawerBody>
           <DrawerFooter>

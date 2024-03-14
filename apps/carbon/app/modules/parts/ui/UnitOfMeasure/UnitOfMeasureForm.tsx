@@ -76,6 +76,7 @@ const UnitOfMeasureForm = ({
                   label="Code"
                   helperText="Unique, uppercase, without spaces"
                 />
+                {/* <CustomFormFields table="unitOfMeasure" />*/}
               </VStack>
             </ModalDrawerBody>
             <ModalDrawerFooter>

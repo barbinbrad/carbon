@@ -87,6 +87,7 @@ const WorkCellForm = ({
               <Location name="locationId" label="Location" />
               <Department name="departmentId" label="Department" />
               <DatePicker name="activeDate" label="Active Date" />
+              {/* <CustomFormFields table="workCell" />*/}
             </VStack>
           </DrawerBody>
           <DrawerFooter>

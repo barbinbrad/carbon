@@ -13,7 +13,7 @@ import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useNavigate } from "@remix-run/react";
 import { useState } from "react";
 import type { z } from "zod";
-import { Color, Hidden, Input, Submit } from "~/components/Form";
+import { Hidden, Input, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import type { Permission } from "~/modules/users";
 import { employeeTypeValidator } from "~/modules/users";
@@ -81,7 +81,6 @@ const EmployeeTypeForm = ({ initialValues }: EmployeeTypeFormProps) => {
             <Hidden name="id" />
             <VStack spacing={4}>
               <Input name="name" label="Employee Type" />
-              <Color name="color" label="Color" />
               <Hidden
                 name="data"
                 value={JSON.stringify(Object.values(permissions))}

@@ -116,6 +116,7 @@ const PartnerForm = ({ initialValues }: PartnerFormProps) => {
                 minValue={0}
                 maxValue={10000}
               />
+              {/* <CustomFormFields table="partner" />*/}
             </VStack>
           </DrawerBody>
           <DrawerFooter>

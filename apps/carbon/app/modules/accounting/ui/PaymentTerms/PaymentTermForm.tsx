@@ -99,6 +99,7 @@ const PaymentTermForm = ({ initialValues }: PaymentTermFormProps) => {
                 maxValue={100}
                 helperText="The percentage of the cash discount. Use 0 for no discount."
               />
+              {/* <CustomFormFields table="paymentTerm" />*/}
             </VStack>
           </DrawerBody>
           <DrawerFooter>

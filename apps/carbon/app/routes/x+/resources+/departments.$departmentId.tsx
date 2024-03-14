@@ -82,7 +82,6 @@ export default function DepartmentRoute() {
   const initialValues = {
     id: department.id,
     name: department.name,
-    color: department.color ?? "#000000",
     parentDepartmentId: department.parentDepartmentId ?? undefined,
   };
 

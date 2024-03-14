@@ -8,7 +8,6 @@ import {
   DrawerHeader,
   DrawerTitle,
   HStack,
-  VStack,
 } from "@carbon/react";
 import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useNavigate } from "@remix-run/react";
@@ -101,68 +100,61 @@ const ChartOfAccountForm = ({ initialValues }: ChartOfAccountFormProps) => {
           <DrawerBody>
             <Hidden name="id" />
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-2 w-full">
-              <VStack spacing={4}>
-                <Input name="number" label="Account Number" />
-                <Input name="name" label="Name" />
-                <Select
-                  name="type"
-                  label="Type"
-                  options={accountTypes.map((accountType) => ({
-                    label: accountType,
-                    value: accountType,
-                  }))}
-                />
-              </VStack>
-              <VStack spacing={4}>
-                <AccountCategory
-                  name="accountCategoryId"
-                  onChange={onAccountCategoryChange}
-                />
-                <AccountSubcategory
-                  name="accountSubcategoryId"
-                  accountCategoryId={accountCategoryId}
-                />
-                <ComboboxControlled
-                  name="incomeBalance"
-                  label="Income/Balance"
-                  options={incomeBalanceTypes.map((incomeBalance) => ({
-                    label: incomeBalance,
-                    value: incomeBalance,
-                  }))}
-                  value={incomeBalance}
-                  onChange={(newValue) => {
-                    if (newValue)
-                      setIncomeBalance(newValue.value as AccountIncomeBalance);
-                  }}
-                />
-              </VStack>
-              <VStack spacing={4}>
-                <ComboboxControlled
-                  name="class"
-                  label="Class"
-                  options={accountClassTypes.map((accountClass) => ({
-                    label: accountClass,
-                    value: accountClass,
-                  }))}
-                  value={accountClass}
-                  onChange={(newValue) => {
-                    if (newValue)
-                      setAccountClass(newValue.value as AccountClass);
-                  }}
-                />
-                <Select
-                  name="consolidatedRate"
-                  label="Consolidated Rate"
-                  options={consolidatedRateTypes.map(
-                    (consolidatedRateType) => ({
-                      label: consolidatedRateType,
-                      value: consolidatedRateType,
-                    })
-                  )}
-                />
-                <Boolean name="directPosting" label="Direct Posting" />
-              </VStack>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-4 w-full">
+              <Input name="number" label="Account Number" />
+              <Input name="name" label="Name" />
+              <Select
+                name="type"
+                label="Type"
+                options={accountTypes.map((accountType) => ({
+                  label: accountType,
+                  value: accountType,
+                }))}
+              />
+
+              <AccountCategory
+                name="accountCategoryId"
+                onChange={onAccountCategoryChange}
+              />
+              <AccountSubcategory
+                name="accountSubcategoryId"
+                accountCategoryId={accountCategoryId}
+              />
+              <ComboboxControlled
+                name="incomeBalance"
+                label="Income/Balance"
+                options={incomeBalanceTypes.map((incomeBalance) => ({
+                  label: incomeBalance,
+                  value: incomeBalance,
+                }))}
+                value={incomeBalance}
+                onChange={(newValue) => {
+                  if (newValue)
+                    setIncomeBalance(newValue.value as AccountIncomeBalance);
+                }}
+              />
+              <ComboboxControlled
+                name="class"
+                label="Class"
+                options={accountClassTypes.map((accountClass) => ({
+                  label: accountClass,
+                  value: accountClass,
+                }))}
+                value={accountClass}
+                onChange={(newValue) => {
+                  if (newValue) setAccountClass(newValue.value as AccountClass);
+                }}
+              />
+              <Select
+                name="consolidatedRate"
+                label="Consolidated Rate"
+                options={consolidatedRateTypes.map((consolidatedRateType) => ({
+                  label: consolidatedRateType,
+                  value: consolidatedRateType,
+                }))}
+              />
+              <Boolean name="directPosting" label="Direct Posting" />
+              {/* <CustomFormFields table="account" />*/}
             </div>
           </DrawerBody>
           <DrawerFooter>

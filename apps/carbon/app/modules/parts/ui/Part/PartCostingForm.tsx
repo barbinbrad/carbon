@@ -4,7 +4,6 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-  VStack,
 } from "@carbon/react";
 import { ValidatedForm } from "@carbon/remix-validated-form";
 import type { z } from "zod";
@@ -40,51 +39,49 @@ const PartCostingForm = ({ initialValues }: PartCostingFormProps) => {
         </CardHeader>
         <CardContent>
           <Hidden name="partId" />
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-2 w-full">
-            <VStack>
-              <Select
-                name="costingMethod"
-                label="Part Costing Method"
-                options={partCostingMethodOptions}
-              />
-              <Number
-                name="standardCost"
-                label="Standard Cost"
-                formatOptions={{
-                  style: "currency",
-                  currency,
-                }}
-              />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-4 w-full">
+            <Select
+              name="costingMethod"
+              label="Part Costing Method"
+              options={partCostingMethodOptions}
+            />
+            <Number
+              name="standardCost"
+              label="Standard Cost"
+              formatOptions={{
+                style: "currency",
+                currency,
+              }}
+            />
 
-              <Number
-                name="unitCost"
-                label="Unit Cost"
-                formatOptions={{
-                  style: "currency",
-                  currency,
-                }}
-              />
-            </VStack>
-            <VStack>
-              <Number
-                name="salesHistory"
-                label="Sales History"
-                formatOptions={{
-                  style: "currency",
-                  currency,
-                }}
-                isReadOnly
-              />
-              <Number
-                name="salesHistoryQty"
-                label="Sales History Qty"
-                formatOptions={{
-                  maximumSignificantDigits: 3,
-                }}
-                isReadOnly
-              />
-              <Boolean name="costIsAdjusted" label="Cost Is Adjusted" />
-            </VStack>
+            <Number
+              name="unitCost"
+              label="Unit Cost"
+              formatOptions={{
+                style: "currency",
+                currency,
+              }}
+            />
+
+            <Number
+              name="salesHistory"
+              label="Sales History"
+              formatOptions={{
+                style: "currency",
+                currency,
+              }}
+              isReadOnly
+            />
+            <Number
+              name="salesHistoryQty"
+              label="Sales History Qty"
+              formatOptions={{
+                maximumSignificantDigits: 3,
+              }}
+              isReadOnly
+            />
+            <Boolean name="costIsAdjusted" label="Cost Is Adjusted" />
+            {/* <CustomFormFields table="partCost" />*/}
           </div>
         </CardContent>
         <CardFooter>

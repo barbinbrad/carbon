@@ -5,7 +5,6 @@ import {
   CardHeader,
   CardTitle,
   HStack,
-  VStack,
 } from "@carbon/react";
 import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useState } from "react";
@@ -64,36 +63,34 @@ const SupplierShippingForm = ({ initialValues }: SupplierShippingFormProps) => {
         </CardHeader>
         <CardContent>
           <Hidden name="supplierId" />
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-2 w-full">
-            <VStack>
-              <Supplier
-                name="shippingSupplierId"
-                label="Shipping Supplier"
-                onChange={(value) => setSupplier(value?.value as string)}
-              />
-              <SupplierLocation
-                name="shippingSupplierLocationId"
-                label="Shipping Location"
-                supplier={supplier}
-              />
-              <SupplierContact
-                name="shippingSupplierContactId"
-                label="Shipping Contact"
-                supplier={supplier}
-              />
-            </VStack>
-            <VStack>
-              <Select
-                name="shippingMethodId"
-                label="Shipping Method"
-                options={shippingMethodOptions}
-              />
-              <Select
-                name="shippingTermId"
-                label="Shipping Term"
-                options={shippingTermOptions}
-              />
-            </VStack>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-4 w-full">
+            <Supplier
+              name="shippingSupplierId"
+              label="Shipping Supplier"
+              onChange={(value) => setSupplier(value?.value as string)}
+            />
+            <SupplierLocation
+              name="shippingSupplierLocationId"
+              label="Shipping Location"
+              supplier={supplier}
+            />
+            <SupplierContact
+              name="shippingSupplierContactId"
+              label="Shipping Contact"
+              supplier={supplier}
+            />
+
+            <Select
+              name="shippingMethodId"
+              label="Shipping Method"
+              options={shippingMethodOptions}
+            />
+            <Select
+              name="shippingTermId"
+              label="Shipping Term"
+              options={shippingTermOptions}
+            />
+            {/* <CustomFormFields table="supplierShipping" />*/}
           </div>
         </CardContent>
         <CardFooter>

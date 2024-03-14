@@ -95,6 +95,7 @@ const CurrencyForm = ({ initialValues }: CurrencyFormProps) => {
                 helperText={exchnageRateHelperText}
               />
               <Boolean name="isBaseCurrency" label="Base Currency" />
+              {/* <CustomFormFields table="currency" />*/}
             </VStack>
           </DrawerBody>
           <DrawerFooter>

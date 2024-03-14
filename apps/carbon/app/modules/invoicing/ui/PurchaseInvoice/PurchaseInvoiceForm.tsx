@@ -85,42 +85,15 @@ const PurchaseInvoiceForm = ({
                 isEditing ? "grid-cols-1 lg:grid-cols-3" : "grid-cols-1"
               )}
             >
-              <VStack>
-                <Supplier
-                  name="supplierId"
-                  label="Supplier"
-                  isReadOnly={isEditing}
-                />
-                {isEditing && (
-                  <>
-                    <Supplier
-                      name="invoiceSupplierId"
-                      label="Invoice Supplier"
-                      onChange={(newValue) =>
-                        setSupplier(newValue?.value as string | undefined)
-                      }
-                    />
-                    <SupplierLocation
-                      name="invoiceSupplierLocationId"
-                      label="Invoice Location"
-                      supplier={supplier}
-                    />
-                    <SupplierContact
-                      name="invoiceSupplierContactId"
-                      label="Invoice Supplier Contact"
-                      supplier={supplier}
-                    />
-                  </>
-                )}
-              </VStack>
-              <VStack>
-                <Input
-                  name="supplierReference"
-                  label="Supplier Invoice Number"
-                />
-                <DatePicker name="dateIssued" label="Date Issued" />
-                <DatePicker name="dateDue" label="Due Date" />
-                {isEditing && (
+              <Supplier
+                name="supplierId"
+                label="Supplier"
+                isReadOnly={isEditing}
+              />
+              <Input name="supplierReference" label="Supplier Invoice Number" />
+
+              {isEditing && (
+                <>
                   <Select
                     name="status"
                     label="Status"
@@ -128,20 +101,39 @@ const PurchaseInvoiceForm = ({
                     options={statusOptions}
                     isReadOnly={permissions.can("delete", "invoicing")}
                   />
-                )}
-              </VStack>
-              <VStack>
-                {isEditing && (
-                  <>
-                    <Select
-                      name="paymentTermId"
-                      label="Payment Terms"
-                      options={paymentTermOptions}
-                    />
-                    <Currency name="currencyCode" label="Currency" />
-                  </>
-                )}
-              </VStack>
+                  <Supplier
+                    name="invoiceSupplierId"
+                    label="Invoice Supplier"
+                    onChange={(newValue) =>
+                      setSupplier(newValue?.value as string | undefined)
+                    }
+                  />
+                  <SupplierLocation
+                    name="invoiceSupplierLocationId"
+                    label="Invoice Location"
+                    supplier={supplier}
+                  />
+                  <SupplierContact
+                    name="invoiceSupplierContactId"
+                    label="Invoice Supplier Contact"
+                    supplier={supplier}
+                  />
+                </>
+              )}
+
+              <DatePicker name="dateDue" label="Due Date" />
+              <DatePicker name="dateIssued" label="Date Issued" />
+              {isEditing && (
+                <>
+                  <Select
+                    name="paymentTermId"
+                    label="Payment Terms"
+                    options={paymentTermOptions}
+                  />
+                  <Currency name="currencyCode" label="Currency" />
+                </>
+              )}
+              {/* <CustomFormFields table="purchaseInvoice" />*/}
             </div>
           </VStack>
         </CardContent>

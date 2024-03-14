@@ -246,7 +246,6 @@ export const supplierShippingValidator = z.object({
 export const supplierTypeValidator = z.object({
   id: zfd.text(z.string().optional()),
   name: z.string().min(1, { message: "Name is required" }),
-  color: z.string(),
 });
 
 export const supplierStatusValidator = z.object({

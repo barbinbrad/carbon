@@ -6,7 +6,6 @@ import {
   CardHeader,
   CardTitle,
   HStack,
-  VStack,
 } from "@carbon/react";
 import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useRevalidator } from "@remix-run/react";
@@ -74,54 +73,47 @@ const PartInventoryForm = ({
         <CardContent>
           <Hidden name="partId" />
           <Hidden name="locationId" />
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-2 w-full">
-            <VStack>
-              <CreatableCombobox
-                name="defaultShelfId"
-                label="Default Shelf"
-                options={shelfOptions}
-                onCreateOption={async (option) => {
-                  const response = await supabase?.from("shelf").insert({
-                    id: option,
-                    locationId: initialValues.locationId,
-                    createdBy: user.id,
-                  });
-                  if (response && response.error === null)
-                    revalidator.revalidate();
-                }}
-                className="w-full"
-              />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-4 w-full">
+            <CreatableCombobox
+              name="defaultShelfId"
+              label="Default Shelf"
+              options={shelfOptions}
+              onCreateOption={async (option) => {
+                const response = await supabase?.from("shelf").insert({
+                  id: option,
+                  locationId: initialValues.locationId,
+                  createdBy: user.id,
+                });
+                if (response && response.error === null)
+                  revalidator.revalidate();
+              }}
+              className="w-full"
+            />
 
-              <Number
-                name="quantityOnHand"
-                label="Quantity On Hand"
-                isReadOnly
-              />
-            </VStack>
-            <VStack>
-              <Number
-                name="quantityAvailable"
-                label="Quantity Available"
-                isReadOnly
-              />
-              <Number
-                name="quantityOnPurchaseOrder"
-                label="Quantity On Purchase Order"
-                isReadOnly
-              />
-            </VStack>
-            <VStack>
-              <Number
-                name="quantityOnProdOrder"
-                label="Quantity On Prod Order"
-                isReadOnly
-              />
-              <Number
-                name="quantityOnSalesOrder"
-                label="Quantity On Sales Order"
-                isReadOnly
-              />
-            </VStack>
+            <Number name="quantityOnHand" label="Quantity On Hand" isReadOnly />
+
+            <Number
+              name="quantityAvailable"
+              label="Quantity Available"
+              isReadOnly
+            />
+            <Number
+              name="quantityOnPurchaseOrder"
+              label="Quantity On Purchase Order"
+              isReadOnly
+            />
+
+            <Number
+              name="quantityOnProdOrder"
+              label="Quantity On Prod Order"
+              isReadOnly
+            />
+            <Number
+              name="quantityOnSalesOrder"
+              label="Quantity On Sales Order"
+              isReadOnly
+            />
+            {/* <CustomFormFields table="partInventory" />*/}
           </div>
         </CardContent>
         <CardFooter>

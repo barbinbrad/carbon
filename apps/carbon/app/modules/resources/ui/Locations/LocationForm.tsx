@@ -84,6 +84,7 @@ const LocationForm = ({
                 <Timezone name="timezone" label="Timezone" />
                 {/* <Number name="latitude" label="Latitude" minValue={-90} maxValue={90} />
               <Number name="longitude" label="Longitude" minVale={-180} maxValue={180} /> */}
+                {/* <CustomFormFields table="location" />*/}
               </VStack>
             </ModalDrawerBody>
             <ModalDrawerFooter>

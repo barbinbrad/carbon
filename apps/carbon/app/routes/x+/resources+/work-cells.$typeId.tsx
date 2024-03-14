@@ -84,7 +84,6 @@ export default function EditAttributeCategoryRoute() {
     id: workCellType?.id,
     name: workCellType?.name ?? "",
     description: workCellType?.description ?? "",
-    color: workCellType?.color ?? "#000000",
     requiredAbility: workCellType?.requiredAbility ?? undefined,
     quotingRate: workCellType?.quotingRate ?? 0,
     laborRate: workCellType?.laborRate ?? 0,

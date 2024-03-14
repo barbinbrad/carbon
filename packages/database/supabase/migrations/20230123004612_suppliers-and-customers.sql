@@ -61,7 +61,6 @@ CREATE TABLE "supplierStatus" (
 CREATE TABLE "supplierType" (
     "id" TEXT NOT NULL DEFAULT uuid_generate_v4(),
     "name" TEXT NOT NULL,
-    "color" TEXT DEFAULT '#000000',
     "protected" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     "createdBy" TEXT NOT NULL,
@@ -70,7 +69,6 @@ CREATE TABLE "supplierType" (
 
     CONSTRAINT "supplierType_pkey" PRIMARY KEY ("id"),
     CONSTRAINT "supplierType_name_unique" UNIQUE ("name"),
-    CONSTRAINT "supplierType_colorCheck" CHECK ("color" is null or "color" ~* '^#[a-f0-9]{6}$'),
     CONSTRAINT "supplierType_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id") ON UPDATE CASCADE ON DELETE RESTRICT,
     CONSTRAINT "supplierType_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id") ON UPDATE CASCADE ON DELETE SET NULL
 );
@@ -153,7 +151,6 @@ CREATE TABLE "customerStatus" (
 CREATE TABLE "customerType" (
     "id" TEXT NOT NULL DEFAULT uuid_generate_v4(),
     "name" TEXT NOT NULL,
-    "color" TEXT DEFAULT '#000000',
     "protected" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     "createdBy" TEXT NOT NULL,
@@ -162,7 +159,6 @@ CREATE TABLE "customerType" (
 
     CONSTRAINT "customerType_pkey" PRIMARY KEY ("id"),
     CONSTRAINT "customerType_name_unique" UNIQUE ("name"),
-    CONSTRAINT "customerType_colorCheck" CHECK ("color" is null or "color" ~* '^#[a-f0-9]{6}$'),
     CONSTRAINT "customerType_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id") ON UPDATE CASCADE ON DELETE RESTRICT,
     CONSTRAINT "customerType_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id") ON UPDATE CASCADE ON DELETE SET NULL
 );

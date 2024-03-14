@@ -76,6 +76,7 @@ const PartGroupForm = ({
               <VStack spacing={4}>
                 <Input name="name" label="Name" />
                 <TextArea name="description" label="Description" />
+                {/* <CustomFormFields table="partGroup" />*/}
               </VStack>
             </ModalDrawerBody>
             <ModalDrawerFooter>

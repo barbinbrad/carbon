@@ -54,7 +54,6 @@ const Department = (props: DepartmentSelectProps) => {
           }}
           initialValues={{
             name: created,
-            color: "#000000",
           }}
         />
       )}

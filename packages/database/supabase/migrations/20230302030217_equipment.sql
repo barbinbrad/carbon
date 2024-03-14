@@ -16,7 +16,6 @@ CREATE TYPE factor AS ENUM (
 CREATE TABLE "department" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "name" TEXT NOT NULL UNIQUE,
-  "color" TEXT NOT NULL DEFAULT '#000000',
   "parentDepartmentId" TEXT,
   "createdBy" TEXT NOT NULL,
   "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
@@ -24,7 +23,6 @@ CREATE TABLE "department" (
   "updatedAt" TIMESTAMP,
 
   CONSTRAINT "department_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "department_colorCheck" CHECK ("color" is null or "color" ~* '^#[a-f0-9]{6}$'),
   CONSTRAINT "department_parentDepartmentId_fkey" FOREIGN KEY ("parentDepartmentId") REFERENCES "department"("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -61,7 +59,6 @@ CREATE POLICY "Employees with resources_delete can delete departments" ON "depar
 CREATE TABLE "workCellType" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "name" TEXT NOT NULL UNIQUE,
-  "color" TEXT NOT NULL DEFAULT '#000000',
   "description" TEXT,
   "requiredAbility" TEXT,
   "quotingRate" NUMERIC NOT NULL DEFAULT 0,
@@ -75,7 +72,6 @@ CREATE TABLE "workCellType" (
   "updatedAt" TIMESTAMP,
 
   CONSTRAINT "workCellType_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "workCellType_colorCheck" CHECK ("color" is null or "color" ~* '^#[a-f0-9]{6}$'),
   CONSTRAINT "workCellType_requiredAbility_fkey" FOREIGN KEY ("requiredAbility") REFERENCES "ability"("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "workCellType_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "workCellType_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE
@@ -256,7 +252,6 @@ CREATE POLICY "Employees with resources_delete can delete crew abilities" ON "cr
 CREATE TABLE "equipmentType" (
   "id" TEXT NOT NULL DEFAULT xid(),
   "name" TEXT NOT NULL UNIQUE,
-  "color" TEXT NOT NULL DEFAULT '#000000',
   "description" TEXT,
   "requiredAbility" TEXT,
   "setupHours" NUMERIC NOT NULL DEFAULT 0,
@@ -267,7 +262,6 @@ CREATE TABLE "equipmentType" (
   "updatedAt" TIMESTAMP,
 
   CONSTRAINT "equipmentType_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "equipmentType_colorCheck" CHECK ("color" is null or "color" ~* '^#[a-f0-9]{6}$'),
   CONSTRAINT "equipmentType_requiredAbility_fkey" FOREIGN KEY ("requiredAbility") REFERENCES "ability"("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "equipmentType_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "equipmentType_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE

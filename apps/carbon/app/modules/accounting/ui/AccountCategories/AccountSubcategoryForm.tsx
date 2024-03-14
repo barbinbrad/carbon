@@ -80,6 +80,7 @@ const AccountSubcategoryForm = ({
                 <InputBase value={category} isReadOnly />
               </FormControl>
               <Input name="name" label="Name" />
+              {/* <CustomFormFields table="accountSubcategory" />*/}
             </VStack>
           </DrawerBody>
           <DrawerFooter>

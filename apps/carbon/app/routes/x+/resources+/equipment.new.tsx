@@ -58,7 +58,6 @@ export default function NewEquipmentTypeRoute() {
   const initialValues = {
     name: "",
     description: "",
-    color: "#000000",
     setupHours: 0,
   };
 

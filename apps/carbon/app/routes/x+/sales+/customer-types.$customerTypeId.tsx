@@ -83,7 +83,6 @@ export default function EditCustomerTypesRoute() {
   const initialValues = {
     id: customerType?.id ?? undefined,
     name: customerType?.name ?? "",
-    color: customerType?.color ?? "#000000",
   };
 
   return (

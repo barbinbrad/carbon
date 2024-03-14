@@ -7,7 +7,6 @@ import {
   ModalCardHeader,
   ModalCardProvider,
   ModalCardTitle,
-  VStack,
   cn,
 } from "@carbon/react";
 import { ValidatedForm } from "@carbon/remix-validated-form";
@@ -130,48 +129,45 @@ const PartForm = ({ initialValues, type = "card", onClose }: PartFormProps) => {
               <Hidden name="type" value={type} />
               <div
                 className={cn(
-                  "grid w-full gap-x-8 gap-y-2",
+                  "grid w-full gap-x-8 gap-y-4",
                   isEditing ? "grid-cols-1 md:grid-cols-3" : "grid-cols-1"
                 )}
               >
-                <VStack>
-                  {isEditing ? (
-                    <Input name="id" label="Part ID" isReadOnly />
-                  ) : (
-                    <InputControlled
-                      name="id"
-                      label="Part ID"
-                      helperText="Use ... to get the next part ID"
-                      value={partId}
-                      onChange={onPartIdChange}
-                      isDisabled={loading}
-                    />
-                  )}
+                {isEditing ? (
+                  <Input name="id" label="Part ID" isReadOnly />
+                ) : (
+                  <InputControlled
+                    name="id"
+                    label="Part ID"
+                    helperText="Use ... to get the next part ID"
+                    value={partId}
+                    onChange={onPartIdChange}
+                    isDisabled={loading}
+                  />
+                )}
 
-                  <Input name="name" label="Name" />
-                  <TextArea name="description" label="Description" />
-                </VStack>
-                <VStack>
-                  <Select
-                    name="replenishmentSystem"
-                    label="Replenishment System"
-                    options={partReplenishmentSystemOptions}
-                  />
-                  <Select
-                    name="partType"
-                    label="Part Type"
-                    options={partTypeOptions}
-                  />
-                  <UnitOfMeasure
-                    name="unitOfMeasureCode"
-                    label="Unit of Measure"
-                  />
-                </VStack>
-                <VStack>
-                  <PartGroup name="partGroupId" label="Part Group" />
-                  <Boolean name="blocked" label="Blocked" />
-                  {isEditing && <Boolean name="active" label="Active" />}
-                </VStack>
+                <Input name="name" label="Name" />
+                <PartGroup name="partGroupId" label="Part Group" />
+
+                <TextArea name="description" label="Description" />
+                <Select
+                  name="replenishmentSystem"
+                  label="Replenishment System"
+                  options={partReplenishmentSystemOptions}
+                />
+                <Select
+                  name="partType"
+                  label="Part Type"
+                  options={partTypeOptions}
+                />
+                <UnitOfMeasure
+                  name="unitOfMeasureCode"
+                  label="Unit of Measure"
+                />
+
+                <Boolean name="blocked" label="Blocked" />
+                {isEditing && <Boolean name="active" label="Active" />}
+                {/* <CustomFormFields table="customerStatus" />*/}
               </div>
             </ModalCardBody>
             <ModalCardFooter>

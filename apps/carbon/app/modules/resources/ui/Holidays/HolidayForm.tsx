@@ -56,6 +56,7 @@ const HolidayForm = ({ initialValues }: HolidayFormProps) => {
             <VStack spacing={4}>
               <Input name="name" label="Holiday Name" />
               <DatePicker name="date" label="Date" />
+              {/* <CustomFormFields table="holiday" />*/}
             </VStack>
           </DrawerBody>
           <DrawerFooter>

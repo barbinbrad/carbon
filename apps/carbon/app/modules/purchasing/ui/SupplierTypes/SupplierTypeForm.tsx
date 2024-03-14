@@ -13,7 +13,7 @@ import {
 import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useFetcher } from "@remix-run/react";
 import type { z } from "zod";
-import { Color, Hidden, Input, Submit } from "~/components/Form";
+import { Hidden, Input, Submit } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { supplierTypeValidator } from "~/modules/purchasing";
 import { path } from "~/utils/path";
@@ -75,7 +75,7 @@ const SupplierTypeForm = ({
               <Hidden name="type" value={type} />
               <VStack spacing={4}>
                 <Input name="name" label="Supplier Type" />
-                <Color name="color" label="Color" />
+                {/* <CustomFormFields table="supplierType" />*/}
               </VStack>
             </ModalDrawerBody>
             <ModalDrawerFooter>

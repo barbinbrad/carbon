@@ -352,6 +352,7 @@ const PurchaseInvoiceLineForm = ({
                   )}
                 </>
               )}
+              {/* <CustomFormFields table="purchaseInvoiceLine" />*/}
             </VStack>
           </DrawerBody>
           <DrawerFooter>

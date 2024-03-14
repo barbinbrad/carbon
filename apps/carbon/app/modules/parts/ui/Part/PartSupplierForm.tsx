@@ -87,6 +87,7 @@ const PartSupplierForm = ({ initialValues }: PartSupplierFormProps) => {
                 label="Conversion Factor"
                 minValue={0}
               />
+              {/* <CustomFormFields table="partSupplier" />*/}
             </VStack>
           </DrawerBody>
           <DrawerFooter>

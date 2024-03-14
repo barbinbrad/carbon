@@ -80,6 +80,7 @@ const CustomerLocationForm = ({
               <Input name="state" label="State" />
               <Input name="postalCode" label="Zip Code" />
               {/* Country dropdown */}
+              {/* <CustomFormFields table="customerLocation" />*/}
             </VStack>
           </DrawerBody>
           <DrawerFooter>

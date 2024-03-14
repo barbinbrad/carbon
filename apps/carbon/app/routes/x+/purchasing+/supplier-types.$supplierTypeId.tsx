@@ -92,7 +92,6 @@ export default function EditSupplierTypesRoute() {
   const initialValues = {
     id: supplierType.id ?? undefined,
     name: supplierType.name ?? "",
-    color: supplierType.color ?? "#000000",
   };
 
   return (

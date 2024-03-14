@@ -67,7 +67,6 @@ const CustomerType = (props: CustomerTypeSelectProps) => {
           }}
           initialValues={{
             name: created,
-            color: "#000000",
           }}
         />
       )}

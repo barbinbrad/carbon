@@ -84,7 +84,6 @@ export default function EditAttributeCategoryRoute() {
     id: equipmentType?.id,
     name: equipmentType?.name ?? "",
     description: equipmentType?.description ?? "",
-    color: equipmentType?.color ?? "#000000",
     requiredAbility: equipmentType?.requiredAbility ?? undefined,
     setupHours: equipmentType?.setupHours ?? 0,
   };

@@ -58,6 +58,7 @@ const PersonJob = ({ job }: PersonJobProps) => {
             />
             <Employee name="managerId" label="Manager" />
             <Hidden name="intent" value="job" />
+            {/* <CustomFormFields table="employeeJob" />*/}
           </VStack>
         </CardContent>
         <CardFooter>

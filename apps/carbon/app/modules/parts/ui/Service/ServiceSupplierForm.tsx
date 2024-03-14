@@ -66,6 +66,7 @@ const ServiceSupplierForm = ({ initialValues }: ServiceSupplierFormProps) => {
             <VStack spacing={4}>
               <Supplier name="supplierId" label="Supplier" />
               <Input name="supplierServiceId" label="Supplier Service ID" />
+              {/* <CustomFormFields table="serviceSupplier" />*/}
             </VStack>
           </DrawerBody>
           <DrawerFooter>

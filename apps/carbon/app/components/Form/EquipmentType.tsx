@@ -55,7 +55,6 @@ const EquipmentType = (props: EquipmentTypeSelectProps) => {
           initialValues={{
             name: created,
             description: "",
-            color: "#000000",
             setupHours: 0,
           }}
         />

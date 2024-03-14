@@ -100,7 +100,7 @@ export async function getEmployeeType(
 ) {
   return client
     .from("employeeType")
-    .select("id, name, color, protected")
+    .select("*")
     .eq("id", employeeTypeId)
     .single();
 }
@@ -109,9 +109,7 @@ export async function getEmployeeTypes(
   client: SupabaseClient<Database>,
   args?: GenericQueryFilters & { name: string | null }
 ) {
-  let query = client
-    .from("employeeType")
-    .select("id, name, color, protected", { count: "exact" });
+  let query = client.from("employeeType").select("*", { count: "exact" });
 
   if (args?.name) {
     query = query.ilike("name", `%${args.name}%`);

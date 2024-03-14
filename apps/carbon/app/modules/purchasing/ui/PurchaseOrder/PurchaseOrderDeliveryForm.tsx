@@ -4,7 +4,6 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-  VStack,
 } from "@carbon/react";
 import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useState } from "react";
@@ -67,54 +66,51 @@ const PurchaseOrderDeliveryForm = ({
         </CardHeader>
         <CardContent>
           <Hidden name="id" />
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-2 w-full">
-            <VStack>
-              <Location
-                name="locationId"
-                label="Delivery Location"
-                isReadOnly={isSupplier}
-                isClearable
-              />
-              <Select
-                name="shippingMethodId"
-                label="Shipping Method"
-                options={shippingMethodOptions}
-              />
-              <Select
-                name="shippingTermId"
-                label="Shipping Terms"
-                isReadOnly={isSupplier}
-                options={shippingTermOptions}
-              />
-            </VStack>
-            <VStack>
-              <DatePicker name="receiptRequestedDate" label="Requested Date" />
-              <DatePicker name="receiptPromisedDate" label="Promised Date" />
-              <DatePicker name="deliveryDate" label="Delivery Date" />
-            </VStack>
-            <VStack>
-              <Input name="trackingNumber" label="Tracking Number" />
-              {/* <TextArea name="notes" label="Shipping Notes" /> */}
-              <Boolean
-                name="dropShipment"
-                label="Drop Shipment"
-                onChange={setDropShip}
-              />
-              {dropShip && (
-                <>
-                  <Customer
-                    name="customerId"
-                    label="Customer"
-                    onChange={(value) => setCustomer(value?.value as string)}
-                  />
-                  <CustomerLocation
-                    name="customerLocationId"
-                    label="Location"
-                    customer={customer}
-                  />
-                </>
-              )}
-            </VStack>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-4 w-full">
+            <Location
+              name="locationId"
+              label="Delivery Location"
+              isReadOnly={isSupplier}
+              isClearable
+            />
+            <Select
+              name="shippingMethodId"
+              label="Shipping Method"
+              options={shippingMethodOptions}
+            />
+            <Select
+              name="shippingTermId"
+              label="Shipping Terms"
+              isReadOnly={isSupplier}
+              options={shippingTermOptions}
+            />
+
+            <DatePicker name="receiptRequestedDate" label="Requested Date" />
+            <DatePicker name="receiptPromisedDate" label="Promised Date" />
+            <DatePicker name="deliveryDate" label="Delivery Date" />
+
+            <Input name="trackingNumber" label="Tracking Number" />
+            {/* <TextArea name="notes" label="Shipping Notes" /> */}
+            <Boolean
+              name="dropShipment"
+              label="Drop Shipment"
+              onChange={setDropShip}
+            />
+            {dropShip && (
+              <>
+                <Customer
+                  name="customerId"
+                  label="Customer"
+                  onChange={(value) => setCustomer(value?.value as string)}
+                />
+                <CustomerLocation
+                  name="customerLocationId"
+                  label="Location"
+                  customer={customer}
+                />
+              </>
+            )}
+            {/* <CustomFormFields table="purchaseOrderDelivery" />*/}
           </div>
         </CardContent>
         <CardFooter>

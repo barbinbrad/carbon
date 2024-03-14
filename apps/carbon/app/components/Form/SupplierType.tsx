@@ -69,7 +69,6 @@ const SupplierType = (props: SupplierTypeSelectProps) => {
           }}
           initialValues={{
             name: created,
-            color: "#000000",
           }}
         />
       )}

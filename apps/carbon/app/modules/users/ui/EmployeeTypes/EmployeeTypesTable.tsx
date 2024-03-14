@@ -33,17 +33,6 @@ const EmployeeTypesTable = memo(({ data, count }: EmployeeTypesTableProps) => {
             </Hyperlink>
           ),
       },
-      {
-        accessorKey: "color",
-        header: "Color",
-        cell: (item) => (
-          <div
-            aria-label="Color"
-            className="w-6 h-6 rounded-md bg-zinc-500"
-            style={{ background: item.getValue<string>() ?? "#000000" }}
-          />
-        ),
-      },
     ];
   }, [navigate]);
 

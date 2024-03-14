@@ -62,41 +62,38 @@ const QuotationForm = ({ initialValues }: QuotationFormProps) => {
           <VStack>
             <div
               className={cn(
-                "grid w-full gap-x-8 gap-y-2",
+                "grid w-full gap-x-8 gap-y-4",
                 isEditing ? "grid-cols-1 lg:grid-cols-3" : "grid-cols-1"
               )}
             >
-              <VStack>
-                <Customer
-                  autoFocus={!isEditing}
-                  name="customerId"
-                  label="Customer"
-                  onChange={(value) => setCustomer(value?.value as string)}
-                />
-                <Input name="name" label="Name" />
-                <Employee name="ownerId" label="Quoter" />
-              </VStack>
-              <VStack>
-                <Location name="locationId" label="Location" />
-                <CustomerLocation
-                  name="customerLocationId"
-                  label="Customer Location"
-                  customer={customer}
-                />
-                <CustomerContact
-                  name="customerContactId"
-                  label="Customer Contact"
-                  customer={customer}
-                />
-              </VStack>
-              <VStack>
-                {isEditing && (
-                  <>
-                    <DatePicker name="expirationDate" label="Expiration Date" />
-                    <TextArea name="notes" label="Notes" />
-                  </>
-                )}
-              </VStack>
+              <Customer
+                autoFocus={!isEditing}
+                name="customerId"
+                label="Customer"
+                onChange={(value) => setCustomer(value?.value as string)}
+              />
+              <Input name="name" label="Name" />
+              <Employee name="ownerId" label="Quoter" />
+
+              <Location name="locationId" label="Location" />
+              <CustomerLocation
+                name="customerLocationId"
+                label="Customer Location"
+                customer={customer}
+              />
+              <CustomerContact
+                name="customerContactId"
+                label="Customer Contact"
+                customer={customer}
+              />
+
+              {isEditing && (
+                <>
+                  <DatePicker name="expirationDate" label="Expiration Date" />
+                  <TextArea name="notes" label="Notes" />
+                </>
+              )}
+              {/* <CustomFormFields table="quote" />*/}
             </div>
           </VStack>
         </CardContent>

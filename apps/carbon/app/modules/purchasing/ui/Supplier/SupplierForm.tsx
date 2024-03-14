@@ -8,7 +8,6 @@ import {
   ModalCardHeader,
   ModalCardProvider,
   ModalCardTitle,
-  VStack,
   cn,
 } from "@carbon/react";
 import { ValidatedForm } from "@carbon/remix-validated-form";
@@ -77,32 +76,23 @@ const SupplierForm = ({
                   isEditing ? "grid-cols-1 lg:grid-cols-3" : "grid-cols-1"
                 )}
               >
-                <VStack>
-                  <Input autoFocus={!isEditing} name="name" label="Name" />
-                  <Input name="taxId" label="Tax ID" />
-                </VStack>
-                <VStack>
-                  <SupplierType
-                    name="supplierTypeId"
-                    label="Supplier Type"
-                    placeholder="Select Supplier Type"
-                  />
-                  <SupplierStatus
-                    name="supplierStatusId"
-                    label="Supplier Status"
-                    placeholder="Select Supplier Status"
-                  />
-                </VStack>
-                {isEditing && (
-                  <>
-                    <VStack>
-                      <Employee
-                        name="accountManagerId"
-                        label="Account Manager"
-                      />
-                    </VStack>
-                  </>
-                )}
+                <Input autoFocus={!isEditing} name="name" label="Name" />
+                <Input name="taxId" label="Tax ID" />
+
+                <SupplierType
+                  name="supplierTypeId"
+                  label="Supplier Type"
+                  placeholder="Select Supplier Type"
+                />
+                <SupplierStatus
+                  name="supplierStatusId"
+                  label="Supplier Status"
+                  placeholder="Select Supplier Status"
+                />
+
+                <Employee name="accountManagerId" label="Account Manager" />
+
+                {/* <CustomFormFields table="supplier" />*/}
               </div>
             </ModalCardBody>
             <ModalCardFooter>

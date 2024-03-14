@@ -80,6 +80,7 @@ const ShiftForm = ({ initialValues }: ShiftFormProps) => {
                   <Boolean name="sunday" description="Sunday" />
                 </VStack>
               </FormControl>
+              {/* <CustomFormFields table="shift" />*/}
             </VStack>
           </DrawerBody>
           <DrawerFooter>

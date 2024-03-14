@@ -66,7 +66,6 @@ export default function NewSupplierTypesRoute() {
   const navigate = useNavigate();
   const initialValues = {
     name: "",
-    color: "#000000",
   };
 
   return (

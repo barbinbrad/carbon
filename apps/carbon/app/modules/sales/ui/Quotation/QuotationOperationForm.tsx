@@ -168,77 +168,72 @@ const QuotationOperationForm = ({
           <Hidden name="quoteAssemblyId" value={quoteAssemblyId ?? undefined} />
 
           <VStack>
-            <div className="grid w-full gap-x-8 gap-y-2 grid-cols-1 lg:grid-cols-3">
-              <VStack>
-                <WorkCellType
-                  name="workCellTypeId"
-                  label="Work Cell"
-                  onChange={(value) => {
-                    onWorkCellChange(value?.value as string);
-                  }}
-                />
-                <InputControlled
-                  name="description"
-                  label="Description"
-                  value={workCellData.description}
-                  onChange={(newValue) => {
-                    setWorkCellData((d) => ({ ...d, description: newValue }));
-                  }}
-                />
-                <EquipmentType
-                  name="equipmentTypeId"
-                  label="Equipment"
-                  onChange={(value) =>
-                    onEquipmentChange(value?.value as string)
-                  }
-                />
-              </VStack>
-              <VStack>
-                <NumberControlled
-                  name="setupHours"
-                  label="Setup Time (hours)"
-                  minValue={0}
-                  value={equipmentData.setupHours}
-                  onChange={(newValue) => {
-                    setEquipmentData((d) => ({ ...d, setupHours: newValue }));
-                  }}
-                />
-                <Number
-                  name="productionStandard"
-                  label="Production Standard"
-                  minValue={0}
-                />
-                <StandardFactor name="standardFactor" label="Standard Factor" />
-              </VStack>
-              <VStack>
-                <NumberControlled
-                  name="quotingRate"
-                  label="Quoting Rate"
-                  minValue={0}
-                  value={workCellData.quotingRate}
-                  onChange={(newValue) => {
-                    setWorkCellData((d) => ({ ...d, quotingRate: newValue }));
-                  }}
-                />
-                <NumberControlled
-                  name="laborRate"
-                  label="Labor Rate"
-                  minValue={0}
-                  value={workCellData.laborRate}
-                  onChange={(newValue) => {
-                    setWorkCellData((d) => ({ ...d, laborRate: newValue }));
-                  }}
-                />
-                <NumberControlled
-                  name="overheadRate"
-                  label="Overhead Rate"
-                  minValue={0}
-                  value={workCellData.overheadRate}
-                  onChange={(newValue) => {
-                    setWorkCellData((d) => ({ ...d, overheadRate: newValue }));
-                  }}
-                />
-              </VStack>
+            <div className="grid w-full gap-x-8 gap-y-4 grid-cols-1 lg:grid-cols-3">
+              <WorkCellType
+                name="workCellTypeId"
+                label="Work Cell"
+                onChange={(value) => {
+                  onWorkCellChange(value?.value as string);
+                }}
+              />
+              <InputControlled
+                name="description"
+                label="Description"
+                value={workCellData.description}
+                onChange={(newValue) => {
+                  setWorkCellData((d) => ({ ...d, description: newValue }));
+                }}
+              />
+              <EquipmentType
+                name="equipmentTypeId"
+                label="Equipment"
+                onChange={(value) => onEquipmentChange(value?.value as string)}
+              />
+
+              <NumberControlled
+                name="setupHours"
+                label="Setup Time (hours)"
+                minValue={0}
+                value={equipmentData.setupHours}
+                onChange={(newValue) => {
+                  setEquipmentData((d) => ({ ...d, setupHours: newValue }));
+                }}
+              />
+              <Number
+                name="productionStandard"
+                label="Production Standard"
+                minValue={0}
+              />
+              <StandardFactor name="standardFactor" label="Standard Factor" />
+
+              <NumberControlled
+                name="quotingRate"
+                label="Quoting Rate"
+                minValue={0}
+                value={workCellData.quotingRate}
+                onChange={(newValue) => {
+                  setWorkCellData((d) => ({ ...d, quotingRate: newValue }));
+                }}
+              />
+              <NumberControlled
+                name="laborRate"
+                label="Labor Rate"
+                minValue={0}
+                value={workCellData.laborRate}
+                onChange={(newValue) => {
+                  setWorkCellData((d) => ({ ...d, laborRate: newValue }));
+                }}
+              />
+              <NumberControlled
+                name="overheadRate"
+                label="Overhead Rate"
+                minValue={0}
+                value={workCellData.overheadRate}
+                onChange={(newValue) => {
+                  setWorkCellData((d) => ({ ...d, overheadRate: newValue }));
+                }}
+              />
+              {/* <CustomFormFields table="quoteOperation" />*/}
             </div>
           </VStack>
         </CardContent>

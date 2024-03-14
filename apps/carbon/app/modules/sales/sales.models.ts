@@ -49,7 +49,6 @@ export const customerStatusValidator = z.object({
 export const customerTypeValidator = z.object({
   id: zfd.text(z.string().optional()),
   name: z.string().min(1, { message: "Name is required" }),
-  color: z.string(),
 });
 
 export const quoteLineStatusType = [

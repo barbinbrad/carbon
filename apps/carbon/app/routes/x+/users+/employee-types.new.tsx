@@ -49,7 +49,7 @@ export async function action({ request }: ActionFunctionArgs) {
     return validationError(validation.error);
   }
 
-  const { name, color, data } = validation.data;
+  const { name, data } = validation.data;
 
   const permissions = JSON.parse(data);
   const jsonValidation =
@@ -66,7 +66,6 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const createEmployeeType = await insertEmployeeType(client, {
     name,
-    color: color ?? undefined,
   });
   if (createEmployeeType.error) {
     return json(
@@ -118,7 +117,6 @@ export default function NewEmployeeTypesRoute() {
 
   const initialValues = {
     name: "",
-    color: "#000000",
     data: "",
     permissions,
   };

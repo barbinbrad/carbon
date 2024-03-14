@@ -4,7 +4,6 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-  VStack,
 } from "@carbon/react";
 import { ValidatedForm } from "@carbon/remix-validated-form";
 import type { z } from "zod";
@@ -42,38 +41,35 @@ const PartManufacturingForm = ({
         </CardHeader>
         <CardContent>
           <Hidden name="partId" />
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-2 w-full">
-            <VStack>
-              <Select
-                name="manufacturingPolicy"
-                label="Manufacturing Policy"
-                options={partManufacturingPolicyOptions}
-              />
-              {/* <Select
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-4 w-full">
+            <Select
+              name="manufacturingPolicy"
+              label="Manufacturing Policy"
+              options={partManufacturingPolicyOptions}
+            />
+            {/* <Select
                 name="routingId"
                 label="Routing ID"
                 options={[{ label: "", value: "" }]}
               /> */}
-            </VStack>
-            <VStack>
-              <Number name="manufacturingLeadTime" label="Lead Time (Days)" />
-              <Number
-                name="scrapPercentage"
-                label="Scrap Percentage"
-                formatOptions={{ style: "percent" }}
-              />
-              <Number name="lotSize" label="Lot Size" />
-            </VStack>
-            <VStack>
-              <Boolean
-                name="manufacturingBlocked"
-                label="Manufacturing Blocked"
-              />
-              <Boolean
-                name="requiresConfiguration"
-                label="Requires Configuration"
-              />
-            </VStack>
+
+            <Number name="manufacturingLeadTime" label="Lead Time (Days)" />
+            <Number
+              name="scrapPercentage"
+              label="Scrap Percentage"
+              formatOptions={{ style: "percent" }}
+            />
+            <Number name="lotSize" label="Lot Size" />
+
+            <Boolean
+              name="manufacturingBlocked"
+              label="Manufacturing Blocked"
+            />
+            <Boolean
+              name="requiresConfiguration"
+              label="Requires Configuration"
+            />
+            {/* <CustomFormFields table="partReplenishment" />*/}
           </div>
         </CardContent>
         <CardFooter>

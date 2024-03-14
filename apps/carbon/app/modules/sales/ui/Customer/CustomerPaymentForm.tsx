@@ -5,7 +5,6 @@ import {
   CardHeader,
   CardTitle,
   HStack,
-  VStack,
 } from "@carbon/react";
 import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useState } from "react";
@@ -58,32 +57,30 @@ const CustomerPaymentForm = ({ initialValues }: CustomerPaymentFormProps) => {
         </CardHeader>
         <CardContent>
           <Hidden name="customerId" />
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-2 w-full">
-            <VStack>
-              <Customer
-                name="invoiceCustomerId"
-                label="Invoice Customer"
-                onChange={(value) => setCustomer(value?.value as string)}
-              />
-              <CustomerLocation
-                name="invoiceCustomerLocationId"
-                label="Invoice Location"
-                customer={customer}
-              />
-              <CustomerContact
-                name="invoiceCustomerContactId"
-                label="Invoice Contact"
-                customer={customer}
-              />
-            </VStack>
-            <VStack>
-              <Select
-                name="paymentTermId"
-                label="Payment Term"
-                options={paymentTermOptions}
-              />
-              <Currency name="currencyCode" label="Currency" />
-            </VStack>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-4 w-full">
+            <Customer
+              name="invoiceCustomerId"
+              label="Invoice Customer"
+              onChange={(value) => setCustomer(value?.value as string)}
+            />
+            <CustomerLocation
+              name="invoiceCustomerLocationId"
+              label="Invoice Location"
+              customer={customer}
+            />
+            <CustomerContact
+              name="invoiceCustomerContactId"
+              label="Invoice Contact"
+              customer={customer}
+            />
+
+            <Select
+              name="paymentTermId"
+              label="Payment Term"
+              options={paymentTermOptions}
+            />
+            <Currency name="currencyCode" label="Currency" />
+            {/* <CustomFormFields table="customerPayment" />*/}
           </div>
         </CardContent>
         <CardFooter>

@@ -55,7 +55,6 @@ const WorkCellType = (props: WorkCellTypeSelectProps) => {
           initialValues={{
             name: created,
             description: "",
-            color: "#000000",
             quotingRate: 0,
             laborRate: 0,
             overheadRate: 0,

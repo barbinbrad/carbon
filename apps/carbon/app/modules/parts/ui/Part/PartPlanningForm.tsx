@@ -6,7 +6,6 @@ import {
   CardHeader,
   CardTitle,
   HStack,
-  VStack,
 } from "@carbon/react";
 import { ValidatedForm } from "@carbon/remix-validated-form";
 import type { z } from "zod";
@@ -67,70 +66,59 @@ const PartPlanningForm = ({
         <CardContent>
           <Hidden name="partId" />
           <Hidden name="locationId" />
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-2 w-full">
-            <VStack>
-              <SelectForm
-                name="reorderingPolicy"
-                label="Reordering Policy"
-                options={partReorderingPolicies.map((policy) => ({
-                  label: policy,
-                  value: policy,
-                }))}
-              />
-              <Boolean name="critical" label="Critical" />
-              <Number
-                name="safetyStockQuantity"
-                label="Safety Stock Quantity"
-              />
-              <Number
-                name="safetyStockLeadTime"
-                label="Safety Stock Lead Time (Days)"
-              />
-              <Number
-                name="minimumOrderQuantity"
-                label="Minimum Order Quantity"
-                minValue={0}
-              />
-              <Number
-                name="maximumOrderQuantity"
-                label="Maximum Order Quantity"
-                minValue={0}
-              />
-              <Number
-                name="orderMultiple"
-                label="Order Multiple"
-                minValue={0}
-              />
-            </VStack>
-            <VStack>
-              <Number
-                name="demandAccumulationPeriod"
-                label="Demand Accumulation Period (Days)"
-                minValue={0}
-              />
-              <Number
-                name="demandReschedulingPeriod"
-                label="Rescheduling Period (Days)"
-                minValue={0}
-              />
-              <Boolean
-                name="demandAccumulationIncludesInventory"
-                label="Demand Includes Inventory"
-              />
-            </VStack>
-            <VStack>
-              <Number name="reorderPoint" label="Reorder Point" />
-              <Number
-                name="reorderQuantity"
-                label="Reorder Quantity"
-                minValue={0}
-              />
-              <Number
-                name="reorderMaximumInventory"
-                label="Reorder Maximum Inventory"
-                minValue={0}
-              />
-            </VStack>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-4 w-full">
+            <SelectForm
+              name="reorderingPolicy"
+              label="Reordering Policy"
+              options={partReorderingPolicies.map((policy) => ({
+                label: policy,
+                value: policy,
+              }))}
+            />
+            <Number name="safetyStockQuantity" label="Safety Stock Quantity" />
+            <Number
+              name="safetyStockLeadTime"
+              label="Safety Stock Lead Time (Days)"
+            />
+            <Number
+              name="minimumOrderQuantity"
+              label="Minimum Order Quantity"
+              minValue={0}
+            />
+            <Number
+              name="maximumOrderQuantity"
+              label="Maximum Order Quantity"
+              minValue={0}
+            />
+            <Number name="orderMultiple" label="Order Multiple" minValue={0} />
+
+            <Number
+              name="demandAccumulationPeriod"
+              label="Demand Accumulation Period (Days)"
+              minValue={0}
+            />
+            <Number
+              name="demandReschedulingPeriod"
+              label="Rescheduling Period (Days)"
+              minValue={0}
+            />
+            <Number name="reorderPoint" label="Reorder Point" />
+            <Number
+              name="reorderQuantity"
+              label="Reorder Quantity"
+              minValue={0}
+            />
+            <Number
+              name="reorderMaximumInventory"
+              label="Reorder Maximum Inventory"
+              minValue={0}
+            />
+            <Boolean
+              name="demandAccumulationIncludesInventory"
+              label="Demand Includes Inventory"
+            />
+            <Boolean name="critical" label="Critical" />
+            {/* <CustomFormFields table="partPlanning" />*/}
           </div>
         </CardContent>
         <CardFooter>

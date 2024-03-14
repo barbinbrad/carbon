@@ -88,17 +88,6 @@ const WorkCellTypesTable = memo(({ data, count }: WorkCellTypesTableProps) => {
           </Button>
         ),
       },
-      {
-        accessorKey: "color",
-        header: "Color",
-        cell: (item) => (
-          <div
-            aria-label="Color"
-            className="w-6 h-6 rounded-md bg-zinc-500"
-            style={{ background: item.getValue<string>() ?? "#000000" }}
-          />
-        ),
-      },
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);

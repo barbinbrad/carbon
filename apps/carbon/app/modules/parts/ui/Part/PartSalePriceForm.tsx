@@ -4,7 +4,6 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-  VStack,
 } from "@carbon/react";
 import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useState } from "react";
@@ -40,39 +39,36 @@ const PartSalePriceForm = ({ initialValues }: PartSalePriceFormProps) => {
         </CardHeader>
         <CardContent>
           <Hidden name="partId" />
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-2 w-full">
-            <VStack>
-              <Number
-                name="unitSalePrice"
-                label="Unit Sale Price"
-                minValue={0}
-                formatOptions={{
-                  style: "currency",
-                  currency,
-                }}
-              />
-              <Currency
-                name="currencyCode"
-                label="Currency"
-                onChange={(newValue) => {
-                  if (newValue) setCurrency(newValue?.value);
-                }}
-              />
-            </VStack>
-            <VStack>
-              <UnitOfMeasure
-                name="salesUnitOfMeasureCode"
-                label="Sales Unit of Measure"
-              />
-            </VStack>
-            <VStack>
-              <Boolean name="salesBlocked" label="Sales Blocked" />
-              <Boolean name="priceIncludesTax" label="Price Includes Tax" />
-              <Boolean
-                name="allowInvoiceDiscount"
-                label="Allow Invoice Discount"
-              />
-            </VStack>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-4 w-full">
+            <Number
+              name="unitSalePrice"
+              label="Unit Sale Price"
+              minValue={0}
+              formatOptions={{
+                style: "currency",
+                currency,
+              }}
+            />
+            <Currency
+              name="currencyCode"
+              label="Currency"
+              onChange={(newValue) => {
+                if (newValue) setCurrency(newValue?.value);
+              }}
+            />
+
+            <UnitOfMeasure
+              name="salesUnitOfMeasureCode"
+              label="Sales Unit of Measure"
+            />
+
+            <Boolean name="salesBlocked" label="Sales Blocked" />
+            <Boolean name="priceIncludesTax" label="Price Includes Tax" />
+            <Boolean
+              name="allowInvoiceDiscount"
+              label="Allow Invoice Discount"
+            />
+            {/* <CustomFormFields table="partUnitSalePrice" />*/}
           </div>
         </CardContent>
         <CardFooter>

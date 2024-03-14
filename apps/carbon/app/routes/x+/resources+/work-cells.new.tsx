@@ -58,7 +58,6 @@ export default function NewWorkCellTypeRoute() {
   const initialValues = {
     name: "",
     description: "",
-    color: "#000000",
     quotingRate: 0,
     laborRate: 0,
     overheadRate: 0,

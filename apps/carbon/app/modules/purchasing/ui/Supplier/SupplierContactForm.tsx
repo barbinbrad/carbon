@@ -96,6 +96,7 @@ const SupplierContactForm = ({
               {/* Country dropdown */}
               <DatePicker name="birthday" label="Birthday" />
               <TextArea name="notes" label="Notes" />
+              {/* <CustomFormFields table="supplierContact" />*/}
             </VStack>
           </DrawerBody>
           <DrawerFooter>

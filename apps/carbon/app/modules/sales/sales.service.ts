@@ -255,7 +255,7 @@ export async function getCustomerType(
 ) {
   return client
     .from("customerType")
-    .select("id, name, color, protected")
+    .select("*")
     .eq("id", customerTypeId)
     .single();
 }
@@ -264,9 +264,7 @@ export async function getCustomerTypes(
   client: SupabaseClient<Database>,
   args?: GenericQueryFilters & { name: string | null }
 ) {
-  let query = client
-    .from("customerType")
-    .select("id, name, color, protected", { count: "exact" });
+  let query = client.from("customerType").select("*", { count: "exact" });
 
   if (args?.name) {
     query = query.ilike("name", `%${args.name}%`);

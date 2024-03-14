@@ -61,7 +61,7 @@ export async function action({ request }: ActionFunctionArgs) {
     return validationError(validation.error);
   }
 
-  const { id, name, color, data } = validation.data;
+  const { id, name, data } = validation.data;
   if (!id) throw notFound("id not found");
 
   const permissions = JSON.parse(data);
@@ -80,7 +80,6 @@ export async function action({ request }: ActionFunctionArgs) {
   const updateEmployeeType = await upsertEmployeeType(client, {
     id,
     name,
-    color: color ?? undefined,
   });
 
   if (updateEmployeeType.error) {
@@ -125,7 +124,6 @@ export default function EditEmployeeTypesRoute() {
   const initialValues = {
     id: employeeType?.id ?? "",
     name: employeeType?.name ?? "",
-    color: employeeType?.color ?? "#000000",
     permissions: employeeTypePermissions,
   };
 

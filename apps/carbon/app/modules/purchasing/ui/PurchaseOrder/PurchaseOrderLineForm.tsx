@@ -327,6 +327,7 @@ const PurchaseOrderLineForm = ({
                   )}
                 </>
               )}
+              {/* <CustomFormFields table="purchaseOrderLine" />*/}
             </VStack>
           </DrawerBody>
           <DrawerFooter>

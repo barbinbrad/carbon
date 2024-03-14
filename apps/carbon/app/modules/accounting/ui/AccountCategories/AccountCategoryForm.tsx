@@ -80,6 +80,7 @@ const AccountCategoryForm = ({
                   label: accountClass,
                 }))}
               />
+              {/* <CustomFormFields table="accountCategory" />*/}
             </VStack>
           </DrawerBody>
           <DrawerFooter>

@@ -15,7 +15,6 @@ import { useFetcher } from "@remix-run/react";
 import type { z } from "zod";
 import {
   Ability,
-  Color,
   Hidden,
   Input,
   Number,
@@ -85,7 +84,6 @@ const WorkCellTypeForm = ({
               <VStack spacing={4}>
                 <Input name="name" label="Name" />
                 <TextArea name="description" label="Description" />
-                <Color name="color" label="Color" />
                 <Ability
                   name="requiredAbility"
                   label="Required Ability"
@@ -98,6 +96,7 @@ const WorkCellTypeForm = ({
                   name="defaultStandardFactor"
                   label="Default Standard Factor"
                 />
+                {/* <CustomFormFields table="workCellType" />*/}
               </VStack>
             </ModalDrawerBody>
             <ModalDrawerFooter>

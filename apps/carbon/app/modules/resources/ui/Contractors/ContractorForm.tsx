@@ -92,6 +92,7 @@ const ContractorForm = ({ initialValues }: ContractorFormProps) => {
                 minValue={0}
                 maxValue={10000}
               />
+              {/* <CustomFormFields table="contractor" />*/}
             </VStack>
           </DrawerBody>
           <DrawerFooter>

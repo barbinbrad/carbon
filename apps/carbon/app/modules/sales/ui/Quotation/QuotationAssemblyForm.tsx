@@ -146,34 +146,31 @@ const QuotationAssemblyForm = ({
           />
           <Hidden name="unitOfMeasureCode" value={partData?.uom} />
           <VStack>
-            <div className="grid w-full gap-x-8 gap-y-2 grid-cols-1 lg:grid-cols-3">
-              <VStack>
-                <Part
-                  name="partId"
-                  label="Manufactured Part"
-                  partReplenishmentSystem="Make"
-                  onChange={(value) => {
-                    onPartChange(value?.value as string);
-                  }}
-                />
-              </VStack>
-              <VStack>
-                <InputControlled
-                  name="description"
-                  label="Description"
-                  value={partData.description}
-                  onChange={(newValue) =>
-                    setPartData((d) => ({ ...d, description: newValue }))
-                  }
-                />
-              </VStack>
-              <VStack>
-                <Number
-                  name="quantityPerParent"
-                  label="Quantity per Parent"
-                  minValue={0}
-                />
-              </VStack>
+            <div className="grid w-full gap-x-8 gap-y-4 grid-cols-1 lg:grid-cols-3">
+              <Part
+                name="partId"
+                label="Manufactured Part"
+                partReplenishmentSystem="Make"
+                onChange={(value) => {
+                  onPartChange(value?.value as string);
+                }}
+              />
+
+              <InputControlled
+                name="description"
+                label="Description"
+                value={partData.description}
+                onChange={(newValue) =>
+                  setPartData((d) => ({ ...d, description: newValue }))
+                }
+              />
+
+              <Number
+                name="quantityPerParent"
+                label="Quantity per Parent"
+                minValue={0}
+              />
+              {/* <CustomFormFields table="quoteAssembly" />*/}
             </div>
           </VStack>
         </CardContent>

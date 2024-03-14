@@ -157,6 +157,7 @@ const QuotationMaterialForm = ({
                   }))
                 }
               />
+              {/* <CustomFormFields table="quoteMaterial" />*/}
             </VStack>
           </DrawerBody>
           <DrawerFooter>

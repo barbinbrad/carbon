@@ -2408,7 +2408,6 @@ export type Database = {
       }
       customerType: {
         Row: {
-          color: string | null
           createdAt: string
           createdBy: string
           customFields: Json | null
@@ -2419,7 +2418,6 @@ export type Database = {
           updatedBy: string | null
         }
         Insert: {
-          color?: string | null
           createdAt?: string
           createdBy: string
           customFields?: Json | null
@@ -2430,7 +2428,6 @@ export type Database = {
           updatedBy?: string | null
         }
         Update: {
-          color?: string | null
           createdAt?: string
           createdBy?: string
           customFields?: Json | null
@@ -2614,7 +2611,6 @@ export type Database = {
       }
       department: {
         Row: {
-          color: string
           createdAt: string
           createdBy: string
           customFields: Json | null
@@ -2625,7 +2621,6 @@ export type Database = {
           updatedBy: string | null
         }
         Insert: {
-          color?: string
           createdAt?: string
           createdBy: string
           customFields?: Json | null
@@ -2636,7 +2631,6 @@ export type Database = {
           updatedBy?: string | null
         }
         Update: {
-          color?: string
           createdAt?: string
           createdBy?: string
           customFields?: Json | null
@@ -3194,7 +3188,6 @@ export type Database = {
       }
       employeeType: {
         Row: {
-          color: string
           createdAt: string
           id: string
           name: string
@@ -3202,7 +3195,6 @@ export type Database = {
           updatedAt: string | null
         }
         Insert: {
-          color?: string
           createdAt?: string
           id?: string
           name: string
@@ -3210,7 +3202,6 @@ export type Database = {
           updatedAt?: string | null
         }
         Update: {
-          color?: string
           createdAt?: string
           id?: string
           name?: string
@@ -3402,7 +3393,6 @@ export type Database = {
       equipmentType: {
         Row: {
           active: boolean
-          color: string
           createdAt: string
           createdBy: string
           customFields: Json | null
@@ -3416,7 +3406,6 @@ export type Database = {
         }
         Insert: {
           active?: boolean
-          color?: string
           createdAt?: string
           createdBy: string
           customFields?: Json | null
@@ -3430,7 +3419,6 @@ export type Database = {
         }
         Update: {
           active?: boolean
-          color?: string
           createdAt?: string
           createdBy?: string
           customFields?: Json | null
@@ -10943,7 +10931,6 @@ export type Database = {
       }
       supplierType: {
         Row: {
-          color: string | null
           createdAt: string
           createdBy: string
           customFields: Json | null
@@ -10954,7 +10941,6 @@ export type Database = {
           updatedBy: string | null
         }
         Insert: {
-          color?: string | null
           createdAt?: string
           createdBy: string
           customFields?: Json | null
@@ -10965,7 +10951,6 @@ export type Database = {
           updatedBy?: string | null
         }
         Update: {
-          color?: string | null
           createdAt?: string
           createdBy?: string
           customFields?: Json | null
@@ -11704,7 +11689,6 @@ export type Database = {
       workCellType: {
         Row: {
           active: boolean
-          color: string
           createdAt: string
           createdBy: string
           customFields: Json | null
@@ -11721,7 +11705,6 @@ export type Database = {
         }
         Insert: {
           active?: boolean
-          color?: string
           createdAt?: string
           createdBy: string
           customFields?: Json | null
@@ -11738,7 +11721,6 @@ export type Database = {
         }
         Update: {
           active?: boolean
-          color?: string
           createdAt?: string
           createdBy?: string
           customFields?: Json | null
